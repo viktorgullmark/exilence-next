@@ -1,0 +1,17 @@
+@import "./_variables.scss";
+@import "./_mixins.scss";
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+@import "./exilence-theme.scss";
+
+.exilence {
+    @include angular-material-theme($exilence-theme);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  color: $font-color;
+  font-family: $main-font;
+  background: $background-color;
+  height: 100%;
+}
