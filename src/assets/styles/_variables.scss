@@ -11,10 +11,12 @@ $main-font: 'Roboto';
 $font-color: #fff;
 /* #endregion */
 
+$net-worth-bar-height: 100px;
+
 /* #region Toolbar */
 $toolbar-height: 30px;
-$content-height: calc(100% - 30px - 25px - 25px);
-$content-height-with-tab: calc(100% - 30px - 25px - 25px - 75px);
+$content-height: calc(100% - 30px - 25px - 25px); 
+$content-height-with-tab: calc(100% - 30px - 100px - 25px);
 $toolbar-background-color: #0a0a0a;
 $container-padding: 25px;
 /* #endregion */

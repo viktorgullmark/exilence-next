@@ -17,11 +17,7 @@ html, body {
 }
 
 .container {
-  position: absolute;
   padding: $container-padding;
-  bottom: 0;
-  left: 0;
-  right: 0;
   top: $toolbar-height;
   height: $content-height;
   background: $background-overlay, url("./../img/main-bg.jpg");
@@ -29,8 +25,9 @@ html, body {
   background-size: cover;
   > *:not(.login-section) {
       width: 100%;
-      height: 100%;
   }
+
+  margin-bottom: -$net-worth-bar-height;
 
   &.tab-group-container {
     padding-top: 100px;
@@ -39,6 +36,7 @@ html, body {
 }
 
 .mat-tab-group {
+  position: absolute;
   padding: 25px;
 }
 
