@@ -86,6 +86,7 @@
     "@angular/animations": "^8.0.0",
     "@angular/cdk": "^8.0.1",
     "@angular/material": "^8.0.1",
+    "@angular/material-moment-adapter": "^8.0.1",
     "@ngrx/effects": "^8.0.1",
     "@ngrx/entity": "^8.0.1",
     "@ngrx/store": "^8.0.1",
