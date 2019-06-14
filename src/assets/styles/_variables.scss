@@ -14,11 +14,11 @@ $font-color: #fff;
 
 /* #region Net worth */
 $net-worth-bar-height: 120px;
-$net-worth-content-height: calc(100% - 30px - 100px - 125px);
+$net-worth-content-height: calc(100% - 30px - 125px - 125px);
 /* #endregion */
 
 /* #region Login */
-$login-content-height: calc(100% - 30px - 25px - 125px); 
+$login-content-height: calc(100% - 30px - 50px - 125px); 
 /* #endregion */
 
 /* #region Toolbar */
