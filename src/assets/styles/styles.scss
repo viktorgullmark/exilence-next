@@ -15,3 +15,34 @@ html, body {
   background: $background-color;
   height: 100%;
 }
+
+.container {
+  position: absolute;
+  top: $toolbar-height;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: $content-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: $background-overlay, url("./../img/secondary-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  > * {
+      width: 100%;
+      height: 100%;
+  }
+}
+
+.pull--right {
+  justify-content: flex-end;
+  display: flex;
+  margin-left: auto;
+}
+
+.pos--middle {
+  margin-left: auto;
+}

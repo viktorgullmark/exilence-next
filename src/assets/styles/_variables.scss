@@ -1,10 +1,18 @@
 @import "./exilence-theme.scss";
 
 /* #region General */
+$version-font-color: #cecece;
 $background-color: #303030;
+$background-overlay: linear-gradient(rgba(16, 16, 16, 0.7), rgba(16, 16, 16, 0.7));
 /* #endregion */
 
 /* #region Font */
 $main-font: 'Roboto';
 $font-color: #fff;
+/* #endregion */
+
+/* #region Toolbar */
+$toolbar-height: 30px;
+$content-height: calc(100% - 30px);
+$toolbar-background-color: #0a0a0a;
 /* #endregion */

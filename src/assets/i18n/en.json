@@ -1,7 +1,5 @@
 {
-  "PAGES": {
-      "HOME": {
-          "TITLE": "App works !"
-      }
+  "INFO": {
+    "TITLE": "Exilence Slim"
   }
 }

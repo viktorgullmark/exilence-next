@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { ElectronService } from './providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AppConfig } from '../environments/environment';
+import * as moment from 'moment';
+
+import { ElectronService } from './shared/providers/electron.service';
+import { BrowserHelper } from './shared/helpers/browser.helper';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +15,11 @@ export class AppComponent {
     private translate: TranslateService) {
 
     translate.setDefaultLang('en');
-    console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {
-      console.log('Mode electron');
-      console.log('Electron ipcRenderer', electronService.ipcRenderer);
-      console.log('NodeJS childProcess', electronService.childProcess);
+      moment.locale(this.electronService.remote.app.getLocale());
     } else {
-      console.log('Mode web');
+      moment.locale(BrowserHelper.getBrowserLang());
     }
   }
 }

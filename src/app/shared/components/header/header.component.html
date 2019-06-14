@@ -1,0 +1,11 @@
+<mat-toolbar class="toolbar">
+  <span class="title">{{ 'INFO.TITLE' | translate }}
+      <span class="version">{{appVersion}}</span>
+  </span>
+  <div class="pull--right" *ngIf="electronService.isElectron()">
+      <mat-icon (click)="minimize()">minimize</mat-icon>
+      <mat-icon (click)="maximize()" *ngIf="!isMaximized">crop_square</mat-icon>
+      <mat-icon (click)="unmaximize()" *ngIf="isMaximized">filter_none</mat-icon>
+      <mat-icon (click)="close()">close</mat-icon>
+  </div>
+</mat-toolbar>

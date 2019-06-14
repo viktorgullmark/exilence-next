@@ -1,0 +1,36 @@
+@import "./../../../../assets/styles/variables";
+
+.mat-toolbar {
+    background: $toolbar-background-color;
+    height: $toolbar-height;
+    -webkit-app-region: drag;
+
+    .mat-icon {
+        width: 15px !important;
+        height: 15px !important;
+        cursor: pointer;
+    }
+
+    .material-icons {
+        font-size: 15px;
+    }
+
+    > a, span {
+        font-size: 14px;
+        text-transform: uppercase;
+
+        &.title {
+            letter-spacing: 6px;
+            color: $primary;
+
+            .version {
+                color: $version-font-color;
+                letter-spacing: 3px;
+            }
+        }
+    }
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+    padding: 0 10px;
+}
