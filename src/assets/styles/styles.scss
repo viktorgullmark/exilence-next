@@ -24,6 +24,7 @@ html, body {
   background-size: cover;
   > *:not(.login-section) {
       width: 100%;
+      height: calc(100% - 75px);
   }
 
   padding-bottom: 125px;
@@ -41,7 +42,7 @@ html, body {
 
 .mat-tab-group {
   position: absolute;
-  padding: 25px;
+  padding: 10px 25px 25px 25px;
 }
 
 .btn-grp {
