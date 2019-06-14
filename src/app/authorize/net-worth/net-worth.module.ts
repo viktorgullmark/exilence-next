@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { SharedModule } from '../../shared/shared.module';
 import { NetWorthComponent } from './net-worth.component';
+import { MatTabsModule, MatIconModule } from '@angular/material';
 
 @NgModule({
   declarations: [NetWorthComponent],
   imports: [
-    CommonModule
+    SharedModule,
+    MatTabsModule,
+    MatIconModule
   ]
 })
 export class NetWorthModule { }

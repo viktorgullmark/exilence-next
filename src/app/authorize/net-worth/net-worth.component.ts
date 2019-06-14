@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./net-worth.component.scss']
 })
 export class NetWorthComponent implements OnInit {
-
+  public selectedIndex = 0;
   constructor() { }
 
   ngOnInit() {

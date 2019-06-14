@@ -31,6 +31,15 @@ html, body {
       width: 100%;
       height: 100%;
   }
+
+  &.tab-group-container {
+    padding-top: 100px;
+    height: $content-height-with-tab;
+  }
+}
+
+.mat-tab-group {
+  padding: 25px;
 }
 
 .btn-grp {
