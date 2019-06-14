@@ -43,6 +43,7 @@ html, body {
 .mat-tab-group {
   position: absolute;
   padding: 10px 25px 25px 25px;
+  width: calc(100% - 50px);
 }
 
 .btn-grp {
