@@ -15,8 +15,8 @@ $net-worth-bar-height: 100px;
 
 /* #region Toolbar */
 $toolbar-height: 30px;
-$content-height: calc(100% - 30px - 25px - 25px); 
-$content-height-with-tab: calc(100% - 30px - 100px - 25px);
+$login-content-height: calc(100% - 30px - 25px - 125px); 
+$net-worth-content-height: calc(100% - 30px - 100px - 125px);
 $toolbar-background-color: #0a0a0a;
 $container-padding: 25px;
 /* #endregion */

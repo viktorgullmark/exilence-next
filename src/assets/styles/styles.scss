@@ -19,7 +19,6 @@ html, body {
 .container {
   padding: $container-padding;
   top: $toolbar-height;
-  height: $content-height;
   background: $background-overlay, url("./../img/main-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -27,11 +26,16 @@ html, body {
       width: 100%;
   }
 
+  padding-bottom: 125px;
   margin-bottom: -$net-worth-bar-height;
 
-  &.tab-group-container {
+  &.login-content {
+    height: $login-content-height;
+  }
+  
+  &.net-worth-content {
     padding-top: 100px;
-    height: $content-height-with-tab;
+    height: $net-worth-content-height;
   }
 }
 
