@@ -1,0 +1,55 @@
+<mat-vertical-stepper #stepper linear="true">
+  <mat-step [stepControl]="accountFormGroup" editable="true">
+    <form [formGroup]="accountFormGroup">
+      <ng-template matStepLabel>{{'ACCOUNT.TITLE' | translate}}</ng-template>
+      <p class="mat-body-1">{{'ACCOUNT.DESC' | translate}}</p>
+      <mat-form-field>
+        <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="sessionId" placeholder="{{'ACCOUNT.SESSIONID' | translate}}" required>
+      </mat-form-field>
+      <div class="btn-grp pull--right">
+        <button mat-raised-button color="primary" matStepperNext>{{'ACTIONS.CONTINUE' | translate}}</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="leagueFormGroup" [editable]="!privateProfileError">
+    <form [formGroup]="leagueFormGroup">
+      <ng-template matStepLabel>{{'LEAGUE.TITLE' | translate}}</ng-template>
+      <p class="mat-body-1">{{'LEAGUE.DESC' | translate}}</p>
+      <mat-form-field>
+        <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)"
+          placeholder="{{'LEAGUE.NAME' | translate}}" required>
+          <mat-option *ngFor="let item of leagues" [value]="item.id">{{item.id}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="tradeLeagueName" placeholder="{{'TRADELEAGUE.NAME' | translate}}" required>
+          <mat-option *ngFor="let item of tradeLeagues" [value]="item.id">{{item.id}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="btn-grp pull--right">
+        <button mat-raised-button class="btn-back" matStepperPrevious>{{'ACTIONS.BACK' | translate}}</button>
+        <button mat-raised-button color="primary"
+          (click)="fetchCharacters()">{{'ACTIONS.CONTINUE' | translate}}</button>
+      </div>
+      <mat-progress-bar color="primary" mode="indeterminate">
+      </mat-progress-bar>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="charFormGroup">
+    <form [formGroup]="charFormGroup">
+      <ng-template matStepLabel>{{'CHARACTER.DESC' | translate}}</ng-template>
+      <mat-form-field>
+        <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}" required>
+          <mat-option *ngFor="let item of characters" [value]="item.name">{{item.level}} - {{item.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="btn-grp pull--right">
+        <button mat-raised-button class="btn-back" matStepperPrevious>{{'ACTIONS.BACK' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="authorize()">{{'ACTIONS.CONTINUE' | translate}}</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-vertical-stepper>

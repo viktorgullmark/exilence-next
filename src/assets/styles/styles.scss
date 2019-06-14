@@ -18,22 +18,25 @@ html, body {
 
 .container {
   position: absolute;
-  top: $toolbar-height;
+  padding: $container-padding;
   bottom: 0;
   left: 0;
   right: 0;
+  top: $toolbar-height;
   height: $content-height;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: $background-overlay, url("./../img/secondary-bg.jpg");
+  background: $background-overlay, url("./../img/main-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-
-  > * {
+  > *:not(.login-section) {
       width: 100%;
       height: 100%;
+  }
+}
+
+.btn-grp {
+  button {
+    margin-left: 15px;
+    margin-bottom: 15px;
   }
 }
 
@@ -43,6 +46,8 @@ html, body {
   margin-left: auto;
 }
 
-.pos--middle {
-  margin-left: auto;
+.pos--center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

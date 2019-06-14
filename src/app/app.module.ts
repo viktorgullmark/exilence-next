@@ -17,6 +17,7 @@ import { WebviewDirective } from './shared/directives/webview.directive';
 import { ErrorHandler } from './shared/error-handler';
 import { RequestInterceptor } from './shared/error-interceptor';
 import { ElectronService } from './shared/providers/electron.service';
+import { LoginModule } from './login/login.module';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -27,7 +28,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     WebviewDirective
   ],
   imports: [
@@ -37,6 +37,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     HeaderModule,
     MatSnackBarModule,
+    LoginModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
