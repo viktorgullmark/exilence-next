@@ -27,7 +27,7 @@ html, body {
       height: calc(100% - 75px);
   }
 
-  padding-bottom: 150px;
+  padding-bottom: 130px;
   margin-bottom: -$net-worth-bar-height;
 
   &.login-content {
@@ -35,7 +35,7 @@ html, body {
   }
   
   &.net-worth-content {
-    padding-top: 100px;
+    padding-top: 85px;
     height: $net-worth-content-height;
   }
 }
