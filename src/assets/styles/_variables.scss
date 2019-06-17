@@ -25,6 +25,21 @@ $net-worth-content-p-bot: 125px;
 $net-worth-content-height: calc(100vh - #{$toolbar-height} - #{$net-worth-content-p-bot} - #{$net-worth-content-p-top});
 /* #endregion */
 
+/* #region Item */
+$rarity-normal-color: #c0c0c0;
+$rarity-magic-color: #8888FF;
+$rarity-rare-color: #EBEB57;
+$rarity-unique-color: #da7a36;
+$rarity-gem-color: #1ba29b;
+$rarity-currency-color: #AD904B;
+$rarity-questitem-color: #6eb930;
+$corrupted-item-color: #f12828;
+$item-gemlevel-color: #25c4bc;
+$item-links-color: $font-color;
+$not-available-color: #b9b9b9;
+$chaos-orb-color: #f0cc00;
+/* #endregion */
+
 /* #region Login */
 $login-content-height: calc(100vh - #{$toolbar-height} - #{$container-padding}*2);
 /* #endregion */

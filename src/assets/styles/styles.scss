@@ -82,6 +82,63 @@ html, body {
   margin-bottom: 15px;
 }
 
+/* #region Item colors */
+.rarity-0 {
+  color: $rarity-normal-color;
+}
+
+.rarity-1 {
+  color: $rarity-magic-color;
+}
+
+.rarity-2 {
+  color: $rarity-rare-color;
+}
+
+.rarity-3 {
+  color: $rarity-unique-color;
+}
+
+.rarity-4 {
+  color: $rarity-gem-color;
+}
+
+.rarity-5 {
+  color: $rarity-currency-color;
+}
+
+.rarity-7 {
+  color: $rarity-questitem-color;
+}
+
+.corrupted {
+  color: $corrupted-item-color;
+}
+
+.links {
+  color: $item-links-color;
+}
+
+.gemlevel {
+  color: $item-gemlevel-color;
+}
+
+.not-available {
+  color: $not-available-color;
+}
+
+.chaos-icon {
+  height: 21px;
+  width: 21px;
+  content: url("./../img/currency/chaos_orb.png");
+}
+
+.net-worth-value {
+  color: $chaos-orb-color;
+}
+
+/* #endregion */
+
 /* #region Ngx-charts overrides */
 .chart-legend .legend-title {
   font-weight: normal !important;

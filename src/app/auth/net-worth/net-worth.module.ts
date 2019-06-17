@@ -10,6 +10,9 @@ import {
   MatInputModule,
   MatSelectModule,
   MatTabsModule,
+  MatTableModule,
+  MatSortModule,
+  MatPaginatorModule,
 } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -31,6 +34,9 @@ import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-pag
     NgxChartsModule,
     MatIconModule,
     MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatFormFieldModule,
     MatDatepickerModule
   ],
