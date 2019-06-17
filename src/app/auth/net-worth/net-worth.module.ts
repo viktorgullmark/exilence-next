@@ -23,6 +23,7 @@ import { NetWorthGraphComponent } from './components/net-worth-graph/net-worth-g
 import { NetWorthItemTableComponent } from './components/net-worth-item-table/net-worth-item-table.component';
 import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
+import { NetWorthRoutingModule } from './net-worth-routing.module';
 
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
@@ -38,7 +39,8 @@ import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-pag
     MatSortModule,
     MatPaginatorModule,
     MatFormFieldModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    NetWorthRoutingModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
