@@ -5,11 +5,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../shared/shared.module';
 import { StepperComponent } from './components/stepper/stepper.component';
-import { LoginComponent } from './login.component';
+import { LoginPageComponent } from './containers/login-page/login-page.component';
 
 @NgModule({
-  declarations: [LoginComponent, StepperComponent],
-  exports: [LoginComponent],
+  declarations: [LoginPageComponent, StepperComponent],
+  exports: [LoginPageComponent],
   imports: [
     SharedModule,
     ReactiveFormsModule,

@@ -24,26 +24,25 @@ html, body {
   background-size: cover;
   > *:not(.login-section) {
       width: 100%;
-      height: calc(100% - 75px);
+      height: calc(100% - #{$net-worth-bar-height});
   }
-
-  padding-bottom: 130px;
-  margin-bottom: -$net-worth-bar-height;
 
   &.login-content {
     height: $login-content-height;
   }
   
   &.net-worth-content {
-    padding-top: 85px;
+    padding-top: $net-worth-content-p-top;
+    padding-bottom: $net-worth-content-p-bot;
     height: $net-worth-content-height;
+    margin-bottom: -$net-worth-bar-height;
   }
 }
 
 .mat-tab-group {
   position: absolute;
   padding: 10px 25px 25px 25px;
-  width: calc(100% - 50px);
+  width: calc(100% - #{$main-padding}*2);
 }
 
 .btn-grp {

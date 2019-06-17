@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { AuthorizeRoutingModule } from './authorize-routing.module';
+import { AuthRoutingModule } from './auth-routing.module';
 import { NetWorthModule } from './net-worth/net-worth.module';
 
 @NgModule({
@@ -9,7 +9,7 @@ import { NetWorthModule } from './net-worth/net-worth.module';
   imports: [
     CommonModule,
     NetWorthModule,
-    AuthorizeRoutingModule
+    AuthRoutingModule
   ]
 })
-export class AuthorizeModule { }
+export class AuthModule { }

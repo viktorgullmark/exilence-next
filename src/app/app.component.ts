@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
-import { ElectronService } from './shared/providers/electron.service';
+import { ElectronService } from './core/providers/electron.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
 
 @Component({

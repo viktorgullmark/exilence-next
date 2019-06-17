@@ -19,10 +19,10 @@ import { NetWorthBarComponent } from './components/net-worth-bar/net-worth-bar.c
 import { NetWorthGraphComponent } from './components/net-worth-graph/net-worth-graph.component';
 import { NetWorthItemTableComponent } from './components/net-worth-item-table/net-worth-item-table.component';
 import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
-import { NetWorthComponent } from './net-worth.component';
+import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 
 @NgModule({
-  declarations: [NetWorthComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
+  declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
     SharedModule,
     ReactiveFormsModule,

@@ -1,6 +1,7 @@
 @import "./exilence-theme.scss";
 
 /* #region General */
+$main-padding: 25px;
 $container-padding: 25px;
 $version-font-color: #cecece;
 $background-color: #303030;
@@ -12,16 +13,19 @@ $main-font: 'Roboto';
 $font-color: #fff;
 /* #endregion */
 
-/* #region Net worth */
-$net-worth-bar-height: 100px;
-$net-worth-content-height: calc(100% - 30px - 125px - 90px);
-/* #endregion */
-
-/* #region Login */
-$login-content-height: calc(100% - 30px - 50px - 125px); 
-/* #endregion */
-
 /* #region Toolbar */
 $toolbar-height: 30px;
 $toolbar-background-color: #0a0a0a;
 /* #endregion */
+
+/* #region Net worth */
+$net-worth-bar-height: 100px;
+$net-worth-content-p-top: 85px;
+$net-worth-content-p-bot: 125px;
+$net-worth-content-height: calc(100vh - #{$toolbar-height} - #{$net-worth-content-p-bot} - #{$net-worth-content-p-top});
+/* #endregion */
+
+/* #region Login */
+$login-content-height: calc(100vh - #{$toolbar-height} - #{$container-padding}*2);
+/* #endregion */
+

@@ -4,20 +4,20 @@ import 'reflect-metadata';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material';
+import { MatIconModule, MatSnackBarModule, MatToolbarModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { HeaderModule } from './shared/components/header/header.module';
-import { WebviewDirective } from './shared/directives/webview.directive';
-import { ErrorHandler } from './shared/error-handler';
-import { RequestInterceptor } from './shared/error-interceptor';
-import { ElectronService } from './shared/providers/electron.service';
+import { HeaderComponent } from './core/components/header/header.component';
+import { ErrorHandler } from './core/error-handling/error-handler';
+import { RequestInterceptor } from './core/error-handling/error-interceptor';
+import { ElectronService } from './core/providers/electron.service';
 import { LoginModule } from './login/login.module';
+import { WebviewDirective } from './shared/directives/webview.directive';
+import { CoreModule } from './core/core.module';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -35,8 +35,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
-    HeaderModule,
     MatSnackBarModule,
+    CoreModule,
     LoginModule,
     TranslateModule.forRoot({
       loader: {

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NetWorthComponent } from './net-worth/net-worth.component';
+import { NetWorthPageComponent } from './net-worth/containers/net-worth-page/net-worth-page.component';
 
 const routes: Routes = [
-  { path: 'net-worth', component: NetWorthComponent },
+  { path: 'net-worth', component: NetWorthPageComponent },
   { path: '', redirectTo: '/auth/net-worth', pathMatch: 'full' }
 ];
 
@@ -11,4 +11,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AuthorizeRoutingModule { }
+export class AuthRoutingModule { }
