@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import { ElectronService } from './core/providers/electron.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
+import { NotificationSidebarComponent } from './core/components/notification-sidebar/notification-sidebar.component';
 
 @Component({
   selector: 'app-root',

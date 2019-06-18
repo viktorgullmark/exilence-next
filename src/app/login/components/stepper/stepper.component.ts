@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material';
 
 import { Character } from '../../../shared/interfaces/character.interface';
 import { League } from '../../../shared/interfaces/league.interface';
-import { Router } from '@angular/router';
+import { SessionForm } from '../../../shared/interfaces/session-form.interface';
 
 @Component({
   selector: 'app-stepper',
@@ -29,8 +29,9 @@ export class StepperComponent implements OnInit {
   } as Character];
 
   @ViewChild('stepper', undefined) stepper: MatStepper;
+  @Output() formData: EventEmitter<SessionForm> = new EventEmitter;
 
-  constructor(@Inject(FormBuilder) fb: FormBuilder, private router: Router) {
+  constructor(@Inject(FormBuilder) fb: FormBuilder) {
     this.accountFormGroup = fb.group({
       accountName: ['', Validators.required],
       sessionId: ['', Validators.required]
@@ -56,7 +57,15 @@ export class StepperComponent implements OnInit {
   }
 
   authorize() {
-    this.router.navigate(['/auth/net-worth']);
+    const formData = {
+      accountName: this.accountFormGroup.controls.accountName.value,
+      sessionId: this.accountFormGroup.controls.sessionId.value,
+      leagueName: this.leagueFormGroup.controls.leagueName.value,
+      tradeLeagueName: this.leagueFormGroup.controls.tradeLeagueName.value,
+      characterName: this.charFormGroup.controls.characterName.value
+    } as SessionForm;
+
+    this.formData.emit(formData);
   }
 
 }

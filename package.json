@@ -93,6 +93,7 @@
     "@ngrx/store-devtools": "^8.0.1",
     "@swimlane/ngx-charts": "^12.0.1",
     "moment": "^2.24.0",
+    "ngx-cookie-service": "^2.2.0",
     "rxjs-compat": "^6.5.2",
     "rxjs-ratelimiter": "^1.0.1"
   }

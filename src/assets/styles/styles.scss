@@ -82,6 +82,10 @@ html, body {
   margin-bottom: 15px;
 }
 
+.noselect {
+  user-select: none;
+}
+
 /* #region Item colors */
 .rarity-0 {
   color: $rarity-normal-color;
@@ -143,4 +147,7 @@ html, body {
 .chart-legend .legend-title {
   font-weight: normal !important;
 }
+/* #endregion */
+
+/* #region Material overrides */
 /* #endregion */

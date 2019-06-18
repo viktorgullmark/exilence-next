@@ -1,0 +1,16 @@
+@import "./../../../../assets/styles/variables";
+
+.notification-sidebar-container {
+    width: 100%;
+    height: $sidebar-content-height;
+    position: absolute;
+    background: none;
+    z-index: auto;
+    .mat-sidenav {
+        width: $sidebar-width;
+        padding: $main-padding;
+    }
+    .mat-drawer-content {
+        z-index: auto;
+    }
+}

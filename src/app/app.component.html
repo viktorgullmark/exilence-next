@@ -1,2 +1,3 @@
-<app-header></app-header>
+<app-header (toggled)="notificationSidenav.toggle()"></app-header>
+<app-notification-sidebar #notificationSidenav></app-notification-sidebar>
 <router-outlet></router-outlet>

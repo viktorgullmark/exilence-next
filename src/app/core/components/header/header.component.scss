@@ -34,3 +34,11 @@
 .mat-toolbar-row, .mat-toolbar-single-row {
     padding: 0 10px;
 }
+
+.sidenav-toggle {
+  transition: all 0.25s 0.25s;
+  transform: rotate(0);
+}
+.toggled {
+    transform: rotate(180deg);
+}

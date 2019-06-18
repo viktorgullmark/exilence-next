@@ -6,6 +6,7 @@ $container-padding: 25px;
 $version-font-color: #cecece;
 $background-color: #303030;
 $background-overlay: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.9));
+$faded-overlay-color: rgba(27, 27, 27, 0.6);
 /* #endregion */
 
 /* #region Font */
@@ -43,4 +44,10 @@ $chaos-orb-color: #f0cc00;
 /* #region Login */
 $login-content-height: calc(100vh - #{$toolbar-height} - #{$container-padding}*2);
 /* #endregion */
+
+/* #region Sidebar */
+$sidebar-content-height: calc(100vh - #{$toolbar-height});
+$sidebar-width: 400px;
+/* #endregion */
+
 

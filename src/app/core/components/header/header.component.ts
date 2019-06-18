@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { version } from '../../../../../package.json';
 import { ElectronService } from '../../providers/electron.service';
 
@@ -11,6 +11,9 @@ export class HeaderComponent implements OnInit {
 
   public appVersion: string = version;
   public isMaximized = false;
+  public isToggled = false;
+
+  @Output() toggled: EventEmitter<any> = new EventEmitter;
 
   constructor(public electronService: ElectronService) {
   }
@@ -34,5 +37,10 @@ export class HeaderComponent implements OnInit {
 
   close() {
     this.electronService.remote.getCurrentWindow().close();
+  }
+
+  toggleSidenav() {
+    this.toggled.emit();
+    this.isToggled = !this.isToggled;
   }
 }
