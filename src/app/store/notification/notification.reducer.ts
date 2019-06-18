@@ -18,32 +18,12 @@ export function reducer(
       return fromAdapter.adapter.addOne(action.payload.notification, state);
     }
 
-    case NotificationActionTypes.UpsertNotification: {
-      return fromAdapter.adapter.upsertOne(action.payload.notification, state);
-    }
-
     case NotificationActionTypes.AddNotifications: {
       return fromAdapter.adapter.addMany(action.payload.notifications, state);
     }
-
-    case NotificationActionTypes.UpsertNotifications: {
-      return fromAdapter.adapter.upsertMany(action.payload.notifications, state);
-    }
-
-    case NotificationActionTypes.UpdateNotification: {
-      return fromAdapter.adapter.updateOne(action.payload.notification, state);
-    }
-
-    case NotificationActionTypes.UpdateNotifications: {
-      return fromAdapter.adapter.updateMany(action.payload.notifications, state);
-    }
-
+  
     case NotificationActionTypes.DeleteNotification: {
       return fromAdapter.adapter.removeOne(action.payload.id, state);
-    }
-
-    case NotificationActionTypes.DeleteNotifications: {
-      return fromAdapter.adapter.removeMany(action.payload.ids, state);
     }
 
     case NotificationActionTypes.LoadNotifications: {
