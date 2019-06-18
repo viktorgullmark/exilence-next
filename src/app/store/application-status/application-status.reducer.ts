@@ -5,7 +5,8 @@ import { ApplicationStatusActions, ApplicationStatusActionTypes } from './applic
 export const initialState: ApplicationStatusState = {
   status: {
     snapshotting: false,
-    lastSnapshot: undefined
+    lastSnapshot: undefined,
+    selectedTabs: []
   }
 };
 

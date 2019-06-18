@@ -50,4 +50,10 @@ $sidebar-content-height: calc(100vh - #{$toolbar-height});
 $sidebar-width: 400px;
 /* #endregion */
 
+/* #region Screen size */
+$screen-xs: 600px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+/* #endregion */
 

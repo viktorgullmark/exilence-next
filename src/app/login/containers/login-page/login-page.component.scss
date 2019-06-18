@@ -1,3 +1,13 @@
+@import "./../../../../assets/styles/variables";
+
 .login-section {
-    width: 40%;
+  width: 40%;
+
+  @media (max-width: $screen-xl) {
+    width: 60%;
+  }
+
+  @media (max-width: $screen-md) {
+    width: 80%;
+  }
 }

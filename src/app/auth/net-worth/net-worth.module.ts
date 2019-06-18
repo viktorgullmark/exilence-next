@@ -24,7 +24,7 @@ import { NetWorthItemTableComponent } from './components/net-worth-item-table/ne
 import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 import { NetWorthRoutingModule } from './net-worth-routing.module';
-import { SnapshotService } from '../../core/providers/snapshot.service';
+import { SnapshotService } from './providers/snapshot.service';
 
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
