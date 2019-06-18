@@ -7,18 +7,11 @@ export enum ApplicationStatusActionTypes {
   UpdateApplicationStatus = '[ApplicationStatus] Update ApplicationStatus'
 }
 
-export class AddApplicationStatus implements Action {
-  readonly type = ApplicationStatusActionTypes.AddApplicationStatus;
-
-  constructor(public payload: { applicationStatus: ApplicationStatus }) {}
-}
 
 export class UpdateApplicationStatus implements Action {
   readonly type = ApplicationStatusActionTypes.UpdateApplicationStatus;
 
-  constructor(public payload: { applicationStatus: Update<ApplicationStatus> }) {}
+  constructor(public payload: { applicationStatus: ApplicationStatus }) {}
 }
 
-export type ApplicationStatusActions =
- AddApplicationStatus
- | UpdateApplicationStatus;
+export type ApplicationStatusActions = UpdateApplicationStatus;

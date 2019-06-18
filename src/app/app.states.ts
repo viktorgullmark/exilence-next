@@ -10,6 +10,6 @@ export interface AppState {
 
 export interface NotificationsState extends EntityState<Notification> { }
 
-export interface ApplicationStatusState extends EntityState<ApplicationStatus> {
+export interface ApplicationStatusState {
     status: ApplicationStatus | null;
 }
