@@ -24,6 +24,7 @@ import { NetWorthItemTableComponent } from './components/net-worth-item-table/ne
 import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 import { NetWorthRoutingModule } from './net-worth-routing.module';
+import { SnapshotService } from '../../core/providers/snapshot.service';
 
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
@@ -45,6 +46,7 @@ import { NetWorthRoutingModule } from './net-worth-routing.module';
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    SnapshotService
   ]
 })
 export class NetWorthModule { }

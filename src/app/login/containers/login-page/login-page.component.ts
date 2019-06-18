@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionForm } from '../../../shared/interfaces/session-form.interface';
+import { SessionService } from '../../../core/providers/session.service';
 
 @Component({
   selector: 'app-login-page',
@@ -9,13 +10,13 @@ import { SessionForm } from '../../../shared/interfaces/session-form.interface';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private sessionService: SessionService) { }
 
   ngOnInit() {
   }
 
   login(event: SessionForm) {
-    console.log(event);
+    this.sessionService.createSession(event);
     this.router.navigate(['/auth/net-worth']);
   }
 }
