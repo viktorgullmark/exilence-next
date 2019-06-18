@@ -41,17 +41,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSnackBarModule,
     CoreModule,
     LoginModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: false // Restrict extension to log-only mode
-    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
+    }),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: false // Restrict extension to log-only mode
     })
   ],
   providers: [ElectronService, ErrorHandler,

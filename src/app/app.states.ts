@@ -1,9 +1,9 @@
-import { EntityState } from '@ngrx/entity';
 
-import { DependencyStatus } from './shared/interfaces/dependency-status.interface';
+import { EntityState } from '@ngrx/entity';
+import { Notification } from './shared/interfaces/notification.interface';
 
 export interface AppState {
-    dependencyStatusState: DependencyStatusState;
+    notificationsState: NotificationsState;
 }
 
-export interface DependencyStatusState extends EntityState<DependencyStatus> { }
+export interface NotificationsState extends EntityState<Notification> { }

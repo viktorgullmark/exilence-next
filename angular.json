@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "exilence-slim": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -69,21 +69,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "exilence-slim:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "exilence-slim:build:dev"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "exilence-slim:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "exilence-slim:build"
           }
         },
         "lint": {
@@ -100,7 +100,7 @@
         }
       }
     },
-    "angular-electron-e2e": {
+    "exilence-slim-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -127,5 +127,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
   }
 }
