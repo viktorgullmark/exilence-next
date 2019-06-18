@@ -4,11 +4,11 @@ import { AppConfig } from '../../environments/environment';
 import { AppState } from '../app.states';
 import * as notificationReducer from './notification/notification.reducer';
 import * as tabSnapshotReducer from './tab-snapshot/tab-snapshot.reducer';
-import * as applicationStatusReducer from './application-status/application-status.reducer';
+import * as applicationReducer from './application/application.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   notificationsState: notificationReducer.reducer,
-  applicationStatusState: applicationStatusReducer.reducer,
+  applicationState: applicationReducer.reducer,
   tabSnapshotsState: tabSnapshotReducer.reducer,
 };
 

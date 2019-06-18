@@ -1,18 +1,18 @@
 
 import { EntityState } from '@ngrx/entity';
 import { Notification } from './shared/interfaces/notification.interface';
-import { ApplicationStatus } from './shared/interfaces/application-status.interface';
+import { Application } from './shared/interfaces/application.interface';
 import { TabSnapshot } from './shared/interfaces/tab-snapshot.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
     tabSnapshotsState: TabSnapshotsState;
-    applicationStatusState: ApplicationStatusState;
+    applicationState: ApplicationState;
 }
 
 export interface NotificationsState extends EntityState<Notification> { }
 export interface TabSnapshotsState extends EntityState<TabSnapshot> { }
 
-export interface ApplicationStatusState {
-    status: ApplicationStatus | null;
+export interface ApplicationState {
+    status: Application | null;
 }

@@ -1,4 +1,4 @@
-export interface ApplicationStatus {
+export interface Application {
     snapshotting: boolean;
     lastSnapshot: Date;
     selectedTabs: Array<string>;
