@@ -3,9 +3,11 @@ import { ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { AppConfig } from '../../environments/environment';
 import { AppState } from '../app.states';
 import * as notificationReducer from './notification/notification.reducer';
+import * as applicationStatusReducer from './application-status/application-status.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
-  notificationsState: notificationReducer.reducer
+  notificationsState: notificationReducer.reducer,
+  applicationStatusState: applicationStatusReducer.reducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

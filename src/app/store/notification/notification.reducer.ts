@@ -1,17 +1,10 @@
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { Notification } from '../../shared/interfaces/notification.interface';
 import * as fromAdapter from './notfication.adapter';
 import { NotificationActions, NotificationActionTypes } from './notification.actions';
+import { NotificationsState } from '../../app.states';
 
-export interface NotificationsState extends EntityState<Notification> {
-  // additional entities state properties
-}
-
-export const adapter: EntityAdapter<Notification> = createEntityAdapter<Notification>();
-
-export const initialState: NotificationsState = adapter.getInitialState({
+export const initialState: NotificationsState = fromAdapter.adapter.getInitialState({
   ids: [],
   entities: {}
 });
@@ -22,43 +15,43 @@ export function reducer(
 ): NotificationsState {
   switch (action.type) {
     case NotificationActionTypes.AddNotification: {
-      return adapter.addOne(action.payload.notification, state);
+      return fromAdapter.adapter.addOne(action.payload.notification, state);
     }
 
     case NotificationActionTypes.UpsertNotification: {
-      return adapter.upsertOne(action.payload.notification, state);
+      return fromAdapter.adapter.upsertOne(action.payload.notification, state);
     }
 
     case NotificationActionTypes.AddNotifications: {
-      return adapter.addMany(action.payload.notifications, state);
+      return fromAdapter.adapter.addMany(action.payload.notifications, state);
     }
 
     case NotificationActionTypes.UpsertNotifications: {
-      return adapter.upsertMany(action.payload.notifications, state);
+      return fromAdapter.adapter.upsertMany(action.payload.notifications, state);
     }
 
     case NotificationActionTypes.UpdateNotification: {
-      return adapter.updateOne(action.payload.notification, state);
+      return fromAdapter.adapter.updateOne(action.payload.notification, state);
     }
 
     case NotificationActionTypes.UpdateNotifications: {
-      return adapter.updateMany(action.payload.notifications, state);
+      return fromAdapter.adapter.updateMany(action.payload.notifications, state);
     }
 
     case NotificationActionTypes.DeleteNotification: {
-      return adapter.removeOne(action.payload.id, state);
+      return fromAdapter.adapter.removeOne(action.payload.id, state);
     }
 
     case NotificationActionTypes.DeleteNotifications: {
-      return adapter.removeMany(action.payload.ids, state);
+      return fromAdapter.adapter.removeMany(action.payload.ids, state);
     }
 
     case NotificationActionTypes.LoadNotifications: {
-      return adapter.addAll(action.payload.notifications, state);
+      return fromAdapter.adapter.addAll(action.payload.notifications, state);
     }
 
     case NotificationActionTypes.ClearNotifications: {
-      return adapter.removeAll(state);
+      return fromAdapter.adapter.removeAll(state);
     }
 
     default: {
