@@ -9,5 +9,11 @@
   "INFORMATION": {
     "COOKIE_SET_TITLE": "Created a session cookie",
     "COOKIE_SET_DESC": "A cookie was created with your session id"
+  },
+  "SNAPSHOT": {
+    "SNAPSHOT_STARTED_TITLE": "Snapshot started",
+    "SNAPSHOT_STARTED_DESC": "Started fetching net worth data for your stash tabs",
+    "SNAPSHOT_FINISHED_TITLE": "Snapshot finished",
+    "SNAPSHOT_FINISHED_DESC": "New net worth data for your stash tabs was fetched successfully"
   }
 }
