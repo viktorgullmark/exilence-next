@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "exilence-slim": {
+    "exilence-2": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -69,21 +69,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "exilence-slim:build"
+            "browserTarget": "exilence-2:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "exilence-slim:build:dev"
+              "browserTarget": "exilence-2:build:dev"
             },
             "production": {
-              "browserTarget": "exilence-slim:build:production"
+              "browserTarget": "exilence-2:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "exilence-slim:build"
+            "browserTarget": "exilence-2:build"
           }
         },
         "lint": {
@@ -100,7 +100,7 @@
         }
       }
     },
-    "exilence-slim-e2e": {
+    "exilence-2-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -118,7 +118,7 @@
       }
     }
   },
-  "defaultProject": "exilence-slim",
+  "defaultProject": "exilence-2",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

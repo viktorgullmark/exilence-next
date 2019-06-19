@@ -3,7 +3,7 @@ import {SpectronClient} from 'spectron';
 
 import commonSetup from './common-setup';
 
-describe('exilence-slim App', function () {
+describe('exilence-2 App', function () {
   commonSetup.apply(this);
 
   let browser: any;
