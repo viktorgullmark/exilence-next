@@ -25,7 +25,10 @@ import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-wor
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 import { NetWorthRoutingModule } from './net-worth-routing.module';
 import { SnapshotService } from './providers/snapshot.service';
-
+import { EffectsModule } from '@ngrx/effects';
+import { ApplicationEffects } from '../../store/application/application.effects';
+import { StoreModule } from '@ngrx/store';
+import { metaReducers, reducers } from './../../store/reducers';
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
@@ -41,7 +44,11 @@ import { SnapshotService } from './providers/snapshot.service';
     MatPaginatorModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    NetWorthRoutingModule
+    NetWorthRoutingModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([
+      ApplicationEffects
+    ])
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
