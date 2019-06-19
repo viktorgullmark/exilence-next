@@ -8,7 +8,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
 } from '@angular/material';
-
+import {NgPipesModule} from 'ngx-pipes';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
@@ -26,7 +26,8 @@ import { CookieService } from './providers/cookie.service';
     MatSidenavModule,
     MatExpansionModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    NgPipesModule
   ],
   declarations: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
   exports: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],

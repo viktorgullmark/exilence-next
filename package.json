@@ -98,6 +98,7 @@
     "electron-settings": "^3.2.0",
     "guid-typescript": "^1.0.9",
     "moment": "^2.24.0",
+    "ngx-pipes": "^2.5.1",
     "rxjs-compat": "^6.5.2",
     "rxjs-ratelimiter": "^1.0.1"
   }

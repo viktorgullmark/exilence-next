@@ -1,8 +1,8 @@
-<mat-accordion>
-  <mat-expansion-panel *ngFor="let notification of allNotifications$ | async">
+<mat-accordion class="notification-list">
+  <mat-expansion-panel *ngFor="let notification of (allNotifications$ | async) | reverse">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{notification.title}}
+        <span class="timestamp">{{notification.timestamp.format('LT')}}</span>{{notification.title}}
       </mat-panel-title>
       <mat-panel-description>
       </mat-panel-description>
