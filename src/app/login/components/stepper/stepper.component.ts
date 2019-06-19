@@ -17,11 +17,11 @@ export class StepperComponent implements OnInit {
   public charFormGroup: FormGroup;
 
   // todo: remove mock data
-  public leagues: Array<League> = [{ id: 'test league', description: '' } as League];
-  public tradeLeagues: Array<League> = [{ id: 'test league', description: '' } as League];
+  public leagues: Array<League> = [{ id: 'Exilence Legion (PL4896)', description: '' } as League];
+  public tradeLeagues: Array<League> = [{ id: 'Exilence Legion (PL4896)', description: '' } as League];
   public characters: Array<Character> = [{
     name: 'test_char',
-    league: 'test league',
+    league: 'Exilence Legion (PL4896)',
     classId: 1,
     ascendancyClass: 1,
     class: 'Witch',

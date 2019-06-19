@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
+import { SnapshotService } from '../../providers/snapshot.service';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -11,12 +12,11 @@ export class NetWorthPageComponent implements OnInit {
 
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
-  constructor() { }
+  constructor(private snapshotService: SnapshotService) { }
 
   ngOnInit() {
     this.tabGroup.selectedIndexChange.subscribe((res: number) => {
       window.dispatchEvent(new Event('resize'));
     });
   }
-
 }

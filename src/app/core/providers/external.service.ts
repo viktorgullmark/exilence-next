@@ -18,6 +18,13 @@ export class ExternalService {
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     );
   }
+
+  getStashTabs(account: string, league: string) {
+    const parameters = `?league=${league}&accountName=${account}&tabs=1`;
+    return this.rateLimiter.limit(
+      this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+    );
+  }
   /* #endregion */
 
 }
