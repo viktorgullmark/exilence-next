@@ -1,16 +1,9 @@
 import { Action } from '@ngrx/store';
-import { Update } from '@ngrx/entity';
-import { Application } from '../../shared/interfaces/application.interface';
+import { Session } from '../../shared/interfaces/session.interface';
 
 export enum ApplicationActionTypes {
-  UpdateApplication = '[Application] Update Application',
-  UpdateSnapshotStatus = '[Application] Update SnapshotStatus'
-}
-
-export class UpdateApplication implements Action {
-  readonly type = ApplicationActionTypes.UpdateApplication;
-
-  constructor(public payload: { application: Application }) {}
+  UpdateSnapshotStatus = '[Application] Update SnapshotStatus',
+  InitSession = '[Application] Init Session'
 }
 
 export class UpdateSnapshotStatus implements Action {
@@ -19,4 +12,10 @@ export class UpdateSnapshotStatus implements Action {
   constructor(public payload: { running: boolean }) {}
 }
 
-export type ApplicationActions = UpdateApplication | UpdateSnapshotStatus;
+export class InitSession implements Action {
+  readonly type = ApplicationActionTypes.InitSession;
+
+  constructor(public payload: { session: Session }) {}
+}
+
+export type ApplicationActions = UpdateSnapshotStatus | InitSession;

@@ -24,7 +24,7 @@ export class SnapshotService {
     private notificationStore: Store<NotificationsState>
   ) {
 
-    this.appState$ = this.appStore.select(appReducer.selectApplication);
+    this.appState$ = this.appStore.select(appReducer.selectApplicationStatus);
 
     this.checkIfReady();
   }

@@ -6,7 +6,12 @@ export const initialState: ApplicationState = {
   status: {
     snapshotting: false,
     lastSnapshot: undefined,
-    selectedTabs: []
+  },
+  session: {
+    sessionId: undefined,
+    account: undefined,
+    league: undefined,
+    tradeLeague: undefined
   }
 };
 
@@ -15,18 +20,18 @@ export function reducer(
   action: ApplicationActions
 ): ApplicationState {
   switch (action.type) {
-    case ApplicationActionTypes.UpdateApplication: {
-      return {
-        ...state,
-        status: action.payload.application,
-      };
-    }
-
     case ApplicationActionTypes.UpdateSnapshotStatus: {
       state.status.snapshotting = action.payload.running;
       return {
         ...state,
         status: state.status
+      };
+    }
+
+    case ApplicationActionTypes.InitSession: {
+      return {
+        ...state,
+        session: action.payload.session
       };
     }
 
@@ -37,6 +42,9 @@ export function reducer(
 }
 
 export const getApplicationState = createFeatureSelector<ApplicationState>('applicationState');
-export const selectApplication = createSelector(getApplicationState,
+export const selectApplicationStatus = createSelector(getApplicationState,
   (state: ApplicationState) => state.status
+);
+export const selectApplicationSession = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session
 );
