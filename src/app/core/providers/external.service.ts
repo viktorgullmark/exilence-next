@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import RateLimiter from 'rxjs-ratelimiter';
 import { Stash } from '../../shared/interfaces/stash.interface';
 import { Observable } from 'rxjs';
+import { RatelimitHelper } from '../../shared/helpers/ratelimit.helper';
 
 @Injectable()
 export class ExternalService {
@@ -26,5 +27,9 @@ export class ExternalService {
     );
   }
   /* #endregion */
+
+  updateRatelimit(requestCount: number, milliseconds: number) {
+    this.rateLimiter = RatelimitHelper.updateRatelimit(requestCount, milliseconds);
+  }
 
 }

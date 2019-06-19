@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from './electron.service';
-import { Guid } from 'guid-typescript';
-import { Notification } from './../../shared/interfaces/notification.interface';
-import { NotificationType } from '../../shared/enums/notification-type.enum';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from './notification.service';
+import { NotificationsState } from './../../app.states';
+import { Notification } from './../../shared/interfaces/notification.interface';
+import * as notificationActions from './../../store/notification/notification.actions';
+import { NotificationType } from '../../shared/enums/notification-type.enum';
+import { Guid } from 'guid-typescript';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class CookieService {
@@ -12,7 +14,7 @@ export class CookieService {
     constructor(
         private electronService: ElectronService,
         private translateService: TranslateService,
-        private notificationService: NotificationService
+        private notificationStore: Store<NotificationsState>
     ) { }
 
     setSessionCookie(sessionId: string) {
@@ -35,13 +37,23 @@ export class CookieService {
                 'INFORMATION.COOKIE_SET_DESC'
             ]).subscribe(translations => {
                 if (error) {
-                    this.notificationService.addNotification(translations['ERROR.COOKIE_NOT_SET_TITLE'],
-                        translations['ERROR.COOKIE_NOT_SET_DESC'],
-                        NotificationType.Information);
+                    this.notificationStore.dispatch(new notificationActions.AddNotification({
+                        notification: {
+                            id: Guid.create(),
+                            title: translations['ERROR.COOKIE_NOT_SET_TITLE'],
+                            description: translations['ERROR.COOKIE_NOT_SET_DESC'],
+                            type: NotificationType.Error
+                        } as Notification
+                    }));
                 } else {
-                    this.notificationService.addNotification(translations['INFORMATION.COOKIE_SET_TITLE'],
-                        translations['INFORMATION.COOKIE_SET_DESC'],
-                        NotificationType.Information);
+                    this.notificationStore.dispatch(new notificationActions.AddNotification({
+                        notification: {
+                            id: Guid.create(),
+                            title: translations['INFORMATION.COOKIE_SET_TITLE'],
+                            description: translations['INFORMATION.COOKIE_SET_DESC'],
+                            type: NotificationType.Information
+                        } as Notification
+                    }));
                 }
             });
         });
