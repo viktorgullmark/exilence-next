@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as moment from 'moment'
+import * as moment from 'moment';
 import * as fromAdapter from './notification.adapter';
 import { NotificationActions, NotificationActionTypes } from './notification.actions';
 import { NotificationsState } from '../../app.states';
