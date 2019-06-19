@@ -3,7 +3,8 @@ import { Update } from '@ngrx/entity';
 import { Application } from '../../shared/interfaces/application.interface';
 
 export enum ApplicationActionTypes {
-  UpdateApplication = '[Application] Update ApplicationStatus'
+  UpdateApplication = '[Application] Update Application',
+  UpdateSnapshotStatus = '[Application] Update SnapshotStatus'
 }
 
 export class UpdateApplication implements Action {
@@ -12,4 +13,10 @@ export class UpdateApplication implements Action {
   constructor(public payload: { application: Application }) {}
 }
 
-export type ApplicationActions = UpdateApplication;
+export class UpdateSnapshotStatus implements Action {
+  readonly type = ApplicationActionTypes.UpdateSnapshotStatus;
+
+  constructor(public payload: { running: boolean }) {}
+}
+
+export type ApplicationActions = UpdateApplication | UpdateSnapshotStatus;

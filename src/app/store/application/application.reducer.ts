@@ -22,6 +22,14 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.UpdateSnapshotStatus: {
+      state.status.snapshotting = action.payload.running;
+      return {
+        ...state,
+        status: state.status
+      };
+    }
+
     default: {
       return state;
     }
