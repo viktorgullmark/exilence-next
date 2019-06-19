@@ -11,6 +11,8 @@ export const initialState: ApplicationState = {
     sessionId: undefined,
     account: undefined,
     league: undefined,
+    tabs: [],
+    tabsLoading: false,
     tradeLeague: undefined
   },
   settings: {
@@ -23,6 +25,39 @@ export function reducer(
   action: ApplicationActions
 ): ApplicationState {
   switch (action.type) {
+
+    case ApplicationActionTypes.LoadTabs: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tabsLoading: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.LoadTabsSuccess: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tabs: action.payload.tabs,
+          tabsLoading: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.LoadTabsFail: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tabsLoading: false
+        }
+      };
+    }
+
+
     case ApplicationActionTypes.UpdateSnapshotStatus: {
       state.status.snapshotting = action.payload.running;
       return {

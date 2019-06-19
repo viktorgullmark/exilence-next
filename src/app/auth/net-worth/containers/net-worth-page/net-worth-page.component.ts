@@ -15,23 +15,25 @@ import { Observable } from 'rxjs';
 export class NetWorthPageComponent implements OnInit {
   public selectedIndex = 0;
 
-
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
   constructor(
     private snapshotService: SnapshotService,
-    private appStore: Store<Application>
+    private store: Store<Application>
   ) {
   }
 
   ngOnInit() {
+
+    this.store.dispatch(new applicationActions.LoadTabs());
+
     this.tabGroup.selectedIndexChange.subscribe((res: number) => {
       window.dispatchEvent(new Event('resize'));
     });
   }
 
   tabsChanged(tabs: string[]) {
-    this.appStore.dispatch(new applicationActions.UpdateTabSelection({
+    this.store.dispatch(new applicationActions.UpdateTabSelection({
       tabs: tabs
     }));
   }
