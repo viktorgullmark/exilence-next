@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as os from 'os';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -19,7 +20,9 @@ function createWindow() {
     height: size.height,
     webPreferences: {
       nodeIntegration: true,
+      webSecurity: false
     },
+    frame: false
   });
 
   if (serve) {
@@ -37,6 +40,10 @@ function createWindow() {
 
   if (serve) {
     win.webContents.openDevTools();
+    BrowserWindow.addDevToolsExtension(
+      // tslint:disable-next-line:max-line-length
+      path.join(os.homedir(), '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
+    );
   }
 
   // Emitted when the window is closed.

@@ -1,9 +1,14 @@
 <mat-toolbar class="toolbar noselect">
-  <span class="title">{{ 'INFO.TITLE' | translate }}
+  <span class="title">{{ 'APP.TITLE' | translate }}
     <span class="version">{{appVersion}}</span>
   </span>
-  <div class="pull--right">
-    <mat-icon (click)="toggleSidenav()" class="sidenav-toggle" [ngClass]="isToggled ? 'toggled' : ''">keyboard_arrow_left</mat-icon>
+  <div class="pull--right btn-area">
+    <mat-icon (click)="toggleSidenav()" class="sidenav-toggle" [ngClass]="isToggled ? 'toggled' : ''">
+      keyboard_arrow_left</mat-icon>
+    <div class="link-container">
+      <a (click)="logout()">
+        {{ 'ACCOUNT.LOGOUT' | translate}} </a>
+    </div>
     <ng-container *ngIf="electronService.isElectron()">
       <mat-icon (click)="minimize()">minimize</mat-icon>
       <mat-icon (click)="maximize()" *ngIf="!isMaximized">crop_square</mat-icon>

@@ -3,5 +3,4 @@ export interface SessionForm {
     sessionId: string;
     leagueName: string;
     tradeLeagueName: string;
-    characterName: string;
 }

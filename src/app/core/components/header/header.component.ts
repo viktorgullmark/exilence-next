@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { version } from '../../../../../package.json';
 import { ElectronService } from '../../providers/electron.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,10 @@ export class HeaderComponent implements OnInit {
 
   @Output() toggled: EventEmitter<any> = new EventEmitter;
 
-  constructor(public electronService: ElectronService) {
+  constructor(
+    public electronService: ElectronService,
+    private router: Router
+    ) {
   }
 
   ngOnInit() {
@@ -37,6 +41,10 @@ export class HeaderComponent implements OnInit {
 
   close() {
     this.electronService.remote.getCurrentWindow().close();
+  }
+
+  logout() {
+    this.router.navigate(['/']);
   }
 
   toggleSidenav() {

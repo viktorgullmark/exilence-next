@@ -17,6 +17,7 @@ import { NotificationService } from './providers/notification.service';
 import { SessionService } from './providers/session.service';
 import { SettingsService } from './providers/settings.service';
 import { ExternalService } from './providers/external.service';
+import { CookieService } from './providers/cookie.service';
 
 @NgModule({
   imports: [SharedModule,
@@ -30,7 +31,7 @@ import { ExternalService } from './providers/external.service';
   ],
   declarations: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
   exports: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
-  providers: [NotificationService, SessionService, ExternalService, SettingsService]
+  providers: [NotificationService, CookieService, SessionService, ExternalService, SettingsService]
 })
 
 export class CoreModule { }

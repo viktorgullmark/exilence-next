@@ -1,5 +1,13 @@
 {
-  "INFO": {
+  "APP": {
     "TITLE": "Exilence 2"
+  },
+  "ERROR": {
+    "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
+    "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie"
+  },
+  "INFORMATION": {
+    "COOKIE_SET_TITLE": "Created a session cookie",
+    "COOKIE_SET_DESC": "A cookie was created with your session id"
   }
 }

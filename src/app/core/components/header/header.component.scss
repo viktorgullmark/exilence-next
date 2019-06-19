@@ -5,9 +5,23 @@
     height: $toolbar-height;
     -webkit-app-region: drag;
 
+    .btn-area {
+        -webkit-app-region: no-drag;
+        align-items: center;
+        .link-container {
+            margin-right: 15px;
+            margin-left: 15px;
+            a {
+                color: $primary;
+                font-size: $font-size;
+            }
+        }
+    }
+
     .mat-icon {
         width: 15px !important;
         height: 15px !important;
+
         cursor: pointer;
     }
 
@@ -16,9 +30,9 @@
     }
 
     > a, span {
-        font-size: 14px;
+        font-size: $font-size;
         text-transform: uppercase;
-
+        
         &.title {
             letter-spacing: 6px;
             color: $primary;

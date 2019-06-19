@@ -7,26 +7,14 @@ export class SettingsService {
     constructor(private electronService: ElectronService) { }
 
     setKey(key: string, object: any) {
-        if (this.electronService.isElectron()) {
-            this.electronService.settings.set(key, object);
-        } else {
-            localStorage.setItem(key, JSON.stringify(object));
-        }
+        this.electronService.settings.set(key, object);
     }
 
     get(key: string) {
-        if (this.electronService.isElectron()) {
-            return this.electronService.settings.get(key);
-        } else {
-            return JSON.parse(localStorage.getItem(key));
-        }
+        return this.electronService.settings.get(key);
     }
 
     clearSettings() {
-        if (this.electronService.isElectron()) {
-            this.electronService.settings.deleteAll();
-        } else {
-            localStorage.clear();
-        }
+        this.electronService.settings.deleteAll();
     }
 }
