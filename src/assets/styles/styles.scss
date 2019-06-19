@@ -69,6 +69,16 @@ a {
   margin-left: auto;
 }
 
+.pull--left {
+  justify-content: flex-start;
+  display: flex;
+  margin-right: auto;
+}
+
+.float--left {
+  float: left;
+}
+
 .pos--center {
   display: flex;
   justify-content: center;
