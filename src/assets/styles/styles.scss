@@ -22,7 +22,7 @@ html, body {
   background: $background-overlay, url("./../img/main-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  > *:not(.login-section) {
+  > *:not(.login-section, .ad-container) {
       width: 100%;
       height: calc(100% - #{$net-worth-bar-height});
   }
@@ -41,6 +41,13 @@ html, body {
 
 a {
   cursor: pointer;
+}
+
+.ad-container {
+  padding: 0 0 $main-padding 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 
 .mat-tab-group {

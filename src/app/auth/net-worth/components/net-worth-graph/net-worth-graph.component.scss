@@ -1,5 +1,7 @@
+@import "./../../../../../assets/styles/variables";
+
 .chart-container {
-    height: 100%;
+    height: calc(100% - #{$ad-banner-top} - #{$main-padding}*1);
     max-width: 100%;
     fill: white;
 }
