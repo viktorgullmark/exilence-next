@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { SnapshotService } from '../../providers/snapshot.service';
+import * as applicationActions from './../../../../store/application/application.actions';
+import * as appReducer from './../../../../store/application/application.reducer';
+import { Store } from '@ngrx/store';
+import { Application } from '../../../../shared/interfaces/application.interface';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -10,9 +15,14 @@ import { SnapshotService } from '../../providers/snapshot.service';
 export class NetWorthPageComponent implements OnInit {
   public selectedIndex = 0;
 
+
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
-  constructor(private snapshotService: SnapshotService) { }
+  constructor(
+    private snapshotService: SnapshotService,
+    private appStore: Store<Application>
+  ) {
+  }
 
   ngOnInit() {
     this.tabGroup.selectedIndexChange.subscribe((res: number) => {
@@ -21,8 +31,8 @@ export class NetWorthPageComponent implements OnInit {
   }
 
   tabsChanged(tabs: string[]) {
-    console.log(tabs);
-
-    // todo: dispatch new selection to store
+    this.appStore.dispatch(new applicationActions.UpdateTabSelection({
+      tabs: tabs
+    }));
   }
 }

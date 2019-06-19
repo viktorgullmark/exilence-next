@@ -4,6 +4,7 @@ import { Notification } from './shared/interfaces/notification.interface';
 import { Application } from './shared/interfaces/application.interface';
 import { TabSnapshot } from './shared/interfaces/tab-snapshot.interface';
 import { Session } from './shared/interfaces/session.interface';
+import { Settings } from './shared/interfaces/settings.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
@@ -17,4 +18,5 @@ export interface TabSnapshotsState extends EntityState<TabSnapshot> { }
 export interface ApplicationState {
     status: Application | null;
     session: Session | null;
+    settings: Settings | null;
 }

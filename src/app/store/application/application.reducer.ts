@@ -12,6 +12,9 @@ export const initialState: ApplicationState = {
     account: undefined,
     league: undefined,
     tradeLeague: undefined
+  },
+  settings: {
+    selectedTabs: undefined
   }
 };
 
@@ -35,6 +38,14 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.UpdateTabSelection: {
+      state.settings.selectedTabs = action.payload.tabs;
+      return {
+        ...state,
+        settings: state.settings
+      };
+    }
+
     default: {
       return state;
     }
@@ -47,4 +58,7 @@ export const selectApplicationStatus = createSelector(getApplicationState,
 );
 export const selectApplicationSession = createSelector(getApplicationState,
   (state: ApplicationState) => state.session
+);
+export const selectApplicationSettings = createSelector(getApplicationState,
+  (state: ApplicationState) => state.settings
 );
