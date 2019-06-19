@@ -19,4 +19,10 @@ export class NetWorthPageComponent implements OnInit {
       window.dispatchEvent(new Event('resize'));
     });
   }
+
+  tabsChanged(tabs: string[]) {
+    console.log(tabs);
+
+    // todo: dispatch new selection to store
+  }
 }

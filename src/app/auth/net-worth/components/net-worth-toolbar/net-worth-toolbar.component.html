@@ -11,8 +11,8 @@
   </mat-form-field>
   <mat-form-field class="ml--15">
       <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
-      <mat-select [formControl]="stashtabs" multiple>
-        <mat-option *ngFor="let tab of stashtabList" [value]="tab">{{tab.id}}</mat-option>
+      <mat-select [formControl]="stashtabs" (selectionChange)="selectedTab($event)" multiple>
+        <mat-option *ngFor="let tab of stashtabList" [value]="tab">{{tab}}</mat-option>
       </mat-select>
     </mat-form-field>
 </div>
