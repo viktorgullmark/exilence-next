@@ -1,8 +1,9 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-
-import * as fromAdapter from './notfication.adapter';
+import * as moment from 'moment'
+import * as fromAdapter from './notification.adapter';
 import { NotificationActions, NotificationActionTypes } from './notification.actions';
 import { NotificationsState } from '../../app.states';
+import { Guid } from 'guid-typescript';
 
 export const initialState: NotificationsState = fromAdapter.adapter.getInitialState({
   ids: [],
@@ -15,13 +16,11 @@ export function reducer(
 ): NotificationsState {
   switch (action.type) {
     case NotificationActionTypes.AddNotification: {
+      action.payload.notification.id = Guid.create();
+      action.payload.notification.timestamp = moment();
       return fromAdapter.adapter.addOne(action.payload.notification, state);
     }
 
-    case NotificationActionTypes.AddNotifications: {
-      return fromAdapter.adapter.addMany(action.payload.notifications, state);
-    }
-  
     case NotificationActionTypes.DeleteNotification: {
       return fromAdapter.adapter.removeOne(action.payload.id, state);
     }

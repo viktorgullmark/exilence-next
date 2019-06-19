@@ -39,7 +39,6 @@ export class CookieService {
                 if (error) {
                     this.notificationStore.dispatch(new notificationActions.AddNotification({
                         notification: {
-                            id: Guid.create(),
                             title: translations['ERROR.COOKIE_NOT_SET_TITLE'],
                             description: translations['ERROR.COOKIE_NOT_SET_DESC'],
                             type: NotificationType.Error
@@ -48,7 +47,6 @@ export class CookieService {
                 } else {
                     this.notificationStore.dispatch(new notificationActions.AddNotification({
                         notification: {
-                            id: Guid.create(),
                             title: translations['INFORMATION.COOKIE_SET_TITLE'],
                             description: translations['INFORMATION.COOKIE_SET_DESC'],
                             type: NotificationType.Information
