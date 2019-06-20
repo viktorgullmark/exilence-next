@@ -21,7 +21,7 @@ export class ApplicationEffects {
       of(['char1', 'char2']) // todo: fetch real chars
     ).pipe(
       map((x) => {
-        return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.sessionDetails, leagues: x[0], characters: x[1] })
+        return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: x[0], characters: x[1] })
       })
     ))),
   );
@@ -32,8 +32,9 @@ export class ApplicationEffects {
       of(['league1']) // todo: map real leagues
         .pipe(
           map((x) => {
+            console.log(res.payload.accountDetails);
             console.log(x);
-            return new applicationActions.ValidateSession({ accountDetails: res.payload.sessionDetails, leagues: x })
+            return new applicationActions.ValidateSession({ accountDetails: res.payload.accountDetails, leagues: x })
           })
         ))
   )
