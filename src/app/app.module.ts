@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -20,7 +21,6 @@ import { ElectronService } from './core/providers/electron.service';
 import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { metaReducers, reducers } from './store/reducers';
-import { EffectsModule } from '@ngrx/effects';
 
 // NG Translate
 // AoT requires an exported function for factories

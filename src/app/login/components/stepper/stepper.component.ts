@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material';
 
 import { League } from '../../../shared/interfaces/league.interface';
-import { Session } from '../../../shared/interfaces/session.interface';
+import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
 
 @Component({
   selector: 'app-stepper',
@@ -20,7 +20,7 @@ export class StepperComponent implements OnInit {
   public tradeLeagues: Array<League> = [{ id: 'Exilence Legion (PL4896)', description: '' } as League];
 
   @ViewChild('stepper', undefined) stepper: MatStepper;
-  @Output() formData: EventEmitter<Session> = new EventEmitter;
+  @Output() formData: EventEmitter<ApplicationSession> = new EventEmitter;
 
   constructor(@Inject(FormBuilder) fb: FormBuilder) {
     this.accountFormGroup = fb.group({
@@ -40,13 +40,17 @@ export class StepperComponent implements OnInit {
     console.log(event);
   }
 
+  validate(accountName: string, sessionId: string) {
+    // todo: dispatch validateSession
+  }
+
   authorize() {
     const session = {
       account: this.accountFormGroup.controls.accountName.value,
       sessionId: this.accountFormGroup.controls.sessionId.value,
       league: this.leagueFormGroup.controls.leagueName.value,
       tradeLeague: this.leagueFormGroup.controls.tradeLeagueName.value
-    } as Session;
+    } as ApplicationSession;
 
     this.formData.emit(session);
   }

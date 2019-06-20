@@ -4,14 +4,14 @@
       <ng-template matStepLabel>{{'ACCOUNT.TITLE' | translate}}</ng-template>
       <p class="mat-body-1">{{'ACCOUNT.DESC' | translate}}</p>
       <mat-form-field>
-        <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
+        <input matInput #accountName formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
       </mat-form-field>
       <mat-form-field>
-        <input matInput formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}"
+        <input matInput #sessionId formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}"
           required>
       </mat-form-field>
       <div class="btn-grp pull--right">
-        <button mat-raised-button color="primary" matStepperNext>{{'ACTIONS.CONTINUE' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="validate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
       </div>
     </form>
   </mat-step>

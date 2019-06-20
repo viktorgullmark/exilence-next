@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Session } from '../../shared/interfaces/session.interface';
+import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
 import * as applicationActions from './../../store/application/application.actions';
 import { CookieService } from './cookie.service';
 import { StorageService } from './storage.service';
@@ -11,7 +11,7 @@ export class SessionService {
 
     constructor(private storageService: StorageService,
         private cookieService: CookieService,
-        private appStore: Store<Session>
+        private appStore: Store<ApplicationSession>
     ) {
     }
 
@@ -19,17 +19,11 @@ export class SessionService {
         this.cookieService.setSessionCookie(sessionId);
     }
 
-    createSession(data: Session) {
+    createSession(data: ApplicationSession) {
         this.setSessionCookie(data.sessionId);
 
         this.appStore.dispatch(new applicationActions.InitSession({
             session: data
         }));
-
-        this.storageService.setKey('session', data);
-    }
-
-    getSession() {
-        return this.storageService.get('session');
     }
 }

@@ -7,7 +7,8 @@ export const initialState: ApplicationState = {
     sessionId: undefined,
     account: undefined,
     league: undefined,
-    tradeLeague: undefined
+    tradeLeague: undefined,
+    validating: false
   }
 };
 
@@ -21,6 +22,36 @@ export function reducer(
       return {
         ...state,
         session: action.payload.session
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSession: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          validating: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSessionSuccess: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          validating: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSessionFail: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          validating: false
+        }
       };
     }
 
