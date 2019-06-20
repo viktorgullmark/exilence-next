@@ -21,7 +21,31 @@ export function reducer(
 
     case ApplicationActionTypes.InitSession: {
       return {
-        ...state
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: true
+        }
+      };
+    }
+    
+    case ApplicationActionTypes.InitSessionSuccess: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.InitSessionFail: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: false
+        }
       };
     }
 
@@ -55,35 +79,6 @@ export function reducer(
       };
     }
 
-    case ApplicationActionTypes.LoadCharLeagues: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          loadingLeagues: true
-        }
-      };
-    }
-
-    case ApplicationActionTypes.LoadCharLeaguesSuccess: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          loadingLeagues: false
-        }
-      };
-    }
-
-    case ApplicationActionTypes.LoadCharLeaguesFail: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          loadingLeagues: false
-        }
-      };
-    }
 
     default: {
       return state;

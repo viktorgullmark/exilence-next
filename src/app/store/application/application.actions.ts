@@ -5,9 +5,8 @@ import { ApplicationSessionDetails } from '../../shared/interfaces/application-s
 
 export enum ApplicationActionTypes {
   InitSession = '[Application] Init Session',
-  LoadCharLeagues = '[Application] Load CharLeagues',
-  LoadCharLeaguesSuccess = '[Application] Load CharLeagues Success',
-  LoadCharLeaguesFail = '[Application] Load CharLeagues Fail',
+  InitSessionSuccess = '[Application] Init Session Success',
+  InitSessionFail = '[Application] Init Session Fail',
   ValidateSession = '[Application] Validate Session',
   ValidateSessionSuccess = '[Application] Validate Session Success',
   ValidateSessionFail = '[Application] Validate Session Fail'
@@ -19,19 +18,13 @@ export class InitSession implements Action {
   constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
 }
 
-export class LoadCharLeagues implements Action {
-  readonly type = ApplicationActionTypes.LoadCharLeagues;
-
-  constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
-}
-
-export class LoadCharLeaguesSuccess implements Action {
-  readonly type = ApplicationActionTypes.LoadCharLeaguesSuccess;
+export class InitSessionSuccess implements Action {
+  readonly type = ApplicationActionTypes.InitSessionSuccess;
   constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[], characters: string[] }) { }
 }
 
-export class LoadCharLeaguesFail implements Action {
-  readonly type = ApplicationActionTypes.LoadCharLeaguesFail;
+export class InitSessionFail implements Action {
+  readonly type = ApplicationActionTypes.InitSessionFail;
   constructor(public payload: { error: string }) { }
 }
 
@@ -53,6 +46,5 @@ export class ValidateSessionFail implements Action {
 
 
 export type ApplicationActions =
-InitSession |
-LoadCharLeagues | LoadCharLeaguesSuccess | LoadCharLeaguesFail |
+InitSession | InitSessionSuccess | InitSessionFail |
 ValidateSession | ValidateSessionSuccess | ValidateSessionFail;

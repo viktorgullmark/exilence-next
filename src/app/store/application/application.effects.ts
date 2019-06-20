@@ -16,28 +16,18 @@ export class ApplicationEffects {
 
   initSession$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSession),
-    mergeMap((res: any) =>
-      of([])
-        .pipe(
-          map(x => new applicationActions.LoadCharLeagues({ accountDetails: res.payload.accountDetails }))
-        ))
-  )
-  );
-
-  loadCharLeagues$ = createEffect(() => this.actions$.pipe(
-    ofType(applicationActions.ApplicationActionTypes.LoadCharLeagues),
     mergeMap((res: any) => forkJoin(
       of(['league1', 'league2']), // todo: fetch real leagues
       of(['char1', 'char2']) // todo: fetch real chars
     ).pipe(
       map((x) => {
-        return new applicationActions.LoadCharLeaguesSuccess({ accountDetails: res.payload.sessionDetails, leagues: x[0], characters: x[1] })
+        return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.sessionDetails, leagues: x[0], characters: x[1] })
       })
     ))),
   );
 
-  loadCharLeaguesSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(applicationActions.ApplicationActionTypes.LoadCharLeaguesSuccess),
+  initSessionSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.InitSessionSuccess),
     mergeMap((res: any) =>
       of(['league1']) // todo: map real leagues
         .pipe(
