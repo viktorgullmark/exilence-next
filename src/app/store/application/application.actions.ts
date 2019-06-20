@@ -5,6 +5,9 @@ import { ApplicationSessionDetails } from '../../shared/interfaces/application-s
 
 export enum ApplicationActionTypes {
   InitSession = '[Application] Init Session',
+  LoadCharLeagues = '[Application] Load CharLeagues',
+  LoadCharLeaguesSuccess = '[Application] Load CharLeagues Success',
+  LoadCharLeaguesFail = '[Application] Load CharLeagues Fail',
   ValidateSession = '[Application] Validate Session',
   ValidateSessionSuccess = '[Application] Validate Session Success',
   ValidateSessionFail = '[Application] Validate Session Fail'
@@ -13,13 +16,29 @@ export enum ApplicationActionTypes {
 export class InitSession implements Action {
   readonly type = ApplicationActionTypes.InitSession;
 
-  constructor(public payload: { session: ApplicationSession }) {}
+  constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
+}
+
+export class LoadCharLeagues implements Action {
+  readonly type = ApplicationActionTypes.LoadCharLeagues;
+
+  constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
+}
+
+export class LoadCharLeaguesSuccess implements Action {
+  readonly type = ApplicationActionTypes.LoadCharLeaguesSuccess;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[], characters: string[] }) { }
+}
+
+export class LoadCharLeaguesFail implements Action {
+  readonly type = ApplicationActionTypes.LoadCharLeaguesFail;
+  constructor(public payload: { error: string }) { }
 }
 
 export class ValidateSession implements Action {
   readonly type = ApplicationActionTypes.ValidateSession;
 
-  constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[] }) {}
 }
 
 export class ValidateSessionSuccess implements Action {
@@ -35,4 +54,5 @@ export class ValidateSessionFail implements Action {
 
 export type ApplicationActions =
 InitSession |
+LoadCharLeagues | LoadCharLeaguesSuccess | LoadCharLeaguesFail |
 ValidateSession | ValidateSessionSuccess | ValidateSessionFail;

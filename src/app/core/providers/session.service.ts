@@ -18,12 +18,4 @@ export class SessionService {
     setSessionCookie(sessionId: string) {
         this.cookieService.setSessionCookie(sessionId);
     }
-
-    createSession(data: ApplicationSession) {
-        this.setSessionCookie(data.sessionId);
-
-        this.appStore.dispatch(new applicationActions.InitSession({
-            session: data
-        }));
-    }
 }

@@ -4,4 +4,5 @@ export interface ApplicationSession {
     league: string;
     tradeLeague: string;
     validating: boolean;
+    loadingLeagues: boolean;
 }

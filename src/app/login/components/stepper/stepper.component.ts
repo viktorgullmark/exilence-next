@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material';
-
-import { League } from '../../../shared/interfaces/league.interface';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
+import * as applicationActions from './../../../store/application/application.actions';
+import { League } from '../../../shared/interfaces/league.interface';
+import { Store } from '@ngrx/store';
+import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 
 @Component({
   selector: 'app-stepper',
@@ -22,7 +24,10 @@ export class StepperComponent implements OnInit {
   @ViewChild('stepper', undefined) stepper: MatStepper;
   @Output() formData: EventEmitter<ApplicationSession> = new EventEmitter;
 
-  constructor(@Inject(FormBuilder) fb: FormBuilder) {
+  constructor(
+    @Inject(FormBuilder) fb: FormBuilder,
+    private appStore: Store<ApplicationSession>
+  ) {
     this.accountFormGroup = fb.group({
       accountName: ['', Validators.required],
       sessionId: ['', Validators.required]
@@ -41,7 +46,9 @@ export class StepperComponent implements OnInit {
   }
 
   validate(accountName: string, sessionId: string) {
-    // todo: dispatch validateSession
+    this.appStore.dispatch(new applicationActions.InitSession({
+      accountDetails: { account: accountName, sessionId: sessionId } as ApplicationSessionDetails
+    }));
   }
 
   authorize() {

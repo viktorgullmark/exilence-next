@@ -21,6 +21,7 @@ import { ElectronService } from './core/providers/electron.service';
 import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { metaReducers, reducers } from './store/reducers';
+import { ApplicationEffects } from './store/application/application.effects';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -53,7 +54,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       maxAge: 25, // Retains last 25 states
       logOnly: false // Restrict extension to log-only mode
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([
+      ApplicationEffects
+    ])
   ],
   providers: [ElectronService, ErrorHandler,
     {

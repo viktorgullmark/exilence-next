@@ -8,7 +8,8 @@ export const initialState: ApplicationState = {
     account: undefined,
     league: undefined,
     tradeLeague: undefined,
-    validating: false
+    validating: false,
+    loadingLeagues: false
   }
 };
 
@@ -20,8 +21,7 @@ export function reducer(
 
     case ApplicationActionTypes.InitSession: {
       return {
-        ...state,
-        session: action.payload.session
+        ...state
       };
     }
 
@@ -51,6 +51,36 @@ export function reducer(
         session: {
           ...state.session,
           validating: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.LoadCharLeagues: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.LoadCharLeaguesSuccess: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.LoadCharLeaguesFail: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loadingLeagues: false
         }
       };
     }

@@ -16,7 +16,6 @@ export class LoginPageComponent implements OnInit {
   }
 
   login(event: ApplicationSession) {
-    this.sessionService.createSession(event);
     this.router.navigate(['/auth/net-worth']);
   }
 }

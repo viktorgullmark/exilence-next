@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { of, forkJoin } from 'rxjs';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import * as applicationActions from './application.actions';
 import { ExternalService } from '../../core/providers/external.service';
 import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
@@ -14,14 +14,44 @@ export class ApplicationEffects {
     private externalService: ExternalService
   ) { }
 
-  // todo: finish effect
-  validateSession$ = createEffect(() => this.actions$.pipe(
-    ofType(applicationActions.ApplicationActionTypes.ValidateSession),
-    mergeMap((accountDetails: ApplicationSessionDetails) => of() 
-      .pipe(
-        map(result => new applicationActions.ValidateSessionSuccess({  })),
-        catchError((e) => of(new applicationActions.ValidateSessionFail({ error: e})))
-      ))
-    )
+  initSession$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.InitSession),
+    mergeMap((res: any) =>
+      of([])
+        .pipe(
+          map(x => new applicationActions.LoadCharLeagues({ accountDetails: res.payload.accountDetails }))
+        ))
+  )
   );
+
+  loadCharLeagues$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.LoadCharLeagues),
+    mergeMap((res: any) => forkJoin(
+      of(['league1', 'league2']), // todo: fetch real leagues
+      of(['char1', 'char2']) // todo: fetch real chars
+    ).pipe(
+      map((x) => {
+        return new applicationActions.LoadCharLeaguesSuccess({ accountDetails: res.payload.sessionDetails, leagues: x[0], characters: x[1] })
+      })
+    ))),
+  );
+
+  loadCharLeaguesSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.LoadCharLeaguesSuccess),
+    mergeMap((res: any) =>
+      of(['league1']) // todo: map real leagues
+        .pipe(
+          map((x) => {
+            console.log(x);
+            return new applicationActions.ValidateSession({ accountDetails: res.payload.sessionDetails, leagues: x })
+          })
+        ))
+  )
+  );
+
+  // todo: do validate session
+  // set cookie
+  // if failed, remove cookie
 }
+
+
