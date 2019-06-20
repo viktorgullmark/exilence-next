@@ -1,22 +1,27 @@
-
 import { EntityState } from '@ngrx/entity';
+
+import { NetWorthSettings } from './shared/interfaces/net-worth-settings.interface';
+import { NetWorthStatus } from './shared/interfaces/net-worth-status.interface';
 import { Notification } from './shared/interfaces/notification.interface';
-import { Application } from './shared/interfaces/application.interface';
-import { TabSnapshot } from './shared/interfaces/tab-snapshot.interface';
 import { Session } from './shared/interfaces/session.interface';
-import { Settings } from './shared/interfaces/settings.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
-    tabSnapshotsState: TabSnapshotsState;
     applicationState: ApplicationState;
+    netWorthState: NetWorthState;
 }
 
 export interface NotificationsState extends EntityState<Notification> { }
-export interface TabSnapshotsState extends EntityState<TabSnapshot> { }
 
 export interface ApplicationState {
-    status: Application | null;
     session: Session | null;
-    settings: Settings | null;
 }
+
+export interface NetWorthState {
+    status: NetWorthStatus | null;
+    settings: NetWorthSettings | null;
+}
+
+// export interface State extends AppState {
+//     netWorth: NetWorthState;
+// }

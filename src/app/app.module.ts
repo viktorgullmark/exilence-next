@@ -21,8 +21,6 @@ import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { metaReducers, reducers } from './store/reducers';
 import { EffectsModule } from '@ngrx/effects';
-import { ApplicationEffects } from './store/application/application.effects';
-import { SnapshotService } from './auth/net-worth/providers/snapshot.service';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -54,7 +52,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: false // Restrict extension to log-only mode
-    })
+    }),
+    EffectsModule.forRoot([])
   ],
   providers: [ElectronService, ErrorHandler,
     {

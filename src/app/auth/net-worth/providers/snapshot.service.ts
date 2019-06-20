@@ -3,28 +3,26 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { TabSnapshotsState } from '../../../app.states';
 import { NotificationType } from '../../../shared/enums/notification-type.enum';
-import { Application } from '../../../shared/interfaces/application.interface';
-import { NotificationsState } from './../../../app.states';
+import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface';
+import { NotificationsState, NetWorthState } from './../../../app.states';
 import { Notification } from './../../../shared/interfaces/notification.interface';
-import * as applicationActions from './../../../store/application/application.actions';
-import * as appReducer from './../../../store/application/application.reducer';
+import * as netWorthActions from './../../../store/net-worth/net-worth.actions';
+import * as netWorthReducer from './../../../store/net-worth/net-worth.reducer';
 import * as notificationActions from './../../../store/notification/notification.actions';
 
 @Injectable()
 export class SnapshotService {
 
-  private appState$: Observable<Application>;
+  private netWorthStatus$: Observable<NetWorthStatus>;
 
   constructor(
     private translateService: TranslateService,
-    private tabSnapshotStore: Store<TabSnapshotsState>,
-    private appStore: Store<Application>,
+    private netWorthStore: Store<NetWorthState>,
     private notificationStore: Store<NotificationsState>
   ) {
 
-    this.appState$ = this.appStore.select(appReducer.selectApplicationStatus);
+    this.netWorthStatus$ = this.netWorthStore.select(netWorthReducer.selectNetWorthStatus);
 
     this.checkIfReady();
   }
@@ -68,19 +66,17 @@ export class SnapshotService {
   }
 
   setSnapshotStatus(running: boolean) {
-    this.appStore.dispatch(new applicationActions.UpdateSnapshotStatus({
-      running: running
-    }));
+    // todo: set snapshotting = true
   }
 
   checkIfReady() {
     // check if ready to begin snapshotting
     setInterval(() => {
-      this.appState$.subscribe((res: Application) => {
+      this.netWorthStatus$.subscribe((res: NetWorthStatus) => {
         if (!res.snapshotting) {
           this.snapshot();
         }
       });
-    }, 1000 * 1);
+    }, 1000 * 10);
   }
 }

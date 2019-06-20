@@ -3,13 +3,13 @@ import { ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { AppConfig } from '../../environments/environment';
 import { AppState } from '../app.states';
 import * as notificationReducer from './notification/notification.reducer';
-import * as tabSnapshotReducer from './tab-snapshot/tab-snapshot.reducer';
 import * as applicationReducer from './application/application.reducer';
+import * as netWorthReducer from './net-worth/net-worth.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   notificationsState: notificationReducer.reducer,
   applicationState: applicationReducer.reducer,
-  tabSnapshotsState: tabSnapshotReducer.reducer,
+  netWorthState: netWorthReducer.reducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

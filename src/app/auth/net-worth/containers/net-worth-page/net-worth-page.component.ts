@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { SnapshotService } from '../../providers/snapshot.service';
-import * as applicationActions from './../../../../store/application/application.actions';
-import * as appReducer from './../../../../store/application/application.reducer';
+import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
+import * as netWorthReducer from './../../../../store/net-worth/net-worth.reducer';
 import { Store } from '@ngrx/store';
-import { Application } from '../../../../shared/interfaces/application.interface';
+import { NetWorthStatus } from '../../../../shared/interfaces/net-worth-status.interface';
 import { Observable } from 'rxjs';
+import { NetWorthState } from '../../../../app.states';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -19,13 +20,13 @@ export class NetWorthPageComponent implements OnInit {
 
   constructor(
     private snapshotService: SnapshotService,
-    private store: Store<Application>
+    private netWorthStore: Store<NetWorthState>
   ) {
   }
 
   ngOnInit() {
 
-    this.store.dispatch(new applicationActions.LoadTabs());
+    this.netWorthStore.dispatch(new netWorthActions.LoadTabs());
 
     this.tabGroup.selectedIndexChange.subscribe((res: number) => {
       window.dispatchEvent(new Event('resize'));
@@ -33,7 +34,7 @@ export class NetWorthPageComponent implements OnInit {
   }
 
   tabsChanged(tabs: string[]) {
-    this.store.dispatch(new applicationActions.UpdateTabSelection({
+    this.netWorthStore.dispatch(new netWorthActions.UpdateTabSelection({
       tabs: tabs
     }));
   }

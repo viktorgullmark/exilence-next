@@ -26,9 +26,9 @@ import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-pag
 import { NetWorthRoutingModule } from './net-worth-routing.module';
 import { SnapshotService } from './providers/snapshot.service';
 import { EffectsModule } from '@ngrx/effects';
-import { ApplicationEffects } from '../../store/application/application.effects';
+import { NetWorthEffects } from '../../store/net-worth/net-worth.effects';
 import { StoreModule } from '@ngrx/store';
-import { metaReducers, reducers } from './../../store/reducers';
+import { reducer } from '../../store/net-worth/net-worth.reducer';
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
@@ -45,9 +45,9 @@ import { metaReducers, reducers } from './../../store/reducers';
     MatFormFieldModule,
     MatDatepickerModule,
     NetWorthRoutingModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([
-      ApplicationEffects
+    StoreModule.forFeature('netWorthState', reducer),
+    EffectsModule.forFeature([
+      NetWorthEffects
     ])
   ],
   providers: [
