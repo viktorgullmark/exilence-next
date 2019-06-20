@@ -95,7 +95,7 @@
     "@ngrx/store": "^8.0.1",
     "@ngrx/store-devtools": "^8.0.1",
     "@swimlane/ngx-charts": "^12.0.1",
-    "electron-settings": "^3.2.0",
+    "electron-json-storage": "^4.1.6",
     "guid-typescript": "^1.0.9",
     "moment": "^2.24.0",
     "ngx-pipes": "^2.5.1",

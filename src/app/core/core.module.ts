@@ -14,7 +14,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationSidebarComponent } from './components/notification-sidebar/notification-sidebar.component';
 import { SessionService } from './providers/session.service';
-import { SettingsService } from './providers/settings.service';
+import { StorageService } from './providers/storage.service';
 import { ExternalService } from './providers/external.service';
 import { CookieService } from './providers/cookie.service';
 
@@ -31,7 +31,7 @@ import { CookieService } from './providers/cookie.service';
   ],
   declarations: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
   exports: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
-  providers: [CookieService, SessionService, ExternalService, SettingsService]
+  providers: [CookieService, SessionService, ExternalService, StorageService]
 })
 
 export class CoreModule { }

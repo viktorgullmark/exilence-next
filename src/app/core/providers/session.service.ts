@@ -4,12 +4,12 @@ import { Store } from '@ngrx/store';
 import { Session } from '../../shared/interfaces/session.interface';
 import * as applicationActions from './../../store/application/application.actions';
 import { CookieService } from './cookie.service';
-import { SettingsService } from './settings.service';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class SessionService {
 
-    constructor(private settingsService: SettingsService,
+    constructor(private storageService: StorageService,
         private cookieService: CookieService,
         private appStore: Store<Session>
     ) {
@@ -26,10 +26,10 @@ export class SessionService {
             session: data
         }));
 
-        this.settingsService.setKey('session', data);
+        this.storageService.setKey('session', data);
     }
 
     getSession() {
-        return this.settingsService.get('session');
+        return this.storageService.get('session');
     }
 }
