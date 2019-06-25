@@ -4,7 +4,9 @@
   },
   "ERROR": {
     "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
-    "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie"
+    "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie",
+    "SESSION_NOT_VALID_TITLE": "The session is not valid",
+    "SESSION_NOT_VALID_DESC": "The session could not be validated, please verify that your account and sessionId is correct"
   },
   "INFORMATION": {
     "COOKIE_SET_TITLE": "Created a session cookie",

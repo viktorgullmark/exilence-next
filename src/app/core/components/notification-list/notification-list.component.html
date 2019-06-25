@@ -2,11 +2,11 @@
   <mat-expansion-panel *ngFor="let notification of (allNotifications$ | async) | reverse">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <span class="timestamp">{{notification.timestamp.format('LT')}}</span>{{notification.title}}
+        <span class="timestamp">{{notification.timestamp.format('LT')}}</span>{{notification.title | translate}}
       </mat-panel-title>
       <mat-panel-description>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <p>{{notification.description}}</p>
+    <p>{{notification.description | translate}}</p>
   </mat-expansion-panel>
 </mat-accordion>

@@ -28,7 +28,7 @@ export function reducer(
         }
       };
     }
-    
+
     case ApplicationActionTypes.InitSessionSuccess: {
       return {
         ...state,
@@ -77,6 +77,12 @@ export function reducer(
           validating: false
         }
       };
+    }
+
+    case ApplicationActionTypes.ValidateSessionFail: {
+      return {
+        ...state
+      }
     }
 
 
