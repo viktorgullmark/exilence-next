@@ -1,2 +1,2 @@
-# exilence-2
+# exilence-next
 Modular version of Exilence

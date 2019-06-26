@@ -171,6 +171,9 @@ a {
 /* #endregion */
 
 /* #region Material overrides */
+.mat-snack-bar-container {
+  max-width: 60vw !important;
+}
 /* #endregion */
 
 input:-webkit-autofill,

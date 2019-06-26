@@ -1,5 +1,5 @@
 {
-  "name": "exilence-2",
+  "name": "exilence-next",
   "version": "0.0.1",
   "description": "Modular version of Exilence",
   "author": {
@@ -8,7 +8,7 @@
   },
   "keywords": [
     "exilence",
-    "exilence 2",
+    "exilence next",
     "path of exile",
     "currency",
     "net worth"
