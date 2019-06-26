@@ -3,6 +3,7 @@
     "TITLE": "Exilence Next"
   },
   "ERROR": {
+    "UNAUTHORIZED": "The sessionId or account is incorrect",
     "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
     "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie",
     "SESSION_NOT_VALID_TITLE": "The session is not valid",

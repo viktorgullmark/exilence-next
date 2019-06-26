@@ -1,14 +1,26 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ErrorHandler {
     constructor(
-        public snackbar: MatSnackBar
+        public snackbar: MatSnackBar,
+        private translateService: TranslateService
     ) { }
 
     public handleError(err: any) {
+        switch(err.status) { 
+            case 403: { 
+               err.message = this.translateService.instant('ERROR.UNAUTHORIZED');
+               break; 
+            } 
+
+            default: { 
+               break; 
+            } 
+         } 
+
         this.snackbar.open(err.message, 'close');
-        console.log(err);
     }
 }
