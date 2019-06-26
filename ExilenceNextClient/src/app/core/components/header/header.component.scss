@@ -23,7 +23,7 @@
     .notification-badge {
       position: relative;
       font-size: $font-size;
-      color: #fff;
+      color: $font-color;
       width: 25px;
       height: 18px;
       font-weight: 200;
@@ -33,6 +33,7 @@
       border-radius: 3px;
       &.has-notifications {
         background: $notification-badge-color;
+        color: #000;
       }
     }
   }
