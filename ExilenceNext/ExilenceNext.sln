@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExilenceNextAPI", "ExilenceNextAPI\ExilenceNextAPI.csproj", "{624557C7-1BD6-4B4F-87D2-8E3460441621}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{624557C7-1BD6-4B4F-87D2-8E3460441621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624557C7-1BD6-4B4F-87D2-8E3460441621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624557C7-1BD6-4B4F-87D2-8E3460441621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624557C7-1BD6-4B4F-87D2-8E3460441621}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C485ABE-7AE7-4CF4-B8B7-17DFC0D90E5A}
+	EndGlobalSection
+EndGlobal
