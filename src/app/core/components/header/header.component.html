@@ -3,8 +3,18 @@
     <span class="version">Build {{appVersion}}</span>
   </span>
   <div class="pull--right btn-area">
-    <mat-icon (click)="toggleSidenav()" class="sidenav-toggle" [ngClass]="isToggled ? 'toggled' : ''">
-      keyboard_arrow_left</mat-icon>
+    <div (click)="toggleSidenav()" *ngLet="(notifications$ | async).length as notificationCount"
+      class="notification-badge" [ngClass]="{ 'has-notifications': notificationCount > 0 }">
+      <ng-container *ngIf="notificationCount < 9 && notificationCount > 0">
+        {{notificationCount}}
+      </ng-container>
+      <ng-container *ngIf="notificationCount >= 9">
+        9+
+      </ng-container>
+      <ng-container *ngIf="notificationCount == 0">
+        N/A
+      </ng-container>
+    </div>
     <div class="link-container">
       <a (click)="logout()">
         {{ 'ACCOUNT.LOGOUT' | translate}} </a>

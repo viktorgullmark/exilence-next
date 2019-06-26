@@ -2,7 +2,10 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { version } from '../../../../../package.json';
 import { ElectronService } from '../../providers/electron.service';
 import { Router } from '@angular/router';
-
+import { Store } from '@ngrx/store';
+import { Notification } from '../../../shared/interfaces/notification.interface';
+import { Observable } from 'rxjs';
+import * as notificationReducer from './../../../store/notification/notification.reducer';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -14,12 +17,16 @@ export class HeaderComponent implements OnInit {
   public isMaximized = false;
   public isToggled = false;
 
+  public notifications$: Observable<Notification[]>;
+
   @Output() toggled: EventEmitter<any> = new EventEmitter;
 
   constructor(
     public electronService: ElectronService,
-    private router: Router
+    private router: Router,
+    private notificationStore: Store<Notification>
     ) {
+      this.notifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications);
   }
 
   ngOnInit() {

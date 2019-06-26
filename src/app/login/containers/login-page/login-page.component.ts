@@ -13,7 +13,7 @@ import * as applicationActions from './../../../store/application/application.ac
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private router: Router, private appStore: Store<ApplicationSession>,) { }
+  constructor(private router: Router, private appStore: Store<ApplicationSession>) { }
 
   ngOnInit() {
   }

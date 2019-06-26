@@ -1,58 +1,68 @@
 @import "./../../../../assets/styles/variables";
 
 .mat-toolbar {
-    background: $toolbar-background-color;
-    height: $toolbar-height;
-    -webkit-app-region: drag;
+  background: $toolbar-background-color;
+  height: $toolbar-height;
+  -webkit-app-region: drag;
 
-    .btn-area {
-        -webkit-app-region: no-drag;
-        align-items: center;
-        .link-container {
-            margin-right: 15px;
-            margin-left: 15px;
-            a {
-                color: $primary;
-                font-size: $font-size;
-            }
-        }
-    }
-
-    .mat-icon {
-        width: 15px !important;
-        height: 15px !important;
-
-        cursor: pointer;
-    }
-
-    .material-icons {
-        font-size: 15px;
-    }
-
-    > a, span {
+  .btn-area {
+    -webkit-app-region: no-drag;
+    align-items: center;
+    .link-container {
+      margin-right: 15px;
+      margin-left: 15px;
+      a {
+        color: $primary;
         font-size: $font-size;
-        text-transform: uppercase;
-        
-        &.title {
-            letter-spacing: 6px;
-            color: $primary;
-
-            .version {
-                color: $version-font-color;
-                letter-spacing: 3px;
-            }
-        }
+      }
     }
+
+    .notification-badge {
+      position: relative;
+      font-size: 0.6em;
+      color: #fff;
+      width: 25px;
+      height: 18px;
+      font-weight: 200;
+      text-align: center;
+      line-height: 18px;
+      cursor: pointer;
+      border-radius: 3px;
+      &.has-notifications {
+        background: $notification-badge-color;
+      }
+    }
+  }
+
+  .mat-icon {
+    width: 15px !important;
+    height: 15px !important;
+
+    cursor: pointer;
+  }
+
+  .material-icons {
+    font-size: 15px;
+  }
+
+  > a,
+  span {
+    font-size: $font-size;
+    text-transform: uppercase;
+
+    &.title {
+      letter-spacing: 6px;
+      color: $primary;
+
+      .version {
+        color: $version-font-color;
+        letter-spacing: 3px;
+      }
+    }
+  }
 }
 
-.mat-toolbar-row, .mat-toolbar-single-row {
-    padding: 0 10px;
-}
-
-.sidenav-toggle {
-  transition: all 0.25s 0.25s;
-  transform: rotate(0);
-}
-.toggled {
-    transform: rotate(180deg);
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+  padding: 0 10px;
 }
