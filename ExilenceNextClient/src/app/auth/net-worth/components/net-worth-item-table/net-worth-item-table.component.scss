@@ -1,0 +1,32 @@
+@import "./../../../../../assets/styles/variables";
+
+.item-filter {
+  width: 100%;
+}
+
+.net-worth-table-outer-container {
+  width: calc(100% - #{$ad-banner-right} - #{$main-padding}* 1);
+  .net-worth-table-container {
+    height: calc(#{$net-worth-content-height} - 70px - #{$ad-banner-top} - #{$main-padding});
+    overflow: auto;
+    .net-worth-table {
+      width: 100%;
+
+      td {
+        &.icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px;
+          img {
+            max-height: 40px;
+          }
+        }
+      }
+
+      th {
+        z-index: auto !important;
+      }
+    }
+  }
+}

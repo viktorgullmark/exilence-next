@@ -1,0 +1,8 @@
+@import "./../../../../assets/styles/variables";
+
+.notification-list {
+    .timestamp {
+        color: $secondary-font-color;
+        margin-right: 15px;
+    }
+}

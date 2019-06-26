@@ -1,7 +1,0 @@
-@import "./../../../../../assets/styles/variables";
-
-.chart-container {
-    height: calc(100% - #{$ad-banner-top} - #{$main-padding}*1);
-    width: calc(100% - #{$ad-banner-right} - #{$main-padding}*1);
-    fill: white;
-}
