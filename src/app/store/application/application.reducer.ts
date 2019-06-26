@@ -8,7 +8,9 @@ export const initialState: ApplicationState = {
     account: undefined,
     league: undefined,
     tradeLeague: undefined,
-    loading: false
+    loading: false,
+    leagues: undefined,
+    characters: undefined
   }
 };
 
@@ -24,6 +26,26 @@ export function reducer(
         session: {
           ...state.session,
           loading: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.AddCharacters: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          characters: action.payload.characters
+        }
+      };
+    }
+
+    case ApplicationActionTypes.AddLeagues: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          leagues: action.payload.leagues
         }
       };
     }
@@ -100,4 +122,12 @@ export const getApplicationState = createFeatureSelector<ApplicationState>('appl
 
 export const selectApplicationSession = createSelector(getApplicationState,
   (state: ApplicationState) => state.session
+);
+
+export const selectApplicationSessionLeagues = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session.leagues
+);
+
+export const selectApplicationSessionCharacters = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session.characters
 );

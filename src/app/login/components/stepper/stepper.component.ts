@@ -7,6 +7,9 @@ import { League } from '../../../shared/interfaces/league.interface';
 import { Store } from '@ngrx/store';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 import { ApplicationEffects } from '../../../store/application/application.effects';
+import { Observable } from 'rxjs';
+import { Character } from '../../../shared/interfaces/character.interface';
+import * as applicationReducer from './../../../store/application/application.reducer';
 
 @Component({
   selector: 'app-stepper',
@@ -18,9 +21,8 @@ export class StepperComponent implements OnInit {
   public leagueFormGroup: FormGroup;
   public charFormGroup: FormGroup;
 
-  // todo: remove mock data
-  public leagues: Array<League> = [{ id: 'Exilence Legion (PL4896)', description: '' } as League];
-  public tradeLeagues: Array<League> = [{ id: 'Exilence Legion (PL4896)', description: '' } as League];
+  public leagues$: Observable<string[]>;
+  public tradeLeagues$: Observable<string[]>;
 
   @ViewChild('stepper', undefined) stepper: MatStepper;
   @Output() formData: EventEmitter<ApplicationSession> = new EventEmitter;
@@ -31,7 +33,10 @@ export class StepperComponent implements OnInit {
     private applicationEffects: ApplicationEffects
   ) {
 
-    applicationEffects.validateSessionSuccess$
+    this.leagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
+    this.tradeLeagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
+
+    this.applicationEffects.validateSessionSuccess$
         .subscribe(res => this.stepper.next());
 
     this.accountFormGroup = fb.group({
