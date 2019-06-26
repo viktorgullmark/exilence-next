@@ -38,7 +38,7 @@
       </mat-form-field>
       <div class="btn-grp pull--right">
         <button mat-raised-button class="btn-back" matStepperPrevious>{{'ACTIONS.BACK' | translate}}</button>
-        <button mat-raised-button color="primary" [disabled]="!leagueFormGroup.valid" (click)="authorize()">{{'ACTIONS.CONTINUE' | translate}}</button>
+        <button mat-raised-button color="primary" [disabled]="!leagueFormGroup.valid || !(validated$ | async)" (click)="authorize()">{{'ACTIONS.CONTINUE' | translate}}</button>
       </div>
       <div class="my--15" *ngIf="loading$ | async">
         <mat-progress-bar color="primary" mode="indeterminate">
