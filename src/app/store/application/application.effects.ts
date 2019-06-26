@@ -9,6 +9,7 @@ import { ApplicationSessionDetails } from '../../shared/interfaces/application-s
 import { CookieService } from '../../core/providers/cookie.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
 import { Notification } from './../../shared/interfaces/notification.interface';
+import { AccountHelper } from '../../shared/helpers/account.helper';
 @Injectable()
 export class ApplicationEffects {
 
@@ -31,9 +32,10 @@ export class ApplicationEffects {
   initSessionSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSessionSuccess),
     mergeMap((res: any) =>
-      of(['Standard']) // todo: map real leagues
+      of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
-          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] }))
+          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] })),
+          catchError(() => of(new applicationActions.ValidateSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' })))
         ))
   )
   );
