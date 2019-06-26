@@ -8,8 +8,7 @@ export const initialState: ApplicationState = {
     account: undefined,
     league: undefined,
     tradeLeague: undefined,
-    validating: false,
-    loadingLeagues: false
+    loading: false
   }
 };
 
@@ -24,7 +23,7 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          loadingLeagues: true
+          loading: true
         }
       };
     }
@@ -39,8 +38,7 @@ export function reducer(
       return {
         ...state,
         session: {
-          ...state.session,
-          loadingLeagues: false
+          ...state.session
         }
       };
     }
@@ -50,7 +48,7 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          loadingLeagues: false
+          loading: false
         }
       };
     }
@@ -60,7 +58,7 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          validating: true
+          loading: true
         }
       };
     }
@@ -70,7 +68,7 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          validating: false
+          loading: false
         }
       };
     }
@@ -80,7 +78,7 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          validating: false
+          loading: false
         }
       };
     }

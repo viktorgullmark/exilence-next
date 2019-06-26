@@ -33,32 +33,6 @@ export class CookieService {
         } as Electron.Details;
 
         this.electronService.remote.session.defaultSession.cookies.set(cookie, (error) => {
-            this.translateService.get([
-                'ERROR.COOKIE_NOT_SET_TITLE',
-                'ERROR.COOKIE_NOT_SET_DESC',
-                'INFORMATION.COOKIE_SET_TITLE',
-                'INFORMATION.COOKIE_SET_DESC'
-            ]).subscribe(translations => {
-                // todo: set notification from action instead
-
-                // if (error) {
-                //     this.notificationStore.dispatch(new notificationActions.AddNotification({
-                //         notification: {
-                //             title: translations['ERROR.COOKIE_NOT_SET_TITLE'],
-                //             description: translations['ERROR.COOKIE_NOT_SET_DESC'],
-                //             type: NotificationType.Error
-                //         } as Notification
-                //     }));
-                // } else {
-                //     this.notificationStore.dispatch(new notificationActions.AddNotification({
-                //         notification: {
-                //             title: translations['INFORMATION.COOKIE_SET_TITLE'],
-                //             description: translations['INFORMATION.COOKIE_SET_DESC'],
-                //             type: NotificationType.Information
-                //         } as Notification
-                //     }));
-                // }
-            });
         });
     }
 }

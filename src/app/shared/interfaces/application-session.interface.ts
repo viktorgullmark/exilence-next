@@ -3,6 +3,5 @@ export interface ApplicationSession {
     sessionId: string;
     league: string;
     tradeLeague: string;
-    validating: boolean;
-    loadingLeagues: boolean;
+    loading: boolean;
 }

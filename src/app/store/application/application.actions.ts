@@ -2,6 +2,8 @@ import { Action } from '@ngrx/store';
 
 import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
 import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
+import { Character } from '../../shared/interfaces/character.interface';
+import { League } from '../../shared/interfaces/league.interface';
 
 export enum ApplicationActionTypes {
   InitSession = '[Application] Init Session',
@@ -21,12 +23,12 @@ export class InitSession implements Action {
 
 export class InitSessionSuccess implements Action {
   readonly type = ApplicationActionTypes.InitSessionSuccess;
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[], characters: string[] }) { }
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[], characters: Character[] }) { }
 }
 
 export class InitSessionFail implements Action {
   readonly type = ApplicationActionTypes.InitSessionFail;
-  constructor(public payload: { error: string }) { }
+  constructor(public payload: { title: string, message: string }) { }
 }
 
 export class ValidateSession implements Action {

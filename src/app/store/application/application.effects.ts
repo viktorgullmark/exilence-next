@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of, forkJoin, throwError } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import * as applicationActions from './application.actions';
-import * as notificationActions from './../notification/notification.actions';
-import { ExternalService } from '../../core/providers/external.service';
-import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+
 import { CookieService } from '../../core/providers/cookie.service';
+import { ExternalService } from '../../core/providers/external.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
-import { Notification } from './../../shared/interfaces/notification.interface';
 import { AccountHelper } from '../../shared/helpers/account.helper';
+import { League } from '../../shared/interfaces/league.interface';
+import { Notification } from './../../shared/interfaces/notification.interface';
+import * as notificationActions from './../notification/notification.actions';
+import * as applicationActions from './application.actions';
+
 @Injectable()
 export class ApplicationEffects {
 
@@ -22,20 +24,42 @@ export class ApplicationEffects {
   initSession$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSession),
     mergeMap((res: any) => forkJoin(
-      this.externalService.getLeagues(),
-      this.externalService.getCharacters(res.payload.accountDetails.accountName)
+      this.externalService.getLeagues().pipe(map((leagues: League[]) => leagues.map(league => league.id))),
+      this.externalService.getCharacters(res.payload.accountDetails.account),
     ).pipe(
-      map(requests => new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] }))
+      map(requests => {
+        if (requests[0].length === 0) { 
+          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' }) }
+        else if (requests[1].length === 0) { 
+          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' }) }
+        else { 
+          // save leagues and chars to state
+          return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] }) }
+      }),
+      catchError(() => of(new applicationActions.InitSessionFail({ title: 'ERROR.INIT_SESSION_FAIL_TITLE', message: 'ERROR.INIT_SESSION_FAIL_DESC' })))
     ))),
   );
+
+  initSessionFail$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.InitSessionFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Error
+        } as Notification
+    }))
+  )
+  );
+
 
   initSessionSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSessionSuccess),
     mergeMap((res: any) =>
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
-          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] })),
-          catchError(() => of(new applicationActions.ValidateSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' })))
+          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] }))
         ))
   )
   );
