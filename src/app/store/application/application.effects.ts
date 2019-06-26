@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, throwError } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import * as applicationActions from './application.actions';
 import * as notificationActions from './../notification/notification.actions';
@@ -21,23 +21,19 @@ export class ApplicationEffects {
   initSession$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSession),
     mergeMap((res: any) => forkJoin(
-      of(['league1', 'league2']), // todo: fetch real leagues
-      of(['char1', 'char2']) // todo: fetch real chars
+      this.externalService.getLeagues(),
+      this.externalService.getCharacters(res.payload.accountDetails.accountName)
     ).pipe(
-      map((requests) => {
-        return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] })
-      })
+      map(requests => new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] }))
     ))),
   );
 
   initSessionSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSessionSuccess),
     mergeMap((res: any) =>
-      of(['league1']) // todo: map real leagues
+      of(['Standard']) // todo: map real leagues
         .pipe(
-          map((x) => {
-            return new applicationActions.ValidateSession({ accountDetails: res.payload.accountDetails, leagues: x })
-          })
+          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] }))
         ))
   )
   );
@@ -45,15 +41,10 @@ export class ApplicationEffects {
   validateSession$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.ValidateSession),
     mergeMap((res: any) =>
-      of(false) // validate session and return true/false
+      this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
-          map((validated) => {
-            if (validated) {
-              return new applicationActions.SetCookie({ sessionId: res.payload.accountDetails.sessionId });
-            } else {
-              return new applicationActions.ValidateSessionFail({ title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' });
-            }
-          })
+          map(() => new applicationActions.ValidateSessionSuccess()),
+          catchError(() => of(new applicationActions.ValidateSessionFail({ title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' })))
         ))),
   );
 
@@ -70,14 +61,26 @@ export class ApplicationEffects {
   )
   );
 
-  setCookie$ = createEffect(() => this.actions$.pipe(
-    ofType(applicationActions.ApplicationActionTypes.SetCookie),
-    mergeMap((sessionId: any) =>
-      of(this.cookieService.setSessionCookie(sessionId))
+  validateSessionSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.ValidateSessionSuccess),
+    map(() => new notificationActions.AddNotification({
+      notification:
+        {
+          title: 'SUCCESS.SESSION_VALID_TITLE',
+          description: 'SUCCESS.SESSION_VALID_DESC',
+          type: NotificationType.Information
+        } as Notification
+    }))
+  )
+  );
+
+
+  setTrialCookie$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.SetTrialCookie),
+    mergeMap((res: any) =>
+      of(this.cookieService.setSessionCookie(res.payload.accountDetails.sessionId))
         .pipe(
-          map((x) => {
-            return new applicationActions.ValidateSessionSuccess()
-          })
+          map(() => new applicationActions.ValidateSession({ accountDetails: res.payload.accountDetails, league: res.payload.league }))
         ))),
   );
 }

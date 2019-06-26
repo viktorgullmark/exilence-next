@@ -6,6 +6,7 @@ import * as applicationActions from './../../../store/application/application.ac
 import { League } from '../../../shared/interfaces/league.interface';
 import { Store } from '@ngrx/store';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
+import { ApplicationEffects } from '../../../store/application/application.effects';
 
 @Component({
   selector: 'app-stepper',
@@ -26,8 +27,13 @@ export class StepperComponent implements OnInit {
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
-    private appStore: Store<ApplicationSession>
+    private appStore: Store<ApplicationSession>,
+    private applicationEffects: ApplicationEffects
   ) {
+
+    applicationEffects.validateSessionSuccess$
+        .subscribe(res => this.stepper.next());
+
     this.accountFormGroup = fb.group({
       accountName: ['', Validators.required],
       sessionId: ['', Validators.required]

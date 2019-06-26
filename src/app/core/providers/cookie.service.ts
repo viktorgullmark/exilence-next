@@ -18,6 +18,9 @@ export class CookieService {
     ) { }
 
     setSessionCookie(sessionId: string) {
+
+        this.electronService.remote.session.defaultSession.cookies.remove('http://www.pathofexile.com', 'POESESSID', (error) => {});
+
         const cookie = {
             url: 'http://www.pathofexile.com',
             name: 'POESESSID',
@@ -36,23 +39,25 @@ export class CookieService {
                 'INFORMATION.COOKIE_SET_TITLE',
                 'INFORMATION.COOKIE_SET_DESC'
             ]).subscribe(translations => {
-                if (error) {
-                    this.notificationStore.dispatch(new notificationActions.AddNotification({
-                        notification: {
-                            title: translations['ERROR.COOKIE_NOT_SET_TITLE'],
-                            description: translations['ERROR.COOKIE_NOT_SET_DESC'],
-                            type: NotificationType.Error
-                        } as Notification
-                    }));
-                } else {
-                    this.notificationStore.dispatch(new notificationActions.AddNotification({
-                        notification: {
-                            title: translations['INFORMATION.COOKIE_SET_TITLE'],
-                            description: translations['INFORMATION.COOKIE_SET_DESC'],
-                            type: NotificationType.Information
-                        } as Notification
-                    }));
-                }
+                // todo: set notification from action instead
+
+                // if (error) {
+                //     this.notificationStore.dispatch(new notificationActions.AddNotification({
+                //         notification: {
+                //             title: translations['ERROR.COOKIE_NOT_SET_TITLE'],
+                //             description: translations['ERROR.COOKIE_NOT_SET_DESC'],
+                //             type: NotificationType.Error
+                //         } as Notification
+                //     }));
+                // } else {
+                //     this.notificationStore.dispatch(new notificationActions.AddNotification({
+                //         notification: {
+                //             title: translations['INFORMATION.COOKIE_SET_TITLE'],
+                //             description: translations['INFORMATION.COOKIE_SET_DESC'],
+                //             type: NotificationType.Information
+                //         } as Notification
+                //     }));
+                // }
             });
         });
     }

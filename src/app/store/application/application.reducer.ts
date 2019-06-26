@@ -29,6 +29,12 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.SetTrialCookie: {
+      return {
+        ...state
+      };
+    }
+
     case ApplicationActionTypes.InitSessionSuccess: {
       return {
         ...state,

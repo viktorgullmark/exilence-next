@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
-import { Stash } from '../../shared/interfaces/stash.interface';
-import { Observable } from 'rxjs';
+
 import { RatelimitHelper } from '../../shared/helpers/ratelimit.helper';
+import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
+import { Stash } from '../../shared/interfaces/stash.interface';
 
 @Injectable()
 export class ExternalService {
@@ -26,6 +28,23 @@ export class ExternalService {
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     );
   }
+
+  getLeagues(type: string = 'main', compact: number = 1) {
+    const parameters = `?type=${type}&compact=${compact}`;
+
+    // todo: fetch leagues
+
+    return of(['league1', 'league2']);
+  }
+
+  getCharacters(account: string) {
+    const parameters = `?accountName=${account}`;
+
+    // todo: fetch chars
+
+    return of(['char1']);
+  }
+
   /* #endregion */
 
   updateRatelimit(requestCount: number, milliseconds: number) {

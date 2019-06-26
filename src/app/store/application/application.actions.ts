@@ -10,7 +10,7 @@ export enum ApplicationActionTypes {
   ValidateSession = '[Application] Validate Session',
   ValidateSessionSuccess = '[Application] Validate Session Success',
   ValidateSessionFail = '[Application] Validate Session Fail',
-  SetCookie = '[Application] Set Cookie',
+  SetTrialCookie = '[Application] Set Trial Cookie',
 }
 
 export class InitSession implements Action {
@@ -32,7 +32,7 @@ export class InitSessionFail implements Action {
 export class ValidateSession implements Action {
   readonly type = ApplicationActionTypes.ValidateSession;
 
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, leagues: string[] }) {}
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) {}
 }
 
 export class ValidateSessionSuccess implements Action {
@@ -45,12 +45,12 @@ export class ValidateSessionFail implements Action {
   constructor(public payload: { title: string, message: string }) { }
 }
 
-export class SetCookie implements Action {
-  readonly type = ApplicationActionTypes.SetCookie;
-  constructor(public payload: { sessionId: string }) { }
+export class SetTrialCookie implements Action {
+  readonly type = ApplicationActionTypes.SetTrialCookie;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
 }
 
 export type ApplicationActions =
 InitSession | InitSessionSuccess | InitSessionFail |
 ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
-SetCookie;
+SetTrialCookie;
