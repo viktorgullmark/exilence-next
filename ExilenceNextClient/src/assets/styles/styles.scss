@@ -19,7 +19,7 @@ html, body {
 .container {
   padding: $container-padding;
   top: $toolbar-height;
-  background: $background-overlay, url("./../img/main-bg.jpg");
+  background: $background-overlay, url("./../img/legion-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   > *:not(.login-section, .ad-container) {
