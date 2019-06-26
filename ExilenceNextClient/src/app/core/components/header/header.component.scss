@@ -8,9 +8,12 @@
   .btn-area {
     -webkit-app-region: no-drag;
     align-items: center;
+    max-height: 100%;
     .link-container {
       margin-right: 15px;
       margin-left: 15px;
+      display: flex;
+      align-items: center;
       a {
         color: $primary;
         font-size: $font-size;
@@ -19,7 +22,7 @@
 
     .notification-badge {
       position: relative;
-      font-size: 0.6em;
+      font-size: $font-size;
       color: #fff;
       width: 25px;
       height: 18px;
