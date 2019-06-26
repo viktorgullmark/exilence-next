@@ -9,6 +9,7 @@ export const initialState: ApplicationState = {
     league: undefined,
     tradeLeague: undefined,
     loading: false,
+    validated: false,
     leagues: undefined,
     characters: undefined
   }
@@ -46,6 +47,26 @@ export function reducer(
         session: {
           ...state.session,
           leagues: action.payload.leagues
+        }
+      };
+    }
+
+    case ApplicationActionTypes.SetLeague: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          league: action.payload.league
+        }
+      };
+    }
+
+    case ApplicationActionTypes.SetTradeLeague: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tradeLeague: action.payload.tradeLeague
         }
       };
     }
@@ -90,7 +111,8 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          loading: false
+          loading: false,
+          validated: true
         }
       };
     }
@@ -100,17 +122,11 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
-          loading: false
+          loading: false,
+          validated: false
         }
-      };
-    }
-
-    case ApplicationActionTypes.ValidateSessionFail: {
-      return {
-        ...state
       }
     }
-
 
     default: {
       return state;
@@ -130,4 +146,12 @@ export const selectApplicationSessionLeagues = createSelector(getApplicationStat
 
 export const selectApplicationSessionCharacters = createSelector(getApplicationState,
   (state: ApplicationState) => state.session.characters
+);
+
+export const selectApplicationSessionLoading = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session.loading
+);
+
+export const selectApplicationSessionValidated = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session.validated
 );

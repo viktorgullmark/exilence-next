@@ -1,14 +1,12 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material';
-import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
-import * as applicationActions from './../../../store/application/application.actions';
-import { League } from '../../../shared/interfaces/league.interface';
 import { Store } from '@ngrx/store';
-import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
-import { ApplicationEffects } from '../../../store/application/application.effects';
 import { Observable } from 'rxjs';
-import { Character } from '../../../shared/interfaces/character.interface';
+
+import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
+import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
+import { ApplicationEffects } from '../../../store/application/application.effects';
 import * as applicationReducer from './../../../store/application/application.reducer';
 
 @Component({
@@ -23,9 +21,12 @@ export class StepperComponent implements OnInit {
 
   public leagues$: Observable<string[]>;
   public tradeLeagues$: Observable<string[]>;
+  public loading$: Observable<Boolean>;
+  public validated$: Observable<Boolean>;
 
   @ViewChild('stepper', undefined) stepper: MatStepper;
   @Output() formData: EventEmitter<ApplicationSession> = new EventEmitter;
+  @Output() validateSession: EventEmitter<ApplicationSessionDetails> = new EventEmitter;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -35,9 +36,11 @@ export class StepperComponent implements OnInit {
 
     this.leagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
     this.tradeLeagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
+    this.loading$ = this.appStore.select(applicationReducer.selectApplicationSessionLoading);
+    this.validated$ = this.appStore.select(applicationReducer.selectApplicationSessionValidated);
 
     this.applicationEffects.validateSessionSuccess$
-        .subscribe(res => this.stepper.next());
+        .subscribe(() => this.stepper.next());
 
     this.accountFormGroup = fb.group({
       accountName: ['', Validators.required],
@@ -57,9 +60,7 @@ export class StepperComponent implements OnInit {
   }
 
   validate(accountName: string, sessionId: string) {
-    this.appStore.dispatch(new applicationActions.InitSession({
-      accountDetails: { account: accountName, sessionId: sessionId } as ApplicationSessionDetails
-    }));
+    this.validateSession.emit({ account: accountName, sessionId: sessionId } as ApplicationSessionDetails);
   }
 
   authorize() {

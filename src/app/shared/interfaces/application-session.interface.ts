@@ -5,6 +5,7 @@ export interface ApplicationSession {
     sessionId: string;
     league: string;
     tradeLeague: string;
+    validated: boolean;
     loading: boolean;
     leagues: string[];
     characters: Character[];

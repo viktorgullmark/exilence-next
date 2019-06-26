@@ -13,6 +13,8 @@ export enum ApplicationActionTypes {
   ValidateSessionSuccess = '[Application] Validate Session Success',
   ValidateSessionFail = '[Application] Validate Session Fail',
   SetTrialCookie = '[Application] Set Trial Cookie',
+  SetLeague = '[Application] Set League',
+  SetTradeLeague = '[Application] Set Trade League',
   AddCharacters = '[Application] Add Characters',
   AddLeagues = '[Application] Add Leagues'
 }
@@ -33,6 +35,18 @@ export class AddLeagues implements Action {
   readonly type = ApplicationActionTypes.AddLeagues;
 
   constructor(public payload: { leagues: string[] }) {}
+}
+
+export class SetLeague implements Action {
+  readonly type = ApplicationActionTypes.SetLeague;
+
+  constructor(public payload: { league: string }) {}
+}
+
+export class SetTradeLeague implements Action {
+  readonly type = ApplicationActionTypes.SetTradeLeague;
+
+  constructor(public payload: { tradeLeague: string }) {}
 }
 
 export class InitSessionSuccess implements Action {
@@ -68,6 +82,7 @@ export class SetTrialCookie implements Action {
 
 export type ApplicationActions =
 AddCharacters | AddLeagues |
+SetLeague | SetTradeLeague |
 InitSession | InitSessionSuccess | InitSessionFail |
 ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
 SetTrialCookie;

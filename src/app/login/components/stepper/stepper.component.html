@@ -4,14 +4,20 @@
       <ng-template matStepLabel>{{'ACCOUNT.TITLE' | translate}}</ng-template>
       <p class="mat-body-1">{{'ACCOUNT.DESC' | translate}}</p>
       <mat-form-field>
-        <input matInput #accountName formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput #sessionId formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}"
+        <input matInput #accountName formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}"
           required>
       </mat-form-field>
+      <mat-form-field>
+        <input matInput #sessionId formControlName="sessionId" type="password"
+          placeholder="{{'ACCOUNT.SESSIONID' | translate}}" required>
+      </mat-form-field>
+      <div class="my--15" *ngIf="loading$ | async">
+        <mat-progress-bar color="primary" mode="indeterminate">
+        </mat-progress-bar>
+      </div>
       <div class="btn-grp pull--right">
-        <button mat-raised-button color="primary" (click)="validate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
+        <button mat-raised-button color="primary"
+          (click)="validate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
       </div>
     </form>
   </mat-step>
@@ -34,8 +40,10 @@
         <button mat-raised-button class="btn-back" matStepperPrevious>{{'ACTIONS.BACK' | translate}}</button>
         <button mat-raised-button color="primary" (click)="authorize()">{{'ACTIONS.CONTINUE' | translate}}</button>
       </div>
-      <mat-progress-bar color="primary" mode="indeterminate">
-      </mat-progress-bar>
+      <div class="my--15" *ngIf="loading$ | async">
+        <mat-progress-bar color="primary" mode="indeterminate">
+        </mat-progress-bar>
+      </div>
     </form>
   </mat-step>
 </mat-vertical-stepper>
