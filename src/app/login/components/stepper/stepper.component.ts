@@ -8,6 +8,7 @@ import { ApplicationSessionDetails } from '../../../shared/interfaces/applicatio
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
 import { ApplicationEffects } from '../../../store/application/application.effects';
 import * as applicationReducer from './../../../store/application/application.reducer';
+import * as applicationActions from './../../../store/application/application.actions';
 
 @Component({
   selector: 'app-stepper',
@@ -39,9 +40,6 @@ export class StepperComponent implements OnInit {
     this.loading$ = this.appStore.select(applicationReducer.selectApplicationSessionLoading);
     this.validated$ = this.appStore.select(applicationReducer.selectApplicationSessionValidated);
 
-    this.applicationEffects.validateSessionSuccess$
-        .subscribe(() => this.stepper.next());
-
     this.accountFormGroup = fb.group({
       accountName: ['', Validators.required],
       sessionId: ['', Validators.required]
@@ -49,6 +47,18 @@ export class StepperComponent implements OnInit {
     this.leagueFormGroup = fb.group({
       leagueName: ['', Validators.required],
       tradeLeagueName: ['', Validators.required]
+    });
+
+    this.applicationEffects.validateSessionSuccess$
+      .subscribe(() => {
+        this.stepper.next();
+      });
+
+    this.leagues$.subscribe(leagues => {
+      if (leagues !== undefined) {
+        this.leagueFormGroup.controls['leagueName'].setValue(leagues[0]);
+        this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
+      }
     });
   }
 
