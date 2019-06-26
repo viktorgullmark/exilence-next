@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material';
+import { LetDirective } from './directives/nglet.directive';
 
 @NgModule({
+  declarations: [LetDirective],
   imports: [
     CommonModule,
     TranslateModule,
@@ -12,7 +14,8 @@ import { MatProgressBarModule } from '@angular/material';
   exports: [
     CommonModule,
     TranslateModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    LetDirective
   ]
 })
 
