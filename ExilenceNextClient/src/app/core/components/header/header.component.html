@@ -3,7 +3,7 @@
     <span class="version">Build {{appVersion}}</span>
   </span>
   <div class="pull--right btn-area">
-    <div (click)="toggleSidenav()" *ngLet="(notifications$ | async).length as notificationCount"
+    <div (click)="toggleSidenav()" *ngLet="(newNotifications$ | async).length as notificationCount"
       class="notification-badge" [ngClass]="{ 'has-notifications': notificationCount > 0 }">
       <ng-container *ngIf="notificationCount < 9 && notificationCount > 0">
         {{notificationCount}}

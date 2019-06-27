@@ -8,15 +8,16 @@ import {
   MatSidenavModule,
   MatToolbarModule,
 } from '@angular/material';
-import {NgPipesModule} from 'ngx-pipes';
+import { NgPipesModule } from 'ngx-pipes';
+
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationSidebarComponent } from './components/notification-sidebar/notification-sidebar.component';
+import { CookieService } from './providers/cookie.service';
+import { ExternalService } from './providers/external.service';
 import { SessionService } from './providers/session.service';
 import { StorageService } from './providers/storage.service';
-import { ExternalService } from './providers/external.service';
-import { CookieService } from './providers/cookie.service';
 
 @NgModule({
   imports: [SharedModule,

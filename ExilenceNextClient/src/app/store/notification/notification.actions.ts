@@ -1,12 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import { Notification } from '../../shared/interfaces/notification.interface';
+import { Update } from '@ngrx/entity';
 
 export enum NotificationActionTypes {
   LoadNotifications = '[Notification] Load Notifications',
   AddNotification = '[Notification] Add Notification',
   DeleteNotification = '[Notification] Delete Notification',
-  ClearNotifications = '[Notification] Clear Notifications'
+  MarkManyAsRead = '[Notification] Mark many as read'
 }
 
 export class LoadNotifications implements Action {
@@ -27,12 +28,14 @@ export class DeleteNotification implements Action {
   constructor(public payload: { id: string }) {}
 }
 
-export class ClearNotifications implements Action {
-  readonly type = NotificationActionTypes.ClearNotifications;
+export class MarkManyAsRead implements Action {
+  readonly type = NotificationActionTypes.MarkManyAsRead;
+
+  constructor(public payload: { notifications: Update<Notification>[] }) {}
 }
 
 export type NotificationActions =
  LoadNotifications
  | AddNotification
  | DeleteNotification
- | ClearNotifications;
+ | MarkManyAsRead;

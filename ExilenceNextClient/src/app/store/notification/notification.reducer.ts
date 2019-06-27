@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as fromAdapter from './notification.adapter';
 import { NotificationActions, NotificationActionTypes } from './notification.actions';
 import { NotificationsState } from '../../app.states';
+import { Notification } from './../../shared/interfaces/notification.interface';
 import { Guid } from 'guid-typescript';
 
 export const initialState: NotificationsState = fromAdapter.adapter.getInitialState({
@@ -16,8 +17,9 @@ export function reducer(
 ): NotificationsState {
   switch (action.type) {
     case NotificationActionTypes.AddNotification: {
-      action.payload.notification.id = Guid.create();
+      action.payload.notification.id = Guid.create().toString();
       action.payload.notification.timestamp = moment();
+      action.payload.notification.read = false;
       return fromAdapter.adapter.addOne(action.payload.notification, state);
     }
 
@@ -29,8 +31,8 @@ export function reducer(
       return fromAdapter.adapter.addAll(action.payload.notifications, state);
     }
 
-    case NotificationActionTypes.ClearNotifications: {
-      return fromAdapter.adapter.removeAll(state);
+    case NotificationActionTypes.MarkManyAsRead: {
+      return fromAdapter.adapter.updateMany(action.payload.notifications, state);
     }
 
     default: {
@@ -41,3 +43,9 @@ export function reducer(
 
 export const getNotificationsState = createFeatureSelector<NotificationsState>('notificationsState');
 export const selectAllNotifications = createSelector(getNotificationsState, fromAdapter.selectAllNotifications);
+
+export const selectAllNewNotifications = createSelector(
+  selectAllNotifications,
+  (notifications: Notification[]) => notifications.filter(n => !n.read)
+);
+

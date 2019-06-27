@@ -13,11 +13,13 @@ import * as notificationReducer from './../../../store/notification/notification
 })
 export class NotificationListComponent implements OnInit {
   public allNotifications$: Observable<Notification[]>;
+  public allNewNotifications$: Observable<Notification[]>;
 
   constructor(
     private notificationStore: Store<NotificationsState>
   ) {
-      this.allNotifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications);
+    this.allNotifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications);
+    this.allNewNotifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications);
   }
 
   ngOnInit() {
