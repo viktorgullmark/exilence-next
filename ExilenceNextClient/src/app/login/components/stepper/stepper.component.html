@@ -17,7 +17,7 @@
       </div>
       <div class="btn-grp pull--right">
         <button mat-raised-button color="primary" [disabled]="!accountFormGroup.valid"
-          (click)="validate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
+          (click)="doValidate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
       </div>
     </form>
   </mat-step>

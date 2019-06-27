@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
+import { Observable } from 'rxjs';
+import * as applicationReducer from './../../../store/application/application.reducer';
 import * as applicationActions from './../../../store/application/application.actions';
 
 @Component({
@@ -13,13 +15,22 @@ import * as applicationActions from './../../../store/application/application.ac
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private router: Router, private appStore: Store<ApplicationSession>) { }
+  public leagues$: Observable<string[]>;
+  public tradeLeagues$: Observable<string[]>;
+  public loading$: Observable<Boolean>;
+  public validated$: Observable<Boolean>;
+
+  constructor(private router: Router, private appStore: Store<ApplicationSession>) {
+    this.leagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
+    this.tradeLeagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues);
+    this.loading$ = this.appStore.select(applicationReducer.selectApplicationSessionLoading);
+    this.validated$ = this.appStore.select(applicationReducer.selectApplicationSessionValidated);
+  }
 
   ngOnInit() {
   }
 
-  login(event: ApplicationSession) {
-
+  doLogin(event: ApplicationSession) {
     this.appStore.dispatch(new applicationActions.SetLeague({
       league: event.league
     }));
@@ -31,7 +42,7 @@ export class LoginPageComponent implements OnInit {
     this.router.navigate(['/auth/net-worth']);
   }
 
-  validate(event: ApplicationSessionDetails) {
+  doValidate(event: ApplicationSessionDetails) {
     this.appStore.dispatch(new applicationActions.InitSession({
       accountDetails: event
     }));
