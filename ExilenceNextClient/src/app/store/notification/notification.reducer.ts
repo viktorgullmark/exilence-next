@@ -5,6 +5,7 @@ import { NotificationActions, NotificationActionTypes } from './notification.act
 import { NotificationsState } from '../../app.states';
 import { Notification } from './../../shared/interfaces/notification.interface';
 import { Guid } from 'guid-typescript';
+import { NotificationType } from '../../shared/enums/notification-type.enum';
 
 export const initialState: NotificationsState = fromAdapter.adapter.getInitialState({
   ids: [],
@@ -44,8 +45,8 @@ export function reducer(
 export const getNotificationsState = createFeatureSelector<NotificationsState>('notificationsState');
 export const selectAllNotifications = createSelector(getNotificationsState, fromAdapter.selectAllNotifications);
 
-export const selectAllNewNotifications = createSelector(
+export const selectAllNewErrorNotifications = createSelector(
   selectAllNotifications,
-  (notifications: Notification[]) => notifications.filter(n => !n.read)
+  (notifications: Notification[]) => notifications.filter(n => !n.read && n.type === NotificationType.Error)
 );
 

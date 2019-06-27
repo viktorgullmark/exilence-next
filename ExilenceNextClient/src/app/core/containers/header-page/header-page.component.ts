@@ -31,7 +31,7 @@ export class HeaderPageComponent implements OnInit {
     private router: Router,
     private notificationStore: Store<Notification>
   ) {
-    this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewNotifications);
+    this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewErrorNotifications);
   }
 
   ngOnInit() {

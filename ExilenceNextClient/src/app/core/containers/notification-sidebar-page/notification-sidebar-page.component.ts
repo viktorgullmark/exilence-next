@@ -5,7 +5,7 @@ import { NotificationsState } from '../../../app.states';
 import { Observable } from 'rxjs';
 import * as notificationReducer from './../../../store/notification/notification.reducer';
 import { Notification } from './../../../shared/interfaces/notification.interface';
-import { filter, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { filter, switchMap, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notification-sidebar-page',
