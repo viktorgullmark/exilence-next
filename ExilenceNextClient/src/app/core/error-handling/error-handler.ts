@@ -16,6 +16,11 @@ export class ErrorHandler {
                 break;
             }
 
+            case 404: {
+                err.message = this.translateService.instant('ERROR.NOT_FOUND');
+                break;
+            }
+
             default: {
                 break;
             }
