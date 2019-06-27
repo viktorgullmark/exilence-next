@@ -1,8 +1,15 @@
 @import "./../../../../assets/styles/variables";
 
+.resize-handle-container {
+  width: 100%;
+  height: $resize-handle-container-height;
+  -webkit-app-region: no-drag;
+  background-color: $toolbar-background-color;
+}
+
 .mat-toolbar {
   background: $toolbar-background-color;
-  height: $toolbar-height;
+  height: calc(#{$toolbar-height} - #{$resize-handle-container-height});
   -webkit-app-region: drag;
 
   .btn-area {
@@ -68,5 +75,5 @@
 
 .mat-toolbar-row,
 .mat-toolbar-single-row {
-  padding: 0 10px;
+  padding: 0 10px $resize-handle-container-height 10px;
 }
