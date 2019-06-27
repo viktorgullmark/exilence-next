@@ -178,6 +178,11 @@ a {
 .mat-drawer-backdrop.mat-drawer-shown {
   background-color: rgba(0, 0, 0, 0.6) !important;
 }
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled=true]).cdk-program-focused {
+  background: none !important;
+}
+
 /* #endregion */
 
 input:-webkit-autofill,
