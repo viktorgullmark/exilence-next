@@ -10,16 +10,16 @@ export class ErrorHandler {
     ) { }
 
     public handleError(err: any) {
-        switch(err.status) { 
-            case 403: { 
-               err.message = this.translateService.instant('ERROR.UNAUTHORIZED');
-               break; 
-            } 
+        switch (err.status) {
+            case 403: {
+                err.message = this.translateService.instant('ERROR.UNAUTHORIZED');
+                break;
+            }
 
-            default: { 
-               break; 
-            } 
-         } 
+            default: {
+                break;
+            }
+        }
 
         this.snackbar.open(err.message, 'close');
     }
