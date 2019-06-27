@@ -22,31 +22,31 @@ export enum ApplicationActionTypes {
 export class InitSession implements Action {
   readonly type = ApplicationActionTypes.InitSession;
 
-  constructor(public payload: { accountDetails: ApplicationSessionDetails }) {}
+  constructor(public payload: { accountDetails: ApplicationSessionDetails }) { }
 }
 
 export class AddCharacters implements Action {
   readonly type = ApplicationActionTypes.AddCharacters;
 
-  constructor(public payload: { characters: Character[] }) {}
+  constructor(public payload: { characters: Character[] }) { }
 }
 
 export class AddLeagues implements Action {
   readonly type = ApplicationActionTypes.AddLeagues;
 
-  constructor(public payload: { leagues: string[] }) {}
+  constructor(public payload: { leagues: string[] }) { }
 }
 
 export class SetLeague implements Action {
   readonly type = ApplicationActionTypes.SetLeague;
 
-  constructor(public payload: { league: string }) {}
+  constructor(public payload: { league: string }) { }
 }
 
 export class SetTradeLeague implements Action {
   readonly type = ApplicationActionTypes.SetTradeLeague;
 
-  constructor(public payload: { tradeLeague: string }) {}
+  constructor(public payload: { tradeLeague: string }) { }
 }
 
 export class InitSessionSuccess implements Action {
@@ -62,12 +62,12 @@ export class InitSessionFail implements Action {
 export class ValidateSession implements Action {
   readonly type = ApplicationActionTypes.ValidateSession;
 
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) {}
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
 }
 
 export class ValidateSessionSuccess implements Action {
   readonly type = ApplicationActionTypes.ValidateSessionSuccess;
-  constructor() { }
+  constructor(public payload: { accountDetails: ApplicationSessionDetails }) { }
 }
 
 export class ValidateSessionFail implements Action {
@@ -81,8 +81,8 @@ export class SetTrialCookie implements Action {
 }
 
 export type ApplicationActions =
-AddCharacters | AddLeagues |
-SetLeague | SetTradeLeague |
-InitSession | InitSessionSuccess | InitSessionFail |
-ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
-SetTrialCookie;
+  AddCharacters | AddLeagues |
+  SetLeague | SetTradeLeague |
+  InitSession | InitSessionSuccess | InitSessionFail |
+  ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
+  SetTrialCookie;

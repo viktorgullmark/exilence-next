@@ -73,7 +73,7 @@ export class ApplicationEffects {
     mergeMap((res: any) =>
       this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
-          map(() => new applicationActions.ValidateSessionSuccess()),
+          map(() => new applicationActions.ValidateSessionSuccess({ accountDetails: res.payload.accountDetails })),
           catchError(() => of(new applicationActions.ValidateSessionFail({ title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' })))
         ))),
   );

@@ -111,6 +111,8 @@ export function reducer(
         ...state,
         session: {
           ...state.session,
+          account: action.payload.accountDetails.account,
+          sessionId: action.payload.accountDetails.sessionId,
           loading: false,
           validated: true
         }
