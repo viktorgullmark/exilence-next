@@ -11,9 +11,9 @@ import {
 import { NgPipesModule } from 'ngx-pipes';
 
 import { SharedModule } from '../shared/shared.module';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderPageComponent } from './containers/header-page/header-page.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
-import { NotificationSidebarComponent } from './components/notification-sidebar/notification-sidebar.component';
+import { NotificationSidebarPageComponent } from './containers/notification-sidebar-page/notification-sidebar-page.component';
 import { CookieService } from './providers/cookie.service';
 import { ExternalService } from './providers/external.service';
 import { SessionService } from './providers/session.service';
@@ -30,8 +30,8 @@ import { StorageService } from './providers/storage.service';
     MatInputModule,
     NgPipesModule
   ],
-  declarations: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
-  exports: [HeaderComponent, NotificationSidebarComponent, NotificationListComponent],
+  declarations: [HeaderPageComponent, NotificationSidebarPageComponent, NotificationListComponent],
+  exports: [HeaderPageComponent, NotificationSidebarPageComponent, NotificationListComponent],
   providers: [CookieService, SessionService, ExternalService, StorageService]
 })
 

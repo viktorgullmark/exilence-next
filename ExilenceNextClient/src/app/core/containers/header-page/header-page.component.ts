@@ -8,15 +8,15 @@ import { take } from 'rxjs/operators';
 import { version } from '../../../../../package.json';
 import { Notification } from '../../../shared/interfaces/notification.interface';
 import { ElectronService } from '../../providers/electron.service';
-import * as notificationActions from './../../../store/notification/notification.actions';
-import * as notificationReducer from './../../../store/notification/notification.reducer';
+import * as notificationActions from '../../../store/notification/notification.actions';
+import * as notificationReducer from '../../../store/notification/notification.reducer';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'app-header-page',
+  templateUrl: './header-page.component.html',
+  styleUrls: ['./header-page.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderPageComponent implements OnInit {
 
   public appVersion: string = version;
   public isMaximized = false;

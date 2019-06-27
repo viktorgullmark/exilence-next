@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 import { ElectronService } from './core/providers/electron.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
-import { NotificationSidebarComponent } from './core/components/notification-sidebar/notification-sidebar.component';
+import { NotificationSidebarPageComponent } from './core/containers/notification-sidebar-page/notification-sidebar-page.component';
 
 @Component({
   selector: 'app-root',
