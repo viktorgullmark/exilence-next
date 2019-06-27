@@ -24,7 +24,7 @@ export class StepperComponent implements OnInit {
   @Input() validated$: Observable<Boolean>;
 
   @ViewChild('stepper', undefined) stepper: MatStepper;
-  @Output() formData: EventEmitter<ApplicationSession> = new EventEmitter;
+  @Output() login: EventEmitter<ApplicationSession> = new EventEmitter;
   @Output() validate: EventEmitter<ApplicationSessionDetails> = new EventEmitter;
 
   constructor(
@@ -72,7 +72,7 @@ export class StepperComponent implements OnInit {
       tradeLeague: this.leagueFormGroup.controls.tradeLeagueName.value
     } as ApplicationSession;
 
-    this.formData.emit(session);
+    this.login.emit(session);
   }
 
 }

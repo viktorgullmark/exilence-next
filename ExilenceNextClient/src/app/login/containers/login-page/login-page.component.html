@@ -1,7 +1,7 @@
 <div class="container login-content pos--center">
   <div class="login-section">
     <app-stepper 
-     (formData)="doLogin($event)"
+     (login)="doLogin($event)"
      (validate)="doValidate($event)"
      [leagues$]="leagues$"
      [tradeLeagues$]="tradeLeagues$"
