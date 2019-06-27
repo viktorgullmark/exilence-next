@@ -22,7 +22,6 @@ export class HeaderPageComponent implements OnInit {
   public isMaximized = false;
   public isToggled = false;
 
-  public notifications$: Observable<Notification[]>;
   public newNotifications$: Observable<Notification[]>;
 
   @Output() toggled: EventEmitter<any> = new EventEmitter;
@@ -32,7 +31,6 @@ export class HeaderPageComponent implements OnInit {
     private router: Router,
     private notificationStore: Store<Notification>
   ) {
-    this.notifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications);
     this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewNotifications);
   }
 
