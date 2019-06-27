@@ -64,7 +64,7 @@ export class StepperComponent implements OnInit {
     this.validate.emit({ account: accountName, sessionId: sessionId } as ApplicationSessionDetails);
   }
 
-  authorize() {
+  doLogin() {
     const session = {
       account: this.accountFormGroup.controls.accountName.value,
       sessionId: this.accountFormGroup.controls.sessionId.value,
