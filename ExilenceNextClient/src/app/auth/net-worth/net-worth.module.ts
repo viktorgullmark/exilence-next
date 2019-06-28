@@ -29,6 +29,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { NetWorthEffects } from '../../store/net-worth/net-worth.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from '../../store/net-worth/net-worth.reducer';
+import { GoogleChartsModule } from 'angular-google-charts';
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
@@ -37,6 +38,7 @@ import { reducer } from '../../store/net-worth/net-worth.reducer';
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,
+    GoogleChartsModule.forRoot(),
     MatIconModule,
     MatInputModule,
     MatTableModule,

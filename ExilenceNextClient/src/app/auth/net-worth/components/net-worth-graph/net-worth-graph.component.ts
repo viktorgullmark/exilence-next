@@ -9,34 +9,33 @@ import { ChartSeries, ChartSeriesEntry } from '../../../../shared/interfaces/cha
 })
 export class NetWorthGraphComponent implements OnInit {
   // todo: remove mock data
-  public data = [{
-    name: 'stashtab1', series: [{
-      name: moment(new Date()).subtract(1, 'days').toDate(),
-      value: 0.5
-    }, {
-      name: moment().toDate(),
-      value: 1.5
-    }, {
-      name: moment(new Date()).add(1, 'days').toDate(),
-      value: 5
-    }]
-  },
-  {
-    name: 'stashtab2', series: [{
-      name: moment(new Date()).subtract(1, 'days').toDate(),
-      value: 2
-    }, {
-      name: moment().toDate(),
-      value: 5.2
-    }, {
-      name: moment(new Date()).add(1, 'days').toDate(),
-      value: 8
-    }]
-  }];
 
-  public colorScheme = {
-    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
+  public data = [
+    ['London', 8136000],
+    ['New York', 8538000],
+    ['Paris', 2244000],
+    ['Berlin', 3470000],
+    ['Kairo', 19500000],
+  ];
+
+  options = {
+    colors: ['#e91e63', '#fff'],
+    is3D: true,
+    backgroundColor: {
+      fill: 'none',
+      stroke: '#fff'
+    },
+    hAxis: {
+      textStyle: { color: '#fff' }
+    },
+    vAxis: {
+      textStyle: { color: '#fff' }
+    },
+    legend: {
+      textStyle: { color: '#fff' }
+    }
   };
+  // moment(new Date()).add(1, 'days').toDate()   #e91e63
 
   constructor() {
   }

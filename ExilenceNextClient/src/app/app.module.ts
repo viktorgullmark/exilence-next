@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,8 +21,8 @@ import { RequestInterceptor } from './core/error-handling/error-interceptor';
 import { ElectronService } from './core/providers/electron.service';
 import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
-import { metaReducers, reducers } from './store/reducers';
 import { ApplicationEffects } from './store/application/application.effects';
+import { metaReducers, reducers } from './store/reducers';
 
 // NG Translate
 // AoT requires an exported function for factories
