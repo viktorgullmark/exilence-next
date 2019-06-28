@@ -29,18 +29,22 @@ export class NetWorthGraphComponent implements OnInit {
       stroke: '#fff'
     },
     hAxis: {
-      textStyle: { color: '#fff' }
+      textStyle: { color: '#fff' },
+      gridlines: { color: '#303030' },
+      minorGridlines: { color: '#303030' }
     },
     vAxis: {
+      textStyle: { color: '#fff' },
+      gridlines: { color: '#303030' },
+      minorGridlines: { color: '#303030' }
+    },
+    legend: {
       textStyle: { color: '#fff' }
     },
-    // legend: {
-    //   textStyle: { color: '#fff' }
-    // },
+    chartArea: { width: '80%', height: '80%' },
     curveType: 'function',
-    series: [{'color': '#D9544C'}],
+    series: [{ 'color': '#e91e63' }],
     intervals: { style: 'bars', color: '#fff' },
-    legend: 'none',
   };
   // moment(new Date()).add(1, 'days').toDate()   #e91e63
 
