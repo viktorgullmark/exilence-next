@@ -38,10 +38,8 @@ export class NetWorthGraphComponent implements OnInit {
       gridlines: { color: '#303030' },
       minorGridlines: { color: '#303030' }
     },
-    legend: {
-      textStyle: { color: '#fff' }
-    },
-    chartArea: { width: '80%', height: '80%' },
+    legend: 'none',
+    chartArea: { width: '90%', height: '85%' },
     curveType: 'function',
     series: [{ 'color': '#e91e63' }],
     intervals: { style: 'bars', color: '#fff' },
