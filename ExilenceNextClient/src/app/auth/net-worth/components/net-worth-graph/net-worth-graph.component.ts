@@ -11,11 +11,14 @@ export class NetWorthGraphComponent implements OnInit {
   // todo: remove mock data
 
   public data = [
-    ['London', 8136000],
-    ['New York', 8538000],
-    ['Paris', 2244000],
-    ['Berlin', 3470000],
-    ['Kairo', 19500000],
+    [1, 100, 90, 110, 85, 96, 104, 120],
+    [2, 120, 95, 130, 90, 113, 124, 140],
+    [3, 130, 105, 140, 100, 117, 133, 139],
+    [4, 90, 85, 95, 85, 88, 92, 95],
+    [5, 70, 74, 63, 67, 69, 70, 72],
+    [6, 30, 39, 22, 21, 28, 34, 40],
+    [7, 80, 77, 83, 70, 77, 85, 90],
+    [8, 100, 90, 110, 85, 95, 102, 110]
   ];
 
   options = {
@@ -31,9 +34,13 @@ export class NetWorthGraphComponent implements OnInit {
     vAxis: {
       textStyle: { color: '#fff' }
     },
-    legend: {
-      textStyle: { color: '#fff' }
-    }
+    // legend: {
+    //   textStyle: { color: '#fff' }
+    // },
+    curveType: 'function',
+    series: [{'color': '#D9544C'}],
+    intervals: { style: 'bars', color: '#fff' },
+    legend: 'none',
   };
   // moment(new Date()).add(1, 'days').toDate()   #e91e63
 

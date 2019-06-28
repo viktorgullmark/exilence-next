@@ -1,7 +1,13 @@
 <div class="chart-container pull--left float--left">
   <google-chart 
     [data]="data" 
-    [columnNames]="['City', 'Inhabitants']"
+    [columnNames]="['1', '2', 
+    {id:'i0', type:'number', role:'interval'}, 
+    {id:'i1', type:'number', role:'interval'}, 
+    {id:'i2', type:'number', role:'interval'}, 
+    {id:'i2', type:'number', role:'interval'}, 
+    {id:'i2', type:'number', role:'interval'}, 
+    {id:'i2', type:'number', role:'interval'}]"
     [options]="options"
     dynamicResize="true" 
     type="LineChart">
