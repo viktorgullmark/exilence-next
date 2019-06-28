@@ -9,7 +9,7 @@ export const initialState: NetWorthState = {
     tabsLoading: false
   },
   settings: {
-    selectedTabs: undefined,
+    selectedTabs: [],
     tabs: []
   }
 };
@@ -75,4 +75,8 @@ export const selectNetWorthStatus = createSelector(getNetWorthState,
 
 export const selectNetWorthSettings = createSelector(getNetWorthState,
   (state: NetWorthState) => state.settings
+);
+
+export const selectNetWorthTabs = createSelector(getNetWorthState,
+  (state: NetWorthState) => state.settings.selectedTabs
 );

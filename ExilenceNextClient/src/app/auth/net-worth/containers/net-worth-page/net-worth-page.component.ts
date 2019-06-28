@@ -8,6 +8,7 @@ import { NetWorthStatus } from '../../../../shared/interfaces/net-worth-status.i
 import { Observable } from 'rxjs';
 import { NetWorthState } from '../../../../app.states';
 import * as moment from 'moment';
+import { Tab } from '../../../../shared/interfaces/stash.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -16,7 +17,7 @@ import * as moment from 'moment';
 })
 export class NetWorthPageComponent implements OnInit {
   public selectedIndex = 0;
-  
+
   // todo: remove mock data
   public data = [
     [moment(new Date()).add(1, 'hours').toDate(), 1],
@@ -36,6 +37,14 @@ export class NetWorthPageComponent implements OnInit {
     private snapshotService: SnapshotService,
     private netWorthStore: Store<NetWorthState>
   ) {
+    this.netWorthStore.select(netWorthReducer.selectNetWorthTabs).subscribe((ids: string[]) => {
+      for (let i = 0; i < ids.length; i++) {
+        this.data.push(
+          [moment(new Date()).add(i, 'hours').toDate(), i],
+        )
+      }
+      window.dispatchEvent(new Event('resize'));
+    });
   }
 
   ngOnInit() {

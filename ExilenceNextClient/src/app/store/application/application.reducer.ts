@@ -10,9 +10,9 @@ export const initialState: ApplicationState = {
     tradeLeague: undefined,
     loading: false,
     validated: false,
-    leagues: undefined,
-    characters: undefined,
-    tabs: undefined
+    leagues: [],
+    characters: [],
+    tabs: []
   }
 };
 
