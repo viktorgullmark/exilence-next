@@ -11,7 +11,8 @@ export const initialState: ApplicationState = {
     loading: false,
     validated: false,
     leagues: undefined,
-    characters: undefined
+    characters: undefined,
+    tabs: undefined
   }
 };
 
@@ -47,6 +48,16 @@ export function reducer(
         session: {
           ...state.session,
           leagues: action.payload.leagues
+        }
+      };
+    }
+
+    case ApplicationActionTypes.AddTabs: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tabs: action.payload.tabs
         }
       };
     }
@@ -148,6 +159,10 @@ export const selectApplicationSessionLeagues = createSelector(getApplicationStat
 
 export const selectApplicationSessionCharacters = createSelector(getApplicationState,
   (state: ApplicationState) => state.session.characters
+);
+
+export const selectApplicationSessionTabs = createSelector(getApplicationState,
+  (state: ApplicationState) => state.session.tabs
 );
 
 export const selectApplicationSessionLoading = createSelector(getApplicationState,

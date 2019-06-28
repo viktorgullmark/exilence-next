@@ -4,6 +4,7 @@ import { ApplicationSession } from '../../shared/interfaces/application-session.
 import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
 import { Character } from '../../shared/interfaces/character.interface';
 import { League } from '../../shared/interfaces/league.interface';
+import { Tab } from '../../shared/interfaces/stash.interface';
 
 export enum ApplicationActionTypes {
   InitSession = '[Application] Init Session',
@@ -16,7 +17,8 @@ export enum ApplicationActionTypes {
   SetLeague = '[Application] Set League',
   SetTradeLeague = '[Application] Set Trade League',
   AddCharacters = '[Application] Add Characters',
-  AddLeagues = '[Application] Add Leagues'
+  AddLeagues = '[Application] Add Leagues',
+  AddTabs = '[Application] Add Tabs'
 }
 
 export class InitSession implements Action {
@@ -35,6 +37,12 @@ export class AddLeagues implements Action {
   readonly type = ApplicationActionTypes.AddLeagues;
 
   constructor(public payload: { leagues: string[] }) { }
+}
+
+export class AddTabs implements Action {
+  readonly type = ApplicationActionTypes.AddTabs;
+
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class SetLeague implements Action {
@@ -81,7 +89,7 @@ export class SetTrialCookie implements Action {
 }
 
 export type ApplicationActions =
-  AddCharacters | AddLeagues |
+  AddCharacters | AddLeagues | AddTabs |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail |
   ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
