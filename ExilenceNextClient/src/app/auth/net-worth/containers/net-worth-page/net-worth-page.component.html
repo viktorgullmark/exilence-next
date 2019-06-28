@@ -16,7 +16,7 @@
     <div class="ad-container">
         <img src="https://via.placeholder.com/970x90" />
     </div>
-    <app-net-worth-graph [hidden]="selectedIndex != 0"></app-net-worth-graph>
+    <app-net-worth-graph [data]="data" [hidden]="selectedIndex != 0"></app-net-worth-graph>
     <app-net-worth-item-table [hidden]="selectedIndex != 1"></app-net-worth-item-table>
 </div>
 <app-net-worth-bar (tabSelectionChanged)="tabsChanged($event)"></app-net-worth-bar>
