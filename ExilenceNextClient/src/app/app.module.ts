@@ -23,6 +23,7 @@ import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -49,6 +50,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
+    }),
+    StorageModule.forRoot({
+      IDBNoWrap: true
     }),
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({

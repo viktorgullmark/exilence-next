@@ -16,6 +16,7 @@ export enum ApplicationActionTypes {
   SetTrialCookie = '[Application] Set Trial Cookie',
   SetLeague = '[Application] Set League',
   SetTradeLeague = '[Application] Set Trade League',
+  SetSession = '[Application] Set Session',
   AddCharacters = '[Application] Add Characters',
   AddLeagues = '[Application] Add Leagues',
   AddTabs = '[Application] Add Tabs'
@@ -25,6 +26,12 @@ export class InitSession implements Action {
   readonly type = ApplicationActionTypes.InitSession;
 
   constructor(public payload: { accountDetails: ApplicationSessionDetails }) { }
+}
+
+export class SetSession implements Action {
+  readonly type = ApplicationActionTypes.SetSession;
+
+  constructor(public payload: { session: ApplicationSession }) { }
 }
 
 export class AddCharacters implements Action {
@@ -91,6 +98,6 @@ export class SetTrialCookie implements Action {
 export type ApplicationActions =
   AddCharacters | AddLeagues | AddTabs |
   SetLeague | SetTradeLeague |
-  InitSession | InitSessionSuccess | InitSessionFail |
+  InitSession | InitSessionSuccess | InitSessionFail | SetSession |
   ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
   SetTrialCookie;

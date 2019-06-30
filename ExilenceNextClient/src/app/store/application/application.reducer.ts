@@ -32,6 +32,13 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.SetSession: {
+      return {
+        ...state,
+        session: action.payload.session
+      };
+    }
+
     case ApplicationActionTypes.AddCharacters: {
       return {
         ...state,

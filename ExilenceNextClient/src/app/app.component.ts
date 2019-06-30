@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { ElectronService } from './core/providers/electron.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
 import { NotificationSidebarPageComponent } from './core/containers/notification-sidebar-page/notification-sidebar-page.component';
+import { StorageService } from './core/providers/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { NotificationSidebarPageComponent } from './core/containers/notification
 })
 export class AppComponent {
   constructor(public electronService: ElectronService,
+    private storageService: StorageService,
     private translate: TranslateService) {
 
     translate.setDefaultLang('en');

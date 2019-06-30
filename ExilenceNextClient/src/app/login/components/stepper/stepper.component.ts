@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
 import { ApplicationEffects } from '../../../store/application/application.effects';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
   selector: 'app-stepper',
@@ -29,7 +30,8 @@ export class StepperComponent implements OnInit {
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
-    private applicationEffects: ApplicationEffects
+    private applicationEffects: ApplicationEffects,
+    private storageMap: StorageMap
   ) {
 
     this.accountFormGroup = fb.group({
@@ -54,6 +56,13 @@ export class StepperComponent implements OnInit {
         this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
       }
     });
+
+    // this.storageMap.get('session.accountDetails').subscribe((data: ApplicationSessionDetails) => {
+    //   if (data !== undefined) {
+    //     this.accountFormGroup.controls.accountName.setValue(data.account);
+    //     this.accountFormGroup.controls.sessionId.setValue(data.sessionId);
+    //   }
+    // });
   }
 
   mapTradeLeague(event: any) {

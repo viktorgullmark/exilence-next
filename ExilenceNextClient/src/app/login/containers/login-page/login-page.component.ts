@@ -22,7 +22,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   public loading$: Observable<Boolean>;
   public validated$: Observable<Boolean>;
 
-  constructor(private router: Router, private appStore: Store<ApplicationSession>) {
+  constructor(
+    private router: Router,
+    private appStore: Store<ApplicationSession>
+  ) {
     this.leagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues).takeUntil(this.destroy$);
     this.tradeLeagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues).takeUntil(this.destroy$);
     this.loading$ = this.appStore.select(applicationReducer.selectApplicationSessionLoading).takeUntil(this.destroy$);

@@ -14,6 +14,7 @@ import * as applicationActions from './application.actions';
 import { Store } from '@ngrx/store';
 import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
 import { Stash } from '../../shared/interfaces/stash.interface';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class ApplicationEffects {
@@ -22,7 +23,8 @@ export class ApplicationEffects {
     private actions$: Actions,
     private externalService: ExternalService,
     private cookieService: CookieService,
-    private appStore: Store<ApplicationSession>
+    private appStore: Store<ApplicationSession>,
+    private storageMap: StorageMap
   ) { }
 
   initSession$ = createEffect(() => this.actions$.pipe(
@@ -67,7 +69,13 @@ export class ApplicationEffects {
     mergeMap((res: any) =>
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
-          map(leagues => new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] }))
+          map(leagues => {
+            this.storageMap.set('session.accountDetails', res.payload.accountDetails).subscribe();
+            this.storageMap.set('session.leagues', res.payload.leagues).subscribe();
+            this.storageMap.set('session.characters', res.payload.characters).subscribe();
+            this.storageMap.set('session.characterLeagues', leagues).subscribe();
+            return new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] });
+          })
         ))
   )
   );
