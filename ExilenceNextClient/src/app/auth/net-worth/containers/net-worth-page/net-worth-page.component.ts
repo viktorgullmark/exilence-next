@@ -220,7 +220,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
       window.dispatchEvent(new Event('resize'));
     });
-    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs);
+    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs).takeUntil(this.destroy$);
   }
 
   ngOnInit() {
