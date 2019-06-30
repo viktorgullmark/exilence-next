@@ -9,6 +9,8 @@ import * as moment from 'moment';
 export class NetWorthGraphComponent implements OnInit {
   @Input() data: Array<any[]>;
 
+  @Input() columnNames: string;
+
   options = {
     colors: ['#e91e63', '#fff'],
     is3D: true,
