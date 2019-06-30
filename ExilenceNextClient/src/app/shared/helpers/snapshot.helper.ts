@@ -1,5 +1,7 @@
+import { TabSnapshotChartData } from "../interfaces/tab-snapshot-chart-data.interface";
+
 export class SnapshotHelper {
-    public static formatSnapshotsForChart(tabIds: string[], snapshots: any[]) {
+    public static formatSnapshotsForChart(tabIds: string[], snapshots: any[]): TabSnapshotChartData {
         const data = [];
         const columnNames = ['Time'];
 
@@ -19,6 +21,6 @@ export class SnapshotHelper {
             }
         }
 
-        return { data, columnNames };
+        return { data, columnNames } as TabSnapshotChartData;
     }
 }

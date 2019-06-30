@@ -10,6 +10,9 @@ import { NetWorthState } from '../../../../app.states';
 import * as moment from 'moment';
 import { Tab } from '../../../../shared/interfaces/stash.interface';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
+import { TabSnapshotChartData } from '../../../../shared/interfaces/tab-snapshot-chart-data.interface';
+import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
+import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -18,10 +21,10 @@ import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
 })
 export class NetWorthPageComponent implements OnInit {
   public selectedIndex = 0;
-  public chartData = { data: [], columnNames: []};
+  public chartData = { data: [], columnNames: []} as TabSnapshotChartData;
 
   // todo: remove mock data
-  public snapshots = [
+  public snapshots: Snapshot[] = [
     {
       timestamp: moment(new Date()).add(1, 'hours').toDate(),
       tabSnapshots: [
@@ -45,7 +48,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(2, 'hours').toDate(),
@@ -70,7 +73,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(3, 'hours').toDate(),
@@ -95,7 +98,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(4, 'hours').toDate(),
@@ -120,7 +123,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(5, 'hours').toDate(),
@@ -145,7 +148,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(6, 'hours').toDate(),
@@ -170,7 +173,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     },
     {
       timestamp: moment(new Date()).add(7, 'hours').toDate(),
@@ -195,7 +198,7 @@ export class NetWorthPageComponent implements OnInit {
           tabId: '2ba40d8eebc43a1ca034282ea451b5422d236fe2b826cc0f63f749007b69ad40',
           value: 4
         },
-      ]
+      ] as TabSnapshot[]
     }
   ];
 
