@@ -19,4 +19,4 @@
     <app-net-worth-graph [chartData]="chartData" [hidden]="selectedIndex != 0 || chartData.data.length == 0"></app-net-worth-graph>
     <app-net-worth-item-table [hidden]="selectedIndex != 1"></app-net-worth-item-table>
 </div>
-<app-net-worth-bar (tabSelectionChanged)="tabsChanged($event)"></app-net-worth-bar>
+<app-net-worth-bar [stashtabList$]="stashtabList$" (tabSelectionChanged)="tabsChanged($event)"></app-net-worth-bar>

@@ -1,25 +1,33 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import 'rxjs/add/operator/takeUntil';
+
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
-import { SnapshotService } from '../../providers/snapshot.service';
-import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
-import * as netWorthReducer from './../../../../store/net-worth/net-worth.reducer';
 import { Store } from '@ngrx/store';
-import { NetWorthStatus } from '../../../../shared/interfaces/net-worth-status.interface';
-import { Observable } from 'rxjs';
-import { NetWorthState } from '../../../../app.states';
 import * as moment from 'moment';
-import { Tab } from '../../../../shared/interfaces/stash.interface';
+import { Subject, Observable } from 'rxjs';
+
+import { NetWorthState } from '../../../../app.states';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
+import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { TabSnapshotChartData } from '../../../../shared/interfaces/tab-snapshot-chart-data.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
+import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
+import * as netWorthReducer from './../../../../store/net-worth/net-worth.reducer';
+import { Tab } from '../../../../shared/interfaces/stash.interface';
+import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
+import * as applicationActions from '../../../../store/application/application.actions';
+import * as applicationReducer from '../../../../store/application/application.reducer';
 
 @Component({
   selector: 'app-net-worth-page',
   templateUrl: './net-worth-page.component.html',
   styleUrls: ['./net-worth-page.component.scss']
 })
-export class NetWorthPageComponent implements OnInit {
+export class NetWorthPageComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  
+  public stashtabList$: Observable<Tab[]>;
+
   public selectedIndex = 0;
   public chartData = { data: [], columnNames: []} as TabSnapshotChartData;
 
@@ -205,18 +213,20 @@ export class NetWorthPageComponent implements OnInit {
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
   constructor(
-    private netWorthStore: Store<NetWorthState>
+    private netWorthStore: Store<NetWorthState>,
+    private appStore: Store<ApplicationSession>
   ) {
-    this.netWorthStore.select(netWorthReducer.selectNetWorthTabs).subscribe((ids: string[]) => {
+    this.netWorthStore.select(netWorthReducer.selectNetWorthTabs).takeUntil(this.destroy$).subscribe((ids: string[]) => {
       this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
       window.dispatchEvent(new Event('resize'));
     });
+    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs);
   }
 
   ngOnInit() {
     this.netWorthStore.dispatch(new netWorthActions.LoadTabs());
 
-    this.tabGroup.selectedIndexChange.subscribe((res: number) => {
+    this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
       window.dispatchEvent(new Event('resize'));
     });
   }
@@ -225,5 +235,10 @@ export class NetWorthPageComponent implements OnInit {
     this.netWorthStore.dispatch(new netWorthActions.UpdateTabSelection({
       tabs: tabs
     }));
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

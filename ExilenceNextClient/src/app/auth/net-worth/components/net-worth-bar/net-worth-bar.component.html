@@ -1,5 +1,5 @@
 <div class="net-worth-bar">
   <div class="net-worth-bar-content">
-    <app-net-worth-toolbar (tabSelectionChanged)="tabsChanged($event)"></app-net-worth-toolbar>
+    <app-net-worth-toolbar [stashtabList$]="stashtabList$" (tabSelectionChanged)="tabsChanged($event)"></app-net-worth-toolbar>
   </div>
 </div>

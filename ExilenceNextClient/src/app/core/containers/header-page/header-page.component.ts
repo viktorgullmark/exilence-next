@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Update } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { version } from '../../../../../package.json';
@@ -10,13 +10,15 @@ import { Notification } from '../../../shared/interfaces/notification.interface'
 import { ElectronService } from '../../providers/electron.service';
 import * as notificationActions from '../../../store/notification/notification.actions';
 import * as notificationReducer from '../../../store/notification/notification.reducer';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
   selector: 'app-header-page',
   templateUrl: './header-page.component.html',
   styleUrls: ['./header-page.component.scss']
 })
-export class HeaderPageComponent implements OnInit {
+export class HeaderPageComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   public appVersion: string = version;
   public isMaximized = false;
@@ -31,7 +33,7 @@ export class HeaderPageComponent implements OnInit {
     private router: Router,
     private notificationStore: Store<Notification>
   ) {
-    this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewErrorNotifications);
+    this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewErrorNotifications).takeUntil(this.destroy$);
   }
 
   ngOnInit() {
@@ -75,5 +77,10 @@ export class HeaderPageComponent implements OnInit {
         this.notificationStore.dispatch(new notificationActions.MarkManyAsRead({ notifications: updates }));
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

@@ -1,24 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { NotificationsState } from '../../../app.states';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import * as notificationReducer from './../../../store/notification/notification.reducer';
 import { Notification } from './../../../shared/interfaces/notification.interface';
 import { filter, switchMap, distinctUntilChanged, map } from 'rxjs/operators';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
   selector: 'app-notification-sidebar-page',
   templateUrl: './notification-sidebar-page.component.html',
   styleUrls: ['./notification-sidebar-page.component.scss']
 })
-export class NotificationSidebarPageComponent implements OnInit {
+export class NotificationSidebarPageComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   public notifications$: Observable<Notification[]>;
 
   @ViewChild('sidenav', undefined) sidenav: MatSidenav;
 
   constructor(private notificationStore: Store<NotificationsState>) {
-    this.notifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications).pipe(
+    this.notifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications).takeUntil(this.destroy$).pipe(
       // only update notifications when the count changes
       distinctUntilChanged((prev, curr) => prev.length === curr.length)
     );
@@ -29,5 +32,10 @@ export class NotificationSidebarPageComponent implements OnInit {
 
   toggle() {
     this.sidenav.toggle();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

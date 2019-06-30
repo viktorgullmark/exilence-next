@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { MatSelectChange } from '@angular/material';
@@ -18,13 +18,13 @@ import * as applicationReducer from '../../../../store/application/application.r
 export class NetWorthToolbarComponent implements OnInit {
   public startDate = new FormControl(moment());
   public endDate = new FormControl(moment());
-  public stashtabList$: Observable<Tab[]>;
   public stashtabs = new FormControl();
 
+  @Input() stashtabList$: Observable<Tab[]>;
   @Output() tabSelectionChanged: EventEmitter<string[]> = new EventEmitter;
 
-  constructor(private appStore: Store<ApplicationSession>) { 
-    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs);
+  constructor() { 
+    
   }
 
   ngOnInit() {
