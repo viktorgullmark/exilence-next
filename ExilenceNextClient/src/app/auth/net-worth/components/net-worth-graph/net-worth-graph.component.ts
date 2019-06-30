@@ -7,9 +7,7 @@ import * as moment from 'moment';
   styleUrls: ['./net-worth-graph.component.scss']
 })
 export class NetWorthGraphComponent implements OnInit {
-  @Input() data: Array<any[]>;
-
-  @Input() columnNames: string;
+  @Input() chartData: any;
 
   options = {
     colors: ['#e91e63', '#fff'],
