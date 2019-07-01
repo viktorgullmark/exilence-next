@@ -25,7 +25,6 @@ import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
 import { StorageModule } from '@ngx-pwa/local-storage';
 import { SessionResolver } from './core/resolvers/session.resolver';
-import { StorageService } from './core/providers/storage.service';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -65,7 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       ApplicationEffects
     ])
   ],
-  providers: [ElectronService, ErrorHandler, SessionResolver, StorageService,
+  providers: [ElectronService, ErrorHandler, SessionResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
