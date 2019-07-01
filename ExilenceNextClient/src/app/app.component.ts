@@ -38,9 +38,8 @@ export class AppComponent {
 
     this.storageMap.get('appState').subscribe((res: ApplicationState) => {
       if (res !== undefined) {
-        this.appStore.dispatch(new applicationActions.SetSession({ session: res.session }));
+        this.appStore.dispatch(new applicationActions.SetState({ state: res }));
       }
     });
-
   }
 }

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-
-import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
-import { AppState } from '../../app.states';
 import { skip } from 'rxjs/operators';
-import { initialState } from '../../store/application/application.reducer';
+
+import { AppState } from '../../app.states';
 
 @Injectable()
 export class StorageService {

@@ -5,9 +5,10 @@ import { ApplicationSessionDetails } from '../../shared/interfaces/application-s
 import { Character } from '../../shared/interfaces/character.interface';
 import { League } from '../../shared/interfaces/league.interface';
 import { Tab } from '../../shared/interfaces/stash.interface';
+import { ApplicationState } from '../../app.states';
 
 export enum ApplicationActionTypes {
-  LoadAppState = '[Application] Load App State',
+  SetState = '[Application] Set State',
   InitSession = '[Application] Init Session',
   InitSessionSuccess = '[Application] Init Session Success',
   InitSessionFail = '[Application] Init Session Fail',
@@ -23,10 +24,10 @@ export enum ApplicationActionTypes {
   AddTabs = '[Application] Add Tabs'
 }
 
-export class LoadAppState implements Action {
-  readonly type = ApplicationActionTypes.LoadAppState;
+export class SetState implements Action {
+  readonly type = ApplicationActionTypes.SetState;
 
-  constructor() { }
+  constructor(public payload: { state: ApplicationState }) { }
 }
 
 export class InitSession implements Action {
@@ -103,7 +104,7 @@ export class SetTrialCookie implements Action {
 }
 
 export type ApplicationActions =
-  LoadAppState |
+  SetState |
   AddCharacters | AddLeagues | AddTabs |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |

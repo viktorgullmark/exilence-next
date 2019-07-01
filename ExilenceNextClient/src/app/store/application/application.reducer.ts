@@ -22,6 +22,13 @@ export function reducer(
 ): ApplicationState {
   switch (action.type) {
 
+    case ApplicationActionTypes.SetState: {
+      return {
+        ...state,
+        ...action.payload.state
+      };
+    }
+
     case ApplicationActionTypes.InitSession: {
       return {
         ...state,
