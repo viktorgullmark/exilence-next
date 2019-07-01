@@ -24,6 +24,7 @@ import { WebviewDirective } from './shared/directives/webview.directive';
 import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
 import { StorageModule } from '@ngx-pwa/local-storage';
+import { SessionResolver } from './core/resolvers/session.resolver';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -63,7 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       ApplicationEffects
     ])
   ],
-  providers: [ElectronService, ErrorHandler,
+  providers: [ElectronService, ErrorHandler, SessionResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

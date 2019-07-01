@@ -34,19 +34,21 @@ export class ApplicationEffects {
       this.externalService.getCharacters(res.payload.accountDetails.account),
     ).pipe(
       map(requests => {
+        this.storageMap.set('session.accountDetails', res.payload.accountDetails).subscribe();
         if (requests[0].length === 0) {
           return new applicationActions.InitSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' })
-        }
-        else if (requests[1].length === 0) {
+        } else if (requests[1].length === 0) {
           return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' })
-        }
-        else {
+        } else {
           this.appStore.dispatch(new applicationActions.AddLeagues({ leagues: requests[0] }));
           this.appStore.dispatch(new applicationActions.AddCharacters({ characters: requests[1] }));
-          return new applicationActions.InitSessionSuccess({ accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] })
+          return new applicationActions.InitSessionSuccess(
+            { accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] })
         }
       }),
-      catchError(() => of(new applicationActions.InitSessionFail({ title: 'ERROR.INIT_SESSION_FAIL_TITLE', message: 'ERROR.INIT_SESSION_FAIL_DESC' })))
+      catchError(() => of(
+        new applicationActions.InitSessionFail(
+          { title: 'ERROR.INIT_SESSION_FAIL_TITLE', message: 'ERROR.INIT_SESSION_FAIL_DESC' })))
     ))),
   );
 
@@ -70,11 +72,11 @@ export class ApplicationEffects {
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
           map(leagues => {
-            this.storageMap.set('session.accountDetails', res.payload.accountDetails).subscribe();
             this.storageMap.set('session.leagues', res.payload.leagues).subscribe();
             this.storageMap.set('session.characters', res.payload.characters).subscribe();
             this.storageMap.set('session.characterLeagues', leagues).subscribe();
-            return new applicationActions.SetTrialCookie({ accountDetails: res.payload.accountDetails, league: leagues[0] });
+            return new applicationActions.SetTrialCookie(
+              { accountDetails: res.payload.accountDetails, league: leagues[0] });
           })
         ))
   )
@@ -85,11 +87,13 @@ export class ApplicationEffects {
     mergeMap((res: any) =>
       this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
-          map((stash: Stash) => { 
+          map((stash: Stash) => {
             this.appStore.dispatch(new applicationActions.AddTabs({ tabs: stash.tabs }));
-            return new applicationActions.ValidateSessionSuccess({ accountDetails: res.payload.accountDetails }); 
+            return new applicationActions.ValidateSessionSuccess({ accountDetails: res.payload.accountDetails });
           }),
-          catchError(() => of(new applicationActions.ValidateSessionFail({ title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' })))
+          catchError(() => of(
+            new applicationActions.ValidateSessionFail(
+              { title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' })))
         ))),
   );
 

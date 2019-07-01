@@ -1,20 +1,25 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
 import { ApplicationEffects } from '../../../store/application/application.effects';
-import { StorageMap } from '@ngx-pwa/local-storage';
+import * as applicationReducer from './../../../store/application/application.reducer';
+import * as applicationActions from './../../../store/application/application.actions';
+import { first, take } from 'rxjs/operators';
+import { takeUntil } from 'rxjs-compat/operator/takeUntil';
 
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss']
 })
-export class StepperComponent implements OnInit {
+export class StepperComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   public accountFormGroup: FormGroup;
   public leagueFormGroup: FormGroup;
   public charFormGroup: FormGroup;
@@ -31,7 +36,7 @@ export class StepperComponent implements OnInit {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private applicationEffects: ApplicationEffects,
-    private storageMap: StorageMap
+    private appStore: Store<ApplicationSession>
   ) {
 
     this.accountFormGroup = fb.group({
@@ -50,19 +55,19 @@ export class StepperComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.leagues$.subscribe(leagues => {
+    this.leagues$.takeUntil(this.destroy$).subscribe(leagues => {
       if (leagues !== undefined) {
         this.leagueFormGroup.controls['leagueName'].setValue(leagues[0]);
         this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
       }
     });
-
-    // this.storageMap.get('session.accountDetails').subscribe((data: ApplicationSessionDetails) => {
-    //   if (data !== undefined) {
-    //     this.accountFormGroup.controls.accountName.setValue(data.account);
-    //     this.accountFormGroup.controls.sessionId.setValue(data.sessionId);
-    //   }
-    // });
+    this.appStore.select(applicationReducer.selectApplicationSession).takeUntil(this.destroy$)
+    .subscribe((data: ApplicationSessionDetails) => {
+        if (data !== undefined) {
+          this.accountFormGroup.controls.accountName.setValue(data.account);
+          this.accountFormGroup.controls.sessionId.setValue(data.sessionId);
+        }
+      });
   }
 
   mapTradeLeague(event: any) {
@@ -84,4 +89,8 @@ export class StepperComponent implements OnInit {
     this.login.emit(session);
   }
 
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 }

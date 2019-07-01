@@ -11,6 +11,7 @@ import { ElectronService } from '../../providers/electron.service';
 import * as notificationActions from '../../../store/notification/notification.actions';
 import * as notificationReducer from '../../../store/notification/notification.reducer';
 import 'rxjs/add/operator/takeUntil';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
   selector: 'app-header-page',
@@ -31,7 +32,8 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   constructor(
     public electronService: ElectronService,
     private router: Router,
-    private notificationStore: Store<Notification>
+    private notificationStore: Store<Notification>,
+    private storageMap: StorageMap
   ) {
     this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewErrorNotifications).takeUntil(this.destroy$);
   }
@@ -58,7 +60,11 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
+  }
+
+  clear() {
+    this.storageMap.clear().subscribe();
   }
 
   toggleSidenav() {

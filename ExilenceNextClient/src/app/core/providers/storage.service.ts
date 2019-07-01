@@ -20,20 +20,22 @@ export class StorageService {
 
     loadSession() {
         const requests$ = forkJoin(
-            this.storageMap.get('session.accountDetails'), 
+            this.storageMap.get('session.accountDetails'),
             this.storageMap.get('session.leagues'),
             this.storageMap.get('session.characters'),
-            this.storageMap.get('session.characterLeagues'),
+            this.storageMap.get('session.characterLeagues')
         );
 
-        requests$.subscribe((res: any[] ) => {
-            const session = {
-                sessionId: res[0].sessionId,
-                account: res[0].account,
-                leagues: res[1],
-                characters: res[2]
-            } as ApplicationSession;
-            this.appStore.dispatch(new applicationActions.SetSession({ session: session }));
+        requests$.subscribe((res: any[]) => {
+            if (res[0] !== undefined && res[1] !== undefined && res[2] !== undefined) {
+                const session = {
+                    sessionId: res[0].sessionId,
+                    account: res[0].account,
+                    leagues: res[1],
+                    characters: res[2]
+                } as ApplicationSession;
+                this.appStore.dispatch(new applicationActions.SetSession({ session: session }));
+            }
         });
     }
 }

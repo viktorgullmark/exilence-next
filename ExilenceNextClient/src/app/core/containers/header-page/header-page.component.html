@@ -4,6 +4,10 @@
     <span class="version">Build {{appVersion}}</span>
   </span>
   <div class="pull--right btn-area">
+    <div class="link-container">
+      <a (click)="clear()">
+        {{ 'SESSION.CLEAR' | translate}} </a>
+    </div>
     <div (click)="toggleSidenav()" *ngLet="(newNotifications$ | async).length as notificationCount"
       class="notification-badge" [ngClass]="{ 'has-notifications': notificationCount > 0 }">
       <ng-container *ngIf="notificationCount < 9 && notificationCount > 0">

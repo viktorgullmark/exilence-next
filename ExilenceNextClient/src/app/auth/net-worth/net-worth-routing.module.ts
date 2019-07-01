@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 
 const routes: Routes = [
-  { path: '', component: NetWorthPageComponent }
+  { path: 'net-worth', component: NetWorthPageComponent },
+  { path: '', redirectTo: 'net-worth', pathMatch: 'full' }
 ];
 
 @NgModule({
