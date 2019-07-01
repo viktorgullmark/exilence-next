@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, EMPTY } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import { CookieService } from '../../core/providers/cookie.service';
@@ -15,6 +15,8 @@ import { Store } from '@ngrx/store';
 import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
 import { Stash } from '../../shared/interfaces/stash.interface';
 import { StorageMap } from '@ngx-pwa/local-storage';
+import { ApplicationState } from '../../app.states';
+import { initialState } from './application.reducer';
 
 @Injectable()
 export class ApplicationEffects {

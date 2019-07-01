@@ -7,6 +7,7 @@ import { League } from '../../shared/interfaces/league.interface';
 import { Tab } from '../../shared/interfaces/stash.interface';
 
 export enum ApplicationActionTypes {
+  LoadAppState = '[Application] Load App State',
   InitSession = '[Application] Init Session',
   InitSessionSuccess = '[Application] Init Session Success',
   InitSessionFail = '[Application] Init Session Fail',
@@ -20,6 +21,12 @@ export enum ApplicationActionTypes {
   AddCharacters = '[Application] Add Characters',
   AddLeagues = '[Application] Add Leagues',
   AddTabs = '[Application] Add Tabs'
+}
+
+export class LoadAppState implements Action {
+  readonly type = ApplicationActionTypes.LoadAppState;
+
+  constructor() { }
 }
 
 export class InitSession implements Action {
@@ -96,6 +103,7 @@ export class SetTrialCookie implements Action {
 }
 
 export type ApplicationActions =
+  LoadAppState |
   AddCharacters | AddLeagues | AddTabs |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |
