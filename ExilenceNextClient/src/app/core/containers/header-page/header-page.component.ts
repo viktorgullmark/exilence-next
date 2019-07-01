@@ -12,6 +12,7 @@ import * as notificationActions from '../../../store/notification/notification.a
 import * as notificationReducer from '../../../store/notification/notification.reducer';
 import 'rxjs/add/operator/takeUntil';
 import { StorageMap } from '@ngx-pwa/local-storage';
+import { selectAllNewErrorNotifications } from '../../../store/notification/notification.selectors.js';
 
 @Component({
   selector: 'app-header-page',
@@ -35,7 +36,7 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
     private notificationStore: Store<Notification>,
     private storageMap: StorageMap
   ) {
-    this.newNotifications$ = this.notificationStore.select(notificationReducer.selectAllNewErrorNotifications).takeUntil(this.destroy$);
+    this.newNotifications$ = this.notificationStore.select(selectAllNewErrorNotifications).takeUntil(this.destroy$);
   }
 
   ngOnInit() {

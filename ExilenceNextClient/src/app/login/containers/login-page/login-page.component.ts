@@ -8,6 +8,11 @@ import { Observable, Subject } from 'rxjs';
 import * as applicationReducer from './../../../store/application/application.reducer';
 import * as applicationActions from './../../../store/application/application.actions';
 import 'rxjs/add/operator/takeUntil';
+import {
+  selectApplicationSessionValidated,
+  selectApplicationSessionLeagues,
+  selectApplicationSessionLoading
+} from '../../../store/application/application.selectors';
 
 @Component({
   selector: 'app-login-page',
@@ -26,10 +31,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private appStore: Store<ApplicationSession>
   ) {
-    this.leagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues).takeUntil(this.destroy$);
-    this.tradeLeagues$ = this.appStore.select(applicationReducer.selectApplicationSessionLeagues).takeUntil(this.destroy$);
-    this.loading$ = this.appStore.select(applicationReducer.selectApplicationSessionLoading).takeUntil(this.destroy$);
-    this.validated$ = this.appStore.select(applicationReducer.selectApplicationSessionValidated).takeUntil(this.destroy$);
+    this.leagues$ = this.appStore.select(selectApplicationSessionLeagues).takeUntil(this.destroy$);
+    this.tradeLeagues$ = this.appStore.select(selectApplicationSessionLeagues).takeUntil(this.destroy$);
+    this.loading$ = this.appStore.select(selectApplicationSessionLoading).takeUntil(this.destroy$);
+    this.validated$ = this.appStore.select(selectApplicationSessionValidated).takeUntil(this.destroy$);
   }
 
   ngOnInit() {

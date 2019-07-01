@@ -20,6 +20,7 @@ import * as applicationReducer from '../../../../store/application/application.r
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { skip } from 'rxjs/operators';
 import { selectNetWorthTabs } from '../../../../store/net-worth/net-worth.selectors';
+import { selectApplicationSessionTabs } from '../../../../store/application/application.selectors';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -222,7 +223,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private storageMap: StorageMap
   ) {
     this.selectedTabs$ = this.netWorthStore.select(selectNetWorthTabs).takeUntil(this.destroy$);
-    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs).takeUntil(this.destroy$);
+    this.stashtabList$ = this.appStore.select(selectApplicationSessionTabs).takeUntil(this.destroy$);
 
     this.selectedTabs$.subscribe((ids: string[]) => {
       this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);

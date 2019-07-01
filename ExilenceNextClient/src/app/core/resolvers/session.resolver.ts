@@ -9,6 +9,7 @@ import { ApplicationEffects } from '../../store/application/application.effects'
 import { catchError, first } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
+import { selectApplicationSession } from '../../store/application/application.selectors';
 
 @Injectable()
 export class SessionResolver implements Resolve<any> {
@@ -21,7 +22,7 @@ export class SessionResolver implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot) {
     if (route.params.validated !== 'true') {
-      this.appStore.select(applicationReducer.selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
+      this.appStore.select(selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
         if (res.sessionId !== undefined) {
           this.appStore.dispatch(new applicationActions.InitSession({ accountDetails: res }));
 

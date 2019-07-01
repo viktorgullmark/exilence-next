@@ -7,6 +7,7 @@ import * as notificationReducer from './../../../store/notification/notification
 import { Notification } from './../../../shared/interfaces/notification.interface';
 import { filter, switchMap, distinctUntilChanged, map } from 'rxjs/operators';
 import 'rxjs/add/operator/takeUntil';
+import { selectAllNotifications } from '../../../store/notification/notification.selectors';
 
 @Component({
   selector: 'app-notification-sidebar-page',
@@ -21,7 +22,7 @@ export class NotificationSidebarPageComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav', undefined) sidenav: MatSidenav;
 
   constructor(private notificationStore: Store<NotificationsState>) {
-    this.notifications$ = this.notificationStore.select(notificationReducer.selectAllNotifications).takeUntil(this.destroy$).pipe(
+    this.notifications$ = this.notificationStore.select(selectAllNotifications).takeUntil(this.destroy$).pipe(
       // only update notifications when the count changes
       distinctUntilChanged((prev, curr) => prev.length === curr.length)
     );

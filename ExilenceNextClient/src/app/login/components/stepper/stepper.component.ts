@@ -11,6 +11,7 @@ import * as applicationReducer from './../../../store/application/application.re
 import * as applicationActions from './../../../store/application/application.actions';
 import { first, take } from 'rxjs/operators';
 import { takeUntil } from 'rxjs-compat/operator/takeUntil';
+import { selectApplicationSession } from '../../../store/application/application.selectors';
 
 @Component({
   selector: 'app-stepper',
@@ -61,8 +62,8 @@ export class StepperComponent implements OnInit, OnDestroy {
         this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
       }
     });
-    this.appStore.select(applicationReducer.selectApplicationSession).takeUntil(this.destroy$)
-    .subscribe((data: ApplicationSessionDetails) => {
+    this.appStore.select(selectApplicationSession).takeUntil(this.destroy$)
+      .subscribe((data: ApplicationSessionDetails) => {
         if (data !== undefined) {
           this.accountFormGroup.controls.accountName.setValue(data.account);
           this.accountFormGroup.controls.sessionId.setValue(data.sessionId);

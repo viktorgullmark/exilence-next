@@ -16,7 +16,6 @@ import { ApplicationSession } from '../../shared/interfaces/application-session.
 import { Stash } from '../../shared/interfaces/stash.interface';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { ApplicationState } from '../../app.states';
-import { initialState } from './application.reducer';
 
 @Injectable()
 export class ApplicationEffects {

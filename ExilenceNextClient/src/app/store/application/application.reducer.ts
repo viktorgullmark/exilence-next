@@ -1,20 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ApplicationState } from '../../app.states';
 import { ApplicationActions, ApplicationActionTypes } from './application.actions';
+import { initialState } from './application.state';
 
-export const initialState: ApplicationState = {
-  session: {
-    sessionId: undefined,
-    account: undefined,
-    league: undefined,
-    tradeLeague: undefined,
-    loading: false,
-    validated: false,
-    leagues: [],
-    characters: [],
-    tabs: []
-  }
-};
 
 export function reducer(
   state = initialState,
@@ -152,7 +140,7 @@ export function reducer(
           loading: false,
           validated: false
         }
-      }
+      };
     }
 
     default: {
@@ -160,29 +148,3 @@ export function reducer(
     }
   }
 }
-
-export const getApplicationState = createFeatureSelector<ApplicationState>('applicationState');
-
-export const selectApplicationSession = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session
-);
-
-export const selectApplicationSessionLeagues = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session.leagues
-);
-
-export const selectApplicationSessionCharacters = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session.characters
-);
-
-export const selectApplicationSessionTabs = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session.tabs
-);
-
-export const selectApplicationSessionLoading = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session.loading
-);
-
-export const selectApplicationSessionValidated = createSelector(getApplicationState,
-  (state: ApplicationState) => state.session.validated
-);
