@@ -22,20 +22,24 @@ export class SessionResolver implements Resolve<any> {
   resolve(route: ActivatedRouteSnapshot) {
     if (route.params.validated !== 'true') {
       this.appStore.select(applicationReducer.selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
-        this.appStore.dispatch(new applicationActions.InitSession({ accountDetails: res }));
+        if (res.sessionId !== undefined) {
+          this.appStore.dispatch(new applicationActions.InitSession({ accountDetails: res }));
 
-        this.applicationEffects.validateSessionSuccess$
-          .subscribe(() => {
-            return;
-          });
+          this.applicationEffects.validateSessionSuccess$
+            .subscribe(() => {
+              return;
+            });
 
-        this.actions$.pipe(ofType(
-          applicationActions.ApplicationActionTypes.InitSessionFail,
-          applicationActions.ApplicationActionTypes.ValidateSessionFail))
-          .subscribe(() => {
-            this.router.navigate(['/login']);
-            return EMPTY;
-          });
+          this.actions$.pipe(ofType(
+            applicationActions.ApplicationActionTypes.InitSessionFail,
+            applicationActions.ApplicationActionTypes.ValidateSessionFail))
+            .subscribe(() => {
+              this.router.navigate(['/login']);
+              return EMPTY;
+            });
+        } else {
+          this.router.navigate(['/login']);
+        }
       });
     }
   }
