@@ -10,6 +10,7 @@ import { Notification } from './../../../shared/interfaces/notification.interfac
 import * as netWorthActions from './../../../store/net-worth/net-worth.actions';
 import * as netWorthReducer from './../../../store/net-worth/net-worth.reducer';
 import * as notificationActions from './../../../store/notification/notification.actions';
+import { selectNetWorthStatus } from '../../../store/net-worth/net-worth.selectors';
 
 @Injectable()
 export class SnapshotService {
@@ -22,7 +23,7 @@ export class SnapshotService {
     private notificationStore: Store<NotificationsState>
   ) {
 
-    this.netWorthStatus$ = this.netWorthStore.select(netWorthReducer.selectNetWorthStatus);
+    this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus);
 
     this.checkIfReady();
   }

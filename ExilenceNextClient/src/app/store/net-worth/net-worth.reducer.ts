@@ -1,18 +1,8 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { NetWorthState } from '../../app.states';
 import { NetWorthActions, NetWorthActionTypes } from './net-worth.actions';
+import { initialState } from './net-worth.state';
 
-export const initialState: NetWorthState = {
-  status: {
-    snapshotting: false,
-    lastSnapshot: undefined,
-    tabsLoading: false
-  },
-  settings: {
-    selectedTabs: [],
-    tabs: []
-  }
-};
 
 export function reducer(
   state = initialState,
@@ -74,16 +64,3 @@ export function reducer(
     }
   }
 }
-
-export const getNetWorthState = createFeatureSelector<NetWorthState>('netWorthState');
-export const selectNetWorthStatus = createSelector(getNetWorthState,
-  (state: NetWorthState) => state.status
-);
-
-export const selectNetWorthSettings = createSelector(getNetWorthState,
-  (state: NetWorthState) => state.settings
-);
-
-export const selectNetWorthTabs = createSelector(getNetWorthState,
-  (state: NetWorthState) => state.settings.selectedTabs
-);
