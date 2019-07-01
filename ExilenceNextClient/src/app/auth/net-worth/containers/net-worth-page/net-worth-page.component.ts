@@ -228,7 +228,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       window.dispatchEvent(new Event('resize'));
     });
 
-    // load state from storage
+    // load state from storage, this subscribtion will only fire once.
     this.storageMap.get('netWorthState').subscribe((res: NetWorthState) => {
       if (res !== undefined) {
         this.appStore.dispatch(new netWorthActions.SetState({ state: res }));
