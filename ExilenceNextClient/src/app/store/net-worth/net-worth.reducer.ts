@@ -20,6 +20,13 @@ export function reducer(
 ): NetWorthState {
   switch (action.type) {
 
+    case NetWorthActionTypes.SetState: {
+      return {
+        ...state,
+        ...action.payload.state
+      };
+    }
+
     case NetWorthActionTypes.LoadTabs: {
       return {
         ...state,

@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { Subject, Observable } from 'rxjs';
 
-import { NetWorthState } from '../../../../app.states';
+import { NetWorthState, AppState } from '../../../../app.states';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { TabSnapshotChartData } from '../../../../shared/interfaces/tab-snapshot-chart-data.interface';
@@ -17,6 +17,8 @@ import { Tab } from '../../../../shared/interfaces/stash.interface';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
 import * as applicationActions from '../../../../store/application/application.actions';
 import * as applicationReducer from '../../../../store/application/application.reducer';
+import { StorageMap } from '@ngx-pwa/local-storage';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -25,11 +27,12 @@ import * as applicationReducer from '../../../../store/application/application.r
 })
 export class NetWorthPageComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
-  
+
   public stashtabList$: Observable<Tab[]>;
+  public selectedTabs$: Observable<string[]>;
 
   public selectedIndex = 0;
-  public chartData = { data: [], columnNames: []} as TabSnapshotChartData;
+  public chartData = { data: [], columnNames: [] } as TabSnapshotChartData;
 
   // todo: remove mock data
   public snapshots: Snapshot[] = [
@@ -213,14 +216,30 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
   constructor(
-    private netWorthStore: Store<NetWorthState>,
-    private appStore: Store<ApplicationSession>
+    private netWorthStore: Store<AppState>,
+    private appStore: Store<ApplicationSession>,
+    private storageMap: StorageMap
   ) {
-    this.netWorthStore.select(netWorthReducer.selectNetWorthTabs).takeUntil(this.destroy$).subscribe((ids: string[]) => {
+    this.selectedTabs$ = this.netWorthStore.select(netWorthReducer.selectNetWorthTabs).takeUntil(this.destroy$);
+    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs).takeUntil(this.destroy$);
+
+    this.selectedTabs$.subscribe((ids: string[]) => {
       this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
       window.dispatchEvent(new Event('resize'));
     });
-    this.stashtabList$ = this.appStore.select(applicationReducer.selectApplicationSessionTabs).takeUntil(this.destroy$);
+
+    // load state from storage
+    this.storageMap.get('netWorthState').subscribe((res: NetWorthState) => {
+      if (res !== undefined) {
+        this.appStore.dispatch(new netWorthActions.SetState({ state: res }));
+      }
+    });
+
+    // save state to storage on changes
+    this.netWorthStore.pipe(skip(1)).subscribe((state: AppState) => {
+      this.storageMap.set('netWorthState', state.netWorthState).subscribe();
+    });
+
   }
 
   ngOnInit() {

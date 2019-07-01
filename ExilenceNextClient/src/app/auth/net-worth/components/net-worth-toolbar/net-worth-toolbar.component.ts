@@ -20,14 +20,17 @@ export class NetWorthToolbarComponent implements OnInit {
   public endDate = new FormControl(moment());
   public stashtabs = new FormControl();
 
+  @Input() selectedTabs$: Observable<string[]>;
   @Input() stashtabList$: Observable<Tab[]>;
   @Output() tabSelectionChanged: EventEmitter<string[]> = new EventEmitter;
 
-  constructor() { 
-    
+  constructor() {
   }
 
   ngOnInit() {
+    this.selectedTabs$.subscribe(tabs => {
+      this.stashtabs.setValue(tabs);
+    });
   }
 
   selectedTab(event: MatSelectChange) {

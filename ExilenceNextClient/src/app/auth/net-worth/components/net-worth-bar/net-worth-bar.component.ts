@@ -10,6 +10,7 @@ import { Tab } from '../../../../shared/interfaces/stash.interface';
 })
 export class NetWorthBarComponent implements OnInit {
   @Input() stashtabList$: Observable<Tab[]>;
+  @Input() selectedTabs$: Observable<string[]>;
   @Output() tabSelectionChanged: EventEmitter<string[]> = new EventEmitter;
 
   constructor() { }

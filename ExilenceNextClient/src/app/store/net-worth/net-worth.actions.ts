@@ -1,10 +1,18 @@
 import { Action } from '@ngrx/store';
+import { NetWorthState } from '../../app.states';
 
 export enum NetWorthActionTypes {
+  SetState = '[NetWorth] Set State',
   UpdateTabSelection = '[NetWorth] Update TabSelection',
   LoadTabs = '[NetWorth] Load Tabs',
   LoadTabsSuccess = '[NetWorth] Load Tabs Success',
   LoadTabsFail = '[NetWorth] Load Tabs Fail'
+}
+
+export class SetState implements Action {
+  readonly type = NetWorthActionTypes.SetState;
+
+  constructor(public payload: { state: NetWorthState }) { }
 }
 
 export class UpdateTabSelection implements Action {
@@ -28,5 +36,6 @@ export class LoadTabsFail implements Action {
 }
 
 export type NetWorthActions =
+  SetState |
   LoadTabs | LoadTabsSuccess | LoadTabsFail |
   UpdateTabSelection;
