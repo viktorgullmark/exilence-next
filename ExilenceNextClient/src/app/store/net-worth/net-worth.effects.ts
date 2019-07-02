@@ -73,7 +73,7 @@ export class NetWorthEffects {
   )
   );
 
-  // todo: price fetched items
+  // todo: price fetched items (wait for prices to be fetched before continuing)
   priceItemsForSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.PriceItemsForSnapshot),
     map(() => new netWorthActions.PriceItemsForSnapshotSuccess()))
