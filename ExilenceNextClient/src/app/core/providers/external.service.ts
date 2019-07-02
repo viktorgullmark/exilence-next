@@ -1,35 +1,61 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 
 import { RatelimitHelper } from '../../shared/helpers/ratelimit.helper';
-import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
-import { Stash } from '../../shared/interfaces/stash.interface';
 import { Character } from '../../shared/interfaces/character.interface';
 import { League } from '../../shared/interfaces/league.interface';
+import { Stash, Tab } from '../../shared/interfaces/stash.interface';
+import { ApplicationSession } from '../../shared/interfaces/application-session.interface';
+import { Store } from '@ngrx/store';
+import { selectApplicationSession } from '../../store/application/application.selectors';
+import { PricedItem } from '../../shared/interfaces/priced-item.interface';
+import { map } from 'rxjs/operators';
+import { Item } from '../../shared/interfaces/item.interface';
 
 @Injectable()
 export class ExternalService {
 
-  private rateLimiter = new RateLimiter(7, 10000);
+  private rateLimiter = new RateLimiter(7, 15000);
   private poeUrl = 'https://www.pathofexile.com';
 
-  constructor(private http: HttpClient) { }
+  private session$: Observable<ApplicationSession>;
+  private session: ApplicationSession;
+
+  constructor(
+    private http: HttpClient,
+    private appStore: Store<ApplicationSession>
+  ) {
+    this.session$ = this.appStore.select(selectApplicationSession);
+    this.session$.subscribe((session: ApplicationSession) => {
+      this.session = session;
+    });
+  }
 
   /* #region pathofexile.com */
-  getStashTab(account: string, league: string, index: number): Observable<Stash> {
-    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+  getStashTab(account: string = this.session.account, league: string = this.session.league, index: number): Observable<Stash> {
+    const parameters = `?league=${this.session.league}&accountName=${this.session.account}&tabIndex=${index}&tabs=1`;
     return this.rateLimiter.limit(
       this.http.get<Stash>(this.poeUrl + '/character-window/get-stash-items' + parameters)
     );
   }
 
-  getStashTabs(account: string, league: string) {
+  getStashTabs(account: string = this.session.account, league: string = this.session.league) {
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return this.rateLimiter.limit(
       this.http.get<Stash>(this.poeUrl + '/character-window/get-stash-items' + parameters)
     );
+  }
+
+  getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
+    return from(tabs).mergeMap((tab: Tab) => {
+      return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
+        return stash.items.map((item: Item) => {
+          return { name: item.typeLine } as PricedItem;
+        });
+      }));
+    });
   }
 
   getLeagues(type: string = 'main', compact: number = 1): Observable<League[]> {
@@ -38,7 +64,7 @@ export class ExternalService {
       this.http.get<League[]>('https://api.pathofexile.com/leagues' + parameters));
   }
 
-  getCharacters(account: string): Observable<Character[]> {
+  getCharacters(account: string = this.session.account): Observable<Character[]> {
     const parameters = `?accountName=${account}`;
     return this.rateLimiter.limit(
       this.http.get<Character[]>(this.poeUrl + '/character-window/get-characters' + parameters));

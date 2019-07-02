@@ -4,6 +4,7 @@ import { NetWorthSettings } from './shared/interfaces/net-worth-settings.interfa
 import { NetWorthStatus } from './shared/interfaces/net-worth-status.interface';
 import { Notification } from './shared/interfaces/notification.interface';
 import { ApplicationSession } from './shared/interfaces/application-session.interface';
+import { PricedItem } from './shared/interfaces/priced-item.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
@@ -20,4 +21,5 @@ export interface ApplicationState {
 export interface NetWorthState {
     status: NetWorthStatus | null;
     settings: NetWorthSettings | null;
+    items: Array<PricedItem> | null;
 }

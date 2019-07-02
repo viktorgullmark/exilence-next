@@ -13,7 +13,11 @@ export function reducer(
     case ApplicationActionTypes.SetState: {
       return {
         ...state,
-        ...action.payload.state
+        ...action.payload.state,
+        session: {
+          ...action.payload.state.session,
+          loading: false
+        }
       };
     }
 

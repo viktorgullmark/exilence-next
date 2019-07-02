@@ -1,12 +1,18 @@
 import { Action } from '@ngrx/store';
 import { NetWorthState } from '../../app.states';
+import { Tab } from '../../shared/interfaces/stash.interface';
+import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
+import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 
 export enum NetWorthActionTypes {
   SetState = '[NetWorth] Set State',
   UpdateTabSelection = '[NetWorth] Update TabSelection',
   LoadTabs = '[NetWorth] Load Tabs',
   LoadTabsSuccess = '[NetWorth] Load Tabs Success',
-  LoadTabsFail = '[NetWorth] Load Tabs Fail'
+  LoadTabsFail = '[NetWorth] Load Tabs Fail',
+  FetchItemsForSnapshot = '[NetWorth] Fetch Items For Snapshot',
+  FetchItemsForSnapshotSuccess = '[NetWorth] Fetch Items For Snapshot Success',
+  FetchItemsForSnapshotFail = '[NetWorth] Fetch Items For Snapshot Fail'
 }
 
 export class SetState implements Action {
@@ -18,6 +24,21 @@ export class SetState implements Action {
 export class UpdateTabSelection implements Action {
   readonly type = NetWorthActionTypes.UpdateTabSelection;
   constructor(public payload: { tabs: string[] }) { }
+}
+
+export class FetchItemsForSnapshot implements Action {
+  readonly type = NetWorthActionTypes.FetchItemsForSnapshot;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[] }) { }
+}
+
+export class FetchItemsForSnapshotSuccess implements Action {
+  readonly type = NetWorthActionTypes.FetchItemsForSnapshotSuccess;
+  constructor(public payload: { items: PricedItem[] }) { }
+}
+
+export class FetchItemsForSnapshotFail implements Action {
+  readonly type = NetWorthActionTypes.FetchItemsForSnapshotFail;
+  constructor(public payload: { error: string }) { }
 }
 
 export class LoadTabs implements Action {
@@ -37,5 +58,6 @@ export class LoadTabsFail implements Action {
 
 export type NetWorthActions =
   SetState |
+  FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |
   LoadTabs | LoadTabsSuccess | LoadTabsFail |
   UpdateTabSelection;

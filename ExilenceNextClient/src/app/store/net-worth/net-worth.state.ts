@@ -9,5 +9,6 @@ export const initialState: NetWorthState = {
     settings: {
         selectedTabs: [],
         tabs: []
-    }
+    },
+    items: []
 };

@@ -13,7 +13,11 @@ export function reducer(
     case NetWorthActionTypes.SetState: {
       return {
         ...state,
-        ...action.payload.state
+        ...action.payload.state,
+        status: {
+          ...action.payload.state.status,
+          snapshotting: false
+        }
       };
     }
 
@@ -47,6 +51,37 @@ export function reducer(
         status: {
           ...state.status,
           tabsLoading: false
+        }
+      };
+    }
+
+    case NetWorthActionTypes.FetchItemsForSnapshot: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: true
+        }
+      };
+    }
+
+    case NetWorthActionTypes.FetchItemsForSnapshotSuccess: {
+      return {
+        ...state,
+        items: action.payload.items,
+        status: {
+          ...state.status,
+          snapshotting: false
+        }
+      };
+    }
+
+    case NetWorthActionTypes.FetchItemsForSnapshotFail: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false
         }
       };
     }

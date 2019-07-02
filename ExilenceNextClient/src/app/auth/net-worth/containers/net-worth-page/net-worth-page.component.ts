@@ -21,6 +21,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { skip } from 'rxjs/operators';
 import { selectNetWorthTabs } from '../../../../store/net-worth/net-worth.selectors';
 import { selectApplicationSessionTabs } from '../../../../store/application/application.selectors';
+import { SnapshotService } from '../../providers/snapshot.service';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -220,7 +221,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   constructor(
     private netWorthStore: Store<AppState>,
     private appStore: Store<ApplicationSession>,
-    private storageMap: StorageMap
+    private storageMap: StorageMap,
+    private snapshotService: SnapshotService
   ) {
     this.selectedTabs$ = this.netWorthStore.select(selectNetWorthTabs).takeUntil(this.destroy$);
     this.stashtabList$ = this.appStore.select(selectApplicationSessionTabs).takeUntil(this.destroy$);
