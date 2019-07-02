@@ -35,7 +35,7 @@ export class ExternalService {
 
   /* #region pathofexile.com */
   getStashTab(account: string = this.session.account, league: string = this.session.league, index: number): Observable<Stash> {
-    const parameters = `?league=${this.session.league}&accountName=${this.session.account}&tabIndex=${index}&tabs=1`;
+    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.rateLimiter.limit(
       this.http.get<Stash>(this.poeUrl + '/character-window/get-stash-items' + parameters)
     );
