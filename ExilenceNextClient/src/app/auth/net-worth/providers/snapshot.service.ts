@@ -42,7 +42,7 @@ export class SnapshotService {
       this.session = session;
     });
 
-    this.checkIfReady();
+    this.startSnapshot();
   }
 
   startSnapshot() {
@@ -52,16 +52,5 @@ export class SnapshotService {
       } as ApplicationSessionDetails,
       tabs: this.tabs
     }));
-  }
-
-  checkIfReady() {
-    // check if ready to begin snapshotting
-    // setInterval(() => {
-      this.netWorthStatus$.subscribe((res: NetWorthStatus) => {
-        if (!res.snapshotting) {
-          this.startSnapshot();
-        }
-      });
-    // }, 1000 * 10);
   }
 }
