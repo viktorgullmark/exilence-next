@@ -15,11 +15,13 @@ import { ApplicationSession } from '../../../shared/interfaces/application-sessi
 import { Tab } from '../../../shared/interfaces/stash.interface';
 import { selectApplicationSessionTabs, selectApplicationSession } from '../../../store/application/application.selectors';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
+import { ApplicationEffects } from '../../../store/application/application.effects';
 
 @Injectable()
 export class SnapshotService {
 
   private netWorthStatus$: Observable<NetWorthStatus>;
+  private netWorthStatus: NetWorthStatus;
   private tabs$: Observable<Tab[]>;
   private tabs: Tab[];
   private session$: Observable<ApplicationSession>;
@@ -27,10 +29,14 @@ export class SnapshotService {
 
   constructor(
     private netWorthStore: Store<NetWorthState>,
-    private appStore: Store<ApplicationSession>
+    private appStore: Store<ApplicationSession>,
+    private applicationEffects: ApplicationEffects
   ) {
 
     this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus);
+    this.netWorthStatus$.subscribe((status: NetWorthStatus) => {
+      this.netWorthStatus = status;
+    });
 
     this.tabs$ = this.appStore.select(selectApplicationSessionTabs);
     this.tabs$.subscribe((tabs: Tab[]) => {
@@ -42,15 +48,21 @@ export class SnapshotService {
       this.session = session;
     });
 
-    this.startSnapshot();
+    this.applicationEffects.validateSessionSuccess$
+      .subscribe(() => {
+        this.checkIfReady();
+      });
   }
 
   startSnapshot() {
     this.netWorthStore.dispatch(new netWorthActions.FetchItemsForSnapshot({
-      accountDetails: {
-        account: this.session.account, sessionId: this.session.sessionId
-      } as ApplicationSessionDetails,
       tabs: this.tabs
     }));
+  }
+
+  checkIfReady() {
+    if (!this.netWorthStatus.snapshotting && this.session.validated) {
+      this.startSnapshot();
+    }
   }
 }

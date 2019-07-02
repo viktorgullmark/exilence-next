@@ -15,8 +15,11 @@ export enum NetWorthActionTypes {
   FetchItemsForSnapshotSuccess = '[NetWorth] Fetch Items For Snapshot Success',
   FetchItemsForSnapshotFail = '[NetWorth] Fetch Items For Snapshot Fail',
   FetchPrices = '[NetWorth] Fetch Prices',
-  FetchPricesSuccess = '[NetWorth] Fetch Prices',
-  FetchPricesFail = '[NetWorth] Fetch Prices'
+  FetchPricesSuccess = '[NetWorth] Fetch Prices Success',
+  FetchPricesFail = '[NetWorth] Fetch Prices Fail',
+  PriceItemsForSnapshot = '[NetWorth] Price Items For Snapshot',
+  PriceItemsForSnapshotSuccess = '[NetWorth] Price Items For Snapshot Success',
+  PriceItemsForSnapshotFail = '[NetWorth] Price Items For Snapshot Fail'
 }
 
 export class SetState implements Action {
@@ -32,7 +35,7 @@ export class UpdateTabSelection implements Action {
 
 export class FetchItemsForSnapshot implements Action {
   readonly type = NetWorthActionTypes.FetchItemsForSnapshot;
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[] }) { }
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class FetchItemsForSnapshotSuccess implements Action {
@@ -42,6 +45,21 @@ export class FetchItemsForSnapshotSuccess implements Action {
 
 export class FetchItemsForSnapshotFail implements Action {
   readonly type = NetWorthActionTypes.FetchItemsForSnapshotFail;
+  constructor(public payload: { error: string }) { }
+}
+
+export class PriceItemsForSnapshot implements Action {
+  readonly type = NetWorthActionTypes.PriceItemsForSnapshot;
+  constructor(public payload: { items: PricedItem[] }) { }
+}
+
+export class PriceItemsForSnapshotSuccess implements Action {
+  readonly type = NetWorthActionTypes.PriceItemsForSnapshotSuccess;
+  constructor() { }
+}
+
+export class PriceItemsForSnapshotFail implements Action {
+  readonly type = NetWorthActionTypes.PriceItemsForSnapshotFail;
   constructor(public payload: { error: string }) { }
 }
 
@@ -77,6 +95,7 @@ export class LoadTabsFail implements Action {
 
 export type NetWorthActions =
   SetState |
+  PriceItemsForSnapshot | PriceItemsForSnapshotSuccess | PriceItemsForSnapshotFail |
   FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |
   FetchPrices | FetchPricesSuccess | FetchPricesFail |
   LoadTabs | LoadTabsSuccess | LoadTabsFail |

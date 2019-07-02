@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Observable, from, forkJoin, combineLatest } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 
 import { RatelimitHelper } from '../../shared/helpers/ratelimit.helper';
@@ -49,13 +49,13 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.tradeLeague) {
-    return from(tabs).mergeMap((tab: Tab) => {
-      return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
+    return forkJoin((tabs.map((tab: Tab) =>
+      this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         return stash.items.map((item: Item) => {
           return { name: item.typeLine } as PricedItem;
         });
-      }));
-    });
+      }))
+    )));
   }
 
   getLeagues(type: string = 'main', compact: number = 1): Observable<League[]> {

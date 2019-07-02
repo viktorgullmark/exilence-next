@@ -2,7 +2,7 @@
 import { NetWorthState } from '../../app.states';
 import { NetWorthActions, NetWorthActionTypes } from './net-worth.actions';
 import { initialState } from './net-worth.state';
-
+import * as moment from 'moment';
 
 export function reducer(
   state = initialState,
@@ -68,10 +68,9 @@ export function reducer(
     case NetWorthActionTypes.FetchItemsForSnapshotSuccess: {
       return {
         ...state,
-        items: state.items.concat(action.payload.items),
+        items: action.payload.items,
         status: {
-          ...state.status,
-          snapshotting: false
+          ...state.status
         }
       };
     }
@@ -80,8 +79,38 @@ export function reducer(
       return {
         ...state,
         status: {
+          ...state.status
+        }
+      };
+    }
+
+    case NetWorthActionTypes.PriceItemsForSnapshot: {
+      return {
+        ...state,
+        status: {
+          ...state.status
+        }
+      };
+    }
+
+    case NetWorthActionTypes.PriceItemsForSnapshotSuccess: {
+      return {
+        ...state,
+        status: {
           ...state.status,
-          snapshotting: false
+          snapshotting: false,
+          lastSnapshot: moment(new Date()).toDate()
+        }
+      };
+    }
+
+    case NetWorthActionTypes.PriceItemsForSnapshotFail: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false,
+          lastSnapshot: moment(new Date()).toDate()
         }
       };
     }
