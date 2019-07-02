@@ -54,19 +54,14 @@ export class SnapshotService {
     }));
   }
 
-
-  // return from(this.tabs).mergeMap((tab: Tab) => {
-  //   return this
-  // });
-
   checkIfReady() {
     // check if ready to begin snapshotting
-    setInterval(() => {
+    // setInterval(() => {
       this.netWorthStatus$.subscribe((res: NetWorthStatus) => {
         if (!res.snapshotting) {
           this.startSnapshot();
         }
       });
-    }, 1000 * 10);
+    // }, 1000 * 10);
   }
 }

@@ -68,7 +68,7 @@ export function reducer(
     case NetWorthActionTypes.FetchItemsForSnapshotSuccess: {
       return {
         ...state,
-        items: action.payload.items,
+        items: state.items.concat(action.payload.items),
         status: {
           ...state.status,
           snapshotting: false
