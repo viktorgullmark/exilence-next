@@ -45,7 +45,7 @@ export class FetchItemsForSnapshotSuccess implements Action {
 
 export class FetchItemsForSnapshotFail implements Action {
   readonly type = NetWorthActionTypes.FetchItemsForSnapshotFail;
-  constructor(public payload: { error: string }) { }
+  constructor(public payload: { title: string, message: string }) { }
 }
 
 export class PriceItemsForSnapshot implements Action {
