@@ -27,6 +27,16 @@ export class NetWorthEffects {
   )
   );
 
+  fetchPrices$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchPrices),
+    mergeMap(() => of([])
+      .pipe(
+        map(prices => new netWorthActions.FetchPricesSuccess({ prices })),
+        catchError((e) => of(new netWorthActions.FetchPricesFail({ error: e })))
+      ))
+  )
+  );
+
   fetchItemsForSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshot),
     mergeMap((res: any) => this.externalService.getItemsForTabs(res.payload.tabs)
