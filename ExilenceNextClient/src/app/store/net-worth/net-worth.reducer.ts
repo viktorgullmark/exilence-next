@@ -12,7 +12,12 @@ export function reducer(
 
     case NetWorthActionTypes.OverrideState: {
       return {
-        ...state
+        ...state,
+        ...action.payload.state,
+        status: {
+          ...action.payload.state.status,
+          snapshotting: false
+        }
       };
     }
 
