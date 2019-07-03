@@ -10,5 +10,9 @@ export const initialState: NetWorthState = {
     },
     stash: {
         tabs: []
+    },
+    prices: {
+        poeNinja: [],
+        poeWatch: []
     }
 };

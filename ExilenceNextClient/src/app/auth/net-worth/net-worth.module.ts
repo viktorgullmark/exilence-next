@@ -58,7 +58,7 @@ import { PoeWatchService } from './providers/poe-watch.service';
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    SnapshotService, PricingService, PoeNinjaService, PoeWatchService
+    PricingService, SnapshotService,  PoeNinjaService, PoeWatchService
   ]
 })
 export class NetWorthModule { }

@@ -104,17 +104,17 @@ export class PriceItemsForSnapshotFail implements Action {
 
 export class FetchPrices implements Action {
   readonly type = NetWorthActionTypes.FetchPrices;
-  constructor() { }
+  constructor(public payload: { league: string }) { }
 }
 
 export class FetchPricesSuccess implements Action {
   readonly type = NetWorthActionTypes.FetchPricesSuccess;
-  constructor(public payload: { prices: ExternalPrice[] }) { }
+  constructor(public payload: { poeNinja: ExternalPrice[], poeWatch: ExternalPrice[] }) { }
 }
 
 export class FetchPricesFail implements Action {
   readonly type = NetWorthActionTypes.FetchPricesFail;
-  constructor(public payload: { error: string }) { }
+  constructor(public payload: { title: string, message: string }) { }
 }
 
 export type NetWorthActions =

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import { ExternalService } from '../../core/providers/external.service';
@@ -11,6 +11,9 @@ import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
 import { NetWorthState } from '../../app.states';
 import { StorageMap } from '@ngx-pwa/local-storage';
+import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
+import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
+import { PricingService } from '../../auth/net-worth/providers/pricing.service';
 
 @Injectable()
 export class NetWorthEffects {
@@ -18,7 +21,10 @@ export class NetWorthEffects {
   constructor(
     private actions$: Actions,
     private externalService: ExternalService,
-    private storageMap: StorageMap
+    private storageMap: StorageMap,
+    private poeNinjaService: PoeNinjaService,
+    private poeWatchService: PoeWatchService,
+    private pricingService: PricingService
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
@@ -54,13 +60,23 @@ export class NetWorthEffects {
   )
   );
 
-  // todo: fetch prices for poe watch & poe ninja
+  // todo: fetch prices for poe ninja / watch
   fetchPrices$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchPrices),
-    mergeMap(() => of([])
+    mergeMap((res: any) => forkJoin(
+        this.poeNinjaService.getCurrencyPrices(res.payload.league),
+        this.poeNinjaService.getItemPrices(res.payload.league)
+      )
       .pipe(
-        map(prices => new netWorthActions.FetchPricesSuccess({ prices })),
-        catchError((e) => of(new netWorthActions.FetchPricesFail({ error: e })))
+        map((prices: any) => {
+          const ninjaCategories = [].concat.apply([], [prices[0], prices[1]]);
+          let ninjaPrices = [];
+          ninjaCategories.forEach(cat => {
+            ninjaPrices = ninjaPrices.concat(cat);
+          });
+          return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: [] });}),
+        catchError((e) => of(new netWorthActions.FetchPricesFail(
+          { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' })))
       ))
   )
   );

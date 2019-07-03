@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, from, forkJoin } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
-
+import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/take';
 import { PoeNinjaCurrencyOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-currency-overview.interface';
 import { PoeNinjaItemOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
 
 @Injectable()
 export class PoeNinjaService {
@@ -18,7 +21,7 @@ export class PoeNinjaService {
       'Currency',
       'Fragment'
     ];
-    return of(categories);
+    return categories;
   }
 
   getItemCategories() {
@@ -38,10 +41,10 @@ export class PoeNinjaService {
       'UniqueFlask',
       'UniqueWeapon',
       'UniqueArmour',
-      'UniqueAcessory',
+      'UniqueAccessory',
       'Beast'
     ];
-    return of(categories);
+    return categories;
   }
 
   getItemCategoryOverview(league: string, type: string) {
@@ -56,6 +59,28 @@ export class PoeNinjaService {
     return this.rateLimiter.limit(
       this.http.get<PoeNinjaCurrencyOverview>('https://poe.ninja/api/data/currencyoverview' + parameters)
     );
+  }
+
+  getItemPrices(league: string) {
+    return forkJoin(this.getItemCategories().map((type: any) => {
+      return this.getItemCategoryOverview(league, type).pipe(map((itemOverview: PoeNinjaItemOverview) => {
+        return itemOverview.lines.map(lines => {
+          return { name: lines.name, value: lines.chaosValue } as ExternalPrice;
+        });
+      }));
+    })
+    )
+  }
+
+  getCurrencyPrices(league: string) {
+    return forkJoin(this.getCurrencyCategories().map((type: any) => {
+      return this.getCurrencyCategoryOverview(league, type).pipe(map((currOverview: PoeNinjaCurrencyOverview) => {
+        return currOverview.lines.map(lines => {
+          return { name: lines.currencyTypeName, value: lines.chaosEquivalent } as ExternalPrice;
+        });
+      }));
+    })
+    )
   }
 
 }

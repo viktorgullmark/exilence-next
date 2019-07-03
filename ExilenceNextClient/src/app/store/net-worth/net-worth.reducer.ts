@@ -78,6 +78,29 @@ export function reducer(
       };
     }
 
+    case NetWorthActionTypes.FetchPrices: {
+      return {
+        ...state
+      };
+    }
+
+    case NetWorthActionTypes.FetchPricesSuccess: {
+      return {
+        ...state,
+        prices: {
+          ...state.prices,
+          poeNinja: action.payload.poeNinja,
+          poeWatch: action.payload.poeWatch
+        }
+      };
+    }
+
+    case NetWorthActionTypes.FetchPricesFail: {
+      return {
+        ...state
+      };
+    }
+
     case NetWorthActionTypes.PriceItemsForSnapshot: {
       return {
         ...state,

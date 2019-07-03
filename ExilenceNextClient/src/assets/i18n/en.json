@@ -4,7 +4,7 @@
   },
   "ERROR": {
     "UNAUTHORIZED": "The session id is incorrect",
-    "NOT_FOUND": "The resource was not found, double-check the account",
+    "NOT_FOUND": "The resource was not found",
     "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
     "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie",
     "SESSION_NOT_VALID_TITLE": "The session is not valid",

@@ -232,7 +232,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       window.dispatchEvent(new Event('resize'));
     });
 
-    // load state from storage, this subscribtion will only fire once.
+    // load state from storage
     this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
 
     // save state to storage on changes
