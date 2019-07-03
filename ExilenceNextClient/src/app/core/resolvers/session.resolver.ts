@@ -21,7 +21,6 @@ export class SessionResolver implements Resolve<any> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot) {
-    console.log(route.params.validated);
     if (route.params.validated !== 'true') {
       this.appStore.select(selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
         if (res.sessionId !== undefined) {
