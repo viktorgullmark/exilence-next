@@ -34,21 +34,21 @@ export class ExternalService {
   }
 
   /* #region pathofexile.com */
-  getStashTab(account: string = this.session.account, league: string = this.session.tradeLeague, index: number): Observable<Stash> {
+  getStashTab(account: string = this.session.account, league: string = this.session.league, index: number): Observable<Stash> {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.rateLimiter.limit(
       this.http.get<Stash>(this.poeUrl + '/character-window/get-stash-items' + parameters)
     );
   }
 
-  getStashTabs(account: string = this.session.account, league: string = this.session.tradeLeague) {
+  getStashTabs(account: string = this.session.account, league: string = this.session.league) {
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return this.rateLimiter.limit(
       this.http.get<Stash>(this.poeUrl + '/character-window/get-stash-items' + parameters)
     );
   }
 
-  getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.tradeLeague) {
+  getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
     return forkJoin((tabs.slice(0, 20).map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         tab.items = stash.items.map((item: Item) => {

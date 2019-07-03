@@ -96,7 +96,7 @@ export function reducer(
       };
     }
 
-    case ApplicationActionTypes.SetTrialCookie: {
+    case ApplicationActionTypes.SetValidateCookieForLogin: {
       return {
         ...state
       };

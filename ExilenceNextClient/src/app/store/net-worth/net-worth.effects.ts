@@ -65,27 +65,27 @@ export class NetWorthEffects {
   )
   );
 
-  fetchTabs$ = createEffect(() => this.actions$.pipe(
-    ofType(netWorthActions.NetWorthActionTypes.FetchTabs),
+  fetchTabsForSnapshot$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshot),
     mergeMap((res: any) =>
       this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
           map((stash: Stash) => {
-            return new netWorthActions.FetchTabsSuccess({ accountDetails: res.payload.accountDetails, tabs: stash.tabs });
+            return new netWorthActions.FetchTabsForSnapshotSuccess({ accountDetails: res.payload.accountDetails, tabs: stash.tabs });
           }),
           catchError(() => of(
-            new netWorthActions.FetchTabsFail(
+            new netWorthActions.FetchTabsForSnapshotFail(
               { title: 'ERROR.FETCH_TABS_FAIL_TITLE', message: 'ERROR.FETCH_TABS_FAIL_DESC' })))
         ))),
   );
 
-  fetchTabsSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(netWorthActions.NetWorthActionTypes.FetchTabsSuccess),
+  fetchTabsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshotSuccess),
     map((res: any) => new netWorthActions.FetchItemsForSnapshot({ tabs: res.payload.tabs })))
   );
 
-  fetchTabsFail$ = createEffect(() => this.actions$.pipe(
-    ofType(netWorthActions.NetWorthActionTypes.FetchTabsFail),
+  fetchTabsForSnapshotFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshotFail),
     map((res: any) => new notificationActions.AddNotification({
       notification:
         {

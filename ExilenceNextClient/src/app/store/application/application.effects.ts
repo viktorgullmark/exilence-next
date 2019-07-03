@@ -106,7 +106,7 @@ export class ApplicationEffects {
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
           map(leagues => {
-            return new applicationActions.SetTrialCookie(
+            return new applicationActions.SetValidateCookieForLogin(
               { accountDetails: res.payload.accountDetails, league: leagues[0] });
           })
         ))
@@ -203,8 +203,8 @@ export class ApplicationEffects {
         ))),
   );
 
-  setTrialCookie$ = createEffect(() => this.actions$.pipe(
-    ofType(applicationActions.ApplicationActionTypes.SetTrialCookie),
+  setValidateCookieForLogin$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.SetValidateCookieForLogin),
     mergeMap((res: any) =>
       of(this.cookieService.setSessionCookie(res.payload.accountDetails.sessionId))
         .pipe(

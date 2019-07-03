@@ -21,9 +21,9 @@ export enum NetWorthActionTypes {
   PriceItemsForSnapshotSuccess = '[NetWorth] Price Items For Snapshot Success',
   PriceItemsForSnapshotFail = '[NetWorth] Price Items For Snapshot Fail',
   AddTabs = '[NetWorth] Add Tabs',
-  FetchTabs = '[NetWorth] Fetch Tabs',
-  FetchTabsSuccess = '[NetWorth] Fetch Tabs Success',
-  FetchTabsFail = '[NetWorth] Fetch Tabs Fail',
+  FetchTabsForSnapshot = '[NetWorth] Fetch Tabs For Snapshot',
+  FetchTabsForSnapshotSuccess = '[NetWorth] Fetch Tabs For Snapshot Success',
+  FetchTabsForSnapshotFail = '[NetWorth] Fetch Tabs For Snapshot Fail',
 }
 
 export class LoadStateFromStorage implements Action {
@@ -46,19 +46,19 @@ export class OverrideState implements Action {
 
   constructor(public payload: { state: NetWorthState }) { }
 }
-export class FetchTabs implements Action {
-  readonly type = NetWorthActionTypes.FetchTabs;
+export class FetchTabsForSnapshot implements Action {
+  readonly type = NetWorthActionTypes.FetchTabsForSnapshot;
 
   constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string, tabs: Tab[] }) { }
 }
 
-export class FetchTabsSuccess implements Action {
-  readonly type = NetWorthActionTypes.FetchTabsSuccess;
+export class FetchTabsForSnapshotSuccess implements Action {
+  readonly type = NetWorthActionTypes.FetchTabsForSnapshotSuccess;
   constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[] }) { }
 }
 
-export class FetchTabsFail implements Action {
-  readonly type = NetWorthActionTypes.FetchTabsFail;
+export class FetchTabsForSnapshotFail implements Action {
+  readonly type = NetWorthActionTypes.FetchTabsForSnapshotFail;
   constructor(public payload: { title: string, message: string }) { }
 }
 

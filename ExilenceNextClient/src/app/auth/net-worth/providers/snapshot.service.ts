@@ -65,7 +65,7 @@ export class SnapshotService {
   }
 
   startSnapshot() {
-    this.netWorthStore.dispatch(new netWorthActions.FetchTabs({
+    this.netWorthStore.dispatch(new netWorthActions.FetchTabsForSnapshot({
       tabs: this.tabs,
       accountDetails: { sessionId: this.session.sessionId, account: this.session.account },
       league: this.session.league
