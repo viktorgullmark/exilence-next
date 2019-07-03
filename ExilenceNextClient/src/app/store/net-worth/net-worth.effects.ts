@@ -13,7 +13,6 @@ import { NetWorthState } from '../../app.states';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
 import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
-import { PricingService } from '../../auth/net-worth/providers/pricing.service';
 
 @Injectable()
 export class NetWorthEffects {
@@ -23,8 +22,7 @@ export class NetWorthEffects {
     private externalService: ExternalService,
     private storageMap: StorageMap,
     private poeNinjaService: PoeNinjaService,
-    private poeWatchService: PoeWatchService,
-    private pricingService: PricingService
+    private poeWatchService: PoeWatchService
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
