@@ -55,9 +55,8 @@ export class SnapshotService {
       this.session = session;
     });
 
-    this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess)).combineLatest(
-      this.actions$.pipe(ofType(ApplicationActionTypes.SetLeague))
-    ).take(1)
+    // todo: listen to both login and revalidate
+    this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
       .subscribe(() => {
         this.checkIfReady();
       });

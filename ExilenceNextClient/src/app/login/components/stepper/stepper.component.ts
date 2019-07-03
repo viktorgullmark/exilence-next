@@ -49,7 +49,7 @@ export class StepperComponent implements OnInit, OnDestroy {
       tradeLeagueName: ['', Validators.required]
     });
 
-    this.applicationEffects.validateSessionSuccess$
+    this.applicationEffects.validateSessionForLoginSuccess$
       .subscribe(() => {
         this.stepper.next();
       });

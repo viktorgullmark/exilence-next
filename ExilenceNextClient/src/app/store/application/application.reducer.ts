@@ -84,6 +84,12 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.SetValidateCookie: {
+      return {
+        ...state
+      };
+    }
+
     case ApplicationActionTypes.InitSessionSuccess: {
       return {
         ...state,
@@ -99,6 +105,40 @@ export function reducer(
         session: {
           ...state.session,
           loading: false
+        }
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSessionForLogin: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loading: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSessionForLoginSuccess: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          account: action.payload.accountDetails.account,
+          sessionId: action.payload.accountDetails.sessionId,
+          loading: false,
+          validated: true
+        }
+      };
+    }
+
+    case ApplicationActionTypes.ValidateSessionForLoginFail: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loading: false,
+          validated: false
         }
       };
     }

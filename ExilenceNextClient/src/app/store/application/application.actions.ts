@@ -12,10 +12,14 @@ export enum ApplicationActionTypes {
   InitSession = '[Application] Init Session',
   InitSessionSuccess = '[Application] Init Session Success',
   InitSessionFail = '[Application] Init Session Fail',
+  ValidateSessionForLogin = '[Application] Validate Session For Login',
+  ValidateSessionForLoginSuccess = '[Application] Validate Session For Login Success',
+  ValidateSessionForLoginFail = '[Application] Validate Session For Login Fail',
   ValidateSession = '[Application] Validate Session',
   ValidateSessionSuccess = '[Application] Validate Session Success',
   ValidateSessionFail = '[Application] Validate Session Fail',
   SetTrialCookie = '[Application] Set Trial Cookie',
+  SetValidateCookie = '[Application] Set Validate Cookie',
   SetLeague = '[Application] Set League',
   SetTradeLeague = '[Application] Set Trade League',
   SetSession = '[Application] Set Session',
@@ -75,9 +79,24 @@ export class InitSessionFail implements Action {
   constructor(public payload: { title: string, message: string }) { }
 }
 
+export class ValidateSessionForLogin implements Action {
+  readonly type = ApplicationActionTypes.ValidateSessionForLogin;
+
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
+}
+
+export class ValidateSessionForLoginSuccess implements Action {
+  readonly type = ApplicationActionTypes.ValidateSessionForLoginSuccess;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails }) { }
+}
+
+export class ValidateSessionForLoginFail implements Action {
+  readonly type = ApplicationActionTypes.ValidateSessionForLoginFail;
+  constructor(public payload: { title: string, message: string }) { }
+}
+
 export class ValidateSession implements Action {
   readonly type = ApplicationActionTypes.ValidateSession;
-
   constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
 }
 
@@ -96,10 +115,16 @@ export class SetTrialCookie implements Action {
   constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
 }
 
+export class SetValidateCookie implements Action {
+  readonly type = ApplicationActionTypes.SetValidateCookie;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string }) { }
+}
+
 export type ApplicationActions =
   SetState |
   AddCharacters | AddLeagues |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |
+  ValidateSessionForLogin | ValidateSessionForLoginSuccess | ValidateSessionForLoginFail |
   ValidateSession | ValidateSessionSuccess | ValidateSessionFail |
-  SetTrialCookie;
+  SetTrialCookie | SetValidateCookie;

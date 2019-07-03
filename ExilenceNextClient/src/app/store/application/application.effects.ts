@@ -73,13 +73,50 @@ export class ApplicationEffects {
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
           map(leagues => {
-            this.storageMap.set('session.leagues', res.payload.leagues).subscribe();
-            this.storageMap.set('session.characters', res.payload.characters).subscribe();
-            this.storageMap.set('session.characterLeagues', leagues).subscribe();
             return new applicationActions.SetTrialCookie(
               { accountDetails: res.payload.accountDetails, league: leagues[0] });
           })
         ))
+  )
+  );
+
+  validateSessionForLogin$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.ValidateSessionForLogin),
+    mergeMap((res: any) =>
+      this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
+        .pipe(
+          map(() => {
+            return new applicationActions.ValidateSessionForLoginSuccess({ accountDetails: res.payload.accountDetails });
+          }),
+          catchError(() => of(
+            new applicationActions.ValidateSessionForLoginFail(
+              { title: 'ERROR.SESSION_NOT_VALID_TITLE', message: 'ERROR.SESSION_NOT_VALID_DESC' })))
+        ))),
+  );
+
+  validateSessionForLoginFail$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.ValidateSessionForLoginFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Error
+        } as Notification
+    }))
+  )
+  );
+
+  validateSessionForLoginSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.ValidateSessionForLoginSuccess),
+    map(() => new notificationActions.AddNotification({
+      notification:
+        {
+          title: 'SUCCESS.SESSION_VALID_TITLE',
+          description: 'SUCCESS.SESSION_VALID_DESC',
+          type: NotificationType.Information
+        } as Notification
+    }))
   )
   );
 
@@ -123,13 +160,23 @@ export class ApplicationEffects {
   )
   );
 
+  setValidateCookie$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.SetValidateCookie),
+    mergeMap((res: any) =>
+      of(this.cookieService.setSessionCookie(res.payload.accountDetails.sessionId))
+        .pipe(
+          map(() => new applicationActions.ValidateSession(
+            { accountDetails: res.payload.accountDetails, league: res.payload.league }))
+        ))),
+  );
 
   setTrialCookie$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.SetTrialCookie),
     mergeMap((res: any) =>
       of(this.cookieService.setSessionCookie(res.payload.accountDetails.sessionId))
         .pipe(
-          map(() => new applicationActions.ValidateSession({ accountDetails: res.payload.accountDetails, league: res.payload.league }))
+          map(() => new applicationActions.ValidateSessionForLogin(
+            { accountDetails: res.payload.accountDetails, league: res.payload.league }))
         ))),
   );
 }

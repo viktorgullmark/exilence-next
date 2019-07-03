@@ -10,6 +10,7 @@ import { catchError, first } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
 import { selectApplicationSession } from '../../store/application/application.selectors';
+import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
 
 @Injectable()
 export class SessionResolver implements Resolve<any> {
@@ -21,33 +22,25 @@ export class SessionResolver implements Resolve<any> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot) {
-    if (route.params.validated !== 'true') {
-      this.appStore.select(selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
-        if (res.sessionId !== undefined) {
-          this.appStore.dispatch(new applicationActions.InitSession({ accountDetails: res }));
-          this.appStore.dispatch(new applicationActions.SetLeague({
-            league: res.league
-          }));
-          this.appStore.dispatch(new applicationActions.SetTradeLeague({
-            tradeLeague: res.tradeLeague
-          }));
+    this.appStore.select(selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
+      if (res.sessionId !== undefined) {
+        this.appStore.dispatch(new applicationActions.SetValidateCookie(
+          { accountDetails: { account: res.account, sessionId: res.sessionId } as ApplicationSessionDetails, league: res.league }));
 
-          this.applicationEffects.validateSessionSuccess$
-            .subscribe(() => {
-              return;
-            });
+        this.applicationEffects.validateSessionSuccess$
+          .subscribe(() => {
+            return;
+          });
 
-          this.actions$.pipe(ofType(
-            applicationActions.ApplicationActionTypes.InitSessionFail,
-            applicationActions.ApplicationActionTypes.ValidateSessionFail))
-            .subscribe(() => {
-              this.router.navigate(['/login']);
-              return EMPTY;
-            });
-        } else {
-          this.router.navigate(['/login']);
-        }
-      });
-    }
+        this.actions$.pipe(ofType(
+          applicationActions.ApplicationActionTypes.ValidateSessionFail))
+          .subscribe(() => {
+            this.router.navigate(['/login']);
+            return EMPTY;
+          });
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }
