@@ -21,6 +21,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { skip } from 'rxjs/operators';
 import { selectNetWorthSelectedTabs, selectNetWorthStashTabs } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
+import { initialState } from '../../../../store/net-worth/net-worth.state';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -232,11 +233,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     });
 
     // load state from storage, this subscribtion will only fire once.
-    this.storageMap.get('netWorthState').subscribe((res: NetWorthState) => {
-      if (res !== undefined) {
-        this.appStore.dispatch(new netWorthActions.SetState({ state: res }));
-      }
-    });
+    this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
 
     // save state to storage on changes
     this.netWorthStore.pipe(skip(1)).subscribe((state: AppState) => {

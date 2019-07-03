@@ -28,6 +28,39 @@ export class ApplicationEffects {
     private storageMap: StorageMap
   ) { }
 
+  loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.LoadStateFromStorage),
+    mergeMap(() => this.storageMap.get('appState').pipe(
+      map((state: ApplicationState) =>
+        state !== undefined ?
+          new applicationActions.OverrideState({ state }) :
+          new applicationActions.LoadStateFromStorageFail({
+            title: 'INFORMATION.NO_STORAGE_TITLE',
+            message: 'INFORMATION.NO_STORAGE_DESC'
+          })
+      )
+    ))
+  )
+  );
+
+  overrideState$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.OverrideState),
+    map(() => new applicationActions.LoadStateFromStorageSuccess()))
+  );
+
+  loadStateFromStorageFail$ = createEffect(() => this.actions$.pipe(
+    ofType(applicationActions.ApplicationActionTypes.LoadStateFromStorageFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Information
+        } as Notification
+    }))
+  )
+  );
+
   initSession$ = createEffect(() => this.actions$.pipe(
     ofType(applicationActions.ApplicationActionTypes.InitSession),
     mergeMap((res: any) => forkJoin(

@@ -6,7 +6,10 @@ import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
 
 export enum NetWorthActionTypes {
-  SetState = '[NetWorth] Set State',
+  LoadStateFromStorage = '[NetWorth] Load State From Storage',
+  LoadStateFromStorageSuccess = '[NetWorth] Load State From Storage Success',
+  LoadStateFromStorageFail = '[NetWorth] Load State From Storage Fail',
+  OverrideState = '[NetWorth] Override State',
   UpdateTabSelection = '[NetWorth] Update TabSelection',
   FetchItemsForSnapshot = '[NetWorth] Fetch Items For Snapshot',
   FetchItemsForSnapshotSuccess = '[NetWorth] Fetch Items For Snapshot Success',
@@ -23,12 +26,26 @@ export enum NetWorthActionTypes {
   FetchTabsFail = '[NetWorth] Fetch Tabs Fail',
 }
 
-export class SetState implements Action {
-  readonly type = NetWorthActionTypes.SetState;
+export class LoadStateFromStorage implements Action {
+  readonly type = NetWorthActionTypes.LoadStateFromStorage;
+  constructor() { }
+}
+
+export class LoadStateFromStorageSuccess implements Action {
+  readonly type = NetWorthActionTypes.LoadStateFromStorageSuccess;
+  constructor() { }
+}
+
+export class LoadStateFromStorageFail implements Action {
+  readonly type = NetWorthActionTypes.LoadStateFromStorageFail;
+  constructor(public payload: { title: string, message: string }) { }
+}
+
+export class OverrideState implements Action {
+  readonly type = NetWorthActionTypes.OverrideState;
 
   constructor(public payload: { state: NetWorthState }) { }
 }
-
 export class FetchTabs implements Action {
   readonly type = NetWorthActionTypes.FetchTabs;
 
@@ -101,7 +118,8 @@ export class FetchPricesFail implements Action {
 }
 
 export type NetWorthActions =
-  SetState |
+  OverrideState |
+  LoadStateFromStorage | LoadStateFromStorageSuccess | LoadStateFromStorageFail |
   AddTabs |
   PriceItemsForSnapshot | PriceItemsForSnapshotSuccess | PriceItemsForSnapshotFail |
   FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |

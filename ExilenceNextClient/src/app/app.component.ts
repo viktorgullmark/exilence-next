@@ -9,6 +9,7 @@ import { ElectronService } from './core/providers/electron.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
 import * as applicationActions from './store/application/application.actions';
 import { skip } from 'rxjs/operators';
+import { initialState } from './store/application/application.state';
 
 @Component({
   selector: 'app-root',
@@ -31,11 +32,7 @@ export class AppComponent {
     }
 
     // load state from storage
-    this.storageMap.get('appState').subscribe((res: ApplicationState) => {
-      if (res !== undefined) {
-        this.appStore.dispatch(new applicationActions.SetState({ state: res }));
-      }
-    });
+    this.appStore.dispatch(new applicationActions.LoadStateFromStorage());
 
     // save state to storage on changes
     this.appStore.pipe(skip(1)).subscribe((state: AppState) => {

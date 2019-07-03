@@ -8,7 +8,10 @@ import { Tab } from '../../shared/interfaces/stash.interface';
 import { ApplicationState } from '../../app.states';
 
 export enum ApplicationActionTypes {
-  SetState = '[Application] Set State',
+  LoadStateFromStorage = '[Application] Load State From Storage',
+  LoadStateFromStorageSuccess = '[Application] Load State From Storage Success',
+  LoadStateFromStorageFail = '[Application] Load State From Storage Fail',
+  OverrideState = '[Application] Override State',
   InitSession = '[Application] Init Session',
   InitSessionSuccess = '[Application] Init Session Success',
   InitSessionFail = '[Application] Init Session Fail',
@@ -27,8 +30,23 @@ export enum ApplicationActionTypes {
   AddLeagues = '[Application] Add Leagues'
 }
 
-export class SetState implements Action {
-  readonly type = ApplicationActionTypes.SetState;
+export class LoadStateFromStorage implements Action {
+  readonly type = ApplicationActionTypes.LoadStateFromStorage;
+  constructor() { }
+}
+
+export class LoadStateFromStorageSuccess implements Action {
+  readonly type = ApplicationActionTypes.LoadStateFromStorageSuccess;
+  constructor() { }
+}
+
+export class LoadStateFromStorageFail implements Action {
+  readonly type = ApplicationActionTypes.LoadStateFromStorageFail;
+  constructor(public payload: { title: string, message: string }) { }
+}
+
+export class OverrideState implements Action {
+  readonly type = ApplicationActionTypes.OverrideState;
 
   constructor(public payload: { state: ApplicationState }) { }
 }
@@ -121,7 +139,8 @@ export class SetValidateCookie implements Action {
 }
 
 export type ApplicationActions =
-  SetState |
+  OverrideState |
+  LoadStateFromStorage | LoadStateFromStorageSuccess | LoadStateFromStorageFail |
   AddCharacters | AddLeagues |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |

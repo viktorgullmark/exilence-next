@@ -3,22 +3,56 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
-import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
 import { ExternalService } from '../../core/providers/external.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
+import { Stash } from '../../shared/interfaces/stash.interface';
 import { Notification } from './../../shared/interfaces/notification.interface';
 import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
-import { Tab, Stash } from '../../shared/interfaces/stash.interface';
+import { NetWorthState } from '../../app.states';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class NetWorthEffects {
 
   constructor(
     private actions$: Actions,
-    private snapshotService: SnapshotService,
-    private externalService: ExternalService
+    private externalService: ExternalService,
+    private storageMap: StorageMap
   ) { }
+
+  loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorage),
+    mergeMap(() => this.storageMap.get('netWorthState').pipe(
+      map((state: NetWorthState) =>
+        state !== undefined ?
+          new netWorthActions.OverrideState({ state }) :
+          new netWorthActions.LoadStateFromStorageFail({
+            title: 'INFORMATION.NO_STORAGE_TITLE',
+            message: 'INFORMATION.NO_STORAGE_DESC'
+          })
+      )
+    ))
+  )
+  );
+
+  overrideState$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.OverrideState),
+    map(() => new netWorthActions.LoadStateFromStorageSuccess()))
+  );
+
+  loadStateFromStorageFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Information
+        } as Notification
+    }))
+  )
+  );
 
   // todo: fetch prices for poe watch & poe ninja
   fetchPrices$ = createEffect(() => this.actions$.pipe(

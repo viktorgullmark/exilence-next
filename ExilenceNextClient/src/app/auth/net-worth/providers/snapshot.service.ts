@@ -56,6 +56,9 @@ export class SnapshotService {
     });
 
     this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
+      .combineLatest(this.actions$.pipe(
+        ofType(NetWorthActionTypes.LoadStateFromStorageFail,
+          NetWorthActionTypes.LoadStateFromStorageSuccess)))
       .subscribe(() => {
         this.checkIfReady();
       });

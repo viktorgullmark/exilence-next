@@ -10,14 +10,27 @@ export function reducer(
 ): NetWorthState {
   switch (action.type) {
 
-    case NetWorthActionTypes.SetState: {
+    case NetWorthActionTypes.OverrideState: {
       return {
-        ...state,
-        ...action.payload.state,
-        status: {
-          ...action.payload.state.status,
-          snapshotting: false
-        }
+        ...state
+      };
+    }
+
+    case NetWorthActionTypes.LoadStateFromStorage: {
+      return {
+        ...state
+      };
+    }
+
+    case NetWorthActionTypes.LoadStateFromStorageSuccess: {
+      return {
+        ...state
+      };
+    }
+
+    case NetWorthActionTypes.LoadStateFromStorageFail: {
+      return {
+        ...state
       };
     }
 

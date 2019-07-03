@@ -10,7 +10,7 @@ export function reducer(
 ): ApplicationState {
   switch (action.type) {
 
-    case ApplicationActionTypes.SetState: {
+    case ApplicationActionTypes.OverrideState: {
       return {
         ...state,
         ...action.payload.state,
@@ -18,6 +18,24 @@ export function reducer(
           ...action.payload.state.session,
           loading: false
         }
+      };
+    }
+
+    case ApplicationActionTypes.LoadStateFromStorage: {
+      return {
+        ...state
+      };
+    }
+
+    case ApplicationActionTypes.LoadStateFromStorageSuccess: {
+      return {
+        ...state
+      };
+    }
+
+    case ApplicationActionTypes.LoadStateFromStorageFail: {
+      return {
+        ...state
       };
     }
 
