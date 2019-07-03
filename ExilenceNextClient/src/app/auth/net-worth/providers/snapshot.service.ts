@@ -72,9 +72,14 @@ export class SnapshotService {
     }));
   }
 
+  fetchPrices() {
+    this.netWorthStore.dispatch(new netWorthActions.FetchPrices({ league: this.session.tradeLeague }));
+  }
+
   checkIfReady() {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
       this.startSnapshot();
+      this.fetchPrices();
     }
   }
 }
