@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import RateLimiter from 'rxjs-ratelimiter';
 import { of } from 'rxjs';
-import { PoeNinjaItemOverview } from '../../shared/interfaces/poe-ninja/poe-ninja-item-overview.interface';
-import { PoeNinjaCurrencyOverview } from '../../shared/interfaces/poe-ninja/poe-ninja-currency-overview.interface';
+import RateLimiter from 'rxjs-ratelimiter';
 
-@Injectable({
-  providedIn: 'root'
-})
+import { PoeNinjaCurrencyOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-currency-overview.interface';
+import { PoeNinjaItemOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-item-overview.interface';
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class PoeNinjaService {
 
   private rateLimiter = new RateLimiter(1, 1);

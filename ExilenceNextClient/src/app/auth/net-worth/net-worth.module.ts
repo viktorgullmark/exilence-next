@@ -30,6 +30,9 @@ import { NetWorthEffects } from '../../store/net-worth/net-worth.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from '../../store/net-worth/net-worth.reducer';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { PricingService } from './providers/pricing.service';
+import { PoeNinjaService } from './providers/poe-ninja.service';
+import { PoeWatchService } from './providers/poe-watch.service';
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
@@ -55,7 +58,7 @@ import { GoogleChartsModule } from 'angular-google-charts';
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    SnapshotService
+    SnapshotService, PricingService, PoeNinjaService, PoeWatchService
   ]
 })
 export class NetWorthModule { }
