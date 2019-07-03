@@ -1,5 +1,4 @@
-import { Character } from "./character.interface";
-import { Tab } from "./stash.interface";
+import { Character } from './character.interface';
 
 export interface ApplicationSession {
     account: string;
@@ -10,5 +9,4 @@ export interface ApplicationSession {
     loading: boolean;
     leagues: string[];
     characters: Character[];
-    tabs: Tab[];
 }

@@ -15,10 +15,6 @@ export const selectApplicationSessionCharacters = createSelector(getApplicationS
     (state: ApplicationState) => state.session.characters
 );
 
-export const selectApplicationSessionTabs = createSelector(getApplicationState,
-    (state: ApplicationState) => state.session.tabs
-);
-
 export const selectApplicationSessionLoading = createSelector(getApplicationState,
     (state: ApplicationState) => state.session.loading
 );

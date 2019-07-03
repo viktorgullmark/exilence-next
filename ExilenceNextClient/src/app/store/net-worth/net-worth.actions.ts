@@ -8,9 +8,6 @@ import { ExternalPrice } from '../../shared/interfaces/external-price.interface'
 export enum NetWorthActionTypes {
   SetState = '[NetWorth] Set State',
   UpdateTabSelection = '[NetWorth] Update TabSelection',
-  LoadTabs = '[NetWorth] Load Tabs',
-  LoadTabsSuccess = '[NetWorth] Load Tabs Success',
-  LoadTabsFail = '[NetWorth] Load Tabs Fail',
   FetchItemsForSnapshot = '[NetWorth] Fetch Items For Snapshot',
   FetchItemsForSnapshotSuccess = '[NetWorth] Fetch Items For Snapshot Success',
   FetchItemsForSnapshotFail = '[NetWorth] Fetch Items For Snapshot Fail',
@@ -19,13 +16,38 @@ export enum NetWorthActionTypes {
   FetchPricesFail = '[NetWorth] Fetch Prices Fail',
   PriceItemsForSnapshot = '[NetWorth] Price Items For Snapshot',
   PriceItemsForSnapshotSuccess = '[NetWorth] Price Items For Snapshot Success',
-  PriceItemsForSnapshotFail = '[NetWorth] Price Items For Snapshot Fail'
+  PriceItemsForSnapshotFail = '[NetWorth] Price Items For Snapshot Fail',
+  AddTabs = '[NetWorth] Add Tabs',
+  FetchTabs = '[NetWorth] Fetch Tabs',
+  FetchTabsSuccess = '[NetWorth] Fetch Tabs Success',
+  FetchTabsFail = '[NetWorth] Fetch Tabs Fail',
 }
 
 export class SetState implements Action {
   readonly type = NetWorthActionTypes.SetState;
 
   constructor(public payload: { state: NetWorthState }) { }
+}
+
+export class FetchTabs implements Action {
+  readonly type = NetWorthActionTypes.FetchTabs;
+
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, league: string, tabs: Tab[] }) { }
+}
+
+export class FetchTabsSuccess implements Action {
+  readonly type = NetWorthActionTypes.FetchTabsSuccess;
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[] }) { }
+}
+
+export class FetchTabsFail implements Action {
+  readonly type = NetWorthActionTypes.FetchTabsFail;
+  constructor(public payload: { title: string, message: string }) { }
+}
+
+export class AddTabs implements Action {
+  readonly type = NetWorthActionTypes.AddTabs;
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class UpdateTabSelection implements Action {
@@ -40,7 +62,7 @@ export class FetchItemsForSnapshot implements Action {
 
 export class FetchItemsForSnapshotSuccess implements Action {
   readonly type = NetWorthActionTypes.FetchItemsForSnapshotSuccess;
-  constructor(public payload: { items: PricedItem[] }) { }
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class FetchItemsForSnapshotFail implements Action {
@@ -50,7 +72,7 @@ export class FetchItemsForSnapshotFail implements Action {
 
 export class PriceItemsForSnapshot implements Action {
   readonly type = NetWorthActionTypes.PriceItemsForSnapshot;
-  constructor(public payload: { items: PricedItem[] }) { }
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class PriceItemsForSnapshotSuccess implements Action {
@@ -78,25 +100,10 @@ export class FetchPricesFail implements Action {
   constructor(public payload: { error: string }) { }
 }
 
-export class LoadTabs implements Action {
-  readonly type = NetWorthActionTypes.LoadTabs;
-  constructor() { }
-}
-
-export class LoadTabsSuccess implements Action {
-  readonly type = NetWorthActionTypes.LoadTabsSuccess;
-  constructor(public payload: { tabs: any[] }) { }
-}
-
-export class LoadTabsFail implements Action {
-  readonly type = NetWorthActionTypes.LoadTabsFail;
-  constructor(public payload: { error: string }) { }
-}
-
 export type NetWorthActions =
   SetState |
+  AddTabs |
   PriceItemsForSnapshot | PriceItemsForSnapshotSuccess | PriceItemsForSnapshotFail |
   FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |
   FetchPrices | FetchPricesSuccess | FetchPricesFail |
-  LoadTabs | LoadTabsSuccess | LoadTabsFail |
   UpdateTabSelection;

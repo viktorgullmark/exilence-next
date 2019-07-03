@@ -12,10 +12,10 @@ import { Notification } from './../../../shared/interfaces/notification.interfac
 import * as netWorthActions from './../../../store/net-worth/net-worth.actions';
 import * as netWorthReducer from './../../../store/net-worth/net-worth.reducer';
 import * as notificationActions from './../../../store/notification/notification.actions';
-import { selectNetWorthStatus } from '../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthStatus, selectNetWorthStashTabs } from '../../../store/net-worth/net-worth.selectors';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
 import { Tab } from '../../../shared/interfaces/stash.interface';
-import { selectApplicationSessionTabs, selectApplicationSession } from '../../../store/application/application.selectors';
+import { selectApplicationSession } from '../../../store/application/application.selectors';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
 import { NetWorthEffects } from '../../../store/net-worth/net-worth.effects';
 import { ApplicationEffects } from '../../../store/application/application.effects';
@@ -45,7 +45,7 @@ export class SnapshotService {
       this.netWorthStatus = status;
     });
 
-    this.tabs$ = this.appStore.select(selectApplicationSessionTabs);
+    this.tabs$ = this.netWorthStore.select(selectNetWorthStashTabs);
     this.tabs$.subscribe((tabs: Tab[]) => {
       this.tabs = tabs;
     });
@@ -56,7 +56,7 @@ export class SnapshotService {
     });
 
     this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess)).combineLatest(
-      this.actions$.pipe(ofType(NetWorthActionTypes.SetState))
+      this.actions$.pipe(ofType(ApplicationActionTypes.SetLeague))
     ).take(1)
       .subscribe(() => {
         this.checkIfReady();
@@ -64,8 +64,10 @@ export class SnapshotService {
   }
 
   startSnapshot() {
-    this.netWorthStore.dispatch(new netWorthActions.FetchItemsForSnapshot({
-      tabs: this.tabs
+    this.netWorthStore.dispatch(new netWorthActions.FetchTabs({
+      tabs: this.tabs,
+      accountDetails: { sessionId: this.session.sessionId, account: this.session.account },
+      league: this.session.league
     }));
   }
 

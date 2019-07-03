@@ -21,10 +21,17 @@ export class SessionResolver implements Resolve<any> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot) {
+    console.log(route.params.validated);
     if (route.params.validated !== 'true') {
       this.appStore.select(selectApplicationSession).pipe(first()).subscribe((res: ApplicationSession) => {
         if (res.sessionId !== undefined) {
           this.appStore.dispatch(new applicationActions.InitSession({ accountDetails: res }));
+          this.appStore.dispatch(new applicationActions.SetLeague({
+            league: res.league
+          }));
+          this.appStore.dispatch(new applicationActions.SetTradeLeague({
+            tradeLeague: res.tradeLeague
+          }));
 
           this.applicationEffects.validateSessionSuccess$
             .subscribe(() => {

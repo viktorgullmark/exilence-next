@@ -20,8 +20,7 @@ export enum ApplicationActionTypes {
   SetTradeLeague = '[Application] Set Trade League',
   SetSession = '[Application] Set Session',
   AddCharacters = '[Application] Add Characters',
-  AddLeagues = '[Application] Add Leagues',
-  AddTabs = '[Application] Add Tabs'
+  AddLeagues = '[Application] Add Leagues'
 }
 
 export class SetState implements Action {
@@ -52,12 +51,6 @@ export class AddLeagues implements Action {
   readonly type = ApplicationActionTypes.AddLeagues;
 
   constructor(public payload: { leagues: string[] }) { }
-}
-
-export class AddTabs implements Action {
-  readonly type = ApplicationActionTypes.AddTabs;
-
-  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class SetLeague implements Action {
@@ -105,7 +98,7 @@ export class SetTrialCookie implements Action {
 
 export type ApplicationActions =
   SetState |
-  AddCharacters | AddLeagues | AddTabs |
+  AddCharacters | AddLeagues |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |
   ValidateSession | ValidateSessionSuccess | ValidateSessionFail |

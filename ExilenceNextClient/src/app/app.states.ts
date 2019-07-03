@@ -5,6 +5,8 @@ import { NetWorthStatus } from './shared/interfaces/net-worth-status.interface';
 import { Notification } from './shared/interfaces/notification.interface';
 import { ApplicationSession } from './shared/interfaces/application-session.interface';
 import { PricedItem } from './shared/interfaces/priced-item.interface';
+import { Tab } from './shared/interfaces/stash.interface';
+import { NetWorthStash } from './shared/interfaces/net-worth-stash.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
@@ -21,5 +23,5 @@ export interface ApplicationState {
 export interface NetWorthState {
     status: NetWorthStatus | null;
     settings: NetWorthSettings | null;
-    items: Array<PricedItem> | null;
+    stash: NetWorthStash | null;
 }

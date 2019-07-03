@@ -1,4 +1,5 @@
 import { Item } from './item.interface';
+import { PricedItem } from './priced-item.interface';
 
 export interface Stash {
     numTabs: number;
@@ -19,6 +20,7 @@ export interface Tab {
     srcL: string;
     srcC: string;
     srcR: string;
+    items: PricedItem[];
 }
 
 export interface Colour {

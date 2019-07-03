@@ -10,6 +10,10 @@ export const selectNetWorthSettings = createSelector(getNetWorthState,
     (state: NetWorthState) => state.settings
 );
 
-export const selectNetWorthTabs = createSelector(getNetWorthState,
+export const selectNetWorthSelectedTabs = createSelector(getNetWorthState,
     (state: NetWorthState) => state.settings.selectedTabs
+);
+
+export const selectNetWorthStashTabs = createSelector(getNetWorthState,
+    (state: NetWorthState) => state.stash.tabs
 );

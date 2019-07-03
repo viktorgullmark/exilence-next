@@ -9,7 +9,6 @@ export const initialState: ApplicationState = {
         loading: false,
         validated: false,
         leagues: [],
-        characters: [],
-        tabs: []
+        characters: []
     }
 };

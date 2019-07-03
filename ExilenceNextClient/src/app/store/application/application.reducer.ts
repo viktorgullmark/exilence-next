@@ -58,16 +58,6 @@ export function reducer(
       };
     }
 
-    case ApplicationActionTypes.AddTabs: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          tabs: action.payload.tabs
-        }
-      };
-    }
-
     case ApplicationActionTypes.SetLeague: {
       return {
         ...state,

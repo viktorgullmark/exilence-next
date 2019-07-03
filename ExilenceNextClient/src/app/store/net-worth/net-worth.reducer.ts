@@ -21,36 +21,12 @@ export function reducer(
       };
     }
 
-    case NetWorthActionTypes.LoadTabs: {
+    case NetWorthActionTypes.AddTabs: {
       return {
         ...state,
-        status: {
-          ...state.status,
-          tabsLoading: true
-        }
-      };
-    }
-
-    case NetWorthActionTypes.LoadTabsSuccess: {
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          tabs: action.payload.tabs,
-        },
-        status: {
-          ...state.status,
-          tabsLoading: false
-        }
-      };
-    }
-
-    case NetWorthActionTypes.LoadTabsFail: {
-      return {
-        ...state,
-        status: {
-          ...state.status,
-          tabsLoading: false
+        stash: {
+          ...state.stash,
+          tabs: action.payload.tabs
         }
       };
     }
@@ -68,9 +44,9 @@ export function reducer(
     case NetWorthActionTypes.FetchItemsForSnapshotSuccess: {
       return {
         ...state,
-        items: action.payload.items,
-        status: {
-          ...state.status
+        stash: {
+          ...state.stash,
+          tabs: action.payload.tabs
         }
       };
     }

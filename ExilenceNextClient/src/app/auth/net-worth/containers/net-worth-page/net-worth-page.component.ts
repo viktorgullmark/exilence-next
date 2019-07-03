@@ -19,8 +19,7 @@ import * as applicationActions from '../../../../store/application/application.a
 import * as applicationReducer from '../../../../store/application/application.reducer';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { skip } from 'rxjs/operators';
-import { selectNetWorthTabs } from '../../../../store/net-worth/net-worth.selectors';
-import { selectApplicationSessionTabs } from '../../../../store/application/application.selectors';
+import { selectNetWorthSelectedTabs, selectNetWorthStashTabs } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
 
 @Component({
@@ -224,8 +223,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private storageMap: StorageMap,
     private snapshotService: SnapshotService
   ) {
-    this.selectedTabs$ = this.netWorthStore.select(selectNetWorthTabs).takeUntil(this.destroy$);
-    this.stashtabList$ = this.appStore.select(selectApplicationSessionTabs).takeUntil(this.destroy$);
+    this.selectedTabs$ = this.netWorthStore.select(selectNetWorthSelectedTabs).takeUntil(this.destroy$);
+    this.stashtabList$ = this.netWorthStore.select(selectNetWorthStashTabs).takeUntil(this.destroy$);
 
     this.selectedTabs$.subscribe((ids: string[]) => {
       this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
@@ -247,8 +246,6 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.netWorthStore.dispatch(new netWorthActions.LoadTabs());
-
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
       window.dispatchEvent(new Event('resize'));
     });

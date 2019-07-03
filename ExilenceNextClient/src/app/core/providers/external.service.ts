@@ -49,13 +49,14 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.tradeLeague) {
-    return forkJoin((tabs.map((tab: Tab) =>
-      this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
-        return stash.items.map((item: Item) => {
-          return { name: item.typeLine } as PricedItem;
+    return forkJoin((tabs.slice(0, 5).map((tab: Tab) => {
+      return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
+        tab.items = stash.items.map((item: Item) => {
+          return { name: item.typeLine, id: item.id } as PricedItem;
         });
-      }))
-    )));
+        return tab;
+      }));
+    })));
   }
 
   getLeagues(type: string = 'main', compact: number = 1): Observable<League[]> {

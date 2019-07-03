@@ -37,14 +37,14 @@ export class ApplicationEffects {
       map(requests => {
         this.storageMap.set('session.accountDetails', res.payload.accountDetails).subscribe();
         if (requests[0].length === 0) {
-          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' })
+          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' });
         } else if (requests[1].length === 0) {
-          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' })
+          return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' });
         } else {
           this.appStore.dispatch(new applicationActions.AddLeagues({ leagues: requests[0] }));
           this.appStore.dispatch(new applicationActions.AddCharacters({ characters: requests[1] }));
           return new applicationActions.InitSessionSuccess(
-            { accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] })
+            { accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] });
         }
       }),
       catchError(() => of(
@@ -88,8 +88,7 @@ export class ApplicationEffects {
     mergeMap((res: any) =>
       this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
-          map((stash: Stash) => {
-            this.appStore.dispatch(new applicationActions.AddTabs({ tabs: stash.tabs }));
+          map(() => {
             return new applicationActions.ValidateSessionSuccess({ accountDetails: res.payload.accountDetails });
           }),
           catchError(() => of(

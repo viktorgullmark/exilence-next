@@ -9,6 +9,7 @@ import { NotificationType } from '../../shared/enums/notification-type.enum';
 import { Notification } from './../../shared/interfaces/notification.interface';
 import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
+import { Tab, Stash } from '../../shared/interfaces/stash.interface';
 
 @Injectable()
 export class NetWorthEffects {
@@ -18,16 +19,6 @@ export class NetWorthEffects {
     private snapshotService: SnapshotService,
     private externalService: ExternalService
   ) { }
-
-  loadTabs$ = createEffect(() => this.actions$.pipe(
-    ofType(netWorthActions.NetWorthActionTypes.LoadTabs),
-    mergeMap(() => of([])
-      .pipe(
-        map(tabs => new netWorthActions.LoadTabsSuccess({ tabs })),
-        catchError((e) => of(new netWorthActions.LoadTabsFail({ error: e })))
-      ))
-  )
-  );
 
   // todo: fetch prices for poe watch & poe ninja
   fetchPrices$ = createEffect(() => this.actions$.pipe(
@@ -40,16 +31,48 @@ export class NetWorthEffects {
   )
   );
 
+  fetchTabs$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabs),
+    mergeMap((res: any) =>
+      this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
+        .pipe(
+          map((stash: Stash) => {
+            return new netWorthActions.FetchTabsSuccess({ accountDetails: res.payload.accountDetails, tabs: stash.tabs });
+          }),
+          catchError(() => of(
+            new netWorthActions.FetchTabsFail(
+              { title: 'ERROR.FETCH_TABS_FAIL_TITLE', message: 'ERROR.FETCH_TABS_FAIL_DESC' })))
+        ))),
+  );
+
+  fetchTabsSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabsSuccess),
+    map((res: any) => new netWorthActions.FetchItemsForSnapshot({ tabs: res.payload.tabs })))
+  );
+
+  fetchTabsFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchTabsFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Error
+        } as Notification
+    }))
+  )
+  );
+
   fetchItemsForSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshot),
     mergeMap((res: any) =>
       this.externalService.getItemsForTabs(res.payload.tabs)
         .pipe(
           map(results => {
-            return new netWorthActions.FetchItemsForSnapshotSuccess({ items: [].concat.apply([], results) })
+            return new netWorthActions.FetchItemsForSnapshotSuccess({ tabs: results });
           }),
           catchError(() => of(new netWorthActions.FetchItemsForSnapshotFail(
-            { title: 'ERROR.FETCH_ITEMS_UNSUCCESSFUL_TITLE', message: 'ERROR.FETCH_ITEMS_UNSUCCESSFUL_DESC' })))
+            { title: 'ERROR.FETCH_ITEMS_FAIL_TITLE', message: 'ERROR.FETCH_ITEMS_FAIL_DESC' })))
         ))
   )
   );
@@ -57,7 +80,7 @@ export class NetWorthEffects {
   // todo: add notification
   fetchItemsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshotSuccess),
-    map(items => new netWorthActions.PriceItemsForSnapshot({ items: items })))
+    map((res: any) => new netWorthActions.PriceItemsForSnapshot({ tabs: res.payload.tabs })))
   );
 
   fetchItemsForSnapshotFail$ = createEffect(() => this.actions$.pipe(

@@ -3,12 +3,12 @@ import { NetWorthState } from '../../app.states';
 export const initialState: NetWorthState = {
     status: {
         snapshotting: false,
-        lastSnapshot: undefined,
-        tabsLoading: false
+        lastSnapshot: undefined
     },
     settings: {
-        selectedTabs: [],
-        tabs: []
+        selectedTabs: []
     },
-    items: []
+    stash: {
+        tabs: []
+    }
 };
