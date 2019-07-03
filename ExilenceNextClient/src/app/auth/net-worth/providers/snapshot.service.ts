@@ -55,7 +55,6 @@ export class SnapshotService {
       this.session = session;
     });
 
-    // todo: listen to both login and revalidate
     this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
       .subscribe(() => {
         this.checkIfReady();
