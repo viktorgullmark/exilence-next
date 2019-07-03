@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, forkJoin } from 'rxjs';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/combineLatest';
 import { NotificationType } from '../../../shared/enums/notification-type.enum';
 import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface';
 import { NotificationsState, NetWorthState } from './../../../app.states';
@@ -15,7 +17,11 @@ import { ApplicationSession } from '../../../shared/interfaces/application-sessi
 import { Tab } from '../../../shared/interfaces/stash.interface';
 import { selectApplicationSessionTabs, selectApplicationSession } from '../../../store/application/application.selectors';
 import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
+import { NetWorthEffects } from '../../../store/net-worth/net-worth.effects';
 import { ApplicationEffects } from '../../../store/application/application.effects';
+import { Actions, ofType } from '@ngrx/effects';
+import { ApplicationActionTypes } from '../../../store/application/application.actions';
+import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
 
 @Injectable()
 export class SnapshotService {
@@ -30,7 +36,8 @@ export class SnapshotService {
   constructor(
     private netWorthStore: Store<NetWorthState>,
     private appStore: Store<ApplicationSession>,
-    private applicationEffects: ApplicationEffects
+    private applicationEffects: ApplicationEffects,
+    private actions$: Actions
   ) {
 
     this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus);
@@ -48,7 +55,9 @@ export class SnapshotService {
       this.session = session;
     });
 
-    this.applicationEffects.validateSessionSuccess$
+    this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess)).combineLatest(
+      this.actions$.pipe(ofType(NetWorthActionTypes.SetState))
+    ).take(1)
       .subscribe(() => {
         this.checkIfReady();
       });
