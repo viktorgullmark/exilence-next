@@ -17,3 +17,7 @@ export const selectNetWorthSelectedTabs = createSelector(getNetWorthState,
 export const selectNetWorthStashTabs = createSelector(getNetWorthState,
     (state: NetWorthState) => state.stash.tabs
 );
+
+export const selectNetWorthSnapshots = createSelector(getNetWorthState,
+    (state: NetWorthState) => state.history.snapshots
+);
