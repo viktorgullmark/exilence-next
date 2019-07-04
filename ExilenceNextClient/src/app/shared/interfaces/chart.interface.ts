@@ -1,5 +1,6 @@
 export interface ChartSeries {
   name: string;
+  id: string;
   series: ChartSeriesEntry[];
 }
 

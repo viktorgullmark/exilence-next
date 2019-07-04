@@ -1,26 +1,23 @@
-import { TabSnapshotChartData } from "../interfaces/tab-snapshot-chart-data.interface";
+import { ChartSeries, ChartSeriesEntry } from '../interfaces/chart.interface';
+import { Snapshot } from '../interfaces/snapshot.interface';
+import { CompactTab } from '../interfaces/stash.interface';
 
 export class SnapshotHelper {
-    public static formatSnapshotsForChart(tabIds: string[], snapshots: any[]): TabSnapshotChartData {
-        const data = [];
-        const columnNames = ['Time'];
+    public static formatSnapshotsForChart(compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
+        const chartSeries: ChartSeries[] = compactTabs.map(tab => {
+            return { name: tab.i + ' - ' + tab.n, series: [], id: tab.id } as ChartSeries
+        });
 
-        if (tabIds.length > 0) {
-            for (let i = 0; i < tabIds.length; i++) {
-                columnNames.push(tabIds[i]);
-                for (let j = 0; j < snapshots.length; j++) {
-                    const tabValue = snapshots[j].tabSnapshots.find(ts => ts.tabId === tabIds[i]).value;
-                    // if first snapshot, start by creating new arr to store data in
-                    if (i === 0) {
-                        data.push([
-                            snapshots[j].timestamp
-                        ]);
-                    }
-                    data[j].push(tabValue)
+        for (let i = 0; i < snapshots.length; i++) {
+            for (let j = 0; j < snapshots[i].tabSnapshots.length; j++) {
+                const tabSeries = chartSeries.find(cs => cs.id === snapshots[i].tabSnapshots[j].tabId);     
+                if (tabSeries !== undefined) {
+                    tabSeries.series.push({ name: snapshots[i].timestamp, value: snapshots[i].tabSnapshots[j].value } as ChartSeriesEntry);
+                    chartSeries[chartSeries.indexOf(tabSeries)] = tabSeries;
                 }
-            }
+            }         
         }
 
-        return { data, columnNames } as TabSnapshotChartData;
+        return chartSeries;
     }
 }

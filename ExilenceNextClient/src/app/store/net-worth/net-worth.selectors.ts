@@ -21,3 +21,8 @@ export const selectNetWorthStashTabs = createSelector(getNetWorthState,
 export const selectNetWorthSnapshots = createSelector(getNetWorthState,
     (state: NetWorthState) => state.history.snapshots
 );
+
+export const selectCompactTabsByIds = (ids: string[]) => createSelector(
+    selectNetWorthStashTabs,
+    tabs => tabs.filter(tab => ids.find(id => id === tab.id))
+);

@@ -1,9 +1,6 @@
 <div class="chart-container pull--left float--left">
-  <google-chart 
-    [data]="chartData.data" 
-    [columnNames]="chartData.columnNames"
-    [options]="options"
-    dynamicResize="true" 
-    type="LineChart">
-  </google-chart>
+  <ngx-charts-line-chart [scheme]="colorScheme" [results]="chartData" [xAxis]="true" [yAxis]="true" [legend]="true" legendTitle="{{ 'GRAPH.LEGEND_TITLE' | translate }}"
+    [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisTickFormatting]="axisFormat" xAxisLabel="{{ 'GRAPH.TIMESTAMP' | translate }}" yAxisLabel="{{ 'GRAPH.VALUE' | translate }}" [autoScale]="true"
+    [timeline]="false"> 
+  </ngx-charts-line-chart>
 </div>
