@@ -103,10 +103,7 @@ export function reducer(
 
     case NetWorthActionTypes.PriceItemsForSnapshot: {
       return {
-        ...state,
-        status: {
-          ...state.status
-        }
+        ...state
       };
     }
 
@@ -117,10 +114,13 @@ export function reducer(
           ...state.status,
           snapshotting: false,
           lastSnapshot: moment(new Date()).toDate()
+        },
+        stash: {
+          ...state.stash,
+          tabs: action.payload.tabs
         }
       };
     }
-
     case NetWorthActionTypes.PriceItemsForSnapshotFail: {
       return {
         ...state,

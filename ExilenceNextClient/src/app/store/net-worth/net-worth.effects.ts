@@ -13,6 +13,7 @@ import { NetWorthState } from '../../app.states';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
 import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
+import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
 
 @Injectable()
 export class NetWorthEffects {
@@ -22,7 +23,8 @@ export class NetWorthEffects {
     private externalService: ExternalService,
     private storageMap: StorageMap,
     private poeNinjaService: PoeNinjaService,
-    private poeWatchService: PoeWatchService
+    private poeWatchService: PoeWatchService,
+    private itemPricingService: ItemPricingService
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
@@ -75,10 +77,12 @@ export class NetWorthEffects {
           });
           return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: prices[2] });
         }),
-        catchError((e) => of(new netWorthActions.FetchPricesFail(
-          { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' })))
-      ))
-  )
+        catchError((e) => {
+          console.log(e);
+          return of(new netWorthActions.FetchPricesFail(
+            { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' }));
+        }))
+    ))
   );
 
   fetchTabsForSnapshot$ = createEffect(() => this.actions$.pipe(
@@ -153,9 +157,17 @@ export class NetWorthEffects {
   )
   );
 
-  // todo: price fetched items (wait for prices to be fetched before continuing)
   priceItemsForSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.PriceItemsForSnapshot),
-    map(() => new netWorthActions.PriceItemsForSnapshotSuccess()))
+    mergeMap((res: any) =>
+      this.itemPricingService.priceItemsInTabs(res.payload.tabs, res.payload.prices)
+        .pipe(
+          map(results => {
+            return new netWorthActions.PriceItemsForSnapshotSuccess({ tabs: results });
+          }),
+          catchError(() => of(new netWorthActions.PriceItemsForSnapshotFail(
+            { title: 'ERROR.PRICE_ITEMS_FAIL_TITLE', message: 'ERROR.PRICE_ITEMS_FAIL_DESC' })))
+        ))
+  )
   );
 }

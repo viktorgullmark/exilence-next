@@ -4,6 +4,7 @@ import { Tab } from '../../shared/interfaces/stash.interface';
 import { ApplicationSessionDetails } from '../../shared/interfaces/application-session-details.interface';
 import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
+import { ExternalPrices } from '../../shared/interfaces/external-prices.interface';
 
 export enum NetWorthActionTypes {
   LoadStateFromStorage = '[NetWorth] Load State From Storage',
@@ -89,17 +90,17 @@ export class FetchItemsForSnapshotFail implements Action {
 
 export class PriceItemsForSnapshot implements Action {
   readonly type = NetWorthActionTypes.PriceItemsForSnapshot;
-  constructor(public payload: { tabs: Tab[] }) { }
+  constructor(public payload: { prices: ExternalPrices, tabs: Tab[] }) { }
 }
 
 export class PriceItemsForSnapshotSuccess implements Action {
   readonly type = NetWorthActionTypes.PriceItemsForSnapshotSuccess;
-  constructor() { }
+  constructor(public payload: { tabs: Tab[] }) { }
 }
 
 export class PriceItemsForSnapshotFail implements Action {
   readonly type = NetWorthActionTypes.PriceItemsForSnapshotFail;
-  constructor(public payload: { error: string }) { }
+  constructor(public payload: { title: string, message: string }) { }
 }
 
 export class FetchPrices implements Action {

@@ -50,7 +50,8 @@ export class PoeWatchService {
         const itemData: PoeWatchItem[] = results[0];
         const priceData: PoeWatchCompactPriceData[] = results[1];
         const combinedData: PoeWatchCombinedPriceItemData[] = itemData
-          .map((item: any) => Object.assign(item, priceData.find(price => price.id === price.id)));
+          .map((item: any) => {
+            return {...item, ...priceData.find(price => price.id === item.id) }; });
 
         return combinedData.map(data => PriceHelper.getExternalPriceFromWatchItem(data));
       })

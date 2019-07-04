@@ -20,6 +20,7 @@ export interface Tab {
     srcL: string;
     srcC: string;
     srcR: string;
+    totalValue: number;
     items: PricedItem[];
 }
 
