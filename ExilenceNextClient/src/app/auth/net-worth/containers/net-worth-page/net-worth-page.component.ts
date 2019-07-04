@@ -33,6 +33,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public snapshots$: Observable<Snapshot[]>;
 
   private snapshots: Snapshot[];
+  private selectedTabIds: string[];
 
   public selectedIndex = 0;
   public chartData = { data: [], columnNames: [] } as TabSnapshotChartData;
@@ -52,6 +53,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
+      if (this.selectedTabIds !== undefined) {
+        this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedTabIds, this.snapshots);
+        window.dispatchEvent(new Event('resize'));
+      }
     });
 
     // load state from storage
@@ -66,6 +71,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.selectedTabs$.subscribe((ids: string[]) => {
+      this.selectedTabIds = ids;
       if (this.snapshots !== undefined) {
         this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
         window.dispatchEvent(new Event('resize'));

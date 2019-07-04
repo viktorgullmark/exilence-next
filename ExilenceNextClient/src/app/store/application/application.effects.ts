@@ -74,8 +74,7 @@ export class ApplicationEffects {
         } else if (requests[1].length === 0) {
           return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' });
         } else {
-          this.appStore.dispatch(new applicationActions.AddLeagues({ leagues: requests[0] }));
-          this.appStore.dispatch(new applicationActions.AddCharacters({ characters: requests[1] }));
+
           return new applicationActions.InitSessionSuccess(
             { accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] });
         }
@@ -106,6 +105,8 @@ export class ApplicationEffects {
       of(AccountHelper.GetLeagues(res.payload.characters))
         .pipe(
           map(leagues => {
+            this.appStore.dispatch(new applicationActions.AddCharacters({ characters: res.payload.characters }));
+            this.appStore.dispatch(new applicationActions.AddLeagues({ leagues: leagues }));
             return new applicationActions.SetValidateCookieForLogin(
               { accountDetails: res.payload.accountDetails, league: leagues[0] });
           })
