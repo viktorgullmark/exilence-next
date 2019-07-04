@@ -6,19 +6,20 @@ import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import * as moment from 'moment';
 import { Observable, Subject } from 'rxjs';
-import { skip } from 'rxjs/operators';
+import { skip, map } from 'rxjs/operators';
 
 import { AppState } from '../../../../app.states';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
-import { Tab } from '../../../../shared/interfaces/stash.interface';
-import { TabSnapshotChartData } from '../../../../shared/interfaces/tab-snapshot-chart-data.interface';
+import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots } from '../../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectCompactTabsByIds } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import { ItemPricingService } from '../../providers/item-pricing.service';
+import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
+import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -33,10 +34,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public snapshots$: Observable<Snapshot[]>;
 
   private snapshots: Snapshot[];
-  private selectedTabIds: string[];
+  private selectedCompactTabs: CompactTab[];
 
   public selectedIndex = 0;
-  public chartData = { data: [], columnNames: [] } as TabSnapshotChartData;
+  public chartData: ChartSeries[] = [];
+  public colorScheme = {
+    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF'] };
 
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
@@ -53,9 +56,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
-      if (this.selectedTabIds !== undefined) {
-        this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedTabIds, this.snapshots);
-        window.dispatchEvent(new Event('resize'));
+      if (this.selectedCompactTabs !== undefined) {
+        this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
       }
     });
 
@@ -70,16 +72,28 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // map tab snapshots to chart
     this.selectedTabs$.subscribe((ids: string[]) => {
-      this.selectedTabIds = ids;
-      if (this.snapshots !== undefined) {
-        this.chartData = SnapshotHelper.formatSnapshotsForChart(ids, this.snapshots);
-        window.dispatchEvent(new Event('resize'));
+      if (ids.length > 0) {
+        this.netWorthStore
+          .select(selectCompactTabsByIds(ids))
+          .pipe(map((tabs: Tab[]) => {
+            return tabs.map((tab: Tab) => { return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab })
+          }))
+          .takeUntil(this.destroy$)
+          .subscribe((tabs: CompactTab[]) => {
+            this.colorScheme.domain = []
+            tabs.map(tab => this.colorScheme.domain.push(ColourHelper.rgbToHex(tab.colour.r, tab.colour.g, tab.colour.b)));
+
+            this.selectedCompactTabs = tabs;
+            if (this.snapshots !== undefined) {
+              this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
+            }
+          });
       }
     });
 
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
-      window.dispatchEvent(new Event('resize'));
     });
   }
 

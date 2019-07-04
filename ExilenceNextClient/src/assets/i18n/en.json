@@ -19,5 +19,10 @@
     "SNAPSHOT_STARTED_DESC": "Started fetching net worth data for your stash tabs",
     "SNAPSHOT_FINISHED_TITLE": "Snapshot finished",
     "SNAPSHOT_FINISHED_DESC": "New net worth data for your stash tabs was fetched successfully"
+  },
+  "GRAPH": {
+    "LEGEND_TITLE": "Stash tabs",
+    "VALUE": "Value",
+    "TIMESTAMP": "Timestamp"
   }
 }

@@ -17,7 +17,7 @@ import { Item } from '../../shared/interfaces/item.interface';
 @Injectable()
 export class ExternalService {
 
-  private rateLimiter = new RateLimiter(7, 15000);
+  private rateLimiter = new RateLimiter(7, 10000);
   private poeUrl = 'https://www.pathofexile.com';
 
   private session$: Observable<ApplicationSession>;
@@ -49,7 +49,7 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
-    return forkJoin((tabs.slice(0, 5).map((tab: Tab) => {
+    return forkJoin((tabs.slice(0, 15).map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         tab.items = stash.items.map((item: Item) => {
           return { name: item.typeLine, id: item.id, value: 0 } as PricedItem;

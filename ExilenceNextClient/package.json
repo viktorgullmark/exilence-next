@@ -96,7 +96,6 @@
     "@ngrx/store-devtools": "^8.0.1",
     "@ngx-pwa/local-storage": "^8.0.2",
     "@swimlane/ngx-charts": "^12.0.1",
-    "angular-google-charts": "^0.1.6",
     "guid-typescript": "^1.0.9",
     "moment": "^2.24.0",
     "ngx-pipes": "^2.5.1",

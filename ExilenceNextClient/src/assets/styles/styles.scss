@@ -4,10 +4,11 @@
 @import "./exilence-theme.scss";
 
 .exilence {
-    @include angular-material-theme($exilence-theme);
+  @include angular-material-theme($exilence-theme);
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   color: $font-color;
@@ -23,14 +24,14 @@ html, body {
   background-repeat: no-repeat;
   background-size: cover;
   > *:not(.login-section, .ad-container) {
-      width: 100%;
-      height: calc(100% - #{$net-worth-bar-height});
+    width: 100%;
+    height: calc(100% - #{$net-worth-bar-height});
   }
 
   &.login-content {
     height: $login-content-height;
   }
-  
+
   &.net-worth-content {
     padding-top: $net-worth-content-p-top;
     padding-bottom: $net-worth-content-p-bot;
@@ -53,7 +54,7 @@ a {
 .mat-tab-group {
   position: absolute;
   padding: 10px 25px 25px 25px;
-  width: calc(100% - #{$main-padding}*2);
+  width: calc(100% - #{$main-padding}* 2);
 }
 
 .btn-grp {
@@ -168,6 +169,17 @@ a {
 .chart-legend .legend-title {
   font-weight: normal !important;
 }
+.legend-label:hover,
+.active,
+.legend-label-text,
+.chart-legend {
+  color: #fff !important;
+}
+
+.legend-label {
+  text-overflow: ellipsis !important;
+  max-width: 175px !important;
+}
 /* #endregion */
 
 /* #region Material overrides */
@@ -179,7 +191,7 @@ a {
   background-color: rgba(0, 0, 0, 0.6) !important;
 }
 
-.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled=true]).cdk-program-focused {
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled="true"]).cdk-program-focused {
   background: none !important;
 }
 
@@ -189,7 +201,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 input:-webkit-autofill {

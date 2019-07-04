@@ -23,6 +23,13 @@ export interface Tab {
     items: PricedItem[];
 }
 
+export interface CompactTab {
+    n: string;
+    i: number;
+    id: string;
+    colour: Colour;
+}
+
 export interface Colour {
     r: number;
     g: number;

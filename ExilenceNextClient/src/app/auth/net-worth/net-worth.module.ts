@@ -16,7 +16,6 @@ import {
 } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
 import { SharedModule } from '../../shared/shared.module';
 import { NetWorthBarComponent } from './components/net-worth-bar/net-worth-bar.component';
 import { NetWorthGraphComponent } from './components/net-worth-graph/net-worth-graph.component';
@@ -29,7 +28,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { NetWorthEffects } from '../../store/net-worth/net-worth.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from '../../store/net-worth/net-worth.reducer';
-import { GoogleChartsModule } from 'angular-google-charts';
 import { PoeNinjaService } from './providers/poe-ninja.service';
 import { PoeWatchService } from './providers/poe-watch.service';
 import { ItemPricingService } from './providers/item-pricing.service';
@@ -41,7 +39,6 @@ import { ItemPricingService } from './providers/item-pricing.service';
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,
-    GoogleChartsModule.forRoot(),
     MatIconModule,
     MatInputModule,
     MatTableModule,
