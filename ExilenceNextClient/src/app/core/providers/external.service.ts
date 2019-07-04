@@ -49,7 +49,7 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
-    return forkJoin((tabs.slice(0, 5).map((tab: Tab) => {
+    return forkJoin((tabs.map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         tab.items = stash.items.map((item: Item) => {
           return { name: item.typeLine, id: item.id, value: 0 } as PricedItem;
