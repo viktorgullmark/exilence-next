@@ -22,7 +22,12 @@ export const selectNetWorthSnapshots = createSelector(getNetWorthState,
     (state: NetWorthState) => state.history.snapshots
 );
 
-export const selectCompactTabsByIds = (ids: string[]) => createSelector(
+export const selectTabsByIds = (ids: string[]) => createSelector(
     selectNetWorthStashTabs,
     tabs => tabs.filter(tab => ids.find(id => id === tab.id))
+);
+
+export const selectSnapshotsByLeague = (league: string) => createSelector(
+    selectNetWorthSnapshots,
+    snapshots => snapshots.filter(snapshot => snapshot.league === league)
 );

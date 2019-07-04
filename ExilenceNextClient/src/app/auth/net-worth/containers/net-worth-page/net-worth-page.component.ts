@@ -14,7 +14,7 @@ import { ApplicationSession } from '../../../../shared/interfaces/application-se
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectCompactTabsByIds } from '../../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import { ItemPricingService } from '../../providers/item-pricing.service';
@@ -76,7 +76,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.selectedTabs$.subscribe((ids: string[]) => {
       if (ids.length > 0) {
         this.netWorthStore
-          .select(selectCompactTabsByIds(ids))
+          .select(selectTabsByIds(ids))
           .pipe(map((tabs: Tab[]) => {
             return tabs.map((tab: Tab) => { return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab })
           }))
