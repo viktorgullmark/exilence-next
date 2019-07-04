@@ -8,6 +8,7 @@ import { PricedItem } from './shared/interfaces/priced-item.interface';
 import { Tab } from './shared/interfaces/stash.interface';
 import { NetWorthStash } from './shared/interfaces/net-worth-stash.interface';
 import { ExternalPrices } from './shared/interfaces/external-prices.interface';
+import { NetWorthHistory } from './shared/interfaces/net-worth-history.interface';
 
 export interface AppState {
     notificationsState: NotificationsState;
@@ -26,4 +27,5 @@ export interface NetWorthState {
     settings: NetWorthSettings | null;
     stash: NetWorthStash | null;
     prices: ExternalPrices | null;
+    history: NetWorthHistory | null;
 }

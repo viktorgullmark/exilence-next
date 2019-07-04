@@ -22,6 +22,10 @@ import { ApplicationEffects } from '../../../store/application/application.effec
 import { Actions, ofType } from '@ngrx/effects';
 import { ApplicationActionTypes } from '../../../store/application/application.actions';
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
+import { map } from 'rxjs/operators';
+import { PricedItem } from '../../../shared/interfaces/priced-item.interface';
+import { Snapshot } from '../../../shared/interfaces/snapshot.interface';
+import { TabSnapshot } from '../../../shared/interfaces/tab-snapshot.interface';
 
 @Injectable()
 export class SnapshotService {
@@ -36,7 +40,6 @@ export class SnapshotService {
   constructor(
     private netWorthStore: Store<NetWorthState>,
     private appStore: Store<ApplicationSession>,
-    private applicationEffects: ApplicationEffects,
     private actions$: Actions
   ) {
 
@@ -64,7 +67,7 @@ export class SnapshotService {
       });
   }
 
-  startSnapshot() {
+  startSnapshotChain() {
     this.netWorthStore.dispatch(new netWorthActions.FetchTabsForSnapshot({
       tabs: this.tabs,
       accountDetails: { sessionId: this.session.sessionId, account: this.session.account },
@@ -78,8 +81,19 @@ export class SnapshotService {
 
   checkIfReady() {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
-      this.startSnapshot();
+      this.startSnapshotChain();
       this.fetchPrices();
     }
+  }
+
+  createTabSnapshots(tabs: Tab[]) {
+    const tabSnapshots: TabSnapshot[] = [];
+    tabs.map((tab: Tab) => {
+      let tabValue = 0;
+      tab.items.forEach((item: PricedItem) => tabValue += item.value);
+      tabSnapshots.push({ tabId: tab.id, value: tabValue } as TabSnapshot);
+    });
+
+    return tabSnapshots;
   }
 }

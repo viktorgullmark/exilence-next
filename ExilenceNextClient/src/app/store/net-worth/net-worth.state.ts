@@ -14,5 +14,8 @@ export const initialState: NetWorthState = {
     prices: {
         poeNinja: [],
         poeWatch: []
+    },
+    history: {
+        snapshots: []
     }
 };

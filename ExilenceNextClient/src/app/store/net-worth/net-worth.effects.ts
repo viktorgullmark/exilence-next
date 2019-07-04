@@ -14,6 +14,10 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
 import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
 import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
+import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
+import { Snapshot } from '../../shared/interfaces/snapshot.interface';
+import * as moment from 'moment';
+import { TabSnapshot } from '../../shared/interfaces/tab-snapshot.interface';
 
 @Injectable()
 export class NetWorthEffects {
@@ -24,7 +28,8 @@ export class NetWorthEffects {
     private storageMap: StorageMap,
     private poeNinjaService: PoeNinjaService,
     private poeWatchService: PoeWatchService,
-    private itemPricingService: ItemPricingService
+    private itemPricingService: ItemPricingService,
+    private snapshotService: SnapshotService
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
@@ -170,4 +175,27 @@ export class NetWorthEffects {
         ))
   )
   );
+
+  priceItemsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.PriceItemsForSnapshotSuccess),
+    map((res: any) => new netWorthActions.CreateSnapshot({ tabs: res.payload.tabs })
+    )
+  )
+  );
+
+  createSnapshot$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.CreateSnapshot),
+    mergeMap((res: any) =>
+      of(this.snapshotService.createTabSnapshots(res.payload.tabs))
+        .pipe(
+          map((tabSnapshots: TabSnapshot[]) => {
+            return new netWorthActions.CreateSnapshotSuccess(
+              { snapshot: { timestamp: moment(new Date()).toDate(), tabSnapshots: tabSnapshots } as Snapshot });
+          }),
+          catchError(() => of(new netWorthActions.CreateSnapshotFail(
+            { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
+        ))
+  )
+  );
+
 }

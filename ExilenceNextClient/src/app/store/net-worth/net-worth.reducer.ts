@@ -112,8 +112,7 @@ export function reducer(
         ...state,
         status: {
           ...state.status,
-          snapshotting: false,
-          lastSnapshot: moment(new Date()).toDate()
+          snapshotting: false
         },
         stash: {
           ...state.stash,
@@ -126,8 +125,7 @@ export function reducer(
         ...state,
         status: {
           ...state.status,
-          snapshotting: false,
-          lastSnapshot: moment(new Date()).toDate()
+          snapshotting: false
         }
       };
     }
@@ -137,6 +135,38 @@ export function reducer(
       return {
         ...state,
         settings: state.settings
+      };
+    }
+
+
+    case NetWorthActionTypes.CreateSnapshot: {
+      return {
+        ...state
+      };
+    }
+
+    case NetWorthActionTypes.CreateSnapshotSuccess: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false,
+          lastSnapshot: moment(new Date()).toDate()
+        },
+        history: {
+          ...state.history,
+          snapshots: [...state.history.snapshots, action.payload.snapshot]
+        }
+      };
+    }
+
+    case NetWorthActionTypes.CreateSnapshotFail: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false
+        }
       };
     }
 

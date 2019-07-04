@@ -5,6 +5,7 @@ import { ApplicationSessionDetails } from '../../shared/interfaces/application-s
 import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
 import { ExternalPrices } from '../../shared/interfaces/external-prices.interface';
+import { Snapshot } from '../../shared/interfaces/snapshot.interface';
 
 export enum NetWorthActionTypes {
   LoadStateFromStorage = '[NetWorth] Load State From Storage',
@@ -25,6 +26,9 @@ export enum NetWorthActionTypes {
   FetchTabsForSnapshot = '[NetWorth] Fetch Tabs For Snapshot',
   FetchTabsForSnapshotSuccess = '[NetWorth] Fetch Tabs For Snapshot Success',
   FetchTabsForSnapshotFail = '[NetWorth] Fetch Tabs For Snapshot Fail',
+  CreateSnapshot = '[NetWorth] Create Snapshot',
+  CreateSnapshotSuccess = '[NetWorth] Create Snapshot Success',
+  CreateSnapshotFail = '[NetWorth] Create Snapshot Fail'
 }
 
 export class LoadStateFromStorage implements Action {
@@ -118,6 +122,21 @@ export class FetchPricesFail implements Action {
   constructor(public payload: { title: string, message: string }) { }
 }
 
+export class CreateSnapshot implements Action {
+  readonly type = NetWorthActionTypes.CreateSnapshot;
+  constructor(public payload: { tabs: Tab[] }) { }
+}
+
+export class CreateSnapshotFail implements Action {
+  readonly type = NetWorthActionTypes.CreateSnapshotFail;
+  constructor(public payload: { title: string, message: string }) { }
+}
+
+export class CreateSnapshotSuccess implements Action {
+  readonly type = NetWorthActionTypes.CreateSnapshotSuccess;
+  constructor(public payload: { snapshot: Snapshot }) { }
+}
+
 export type NetWorthActions =
   OverrideState |
   LoadStateFromStorage | LoadStateFromStorageSuccess | LoadStateFromStorageFail |
@@ -125,4 +144,5 @@ export type NetWorthActions =
   PriceItemsForSnapshot | PriceItemsForSnapshotSuccess | PriceItemsForSnapshotFail |
   FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |
   FetchPrices | FetchPricesSuccess | FetchPricesFail |
-  UpdateTabSelection;
+  UpdateTabSelection |
+  CreateSnapshot | CreateSnapshotSuccess | CreateSnapshotFail;
