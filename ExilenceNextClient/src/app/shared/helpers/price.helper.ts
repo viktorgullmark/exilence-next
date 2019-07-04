@@ -1,5 +1,5 @@
-import { PoeWatchCombinedPriceItemData } from "../interfaces/poe-watch/poe-watch-combined-price-item-data.interface";
-import { ExternalPrice } from "../interfaces/external-price.interface";
+import { ExternalPrice } from '../interfaces/external-price.interface';
+import { PoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 
 export class PriceHelper {
     public static getExternalPriceFromWatchItem(item: PoeWatchCombinedPriceItemData): ExternalPrice {
