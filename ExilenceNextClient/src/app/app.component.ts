@@ -3,13 +3,13 @@ import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-
-import { ApplicationState, AppState } from './app.states';
+import { skip } from 'rxjs/operators';
+import { AppState } from './app.states';
 import { ElectronService } from './core/providers/electron.service';
+import { JsonService } from './core/providers/json.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
 import * as applicationActions from './store/application/application.actions';
-import { skip } from 'rxjs/operators';
-import { initialState } from './store/application/application.state';
+
 
 @Component({
   selector: 'app-root',
@@ -20,8 +20,11 @@ export class AppComponent {
   constructor(public electronService: ElectronService,
     private storageMap: StorageMap,
     private translate: TranslateService,
-    private appStore: Store<AppState>
+    private appStore: Store<AppState>,
+    private jsonService: JsonService
   ) {
+
+    // this.jsonService.testJsonPatch();
 
     this.translate.setDefaultLang('en');
 
