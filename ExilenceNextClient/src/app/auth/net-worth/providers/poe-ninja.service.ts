@@ -65,7 +65,7 @@ export class PoeNinjaService {
     return forkJoin(this.getItemCategories().map((type: any) => {
       return this.getItemCategoryOverview(league, type).pipe(map((itemOverview: PoeNinjaItemOverview) => {
         return itemOverview.lines.map(lines => {
-          return { name: lines.name, value: lines.chaosValue } as ExternalPrice;
+          return { name: lines.name, calculated: lines.chaosValue } as ExternalPrice;
         });
       }));
     })
@@ -76,7 +76,7 @@ export class PoeNinjaService {
     return forkJoin(this.getCurrencyCategories().map((type: any) => {
       return this.getCurrencyCategoryOverview(league, type).pipe(map((currOverview: PoeNinjaCurrencyOverview) => {
         return currOverview.lines.map(lines => {
-          return { name: lines.currencyTypeName, value: lines.chaosEquivalent } as ExternalPrice;
+          return { name: lines.currencyTypeName, calculated: lines.chaosEquivalent } as ExternalPrice;
         });
       }));
     })

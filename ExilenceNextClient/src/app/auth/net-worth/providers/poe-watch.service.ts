@@ -5,6 +5,11 @@ import { PoeWatchItem } from '../../../shared/interfaces/poe-watch/poe-watch-ite
 import { PoeWatchCompactPriceData } from '../../../shared/interfaces/poe-watch/poe-watch-compact-price-data.interface';
 import { PoeWatchItemListing } from '../../../shared/interfaces/poe-watch/poe-watch-item-listing.interface';
 import { PoeWatchCategory } from '../../../shared/interfaces/poe-watch/poe-watch-category.interface';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/internal/operators/map';
+import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
+import { PoeWatchCombinedPriceItemData } from '../../../shared/interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
+import { PriceHelper } from '../../../shared/helpers/price.helper';
 
 @Injectable()
 export class PoeWatchService {
@@ -36,6 +41,19 @@ export class PoeWatchService {
     const parameters = `?league=${league}&account=${account}`;
     return this.rateLimiter.limit(
       this.http.get<PoeWatchItemListing[]>('https://api.poe.watch/listings' + parameters)
+    );
+  }
+
+  getPrices(league: string) {
+    return forkJoin(this.getItemdata(), this.getCompactPriceData(league)).pipe(
+      map((results: any[]) => {
+        const itemData: PoeWatchItem[] = results[0];
+        const priceData: PoeWatchCompactPriceData[] = results[1];
+        const combinedData: PoeWatchCombinedPriceItemData[] = itemData
+          .map((item: any) => Object.assign(item, priceData.find(price => price.id === price.id)));
+
+        return combinedData.map(data => PriceHelper.getExternalPriceFromWatchItem(data));
+      })
     );
   }
 

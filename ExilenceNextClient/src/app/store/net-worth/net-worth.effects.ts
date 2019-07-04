@@ -63,7 +63,8 @@ export class NetWorthEffects {
     ofType(netWorthActions.NetWorthActionTypes.FetchPrices),
     mergeMap((res: any) => forkJoin(
       this.poeNinjaService.getCurrencyPrices(res.payload.league),
-      this.poeNinjaService.getItemPrices(res.payload.league)
+      this.poeNinjaService.getItemPrices(res.payload.league),
+      this.poeWatchService.getPrices(res.payload.league)
     )
       .pipe(
         map((prices: any) => {
@@ -72,7 +73,7 @@ export class NetWorthEffects {
           ninjaCategories.forEach(cat => {
             ninjaPrices = ninjaPrices.concat(cat);
           });
-          return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: [] });
+          return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: prices[2] });
         }),
         catchError((e) => of(new netWorthActions.FetchPricesFail(
           { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' })))
