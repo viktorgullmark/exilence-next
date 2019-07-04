@@ -62,9 +62,9 @@ export class NetWorthEffects {
   fetchPrices$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchPrices),
     mergeMap((res: any) => forkJoin(
-        this.poeNinjaService.getCurrencyPrices(res.payload.league),
-        this.poeNinjaService.getItemPrices(res.payload.league)
-      )
+      this.poeNinjaService.getCurrencyPrices(res.payload.league),
+      this.poeNinjaService.getItemPrices(res.payload.league)
+    )
       .pipe(
         map((prices: any) => {
           const ninjaCategories = [].concat.apply([], [prices[0], prices[1]]);
@@ -72,7 +72,8 @@ export class NetWorthEffects {
           ninjaCategories.forEach(cat => {
             ninjaPrices = ninjaPrices.concat(cat);
           });
-          return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: [] });}),
+          return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: [] });
+        }),
         catchError((e) => of(new netWorthActions.FetchPricesFail(
           { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' })))
       ))
@@ -125,10 +126,17 @@ export class NetWorthEffects {
   )
   );
 
-  // todo: add notification
   fetchItemsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshotSuccess),
-    map((res: any) => new netWorthActions.PriceItemsForSnapshot({ tabs: res.payload.tabs })))
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: 'INFORMATION.FETCH_ITEMS_SUCCESS_TITLE',
+          description: 'INFORMATION.FETCH_ITEMS_SUCCESS_DESC',
+          type: NotificationType.Information
+        } as Notification
+    }))
+  )
   );
 
   fetchItemsForSnapshotFail$ = createEffect(() => this.actions$.pipe(

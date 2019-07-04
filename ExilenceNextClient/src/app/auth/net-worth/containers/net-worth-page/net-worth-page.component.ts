@@ -1,27 +1,24 @@
 import 'rxjs/add/operator/takeUntil';
 
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
+import { StorageMap } from '@ngx-pwa/local-storage';
 import * as moment from 'moment';
-import { Subject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { skip } from 'rxjs/operators';
 
-import { NetWorthState, AppState } from '../../../../app.states';
+import { AppState } from '../../../../app.states';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
+import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
+import { Tab } from '../../../../shared/interfaces/stash.interface';
 import { TabSnapshotChartData } from '../../../../shared/interfaces/tab-snapshot-chart-data.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
-import * as netWorthReducer from './../../../../store/net-worth/net-worth.reducer';
-import { Tab } from '../../../../shared/interfaces/stash.interface';
-import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
-import * as applicationActions from '../../../../store/application/application.actions';
-import * as applicationReducer from '../../../../store/application/application.reducer';
-import { StorageMap } from '@ngx-pwa/local-storage';
-import { skip } from 'rxjs/operators';
 import { selectNetWorthSelectedTabs, selectNetWorthStashTabs } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
-import { initialState } from '../../../../store/net-worth/net-worth.state';
+import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
+import { ItemPricingService } from '../../providers/item-pricing.service';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -222,7 +219,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private netWorthStore: Store<AppState>,
     private appStore: Store<ApplicationSession>,
     private storageMap: StorageMap,
-    private snapshotService: SnapshotService
+    private snapshotService: SnapshotService,
+    private itemPricingService: ItemPricingService
   ) {
     this.selectedTabs$ = this.netWorthStore.select(selectNetWorthSelectedTabs).takeUntil(this.destroy$);
     this.stashtabList$ = this.netWorthStore.select(selectNetWorthStashTabs).takeUntil(this.destroy$);

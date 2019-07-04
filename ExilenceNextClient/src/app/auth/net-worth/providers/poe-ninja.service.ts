@@ -69,7 +69,7 @@ export class PoeNinjaService {
         });
       }));
     })
-    )
+    );
   }
 
   getCurrencyPrices(league: string) {
@@ -80,7 +80,7 @@ export class PoeNinjaService {
         });
       }));
     })
-    )
+    );
   }
 
 }
