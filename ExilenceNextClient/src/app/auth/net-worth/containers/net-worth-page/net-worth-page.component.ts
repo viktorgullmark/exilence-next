@@ -14,12 +14,13 @@ import { ApplicationSession } from '../../../../shared/interfaces/application-se
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds } from '../../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds, selectSnapshotsByLeague } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
+import { selectApplicationSessionLeague } from '../../../../store/application/application.selectors';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -39,7 +40,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public selectedIndex = 0;
   public chartData: ChartSeries[] = [];
   public colorScheme = {
-    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF'] };
+    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
+  };
 
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
 
@@ -52,7 +54,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   ) {
     this.selectedTabs$ = this.netWorthStore.select(selectNetWorthSelectedTabs).takeUntil(this.destroy$);
     this.stashtabList$ = this.netWorthStore.select(selectNetWorthStashTabs).takeUntil(this.destroy$);
-    this.snapshots$ = this.netWorthStore.select(selectNetWorthSnapshots).takeUntil(this.destroy$);
+
+    this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
+      this.snapshots$ = this.netWorthStore.select(selectSnapshotsByLeague(league)).takeUntil(this.destroy$);
+    });
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
