@@ -76,6 +76,16 @@ export function reducer(
       };
     }
 
+    case ApplicationActionTypes.AddTradeLeagues: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          tradeLeagues: action.payload.leagues
+        }
+      };
+    }
+
     case ApplicationActionTypes.SetLeague: {
       return {
         ...state,

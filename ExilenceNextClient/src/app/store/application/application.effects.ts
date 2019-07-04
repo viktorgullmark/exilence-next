@@ -74,7 +74,7 @@ export class ApplicationEffects {
         } else if (requests[1].length === 0) {
           return new applicationActions.InitSessionFail({ title: 'ERROR.NO_CHARS_TITLE', message: 'ERROR.NO_CHARS_DESC' });
         } else {
-
+          this.appStore.dispatch(new applicationActions.AddTradeLeagues({ leagues: AccountHelper.GetTradeLeagues(requests[0]) }));
           return new applicationActions.InitSessionSuccess(
             { accountDetails: res.payload.accountDetails, leagues: requests[0], characters: requests[1] });
         }

@@ -91,7 +91,7 @@ export class SnapshotService {
     tabs.map((tab: Tab) => {
       let tabValue = 0;
       tab.items.forEach((item: PricedItem) => tabValue += item.value);
-      tabSnapshots.push({ tabId: tab.id, value: tabValue } as TabSnapshot);
+      tabSnapshots.push({ tabId: tab.id, value: tabValue} as TabSnapshot);
     });
 
     return tabSnapshots;

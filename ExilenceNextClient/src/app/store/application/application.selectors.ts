@@ -11,6 +11,14 @@ export const selectApplicationSessionCharacterLeagues = createSelector(getApplic
     (state: ApplicationState) => state.session.characterLeagues
 );
 
+export const selectApplicationSessionTradeLeagues = createSelector(getApplicationState,
+    (state: ApplicationState) => state.session.tradeLeagues
+);
+
+export const selectApplicationSessionLeague = createSelector(getApplicationState,
+    (state: ApplicationState) => state.session.league
+);
+
 export const selectApplicationSessionCharacters = createSelector(getApplicationState,
     (state: ApplicationState) => state.session.characters
 );

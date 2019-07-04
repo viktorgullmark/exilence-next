@@ -11,4 +11,8 @@ export class AccountHelper {
 
         return accountLeagues;
     }
+
+    public static GetTradeLeagues(leagues: string[]) {
+        return leagues.filter(l => l.indexOf('SSF') === -1);
+    }
 }

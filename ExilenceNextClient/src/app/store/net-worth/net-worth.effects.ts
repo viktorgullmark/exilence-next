@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of, forkJoin } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { StorageMap } from '@ngx-pwa/local-storage';
+import * as moment from 'moment';
+import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
+import { NetWorthState, ApplicationState } from '../../app.states';
+import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
+import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
+import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
+import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
 import { ExternalService } from '../../core/providers/external.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
+import { Snapshot } from '../../shared/interfaces/snapshot.interface';
 import { Stash } from '../../shared/interfaces/stash.interface';
+import { TabSnapshot } from '../../shared/interfaces/tab-snapshot.interface';
 import { Notification } from './../../shared/interfaces/notification.interface';
 import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
-import { NetWorthState } from '../../app.states';
-import { StorageMap } from '@ngx-pwa/local-storage';
-import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
-import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
-import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
-import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
-import { Snapshot } from '../../shared/interfaces/snapshot.interface';
-import * as moment from 'moment';
-import { TabSnapshot } from '../../shared/interfaces/tab-snapshot.interface';
+import { selectApplicationSessionLeague } from '../application/application.selectors';
 
 @Injectable()
 export class NetWorthEffects {
@@ -29,7 +31,8 @@ export class NetWorthEffects {
     private poeNinjaService: PoeNinjaService,
     private poeWatchService: PoeWatchService,
     private itemPricingService: ItemPricingService,
-    private snapshotService: SnapshotService
+    private snapshotService: SnapshotService,
+    private appStore: Store<ApplicationState>
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
@@ -185,17 +188,17 @@ export class NetWorthEffects {
 
   createSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.CreateSnapshot),
-    mergeMap((res: any) =>
-      of(this.snapshotService.createTabSnapshots(res.payload.tabs))
-        .pipe(
-          map((tabSnapshots: TabSnapshot[]) => {
-            return new netWorthActions.CreateSnapshotSuccess(
-              { snapshot: { timestamp: moment(new Date()).toDate(), tabSnapshots: tabSnapshots } as Snapshot });
-          }),
-          catchError(() => of(new netWorthActions.CreateSnapshotFail(
-            { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
-        ))
-  )
+    mergeMap((res: any) => this.appStore.select(selectApplicationSessionLeague)
+    .mergeMap((league: string) => of(this.snapshotService.createTabSnapshots(res.payload.tabs))
+      .pipe(
+        map((tabSnapshots: TabSnapshot[]) => {
+          return new netWorthActions.CreateSnapshotSuccess(
+            { snapshot: { league: league, timestamp: moment(new Date()).toDate(), tabSnapshots: tabSnapshots } as Snapshot });
+        }),
+        catchError(() => of(new netWorthActions.CreateSnapshotFail(
+          { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
+      ))
+  ))
   );
 
 }
