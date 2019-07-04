@@ -7,8 +7,8 @@ export const selectApplicationSession = createSelector(getApplicationState,
     (state: ApplicationState) => state.session
 );
 
-export const selectApplicationSessionLeagues = createSelector(getApplicationState,
-    (state: ApplicationState) => state.session.leagues
+export const selectApplicationSessionCharacterLeagues = createSelector(getApplicationState,
+    (state: ApplicationState) => state.session.characterLeagues
 );
 
 export const selectApplicationSessionCharacters = createSelector(getApplicationState,

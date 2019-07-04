@@ -106,7 +106,7 @@ export class ApplicationEffects {
         .pipe(
           map(leagues => {
             this.appStore.dispatch(new applicationActions.AddCharacters({ characters: res.payload.characters }));
-            this.appStore.dispatch(new applicationActions.AddLeagues({ leagues: leagues }));
+            this.appStore.dispatch(new applicationActions.AddCharacterLeagues({ leagues: leagues }));
             return new applicationActions.SetValidateCookieForLogin(
               { accountDetails: res.payload.accountDetails, league: leagues[0] });
           })

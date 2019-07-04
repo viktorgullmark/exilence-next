@@ -27,7 +27,8 @@ export enum ApplicationActionTypes {
   SetTradeLeague = '[Application] Set Trade League',
   SetSession = '[Application] Set Session',
   AddCharacters = '[Application] Add Characters',
-  AddLeagues = '[Application] Add Leagues'
+  AddCharacterLeagues = '[Application] Add Character Leagues',
+  AddTradeLeagues = '[Application] Add Trade Leagues'
 }
 
 export class LoadStateFromStorage implements Action {
@@ -69,8 +70,14 @@ export class AddCharacters implements Action {
   constructor(public payload: { characters: Character[] }) { }
 }
 
-export class AddLeagues implements Action {
-  readonly type = ApplicationActionTypes.AddLeagues;
+export class AddCharacterLeagues implements Action {
+  readonly type = ApplicationActionTypes.AddCharacterLeagues;
+
+  constructor(public payload: { leagues: string[] }) { }
+}
+
+export class AddTradeLeagues implements Action {
+  readonly type = ApplicationActionTypes.AddTradeLeagues;
 
   constructor(public payload: { leagues: string[] }) { }
 }
@@ -141,7 +148,7 @@ export class SetValidateCookie implements Action {
 export type ApplicationActions =
   OverrideState |
   LoadStateFromStorage | LoadStateFromStorageSuccess | LoadStateFromStorageFail |
-  AddCharacters | AddLeagues |
+  AddCharacters | AddCharacterLeagues | AddTradeLeagues |
   SetLeague | SetTradeLeague |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |
   ValidateSessionForLogin | ValidateSessionForLoginSuccess | ValidateSessionForLoginFail |

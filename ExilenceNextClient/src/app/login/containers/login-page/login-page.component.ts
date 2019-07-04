@@ -10,7 +10,7 @@ import * as applicationActions from './../../../store/application/application.ac
 import 'rxjs/add/operator/takeUntil';
 import {
   selectApplicationSessionValidated,
-  selectApplicationSessionLeagues,
+  selectApplicationSessionCharacterLeagues,
   selectApplicationSessionLoading
 } from '../../../store/application/application.selectors';
 
@@ -31,8 +31,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private appStore: Store<ApplicationSession>
   ) {
-    this.leagues$ = this.appStore.select(selectApplicationSessionLeagues).takeUntil(this.destroy$);
-    this.tradeLeagues$ = this.appStore.select(selectApplicationSessionLeagues).takeUntil(this.destroy$);
+    this.leagues$ = this.appStore.select(selectApplicationSessionCharacterLeagues).takeUntil(this.destroy$);
+    this.tradeLeagues$ = this.appStore.select(selectApplicationSessionCharacterLeagues).takeUntil(this.destroy$);
     this.loading$ = this.appStore.select(selectApplicationSessionLoading).takeUntil(this.destroy$);
     this.validated$ = this.appStore.select(selectApplicationSessionValidated).takeUntil(this.destroy$);
   }

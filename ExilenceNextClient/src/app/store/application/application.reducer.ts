@@ -66,12 +66,12 @@ export function reducer(
       };
     }
 
-    case ApplicationActionTypes.AddLeagues: {
+    case ApplicationActionTypes.AddCharacterLeagues: {
       return {
         ...state,
         session: {
           ...state.session,
-          leagues: action.payload.leagues
+          characterLeagues: action.payload.leagues
         }
       };
     }
