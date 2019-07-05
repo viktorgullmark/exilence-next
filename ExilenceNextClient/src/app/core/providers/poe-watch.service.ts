@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import RateLimiter from 'rxjs-ratelimiter';
-import { PoeWatchItem } from '../../../shared/interfaces/poe-watch/poe-watch-item.interface';
-import { PoeWatchCompactPriceData } from '../../../shared/interfaces/poe-watch/poe-watch-compact-price-data.interface';
-import { PoeWatchItemListing } from '../../../shared/interfaces/poe-watch/poe-watch-item-listing.interface';
-import { PoeWatchCategory } from '../../../shared/interfaces/poe-watch/poe-watch-category.interface';
+import { PoeWatchItem } from '../../shared/interfaces/poe-watch/poe-watch-item.interface';
+import { PoeWatchCompactPriceData } from '../../shared/interfaces/poe-watch/poe-watch-compact-price-data.interface';
+import { PoeWatchItemListing } from '../../shared/interfaces/poe-watch/poe-watch-item-listing.interface';
+import { PoeWatchCategory } from '../../shared/interfaces/poe-watch/poe-watch-category.interface';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
-import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
-import { PoeWatchCombinedPriceItemData } from '../../../shared/interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
-import { PriceHelper } from '../../../shared/helpers/price.helper';
+import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
+import { PoeWatchCombinedPriceItemData } from '../../shared/interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
+import { PriceHelper } from '../../shared/helpers/price.helper';
 
 @Injectable()
 export class PoeWatchService {

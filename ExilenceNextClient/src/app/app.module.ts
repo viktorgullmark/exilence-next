@@ -24,6 +24,10 @@ import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
 import { StorageModule } from '@ngx-pwa/local-storage';
 import { SessionResolver } from './core/resolvers/session.resolver';
+import { SnapshotService } from './core/providers/snapshot.service';
+import { ItemPricingService } from './core/providers/item-pricing.service';
+import { PoeNinjaService } from './core/providers/poe-ninja.service';
+import { PoeWatchService } from './core/providers/poe-watch.service';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -63,7 +67,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       ApplicationEffects
     ])
   ],
-  providers: [ElectronService, ErrorHandler, SessionResolver,
+  providers: [ElectronService, ErrorHandler, SessionResolver, SnapshotService, ItemPricingService, PoeNinjaService, PoeWatchService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

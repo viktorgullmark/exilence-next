@@ -6,6 +6,7 @@ import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
 import { ExternalPrices } from '../../shared/interfaces/external-prices.interface';
 import { Snapshot } from '../../shared/interfaces/snapshot.interface';
+import { TabSelection } from '../../shared/interfaces/tab-selection.interface';
 
 export enum NetWorthActionTypes {
   LoadStateFromStorage = '[NetWorth] Load State From Storage',
@@ -74,7 +75,7 @@ export class AddTabs implements Action {
 
 export class UpdateTabSelection implements Action {
   readonly type = NetWorthActionTypes.UpdateTabSelection;
-  constructor(public payload: { tabs: string[] }) { }
+  constructor(public payload: { tabs: TabSelection[] }) { }
 }
 
 export class FetchItemsForSnapshot implements Action {

@@ -3,11 +3,11 @@ import { of, from, forkJoin } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/take';
-import { PoeNinjaCurrencyOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-currency-overview.interface';
-import { PoeNinjaItemOverview } from '../../../shared/interfaces/poe-ninja/poe-ninja-item-overview.interface';
+import { PoeNinjaCurrencyOverview } from '../../shared/interfaces/poe-ninja/poe-ninja-currency-overview.interface';
+import { PoeNinjaItemOverview } from '../../shared/interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
+import { ExternalPrice } from '../../shared/interfaces/external-price.interface';
 
 @Injectable()
 export class PoeNinjaService {

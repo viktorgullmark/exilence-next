@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 
-import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
-import * as netWorthActions from './../../../store/net-worth/net-worth.actions';
+import { NetWorthActionTypes } from '../../store/net-worth/net-worth.actions';
+import * as netWorthActions from '../../store/net-worth/net-worth.actions';
 import { Store } from '@ngrx/store';
-import { NetWorthState } from '../../../app.states';
-import { ExternalPrices } from '../../../shared/interfaces/external-prices.interface';
-import { Tab } from '../../../shared/interfaces/stash.interface';
+import { NetWorthState } from '../../app.states';
+import { ExternalPrices } from '../../shared/interfaces/external-prices.interface';
+import { Tab } from '../../shared/interfaces/stash.interface';
 import { of } from 'rxjs';
-import { Item } from '../../../shared/interfaces/item.interface';
-import { PricedItem } from '../../../shared/interfaces/priced-item.interface';
+import { Item } from '../../shared/interfaces/item.interface';
+import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 
 @Injectable()
 export class ItemPricingService {

@@ -7,10 +7,10 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import { NetWorthState, ApplicationState } from '../../app.states';
-import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
-import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
-import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
-import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
+import { ItemPricingService } from '../../core/providers/item-pricing.service';
+import { PoeNinjaService } from '../../core/providers/poe-ninja.service';
+import { PoeWatchService } from '../../core/providers/poe-watch.service';
+import { SnapshotService } from '../../core/providers/snapshot.service';
 import { ExternalService } from '../../core/providers/external.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
 import { Snapshot } from '../../shared/interfaces/snapshot.interface';
@@ -32,7 +32,8 @@ export class NetWorthEffects {
     private poeWatchService: PoeWatchService,
     private itemPricingService: ItemPricingService,
     private snapshotService: SnapshotService,
-    private appStore: Store<ApplicationState>
+    private appStore: Store<ApplicationState>,
+    private netWorthStore: Store<NetWorthState>
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
@@ -109,7 +110,9 @@ export class NetWorthEffects {
 
   fetchTabsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshotSuccess),
-    map((res: any) => new netWorthActions.FetchItemsForSnapshot({ tabs: res.payload.tabs })))
+    map((res: any) => {
+      return new netWorthActions.FetchItemsForSnapshot({ tabs: res.payload.tabs });
+    }))
   );
 
   fetchTabsForSnapshotFail$ = createEffect(() => this.actions$.pipe(
@@ -189,16 +192,16 @@ export class NetWorthEffects {
   createSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.CreateSnapshot),
     mergeMap((res: any) => this.appStore.select(selectApplicationSessionLeague)
-    .mergeMap((league: string) => of(this.snapshotService.createTabSnapshots(res.payload.tabs))
-      .pipe(
-        map((tabSnapshots: TabSnapshot[]) => {
-          return new netWorthActions.CreateSnapshotSuccess(
-            { snapshot: { league: league, timestamp: moment(new Date()).toDate(), tabSnapshots: tabSnapshots } as Snapshot });
-        }),
-        catchError(() => of(new netWorthActions.CreateSnapshotFail(
-          { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
-      ))
-  ))
+      .mergeMap((league: string) => of(this.snapshotService.createTabSnapshots(res.payload.tabs))
+        .pipe(
+          map((tabSnapshots: TabSnapshot[]) => {
+            return new netWorthActions.CreateSnapshotSuccess(
+              { snapshot: { league: league, timestamp: moment(new Date()).toDate(), tabSnapshots: tabSnapshots } as Snapshot });
+          }),
+          catchError(() => of(new netWorthActions.CreateSnapshotFail(
+            { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
+        ))
+    ))
   );
 
 }
