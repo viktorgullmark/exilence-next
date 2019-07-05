@@ -57,11 +57,12 @@ export class StepperComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.leagues$.takeUntil(this.destroy$).subscribe(leagues => {
-      if (leagues !== undefined) {
-        this.leagueFormGroup.controls['leagueName'].setValue(leagues[0]);
-        this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
-      }
+      this.leagueFormGroup.controls['leagueName'].setValue(leagues[0]);
     });
+    this.tradeLeagues$.takeUntil(this.destroy$).subscribe(leagues => {
+      this.leagueFormGroup.controls['tradeLeagueName'].setValue(leagues[0]);
+    });
+
     this.appStore.select(selectApplicationSession).takeUntil(this.destroy$)
       .subscribe((data: ApplicationSessionDetails) => {
         if (data !== undefined) {

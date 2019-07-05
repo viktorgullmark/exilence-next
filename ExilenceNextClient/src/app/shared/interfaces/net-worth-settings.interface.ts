@@ -1,3 +1,5 @@
+import { TabSelection } from './tab-selection.interface';
+
 export interface NetWorthSettings {
-    selectedTabs: Array<string>;
+    selectedTabs: Array<TabSelection>;
 }

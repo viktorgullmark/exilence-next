@@ -131,10 +131,12 @@ export function reducer(
     }
 
     case NetWorthActionTypes.UpdateTabSelection: {
-      state.settings.selectedTabs = action.payload.tabs;
       return {
         ...state,
-        settings: state.settings
+        settings: {
+          ...state.settings,
+          selectedTabs: state.settings.selectedTabs.concat(action.payload.tabs)
+        }
       };
     }
 

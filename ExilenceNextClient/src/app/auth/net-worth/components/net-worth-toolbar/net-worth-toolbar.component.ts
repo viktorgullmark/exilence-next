@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
 import * as applicationActions from '../../../../store/application/application.actions';
 import * as applicationReducer from '../../../../store/application/application.reducer';
+import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
 
 @Component({
   selector: 'app-net-worth-toolbar',
@@ -20,7 +21,7 @@ export class NetWorthToolbarComponent implements OnInit {
   public endDate = new FormControl(moment());
   public stashtabs = new FormControl();
 
-  @Input() selectedTabs$: Observable<string[]>;
+  @Input() selectedTabs$: Observable<TabSelection[]>;
   @Input() stashtabList$: Observable<Tab[]>;
   @Output() tabSelectionChanged: EventEmitter<string[]> = new EventEmitter;
 
@@ -29,7 +30,7 @@ export class NetWorthToolbarComponent implements OnInit {
 
   ngOnInit() {
     this.selectedTabs$.subscribe(tabs => {
-      this.stashtabs.setValue(tabs);
+      this.stashtabs.setValue(tabs.map(tab => tab.tabId));
     });
   }
 

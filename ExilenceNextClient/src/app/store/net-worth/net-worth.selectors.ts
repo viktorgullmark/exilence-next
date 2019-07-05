@@ -31,3 +31,8 @@ export const selectSnapshotsByLeague = (league: string) => createSelector(
     selectNetWorthSnapshots,
     snapshots => snapshots.filter(snapshot => snapshot.league === league)
 );
+
+export const selectTabSelectionByLeague = (league: string) => createSelector(
+    selectNetWorthSelectedTabs,
+    tabs => tabs.filter(tab => tab.league === league)
+);

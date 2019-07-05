@@ -14,13 +14,14 @@ import { ApplicationSession } from '../../../../shared/interfaces/application-se
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
 import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds, selectSnapshotsByLeague } from '../../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds, selectSnapshotsByLeague, selectTabSelectionByLeague } from '../../../../store/net-worth/net-worth.selectors';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 import { selectApplicationSessionLeague } from '../../../../store/application/application.selectors';
+import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -31,11 +32,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   public stashtabList$: Observable<Tab[]>;
-  public selectedTabs$: Observable<string[]>;
+  public selectedTabs$: Observable<TabSelection[]>;
   public snapshots$: Observable<Snapshot[]>;
 
-  private snapshots: Snapshot[];
+  private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
+  private selectedLeague: string;
 
   public selectedIndex = 0;
   public chartData: ChartSeries[] = [];
@@ -52,11 +54,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private snapshotService: SnapshotService,
     private itemPricingService: ItemPricingService
   ) {
-    this.selectedTabs$ = this.netWorthStore.select(selectNetWorthSelectedTabs).takeUntil(this.destroy$);
     this.stashtabList$ = this.netWorthStore.select(selectNetWorthStashTabs).takeUntil(this.destroy$);
 
     this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
+      this.selectedLeague = league;
       this.snapshots$ = this.netWorthStore.select(selectSnapshotsByLeague(league)).takeUntil(this.destroy$);
+      this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
     });
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
@@ -78,10 +81,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // map tab snapshots to chart
-    this.selectedTabs$.subscribe((ids: string[]) => {
-      if (ids.length > 0) {
+    this.selectedTabs$.subscribe((selectedTabs: TabSelection[]) => {
+      if (selectedTabs.length > 0) {
         this.netWorthStore
-          .select(selectTabsByIds(ids))
+          .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
           .pipe(map((tabs: Tab[]) => {
             return tabs.map((tab: Tab) => { return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab })
           }))
@@ -91,7 +94,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
             tabs.map(tab => this.colorScheme.domain.push(ColourHelper.rgbToHex(tab.colour.r, tab.colour.g, tab.colour.b)));
 
             this.selectedCompactTabs = tabs;
-            if (this.snapshots !== undefined) {
+            if (this.snapshots.length > 0) {
               this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
             }
           });
@@ -102,9 +105,13 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  tabsChanged(tabs: string[]) {
+  tabsChanged(tabIds: string[]) {
+
+    const selectedTabs = tabIds.map(id => {
+      return { tabId: id, league: this.selectedLeague} as TabSelection;
+    });
     this.netWorthStore.dispatch(new netWorthActions.UpdateTabSelection({
-      tabs: tabs
+      tabs: selectedTabs
     }));
   }
 
