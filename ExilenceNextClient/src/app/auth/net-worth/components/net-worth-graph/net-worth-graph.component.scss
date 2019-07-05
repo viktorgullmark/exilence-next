@@ -1,7 +1,7 @@
 @import "./../../../../../assets/styles/variables";
 
 .chart-container {
-  height: calc(100% - #{$ad-banner-top} - #{$main-padding}* 1);
+  height: calc(100% - #{$main-padding}* 1);
   width: 100%;
   ngx-charts-line-chart {
     z-index: 2;

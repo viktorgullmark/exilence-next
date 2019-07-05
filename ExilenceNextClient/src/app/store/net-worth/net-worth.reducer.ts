@@ -135,7 +135,7 @@ export function reducer(
         ...state,
         settings: {
           ...state.settings,
-          selectedTabs: state.settings.selectedTabs.concat(action.payload.tabs)
+          selectedTabs: action.payload.tabs
         }
       };
     }

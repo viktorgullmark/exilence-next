@@ -7,7 +7,7 @@
 .net-worth-table-outer-container {
   width: 100%;
   .net-worth-table-container {
-    height: calc(#{$net-worth-content-height} - 70px - #{$ad-banner-top} - #{$main-padding});
+    height: calc(#{$net-worth-content-height} - 70px - #{$main-padding});
     overflow: auto;
     .net-worth-table {
       width: 100%;
