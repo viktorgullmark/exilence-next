@@ -13,6 +13,7 @@ import { selectApplicationSession } from '../../store/application/application.se
 import { PricedItem } from '../../shared/interfaces/priced-item.interface';
 import { map } from 'rxjs/operators';
 import { Item } from '../../shared/interfaces/item.interface';
+import { AppConfig } from './../../../environments/environment';
 
 @Injectable()
 export class ExternalService {
@@ -49,7 +50,7 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
-    return forkJoin((tabs.slice(0, 15).map((tab: Tab) => {
+    return forkJoin(((AppConfig.production ? tabs : tabs.slice(0, 15)).map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         tab.items = stash.items.map((item: Item) => {
           return { name: item.typeLine, id: item.id, value: 0 } as PricedItem;
