@@ -13,6 +13,9 @@ import * as notificationReducer from '../../../store/notification/notification.r
 import 'rxjs/add/operator/takeUntil';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { selectAllNewErrorNotifications } from '../../../store/notification/notification.selectors.js';
+import { NetWorthState } from '../../../app.states.js';
+import { selectNetWorthStatus } from '../../../store/net-worth/net-worth.selectors.js';
+import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface.js';
 
 @Component({
   selector: 'app-header-page',
@@ -26,7 +29,10 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   public isMaximized = false;
   public isToggled = false;
 
+  public status$: Observable<NetWorthStatus>;
   public newNotifications$: Observable<Notification[]>;
+
+  private snapshotting: boolean;
 
   @Output() toggled: EventEmitter<any> = new EventEmitter;
 
@@ -34,9 +40,15 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
     public electronService: ElectronService,
     private router: Router,
     private notificationStore: Store<Notification>,
-    private storageMap: StorageMap
+    private storageMap: StorageMap,
+    private netWorthStore: Store<NetWorthState>,
   ) {
     this.newNotifications$ = this.notificationStore.select(selectAllNewErrorNotifications).takeUntil(this.destroy$);
+    this.status$ = this.netWorthStore.select(selectNetWorthStatus);
+
+    this.status$.subscribe(status => {
+      this.snapshotting = status.snapshotting;
+    });
   }
 
   ngOnInit() {
@@ -61,7 +73,9 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.router.navigate(['/login']);
+    if (!this.snapshotting) {
+      this.router.navigate(['/login']);
+    }
   }
 
   clear() {

@@ -24,7 +24,11 @@
       a {
         color: $primary;
         font-size: $font-size;
-      }
+        &.disabled {
+          color: $disabled-color;
+          cursor: not-allowed;
+        }
+      }        
     }
 
     .notification-badge {

@@ -9,6 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StorageModule } from '@ngx-pwa/local-storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -18,16 +19,11 @@ import { CoreModule } from './core/core.module';
 import { ErrorHandler } from './core/error-handling/error-handler';
 import { RequestInterceptor } from './core/error-handling/error-interceptor';
 import { ElectronService } from './core/providers/electron.service';
+import { SessionResolver } from './core/resolvers/session.resolver';
 import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
-import { StorageModule } from '@ngx-pwa/local-storage';
-import { SessionResolver } from './core/resolvers/session.resolver';
-import { SnapshotService } from './core/providers/snapshot.service';
-import { ItemPricingService } from './core/providers/item-pricing.service';
-import { PoeNinjaService } from './core/providers/poe-ninja.service';
-import { PoeWatchService } from './core/providers/poe-watch.service';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -67,7 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       ApplicationEffects
     ])
   ],
-  providers: [ElectronService, ErrorHandler, SessionResolver, SnapshotService, ItemPricingService, PoeNinjaService, PoeWatchService,
+  providers: [ElectronService, ErrorHandler, SessionResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,

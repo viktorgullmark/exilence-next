@@ -28,6 +28,10 @@ import { NetWorthItemTableComponent } from './components/net-worth-item-table/ne
 import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 import { NetWorthRoutingModule } from './net-worth-routing.module';
+import { SnapshotService } from './providers/snapshot.service';
+import { ItemPricingService } from './providers/item-pricing.service';
+import { PoeNinjaService } from './providers/poe-ninja.service';
+import { PoeWatchService } from './providers/poe-watch.service';
 
 @NgModule({
   declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
@@ -52,7 +56,8 @@ import { NetWorthRoutingModule } from './net-worth-routing.module';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    SnapshotService, ItemPricingService, PoeNinjaService, PoeWatchService
   ]
 })
 export class NetWorthModule { }

@@ -7,10 +7,10 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import { NetWorthState, ApplicationState } from '../../app.states';
-import { ItemPricingService } from '../../core/providers/item-pricing.service';
-import { PoeNinjaService } from '../../core/providers/poe-ninja.service';
-import { PoeWatchService } from '../../core/providers/poe-watch.service';
-import { SnapshotService } from '../../core/providers/snapshot.service';
+import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
+import { PoeNinjaService } from '../../auth/net-worth/providers/poe-ninja.service';
+import { PoeWatchService } from '../../auth/net-worth/providers/poe-watch.service';
+import { SnapshotService } from '../../auth/net-worth/providers/snapshot.service';
 import { ExternalService } from '../../core/providers/external.service';
 import { NotificationType } from '../../shared/enums/notification-type.enum';
 import { Snapshot } from '../../shared/interfaces/snapshot.interface';

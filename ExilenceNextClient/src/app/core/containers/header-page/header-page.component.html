@@ -21,7 +21,7 @@
       </ng-container>
     </div>
     <div class="link-container">
-      <a (click)="logout()">
+      <a class="logout-link" (click)="logout()" [ngClass]="{ 'disabled': (status$ | async).snapshotting }">
         {{ 'ACCOUNT.LOGOUT' | translate}} </a>
     </div>
     <ng-container *ngIf="electronService.isElectron()">
