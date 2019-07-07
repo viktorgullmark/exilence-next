@@ -61,11 +61,7 @@ export function reducer(
 
     case NetWorthActionTypes.FetchItemsForSnapshotSuccess: {
       return {
-        ...state,
-        stash: {
-          ...state.stash,
-          tabs: action.payload.tabs
-        }
+        ...state
       };
     }
 
