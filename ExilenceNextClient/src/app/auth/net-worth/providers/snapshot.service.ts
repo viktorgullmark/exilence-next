@@ -1,35 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, from, forkJoin } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/combineLatest';
-import { NotificationType } from '../../../shared/enums/notification-type.enum';
-import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface';
-import { NotificationsState, NetWorthState } from '../../../app.states';
-import { Notification } from '../../../shared/interfaces/notification.interface';
-import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
-import * as netWorthReducer from '../../../store/net-worth/net-worth.reducer';
-import * as notificationActions from '../../../store/notification/notification.actions';
-import { selectNetWorthStatus, selectNetWorthStashTabs } from '../../../store/net-worth/net-worth.selectors';
+import { NetWorthState } from '../../../app.states';
 import { ApplicationSession } from '../../../shared/interfaces/application-session.interface';
-import { Tab } from '../../../shared/interfaces/stash.interface';
-import { selectApplicationSession } from '../../../store/application/application.selectors';
-import { ApplicationSessionDetails } from '../../../shared/interfaces/application-session-details.interface';
-import { NetWorthEffects } from '../../../store/net-worth/net-worth.effects';
-import { ApplicationEffects } from '../../../store/application/application.effects';
-import { Actions, ofType } from '@ngrx/effects';
-import { ApplicationActionTypes } from '../../../store/application/application.actions';
-import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
-import { map } from 'rxjs/operators';
+import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface';
 import { PricedItem } from '../../../shared/interfaces/priced-item.interface';
-import { Snapshot } from '../../../shared/interfaces/snapshot.interface';
+import { Tab } from '../../../shared/interfaces/stash.interface';
 import { TabSnapshot } from '../../../shared/interfaces/tab-snapshot.interface';
+import { ApplicationActionTypes } from '../../../store/application/application.actions';
+import { selectApplicationSession, selectApplicationSessionLeague } from '../../../store/application/application.selectors';
+import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
+import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
+import { selectNetWorthStatus, selectTabsByLeague } from '../../../store/net-worth/net-worth.selectors';
 
 @Injectable()
-export class SnapshotService {
+export class SnapshotService implements OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   private netWorthStatus$: Observable<NetWorthStatus>;
   private netWorthStatus: NetWorthStatus;
@@ -45,27 +36,34 @@ export class SnapshotService {
   ) {
 
     this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus);
-    this.netWorthStatus$.subscribe((status: NetWorthStatus) => {
+    this.netWorthStatus$.takeUntil(this.destroy$).subscribe((status: NetWorthStatus) => {
       this.netWorthStatus = status;
     });
 
-    this.tabs$ = this.netWorthStore.select(selectNetWorthStashTabs);
-    this.tabs$.subscribe((tabs: Tab[]) => {
-      this.tabs = tabs;
+    this.session$ = this.appStore.select(selectApplicationSession);
+    this.session$.takeUntil(this.destroy$).subscribe((session: ApplicationSession) => {
+      this.session = session;
     });
 
-    this.session$ = this.appStore.select(selectApplicationSession);
-    this.session$.subscribe((session: ApplicationSession) => {
-      this.session = session;
+    this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
+      this.tabs$ = this.netWorthStore.select(selectTabsByLeague(league));
+      this.tabs$.takeUntil(this.destroy$).subscribe((tabs: Tab[]) => {
+        this.tabs = tabs;
+      });
     });
 
     this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
       .combineLatest(this.actions$.pipe(
         ofType(NetWorthActionTypes.LoadStateFromStorageFail,
           NetWorthActionTypes.LoadStateFromStorageSuccess)).first())
-      .subscribe(() => {
+      .takeUntil(this.destroy$).subscribe(() => {
         this.checkIfReady();
       });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   startSnapshotChain() {
@@ -92,7 +90,7 @@ export class SnapshotService {
     tabs.map((tab: Tab) => {
       let tabValue = 0;
       tab.items.forEach((item: PricedItem) => tabValue += item.value);
-      tabSnapshots.push({ tabId: tab.id, value: tabValue} as TabSnapshot);
+      tabSnapshots.push({ tabId: tab.id, value: tabValue } as TabSnapshot);
     });
 
     return tabSnapshots;

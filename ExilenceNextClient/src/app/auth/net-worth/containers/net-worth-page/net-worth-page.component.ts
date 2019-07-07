@@ -4,24 +4,27 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import * as moment from 'moment';
 import { Observable, Subject } from 'rxjs';
-import { skip, map } from 'rxjs/operators';
+import { map, skip } from 'rxjs/operators';
 
 import { AppState } from '../../../../app.states';
+import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
+import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
-import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
-import { TabSnapshot } from '../../../../shared/interfaces/tab-snapshot.interface';
-import { selectNetWorthSelectedTabs, selectNetWorthStashTabs, selectNetWorthSnapshots, selectTabsByIds, selectSnapshotsByLeague, selectTabSelectionByLeague } from '../../../../store/net-worth/net-worth.selectors';
+import { CompactTab, Tab } from '../../../../shared/interfaces/stash.interface';
+import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
+import { selectApplicationSessionLeague } from '../../../../store/application/application.selectors';
+import {
+  selectSnapshotsByLeague,
+  selectTabsByIds,
+  selectTabsByLeague,
+  selectTabSelectionByLeague,
+} from '../../../../store/net-worth/net-worth.selectors';
+import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
-import { ItemPricingService } from '../../providers/item-pricing.service';
-import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
-import { ColourHelper } from '../../../../shared/helpers/colour.helper';
-import { selectApplicationSessionLeague } from '../../../../store/application/application.selectors';
-import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -54,12 +57,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private snapshotService: SnapshotService,
     private itemPricingService: ItemPricingService
   ) {
-    this.stashtabList$ = this.netWorthStore.select(selectNetWorthStashTabs).takeUntil(this.destroy$);
 
     this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
       this.selectedLeague = league;
       this.snapshots$ = this.netWorthStore.select(selectSnapshotsByLeague(league)).takeUntil(this.destroy$);
       this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
+      this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
     });
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
@@ -108,7 +111,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   tabsChanged(tabIds: string[]) {
 
     const selectedTabs = tabIds.map(id => {
-      return { tabId: id, league: this.selectedLeague} as TabSelection;
+      return { tabId: id, league: this.selectedLeague } as TabSelection;
     });
     this.netWorthStore.dispatch(new netWorthActions.UpdateTabSelection({
       tabs: selectedTabs

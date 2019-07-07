@@ -116,7 +116,7 @@ export function reducer(
         },
         stash: {
           ...state.stash,
-          tabs: action.payload.tabs
+          tabs: state.stash.tabs.concat(action.payload.tabs)
         }
       };
     }

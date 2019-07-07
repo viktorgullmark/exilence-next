@@ -36,3 +36,9 @@ export const selectTabSelectionByLeague = (league: string) => createSelector(
     selectNetWorthSelectedTabs,
     tabs => tabs.filter(tab => tab.league === league)
 );
+
+
+export const selectTabsByLeague = (league: string) => createSelector(
+    selectNetWorthStashTabs,
+    tabs => tabs.filter(tab => tab.league === league)
+);
