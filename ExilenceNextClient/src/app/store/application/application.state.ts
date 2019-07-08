@@ -8,6 +8,7 @@ export const initialState: ApplicationState = {
         tradeLeague: undefined,
         loading: false,
         validated: false,
+        moduleIndex: 0,
         characterLeagues: [],
         tradeLeagues: [],
         characters: []

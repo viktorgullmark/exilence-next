@@ -15,7 +15,7 @@ import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { CompactTab, Tab } from '../../../../shared/interfaces/stash.interface';
 import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
-import { selectApplicationSessionLeague } from '../../../../store/application/application.selectors';
+import { selectApplicationSessionLeague, selectApplicationSessionModuleIndex } from '../../../../store/application/application.selectors';
 import {
   selectSnapshotsByLeague,
   selectTabsByIds,
@@ -25,6 +25,7 @@ import {
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
+import * as applicationActions from './../../../../store/application/application.actions';
 import { StorageService } from '../../../../core/providers/storage.service';
 
 @Component({
@@ -39,6 +40,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public selectedTabs$: Observable<TabSelection[]>;
   public snapshots$: Observable<Snapshot[]>;
   public playerList$: Observable<any[]> = of([]);
+  public moduleIndex$: Observable<number>;
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
@@ -67,6 +69,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
     });
+
+    this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
 
     this.snapshots$.subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
@@ -109,6 +113,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     });
 
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
+      this.appStore.dispatch(new applicationActions.SetModuleIndex({ index: res }));
+      window.dispatchEvent(new Event('resize'));
     });
   }
 

@@ -1,12 +1,16 @@
 <div class="top-bar divider">
   <div class="top-bar-content">
     <div class="config specific-config">
-      <mat-form-field class="mr--15">
-        <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
-        <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple>
-          <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <ng-container [ngSwitch]="moduleIndex$ | async">
+        <ng-container *ngSwitchCase="0">
+          <mat-form-field class="mr--15">
+            <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
+            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple>
+              <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+      </ng-container>
     </div>
     <div class="config global-config">
       <mat-form-field class="ml--15">

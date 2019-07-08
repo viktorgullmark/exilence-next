@@ -27,6 +27,10 @@ export const selectApplicationSessionLoading = createSelector(getApplicationStat
     (state: ApplicationState) => state.session.loading
 );
 
+export const selectApplicationSessionModuleIndex = createSelector(getApplicationState,
+    (state: ApplicationState) => state.session.moduleIndex
+);
+
 export const selectApplicationSessionValidated = createSelector(getApplicationState,
     (state: ApplicationState) => state.session.validated
 );

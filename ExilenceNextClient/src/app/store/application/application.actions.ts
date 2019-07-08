@@ -28,7 +28,8 @@ export enum ApplicationActionTypes {
   SetSession = '[Application] Set Session',
   AddCharacters = '[Application] Add Characters',
   AddCharacterLeagues = '[Application] Add Character Leagues',
-  AddTradeLeagues = '[Application] Add Trade Leagues'
+  AddTradeLeagues = '[Application] Add Trade Leagues',
+  SetModuleIndex = '[Application] Set Module Index'
 }
 
 export class LoadStateFromStorage implements Action {
@@ -62,6 +63,12 @@ export class SetSession implements Action {
   readonly type = ApplicationActionTypes.SetSession;
 
   constructor(public payload: { session: ApplicationSession }) { }
+}
+
+export class SetModuleIndex implements Action {
+  readonly type = ApplicationActionTypes.SetModuleIndex;
+
+  constructor(public payload: { index: number }) { }
 }
 
 export class AddCharacters implements Action {
@@ -149,7 +156,7 @@ export type ApplicationActions =
   OverrideState |
   LoadStateFromStorage | LoadStateFromStorageSuccess | LoadStateFromStorageFail |
   AddCharacters | AddCharacterLeagues | AddTradeLeagues |
-  SetLeague | SetTradeLeague |
+  SetLeague | SetTradeLeague | SetModuleIndex |
   InitSession | InitSessionSuccess | InitSessionFail | SetSession |
   ValidateSessionForLogin | ValidateSessionForLoginSuccess | ValidateSessionForLoginFail |
   ValidateSession | ValidateSessionSuccess | ValidateSessionFail |

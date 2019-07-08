@@ -5,7 +5,7 @@ import { SessionResolver } from './core/resolvers/session.resolver';
 
 const routes: Routes = [
     {
-        path: 'auth/:validated',
+        path: 'auth',
         loadChildren: () => import('./auth/auth.module').then(mod => mod.AuthModule),
         resolve: { networth: SessionResolver }
     },

@@ -50,9 +50,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       tradeLeague: event.tradeLeague
     }));
 
-    this.validated$.takeUntil(this.destroy$).subscribe(validated => {
-      this.router.navigate(['/auth', validated]);
-    });
+    this.router.navigate(['/auth']);
   }
 
   doValidate(event: ApplicationSessionDetails) {

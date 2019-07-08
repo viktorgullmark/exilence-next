@@ -16,7 +16,8 @@ export function reducer(
         ...action.payload.state,
         session: {
           ...action.payload.state.session,
-          loading: false
+          loading: false,
+          moduleIndex: 0
         }
       };
     }
@@ -53,6 +54,16 @@ export function reducer(
       return {
         ...state,
         session: action.payload.session
+      };
+    }
+
+    case ApplicationActionTypes.SetModuleIndex: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          moduleIndex: action.payload.index
+        }
       };
     }
 
