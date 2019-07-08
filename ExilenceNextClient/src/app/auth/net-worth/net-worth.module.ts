@@ -22,7 +22,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SharedModule } from '../../shared/shared.module';
 import { NetWorthEffects } from '../../store/net-worth/net-worth.effects';
 import { reducer } from '../../store/net-worth/net-worth.reducer';
-import { NetWorthBarComponent } from './components/net-worth-bar/net-worth-bar.component';
 import { NetWorthGraphComponent } from './components/net-worth-graph/net-worth-graph.component';
 import { NetWorthItemTableComponent } from './components/net-worth-item-table/net-worth-item-table.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
@@ -31,9 +30,10 @@ import { SnapshotService } from './providers/snapshot.service';
 import { ItemPricingService } from './providers/item-pricing.service';
 import { PoeNinjaService } from './providers/poe-ninja.service';
 import { PoeWatchService } from './providers/poe-watch.service';
+import { TopBarComponent } from './components/top-bar/top-bar.component';
 
 @NgModule({
-  declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
+  declarations: [NetWorthPageComponent, TopBarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
     SharedModule,
     ReactiveFormsModule,

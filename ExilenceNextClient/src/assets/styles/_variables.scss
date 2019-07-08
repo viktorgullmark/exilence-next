@@ -27,8 +27,11 @@ $disabled-color: #888888;
 
 /* #endregion */
 
+/* #region Top bar */
+$top-bar-height: 70px;
+/* #endregion */
+
 /* #region Net worth */
-$net-worth-bar-height: 70px;
 $net-worth-content-p-top: 85px;
 $net-worth-content-p-bot: 125px;
 $net-worth-content-height: calc(100vh - #{$toolbar-height} - #{$net-worth-content-p-bot} - #{$net-worth-content-p-top});

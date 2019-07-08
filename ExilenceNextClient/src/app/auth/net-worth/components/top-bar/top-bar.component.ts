@@ -8,11 +8,11 @@ import { TabSelection } from '../../../../shared/interfaces/tab-selection.interf
 import { MatSelectChange } from '@angular/material';
 
 @Component({
-  selector: 'app-net-worth-bar',
-  templateUrl: './net-worth-bar.component.html',
-  styleUrls: ['./net-worth-bar.component.scss']
+  selector: 'app-top-bar',
+  templateUrl: './top-bar.component.html',
+  styleUrls: ['./top-bar.component.scss']
 })
-export class NetWorthBarComponent implements OnInit {
+export class TopBarComponent implements OnInit {
   @Input() stashtabList$: Observable<Tab[]>;
   @Input() selectedTabs$: Observable<TabSelection[]>;
   @Input() playerList$: Observable<any[]>;
