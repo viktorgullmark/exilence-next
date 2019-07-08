@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { map, skip } from 'rxjs/operators';
 
 import { AppState } from '../../../../app.states';
@@ -38,6 +38,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public stashtabList$: Observable<Tab[]>;
   public selectedTabs$: Observable<TabSelection[]>;
   public snapshots$: Observable<Snapshot[]>;
+  public playerList$: Observable<any[]> = of([]);
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];

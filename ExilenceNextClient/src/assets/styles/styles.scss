@@ -23,9 +23,9 @@ body {
   background: $background-overlay, url("./../img/legion-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  > *:not(.login-section) {
+  > *:not(.login-section, hr) {
     width: 100%;
-    height: calc(100% - #{$net-worth-bar-height});
+    height: 100%;
   }
 
   &.login-content {
@@ -36,12 +36,15 @@ body {
     padding-top: $net-worth-content-p-top;
     padding-bottom: $net-worth-content-p-bot;
     height: $net-worth-content-height;
-    margin-bottom: -$net-worth-bar-height;
   }
 }
 
 a {
   cursor: pointer;
+}
+
+.divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mat-tab-group {
@@ -55,6 +58,20 @@ a {
     margin-left: 15px;
     margin-bottom: 15px;
   }
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
 }
 
 .pull--right {

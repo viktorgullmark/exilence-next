@@ -25,7 +25,6 @@ import { reducer } from '../../store/net-worth/net-worth.reducer';
 import { NetWorthBarComponent } from './components/net-worth-bar/net-worth-bar.component';
 import { NetWorthGraphComponent } from './components/net-worth-graph/net-worth-graph.component';
 import { NetWorthItemTableComponent } from './components/net-worth-item-table/net-worth-item-table.component';
-import { NetWorthToolbarComponent } from './components/net-worth-toolbar/net-worth-toolbar.component';
 import { NetWorthPageComponent } from './containers/net-worth-page/net-worth-page.component';
 import { NetWorthRoutingModule } from './net-worth-routing.module';
 import { SnapshotService } from './providers/snapshot.service';
@@ -34,7 +33,7 @@ import { PoeNinjaService } from './providers/poe-ninja.service';
 import { PoeWatchService } from './providers/poe-watch.service';
 
 @NgModule({
-  declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthToolbarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
+  declarations: [NetWorthPageComponent, NetWorthBarComponent, NetWorthGraphComponent, NetWorthItemTableComponent],
   imports: [
     SharedModule,
     ReactiveFormsModule,

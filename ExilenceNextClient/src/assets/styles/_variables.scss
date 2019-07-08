@@ -2,6 +2,7 @@
 
 /* #region General */
 $main-padding: 25px;
+$main-margin: 25px;
 $container-padding: 25px;
 $version-font-color: #cecece;
 
@@ -23,13 +24,15 @@ $toolbar-background-color: #0a0a0a;
 $notification-badge-color: $secondary;
 $resize-handle-container-height: 5px;
 $disabled-color: #888888;
+
 /* #endregion */
 
 /* #region Net worth */
-$net-worth-bar-height: 100px;
+$net-worth-bar-height: 70px;
 $net-worth-content-p-top: 85px;
 $net-worth-content-p-bot: 125px;
 $net-worth-content-height: calc(100vh - #{$toolbar-height} - #{$net-worth-content-p-bot} - #{$net-worth-content-p-top});
+$global-config-width: 150px;
 /* #endregion */
 
 /* #region Item */

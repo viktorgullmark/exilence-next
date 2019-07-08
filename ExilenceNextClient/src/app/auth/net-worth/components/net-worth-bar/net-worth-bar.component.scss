@@ -1,10 +1,18 @@
 @import "./../../../../../assets/styles/variables";
 
 .net-worth-bar {
-    background: $background-color;
     height: $net-worth-bar-height;
-
-    .net-worth-bar-content {
-        padding: 25px 25px 0 25px;
-    }
+    margin-bottom: $main-margin;
+    .config {
+        &.specific-config {
+            float: left;
+            width: calc(100% - #{$global-config-width})
+        }
+        &.global-config {
+            width: $global-config-width;
+            float: right;
+            display: flex;
+            justify-content: flex-end;
+        }
+   }
 }
