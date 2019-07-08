@@ -10,15 +10,24 @@
             </mat-select>
           </mat-form-field>
         </ng-container>
+        <ng-container *ngSwitchCase="1">
+            <mat-form-field class="mr--15">
+              <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
+              <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple>
+                <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
       </ng-container>
     </div>
     <div class="config global-config">
-      <mat-form-field class="ml--15">
+      <!-- temporarily outcommented -->
+      <!-- <mat-form-field class="ml--15">
         <mat-label>{{ 'GLOBAL.PLAYERS' | translate}}</mat-label>
         <mat-select [formControl]="players" (selectionChange)="playersChanged($event)" multiple disabled>
           <mat-option *ngFor="let player of playerList$ | async" [value]="player.name">{{player.name}}</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
   </div>
 </div>
