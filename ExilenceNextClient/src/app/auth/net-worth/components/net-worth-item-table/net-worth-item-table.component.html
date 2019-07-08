@@ -22,7 +22,7 @@
 
             <ng-container matColumnDef="tab">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="tab"> Tab </th>
-                <td mat-cell *matCellDef="let element">{{element.tab}}</td>
+                <td mat-cell *matCellDef="let element">{{element.tabNames}}</td>
             </ng-container>
 
             <ng-container matColumnDef="links">
@@ -38,11 +38,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.quality}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="gemLevel">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="gemLevel"> Level </th>
+            <ng-container matColumnDef="level">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="level"> Level </th>
                 <td mat-cell *matCellDef="let element">
-                    <span *ngIf="element.gemLevel > 0" class="gemlevel">{{element.gemLevel}}</span>
-                    <span *ngIf="element.gemLevel == 0 || element.gemLevel == undefined"
+                    <span *ngIf="element.level > 0" class="level">{{element.level}}</span>
+                    <span *ngIf="element.level == 0 || element.level == undefined"
                         class="not-available">n/a</span>
                 </td>
             </ng-container>
@@ -53,27 +53,27 @@
                         [ngClass]="{'corrupted': element.corrupted }">{{element.corrupted ? 'yes' : 'no'}}</span></td>
             </ng-container>
 
-            <ng-container matColumnDef="stacksize">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="stacksize"> Quantity </th>
+            <ng-container matColumnDef="stackSize">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="stackSize"> Quantity </th>
                 <td mat-cell *matCellDef="let element">
-                    {{element.stacksize}}
+                    {{element.stackSize}}
                     <ng-container *ngIf="isDivinationCard(element.icon)">
                         /{{element.totalStacksize}}
                     </ng-container>
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="valuePerUnit">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value&nbsp;&nbsp;<img
+            <ng-container matColumnDef="calculated">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="calculated"> Value&nbsp;&nbsp;<img
                         class="chaos-icon" /> </th>
                 <td mat-cell *matCellDef="let element"><span
-                        class="net-worth-value">{{element.valuePerUnit.toFixed(2)}}</span></td>
+                        class="net-worth-value">{{element.calculated.toFixed(2)}}</span></td>
             </ng-container>
 
-            <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total&nbsp;&nbsp;<img
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="total"> Total&nbsp;&nbsp;<img
                         class="chaos-icon" /> </th>
-                <td mat-cell *matCellDef="let element"><span class="net-worth-value">{{element.value.toFixed(2)}}</span>
+                <td mat-cell *matCellDef="let element"><span class="net-worth-value">{{element.total.toFixed(2)}}</span>
                 </td>
             </ng-container>
 

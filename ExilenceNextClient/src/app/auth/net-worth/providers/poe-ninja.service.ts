@@ -8,6 +8,7 @@ import { PoeNinjaItemOverview } from '../../../shared/interfaces/poe-ninja/poe-n
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
+import { PriceHelper } from '../../../shared/helpers/price.helper';
 
 @Injectable()
 export class PoeNinjaService {
@@ -66,7 +67,7 @@ export class PoeNinjaService {
       return this.getItemCategoryOverview(league, type).pipe(map((itemOverview: PoeNinjaItemOverview) => {
         if (itemOverview !== null) {
           return itemOverview.lines.map(lines => {
-            return { name: lines.name, calculated: lines.chaosValue } as ExternalPrice;
+            return PriceHelper.getExternalPriceFromNinjaItem(lines) as ExternalPrice;
           });
         }
       }));
@@ -79,7 +80,8 @@ export class PoeNinjaService {
       return this.getCurrencyCategoryOverview(league, type).pipe(map((currOverview: PoeNinjaCurrencyOverview) => {
         if (currOverview !== null) {
           return currOverview.lines.map(lines => {
-            return { name: lines.currencyTypeName, calculated: lines.chaosEquivalent } as ExternalPrice;
+            const currencyDetail = currOverview.currencyDetails.find(detail => detail.name === lines.currencyTypeName);
+            return PriceHelper.getExternalPriceFromNinjaCurrencyItem(lines, currencyDetail) as ExternalPrice;
           });
         }
       }));

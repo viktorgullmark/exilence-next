@@ -43,7 +43,7 @@ export class ItemPricingService {
                 const foundPrice = combinedPrices.find(price => price.name === item.name);
 
                 // todo: read setting for chosen price, to use ninja or watch here
-                item.value = foundPrice !== undefined && foundPrice.calculated !== undefined ? foundPrice.calculated : 0;
+                item.calculated = foundPrice !== undefined && foundPrice.calculated !== undefined ? foundPrice.calculated : 0;
                 return item;
             });
         });

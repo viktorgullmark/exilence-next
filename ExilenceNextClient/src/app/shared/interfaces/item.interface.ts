@@ -39,5 +39,6 @@ export interface Item {
     prophecyText: string;
     socket: number;
     stackSize?: number;
+    maxStackSize?: number;
 }
 

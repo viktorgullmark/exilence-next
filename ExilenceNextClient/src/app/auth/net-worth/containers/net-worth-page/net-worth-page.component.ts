@@ -5,7 +5,7 @@ import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { Observable, Subject, of } from 'rxjs';
-import { map, skip } from 'rxjs/operators';
+import { map, skip, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AppState } from '../../../../app.states';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
@@ -27,6 +27,10 @@ import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import * as applicationActions from './../../../../store/application/application.actions';
 import { StorageService } from '../../../../core/providers/storage.service';
+import { TableHelper } from '../../../../shared/helpers/table.helper';
+import { PricedItem } from '../../../../shared/interfaces/priced-item.interface';
+import { NetWorthItemTableComponent } from '../../components/net-worth-item-table/net-worth-item-table.component';
+import { TableItem } from '../../../../shared/interfaces/table-item.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -41,6 +45,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public snapshots$: Observable<Snapshot[]>;
   public playerList$: Observable<any[]> = of([]);
   public moduleIndex$: Observable<number>;
+  public selectedTabsWithItems$: Observable<Tab[]>;
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
@@ -48,11 +53,13 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   public selectedIndex = 0;
   public chartData: ChartSeries[] = [];
+  public tableData: TableItem[] = [];
   public colorScheme = {
     domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
   };
 
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
+  @ViewChild(NetWorthItemTableComponent, undefined) itemTable: NetWorthItemTableComponent;
 
   constructor(
     private netWorthStore: Store<AppState>,
@@ -92,7 +99,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // map tab snapshots to chart
-    this.selectedTabs$.subscribe((selectedTabs: TabSelection[]) => {
+    this.selectedTabs$.pipe(debounceTime(500), distinctUntilChanged()).subscribe((selectedTabs: TabSelection[]) => {
       if (selectedTabs.length > 0) {
         this.netWorthStore
           .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
@@ -103,14 +110,22 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
           .subscribe((tabs: CompactTab[]) => {
             this.colorScheme.domain = []
             tabs.map(tab => this.colorScheme.domain.push(ColourHelper.rgbToHex(tab.colour.r, tab.colour.g, tab.colour.b)));
-
             this.selectedCompactTabs = tabs;
             if (this.snapshots.length > 0) {
               this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
             }
           });
+
       }
+      this.selectedTabsWithItems$ = this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
+
+      this.selectedTabsWithItems$.subscribe((selectedCompactTabs: Tab[]) => {
+        this.tableData = TableHelper.formatTabsForTable(selectedCompactTabs);
+        this.itemTable.updateTable(this.tableData);
+      });
     });
+
+
 
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
       this.appStore.dispatch(new applicationActions.SetModuleIndex({ index: res }));

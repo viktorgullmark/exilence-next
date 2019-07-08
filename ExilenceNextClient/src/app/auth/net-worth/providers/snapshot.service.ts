@@ -89,7 +89,7 @@ export class SnapshotService implements OnDestroy {
     const tabSnapshots: TabSnapshot[] = [];
     tabs.map((tab: Tab) => {
       let tabValue = 0;
-      tab.items.forEach((item: PricedItem) => tabValue += item.value);
+      tab.items.forEach((item: PricedItem) => tabValue += item.calculated);
       tabSnapshots.push({ tabId: tab.id, value: tabValue } as TabSnapshot);
     });
 

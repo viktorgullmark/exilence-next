@@ -15,5 +15,5 @@
 <div class="container net-worth-content">
     <app-top-bar [stashtabList$]="stashtabList$" [moduleIndex$]="moduleIndex$" [playerList$]="playerList$" [selectedTabs$]="selectedTabs$" (tabSelectionChanged)="tabsChanged($event)"></app-top-bar>
     <app-net-worth-graph [chartData]="chartData" [colorScheme]="colorScheme" [hidden]="selectedIndex != 0 || chartData.length == 0"></app-net-worth-graph>
-    <app-net-worth-item-table [hidden]="selectedIndex != 1"></app-net-worth-item-table>
+    <app-net-worth-item-table [tableData]="tableData" [hidden]="selectedIndex != 1"></app-net-worth-item-table>
 </div>

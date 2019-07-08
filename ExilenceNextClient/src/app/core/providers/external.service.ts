@@ -16,6 +16,7 @@ import { Item } from '../../shared/interfaces/item.interface';
 import { AppConfig } from './../../../environments/environment';
 import { NetWorthState } from '../../app.states';
 import * as netWorthActions from './../../store/net-worth/net-worth.actions';
+import { ItemHelper } from '../../shared/helpers/item.helper';
 
 @Injectable()
 export class ExternalService {
@@ -59,7 +60,20 @@ export class ExternalService {
         this.netWorthStore.dispatch(new netWorthActions.IncrementFetchedTabsCount());
         tab.league = league;
         tab.items = stash.items.map((item: Item) => {
-          return { name: item.typeLine, id: item.id, value: 0 } as PricedItem;
+          return {
+            id: item.id,
+            name: item.typeLine,
+            frameType: item.frameType,
+            calculated: 0,
+            icon: item.icon,
+            corrupted: item.corrupted || false,
+            links: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getLinks(item.sockets.map(t => t.group)) : 0,
+            sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
+            quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
+            level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
+            stackSize: item.stackSize || 0,
+            totalStacksize: item.maxStackSize || 0
+          } as PricedItem;
         });
         return tab;
       }));
