@@ -195,6 +195,8 @@ a {
 /* #region Material overrides */
 .mat-snack-bar-container {
   max-width: 60vw !important;
+  background: $background-color !important;
+  color: $font-color !important;
 }
 
 .mat-drawer-backdrop.mat-drawer-shown {
