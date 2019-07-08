@@ -25,6 +25,7 @@ import {
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
 import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
+import { StorageService } from '../../../../core/providers/storage.service';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -55,7 +56,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private appStore: Store<ApplicationSession>,
     private storageMap: StorageMap,
     private snapshotService: SnapshotService,
-    private itemPricingService: ItemPricingService
+    private itemPricingService: ItemPricingService,
+    private storageService: StorageService
   ) {
 
     this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
@@ -73,11 +75,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     });
 
     // load state from storage
-    this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
-
+    if (!this.storageService.netWorthLoaded) {
+      this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
+    }
     // save state to storage on changes
-    this.netWorthStore.pipe(skip(1)).subscribe((state: AppState) => {
-      this.storageMap.set('netWorthState', state.netWorthState).subscribe();
+    this.netWorthStore.pipe(skip(1)).takeUntil(this.destroy$).subscribe((state: AppState) => {
+      this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
     });
 
   }

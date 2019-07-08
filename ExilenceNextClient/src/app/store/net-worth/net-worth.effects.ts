@@ -20,6 +20,7 @@ import { Notification } from './../../shared/interfaces/notification.interface';
 import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
 import { selectApplicationSessionLeague } from '../application/application.selectors';
+import { StorageService } from '../../core/providers/storage.service';
 
 @Injectable()
 export class NetWorthEffects {
@@ -33,19 +34,22 @@ export class NetWorthEffects {
     private itemPricingService: ItemPricingService,
     private snapshotService: SnapshotService,
     private appStore: Store<ApplicationState>,
-    private netWorthStore: Store<NetWorthState>
+    private netWorthStore: Store<NetWorthState>,
+    private storageService: StorageService
   ) { }
 
   loadStateFromStorage$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorage),
     mergeMap(() => this.storageMap.get('netWorthState').pipe(
-      map((state: NetWorthState) =>
-        state !== undefined ?
+      map((state: NetWorthState) => {
+        this.storageService.netWorthLoaded = true;
+        return state !== undefined ?
           new netWorthActions.OverrideState({ state }) :
           new netWorthActions.LoadStateFromStorageFail({
             title: 'INFORMATION.NO_STORAGE_TITLE',
             message: 'INFORMATION.NO_STORAGE_DESC'
-          })
+          });
+        }
       )
     ))
   )

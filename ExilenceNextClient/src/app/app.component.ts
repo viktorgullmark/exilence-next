@@ -9,6 +9,7 @@ import { ElectronService } from './core/providers/electron.service';
 import { JsonService } from './core/providers/json.service';
 import { BrowserHelper } from './shared/helpers/browser.helper';
 import * as applicationActions from './store/application/application.actions';
+import { StorageService } from './core/providers/storage.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class AppComponent {
     private storageMap: StorageMap,
     private translate: TranslateService,
     private appStore: Store<AppState>,
-    private jsonService: JsonService
+    private jsonService: JsonService,
+    private storageService: StorageService
   ) {
 
     // this.jsonService.testJsonPatch();
