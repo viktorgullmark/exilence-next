@@ -75,7 +75,7 @@ export class AddTabs implements Action {
 
 export class UpdateTabSelection implements Action {
   readonly type = NetWorthActionTypes.UpdateTabSelection;
-  constructor(public payload: { tabs: TabSelection[] }) { }
+  constructor(public payload: { tabs: TabSelection[], league: string}) { }
 }
 
 export class FetchItemsForSnapshot implements Action {

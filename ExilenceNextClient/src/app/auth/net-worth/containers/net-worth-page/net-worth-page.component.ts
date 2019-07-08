@@ -112,12 +112,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   tabsChanged(tabIds: string[]) {
-
     const selectedTabs = tabIds.map(id => {
       return { tabId: id, league: this.selectedLeague } as TabSelection;
     });
     this.netWorthStore.dispatch(new netWorthActions.UpdateTabSelection({
-      tabs: selectedTabs
+      tabs: selectedTabs,
+      league: this.selectedLeague
     }));
   }
 

@@ -104,6 +104,11 @@ export function reducer(
     }
 
     case NetWorthActionTypes.PriceItemsForSnapshotSuccess: {
+      const tabs = [...state.stash.tabs];
+      action.payload.tabs.forEach(tab => {
+        const foundTab = tabs.find(t => t.id === tab.id);
+        foundTab !== undefined ? tabs[tabs.indexOf(foundTab)] = tab : tabs.push(tab);
+      });
       return {
         ...state,
         status: {
@@ -112,7 +117,7 @@ export function reducer(
         },
         stash: {
           ...state.stash,
-          tabs: action.payload.tabs
+          tabs: tabs
         }
       };
     }
@@ -127,11 +132,14 @@ export function reducer(
     }
 
     case NetWorthActionTypes.UpdateTabSelection: {
+
+      const otherTabs = [...state.settings.selectedTabs.filter(tab => tab.league !== action.payload.league)];
+
       return {
         ...state,
         settings: {
           ...state.settings,
-          selectedTabs: action.payload.tabs
+          selectedTabs: otherTabs.concat(action.payload.tabs)
         }
       };
     }
