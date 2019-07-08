@@ -6,6 +6,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatSidenavModule,
   MatToolbarModule,
 } from '@angular/material';
@@ -35,6 +36,7 @@ import { SnapshotProgressSnackbarSnackComponent } from
     MatToolbarModule,
     MatSidenavModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
     NgPipesModule,

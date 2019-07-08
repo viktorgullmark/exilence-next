@@ -19,12 +19,12 @@ import { CoreModule } from './core/core.module';
 import { ErrorHandler } from './core/error-handling/error-handler';
 import { RequestInterceptor } from './core/error-handling/error-interceptor';
 import { ElectronService } from './core/providers/electron.service';
+import { StorageService } from './core/providers/storage.service';
 import { SessionResolver } from './core/resolvers/session.resolver';
 import { LoginModule } from './login/login.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { ApplicationEffects } from './store/application/application.effects';
 import { metaReducers, reducers } from './store/reducers';
-import { StorageService } from './core/providers/storage.service';
 
 // NG Translate
 // AoT requires an exported function for factories
@@ -56,10 +56,10 @@ export function HttpLoaderFactory(http: HttpClient) {
       IDBNoWrap: true
     }),
     StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: false // Restrict extension to log-only mode
-    }),
+    // StoreDevtoolsModule.instrument({
+    //   maxAge: 25, // Retains last 25 states
+    //   logOnly: false // Restrict extension to log-only mode
+    // }),
     EffectsModule.forRoot([
       ApplicationEffects
     ])

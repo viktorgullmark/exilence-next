@@ -8,8 +8,8 @@ import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
   styleUrls: ['./net-worth-graph.component.scss']
 })
 export class NetWorthGraphComponent implements OnInit {
+  @Input() loading: boolean;
   @Input() chartData: ChartSeries[] = [];
-
   @Input() colorScheme = {
     domain: ['#e91e63', '#fff'] };
 

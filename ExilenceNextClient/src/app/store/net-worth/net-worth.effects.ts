@@ -92,7 +92,6 @@ export class NetWorthEffects {
           return new netWorthActions.FetchPricesSuccess({ poeNinja: ninjaPrices, poeWatch: prices[2] });
         }),
         catchError((e) => {
-          console.log(e);
           return of(new netWorthActions.FetchPricesFail(
             { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' }));
         }))

@@ -9,6 +9,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatPaginatorModule,
+  MatProgressSpinnerModule,
   MatSelectModule,
   MatSortModule,
   MatTableModule,
@@ -37,6 +38,7 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
   imports: [
     SharedModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,

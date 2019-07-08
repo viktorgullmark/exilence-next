@@ -32,6 +32,5 @@ export class SnapshotProgressSnackbarSnackComponent implements OnDestroy {
     }
 
     animationEnded(event: any) {
-        console.log(event);
     }
 }

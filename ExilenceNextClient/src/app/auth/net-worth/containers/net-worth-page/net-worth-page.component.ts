@@ -51,6 +51,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   private selectedCompactTabs: CompactTab[];
   private selectedLeague: string;
 
+  public graphLoading = false;
   public selectedIndex = 0;
   public chartData: ChartSeries[] = [];
   public tableData: TableItem[] = [];
@@ -79,10 +80,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
 
-    this.snapshots$.subscribe((snapshots: Snapshot[]) => {
+    this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
       if (this.selectedCompactTabs !== undefined) {
+        this.graphLoading = true;
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
+        setTimeout(() => this.graphLoading = false, 1500);
       }
     });
 
@@ -94,12 +97,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.netWorthStore.pipe(skip(1)).takeUntil(this.destroy$).subscribe((state: AppState) => {
       this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
     });
-
   }
 
   ngOnInit() {
     // map tab snapshots to chart
-    this.selectedTabs$.pipe(debounceTime(500), distinctUntilChanged()).subscribe((selectedTabs: TabSelection[]) => {
+    this.selectedTabs$.pipe(debounceTime(250), distinctUntilChanged()).takeUntil(this.destroy$)
+    .subscribe((selectedTabs: TabSelection[]) => {
       if (selectedTabs.length > 0) {
         this.netWorthStore
           .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
@@ -119,15 +122,16 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       }
       this.selectedTabsWithItems$ = this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
 
-      this.selectedTabsWithItems$.subscribe((selectedCompactTabs: Tab[]) => {
+      this.selectedTabsWithItems$.takeUntil(this.destroy$).subscribe((selectedCompactTabs: Tab[]) => {
         this.tableData = TableHelper.formatTabsForTable(selectedCompactTabs);
         this.itemTable.updateTable(this.tableData);
       });
     });
 
 
-
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
+      this.graphLoading = true;
+      setTimeout(() => this.graphLoading = false, 1500);
       this.appStore.dispatch(new applicationActions.SetModuleIndex({ index: res }));
       window.dispatchEvent(new Event('resize'));
     });

@@ -1,6 +1,7 @@
 import { ChartSeries, ChartSeriesEntry } from '../interfaces/chart.interface';
 import { Snapshot } from '../interfaces/snapshot.interface';
 import { CompactTab } from '../interfaces/stash.interface';
+import { Observable, of } from 'rxjs';
 
 export class SnapshotHelper {
     public static formatSnapshotsForChart(compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {

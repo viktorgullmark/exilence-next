@@ -53,6 +53,13 @@ a {
   width: calc(100% - #{$main-padding}* 2);
 }
 
+.spinner-container {
+  align-self: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .h-container {
   font-weight: normal;
   color: $secondary;
