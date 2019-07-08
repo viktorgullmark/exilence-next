@@ -11,9 +11,11 @@ import { ApplicationSession } from '../../shared/interfaces/application-session.
 import { Store } from '@ngrx/store';
 import { selectApplicationSession } from '../../store/application/application.selectors';
 import { PricedItem } from '../../shared/interfaces/priced-item.interface';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { Item } from '../../shared/interfaces/item.interface';
 import { AppConfig } from './../../../environments/environment';
+import { NetWorthState } from '../../app.states';
+import * as netWorthActions from './../../store/net-worth/net-worth.actions';
 
 @Injectable()
 export class ExternalService {
@@ -26,7 +28,8 @@ export class ExternalService {
 
   constructor(
     private http: HttpClient,
-    private appStore: Store<ApplicationSession>
+    private appStore: Store<ApplicationSession>,
+    private netWorthStore: Store<NetWorthState>
   ) {
     this.session$ = this.appStore.select(selectApplicationSession);
     this.session$.subscribe((session: ApplicationSession) => {
@@ -50,8 +53,10 @@ export class ExternalService {
   }
 
   getItemsForTabs(tabs: Tab[], account: string = this.session.account, league: string = this.session.league) {
+    this.netWorthStore.dispatch(new netWorthActions.ResetFetchedTabsCount());
     return forkJoin(((AppConfig.production ? tabs : tabs.slice(0, 15)).map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
+        this.netWorthStore.dispatch(new netWorthActions.IncrementFetchedTabsCount());
         tab.league = league;
         tab.items = stash.items.map((item: Item) => {
           return { name: item.typeLine, id: item.id, value: 0 } as PricedItem;

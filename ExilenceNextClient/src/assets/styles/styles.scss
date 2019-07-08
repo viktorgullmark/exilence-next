@@ -53,6 +53,18 @@ a {
   width: calc(100% - #{$main-padding}* 2);
 }
 
+.h-container {
+  font-weight: normal;
+  color: $secondary;
+  margin-top: 0px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .h-icon {
+    margin: 0 5px 16px 0;
+  }
+}
+
 .btn-grp {
   button {
     margin-left: 15px;
@@ -197,6 +209,10 @@ a {
   max-width: 60vw !important;
   background: $background-color !important;
   color: $font-color !important;
+}
+
+.mat-progress-bar .mat-progress-bar-fill {
+  transition-duration: 0ms !important;
 }
 
 .mat-drawer-backdrop.mat-drawer-shown {

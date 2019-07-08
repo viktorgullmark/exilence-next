@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { skip } from 'rxjs/operators';
 
 import { AppState } from './app.states';
-import { ProgressSnackbarComponent } from './core/components/progress-snackbar/progress-snackbar.component';
+import { SnapshotProgressSnackbarComponent } from './core/components/snapshot-progress-snackbar/snapshot-progress-snackbar.component';
 import { ElectronService } from './core/providers/electron.service';
 import { JsonService } from './core/providers/json.service';
 import { StorageService } from './core/providers/storage.service';
@@ -21,7 +21,7 @@ import * as applicationActions from './store/application/application.actions';
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild('progressSnackbar', undefined) progressSnackbar: ProgressSnackbarComponent;
+  @ViewChild('progressSnackbar', undefined) progressSnackbar: SnapshotProgressSnackbarComponent;
 
   constructor(public electronService: ElectronService,
     private storageMap: StorageMap,

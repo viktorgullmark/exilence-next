@@ -17,6 +17,11 @@ export function reducer(
         status: {
           ...action.payload.state.status,
           snapshotting: false
+        },
+        stash: {
+          ...action.payload.state.stash,
+          tabCount: 0,
+          tabCountFetched: 0
         }
       };
     }
@@ -144,6 +149,35 @@ export function reducer(
       };
     }
 
+    case NetWorthActionTypes.FetchTabsForSnapshotSuccess: {
+      return {
+        ...state,
+        stash: {
+          ...state.stash,
+          tabCount: action.payload.tabCount
+        }
+      };
+    }
+
+    case NetWorthActionTypes.IncrementFetchedTabsCount: {
+      return {
+        ...state,
+        stash: {
+          ...state.stash,
+          tabCountFetched: state.stash.tabCountFetched + 1
+        }
+      };
+    }
+
+    case NetWorthActionTypes.ResetFetchedTabsCount: {
+      return {
+        ...state,
+        stash: {
+          ...state.stash,
+          tabCountFetched: 0
+        }
+      };
+    }
 
     case NetWorthActionTypes.CreateSnapshot: {
       return {

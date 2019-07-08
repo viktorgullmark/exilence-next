@@ -22,6 +22,14 @@ export const selectNetWorthSnapshots = createSelector(getNetWorthState,
     (state: NetWorthState) => state.history.snapshots
 );
 
+export const selectNetWorthFetchedTabsCount = createSelector(getNetWorthState,
+    (state: NetWorthState) => state.stash.tabCountFetched
+);
+
+export const selectNetWorthTabsCount = createSelector(getNetWorthState,
+    (state: NetWorthState) => state.stash.tabCount
+);
+
 export const selectTabsByIds = (ids: string[]) => createSelector(
     selectNetWorthStashTabs,
     tabs => tabs.filter(tab => ids.find(id => id === tab.id))

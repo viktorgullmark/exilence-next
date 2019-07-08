@@ -18,7 +18,9 @@
     "SNAPSHOT_STARTED_TITLE": "Snapshot started",
     "SNAPSHOT_STARTED_DESC": "Started fetching net worth data for your stash tabs",
     "SNAPSHOT_FINISHED_TITLE": "Snapshot finished",
-    "SNAPSHOT_FINISHED_DESC": "New net worth data for your stash tabs was fetched successfully"
+    "SNAPSHOT_FINISHED_DESC": "New net worth data for your stash tabs was fetched successfully",
+    "FETCHING_TAB": "Fetching tab",
+    "IN_PROGRESS": "Snapshot in progress"
   },
   "GRAPH": {
     "LEGEND_TITLE": "Stash tabs",

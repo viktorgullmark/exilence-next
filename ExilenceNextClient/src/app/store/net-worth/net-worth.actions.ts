@@ -27,6 +27,8 @@ export enum NetWorthActionTypes {
   FetchTabsForSnapshot = '[NetWorth] Fetch Tabs For Snapshot',
   FetchTabsForSnapshotSuccess = '[NetWorth] Fetch Tabs For Snapshot Success',
   FetchTabsForSnapshotFail = '[NetWorth] Fetch Tabs For Snapshot Fail',
+  IncrementFetchedTabsCount = '[NetWorth] Increment Fetched Tabs Count',
+  ResetFetchedTabsCount = '[NetWorth] Reset Fetched Tabs Count',
   CreateSnapshot = '[NetWorth] Create Snapshot',
   CreateSnapshotSuccess = '[NetWorth] Create Snapshot Success',
   CreateSnapshotFail = '[NetWorth] Create Snapshot Fail'
@@ -60,7 +62,7 @@ export class FetchTabsForSnapshot implements Action {
 
 export class FetchTabsForSnapshotSuccess implements Action {
   readonly type = NetWorthActionTypes.FetchTabsForSnapshotSuccess;
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[] }) { }
+  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[], tabCount: number }) { }
 }
 
 export class FetchTabsForSnapshotFail implements Action {
@@ -75,7 +77,17 @@ export class AddTabs implements Action {
 
 export class UpdateTabSelection implements Action {
   readonly type = NetWorthActionTypes.UpdateTabSelection;
-  constructor(public payload: { tabs: TabSelection[], league: string}) { }
+  constructor(public payload: { tabs: TabSelection[], league: string }) { }
+}
+
+export class IncrementFetchedTabsCount implements Action {
+  readonly type = NetWorthActionTypes.IncrementFetchedTabsCount;
+  constructor() { }
+}
+
+export class ResetFetchedTabsCount implements Action {
+  readonly type = NetWorthActionTypes.ResetFetchedTabsCount;
+  constructor() { }
 }
 
 export class FetchItemsForSnapshot implements Action {
@@ -144,6 +156,7 @@ export type NetWorthActions =
   AddTabs |
   PriceItemsForSnapshot | PriceItemsForSnapshotSuccess | PriceItemsForSnapshotFail |
   FetchItemsForSnapshot | FetchItemsForSnapshotSuccess | FetchItemsForSnapshotFail |
+  FetchTabsForSnapshot | FetchTabsForSnapshotSuccess | FetchTabsForSnapshotFail |
   FetchPrices | FetchPricesSuccess | FetchPricesFail |
-  UpdateTabSelection |
+  UpdateTabSelection | IncrementFetchedTabsCount | ResetFetchedTabsCount |
   CreateSnapshot | CreateSnapshotSuccess | CreateSnapshotFail;

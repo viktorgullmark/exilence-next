@@ -9,7 +9,9 @@ export const initialState: NetWorthState = {
         selectedTabs: []
     },
     stash: {
-        tabs: []
+        tabs: [],
+        tabCountFetched: 0,
+        tabCount: 0
     },
     prices: {
         poeNinja: [],

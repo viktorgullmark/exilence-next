@@ -21,6 +21,7 @@ import * as notificationActions from './../notification/notification.actions';
 import * as netWorthActions from './net-worth.actions';
 import { selectApplicationSessionLeague } from '../application/application.selectors';
 import { StorageService } from '../../core/providers/storage.service';
+import { AppConfig } from '../../../environments/environment';
 
 @Injectable()
 export class NetWorthEffects {
@@ -49,7 +50,7 @@ export class NetWorthEffects {
             title: 'INFORMATION.NO_STORAGE_TITLE',
             message: 'INFORMATION.NO_STORAGE_DESC'
           });
-        }
+      }
       )
     ))
   )
@@ -104,7 +105,12 @@ export class NetWorthEffects {
       this.externalService.getStashTabs(res.payload.accountDetails.account, res.payload.league)
         .pipe(
           map((stash: Stash) => {
-            return new netWorthActions.FetchTabsForSnapshotSuccess({ accountDetails: res.payload.accountDetails, tabs: stash.tabs });
+            return new netWorthActions.FetchTabsForSnapshotSuccess(
+              {
+                accountDetails: res.payload.accountDetails,
+                tabs: stash.tabs,
+                tabCount: (AppConfig.production ? stash.tabs.length : stash.tabs.slice(0, 15).length)
+              });
           }),
           catchError(() => of(
             new netWorthActions.FetchTabsForSnapshotFail(

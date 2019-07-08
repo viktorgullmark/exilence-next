@@ -1,0 +1,10 @@
+<div class="progress-snackbar-content">
+    <div class="h-container">
+        <mat-icon class="h-icon">get_app</mat-icon>
+        <h3 class="mat-h3">{{'SNAPSHOT.IN_PROGRESS' | translate }}</h3>
+    </div>
+    <span>{{'SNAPSHOT.FETCHING_TAB' | translate}}&nbsp;{{tabCountFetched$ | async }}&nbsp;of&nbsp;{{tabCount}}</span>
+    <mat-progress-bar (animationEnd)="animationEnded($event)" color="primary" mode="determinate"
+        [value]="((tabCountFetched$ | async)/tabCount) * 100">
+    </mat-progress-bar>
+</div>
