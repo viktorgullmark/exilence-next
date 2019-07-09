@@ -84,12 +84,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
       if (this.selectedCompactTabs !== undefined) {
-        this.graphLoading = true;
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
-        timer(2000).takeUntil(this.tabChanged$)
-          .pipe(
-            switchMap(() => of(this.graphLoading = false))
-          ).subscribe();
       }
     });
 
