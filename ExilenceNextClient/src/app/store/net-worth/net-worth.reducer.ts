@@ -98,7 +98,11 @@ export function reducer(
 
     case NetWorthActionTypes.FetchPricesFail: {
       return {
-        ...state
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false
+        }
       };
     }
 
