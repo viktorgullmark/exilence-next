@@ -1,4 +1,4 @@
-<mat-sidenav-container hasBackdrop="true" class="notification-sidebar-container">
+<mat-sidenav-container hasBackdrop="true" class="notification-sidebar-container" [ngClass]="{ 'toggled': toggled }">
   <mat-sidenav #sidenav mode="over" position="end">
     <app-notification-list
     [notifications$]="notifications$">

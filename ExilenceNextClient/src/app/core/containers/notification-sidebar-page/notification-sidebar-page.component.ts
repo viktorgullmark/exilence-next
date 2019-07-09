@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import 'rxjs/add/operator/takeUntil';
+
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Store } from '@ngrx/store';
-import { NotificationsState } from '../../../app.states';
 import { Observable, Subject } from 'rxjs';
-import * as notificationReducer from './../../../store/notification/notification.reducer';
-import { Notification } from './../../../shared/interfaces/notification.interface';
-import { filter, switchMap, distinctUntilChanged, map } from 'rxjs/operators';
-import 'rxjs/add/operator/takeUntil';
+import { distinctUntilChanged } from 'rxjs/operators';
+
+import { NotificationsState } from '../../../app.states';
 import { selectAllNotifications } from '../../../store/notification/notification.selectors';
+import { Notification } from './../../../shared/interfaces/notification.interface';
 
 @Component({
   selector: 'app-notification-sidebar-page',
@@ -18,6 +19,7 @@ export class NotificationSidebarPageComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   public notifications$: Observable<Notification[]>;
+  public toggled = false;
 
   @ViewChild('sidenav', undefined) sidenav: MatSidenav;
 
@@ -29,6 +31,12 @@ export class NotificationSidebarPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.sidenav.openedStart.subscribe((opened: any) => {
+      this.toggled = true;
+    });
+    this.sidenav.openedChange.subscribe((opened: any) => {
+      this.toggled = opened;
+    });
   }
 
   toggle() {

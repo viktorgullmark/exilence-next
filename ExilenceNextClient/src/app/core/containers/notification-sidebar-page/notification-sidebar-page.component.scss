@@ -5,12 +5,15 @@
     height: $sidebar-content-height;
     position: absolute;
     background: none;
-    z-index: auto;
+    z-index: -1;
     .mat-sidenav {
         width: $sidebar-width;
         padding: $main-padding;
     }
     .mat-drawer-content {
+        z-index: auto;
+    }
+    &.toggled {
         z-index: auto;
     }
 }
