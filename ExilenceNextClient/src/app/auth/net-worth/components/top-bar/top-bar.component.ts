@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { Tab } from '../../../../shared/interfaces/stash.interface';
 import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
@@ -18,7 +18,9 @@ import { Store } from '@ngrx/store';
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss']
 })
-export class TopBarComponent implements OnInit {
+export class TopBarComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   @Input() stashtabList$: Observable<Tab[]>;
   @Input() selectedTabs$: Observable<TabSelection[]>;
   @Input() playerList$: Observable<any[]>;
@@ -30,13 +32,18 @@ export class TopBarComponent implements OnInit {
   public status$: Observable<NetWorthStatus>;
 
   constructor(public router: Router, private netWorthStore: Store<NetWorthState>) {
-    this.status$ = this.netWorthStore.select(selectNetWorthStatus);
+    this.status$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
   }
 
   ngOnInit() {
-    this.selectedTabs$.subscribe(tabs => {
+    this.selectedTabs$.takeUntil(this.destroy$).subscribe(tabs => {
       this.stashtabs.setValue(tabs.map(tab => tab.tabId));
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   tabsChanged(event: MatSelectChange) {

@@ -44,9 +44,9 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
     private netWorthStore: Store<NetWorthState>,
   ) {
     this.newNotifications$ = this.notificationStore.select(selectAllNewErrorNotifications).takeUntil(this.destroy$);
-    this.status$ = this.netWorthStore.select(selectNetWorthStatus);
+    this.status$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
 
-    this.status$.subscribe(status => {
+    this.status$.takeUntil(this.destroy$).subscribe(status => {
       this.snapshotting = status.snapshotting;
     });
   }
@@ -85,7 +85,7 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   toggleSidenav() {
     this.toggled.emit();
     this.isToggled = !this.isToggled;
-    this.newNotifications$.pipe(take(1)).subscribe(notifications => {
+    this.newNotifications$.pipe(take(1)).takeUntil(this.destroy$).subscribe(notifications => {
       const updates: Update<Notification>[] = notifications.map(n => {
         return {
           id: n.id,

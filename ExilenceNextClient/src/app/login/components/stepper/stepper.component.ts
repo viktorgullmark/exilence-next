@@ -50,7 +50,7 @@ export class StepperComponent implements OnInit, OnDestroy {
     });
 
     this.applicationEffects.validateSessionForLoginSuccess$
-      .subscribe(() => {
+      .takeUntil(this.destroy$).subscribe(() => {
         this.stepper.next();
       });
   }
