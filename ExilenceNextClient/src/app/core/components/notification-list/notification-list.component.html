@@ -1,5 +1,6 @@
 <mat-accordion class="notification-list">
-  <mat-expansion-panel *ngFor="let notification of (notifications$ | async) | reverse">
+  <mat-expansion-panel *ngFor="let notification of (notifications$ | async) | reverse"
+    [ngClass]="{ 'information': notification.type == NotificationType.Information, 'warning': notification.type == NotificationType.Warning, 'error': notification.type == NotificationType.Error}">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <span class="timestamp">{{notification.timestamp.format('LT')}}</span>{{notification.title | translate}}

@@ -14,7 +14,9 @@ $faded-overlay-color: rgba(27, 27, 27, 0.6);
 /* #region Font */
 $main-font: 'Roboto';
 $font-color: #fff;
-$warning: #ffbd56;
+$warning-color: #ffbd56;
+$information-color: $font-color;
+$error-color: #f74b4b;
 $secondary-font-color: #cecece;
 $font-size: 13px;
 /* #endregion */
