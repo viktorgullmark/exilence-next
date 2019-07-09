@@ -3,6 +3,7 @@
     "TITLE": "Exilence Next"
   },
   "ERROR": {
+    "UNREACHABLE": "Could not reach: ",
     "UNAUTHORIZED": "The session id is incorrect",
     "NOT_FOUND": "The resource was not found",
     "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
