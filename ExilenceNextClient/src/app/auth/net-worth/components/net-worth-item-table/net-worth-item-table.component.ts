@@ -19,6 +19,7 @@ export class NetWorthItemTableComponent implements OnInit {
   @ViewChild(MatSort, undefined) sort: MatSort;
   @ViewChild(MatPaginator, undefined) paginator: MatPaginator;
 
+  private filterValue = '';
   public stashtabs$: Observable<Tab[]>;
   public pageSizeOptions: number[] = [5, 10, 25, 100];
   public displayedColumns: string[] = ['icon', 'name', 'tab', 'links', 'quality', 'level', 'corrupted',
@@ -31,13 +32,15 @@ export class NetWorthItemTableComponent implements OnInit {
   }
 
   updateTable(newData: TableItem[]) {
-    const data = [... newData];
+    const data = [...newData];
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.filter = this.filterValue;
   }
 
   applyFilter(filterValue: string) {
+    this.filterValue = filterValue;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
