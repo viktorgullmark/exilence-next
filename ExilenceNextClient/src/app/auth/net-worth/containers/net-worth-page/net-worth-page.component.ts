@@ -86,6 +86,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       if (this.selectedCompactTabs !== undefined) {
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
       }
+
+      // todo: update item table
     });
 
     // load state from storage
