@@ -222,6 +222,11 @@ a {
   background: $background-color-secondary !important;
 }
 
+.mat-cell {
+  font-size: 12px !important;
+  white-space: nowrap;
+}
+
 .mat-paginator {
   background: $background-color-secondary !important;
 }

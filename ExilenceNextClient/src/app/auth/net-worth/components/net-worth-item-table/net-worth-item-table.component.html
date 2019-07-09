@@ -21,8 +21,8 @@
             </ng-container>
 
             <ng-container matColumnDef="tab">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="tab"> Tab </th>
-                <td mat-cell *matCellDef="let element">{{element.tabNames}}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="tab"> Tabs </th>
+                <td mat-cell *matCellDef="let element">{{getTabNames(element.tabs)}}</td>
             </ng-container>
 
             <ng-container matColumnDef="links">
@@ -58,7 +58,7 @@
                 <td mat-cell *matCellDef="let element">
                     {{element.stackSize}}
                     <ng-container *ngIf="isDivinationCard(element.icon)">
-                        /{{element.totalStacksize}}
+                        / {{element.totalStacksize}}
                     </ng-container>
                 </td>
             </ng-container>

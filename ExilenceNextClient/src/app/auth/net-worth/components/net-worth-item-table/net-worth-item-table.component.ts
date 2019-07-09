@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { ItemHelper } from './../../../../shared/helpers/item.helper';
 import { Observable } from 'rxjs';
-import { Tab } from '../../../../shared/interfaces/stash.interface';
+import { Tab, CompactTab } from '../../../../shared/interfaces/stash.interface';
 import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
 import { PricedItem } from '../../../../shared/interfaces/priced-item.interface';
 import { TableItem } from '../../../../shared/interfaces/table-item.interface';
+import { TableHelper } from '../../../../shared/helpers/table.helper';
 
 @Component({
   selector: 'app-net-worth-item-table',
@@ -43,4 +44,9 @@ export class NetWorthItemTableComponent implements OnInit {
   isDivinationCard(icon: string) {
     return ItemHelper.isDivinationCard(icon);
   }
+
+  getTabNames(tabs: CompactTab[]) {
+    return TableHelper.getTabNames(tabs);
+  }
+
 }

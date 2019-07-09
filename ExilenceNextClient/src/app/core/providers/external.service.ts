@@ -71,8 +71,8 @@ export class ExternalService {
             sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
             quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
             level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
-            stackSize: item.stackSize || 0,
-            totalStacksize: item.maxStackSize || 0
+            stackSize: item.stackSize || 1,
+            totalStacksize: item.maxStackSize || 1
           } as PricedItem;
         });
         return tab;
