@@ -85,7 +85,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       if (this.selectedCompactTabs !== undefined) {
         this.graphLoading = true;
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
-        timer(2000).takeUntil(this.destroy$)
+        timer(1500).takeUntil(this.destroy$)
           .pipe(
             switchMap(() => of(this.graphLoading = false))
           ).subscribe();
@@ -128,7 +128,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((index: number) => {
       if (index === 0) {
         this.graphLoading = true;
-        timer(2000).takeUntil(this.destroy$)
+        timer(1500).takeUntil(this.destroy$)
           .pipe(
             switchMap(() => of(this.graphLoading = false))
           ).subscribe();
