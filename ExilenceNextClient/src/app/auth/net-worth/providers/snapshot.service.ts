@@ -35,12 +35,12 @@ export class SnapshotService implements OnDestroy {
     private actions$: Actions
   ) {
 
-    this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus);
+    this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
     this.netWorthStatus$.takeUntil(this.destroy$).subscribe((status: NetWorthStatus) => {
       this.netWorthStatus = status;
     });
 
-    this.session$ = this.appStore.select(selectApplicationSession);
+    this.session$ = this.appStore.select(selectApplicationSession).takeUntil(this.destroy$);
     this.session$.takeUntil(this.destroy$).subscribe((session: ApplicationSession) => {
       this.session = session;
     });
