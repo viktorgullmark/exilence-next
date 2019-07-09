@@ -218,6 +218,14 @@ a {
   color: $font-color !important;
 }
 
+.mat-table {
+  background: $background-color-secondary !important;
+}
+
+.mat-paginator {
+  background: $background-color-secondary !important;
+}
+
 .mat-progress-bar .mat-progress-bar-fill {
   transition-duration: 0ms !important;
 }
