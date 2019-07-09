@@ -211,6 +211,24 @@ a {
 }
 /* #endregion */
 
+/* #region Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  background: $scrollbar-background-color;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  background: #e4e4e4;
+}
+/* #endregion */
+
 /* #region Material overrides */
 .mat-snack-bar-container {
   max-width: 60vw !important;
