@@ -4,8 +4,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { Observable, Subject, of } from 'rxjs';
-import { map, skip, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { Observable, Subject, of, timer } from 'rxjs';
+import { map, skip, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import 'rxjs/add/operator/switchMap';
 import { AppState } from '../../../../app.states';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
@@ -85,7 +85,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       if (this.selectedCompactTabs !== undefined) {
         this.graphLoading = true;
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
-        setTimeout(() => this.graphLoading = false, 1500);
+        timer(2000).takeUntil(this.destroy$)
+          .pipe(
+            switchMap(() => of(this.graphLoading = false))
+          ).subscribe();
       }
     });
 
@@ -116,17 +119,24 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
             this.updateColorSchemeFromCompactTabs(tabs);
             return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
           });
-    }).subscribe((tabs: Tab[]) => {
-      this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
-      this.tableData = TableHelper.formatTabsForTable(tabs);
-      this.itemTable.updateTable(this.tableData);
-    });
+      }).subscribe((tabs: Tab[]) => {
+        this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
+        this.tableData = TableHelper.formatTabsForTable(tabs);
+        this.itemTable.updateTable(this.tableData);
+      });
 
-    this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
-      this.graphLoading = true;
-      setTimeout(() => this.graphLoading = false, 1500);
-      this.appStore.dispatch(new applicationActions.SetModuleIndex({ index: res }));
-      window.dispatchEvent(new Event('resize'));
+    this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((index: number) => {
+      if (index === 0) {
+        this.graphLoading = true;
+        timer(2000).takeUntil(this.destroy$)
+          .pipe(
+            switchMap(() => of(this.graphLoading = false))
+          ).subscribe();
+
+        window.dispatchEvent(new Event('resize'));
+      }
+      this.appStore.dispatch(new applicationActions.SetModuleIndex({ index: index }));
+
     });
   }
 
