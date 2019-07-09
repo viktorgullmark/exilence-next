@@ -74,7 +74,6 @@ export class NetWorthEffects {
   )
   );
 
-  // todo: fetch prices for poe ninja / watch
   fetchPrices$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchPrices),
     mergeMap((res: any) => forkJoin(
@@ -96,6 +95,19 @@ export class NetWorthEffects {
             { title: 'ERROR.FETCH_PRICES_FAIL_TITLE', message: 'ERROR.FETCH_PRICES_FAIL_DESC' }));
         }))
     ))
+  );
+
+  fetchPricesFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchPricesFail),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Error
+        } as Notification
+    }))
+  )
   );
 
   fetchTabsForSnapshot$ = createEffect(() => this.actions$.pipe(
