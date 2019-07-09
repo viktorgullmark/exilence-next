@@ -58,8 +58,7 @@ export function reducer(
       return {
         ...state,
         status: {
-          ...state.status,
-          snapshotting: true
+          ...state.status
         }
       };
     }
@@ -153,12 +152,32 @@ export function reducer(
       };
     }
 
+    case NetWorthActionTypes.FetchTabsForSnapshot: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: true
+        }
+      };
+    }
+
     case NetWorthActionTypes.FetchTabsForSnapshotSuccess: {
       return {
         ...state,
         stash: {
           ...state.stash,
           tabCount: action.payload.tabCount
+        }
+      };
+    }
+
+    case NetWorthActionTypes.FetchTabsForSnapshotFail: {
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          snapshotting: false
         }
       };
     }

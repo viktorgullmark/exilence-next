@@ -5,7 +5,7 @@
         <ng-container *ngSwitchCase="0">
           <mat-form-field class="mr--15">
             <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
-            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting">
+            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
               <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -13,7 +13,7 @@
         <ng-container *ngSwitchCase="1">
             <mat-form-field class="mr--15">
               <mat-label>{{ 'NETWORTH.STASHTABS' | translate}}</mat-label>
-              <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting">
+              <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
                 <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
               </mat-select>
             </mat-form-field>

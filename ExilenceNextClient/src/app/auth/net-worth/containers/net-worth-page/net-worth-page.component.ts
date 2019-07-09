@@ -5,8 +5,8 @@ import { MatTabGroup } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { Observable, Subject, of } from 'rxjs';
-import { map, skip, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
+import { map, skip, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import 'rxjs/add/operator/switchMap';
 import { AppState } from '../../../../app.states';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
@@ -100,34 +100,27 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // map tab snapshots to chart
-    this.selectedTabs$.pipe(debounceTime(250), distinctUntilChanged()).takeUntil(this.destroy$)
-    .subscribe((selectedTabs: TabSelection[]) => {
-      if (selectedTabs.length > 0) {
-        this.netWorthStore
+    this.selectedTabs$.pipe(distinctUntilChanged()).takeUntil(this.destroy$)
+      .mergeMap((selectedTabs: TabSelection[]) => {
+        return this.netWorthStore
           .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
-          .pipe(map((tabs: Tab[]) => {
-            return tabs.map((tab: Tab) => { return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab })
-          }))
-          .takeUntil(this.destroy$)
-          .subscribe((tabs: CompactTab[]) => {
-            this.colorScheme.domain = []
-            tabs.map(tab => this.colorScheme.domain.push(ColourHelper.rgbToHex(tab.colour.r, tab.colour.g, tab.colour.b)));
-            this.selectedCompactTabs = tabs;
-            if (this.snapshots.length > 0) {
-              this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
-            }
+          .pipe(
+            filter(tabs => tabs.length !== 0),
+            map((tabs: Tab[]) => {
+              return tabs.map((tab: Tab) => {
+                return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab;
+              }
+              );
+            }))
+          .mergeMap((tabs: CompactTab[]) => {
+            this.updateColorSchemeFromCompactTabs(tabs);
+            return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
           });
-
-      }
-      this.selectedTabsWithItems$ = this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
-
-      this.selectedTabsWithItems$.takeUntil(this.destroy$).subscribe((selectedCompactTabs: Tab[]) => {
-        this.tableData = TableHelper.formatTabsForTable(selectedCompactTabs);
-        this.itemTable.updateTable(this.tableData);
-      });
+    }).subscribe((tabs: Tab[]) => {
+      this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
+      this.tableData = TableHelper.formatTabsForTable(tabs);
+      this.itemTable.updateTable(this.tableData);
     });
-
 
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((res: number) => {
       this.graphLoading = true;
@@ -145,6 +138,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       tabs: selectedTabs,
       league: this.selectedLeague
     }));
+  }
+
+  updateColorSchemeFromCompactTabs(tabs: CompactTab[]) {
+    this.colorScheme.domain = [];
+    tabs.map(tab => this.colorScheme.domain.push(ColourHelper.rgbToHex(tab.colour.r, tab.colour.g, tab.colour.b)));
+    this.selectedCompactTabs = tabs;
   }
 
   ngOnDestroy() {
