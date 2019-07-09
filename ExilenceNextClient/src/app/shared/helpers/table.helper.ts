@@ -12,7 +12,7 @@ export class TableHelper {
                 const item = {
                     name: pItem.name,
                     frameType: pItem.frameType,
-                    total: pItem.calculated,
+                    total: pItem.calculated * pItem.stackSize,
                     calculated: pItem.calculated,
                     max: pItem.max,
                     mean: pItem.mean,
