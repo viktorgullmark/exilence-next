@@ -50,6 +50,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
+  private selectedTabs: Tab[];
   private selectedLeague: string;
 
   public graphLoading = false;
@@ -86,8 +87,9 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       if (this.selectedCompactTabs !== undefined) {
         this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
       }
-
-      // todo: update item table
+      if (this.selectedTabs !== undefined) {
+        this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
+      }
     });
 
     // load state from storage
@@ -118,6 +120,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
             return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
           });
       }).subscribe((tabs: Tab[]) => {
+        this.selectedTabs = tabs;
         this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
         this.tableData = TableHelper.formatTabsForTable(tabs);
         this.itemTable.updateTable(this.tableData);
