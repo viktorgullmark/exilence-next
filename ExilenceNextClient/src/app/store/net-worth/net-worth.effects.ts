@@ -58,7 +58,23 @@ export class NetWorthEffects {
 
   overrideState$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.OverrideState),
-    map(() => new netWorthActions.LoadStateFromStorageSuccess()))
+    map(() => new netWorthActions.LoadStateFromStorageSuccess({
+      title: 'INFORMATION.LOAD_FROM_STORAGE_SUCCESS_TITLE',
+      message: 'INFORMATION.LOAD_FROM_STORAGE_SUCCESS_DESC'
+    })))
+  );
+
+  loadStateFromStorageSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess),
+    map((res: any) => new notificationActions.AddNotification({
+      notification:
+        {
+          title: res.payload.title,
+          description: res.payload.message,
+          type: NotificationType.Information
+        } as Notification
+    }))
+  )
   );
 
   loadStateFromStorageFail$ = createEffect(() => this.actions$.pipe(
@@ -79,7 +95,7 @@ export class NetWorthEffects {
     mergeMap((res: any) => forkJoin(
       this.poeNinjaService.getCurrencyPrices(res.payload.league),
       this.poeNinjaService.getItemPrices(res.payload.league),
-      this.poeWatchService.getPrices(res.payload.league)
+      of([]) // this.poeWatchService.getPrices(res.payload.league)
     )
       .pipe(
         map((prices: any) => {
@@ -120,7 +136,9 @@ export class NetWorthEffects {
               {
                 accountDetails: res.payload.accountDetails,
                 tabs: stash.tabs,
-                tabCount: (AppConfig.production ? stash.tabs.length : stash.tabs.slice(0, 15).length)
+                tabCount: (AppConfig.production ? stash.tabs.length : stash.tabs.slice(0, 15).length),
+                title: 'INFORMATION.FETCH_TABS_SUCCESS_TITLE',
+                message: 'INFORMATION.FETCH_TABS_SUCCESS_DESC'
               });
           }),
           catchError(() => of(
@@ -132,6 +150,14 @@ export class NetWorthEffects {
   fetchTabsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshotSuccess),
     map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: res.payload.title,
+            description: res.payload.message,
+            type: NotificationType.Information
+          } as Notification
+      }));
       return new netWorthActions.FetchItemsForSnapshot({ tabs: res.payload.tabs });
     }))
   );
@@ -205,7 +231,17 @@ export class NetWorthEffects {
 
   priceItemsForSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.PriceItemsForSnapshotSuccess),
-    map((res: any) => new netWorthActions.CreateSnapshot({ tabs: res.payload.tabs })
+    map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: 'INFORMATION.PRICE_ITEMS_SUCCESS_TITLE',
+            description: 'INFORMATION.PRICE_ITEMS_SUCCESS_DESC',
+            type: NotificationType.Information
+          } as Notification
+      }));
+      return new netWorthActions.CreateSnapshot({ tabs: res.payload.tabs });
+    }
     )
   )
   );
@@ -223,6 +259,36 @@ export class NetWorthEffects {
             { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' })))
         ))
     ))
+  );
+
+  createSnapshotSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.CreateSnapshotSuccess),
+    map(() =>
+      new notificationActions.AddNotification({
+        notification:
+          {
+            title: 'INFORMATION.CREATE_SNAPSHOT_SUCCESS_TITLE',
+            description: 'INFORMATION.CREATE_SNAPSHOT_SUCCESS_DESC',
+            type: NotificationType.Information
+          } as Notification
+      })
+    )
+  )
+  );
+
+  createSnapshotFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.CreateSnapshotFail),
+    map(() =>
+      new notificationActions.AddNotification({
+        notification:
+          {
+            title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE',
+            description: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC',
+            type: NotificationType.Error
+          } as Notification
+      })
+    )
+  )
   );
 
 }

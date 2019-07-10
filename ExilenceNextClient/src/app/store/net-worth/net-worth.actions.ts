@@ -41,7 +41,7 @@ export class LoadStateFromStorage implements Action {
 
 export class LoadStateFromStorageSuccess implements Action {
   readonly type = NetWorthActionTypes.LoadStateFromStorageSuccess;
-  constructor() { }
+  constructor(public payload: { title: string, message: string }) { }
 }
 
 export class LoadStateFromStorageFail implements Action {
@@ -62,7 +62,10 @@ export class FetchTabsForSnapshot implements Action {
 
 export class FetchTabsForSnapshotSuccess implements Action {
   readonly type = NetWorthActionTypes.FetchTabsForSnapshotSuccess;
-  constructor(public payload: { accountDetails: ApplicationSessionDetails, tabs: Tab[], tabCount: number }) { }
+  constructor(public payload: {
+    accountDetails: ApplicationSessionDetails, tabs: Tab[],
+    tabCount: number, title: string, message: string
+  }) { }
 }
 
 export class FetchTabsForSnapshotFail implements Action {

@@ -36,10 +36,18 @@
   "INFORMATION": {
     "COOKIE_SET_TITLE": "Created a session cookie",
     "COOKIE_SET_DESC": "A cookie was created with your session id",
-    "FETCH_ITEMS_SUCCESS_TITLE": "Successfully fetched items",
+    "FETCH_TABS_SUCCESS_TITLE": "Fetched tabs",
+    "FETCH_TABS_SUCCESS_DESC": "All stash tabs was correctly fetched",
+    "FETCH_ITEMS_SUCCESS_TITLE": "Fetched items in tabs",
     "FETCH_ITEMS_SUCCESS_DESC": "All items in your stash tabs was correctly fetched",
-    "NO_STORAGE_TITLE": "No local storage exists",
-    "NO_STORAGE_DESC": "A local data storage could not be found, we will create one for you"
+    "NO_STORAGE_TITLE": "No local storage found",
+    "NO_STORAGE_DESC": "A local data storage could not be found, we will create one for you",
+    "CREATE_SNAPSHOT_SUCCESS_TITLE": "Finished creating snapshot",
+    "CREATE_SNAPSHOT_SUCCESS_DESC": "Finished creating snapshot successfully",
+    "PRICE_ITEMS_SUCCESS_TITLE": "Items were priced",
+    "PRICE_ITEMS_SUCCESS_DESC": "All items were successfully priced from chosen sources",
+    "LOAD_FROM_STORAGE_SUCCESS_TITLE": "Data was loaded from disc",
+    "LOAD_FROM_STORAGE_SUCCESS_DESC": "Data (settings, history etc) was correctly loaded from disc"
   },
   "SNAPSHOT": {
     "SNAPSHOT_STARTED_TITLE": "Snapshot started",
