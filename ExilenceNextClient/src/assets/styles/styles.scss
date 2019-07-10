@@ -236,10 +236,6 @@ a {
   color: $font-color !important;
 }
 
-.cdk-overlay-pane {
-  min-width: 100% !important;
-}
-
 .mat-bottom-sheet-container-small,
 .mat-bottom-sheet-container-medium,
 .mat-bottom-sheet-container-large,
@@ -251,6 +247,8 @@ a {
 }
 .mat-bottom-sheet-container {
   min-height: 60vh;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
 }
 
 .mat-table {
