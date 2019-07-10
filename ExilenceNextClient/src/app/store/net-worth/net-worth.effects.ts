@@ -95,7 +95,7 @@ export class NetWorthEffects {
     mergeMap((res: any) => forkJoin(
       this.poeNinjaService.getCurrencyPrices(res.payload.league),
       this.poeNinjaService.getItemPrices(res.payload.league),
-      of([]) // this.poeWatchService.getPrices(res.payload.league)
+      this.poeWatchService.getPrices(res.payload.league)
     )
       .pipe(
         map((prices: any) => {

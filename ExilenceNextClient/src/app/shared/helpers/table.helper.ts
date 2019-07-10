@@ -31,14 +31,16 @@ export class TableHelper {
                 } as TableItem;
 
                 const foundStackIndex = itemsForTable.indexOf(TableHelper.findTableItem(itemsForTable, item));
-                if (foundStackIndex === -1) {
-                    itemsForTable.push(item);
-                } else {
-                    itemsForTable[foundStackIndex].stackSize += item.stackSize;
-                    itemsForTable[foundStackIndex].total = itemsForTable[foundStackIndex].stackSize * item.calculated;
+                if (item.calculated > 0) {
+                    if (foundStackIndex === -1) {
+                        itemsForTable.push(item);
+                    } else {
+                        itemsForTable[foundStackIndex].stackSize += item.stackSize;
+                        itemsForTable[foundStackIndex].total = itemsForTable[foundStackIndex].stackSize * item.calculated;
 
-                    if (itemsForTable[foundStackIndex].tabs.find(t => t.id === tab.id) === undefined) {
-                        itemsForTable[foundStackIndex].tabs.push({ i: tab.i, id: tab.id, colour: tab.colour, n: tab.n } as CompactTab);
+                        if (itemsForTable[foundStackIndex].tabs.find(t => t.id === tab.id) === undefined) {
+                            itemsForTable[foundStackIndex].tabs.push({ i: tab.i, id: tab.id, colour: tab.colour, n: tab.n } as CompactTab);
+                        }
                     }
                 }
             }

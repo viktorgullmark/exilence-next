@@ -6,10 +6,13 @@ export interface PricedItem {
     frameType: number;
     calculated: number;
     max: number;
+    elder: boolean;
+    shaper: boolean;
     mean: number;
     median: number;
     min: number;
     mode: number;
+    ilvl: number;
     stackSize: number;
     totalStacksize: number;
     links: number;
@@ -18,5 +21,7 @@ export interface PricedItem {
     corrupted: boolean;
     icon: string;
     sockets: number;
+    variant: string;
+    tier: number;
 }
 

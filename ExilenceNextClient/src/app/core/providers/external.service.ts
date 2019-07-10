@@ -65,14 +65,19 @@ export class ExternalService {
             name: item.typeLine,
             frameType: item.frameType,
             calculated: 0,
+            elder: item.elder,
+            shaper: item.shaper,
             icon: item.icon,
+            ilvl: item.ilvl,
+            tier: item.properties !== null && item.properties !== undefined ? ItemHelper.getMapTier(item.properties) : 0,
             corrupted: item.corrupted || false,
             links: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getLinks(item.sockets.map(t => t.group)) : 0,
             sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
             quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
             level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
             stackSize: item.stackSize || 1,
-            totalStacksize: item.maxStackSize || 1
+            totalStacksize: item.maxStackSize || 1,
+            variant: ItemHelper.getItemVariant(item)
           } as PricedItem;
         });
         return tab;

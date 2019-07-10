@@ -5,6 +5,7 @@ import { PoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-ove
 import { PoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-item-overview-line.interface';
 import { PoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja-currency-overview-line.interface';
 import { PoeNinjaCurrencyOverviewCurrencyDetail } from '../interfaces/poe-ninja/poe-ninja-currency-overview-currency-detail.interface';
+import { PricedItem } from '../interfaces/priced-item.interface';
 
 export class PriceHelper {
     public static getExternalPriceFromWatchItem(item: PoeWatchCombinedPriceItemData): ExternalPrice {
@@ -19,6 +20,7 @@ export class PriceHelper {
             links: item.linkCount,
             level: item.gemLevel,
             corrupted: item.gemIsCorrupted,
+            calculated: 0,
             totalStacksize: item.stackSize
         } as ExternalPrice;
     }
@@ -44,5 +46,17 @@ export class PriceHelper {
             calculated: item.chaosEquivalent,
             icon: details !== undefined ? details.icon : undefined
         } as ExternalPrice;
+    }
+
+    public static mapPriceToItem(item: PricedItem, price: ExternalPrice) {
+        if (price !== undefined) {
+            item.calculated = price.calculated;
+            item.max = price.max;
+            item.mean = price.mean;
+            item.mode = price.mode;
+            item.min = price.min;
+            item.median = price.median;
+        }
+        return item;
     }
 }
