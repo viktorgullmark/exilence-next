@@ -3,6 +3,10 @@
 .chart-container {
   height: calc(100% - #{$main-padding}* 1);
   width: 100%;
+  .player-chart-container, .tab-chart-container {
+    height: 50%;
+    width: 100%;
+  }
   ngx-charts-line-chart {
     z-index: 2;
     fill: white;

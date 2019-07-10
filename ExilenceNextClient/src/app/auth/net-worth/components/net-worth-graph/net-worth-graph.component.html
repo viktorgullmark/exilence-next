@@ -1,10 +1,19 @@
-<div class="chart-container pull--left float--left">
-  <ngx-charts-line-chart *ngIf="!loading" [scheme]="colorScheme" [results]="chartData" [xAxis]="true" [yAxis]="true" [legend]="true"
-    legendTitle="{{ 'GRAPH.LEGEND_TITLE' | translate }}" [showXAxisLabel]="true" [showYAxisLabel]="true"
-    [xAxisTickFormatting]="axisFormat" xAxisLabel="{{ 'GRAPH.TIMESTAMP' | translate }}"
-    yAxisLabel="{{ 'GRAPH.VALUE' | translate }}" [autoScale]="true" [timeline]="false">
-  </ngx-charts-line-chart>
-  <div class="spinner-container" *ngIf="loading">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+<div class="chart-container" *ngIf="!loading">
+  <div class="player-chart-container">
+    <ngx-charts-line-chart [scheme]="defaultColorScheme" [results]="playerChartData" [xAxis]="false" [yAxis]="true"
+      [legend]="true" legendTitle="{{ 'NETWORTH.GRAPHS.PLAYER_GRAPH.LEGEND_TITLE' | translate }}" [showXAxisLabel]="true"
+      [showYAxisLabel]="true" [xAxisTickFormatting]="axisFormat" xAxisLabel="{{ 'NETWORTH.GRAPHS.TIMESTAMP' | translate }}"
+      yAxisLabel="{{ 'NETWORTH.GRAPHS.VALUE' | translate }}" [autoScale]="true" [timeline]="false">
+    </ngx-charts-line-chart>
   </div>
+  <div class="tab-chart-container">
+    <ngx-charts-line-chart [scheme]="colorScheme" [results]="tabChartData" [xAxis]="true" [yAxis]="true"
+      [legend]="true" legendTitle="{{ 'NETWORTH.GRAPHS.TAB_GRAPH.LEGEND_TITLE' | translate }}" [showXAxisLabel]="true"
+      [showYAxisLabel]="true" [xAxisTickFormatting]="axisFormat" xAxisLabel="{{ 'NETWORTH.GRAPHS.TIMESTAMP' | translate }}"
+      yAxisLabel="{{ 'NETWORTH.GRAPHS.VALUE' | translate }}" [autoScale]="true" [timeline]="false">
+    </ngx-charts-line-chart>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loading">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>

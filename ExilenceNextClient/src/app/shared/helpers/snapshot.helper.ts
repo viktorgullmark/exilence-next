@@ -4,7 +4,7 @@ import { CompactTab } from '../interfaces/stash.interface';
 import { Observable, of } from 'rxjs';
 
 export class SnapshotHelper {
-    public static formatSnapshotsForChart(compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
+    public static formatSnapshotsForTabChart(compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
         const chartSeries: ChartSeries[] = compactTabs.map(tab => {
             return { name: tab.i + ' - ' + tab.n, series: [], id: tab.id } as ChartSeries;
         });
@@ -17,6 +17,26 @@ export class SnapshotHelper {
                     chartSeries[chartSeries.indexOf(tabSeries)] = tabSeries;
                 }
             }
+        }
+
+        return chartSeries;
+    }
+
+    // todo: rebuild function when group support is added
+    public static formatSnapshotsForPlayerChart(accounts: string[], compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
+        const chartSeries: ChartSeries[] = accounts.map(acc => {
+            return { name: acc, series: [] } as ChartSeries;
+        });
+
+        for (let i = 0; i < snapshots.length; i++) {
+            let value = 0;
+            for (let j = 0; j < snapshots[i].tabSnapshots.length; j++) {
+                const tabSeries = compactTabs.find(ct => ct.id === snapshots[i].tabSnapshots[j].tabId);
+                if (tabSeries !== undefined) {
+                    value += snapshots[i].tabSnapshots[j].value;
+                }
+            }
+            chartSeries[0].series.push({ name: snapshots[i].timestamp, value: value } as ChartSeriesEntry);
         }
 
         return chartSeries;

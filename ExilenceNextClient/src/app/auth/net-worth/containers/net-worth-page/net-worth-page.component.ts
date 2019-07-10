@@ -15,7 +15,7 @@ import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { CompactTab, Tab } from '../../../../shared/interfaces/stash.interface';
 import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
-import { selectApplicationSessionLeague, selectApplicationSessionModuleIndex } from '../../../../store/application/application.selectors';
+import { selectApplicationSessionLeague, selectApplicationSessionModuleIndex, selectApplicationSession } from '../../../../store/application/application.selectors';
 import {
   selectSnapshotsByLeague,
   selectTabsByIds,
@@ -55,8 +55,11 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
 
   public graphLoading = false;
   public selectedIndex = 0;
-  public chartData: ChartSeries[] = [];
+  public tabChartData: ChartSeries[] = [];
+  public playerChartData: ChartSeries[] = [];
   public tableData: TableItem[] = [];
+  public session: ApplicationSession;
+
   public colorScheme = {
     domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
   };
@@ -80,12 +83,21 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
     });
 
+    // todo: replace with group subscription when group support is added
+    this.appStore.select(selectApplicationSession).takeUntil(this.destroy$).subscribe((session: ApplicationSession) => {
+      this.session = session;
+    });
+
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
 
     this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
       if (this.selectedCompactTabs !== undefined) {
-        this.chartData = SnapshotHelper.formatSnapshotsForChart(this.selectedCompactTabs, this.snapshots);
+        this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(this.selectedCompactTabs, this.snapshots);
+        if (this.session !== undefined) {
+          this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.session.account],
+            this.selectedCompactTabs, this.snapshots);
+        }
       }
       if (this.selectedTabs !== undefined) {
         this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
@@ -121,7 +133,11 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
           });
       }).subscribe((tabs: Tab[]) => {
         this.selectedTabs = tabs;
-        this.chartData = SnapshotHelper.formatSnapshotsForChart(tabs, this.snapshots);
+        this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(tabs, this.snapshots);
+        if (this.session !== undefined) {
+          this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.session.account],
+            tabs, this.snapshots);
+        }
         this.tableData = TableHelper.formatTabsForTable(tabs);
         this.itemTable.updateTable(this.tableData);
       });

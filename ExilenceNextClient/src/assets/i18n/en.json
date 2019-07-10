@@ -61,15 +61,18 @@
     "SESSION_VALID_TITLE": "Validated session correctly",
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
-  "GRAPH": {
-    "LEGEND_TITLE": "Stash tabs",
-    "VALUE": "Value",
-    "TIMESTAMP": "Timestamp"
-  },
   "NETWORTH": {
     "SELECT_STASHTABS": "Select stash tabs",
     "GRAPHS": {
-      "HEADER": "Graphs"
+      "VALUE": "Value",
+      "TIMESTAMP": "Timestamp",
+      "HEADER": "Graphs",
+      "PLAYER_GRAPH": {
+        "LEGEND_TITLE": "Players"
+      },
+      "TAB_GRAPH": {
+        "LEGEND_TITLE": "Stash tabs"
+      }
     },
     "ITEMS": {
       "HEADER": "Items"

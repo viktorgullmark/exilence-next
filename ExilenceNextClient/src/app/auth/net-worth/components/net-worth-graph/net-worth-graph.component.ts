@@ -9,9 +9,15 @@ import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 })
 export class NetWorthGraphComponent implements OnInit {
   @Input() loading: boolean;
-  @Input() chartData: ChartSeries[] = [];
+  @Input() tabChartData: ChartSeries[] = [];
+  @Input() playerChartData: ChartSeries[] = [];
   @Input() colorScheme = {
-    domain: ['#e91e63', '#fff'] };
+    domain: ['#e91e63', '#fff']
+  };
+
+  public defaultColorScheme = {
+    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
+  };
 
   constructor() {
   }
