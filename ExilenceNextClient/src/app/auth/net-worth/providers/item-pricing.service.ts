@@ -99,7 +99,7 @@ export class ItemPricingService {
     }
 
     priceCheckDivinationCard(name: string) {
-        return this.prices.find(p => p.name === p.name && p.icon.indexOf('Divination') > -1);
+        return this.prices.find(p => p.name === name && p.icon.indexOf('Divination') > -1);
     }
 
 }
