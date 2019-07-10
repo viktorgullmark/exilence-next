@@ -2,18 +2,44 @@
   "APP": {
     "TITLE": "Exilence Next"
   },
+  "ACCOUNT": {
+    "LOGOUT": "Logout"
+  },
+  "SESSION": {
+    "CLEAR": "Clear storage"
+  },
   "ERROR": {
     "UNREACHABLE": "Could not reach: ",
     "UNAUTHORIZED": "The session id is incorrect",
     "NOT_FOUND": "The resource was not found",
-    "COOKIE_NOT_SET_TITLE": "Cookie could not be set",
+    "NO_LEAGUES_TITLE": "No leagues found",
+    "NO_LEAGUES_DESC": "We could not find any leagues for your account",
+    "NO_CHARS_TITLE": "No characters found",
+    "NO_CHARS_DESC": "We could not find any characters for your account",
+    "INIT_SESSION_FAIL_TITLE": "Initializing session failed",
+    "INIT_SESSION_FAIL_DESC": "We could not initialize your session",
+    "FETCH_PRICES_FAIL_TITLE": "Fetching prices failed",
+    "FETCH_PRICES_FAIL_DESC": "Prices could not be fetched from one or more sources",
+    "FETCH_ITEMS_FAIL_TITLE": "Fetching items failed",
+    "FETCH_ITEMS_FAIL_DESC": "One or more items could not be fetched from your tabs",
+    "FETCH_TABS_FAIL_TITLE": "Fetching tabs failed",
+    "FETCH_TABS_FAIL_DESC": "One or more tabs could not be fetched",
+    "PRICE_ITEMS_FAIL_TITLE": "Pricing items failed",
+    "PRICE_ITEMS_FAIL_DESC": "One or more items could not be priced",
+    "CREATE_SNAPSHOT_FAIL_TITLE": "Creating snapshot failed",
+    "CREATE_SNAPSHOT_FAIL_DESC": "Snapshot could not be completed",
+    "COOKIE_NOT_SET_TITLE": "Setting cookie failed",
     "COOKIE_NOT_SET_DESC": "An error occured when setting the cookie",
-    "SESSION_NOT_VALID_TITLE": "The session is not valid",
+    "SESSION_NOT_VALID_TITLE": "Validating session failed",
     "SESSION_NOT_VALID_DESC": "The session could not be validated, please verify that your account and session id is correct"
   },
   "INFORMATION": {
     "COOKIE_SET_TITLE": "Created a session cookie",
-    "COOKIE_SET_DESC": "A cookie was created with your session id"
+    "COOKIE_SET_DESC": "A cookie was created with your session id",
+    "FETCH_ITEMS_SUCCESS_TITLE": "Successfully fetched items",
+    "FETCH_ITEMS_SUCCESS_DESC": "All items in your stash tabs was correctly fetched",
+    "NO_STORAGE_TITLE": "No local storage exists",
+    "NO_STORAGE_DESC": "A local data storage could not be found, we will create one for you"
   },
   "SNAPSHOT": {
     "SNAPSHOT_STARTED_TITLE": "Snapshot started",
@@ -23,9 +49,22 @@
     "FETCHING_TAB": "Fetching tab",
     "IN_PROGRESS": "Snapshot in progress"
   },
+  "SUCCESS": {
+    "SESSION_VALID_TITLE": "Validated session correctly",
+    "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
+  },
   "GRAPH": {
     "LEGEND_TITLE": "Stash tabs",
     "VALUE": "Value",
     "TIMESTAMP": "Timestamp"
+  },
+  "NETWORTH": {
+    "SELECT_STASHTABS": "Select stash tabs",
+    "GRAPHS": {
+      "HEADER": "Graphs"
+    },
+    "ITEMS": {
+      "HEADER": "Items"
+    }
   }
 }
