@@ -23,9 +23,9 @@ export class SnapshotHelper {
     }
 
     // todo: rebuild function when group support is added
-    public static formatSnapshotsForPlayerChart(accounts: string[], compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
-        const chartSeries: ChartSeries[] = accounts.map(acc => {
-            return { name: acc, series: [] } as ChartSeries;
+    public static formatSnapshotsForPlayerChart(players: string[], compactTabs: CompactTab[], snapshots: Snapshot[]): Array<ChartSeries> {
+        const chartSeries: ChartSeries[] = players.map(p => {
+            return { name: p, series: [] } as ChartSeries;
         });
 
         for (let i = 0; i < snapshots.length; i++) {

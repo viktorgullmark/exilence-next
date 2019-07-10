@@ -62,13 +62,14 @@
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
   "NETWORTH": {
+    "TOTAL_VALUE": "Total value",
     "SELECT_STASHTABS": "Select stash tabs",
     "GRAPHS": {
       "VALUE": "Chaos",
       "TIMESTAMP": "Timestamp",
       "HEADER": "Graphs",
       "PLAYER_GRAPH": {
-        "LEGEND_TITLE": "Players"
+        "LEGEND_TITLE": ""
       },
       "TAB_GRAPH": {
         "LEGEND_TITLE": "Stash tabs"

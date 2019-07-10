@@ -31,6 +31,7 @@ import { TableHelper } from '../../../../shared/helpers/table.helper';
 import { PricedItem } from '../../../../shared/interfaces/priced-item.interface';
 import { NetWorthItemTableComponent } from '../../components/net-worth-item-table/net-worth-item-table.component';
 import { TableItem } from '../../../../shared/interfaces/table-item.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -73,7 +74,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private storageMap: StorageMap,
     private snapshotService: SnapshotService,
     private itemPricingService: ItemPricingService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private translateService: TranslateService
   ) {
 
     this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
@@ -83,21 +85,14 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
     });
 
-    // todo: replace with group subscription when group support is added
-    this.appStore.select(selectApplicationSession).takeUntil(this.destroy$).subscribe((session: ApplicationSession) => {
-      this.session = session;
-    });
-
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
 
     this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
       this.snapshots = snapshots;
       if (this.selectedCompactTabs !== undefined) {
         this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(this.selectedCompactTabs, this.snapshots);
-        if (this.session !== undefined) {
-          this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.session.account],
-            this.selectedCompactTabs, this.snapshots);
-        }
+        this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
+          this.selectedCompactTabs, this.snapshots);
       }
       if (this.selectedTabs !== undefined) {
         this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
@@ -134,10 +129,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       }).subscribe((tabs: Tab[]) => {
         this.selectedTabs = tabs;
         this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(tabs, this.snapshots);
-        if (this.session !== undefined) {
-          this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.session.account],
-            tabs, this.snapshots);
-        }
+        this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
+          tabs, this.snapshots);
         this.tableData = TableHelper.formatTabsForTable(tabs);
         this.itemTable.updateTable(this.tableData);
       });
