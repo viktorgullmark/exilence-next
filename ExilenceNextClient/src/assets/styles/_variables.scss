@@ -29,6 +29,7 @@ $toolbar-background-color: #0a0a0a;
 $notification-badge-color: $secondary;
 $resize-handle-container-height: 5px;
 $disabled-color: #888888;
+$toolbar-font-color: $secondary-font-color;
 /* #endregion */
 
 /* #region Top bar */
@@ -64,6 +65,11 @@ $login-content-height: calc(100vh - #{$toolbar-height} - #{$container-padding}*2
 /* #region Sidebar */
 $sidebar-content-height: calc(100vh - #{$toolbar-height});
 $sidebar-width: 550px;
+/* #endregion */
+
+/* #region Settings */
+$topbar-content-height: calc(100vh - #{$toolbar-height});
+$topbar-width: 550px;
 /* #endregion */
 
 /* #region Screen size */

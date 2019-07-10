@@ -8,6 +8,7 @@
 }
 
 .mat-toolbar {
+  color: $toolbar-font-color;
   background: $toolbar-background-color;
   height: calc(#{$toolbar-height} - #{$resize-handle-container-height});
   -webkit-app-region: drag;
@@ -16,9 +17,8 @@
     -webkit-app-region: no-drag;
     align-items: center;
     max-height: 100%;
-    .link-container {
-      margin-right: 15px;
-      margin-left: 15px;
+    .toolbar-content-container {
+      text-transform: uppercase;
       display: flex;
       align-items: center;
       a {
@@ -33,15 +33,16 @@
 
     .notification-badge {
       position: relative;
-      font-size: $font-size;
+      font-size: 11px;
       color: $font-color;
       width: 25px;
-      height: 18px;
+      height: 16px;
       font-weight: 200;
       text-align: center;
-      line-height: 18px;
+      line-height: 17px;
       cursor: pointer;
       border-radius: 3px;
+      border: 1px solid $notification-badge-color;
       &.has-notifications {
         background: $notification-badge-color;
         color: #000;

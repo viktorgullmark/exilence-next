@@ -236,6 +236,23 @@ a {
   color: $font-color !important;
 }
 
+.cdk-overlay-pane {
+  min-width: 100% !important;
+}
+
+.mat-bottom-sheet-container-small,
+.mat-bottom-sheet-container-medium,
+.mat-bottom-sheet-container-large,
+.mat-bottom-sheet-container-xlarge {
+  min-width: 100% !important;
+  max-width: 100% !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.mat-bottom-sheet-container {
+  min-height: 60vh;
+}
+
 .mat-table {
   background: $background-color-secondary !important;
 }

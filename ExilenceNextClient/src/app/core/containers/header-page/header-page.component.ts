@@ -27,14 +27,16 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
 
   public appVersion: string = version;
   public isMaximized = false;
-  public isToggled = false;
+  public notificationsIsToggled = false;
+  public settingsIsToggled = false;
 
   public status$: Observable<NetWorthStatus>;
   public newNotifications$: Observable<Notification[]>;
 
   private snapshotting: boolean;
 
-  @Output() toggled: EventEmitter<any> = new EventEmitter;
+  @Output() toggledNotifications: EventEmitter<any> = new EventEmitter;
+  @Output() toggledSettings: EventEmitter<any> = new EventEmitter;
 
   constructor(
     public electronService: ElectronService,
@@ -82,9 +84,15 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
     this.storageMap.clear().subscribe();
   }
 
+
+  toggleSettings() {
+    this.toggledSettings.emit();
+    this.settingsIsToggled = !this.settingsIsToggled;
+  }
+
   toggleSidenav() {
-    this.toggled.emit();
-    this.isToggled = !this.isToggled;
+    this.toggledNotifications.emit();
+    this.notificationsIsToggled = !this.notificationsIsToggled;
     this.newNotifications$.pipe(take(1)).takeUntil(this.destroy$).subscribe(notifications => {
       const updates: Update<Notification>[] = notifications.map(n => {
         return {
