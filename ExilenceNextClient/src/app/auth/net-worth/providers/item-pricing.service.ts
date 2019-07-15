@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Predicate } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
@@ -58,50 +58,66 @@ export class ItemPricingService {
 
         let price: ExternalPrice;
 
-        switch (item.frameType) {
-            case 0: // normal
-                break;
-            case 1: // magic
-                break;
-            case 2: // rare
-                break;
-            case 3: // unique
-                break;
-            case 4: // gem
-                break;
-            case 5: // currency
-                price = this.priceCheckByName(item.name);
-                break;
-            case 6: // divination card
-                price = this.priceCheckDivinationCard(item.name);
-                break;
-            case 8: // prophecy
-                price = this.priceCheckByName(item.name);
-                break;
-            case 9: // relic
-                price = this.priceCheckByName(item.name);
-                break;
-            default:
-        }
-
-        return PriceHelper.mapPriceToItem(item, price);
-    }
-
-    priceCheckByName(name: string) {
-        if (name === 'Chaos Orb') {
-            return {
+        if (item.name === 'Chaos Orb') {
+            price = {
                 max: 1,
                 min: 1,
                 median: 1,
                 mean: 1,
                 calculated: 1
             } as ExternalPrice;
+        } else {
+            switch (item.frameType) {
+                case 0: // normal
+                case 1: // magic
+                case 2: // rare
+                    if (item.name.indexOf(' Map') > -1) {
+                        price = this.priceCheck(p =>
+                            (p.name === name || item.name.indexOf(p.name) > -1) && p.tier === item.tier);
+                    } else if (item.ilvl > 0) {
+                        if (item.ilvl > 86) {
+                            item.ilvl = 86;
+                        }
+                        price = this.priceCheck(p => p.baseType === item.typeLine && p.level === item.ilvl && p.variant === item.variant);
+                    } else { // other (e.g fragments, scrabs)
+                        price = this.priceCheck(p => p.name === item.name);
+                    }
+                    break;
+                case 3: // unique
+                    price = this.priceCheck(p => p.name === name
+                        && p.links === item.links
+                        && p.frameType === 3
+                        && p.corrupted === item.corrupted
+                        && p.quality === item.quality
+                        && (p === item.variant || p.variant === undefined || p.variant === null));
+                    break;
+                case 4: // gem
+                    price = this.priceCheck(p => p.name === name
+                        && p.level === item.level
+                        && p.corrupted === item.corrupted
+                        && p.quality === item.quality);
+                    break;
+                case 5: // currency
+                    price = this.priceCheck(p => p.name === item.name);
+                    break;
+                case 6: // divination card
+                    price = this.priceCheck(p => p.name === name && p.icon.indexOf('Divination') > -1);
+                    break;
+                case 8: // prophecy
+                    price = this.priceCheck(p => p.name === item.name && p.icon.indexOf('Prophecy') > -1);
+                    break;
+                case 9: // relic
+                    price = this.priceCheck(p => p.name === item.name);
+                    break;
+                default:
+                    price = this.priceCheck(p => p.name === item.name);
+            }
         }
-        return this.prices.find(p => p.name === name);
+
+        return PriceHelper.mapPriceToItem(item, price);
     }
 
-    priceCheckDivinationCard(name: string) {
-        return this.prices.find(p => p.name === name && p.icon.indexOf('Divination') > -1);
+    priceCheck(expression: Predicate<ExternalPrice>) {
+        return this.prices.find(expression);
     }
-
 }

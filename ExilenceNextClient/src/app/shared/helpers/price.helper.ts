@@ -17,11 +17,16 @@ export class PriceHelper {
             median: item.median,
             min: item.min,
             mode: item.mode,
+            frameType: item.frame,
             links: item.linkCount,
             level: item.gemLevel,
+            ilvl: item.ilvl,
+            variant: item.variation,
+            baseType: item.type,
             corrupted: item.gemIsCorrupted,
             calculated: 0,
-            totalStacksize: item.stackSize
+            totalStacksize: item.stackSize,
+            tier: item.tier
         } as ExternalPrice;
     }
 
@@ -31,9 +36,14 @@ export class PriceHelper {
             icon: item.icon,
             calculated: item.chaosValue,
             links: item.links,
+            variant: item.variant,
             level: item.gemLevel,
+            frameType: item.itemClass,
+            baseType: item.baseType,
+            ilvl: item.levelRequired,
             corrupted: item.corrupted,
-            totalStacksize: item.stackSize
+            totalStacksize: item.stackSize,
+            tier: item.mapTier
         } as ExternalPrice;
     }
 

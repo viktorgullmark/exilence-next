@@ -3,6 +3,7 @@ import { ExternalPrice } from './external-price.interface';
 export interface PricedItem {
     id: string;
     name: string;
+    typeLine: string;
     frameType: number;
     calculated: number;
     max: number;

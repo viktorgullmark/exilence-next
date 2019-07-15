@@ -41,6 +41,14 @@ export class ItemHelper {
         return 0;
     }
 
+    public static getItemName(typeline: string, name: string) {
+        let itemName = name;
+        if (typeline) {
+            itemName += ' ' + typeline;
+        }
+        return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+    }
+
     public static getItemVariant(sockets: Socket[], explicitMods: string[]): string {
         if (sockets === null ||sockets === undefined) {
             return '';

@@ -62,7 +62,8 @@ export class ExternalService {
         tab.items = stash.items.map((item: Item) => {
           return {
             id: item.id,
-            name: item.typeLine,
+            name: ItemHelper.getItemName(item.typeLine, item.name),
+            typeLine: item.typeLine,
             frameType: item.frameType,
             calculated: 0,
             elder: item.elder,
