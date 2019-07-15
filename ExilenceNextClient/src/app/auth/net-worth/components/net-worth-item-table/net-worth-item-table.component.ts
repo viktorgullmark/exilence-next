@@ -45,7 +45,6 @@ export class NetWorthItemTableComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.filterValue = filterValue;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource);
   }
 
   export() {
