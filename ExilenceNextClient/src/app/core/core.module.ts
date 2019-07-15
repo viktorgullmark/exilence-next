@@ -10,6 +10,8 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatBottomSheetModule,
+  MatTabsModule,
+  MatDividerModule,
 } from '@angular/material';
 import { NgPipesModule } from 'ngx-pipes';
 
@@ -37,6 +39,7 @@ import { SettingsBottomSheetContentComponent } from './components/settings-botto
   imports: [SharedModule,
     MatIconModule,
     MatButtonModule,
+    MatTabsModule,
     MatToolbarModule,
     MatSidenavModule,
     MatExpansionModule,
@@ -45,6 +48,7 @@ import { SettingsBottomSheetContentComponent } from './components/settings-botto
     MatInputModule,
     MatBottomSheetModule,
     NgPipesModule,
+    MatDividerModule,
     MatProgressBarModule
   ],
   declarations: [HeaderPageComponent, SettingsBottomSheetPageComponent, SettingsBottomSheetContentComponent,

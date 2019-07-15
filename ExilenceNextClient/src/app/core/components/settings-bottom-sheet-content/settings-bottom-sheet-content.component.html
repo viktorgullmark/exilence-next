@@ -1,1 +1,28 @@
-settings here
+<mat-tab-group #tabGroup id="tabGroup" animationDuration="0" [(selectedIndex)]="selectedIndex">
+    <mat-tab #general id="general" class="active">
+        <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">laptop</mat-icon>
+            &nbsp;{{'SETTINGS.GENERAL_HEADER' | translate }}
+        </ng-template>
+        <div [hidden]="selectedIndex != 0">
+            <div class="setting-tab-content">
+                <div class="setting-inner-content">
+                    general settings here
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab #networth id="networth">
+        <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">attach_money</mat-icon>
+            &nbsp;{{'SETTINGS.NETWORTH_HEADER' | translate }}
+        </ng-template>
+        <div [hidden]="selectedIndex != 1">
+            <div class="setting-tab-content">
+                <div class="setting-inner-content">
+                    net worth settings here
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

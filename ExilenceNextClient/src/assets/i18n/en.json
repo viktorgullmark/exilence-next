@@ -78,5 +78,9 @@
     "ITEMS": {
       "HEADER": "Items"
     }
+  },
+  "SETTINGS": {
+    "GENERAL_HEADER": "General",
+    "NETWORTH_HEADER": "Net worth"
   }
 }

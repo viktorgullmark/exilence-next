@@ -7,8 +7,8 @@ import { MatBottomSheetRef } from '@angular/material';
     styleUrls: ['settings-bottom-sheet-content.component.scss']
 })
 export class SettingsBottomSheetContentComponent {
+    public selectedIndex = 0;
     constructor(private _bottomSheetRef: MatBottomSheetRef<SettingsBottomSheetContentComponent>) { }
-
     openLink(event: MouseEvent): void {
         this._bottomSheetRef.dismiss();
         event.preventDefault();
