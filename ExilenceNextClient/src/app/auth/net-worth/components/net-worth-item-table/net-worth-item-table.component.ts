@@ -7,6 +7,9 @@ import { TabSelection } from '../../../../shared/interfaces/tab-selection.interf
 import { PricedItem } from '../../../../shared/interfaces/priced-item.interface';
 import { TableItem } from '../../../../shared/interfaces/table-item.interface';
 import { TableHelper } from '../../../../shared/helpers/table.helper';
+import * as moment from 'moment';
+import { ExportToCsv } from 'export-to-csv';
+import { ExportHelper } from '../../../../shared/helpers/export.helper';
 
 @Component({
   selector: 'app-net-worth-item-table',
@@ -42,6 +45,28 @@ export class NetWorthItemTableComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.filterValue = filterValue;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  export() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Net worth export ' + moment(Date.now()).format('YYYY-MM-DD HH:MM'),
+      useBom: true,
+      useKeysAsHeaders: true,
+      filename: 'Networth_' + moment(Date.now()).format('YYYY-MM-DD')
+    };
+
+    const csvExporter = new ExportToCsv(options);
+
+    const dataToExport = this.dataSource.data;
+
+    if (dataToExport.length > 0) {
+      csvExporter.generateCsv(ExportHelper.mapToNetWorthExport(dataToExport));
+    }
   }
 
   isDivinationCard(icon: string) {
