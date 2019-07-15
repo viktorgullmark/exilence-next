@@ -45,6 +45,7 @@ export class NetWorthItemTableComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.filterValue = filterValue;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource);
   }
 
   export() {
@@ -62,7 +63,7 @@ export class NetWorthItemTableComponent implements OnInit {
 
     const csvExporter = new ExportToCsv(options);
 
-    const dataToExport = this.dataSource.data;
+    const dataToExport = this.dataSource.filteredData;
 
     if (dataToExport.length > 0) {
       csvExporter.generateCsv(ExportHelper.mapToNetWorthExport(dataToExport));
