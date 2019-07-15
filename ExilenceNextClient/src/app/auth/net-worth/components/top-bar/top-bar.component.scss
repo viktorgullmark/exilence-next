@@ -1,18 +1,45 @@
 @import "./../../../../../assets/styles/variables";
 
 .top-bar {
-    height: $top-bar-height;
-    margin-bottom: $main-margin;
+  height: $top-bar-height;
+  margin-bottom: $main-margin;
+  .top-bar-content {
+    display: flex;
     .config {
-        &.specific-config {
-            float: left;
-            width: calc(100% - #{$global-config-width})
+      &.specific-config {
+        display: flex;
+        justify-content: flex-end;
+        width: calc(100% - #{$global-config-width});
+      }
+      &.global-config {
+        width: $global-config-width;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .networth-wrapper {
+    float: left;
+    margin-right: $main-margin;
+    min-width: 100px;
+    .title {
+      font-size: 14px;
+    }
+
+    .networth-inner-wrapper {
+      margin-top: 10px;
+
+      .networth {
+        color: $chaos-orb-color;
+        > * {
+          color: $chaos-orb-color;
         }
-        &.global-config {
-            width: $global-config-width;
-            float: right;
-            display: flex;
-            justify-content: flex-end;
-        }
-   }
+      }
+
+      .networth-placeholder {
+        color: $networth-placeholder-color;
+      }
+    }
+  }
 }

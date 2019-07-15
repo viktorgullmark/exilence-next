@@ -4,14 +4,14 @@
   display: flex;
   width: 100%;
   .item-filter-container {
-    width: 85%;
+    width: calc(100% - #{$main-btn-width});
     .item-filter {
       width: 100%;
     }
   }
 
   .export-btn-container {
-    width: 15%;
+    width: $main-btn-width;
     padding-left: 10px;
     button {
       width: 100%;

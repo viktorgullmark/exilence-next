@@ -62,6 +62,8 @@
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
   "NETWORTH": {
+    "CURRENT_TOTAL": "Current value",
+    "CURRENT_GAIN": "Gain per hour",
     "TOTAL_VALUE": "Total value",
     "SELECT_STASHTABS": "Select stash tabs",
     "GRAPHS": {
@@ -82,5 +84,11 @@
   "SETTINGS": {
     "GENERAL_HEADER": "General",
     "NETWORTH_HEADER": "Net worth"
+  },
+  "GLOBAL": {
+    "SELECT_PLAYERS": "Select players"
+  },
+  "EXPORT": {
+    "BUTTON_TITLE": "Export to .csv"
   }
 }

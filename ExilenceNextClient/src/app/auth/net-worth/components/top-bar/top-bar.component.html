@@ -1,33 +1,59 @@
 <div class="top-bar divider">
   <div class="top-bar-content">
+    <div class="networth-wrapper">
+      <span class="title">{{'NETWORTH.CURRENT_TOTAL' | translate }}</span>
+      <br />
+      <div class="networth-inner-wrapper">
+        <span class="networth with-icon" *ngIf="true == false">
+          <span>0.00&nbsp;&nbsp;</span><img class="chaos-icon" />
+        </span>
+        <span class="networth-placeholder" *ngIf="true == true">
+          No data
+        </span>
+      </div>
+    </div>
+    <div class="networth-wrapper">
+      <span class="title">{{'NETWORTH.CURRENT_GAIN' | translate }}</span>
+      <br />
+      <div class="networth-inner-wrapper">
+        <span class="networth with-icon" *ngIf="true == false">
+          <span>0.00&nbsp;&nbsp;</span><img class="chaos-icon" />
+        </span>
+        <span class="networth-placeholder" *ngIf="true == true">
+          No data
+        </span>
+      </div>
+    </div>
     <div class="config specific-config">
       <ng-container [ngSwitch]="moduleIndex$ | async">
+        <!-- todo: wrap this case as a component, to re use for case 1 -->
         <ng-container *ngSwitchCase="0">
-          <mat-form-field class="mr--15">
+          <mat-form-field>
             <mat-label>{{ 'NETWORTH.SELECT_STASHTABS' | translate}}</mat-label>
-            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
+            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple
+              [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
               <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
             </mat-select>
           </mat-form-field>
         </ng-container>
         <ng-container *ngSwitchCase="1">
-            <mat-form-field class="mr--15">
-              <mat-label>{{ 'NETWORTH.SELECT_STASHTABS' | translate}}</mat-label>
-              <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
-                <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </ng-container>
+          <mat-form-field>
+            <mat-label>{{ 'NETWORTH.SELECT_STASHTABS' | translate}}</mat-label>
+            <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple
+              [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
+              <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
       </ng-container>
     </div>
     <div class="config global-config">
-      <!-- temporarily outcommented -->
-      <!-- <mat-form-field class="ml--15">
-        <mat-label>{{ 'GLOBAL.PLAYERS' | translate}}</mat-label>
+      <mat-form-field class="ml--15">
+        <mat-label>{{ 'GLOBAL.SELECT_PLAYERS' | translate}}</mat-label>
         <mat-select [formControl]="players" (selectionChange)="playersChanged($event)" multiple disabled>
           <mat-option *ngFor="let player of playerList$ | async" [value]="player.name">{{player.name}}</mat-option>
         </mat-select>
-      </mat-form-field> -->
+      </mat-form-field>
     </div>
   </div>
 </div>
