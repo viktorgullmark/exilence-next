@@ -56,6 +56,8 @@ export class ItemPricingService {
 
     priceItem(item: PricedItem): PricedItem {
 
+        let price: ExternalPrice;
+
         switch (item.frameType) {
             case 0: // normal
                 break;
@@ -68,21 +70,21 @@ export class ItemPricingService {
             case 4: // gem
                 break;
             case 5: // currency
-                item = PriceHelper.mapPriceToItem(item, this.priceCheckByName(item.name));
+                price = this.priceCheckByName(item.name);
                 break;
             case 6: // divination card
-                item = PriceHelper.mapPriceToItem(item, this.priceCheckDivinationCard(item.name));
+                price = this.priceCheckDivinationCard(item.name);
                 break;
             case 8: // prophecy
-                item = PriceHelper.mapPriceToItem(item, this.priceCheckByName(item.name));
+                price = this.priceCheckByName(item.name);
                 break;
             case 9: // relic
-                item = PriceHelper.mapPriceToItem(item, this.priceCheckByName(item.name));
+                price = this.priceCheckByName(item.name);
                 break;
             default:
         }
 
-        return item;
+        return PriceHelper.mapPriceToItem(item, price);
     }
 
     priceCheckByName(name: string) {
