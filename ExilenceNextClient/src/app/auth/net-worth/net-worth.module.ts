@@ -14,6 +14,7 @@ import {
   MatSortModule,
   MatTableModule,
   MatTabsModule,
+  MatButtonModule,
 } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { EffectsModule } from '@ngrx/effects';
@@ -45,6 +46,7 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
     MatIconModule,
     MatInputModule,
     MatTableModule,
+    MatButtonModule,
     MatSortModule,
     MatPaginatorModule,
     MatFormFieldModule,
