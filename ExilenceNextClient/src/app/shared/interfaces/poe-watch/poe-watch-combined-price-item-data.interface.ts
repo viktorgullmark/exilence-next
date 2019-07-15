@@ -7,6 +7,9 @@ export interface PoeWatchCombinedPriceItemData {
     max: number;
     exalted: number;
     count: number;
+    baseItemLevel?: number;
+    baseIsShaper?: boolean;
+    baseIsElder?: boolean;
     stackSize?: number;
     fullname?: string;
     name: string;

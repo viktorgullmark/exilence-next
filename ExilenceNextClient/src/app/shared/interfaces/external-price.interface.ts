@@ -9,6 +9,8 @@ export interface ExternalPrice {
     frameType?: number;
     // additional properties
     variant?: string;
+    elder?: boolean;
+    shaper?: boolean;
     baseType?: string;
     links?: number;
     quality?: number;
