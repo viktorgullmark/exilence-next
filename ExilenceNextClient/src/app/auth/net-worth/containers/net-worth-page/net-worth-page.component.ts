@@ -32,6 +32,7 @@ import { PricedItem } from '../../../../shared/interfaces/priced-item.interface'
 import { NetWorthItemTableComponent } from '../../components/net-worth-item-table/net-worth-item-table.component';
 import { TableItem } from '../../../../shared/interfaces/table-item.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -75,7 +76,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private snapshotService: SnapshotService,
     private itemPricingService: ItemPricingService,
     private storageService: StorageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private actions$: Actions
   ) {
 
     this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
@@ -104,9 +106,12 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
     }
     // save state to storage on changes
-    this.netWorthStore.pipe(skip(1)).takeUntil(this.destroy$).subscribe((state: AppState) => {
-      this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
-    });
+    this.actions$.pipe(
+      ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail,
+        netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
+          this.netWorthStore.pipe(skip(1)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
+            this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
+          });
   }
 
   ngOnInit() {
