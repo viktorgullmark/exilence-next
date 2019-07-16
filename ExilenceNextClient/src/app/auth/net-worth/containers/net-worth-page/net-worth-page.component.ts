@@ -23,6 +23,7 @@ import {
   selectTabSelectionByLeague,
   selectTotalValue,
   selectSelectedTabsValue,
+  selectLastSnapshotByLeague,
 } from '../../../../store/net-worth/net-worth.selectors';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
@@ -55,6 +56,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public moduleIndex$: Observable<number>;
   public totalValue$: Observable<number>;
   public selectedTabsValue$: Observable<number>;
+  public lastSnapshot$: Observable<Snapshot>;
   public selectedTabsWithItems$: Observable<Tab[]>;
 
   private snapshots: Snapshot[] = [];
@@ -93,6 +95,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
       this.totalValue$ = this.netWorthStore.select(selectTotalValue(league));
+      this.lastSnapshot$ = this.netWorthStore.select(selectLastSnapshotByLeague(league));
     });
 
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);

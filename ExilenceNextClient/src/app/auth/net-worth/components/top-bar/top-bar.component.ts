@@ -13,6 +13,7 @@ import { NetWorthState } from '../../../../app.states';
 import { NetWorthStatus } from '../../../../shared/interfaces/net-worth-status.interface';
 import { Store } from '@ngrx/store';
 import { SnapshotService } from '../../providers/snapshot.service';
+import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 
 @Component({
   selector: 'app-top-bar',
@@ -28,6 +29,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   @Input() moduleIndex$: Observable<number>;
   @Input() selectedTabsValue$: Observable<number>;
   @Input() totalValue$: Observable<number>;
+  @Input() lastSnapshot$: Observable<Snapshot>;
   @Output() tabSelectionChanged: EventEmitter<string[]> = new EventEmitter;
 
   public stashtabs = new FormControl();
@@ -54,6 +56,12 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   tabsChanged(event: MatSelectChange) {
     this.tabSelectionChanged.emit(event.value);
+  }
+
+  getFromNow(snapshot: Snapshot) {
+    if (snapshot !== undefined) {
+      return moment(snapshot.timestamp).fromNow();
+    }
   }
 
   isSelected(selection: TabSelection[], id: string) {

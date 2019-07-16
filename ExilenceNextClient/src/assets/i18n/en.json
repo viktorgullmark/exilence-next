@@ -65,6 +65,8 @@
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
   "NETWORTH": {
+    "NO_STASHTABS": "No stashtabs fetched",
+    "LAST_SNAPSHOT_LABEL_PREFIX": "Updated",
     "CURRENT_TOTAL": "Total value",
     "CURRENT_SELECTED": "Selected value",
     "CURRENT_GAIN": "Gain per hour",

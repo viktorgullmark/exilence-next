@@ -3,8 +3,15 @@
 .top-bar {
   height: $top-bar-height;
   margin-bottom: $main-margin;
+  margin-top: -$main-margin;
   .top-bar-content {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    .mat-form-field {
+      padding-top: 1.25rem;
+    }
     .config {
       &.specific-config {
         display: flex;
@@ -21,12 +28,15 @@
 
   .btn-container {
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+  }
 
-    button {
-      margin-top: 5px;
-    }
+  .last-snapshot-timestamp {
+    font-size: 12px;
+    min-width: 200px;
+    text-align: right;
+    color: $secondary-font-color;
   }
 
   .networth-wrapper {
