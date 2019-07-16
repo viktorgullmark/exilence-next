@@ -11,6 +11,7 @@ import { TabSelection } from '../../../../shared/interfaces/tab-selection.interf
 })
 export class NetWorthGraphComponent implements OnInit {
   @Input() loading: boolean;
+  @Input() stashtabList$: Observable<TabSelection>;
   @Input() selectedTabs$: Observable<TabSelection>;
   @Input() tabChartData: ChartSeries[] = [];
   @Input() playerChartData: ChartSeries[] = [];

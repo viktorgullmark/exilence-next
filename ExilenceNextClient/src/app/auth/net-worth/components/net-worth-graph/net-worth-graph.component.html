@@ -3,7 +3,7 @@
   <div class="mid-text-container" *ngIf="(selectedTabs$ | async).length == 0">
     <div class="h-container">
       <mat-icon class="h-icon">warning</mat-icon>
-      <h3 class="mat-h3">{{'NETWORTH.WARNING_NO_SELECTED_TABS' | translate }}</h3>
+      <h3 class="mat-h3">{{ ((stashtabList$ | async) == undefined || (stashtabList$ | async).length == 0 ? 'NETWORTH.WARNING_NO_TABS' : 'NETWORTH.WARNING_NO_SELECTED_TABS') | translate}}</h3>
     </div>
   </div>
   <ng-container *ngIf="(selectedTabs$ | async).length > 0">
