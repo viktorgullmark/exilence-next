@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { NetWorthState } from '../../../app.states';
 import { ExternalPrices } from '../../../shared/interfaces/external-prices.interface';
 import { Tab } from '../../../shared/interfaces/stash.interface';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { Item } from '../../../shared/interfaces/item.interface';
 import { PricedItem } from '../../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
@@ -23,14 +23,13 @@ export class ItemPricingService {
         private netWorthStore: Store<NetWorthState>
     ) {
 
-
-        this.actions$.pipe(ofType(NetWorthActionTypes.FetchPricesSuccess)).subscribe((prices: any) => {
-            this.actions$.pipe(ofType(NetWorthActionTypes.FetchItemsForSnapshotSuccess))
-                .subscribe((items: any) => {
-                    this.netWorthStore.dispatch(new netWorthActions.PriceItemsForSnapshot(
-                        { prices: prices.payload, tabs: items.payload.tabs }));
-                });
-        });
+        zip(
+            this.actions$.pipe(ofType(NetWorthActionTypes.FetchPricesSuccess)),
+            this.actions$.pipe(ofType(NetWorthActionTypes.FetchItemsForSnapshotSuccess)))
+            .subscribe((res: any) => {
+                this.netWorthStore.dispatch(new netWorthActions.PriceItemsForSnapshot(
+                    { prices: res[0].payload, tabs: res[1].payload.tabs }));
+            });
     }
 
     priceItemsInTabs(tabs: Tab[], prices: ExternalPrices) {

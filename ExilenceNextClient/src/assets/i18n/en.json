@@ -41,6 +41,8 @@
     "COOKIE_SET_DESC": "A cookie was created with your session id",
     "FETCH_TABS_SUCCESS_TITLE": "Fetched tabs",
     "FETCH_TABS_SUCCESS_DESC": "All stash tabs was correctly fetched",
+    "FETCH_PRICES_SUCCESS_TITLE": "Fetched prices from external sources",
+    "FETCH_PRICES_SUCCESS_DESC": "Prices were fetched from chosen external sources",
     "FETCH_ITEMS_SUCCESS_TITLE": "Fetched items in tabs",
     "FETCH_ITEMS_SUCCESS_DESC": "All items in your stash tabs was correctly fetched",
     "NO_STORAGE_TITLE": "No local storage found",

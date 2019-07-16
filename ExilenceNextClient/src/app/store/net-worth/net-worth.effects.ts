@@ -113,6 +113,23 @@ export class NetWorthEffects {
     ))
   );
 
+  fetchPricesSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshotSuccess),
+    map((res: any) => {
+
+      return new notificationActions.AddNotification({
+        notification:
+          {
+            title: 'INFORMATION.FETCH_PRICES_SUCCESS_TITLE',
+            description: 'INFORMATION.FETCH_PRICES_SUCCESS_TITLE',
+            type: NotificationType.Information
+          } as Notification
+      });
+    }
+    )
+  )
+  );
+
   fetchPricesFail$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchPricesFail),
     map((res: any) => new notificationActions.AddNotification({
@@ -221,7 +238,6 @@ export class NetWorthEffects {
       this.itemPricingService.priceItemsInTabs(res.payload.tabs, res.payload.prices)
         .pipe(
           map(results => {
-            console.log('priced!', results);
             return new netWorthActions.PriceItemsForSnapshotSuccess({ tabs: results });
           }),
           catchError(() => of(new netWorthActions.PriceItemsForSnapshotFail(
