@@ -5,6 +5,9 @@
   "ACCOUNT": {
     "LOGOUT": "Logout"
   },
+  "ACTIONS": {
+    "SNAPSHOT": "Create snapshot"
+  },
   "SESSION": {
     "CLEAR": "Clear storage"
   },
@@ -62,7 +65,8 @@
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
   "NETWORTH": {
-    "CURRENT_TOTAL": "Current value",
+    "CURRENT_TOTAL": "Total value",
+    "CURRENT_SELECTED": "Selected value",
     "CURRENT_GAIN": "Gain per hour",
     "TOTAL_VALUE": "Total value",
     "SELECT_STASHTABS": "Select stash tabs",

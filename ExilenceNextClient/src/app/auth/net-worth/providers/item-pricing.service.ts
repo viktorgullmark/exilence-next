@@ -23,13 +23,14 @@ export class ItemPricingService {
         private netWorthStore: Store<NetWorthState>
     ) {
 
-        this.actions$.pipe(ofType(NetWorthActionTypes.FetchPricesSuccess))
-            .combineLatest(this.actions$.pipe(
-                ofType(NetWorthActionTypes.FetchItemsForSnapshotSuccess)))
-            .subscribe((res: any) => {
-                this.netWorthStore.dispatch(new netWorthActions.PriceItemsForSnapshot(
-                    { prices: res[0].payload, tabs: res[1].payload.tabs }));
-            });
+
+        this.actions$.pipe(ofType(NetWorthActionTypes.FetchPricesSuccess)).subscribe((prices: any) => {
+            this.actions$.pipe(ofType(NetWorthActionTypes.FetchItemsForSnapshotSuccess))
+                .subscribe((items: any) => {
+                    this.netWorthStore.dispatch(new netWorthActions.PriceItemsForSnapshot(
+                        { prices: prices.payload, tabs: items.payload.tabs }));
+                });
+        });
     }
 
     priceItemsInTabs(tabs: Tab[], prices: ExternalPrices) {

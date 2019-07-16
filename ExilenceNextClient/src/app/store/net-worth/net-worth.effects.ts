@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import * as moment from 'moment';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, first } from 'rxjs/operators';
 
 import { NetWorthState, ApplicationState } from '../../app.states';
 import { ItemPricingService } from '../../auth/net-worth/providers/item-pricing.service';
@@ -221,6 +221,7 @@ export class NetWorthEffects {
       this.itemPricingService.priceItemsInTabs(res.payload.tabs, res.payload.prices)
         .pipe(
           map(results => {
+            console.log('priced!', results);
             return new netWorthActions.PriceItemsForSnapshotSuccess({ tabs: results });
           }),
           catchError(() => of(new netWorthActions.PriceItemsForSnapshotFail(
@@ -249,7 +250,7 @@ export class NetWorthEffects {
   createSnapshot$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.CreateSnapshot),
     mergeMap((res: any) => this.appStore.select(selectApplicationSessionLeague)
-      .mergeMap((league: string) => of(this.snapshotService.createTabSnapshots(res.payload.tabs))
+      .pipe(first()).mergeMap((league: string) => of(this.snapshotService.createTabSnapshots(res.payload.tabs))
         .pipe(
           map((tabSnapshots: TabSnapshot[]) => {
             return new netWorthActions.CreateSnapshotSuccess(

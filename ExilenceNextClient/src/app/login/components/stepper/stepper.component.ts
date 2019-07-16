@@ -64,10 +64,16 @@ export class StepperComponent implements OnInit, OnDestroy {
     });
 
     this.appStore.select(selectApplicationSession).takeUntil(this.destroy$)
-      .subscribe((data: ApplicationSessionDetails) => {
-        if (data !== undefined) {
+      .subscribe((data: ApplicationSession) => {
+        if (data.sessionId !== undefined && data.account !== undefined) {
           this.accountFormGroup.controls.accountName.setValue(data.account);
           this.accountFormGroup.controls.sessionId.setValue(data.sessionId);
+        }
+        if (data.league !== undefined) {
+          this.leagueFormGroup.controls.leagueName.setValue(data.league);
+        }
+        if (data.tradeLeague !== undefined) {
+          this.leagueFormGroup.controls.tradeLeagueName.setValue(data.tradeLeague);
         }
       });
   }

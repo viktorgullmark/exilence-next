@@ -17,6 +17,7 @@ import { selectApplicationSession, selectApplicationSessionLeague } from '../../
 import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
 import { selectNetWorthStatus, selectTabsByLeague } from '../../../store/net-worth/net-worth.selectors';
+import { first } from 'rxjs/operators';
 
 @Injectable()
 export class SnapshotService implements OnDestroy {
@@ -52,13 +53,13 @@ export class SnapshotService implements OnDestroy {
       });
     });
 
-    this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
-      .combineLatest(this.actions$.pipe(
-        ofType(NetWorthActionTypes.LoadStateFromStorageFail,
-          NetWorthActionTypes.LoadStateFromStorageSuccess)).first())
-      .takeUntil(this.destroy$).subscribe(() => {
-        this.checkIfReady();
-      });
+    // this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
+    //   .pipe(first()).combineLatest(this.actions$.pipe(
+    //     ofType(NetWorthActionTypes.LoadStateFromStorageFail,
+    //       NetWorthActionTypes.LoadStateFromStorageSuccess)).first())
+    //   .takeUntil(this.destroy$).subscribe(() => {
+    //     this.checkIfReady();
+    //   });
   }
 
   ngOnDestroy() {
@@ -78,7 +79,7 @@ export class SnapshotService implements OnDestroy {
     this.netWorthStore.dispatch(new netWorthActions.FetchPrices({ league: this.session.tradeLeague }));
   }
 
-  checkIfReady() {
+  snapshot() {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
       this.startSnapshotChain();
       this.fetchPrices();

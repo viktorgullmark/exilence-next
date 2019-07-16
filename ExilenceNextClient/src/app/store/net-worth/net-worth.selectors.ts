@@ -40,13 +40,30 @@ export const selectSnapshotsByLeague = (league: string) => createSelector(
     snapshots => snapshots.filter(snapshot => snapshot.league === league)
 );
 
+export const selectLastSnapshotByLeague = (league: string) => createSelector(
+    selectSnapshotsByLeague(league),
+    snapshots => snapshots[snapshots.length - 1]
+);
+
 export const selectTabSelectionByLeague = (league: string) => createSelector(
     selectNetWorthSelectedTabs,
     tabs => tabs.filter(tab => tab.league === league)
 );
 
-
 export const selectTabsByLeague = (league: string) => createSelector(
     selectNetWorthStashTabs,
     tabs => tabs.filter(tab => tab.league === league)
 );
+
+export const selectTotalValue = (league: string) => createSelector(
+    selectLastSnapshotByLeague(league),
+    snapshot => snapshot !== undefined ? snapshot.tabSnapshots.map(ts => ts.value).reduce((a, b) => a + b, 0) : 0
+);
+
+export const selectSelectedTabsValue = (league: string, tabIds: string[]) => createSelector(
+    selectLastSnapshotByLeague(league),
+    snapshot => snapshot !== undefined ? snapshot.tabSnapshots
+        .filter(ts => tabIds.find(id => id === ts.tabId) !== undefined)
+        .map(ts => ts.value).reduce((a, b) => a + b, 0) : 0
+);
+
