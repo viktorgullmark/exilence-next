@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
+import { Observable } from 'rxjs';
+import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
 
 @Component({
   selector: 'app-net-worth-graph',
@@ -9,6 +11,7 @@ import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
 })
 export class NetWorthGraphComponent implements OnInit {
   @Input() loading: boolean;
+  @Input() selectedTabs$: Observable<TabSelection>;
   @Input() tabChartData: ChartSeries[] = [];
   @Input() playerChartData: ChartSeries[] = [];
   @Input() colorScheme = {

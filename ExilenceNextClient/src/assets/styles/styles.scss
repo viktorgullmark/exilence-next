@@ -71,11 +71,13 @@ a {
 
 .h-container {
   font-weight: normal;
-  color: $secondary;
   margin-top: 0px;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  &.snapshot-title {
+    color: $secondary;
+  }
   .h-icon {
     margin: 0 5px 16px 0;
   }

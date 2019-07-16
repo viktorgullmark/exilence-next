@@ -16,7 +16,7 @@
     <app-top-bar [lastSnapshot$]="lastSnapshot$" [totalValue$]="totalValue$" [selectedTabsValue$]="selectedTabsValue$" [stashtabList$]="stashtabList$" [moduleIndex$]="moduleIndex$" [playerList$]="playerList$"
         [selectedTabs$]="selectedTabs$" (tabSelectionChanged)="tabsChanged($event)"></app-top-bar>
 
-    <app-net-worth-graph [loading]="graphLoading" [tabChartData]="tabChartData" [playerChartData]="playerChartData" [colorScheme]="colorScheme"
+    <app-net-worth-graph [selectedTabs$]="selectedTabs$" [loading]="graphLoading" [tabChartData]="tabChartData" [playerChartData]="playerChartData" [colorScheme]="colorScheme"
         [hidden]="selectedIndex != 0 || (tabChartData.length == 0 && playerChartData.length == 0)"></app-net-worth-graph>
 
     <app-net-worth-item-table [tableData]="tableData" [hidden]="selectedIndex != 1"></app-net-worth-item-table>

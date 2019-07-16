@@ -3,6 +3,13 @@
 .chart-container {
   height: calc(100% - #{$main-padding}* 1);
   width: 100%;
+  .mid-text-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .player-chart-container, .tab-chart-container {
     height: 50%;
     width: 100%;

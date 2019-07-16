@@ -95,8 +95,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.snapshots$ = this.netWorthStore.select(selectSnapshotsByLeague(league)).takeUntil(this.destroy$);
       this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
-      this.totalValue$ = this.netWorthStore.select(selectTotalValue(league));
-      this.lastSnapshot$ = this.netWorthStore.select(selectLastSnapshotByLeague(league));
+      this.totalValue$ = this.netWorthStore.select(selectTotalValue(league)).takeUntil(this.destroy$);
+      this.lastSnapshot$ = this.netWorthStore.select(selectLastSnapshotByLeague(league)).takeUntil(this.destroy$);
     });
 
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);

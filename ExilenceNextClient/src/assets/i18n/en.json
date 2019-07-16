@@ -74,6 +74,7 @@
     "CURRENT_GAIN": "Gain per hour",
     "TOTAL_VALUE": "Total value",
     "SELECT_STASHTABS": "Select stash tabs",
+    "WARNING_NO_SELECTED_TABS": "No stash tabs has been selected, choose from the drop down in the top",
     "GRAPHS": {
       "VALUE": "Chaos",
       "TIMESTAMP": "Timestamp",
