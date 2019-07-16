@@ -68,7 +68,6 @@ export class ApplicationEffects {
       this.externalService.getCharacters(res.payload.accountDetails.account),
     ).pipe(
       map(requests => {
-        this.storageMap.set('session.accountDetails', res.payload.accountDetails).subscribe();
         if (requests[0].length === 0) {
           return new applicationActions.InitSessionFail({ title: 'ERROR.NO_LEAGUES_TITLE', message: 'ERROR.NO_LEAGUES_DESC' });
         } else if (requests[1].length === 0) {

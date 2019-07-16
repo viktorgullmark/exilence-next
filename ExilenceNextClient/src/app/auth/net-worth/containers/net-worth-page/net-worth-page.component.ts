@@ -7,7 +7,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { Observable, Subject, of, timer } from 'rxjs';
 import { map, skip, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import 'rxjs/add/operator/switchMap';
-import { AppState } from '../../../../app.states';
+import { AppState, NetWorthState } from '../../../../app.states';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
@@ -24,6 +24,7 @@ import {
   selectTotalValue,
   selectSelectedTabsValue,
   selectLastSnapshotByLeague,
+  getNetWorthState,
 } from '../../../../store/net-worth/net-worth.selectors';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
@@ -120,8 +121,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.actions$.pipe(
       ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail,
         netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.netWorthStore.pipe(skip(2)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
-            this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
+          this.netWorthStore.select(getNetWorthState)
+          .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: NetWorthState) => {
+            console.log('persist nw state');
+            this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
           });
   }
 

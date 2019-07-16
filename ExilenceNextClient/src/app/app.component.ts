@@ -3,9 +3,9 @@ import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import { skip } from 'rxjs/operators';
+import { skip, distinctUntilChanged } from 'rxjs/operators';
 
-import { AppState } from './app.states';
+import { AppState, ApplicationState } from './app.states';
 import { SnapshotProgressSnackbarComponent } from './core/components/snapshot-progress-snackbar/snapshot-progress-snackbar.component';
 import { ElectronService } from './core/providers/electron.service';
 import { JsonService } from './core/providers/json.service';
@@ -15,6 +15,7 @@ import * as applicationActions from './store/application/application.actions';
 import { ofType, Actions } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import 'rxjs/add/operator/mergeMap';
+import { getApplicationState } from './store/application/application.selectors';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(public electronService: ElectronService,
     private storageMap: StorageMap,
     private translate: TranslateService,
-    private appStore: Store<AppState>,
+    private appStore: Store<ApplicationState>,
     private jsonService: JsonService,
     private storageService: StorageService,
     private actions$: Actions
@@ -51,9 +52,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.actions$.pipe(
       ofType(applicationActions.ApplicationActionTypes.LoadStateFromStorageFail,
         applicationActions.ApplicationActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.appStore.pipe(skip(2)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
-            this.storageMap.set('appState', state.applicationState).takeUntil(this.destroy$).subscribe();
-          });
+          this.appStore.select(getApplicationState)
+            .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: ApplicationState) => {
+              console.log('persist app state');
+              this.storageMap.set('appState', state).takeUntil(this.destroy$).subscribe();
+            });
   }
 
   ngOnInit() {
