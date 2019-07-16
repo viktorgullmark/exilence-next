@@ -6,7 +6,7 @@
     "LOGOUT": "Logout"
   },
   "ACTIONS": {
-    "SNAPSHOT": "Create snapshot"
+    "SNAPSHOT": "Take snapshot"
   },
   "SESSION": {
     "CLEAR": "Clear storage"
