@@ -120,7 +120,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     this.actions$.pipe(
       ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail,
         netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.netWorthStore.pipe(skip(1)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
+          this.netWorthStore.pipe(skip(2)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
             this.storageMap.set('netWorthState', state.netWorthState).takeUntil(this.destroy$).subscribe();
           });
   }

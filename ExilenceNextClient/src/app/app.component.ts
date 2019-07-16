@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.actions$.pipe(
       ofType(applicationActions.ApplicationActionTypes.LoadStateFromStorageFail,
         applicationActions.ApplicationActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.appStore.pipe(skip(1)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
+          this.appStore.pipe(skip(2)).takeUntil(this.destroy$)).subscribe((state: AppState) => {
             this.storageMap.set('appState', state.applicationState).takeUntil(this.destroy$).subscribe();
           });
   }
