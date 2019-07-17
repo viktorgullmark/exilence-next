@@ -1,2 +1,2 @@
 # exilence-next
-Modular version of Exilence
+Complete rewrite of Exilence
