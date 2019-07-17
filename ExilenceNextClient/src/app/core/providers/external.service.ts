@@ -21,7 +21,7 @@ import { ItemHelper } from '../../shared/helpers/item.helper';
 @Injectable()
 export class ExternalService {
 
-  private rateLimiter = new RateLimiter(7, 10000);
+  private rateLimiter = new RateLimiter(5, 10000);
   private poeUrl = 'https://www.pathofexile.com';
 
   private session$: Observable<ApplicationSession>;
