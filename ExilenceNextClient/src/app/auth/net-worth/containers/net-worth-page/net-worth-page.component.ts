@@ -127,13 +127,11 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.appStore.dispatch(new netWorthActions.LoadStateFromStorage());
     }
     // save state to storage on changes
-    this.actions$.pipe(
-      ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail,
-        netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.netWorthStore.select(getNetWorthState)
-            .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: NetWorthState) => {
-              this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
-            });
+    this.netWorthStore.select(getNetWorthState)
+      .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$).subscribe((state: NetWorthState) => {
+        console.log('persist nw:', state);
+        this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
+      });
   }
 
   ngOnInit() {
@@ -149,24 +147,24 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
           this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
         }
         return this.selectedTabs$.takeUntil(this.destroy$)
-        .mergeMap((selectedTabs: TabSelection[]) => {
-          this.selectedTabsValue$ = this.netWorthStore.select(selectSelectedTabsValue(league, selectedTabs.map(t => t.tabId)))
-            .takeUntil(this.destroy$);
-          return this.netWorthStore
-            .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
-            .pipe(
-              filter(tabs => tabs.length !== 0),
-              map((tabs: Tab[]) => {
-                return tabs.map((tab: Tab) => {
-                  return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab;
-                }
-                );
-              }))
-            .mergeMap((tabs: CompactTab[]) => {
-              this.updateColorSchemeFromCompactTabs(tabs);
-              return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
-            });
-        });
+          .mergeMap((selectedTabs: TabSelection[]) => {
+            this.selectedTabsValue$ = this.netWorthStore.select(selectSelectedTabsValue(league, selectedTabs.map(t => t.tabId)))
+              .takeUntil(this.destroy$);
+            return this.netWorthStore
+              .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
+              .pipe(
+                filter(tabs => tabs.length !== 0),
+                map((tabs: Tab[]) => {
+                  return tabs.map((tab: Tab) => {
+                    return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab;
+                  }
+                  );
+                }))
+              .mergeMap((tabs: CompactTab[]) => {
+                this.updateColorSchemeFromCompactTabs(tabs);
+                return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
+              });
+          });
       });
     }).subscribe((tabs: Tab[]) => {
       this.selectedTabs = tabs;

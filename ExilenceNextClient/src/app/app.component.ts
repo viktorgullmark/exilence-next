@@ -49,13 +49,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.appStore.dispatch(new applicationActions.LoadStateFromStorage());
 
     // save state to storage on changes
-    this.actions$.pipe(
-      ofType(applicationActions.ApplicationActionTypes.LoadStateFromStorageFail,
-        applicationActions.ApplicationActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
-          this.appStore.select(getApplicationState)
-            .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: ApplicationState) => {
-              this.storageMap.set('appState', state).takeUntil(this.destroy$).subscribe();
-            });
+    this.appStore.select(getApplicationState)
+      .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$).subscribe((state: ApplicationState) => {
+        console.log('persist app:', state);
+        this.storageMap.set('appState', state).takeUntil(this.destroy$).subscribe();
+      });
   }
 
   ngOnInit() {
