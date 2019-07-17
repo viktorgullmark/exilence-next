@@ -1,5 +1,5 @@
 <mat-tab-group #tabGroup id="tabGroup" animationDuration="0" [(selectedIndex)]="selectedIndex">
-    <mat-tab #general id="general" class="active">
+    <!-- <mat-tab #general id="general" class="active">
         <ng-template mat-tab-label>
             <mat-icon class="tab-icon">laptop</mat-icon>
             &nbsp;{{'SETTINGS.GENERAL_HEADER' | translate }}
@@ -11,17 +11,17 @@
                 </div>
             </div>
         </div>
-    </mat-tab>
+    </mat-tab> -->
     <mat-tab #networth id="networth" [disabled]="!storageService.netWorthLoaded">
         <ng-template mat-tab-label>
             <mat-icon class="tab-icon">attach_money</mat-icon>
             &nbsp;{{'SETTINGS.NETWORTH_HEADER' | translate }}
         </ng-template>
-        <div [hidden]="selectedIndex != 1">
+        <div [hidden]="selectedIndex != 0">
             <div class="setting-tab-content">
                 <div class="setting-inner-content" *ngIf="netWorthSettings">
                     <div class="setting">
-                        <mat-slide-toggle color="primary" [(checked)]="netWorthSettings.automaticSnapshotting" (change)="toggleAutomaticSnapshotting($event)">
+                        <mat-slide-toggle [disabled]="!storageService.netWorthLoaded" color="primary" [(checked)]="netWorthSettings.automaticSnapshotting" (change)="toggleAutomaticSnapshotting($event)">
                             {{'SETTINGS.TOGGLE_AUTOMATIC_SNAPSHOTS' | translate }}
                         </mat-slide-toggle>
                     </div>
