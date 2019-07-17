@@ -62,6 +62,7 @@ export class SnapshotService implements OnDestroy {
       if (settings.automaticSnapshotting) {
         this.startSnapshotTimer();
       } else {
+        this.snapshotCountdown = -1;
         this.killInterval$.next();
       }
     });
