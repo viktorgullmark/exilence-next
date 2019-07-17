@@ -73,7 +73,7 @@ export class ItemPricingService {
                 case 2: // rare
                     if (item.name.indexOf(' Map') > -1) {
                         price = this.priceCheck(p =>
-                            (p.name === name || item.name.indexOf(p.name) > -1) && p.tier === item.tier);
+                            (p.name === item.name || item.name.indexOf(p.name) > -1) && p.tier === item.tier);
                     } else if (item.ilvl > 0) {
                         if (item.ilvl > 86) {
                             item.ilvl = 86;
@@ -84,7 +84,7 @@ export class ItemPricingService {
                     }
                     break;
                 case 3: // unique
-                    price = this.priceCheck(p => p.name === name
+                    price = this.priceCheck(p => p.name === item.name
                         && p.links === item.links
                         && p.frameType === 3
                         && p.corrupted === item.corrupted
@@ -92,7 +92,7 @@ export class ItemPricingService {
                         && (p === item.variant || p.variant === undefined || p.variant === null));
                     break;
                 case 4: // gem
-                    price = this.priceCheck(p => p.name === name
+                    price = this.priceCheck(p => p.name === item.name
                         && p.level === item.level
                         && p.corrupted === item.corrupted
                         && p.quality === item.quality);
@@ -101,7 +101,7 @@ export class ItemPricingService {
                     price = this.priceCheck(p => p.name === item.name);
                     break;
                 case 6: // divination card
-                    price = this.priceCheck(p => p.name === name && p.icon.indexOf('Divination') > -1);
+                    price = this.priceCheck(p => p.name === item.name && p.icon.indexOf('Divination') > -1);
                     break;
                 case 8: // prophecy
                     price = this.priceCheck(p => p.name === item.name && p.icon.indexOf('Prophecy') > -1);
