@@ -129,7 +129,6 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     // save state to storage on changes
     this.netWorthStore.select(getNetWorthState)
       .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$).subscribe((state: NetWorthState) => {
-        console.log('persist nw:', state);
         this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
       });
   }

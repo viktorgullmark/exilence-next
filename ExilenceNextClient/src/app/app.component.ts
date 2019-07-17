@@ -51,7 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
     // save state to storage on changes
     this.appStore.select(getApplicationState)
       .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$).subscribe((state: ApplicationState) => {
-        console.log('persist app:', state);
         this.storageMap.set('appState', state).takeUntil(this.destroy$).subscribe();
       });
   }
