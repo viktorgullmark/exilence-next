@@ -66,6 +66,10 @@
     "SESSION_VALID_TITLE": "Validated session correctly",
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
+  "LEAGUE": {
+    "SELECT_LEAGUE": "Select league",
+    "SELECT_TRADELEAGUE": "Select price league"
+  },
   "NETWORTH": {
     "NO_STASHTABS": "No stashtabs fetched",
     "LAST_SNAPSHOT_LABEL_PREFIX": "Updated",

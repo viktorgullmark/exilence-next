@@ -132,14 +132,19 @@ export class NetWorthEffects {
 
   fetchPricesFail$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchPricesFail),
-    map((res: any) => new notificationActions.AddNotification({
-      notification:
-        {
-          title: res.payload.title,
-          description: res.payload.message,
-          type: NotificationType.Error
-        } as Notification
-    }))
+    map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: res.payload.title,
+            description: res.payload.message,
+            type: NotificationType.Error
+          } as Notification
+      }));
+      return new netWorthActions.CreateSnapshotFail(
+        { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' });
+    }
+    )
   )
   );
 
@@ -181,14 +186,19 @@ export class NetWorthEffects {
 
   fetchTabsForSnapshotFail$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchTabsForSnapshotFail),
-    map((res: any) => new notificationActions.AddNotification({
-      notification:
-        {
-          title: res.payload.title,
-          description: res.payload.message,
-          type: NotificationType.Error
-        } as Notification
-    }))
+    map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: res.payload.title,
+            description: res.payload.message,
+            type: NotificationType.Error
+          } as Notification
+      }));
+      return new netWorthActions.CreateSnapshotFail(
+        { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' });
+    }
+    )
   )
   );
 
@@ -221,14 +231,19 @@ export class NetWorthEffects {
 
   fetchItemsForSnapshotFail$ = createEffect(() => this.actions$.pipe(
     ofType(netWorthActions.NetWorthActionTypes.FetchItemsForSnapshotFail),
-    map((res: any) => new notificationActions.AddNotification({
-      notification:
-        {
-          title: res.payload.title,
-          description: res.payload.message,
-          type: NotificationType.Error
-        } as Notification
-    }))
+    map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: res.payload.title,
+            description: res.payload.message,
+            type: NotificationType.Error
+          } as Notification
+      }));
+      return new netWorthActions.CreateSnapshotFail(
+        { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' });
+    }
+    )
   )
   );
 
@@ -258,6 +273,24 @@ export class NetWorthEffects {
           } as Notification
       }));
       return new netWorthActions.CreateSnapshot({ tabs: res.payload.tabs });
+    }
+    )
+  )
+  );
+
+  priceItemsForSnapshotFail$ = createEffect(() => this.actions$.pipe(
+    ofType(netWorthActions.NetWorthActionTypes.PriceItemsForSnapshotFail),
+    map((res: any) => {
+      this.netWorthStore.dispatch(new notificationActions.AddNotification({
+        notification:
+          {
+            title: res.payload.title,
+            description: res.payload.message,
+            type: NotificationType.Error
+          } as Notification
+      }));
+      return new netWorthActions.CreateSnapshotFail(
+        { title: 'ERROR.CREATE_SNAPSHOT_FAIL_TITLE', message: 'ERROR.CREATE_SNAPSHOT_FAIL_DESC' });
     }
     )
   )

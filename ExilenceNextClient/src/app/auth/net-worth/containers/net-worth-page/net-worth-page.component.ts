@@ -1,44 +1,49 @@
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeUntil';
 
-import { Component, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { Observable, Subject, of, timer } from 'rxjs';
-import { map, skip, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
-import 'rxjs/add/operator/switchMap';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, of, Subject, timer } from 'rxjs';
+import { distinctUntilChanged, filter, map, skip, switchMap } from 'rxjs/operators';
+
 import { AppState, NetWorthState } from '../../../../app.states';
+import { StorageService } from '../../../../core/providers/storage.service';
 import { ColourHelper } from '../../../../shared/helpers/colour.helper';
 import { SnapshotHelper } from '../../../../shared/helpers/snapshot.helper';
+import { TableHelper } from '../../../../shared/helpers/table.helper';
 import { ApplicationSession } from '../../../../shared/interfaces/application-session.interface';
 import { ChartSeries } from '../../../../shared/interfaces/chart.interface';
+import { NetWorthSettings } from '../../../../shared/interfaces/net-worth-settings.interface';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
 import { CompactTab, Tab } from '../../../../shared/interfaces/stash.interface';
 import { TabSelection } from '../../../../shared/interfaces/tab-selection.interface';
-import { selectApplicationSessionLeague, selectApplicationSessionModuleIndex, selectApplicationSession } from '../../../../store/application/application.selectors';
+import { TableItem } from '../../../../shared/interfaces/table-item.interface';
 import {
+  selectApplicationSessionCharacterLeagues,
+  selectApplicationSessionLeague,
+  selectApplicationSessionModuleIndex,
+} from '../../../../store/application/application.selectors';
+import {
+  getNetWorthState,
+  selectLastSnapshotByLeague,
+  selectNetWorthSettings,
+  selectSelectedTabsValue,
   selectSnapshotsByLeague,
   selectTabsByIds,
   selectTabsByLeague,
   selectTabSelectionByLeague,
   selectTotalValue,
-  selectSelectedTabsValue,
-  selectLastSnapshotByLeague,
-  getNetWorthState,
-  selectNetWorthSettings,
 } from '../../../../store/net-worth/net-worth.selectors';
+import { NetWorthItemTableComponent } from '../../components/net-worth-item-table/net-worth-item-table.component';
+import { TopBarComponent } from '../../components/top-bar/top-bar.component';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
-import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 import * as applicationActions from './../../../../store/application/application.actions';
-import { StorageService } from '../../../../core/providers/storage.service';
-import { TableHelper } from '../../../../shared/helpers/table.helper';
-import { PricedItem } from '../../../../shared/interfaces/priced-item.interface';
-import { NetWorthItemTableComponent } from '../../components/net-worth-item-table/net-worth-item-table.component';
-import { TableItem } from '../../../../shared/interfaces/table-item.interface';
-import { TranslateService } from '@ngx-translate/core';
-import { Actions, ofType } from '@ngrx/effects';
-import { NetWorthSettings } from '../../../../shared/interfaces/net-worth-settings.interface';
+import * as netWorthActions from './../../../../store/net-worth/net-worth.actions';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -62,6 +67,8 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public lastSnapshot$: Observable<Snapshot>;
   public selectedTabsWithItems$: Observable<Tab[]>;
   public netWorthSettings$: Observable<NetWorthSettings>;
+  public leagues$: Observable<string[]>;
+  public selectedLeague$: Observable<string>;
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
@@ -80,7 +87,9 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   };
 
   @ViewChild('tabGroup', undefined) tabGroup: MatTabGroup;
+
   @ViewChild(NetWorthItemTableComponent, undefined) itemTable: NetWorthItemTableComponent;
+  @ViewChild(TopBarComponent, undefined) topBar: TopBarComponent;
 
   constructor(
     private netWorthStore: Store<AppState>,
@@ -93,29 +102,25 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
     private actions$: Actions
   ) {
 
-    this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$).subscribe((league: string) => {
+    this.selectedLeague$ = this.appStore.select(selectApplicationSessionLeague).takeUntil(this.destroy$);
+
+    this.selectedLeague$.subscribe((league: string) => {
       this.selectedLeague = league;
       this.snapshots$ = this.netWorthStore.select(selectSnapshotsByLeague(league)).takeUntil(this.destroy$);
       this.selectedTabs$ = this.netWorthStore.select(selectTabSelectionByLeague(league)).takeUntil(this.destroy$);
       this.stashtabList$ = this.netWorthStore.select(selectTabsByLeague(league)).takeUntil(this.destroy$);
       this.totalValue$ = this.netWorthStore.select(selectTotalValue(league)).takeUntil(this.destroy$);
       this.lastSnapshot$ = this.netWorthStore.select(selectLastSnapshotByLeague(league)).takeUntil(this.destroy$);
+      if (this.selectedTabs !== undefined) {
+        this.selectedTabsValue$ = this.netWorthStore.select(selectSelectedTabsValue(this.selectedLeague,
+          this.selectedTabs.map(t => t.id))).takeUntil(this.destroy$);
+      }
     });
+
+    this.leagues$ = this.appStore.select(selectApplicationSessionCharacterLeagues).takeUntil(this.destroy$);
 
     this.netWorthSettings$ = this.netWorthStore.select(selectNetWorthSettings).takeUntil(this.destroy$);
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
-
-    this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
-      this.snapshots = snapshots;
-      if (this.selectedCompactTabs !== undefined) {
-        this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(this.selectedCompactTabs, this.snapshots);
-        this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
-          this.selectedCompactTabs, this.snapshots);
-      }
-      if (this.selectedTabs !== undefined) {
-        this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
-      }
-    });
 
     // load state from storage
     if (!this.storageService.netWorthLoaded) {
@@ -126,37 +131,51 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       ofType(netWorthActions.NetWorthActionTypes.LoadStateFromStorageFail,
         netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
           this.netWorthStore.select(getNetWorthState)
-          .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: NetWorthState) => {
-            this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
-          });
+            .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: NetWorthState) => {
+              this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
+            });
   }
 
   ngOnInit() {
-    this.selectedTabs$.pipe(distinctUntilChanged()).takeUntil(this.destroy$)
-      .mergeMap((selectedTabs: TabSelection[]) => {
-        this.selectedTabsValue$ = this.netWorthStore.select(selectSelectedTabsValue(this.selectedLeague, selectedTabs.map(t => t.tabId)));
-        return this.netWorthStore
-          .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
-          .pipe(
-            filter(tabs => tabs.length !== 0),
-            map((tabs: Tab[]) => {
-              return tabs.map((tab: Tab) => {
-                return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab;
-              }
-              );
-            }))
-          .mergeMap((tabs: CompactTab[]) => {
-            this.updateColorSchemeFromCompactTabs(tabs);
-            return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
-          });
-      }).subscribe((tabs: Tab[]) => {
-        this.selectedTabs = tabs;
-        this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(tabs, this.snapshots);
-        this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
-          tabs, this.snapshots);
-        this.tableData = TableHelper.formatTabsForTable(tabs);
-        this.itemTable.updateTable(this.tableData);
+    this.selectedLeague$.mergeMap((league) => {
+      return this.snapshots$.takeUntil(this.destroy$).mergeMap((snapshots: Snapshot[]) => {
+        this.snapshots = snapshots;
+        if (this.selectedCompactTabs !== undefined) {
+          this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(this.selectedCompactTabs, this.snapshots);
+          this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
+            this.selectedCompactTabs, this.snapshots);
+        }
+        if (this.selectedTabs !== undefined) {
+          this.tableData = TableHelper.formatTabsForTable(this.selectedTabs);
+        }
+        return this.selectedTabs$.takeUntil(this.destroy$)
+        .mergeMap((selectedTabs: TabSelection[]) => {
+          this.selectedTabsValue$ = this.netWorthStore.select(selectSelectedTabsValue(league, selectedTabs.map(t => t.tabId)))
+            .takeUntil(this.destroy$);
+          return this.netWorthStore
+            .select(selectTabsByIds(selectedTabs.map(tab => tab.tabId)))
+            .pipe(
+              filter(tabs => tabs.length !== 0),
+              map((tabs: Tab[]) => {
+                return tabs.map((tab: Tab) => {
+                  return { id: tab.id, n: tab.n, colour: tab.colour, i: tab.i } as CompactTab;
+                }
+                );
+              }))
+            .mergeMap((tabs: CompactTab[]) => {
+              this.updateColorSchemeFromCompactTabs(tabs);
+              return this.netWorthStore.select(selectTabsByIds(selectedTabs.map(t => t.tabId)));
+            });
+        });
       });
+    }).subscribe((tabs: Tab[]) => {
+      this.selectedTabs = tabs;
+      this.tabChartData = SnapshotHelper.formatSnapshotsForTabChart(tabs, this.snapshots);
+      this.playerChartData = SnapshotHelper.formatSnapshotsForPlayerChart([this.translateService.instant('NETWORTH.TOTAL_VALUE')],
+        tabs, this.snapshots);
+      this.tableData = TableHelper.formatTabsForTable(tabs);
+      this.itemTable.updateTable(this.tableData);
+    });
 
     this.tabGroup.selectedIndexChange.takeUntil(this.destroy$).subscribe((index: number) => {
       if (index === 0) {
@@ -182,6 +201,10 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       tabs: selectedTabs,
       league: this.selectedLeague
     }));
+  }
+
+  leagueChanged(league: string) {
+    this.appStore.dispatch(new applicationActions.SetLeague({ league: league }));
   }
 
   updateColorSchemeFromCompactTabs(tabs: CompactTab[]) {

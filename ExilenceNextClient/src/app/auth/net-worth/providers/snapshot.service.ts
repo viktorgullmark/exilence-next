@@ -59,11 +59,13 @@ export class SnapshotService implements OnDestroy {
 
     this.netWorthSettings$.takeUntil(this.destroy$).subscribe((settings: NetWorthSettings) => {
       this.netWorthSettings = settings;
-      if (settings.automaticSnapshotting) {
-        this.startSnapshotTimer();
-      } else {
-        this.snapshotCountdown = -1;
-        this.killInterval$.next();
+      if (this.snapshotCountdown === undefined) {
+        if (settings.automaticSnapshotting) {
+          this.startSnapshotTimer();
+        } else {
+          this.snapshotCountdown = -1;
+          this.killInterval$.next();
+        }
       }
     });
 
@@ -82,7 +84,7 @@ export class SnapshotService implements OnDestroy {
 
   startSnapshotTimer() {
     const countdownStart = 30;
-    this.snapshotTimer = timer(1000, 1000).pipe(map(i => countdownStart - i), take(countdownStart + 1));
+    this.snapshotTimer = timer(1000, 1000).pipe(map(i => countdownStart - i), take(countdownStart + 1)).takeUntil(this.killInterval$);
 
     this.snapshotTimer.takeUntil(this.killInterval$)
       .subscribe((counter) => {
@@ -114,11 +116,11 @@ export class SnapshotService implements OnDestroy {
 
   snapshot() {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
-      this.snapshotCountdown = -1;
       this.startSnapshotChain();
       this.fetchPrices();
-      this.killInterval$.next();
     }
+    this.snapshotCountdown = -1;
+    this.killInterval$.next();
   }
 
   createTabSnapshots(tabs: Tab[]) {

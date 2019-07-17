@@ -20,7 +20,7 @@ export class SettingsBottomSheetContentComponent implements OnDestroy {
     public selectedIndex = 0;
     constructor(
         private netWorthStore: Store<NetWorthState>,
-        private storageService: StorageService,
+        public storageService: StorageService,
         private _bottomSheetRef: MatBottomSheetRef<SettingsBottomSheetContentComponent>) {
 
         this.netWorthStore.select(selectNetWorthSettings).subscribe((settings: NetWorthSettings) => {

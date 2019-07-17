@@ -27,12 +27,12 @@
       <p class="mat-body-1">{{'LEAGUE.DESC' | translate}}</p>
       <mat-form-field>
         <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)"
-          placeholder="{{'LEAGUE.NAME' | translate}}" required>
+          placeholder="{{'LEAGUE.SELECT_LEAGUE' | translate}}" required>
           <mat-option *ngFor="let item of leagues$ | async" [value]="item">{{item}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-select formControlName="tradeLeagueName" placeholder="{{'TRADELEAGUE.NAME' | translate}}" required>
+        <mat-select formControlName="tradeLeagueName" placeholder="{{'LEAGUE.SELECT_TRADELEAGUE' | translate}}" required>
           <mat-option *ngFor="let item of tradeLeagues$ | async" [value]="item">{{item}}</mat-option>
         </mat-select>
       </mat-form-field>
