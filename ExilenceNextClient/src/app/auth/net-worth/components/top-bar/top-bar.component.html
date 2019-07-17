@@ -27,7 +27,7 @@
               {{ ((stashtabList$ | async) == undefined || (stashtabList$ | async).length == 0 ? 'NETWORTH.NO_STASHTABS' : 'NETWORTH.SELECT_STASHTABS') | translate}}
             </mat-label>
             <mat-select [formControl]="stashtabs" (selectionChange)="tabsChanged($event)" multiple
-              [disabled]="(status$ | async).snapshotting || (stashtabList$ | async).length == 0">
+              [disabled]="(stashtabList$ | async).length == 0">
               <mat-option *ngFor="let tab of stashtabList$ | async" [value]="tab.id">{{tab.n}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -52,7 +52,7 @@
       </mat-form-field> -->
       <div class="btn-container ml--15">
         <span class="last-snapshot-timestamp mr--15" *ngIf="(lastSnapshot$ | async)">{{'NETWORTH.LAST_SNAPSHOT_LABEL_PREFIX' | translate}} {{getFromNow((lastSnapshot$ | async))}}</span>
-        <button mat-raised-button color="primary" [disabled]="(status$ | async).snapshotting"
+        <button mat-raised-button color="primary" [disabled]="(status$ | async).snapshotting || (netWorthSettings$ | async).automaticSnapshotting"
           (click)="doSnapshot()">{{'ACTIONS.SNAPSHOT' | translate}}</button>
       </div>
     </div>

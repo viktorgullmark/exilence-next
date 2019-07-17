@@ -262,6 +262,10 @@ a {
   max-width: 100vw !important;
 }
 
+.mat-tab-body-content {
+  overflow: hidden !important;
+}
+
 .mat-table {
   background: $background-color-secondary !important;
 }

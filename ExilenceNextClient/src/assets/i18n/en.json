@@ -93,7 +93,8 @@
   },
   "SETTINGS": {
     "GENERAL_HEADER": "General",
-    "NETWORTH_HEADER": "Net worth"
+    "NETWORTH_HEADER": "Net worth",
+    "TOGGLE_AUTOMATIC_SNAPSHOTS": "Automatic snapshotting"
   },
   "GLOBAL": {
     "SELECT_PLAYERS": "Select players"

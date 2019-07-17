@@ -12,15 +12,19 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab #networth id="networth">
+    <mat-tab #networth id="networth" [disabled]="!storageService.netWorthLoaded">
         <ng-template mat-tab-label>
             <mat-icon class="tab-icon">attach_money</mat-icon>
             &nbsp;{{'SETTINGS.NETWORTH_HEADER' | translate }}
         </ng-template>
         <div [hidden]="selectedIndex != 1">
             <div class="setting-tab-content">
-                <div class="setting-inner-content">
-                    net worth settings here
+                <div class="setting-inner-content" *ngIf="netWorthSettings">
+                    <div class="setting">
+                        <mat-slide-toggle color="primary" [(checked)]="netWorthSettings.automaticSnapshotting" (change)="toggleAutomaticSnapshotting($event)">
+                            {{'SETTINGS.TOGGLE_AUTOMATIC_SNAPSHOTS' | translate }}
+                        </mat-slide-toggle>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,6 +12,7 @@ import {
   MatBottomSheetModule,
   MatTabsModule,
   MatDividerModule,
+  MatSlideToggleModule,
 } from '@angular/material';
 import { NgPipesModule } from 'ngx-pipes';
 
@@ -43,6 +44,7 @@ import { SettingsBottomSheetContentComponent } from './components/settings-botto
     MatToolbarModule,
     MatSidenavModule,
     MatExpansionModule,
+    MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,

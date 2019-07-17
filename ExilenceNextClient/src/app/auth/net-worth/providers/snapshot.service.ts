@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, interval } from 'rxjs';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/skipUntil';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/take';
 import { NetWorthState } from '../../../app.states';
@@ -16,19 +17,25 @@ import { ApplicationActionTypes } from '../../../store/application/application.a
 import { selectApplicationSession, selectApplicationSessionLeague } from '../../../store/application/application.selectors';
 import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
-import { selectNetWorthStatus, selectTabsByLeague } from '../../../store/net-worth/net-worth.selectors';
-import { first } from 'rxjs/operators';
+import { selectNetWorthStatus, selectTabsByLeague, selectNetWorthSettings } from '../../../store/net-worth/net-worth.selectors';
+import { first, exhaust, last, } from 'rxjs/operators';
+import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.interface';
 
 @Injectable()
 export class SnapshotService implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
+  disableAutomaticSnapshotting$: Subject<boolean> = new Subject<boolean>();
+  private killInterval$: Subject<void> = new Subject<void>();
 
+  private netWorthSettings: NetWorthSettings;
+  private netWorthSettings$: Observable<NetWorthSettings>;
   private netWorthStatus$: Observable<NetWorthStatus>;
   private netWorthStatus: NetWorthStatus;
   private tabs$: Observable<Tab[]>;
   private tabs: Tab[];
   private session$: Observable<ApplicationSession>;
   private session: ApplicationSession;
+  private snapshotTimer: Observable<number> = interval(1000 * 15);
 
   constructor(
     private netWorthStore: Store<NetWorthState>,
@@ -36,9 +43,28 @@ export class SnapshotService implements OnDestroy {
     private actions$: Actions
   ) {
 
+    this.actions$.pipe(
+      ofType(netWorthActions.NetWorthActionTypes.CreateSnapshotSuccess,
+        netWorthActions.NetWorthActionTypes.CreateSnapshotFail)).subscribe(() => {
+          if (this.netWorthSettings.automaticSnapshotting) {
+            this.startSnapshotTimer();
+          }
+        });
+
+    this.netWorthSettings$ = this.netWorthStore.select(selectNetWorthSettings).takeUntil(this.destroy$);
     this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
     this.netWorthStatus$.takeUntil(this.destroy$).subscribe((status: NetWorthStatus) => {
       this.netWorthStatus = status;
+    });
+
+    this.netWorthSettings$.takeUntil(this.destroy$).subscribe((settings: NetWorthSettings) => {
+      this.netWorthSettings = settings;
+      if (settings.automaticSnapshotting) {
+        this.disableAutomaticSnapshotting$.next(false);
+        this.startSnapshotTimer();
+      } else {
+        this.disableAutomaticSnapshotting$.next(true);
+      }
     });
 
     this.session$ = this.appStore.select(selectApplicationSession).takeUntil(this.destroy$);
@@ -52,17 +78,19 @@ export class SnapshotService implements OnDestroy {
         this.tabs = tabs;
       });
     });
+  }
 
-    // this.actions$.pipe(ofType(ApplicationActionTypes.ValidateSessionSuccess))
-    //   .pipe(first()).combineLatest(this.actions$.pipe(
-    //     ofType(NetWorthActionTypes.LoadStateFromStorageFail,
-    //       NetWorthActionTypes.LoadStateFromStorageSuccess)).first())
-    //   .takeUntil(this.destroy$).subscribe(() => {
-    //     this.checkIfReady();
-    //   });
+  startSnapshotTimer() {
+    this.snapshotTimer = interval(1000 * 15);
+    this.snapshotTimer.takeUntil(this.killInterval$)
+      .subscribe(() => {
+        this.snapshot();
+      });
   }
 
   ngOnDestroy() {
+    this.disableAutomaticSnapshotting$.next(false);
+    this.disableAutomaticSnapshotting$.unsubscribe();
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
@@ -83,6 +111,7 @@ export class SnapshotService implements OnDestroy {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
       this.startSnapshotChain();
       this.fetchPrices();
+      this.killInterval$.next();
     }
   }
 

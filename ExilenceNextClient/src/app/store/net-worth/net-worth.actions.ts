@@ -7,6 +7,7 @@ import { ExternalPrice } from '../../shared/interfaces/external-price.interface'
 import { ExternalPrices } from '../../shared/interfaces/external-prices.interface';
 import { Snapshot } from '../../shared/interfaces/snapshot.interface';
 import { TabSelection } from '../../shared/interfaces/tab-selection.interface';
+import { NetWorthSettings } from '../../shared/interfaces/net-worth-settings.interface';
 
 export enum NetWorthActionTypes {
   LoadStateFromStorage = '[NetWorth] Load State From Storage',
@@ -31,7 +32,8 @@ export enum NetWorthActionTypes {
   ResetFetchedTabsCount = '[NetWorth] Reset Fetched Tabs Count',
   CreateSnapshot = '[NetWorth] Create Snapshot',
   CreateSnapshotSuccess = '[NetWorth] Create Snapshot Success',
-  CreateSnapshotFail = '[NetWorth] Create Snapshot Fail'
+  CreateSnapshotFail = '[NetWorth] Create Snapshot Fail',
+  UpdateSettings = '[NetWorth] Update Settings',
 }
 
 export class LoadStateFromStorage implements Action {
@@ -54,6 +56,13 @@ export class OverrideState implements Action {
 
   constructor(public payload: { state: NetWorthState }) { }
 }
+
+export class UpdateSettings implements Action {
+  readonly type = NetWorthActionTypes.UpdateSettings;
+
+  constructor(public payload: { settings: NetWorthSettings }) { }
+}
+
 export class FetchTabsForSnapshot implements Action {
   readonly type = NetWorthActionTypes.FetchTabsForSnapshot;
 
@@ -162,4 +171,5 @@ export type NetWorthActions =
   FetchTabsForSnapshot | FetchTabsForSnapshotSuccess | FetchTabsForSnapshotFail |
   FetchPrices | FetchPricesSuccess | FetchPricesFail |
   UpdateTabSelection | IncrementFetchedTabsCount | ResetFetchedTabsCount |
-  CreateSnapshot | CreateSnapshotSuccess | CreateSnapshotFail;
+  CreateSnapshot | CreateSnapshotSuccess | CreateSnapshotFail |
+  UpdateSettings;

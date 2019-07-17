@@ -152,6 +152,15 @@ export function reducer(
       };
     }
 
+    case NetWorthActionTypes.UpdateSettings: {
+      return {
+        ...state,
+        settings: {
+          ...action.payload.settings
+        }
+      };
+    }
+
     case NetWorthActionTypes.FetchTabsForSnapshot: {
       return {
         ...state,

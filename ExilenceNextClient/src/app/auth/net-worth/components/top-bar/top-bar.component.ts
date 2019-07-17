@@ -14,6 +14,7 @@ import { NetWorthStatus } from '../../../../shared/interfaces/net-worth-status.i
 import { Store } from '@ngrx/store';
 import { SnapshotService } from '../../providers/snapshot.service';
 import { Snapshot } from '../../../../shared/interfaces/snapshot.interface';
+import { NetWorthSettings } from '../../../../shared/interfaces/net-worth-settings.interface';
 
 @Component({
   selector: 'app-top-bar',
@@ -24,6 +25,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   @Input() stashtabList$: Observable<Tab[]>;
+  @Input() netWorthSettings$: Observable<NetWorthSettings>;
   @Input() selectedTabs$: Observable<TabSelection[]>;
   @Input() playerList$: Observable<any[]>;
   @Input() moduleIndex$: Observable<number>;

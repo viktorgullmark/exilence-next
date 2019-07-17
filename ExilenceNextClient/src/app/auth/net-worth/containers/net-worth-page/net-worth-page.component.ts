@@ -25,6 +25,7 @@ import {
   selectSelectedTabsValue,
   selectLastSnapshotByLeague,
   getNetWorthState,
+  selectNetWorthSettings,
 } from '../../../../store/net-worth/net-worth.selectors';
 import { ItemPricingService } from '../../providers/item-pricing.service';
 import { SnapshotService } from '../../providers/snapshot.service';
@@ -37,6 +38,7 @@ import { NetWorthItemTableComponent } from '../../components/net-worth-item-tabl
 import { TableItem } from '../../../../shared/interfaces/table-item.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, ofType } from '@ngrx/effects';
+import { NetWorthSettings } from '../../../../shared/interfaces/net-worth-settings.interface';
 
 @Component({
   selector: 'app-net-worth-page',
@@ -59,6 +61,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   public selectedTabsValue$: Observable<number>;
   public lastSnapshot$: Observable<Snapshot>;
   public selectedTabsWithItems$: Observable<Tab[]>;
+  public netWorthSettings$: Observable<NetWorthSettings>;
 
   private snapshots: Snapshot[] = [];
   private selectedCompactTabs: CompactTab[];
@@ -99,6 +102,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
       this.lastSnapshot$ = this.netWorthStore.select(selectLastSnapshotByLeague(league)).takeUntil(this.destroy$);
     });
 
+    this.netWorthSettings$ = this.netWorthStore.select(selectNetWorthSettings).takeUntil(this.destroy$);
     this.moduleIndex$ = this.appStore.select(selectApplicationSessionModuleIndex).takeUntil(this.destroy$);
 
     this.snapshots$.takeUntil(this.destroy$).subscribe((snapshots: Snapshot[]) => {
@@ -123,7 +127,6 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
         netWorthActions.NetWorthActionTypes.LoadStateFromStorageSuccess)).mergeMap(() =>
           this.netWorthStore.select(getNetWorthState)
           .pipe(distinctUntilChanged(), skip(1)).takeUntil(this.destroy$)).subscribe((state: NetWorthState) => {
-            console.log('persist nw state');
             this.storageMap.set('netWorthState', state).takeUntil(this.destroy$).subscribe();
           });
   }
