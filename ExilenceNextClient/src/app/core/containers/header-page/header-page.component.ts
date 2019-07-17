@@ -82,7 +82,7 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
 
   clear() {
     this.storageMap.clear().subscribe(() => {
-      this.electronService.ipcRenderer.send('relaunch');
+      this.router.navigate(['/login']);
     });
   }
 

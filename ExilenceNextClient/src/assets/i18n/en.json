@@ -3,6 +3,7 @@
     "TITLE": "Exilence Next"
   },
   "ACCOUNT": {
+    "NAME": "Account name",
     "TITLE": "Account information",
     "DESC": "Enter your account information here",
     "LOGOUT": "Logout",
