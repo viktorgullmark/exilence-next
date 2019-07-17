@@ -24,7 +24,6 @@ import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.
 @Injectable()
 export class SnapshotService implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
-  disableAutomaticSnapshotting$: Subject<boolean> = new Subject<boolean>();
   private killInterval$: Subject<void> = new Subject<void>();
 
   private netWorthSettings: NetWorthSettings;
@@ -35,7 +34,7 @@ export class SnapshotService implements OnDestroy {
   private tabs: Tab[];
   private session$: Observable<ApplicationSession>;
   private session: ApplicationSession;
-  private snapshotTimer: Observable<number> = interval(1000 * 15);
+  private snapshotTimer: Observable<number>;
 
   constructor(
     private netWorthStore: Store<NetWorthState>,
@@ -60,10 +59,9 @@ export class SnapshotService implements OnDestroy {
     this.netWorthSettings$.takeUntil(this.destroy$).subscribe((settings: NetWorthSettings) => {
       this.netWorthSettings = settings;
       if (settings.automaticSnapshotting) {
-        this.disableAutomaticSnapshotting$.next(false);
         this.startSnapshotTimer();
       } else {
-        this.disableAutomaticSnapshotting$.next(true);
+        this.killInterval$.next();
       }
     });
 
@@ -89,8 +87,6 @@ export class SnapshotService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.disableAutomaticSnapshotting$.next(false);
-    this.disableAutomaticSnapshotting$.unsubscribe();
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
