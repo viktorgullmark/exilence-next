@@ -51,8 +51,16 @@
         </mat-select>
       </mat-form-field> -->
       <div class="btn-container ml--15">
-        <span class="last-snapshot-timestamp mr--15" *ngIf="(lastSnapshot$ | async)">{{'NETWORTH.LAST_SNAPSHOT_LABEL_PREFIX' | translate}} {{getFromNow((lastSnapshot$ | async))}}</span>
-        <button mat-raised-button color="primary" [disabled]="(status$ | async).snapshotting || (netWorthSettings$ | async).automaticSnapshotting"
+        <div class="snapshot-timestamp-labels">
+          <span class="next-snapshot-timestamp mr--15"
+            *ngIf="(netWorthSettings$ | async).automaticSnapshotting && snapshotService.snapshotCountdown > 0">{{snapshotService.snapshotCountdown}}
+            {{'NETWORTH.NEXT_SNAPSHOT_LABEL_SUFFIX' | translate}}</span><br />
+          <span class="last-snapshot-timestamp mr--15"
+            *ngIf="(lastSnapshot$ | async)">{{'NETWORTH.LAST_SNAPSHOT_LABEL_PREFIX' | translate}}
+            {{getFromNow((lastSnapshot$ | async))}}</span>
+        </div>
+        <button mat-raised-button color="primary"
+          [disabled]="(status$ | async).snapshotting || (netWorthSettings$ | async).automaticSnapshotting"
           (click)="doSnapshot()">{{'ACTIONS.SNAPSHOT' | translate}}</button>
       </div>
     </div>

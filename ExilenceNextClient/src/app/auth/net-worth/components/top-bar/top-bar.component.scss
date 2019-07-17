@@ -32,11 +32,15 @@
     align-items: center;
   }
 
-  .last-snapshot-timestamp {
+  .snapshot-timestamp-labels {
     font-size: 12px;
+    line-height: 18px;
     min-width: 200px;
     text-align: right;
     color: $secondary-font-color;
+    .last-snapshot-timestamp {
+      color: $success-color;
+    }
   }
 
   .networth-wrapper {
@@ -49,7 +53,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       transform-origin: 0 0;
-      font-size: 0.720rem;
+      font-size: 0.72rem;
       color: rgba(255, 255, 255, 0.7);
     }
 

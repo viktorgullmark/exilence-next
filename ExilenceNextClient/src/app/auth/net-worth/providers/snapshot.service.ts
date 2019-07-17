@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, interval } from 'rxjs';
+import { Observable, Subject, interval, timer } from 'rxjs';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/skipUntil';
@@ -18,14 +18,13 @@ import { selectApplicationSession, selectApplicationSessionLeague } from '../../
 import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
 import { selectNetWorthStatus, selectTabsByLeague, selectNetWorthSettings } from '../../../store/net-worth/net-worth.selectors';
-import { first, exhaust, last, } from 'rxjs/operators';
+import { first, exhaust, last, map, take, } from 'rxjs/operators';
 import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.interface';
 
 @Injectable()
 export class SnapshotService implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
   private killInterval$: Subject<void> = new Subject<void>();
-
   private netWorthSettings: NetWorthSettings;
   private netWorthSettings$: Observable<NetWorthSettings>;
   private netWorthStatus$: Observable<NetWorthStatus>;
@@ -35,6 +34,8 @@ export class SnapshotService implements OnDestroy {
   private session$: Observable<ApplicationSession>;
   private session: ApplicationSession;
   private snapshotTimer: Observable<number>;
+
+  public snapshotCountdown: number;
 
   constructor(
     private netWorthStore: Store<NetWorthState>,
@@ -79,10 +80,17 @@ export class SnapshotService implements OnDestroy {
   }
 
   startSnapshotTimer() {
-    this.snapshotTimer = interval(1000 * 15);
+    const countdownStart = 15;
+    this.snapshotTimer = timer(1000, 1000).pipe(map(i => countdownStart - i), take(countdownStart + 1));
+
     this.snapshotTimer.takeUntil(this.killInterval$)
-      .subscribe(() => {
-        this.snapshot();
+      .subscribe((counter) => {
+        if (counter === 0) {
+          this.snapshot();
+        }
+        setTimeout(() => {
+          this.snapshotCountdown = counter;
+        });
       });
   }
 

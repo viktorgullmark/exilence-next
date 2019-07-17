@@ -69,6 +69,7 @@
   "NETWORTH": {
     "NO_STASHTABS": "No stashtabs fetched",
     "LAST_SNAPSHOT_LABEL_PREFIX": "Updated",
+    "NEXT_SNAPSHOT_LABEL_SUFFIX": "seconds to next snapshot",
     "CURRENT_TOTAL": "Total value",
     "CURRENT_SELECTED": "Selected value",
     "CURRENT_GAIN": "Gain per hour",
