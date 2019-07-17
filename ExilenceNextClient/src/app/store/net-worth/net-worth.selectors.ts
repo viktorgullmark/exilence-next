@@ -10,6 +10,10 @@ export const selectNetWorthSettings = createSelector(getNetWorthState,
     (state: NetWorthState) => state.settings
 );
 
+export const selectNetWorthSettingAutomaticSnapshotting = createSelector(selectNetWorthSettings,
+    settings => settings.automaticSnapshotting
+);
+
 export const selectNetWorthSelectedTabs = createSelector(getNetWorthState,
     (state: NetWorthState) => state.settings.selectedTabs
 );

@@ -17,7 +17,7 @@ import { ApplicationActionTypes } from '../../../store/application/application.a
 import { selectApplicationSession, selectApplicationSessionLeague } from '../../../store/application/application.selectors';
 import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
 import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
-import { selectNetWorthStatus, selectTabsByLeague, selectNetWorthSettings } from '../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthStatus, selectTabsByLeague, selectNetWorthSettings, selectNetWorthSettingAutomaticSnapshotting } from '../../../store/net-worth/net-worth.selectors';
 import { first, exhaust, last, map, take, } from 'rxjs/operators';
 import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.interface';
 
@@ -25,8 +25,8 @@ import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.
 export class SnapshotService implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
   private killInterval$: Subject<void> = new Subject<void>();
-  private netWorthSettings: NetWorthSettings;
-  private netWorthSettings$: Observable<NetWorthSettings>;
+  private automaticSnapshotting: boolean;
+  private netWorthSettingAutomaticSnapshotting$: Observable<boolean>;
   private netWorthStatus$: Observable<NetWorthStatus>;
   private netWorthStatus: NetWorthStatus;
   private tabs$: Observable<Tab[]>;
@@ -35,7 +35,7 @@ export class SnapshotService implements OnDestroy {
   private session: ApplicationSession;
   private snapshotTimer: Observable<number>;
 
-  public snapshotCountdown: number;
+  public snapshotCountdown = -1;
 
   constructor(
     private netWorthStore: Store<NetWorthState>,
@@ -46,26 +46,25 @@ export class SnapshotService implements OnDestroy {
     this.actions$.pipe(
       ofType(netWorthActions.NetWorthActionTypes.CreateSnapshotSuccess,
         netWorthActions.NetWorthActionTypes.CreateSnapshotFail)).subscribe(() => {
-          if (this.netWorthSettings.automaticSnapshotting) {
+          if (this.automaticSnapshotting) {
             this.startSnapshotTimer();
           }
         });
 
-    this.netWorthSettings$ = this.netWorthStore.select(selectNetWorthSettings).takeUntil(this.destroy$);
+    this.netWorthSettingAutomaticSnapshotting$ = this.netWorthStore
+    .select(selectNetWorthSettingAutomaticSnapshotting).takeUntil(this.destroy$);
     this.netWorthStatus$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
     this.netWorthStatus$.takeUntil(this.destroy$).subscribe((status: NetWorthStatus) => {
       this.netWorthStatus = status;
     });
 
-    this.netWorthSettings$.takeUntil(this.destroy$).subscribe((settings: NetWorthSettings) => {
-      this.netWorthSettings = settings;
-      if (this.snapshotCountdown === undefined) {
-        if (settings.automaticSnapshotting) {
-          this.startSnapshotTimer();
-        } else {
-          this.snapshotCountdown = -1;
-          this.killInterval$.next();
-        }
+    this.netWorthSettingAutomaticSnapshotting$.takeUntil(this.destroy$).subscribe((setting: boolean) => {
+      this.automaticSnapshotting = setting;
+      if (setting) {
+        this.startSnapshotTimer();
+      } else {
+        this.snapshotCountdown = -1;
+        this.killInterval$.next();
       }
     });
 
