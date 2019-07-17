@@ -60,7 +60,7 @@
             {{getFromNow((lastSnapshot$ | async))}}</span>
         </div>
         <button mat-raised-button color="primary"
-          [disabled]="(status$ | async).snapshotting || (netWorthSettings$ | async).automaticSnapshotting"
+          [disabled]="(status$ | async).snapshotting"
           (click)="doSnapshot()">{{'ACTIONS.SNAPSHOT' | translate}}</button>
       </div>
     </div>

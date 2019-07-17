@@ -80,7 +80,7 @@ export class SnapshotService implements OnDestroy {
   }
 
   startSnapshotTimer() {
-    const countdownStart = 15;
+    const countdownStart = 30;
     this.snapshotTimer = timer(1000, 1000).pipe(map(i => countdownStart - i), take(countdownStart + 1));
 
     this.snapshotTimer.takeUntil(this.killInterval$)
