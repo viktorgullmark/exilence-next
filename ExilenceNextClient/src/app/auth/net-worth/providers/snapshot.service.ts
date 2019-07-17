@@ -86,12 +86,12 @@ export class SnapshotService implements OnDestroy {
 
     this.snapshotTimer.takeUntil(this.killInterval$)
       .subscribe((counter) => {
-        if (counter === 0) {
-          this.snapshot();
-        }
         setTimeout(() => {
           this.snapshotCountdown = counter;
         });
+        if (counter === 0) {
+          this.snapshot();
+        }
       });
   }
 
@@ -114,6 +114,7 @@ export class SnapshotService implements OnDestroy {
 
   snapshot() {
     if (!this.netWorthStatus.snapshotting && this.session.validated) {
+      this.snapshotCountdown = -1;
       this.startSnapshotChain();
       this.fetchPrices();
       this.killInterval$.next();
