@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="toolbar-content-container mr--15">
-      <a (click)="clear()">
+      <a (click)="clear()" [ngClass]="{ 'disabled': (status$ | async).snapshotting }">
         {{ 'SESSION.CLEAR' | translate}} </a>
     </div>
     <div class="toolbar-content-container mr--15">

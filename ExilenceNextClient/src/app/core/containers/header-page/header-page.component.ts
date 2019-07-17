@@ -81,9 +81,11 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    this.storageMap.clear().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
+    if (!this.snapshotting) {
+      this.storageMap.clear().subscribe(() => {
+        this.router.navigate(['/login']);
+      });
+    }
   }
 
 
