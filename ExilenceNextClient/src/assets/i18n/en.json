@@ -3,10 +3,16 @@
     "TITLE": "Exilence Next"
   },
   "ACCOUNT": {
-    "LOGOUT": "Logout"
+    "TITLE": "Account information",
+    "DESC": "Enter your account information here",
+    "LOGOUT": "Logout",
+    "SESSIONID": "Session ID"
   },
   "ACTIONS": {
-    "SNAPSHOT": "Take snapshot"
+    "SNAPSHOT": "Take snapshot",
+    "VALIDATE": "Validate",
+    "CONTINUE": "Next",
+    "BACK": "Previous"
   },
   "SESSION": {
     "CLEAR": "Clear storage"
@@ -67,6 +73,8 @@
     "SESSION_VALID_DESC": "Session was validated, your account credentials are correct"
   },
   "LEAGUE": {
+    "TITLE": "League selection",
+    "DESC": "Select preferred leagues",
     "SELECT_LEAGUE": "Select league",
     "SELECT_TRADELEAGUE": "Select price league"
   },
