@@ -134,7 +134,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedLeague$.mergeMap((league) => {
+    this.selectedLeague$.takeUntil(this.destroy$).mergeMap((league) => {
       return this.snapshots$.takeUntil(this.destroy$).mergeMap((snapshots: Snapshot[]) => {
         this.snapshots = snapshots;
         if (this.selectedCompactTabs !== undefined) {
