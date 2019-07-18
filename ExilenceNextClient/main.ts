@@ -2,6 +2,10 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as os from 'os';
+import * as Sentry from '@sentry/electron';
+import { AppConfig } from './src/environments/environment';
+
+Sentry.init({ dsn: AppConfig.sentryDsn });
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -9,7 +13,6 @@ const ipcMain = require('electron').ipcMain;
 serve = args.some(val => val === '--serve');
 
 ipcMain.on('relaunch', () => {
-  app.quit();
   app.relaunch();
 });
 
@@ -59,7 +62,6 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
-
 }
 
 try {
@@ -88,5 +90,5 @@ try {
 
 } catch (e) {
   // Catch Error
-  // throw e;
+  throw e;
 }
