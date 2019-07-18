@@ -95,7 +95,6 @@
     "@ngrx/store": "^8.0.1",
     "@ngrx/store-devtools": "^8.0.1",
     "@ngx-pwa/local-storage": "^8.0.2",
-    "@sentry/electron": "^0.17.1",
     "@swimlane/ngx-charts": "^12.0.1",
     "export-to-csv": "^0.2.1",
     "fast-json-patch": "^2.1.0",

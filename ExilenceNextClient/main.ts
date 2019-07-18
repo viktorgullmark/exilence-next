@@ -2,10 +2,6 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as os from 'os';
-import * as Sentry from '@sentry/electron';
-import { AppConfig } from './src/environments/environment';
-
-Sentry.init({ dsn: AppConfig.sentryDsn });
 
 let win, serve;
 const args = process.argv.slice(1);
