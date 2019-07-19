@@ -2,6 +2,9 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as os from 'os';
+import * as Sentry from '@sentry/electron';
+
+Sentry.init({ dsn: 'https://81deb5bd2814402f9efd7db4cfd84fd2@sentry.io/1507995' });
 
 let win, serve;
 const args = process.argv.slice(1);
