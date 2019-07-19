@@ -15,10 +15,12 @@ export function reducer(
         ...state,
         ...action.payload.state,
         status: {
+          ...state.status,
           ...action.payload.state.status,
           snapshotting: false
         },
         stash: {
+          ...state.stash,
           ...action.payload.state.stash,
           tabCount: 0,
           tabCountFetched: 0
