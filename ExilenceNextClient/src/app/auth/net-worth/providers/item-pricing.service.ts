@@ -45,13 +45,15 @@ export class ItemPricingService {
 
         this.prices = combinedPrices;
 
-        tabs.forEach((tab: Tab) => {
-            tab.items.map((item: PricedItem) => {
-                return this.priceItem(item);
-            });
-        });
+        const valuedTabs = [...tabs.map((tab: Tab) => {
+            const tabItems = [...tab.items.map((item: PricedItem) => {
+                return this.priceItem({...item});
+            })];
+            const updatedTab = { items: tabItems } as Tab;
+            return {...tab, ...updatedTab};
+        })];
 
-        return of(tabs);
+        return of(valuedTabs);
     }
 
     priceItem(item: PricedItem): PricedItem {
@@ -114,7 +116,7 @@ export class ItemPricingService {
             }
         }
 
-        return PriceHelper.mapPriceToItem(item, price);
+        return { ...item, ...price };
     }
 
     priceCheck(expression: Predicate<ExternalPrice>) {

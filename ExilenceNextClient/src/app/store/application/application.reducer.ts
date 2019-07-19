@@ -15,6 +15,7 @@ export function reducer(
         ...state,
         ...action.payload.state,
         session: {
+          ...state.session,
           ...action.payload.state.session,
           loading: false,
           moduleIndex: 0
@@ -53,7 +54,10 @@ export function reducer(
     case ApplicationActionTypes.SetSession: {
       return {
         ...state,
-        session: action.payload.session
+        session: {
+          ...state.session,
+          ...action.payload.session
+        }
       };
     }
 

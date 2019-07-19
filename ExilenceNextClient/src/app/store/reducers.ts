@@ -5,6 +5,7 @@ import { AppState } from '../app.states';
 import * as notificationReducer from './notification/notification.reducer';
 import * as applicationReducer from './application/application.reducer';
 import * as netWorthReducer from './net-worth/net-worth.reducer';
+import { storeFreeze } from 'ngrx-store-freeze';
 
 export const reducers: ActionReducerMap<AppState> = {
   notificationsState: notificationReducer.reducer,
@@ -21,5 +22,5 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 }
 
 export const metaReducers: MetaReducer<AppState>[] = !AppConfig.production
-  ? []
+  ? [storeFreeze]
   : [];

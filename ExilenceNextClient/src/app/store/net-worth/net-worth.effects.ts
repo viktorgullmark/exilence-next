@@ -210,8 +210,11 @@ export class NetWorthEffects {
           map(results => {
             return new netWorthActions.FetchItemsForSnapshotSuccess({ tabs: results });
           }),
-          catchError(() => of(new netWorthActions.FetchItemsForSnapshotFail(
-            { title: 'ERROR.FETCH_ITEMS_FAIL_TITLE', message: 'ERROR.FETCH_ITEMS_FAIL_DESC' })))
+          catchError((e) => {
+            debugger;
+            return of(new netWorthActions.FetchItemsForSnapshotFail({ title: 'ERROR.FETCH_ITEMS_FAIL_TITLE', message: 'ERROR.FETCH_ITEMS_FAIL_DESC' }))
+          }
+          )
         ))
   )
   );

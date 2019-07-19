@@ -15,10 +15,9 @@ export function reducer(
 ): NotificationsState {
   switch (action.type) {
     case NotificationActionTypes.AddNotification: {
-      action.payload.notification.id = Guid.create().toString();
-      action.payload.notification.timestamp = moment();
-      action.payload.notification.read = false;
-      return fromAdapter.adapter.addOne(action.payload.notification, state);
+      const notification = { id: Guid.create().toString(), timestamp: moment(), read: false };
+      const merged = { ...action.payload.notification, ...notification };
+      return fromAdapter.adapter.addOne(merged, state);
     }
 
     case NotificationActionTypes.DeleteNotification: {

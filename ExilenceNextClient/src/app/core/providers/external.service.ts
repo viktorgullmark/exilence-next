@@ -58,30 +58,31 @@ export class ExternalService {
     return forkJoin(((AppConfig.production ? tabs : tabs.slice(0, 15)).map((tab: Tab) => {
       return this.getStashTab(account, league, tab.i).pipe(map((stash: Stash) => {
         this.netWorthStore.dispatch(new netWorthActions.IncrementFetchedTabsCount());
-        tab.league = league;
-        tab.items = stash.items.map((item: Item) => {
-          return {
-            id: item.id,
-            name: ItemHelper.getItemName(item.typeLine, item.name),
-            typeLine: item.typeLine,
-            frameType: item.frameType,
-            calculated: 0,
-            elder: item.elder,
-            shaper: item.shaper,
-            icon: item.icon,
-            ilvl: item.ilvl,
-            tier: item.properties !== null && item.properties !== undefined ? ItemHelper.getMapTier(item.properties) : 0,
-            corrupted: item.corrupted || false,
-            links: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getLinks(item.sockets.map(t => t.group)) : 0,
-            sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
-            quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
-            level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
-            stackSize: item.stackSize || 1,
-            totalStacksize: item.maxStackSize || 1,
-            variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods) : ''
-          } as PricedItem;
-        });
-        return tab;
+        const tabData = {
+          league: league, items: stash.items.map((item: Item) => {
+            return {
+              id: item.id,
+              name: ItemHelper.getItemName(item.typeLine, item.name),
+              typeLine: item.typeLine,
+              frameType: item.frameType,
+              calculated: 0,
+              elder: item.elder,
+              shaper: item.shaper,
+              icon: item.icon,
+              ilvl: item.ilvl,
+              tier: item.properties !== null && item.properties !== undefined ? ItemHelper.getMapTier(item.properties) : 0,
+              corrupted: item.corrupted || false,
+              links: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getLinks(item.sockets.map(t => t.group)) : 0,
+              sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
+              quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
+              level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
+              stackSize: item.stackSize || 1,
+              totalStacksize: item.maxStackSize || 1,
+              variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods) : ''
+            } as PricedItem;
+          })
+        } as Tab;
+        return { ...tab, ...tabData };
       }));
     })));
   }

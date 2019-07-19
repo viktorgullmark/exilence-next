@@ -211,6 +211,7 @@ export class NetWorthPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('destroyed networthapge');
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
