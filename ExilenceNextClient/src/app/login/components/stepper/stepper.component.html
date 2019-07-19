@@ -16,7 +16,7 @@
         </mat-progress-bar>
       </div>
       <div class="btn-grp pull--right">
-        <button mat-raised-button color="primary" [attr.disabled]="!accountFormGroup.valid"
+        <button mat-raised-button color="primary" [disabled]="!accountFormGroup.valid"
           (click)="doValidate(accountName.value, sessionId.value)">{{'ACTIONS.VALIDATE' | translate}}</button>
       </div>
     </form>
@@ -38,7 +38,7 @@
       </mat-form-field>
       <div class="btn-grp pull--right">
         <button mat-raised-button class="btn-back" matStepperPrevious>{{'ACTIONS.BACK' | translate}}</button>
-        <button mat-raised-button color="primary" [attr.disabled]="!leagueFormGroup.valid || !(validated$ | async)" (click)="doLogin()">{{'ACTIONS.CONTINUE' | translate}}</button>
+        <button mat-raised-button color="primary" [disabled]="!leagueFormGroup.valid || !(validated$ | async)" (click)="doLogin()">{{'ACTIONS.CONTINUE' | translate}}</button>
       </div>
       <div class="my--15" *ngIf="loading$ | async">
         <mat-progress-bar color="primary" mode="indeterminate">

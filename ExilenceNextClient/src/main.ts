@@ -11,6 +11,10 @@ if (AppConfig.production) {
   enableProdMode();
 }
 
+if (window) {
+  window.console.warn = function () { };
+}
+
 platformBrowserDynamic()
   .bootstrapModule(AppModule, {
     preserveWhitespaces: false
