@@ -22,5 +22,5 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 }
 
 export const metaReducers: MetaReducer<AppState>[] = !AppConfig.production
-  ? [storeFreeze]
+  ? []
   : [];
