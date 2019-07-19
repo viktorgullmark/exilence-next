@@ -16,6 +16,7 @@ import { selectAllNewErrorNotifications } from '../../../store/notification/noti
 import { NetWorthState } from '../../../app.states.js';
 import { selectNetWorthStatus } from '../../../store/net-worth/net-worth.selectors.js';
 import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface.js';
+import { SnapshotService } from '../../../auth/net-worth/providers/snapshot.service.js';
 
 @Component({
   selector: 'app-header-page',
@@ -43,7 +44,7 @@ export class HeaderPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private notificationStore: Store<Notification>,
     private storageMap: StorageMap,
-    private netWorthStore: Store<NetWorthState>,
+    private netWorthStore: Store<NetWorthState>
   ) {
     this.newNotifications$ = this.notificationStore.select(selectAllNewErrorNotifications).takeUntil(this.destroy$);
     this.status$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);

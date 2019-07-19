@@ -4,9 +4,10 @@ import { NetWorthState } from '../../../app.states';
 import { Store } from '@ngrx/store';
 import * as netWorthActions from './../../../store/net-worth/net-worth.actions';
 import { Observable, Subject } from 'rxjs';
-import { selectNetWorthSettings } from '../../../store/net-worth/net-worth.selectors';
+import { selectNetWorthSettings, selectNetWorthStatus } from '../../../store/net-worth/net-worth.selectors';
 import { NetWorthSettings } from '../../../shared/interfaces/net-worth-settings.interface';
 import { StorageService } from '../../providers/storage.service';
+import { NetWorthStatus } from '../../../shared/interfaces/net-worth-status.interface';
 
 @Component({
     selector: 'app-settings-bottom-sheet-content',
@@ -16,6 +17,7 @@ import { StorageService } from '../../providers/storage.service';
 export class SettingsBottomSheetContentComponent implements OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
+    public status$: Observable<NetWorthStatus>;
     public netWorthSettings: NetWorthSettings;
     public selectedIndex = 0;
     constructor(
@@ -26,6 +28,8 @@ export class SettingsBottomSheetContentComponent implements OnDestroy {
         this.netWorthStore.select(selectNetWorthSettings).subscribe((settings: NetWorthSettings) => {
             this.netWorthSettings = settings;
         });
+
+        this.status$ = this.netWorthStore.select(selectNetWorthStatus).takeUntil(this.destroy$);
     }
     openLink(event: MouseEvent): void {
         this._bottomSheetRef.dismiss();

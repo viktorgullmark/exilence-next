@@ -21,7 +21,7 @@
             <div class="setting-tab-content">
                 <div class="setting-inner-content" *ngIf="netWorthSettings">
                     <div class="setting">
-                        <mat-slide-toggle [disabled]="!storageService.netWorthLoaded" color="primary" [(checked)]="netWorthSettings.automaticSnapshotting" (change)="toggleAutomaticSnapshotting($event)">
+                        <mat-slide-toggle [disabled]="!storageService.netWorthLoaded || (status$ | async).snapshotting" color="primary" [(checked)]="netWorthSettings.automaticSnapshotting" (change)="toggleAutomaticSnapshotting($event)">
                             {{'SETTINGS.TOGGLE_AUTOMATIC_SNAPSHOTS' | translate }}
                         </mat-slide-toggle>
                     </div>

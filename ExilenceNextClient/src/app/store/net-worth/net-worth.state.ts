@@ -7,7 +7,7 @@ export const initialState: NetWorthState = {
     },
     settings: {
         selectedTabs: [],
-        automaticSnapshotting: true
+        automaticSnapshotting: false
     },
     stash: {
         tabs: [],
