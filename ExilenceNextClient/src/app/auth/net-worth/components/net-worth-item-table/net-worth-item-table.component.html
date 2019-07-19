@@ -6,7 +6,7 @@
             </mat-form-field>
         </div>
         <div class="export-btn-container">
-            <button mat-raised-button color="primary" (click)="export()" type="button" [attr.disabled]="dataSource == undefined || dataSource.filteredData.length == 0">{{'EXPORT.BUTTON_TITLE' | translate }}</button>
+            <button mat-raised-button color="primary" (click)="export()" type="button" [disabled]="dataSource == undefined || dataSource.filteredData.length == 0">{{'EXPORT.BUTTON_TITLE' | translate }}</button>
         </div>
     </div>
     <div class="net-worth-table-container">
