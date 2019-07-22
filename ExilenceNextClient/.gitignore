@@ -39,6 +39,7 @@ npm-debug.log
 testem.log
 /typings
 package-lock.json
+README.temp.md
 
 # e2e
 /e2e/*.js
