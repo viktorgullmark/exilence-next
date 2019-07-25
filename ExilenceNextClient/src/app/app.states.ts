@@ -4,8 +4,8 @@ import { NetWorthSettings } from './shared/interfaces/net-worth-settings.interfa
 import { NetWorthStatus } from './shared/interfaces/net-worth-status.interface';
 import { Notification } from './shared/interfaces/notification.interface';
 import { ApplicationSession } from './shared/interfaces/application-session.interface';
-import { PricedItem } from './shared/interfaces/priced-item.interface';
-import { Tab } from './shared/interfaces/stash.interface';
+// import { PricedItem } from './shared/interfaces/priced-item.interface';
+// import { Tab } from './shared/interfaces/stash.interface';
 import { NetWorthStash } from './shared/interfaces/net-worth-stash.interface';
 import { ExternalPrices } from './shared/interfaces/external-prices.interface';
 import { NetWorthHistory } from './shared/interfaces/net-worth-history.interface';

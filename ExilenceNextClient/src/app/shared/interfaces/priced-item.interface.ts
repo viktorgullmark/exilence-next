@@ -1,4 +1,4 @@
-import { ExternalPrice } from './external-price.interface';
+// import { ExternalPrice } from './external-price.interface';
 
 export interface PricedItem {
     id: string;
@@ -24,5 +24,5 @@ export interface PricedItem {
     sockets: number;
     variant: string;
     tier: number;
+    retrievedAt: Date;
 }
-

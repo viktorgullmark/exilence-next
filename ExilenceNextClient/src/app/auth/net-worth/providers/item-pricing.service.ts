@@ -1,17 +1,18 @@
+import * as moment from 'moment';
 import { Injectable, Predicate } from '@angular/core';
+import { of, zip } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
-
-import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
-import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
 import { Store } from '@ngrx/store';
+
+import * as netWorthActions from '../../../store/net-worth/net-worth.actions';
+import { NetWorthActionTypes } from '../../../store/net-worth/net-worth.actions';
 import { NetWorthState } from '../../../app.states';
 import { ExternalPrices } from '../../../shared/interfaces/external-prices.interface';
 import { Tab } from '../../../shared/interfaces/stash.interface';
-import { of, zip } from 'rxjs';
-import { Item } from '../../../shared/interfaces/item.interface';
+// import { Item } from '../../../shared/interfaces/item.interface';
 import { PricedItem } from '../../../shared/interfaces/priced-item.interface';
 import { ExternalPrice } from '../../../shared/interfaces/external-price.interface';
-import { PriceHelper } from '../../../shared/helpers/price.helper';
+// import { PriceHelper } from '../../../shared/helpers/price.helper';
 
 @Injectable()
 export class ItemPricingService {
@@ -22,7 +23,6 @@ export class ItemPricingService {
         private actions$: Actions,
         private netWorthStore: Store<NetWorthState>
     ) {
-
         zip(
             this.actions$.pipe(ofType(NetWorthActionTypes.FetchPricesSuccess)),
             this.actions$.pipe(ofType(NetWorthActionTypes.FetchItemsForSnapshotSuccess)))
@@ -47,7 +47,7 @@ export class ItemPricingService {
 
         const valuedTabs = [...tabs.map((tab: Tab) => {
             const tabItems = [...tab.items.map((item: PricedItem) => {
-                return this.priceItem({...item});
+                return this.priceItem(item);
             })];
             const updatedTab = { items: tabItems } as Tab;
             return {...tab, ...updatedTab};
@@ -58,6 +58,7 @@ export class ItemPricingService {
 
     priceItem(item: PricedItem): PricedItem {
 
+        const retrievedAt = moment(new Date()).toDate();
         let price: ExternalPrice;
 
         if (item.name === 'Chaos Orb') {
@@ -116,7 +117,7 @@ export class ItemPricingService {
             }
         }
 
-        return { ...item, ...price };
+        return { ...item, ...price, retrievedAt };
     }
 
     priceCheck(expression: Predicate<ExternalPrice>) {

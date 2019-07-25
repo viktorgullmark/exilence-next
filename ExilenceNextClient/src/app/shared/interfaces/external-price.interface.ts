@@ -21,4 +21,3 @@ export interface ExternalPrice {
     icon?: string;
     tier?: number;
 }
-
