@@ -1,6 +1,6 @@
 import { ExternalPrice } from './external-price.interface';
 
-export interface ExternalPrices {
+export interface ExternalPricesCombined {
     poeNinja: ExternalPrice[];
     poeWatch: ExternalPrice[];
 }

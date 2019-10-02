@@ -12,6 +12,7 @@ import { ItemHelper } from '../helpers/item.helper';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
+const apiUrl = 'https://api.pathofexile.com';
 
 export const externalService = {
     getStashTab,
@@ -74,7 +75,7 @@ function getItemsForTabs(tabs: Tab[], account: string, league: string) {
 function getLeagues(type: string = 'main', compact: number = 1): Observable<AxiosResponse<League[]>> {
     const parameters = `?type=${type}&compact=${compact}`;
     return rateLimiter.limit(
-        from(axios.get<League[]>('https://api.pathofexile.com/leagues' + parameters)));
+        from(axios.get<League[]>(apiUrl + '/leagues' + parameters)));
 }
 
 function getCharacters(account: string): Observable<AxiosResponse<Character[]>> {

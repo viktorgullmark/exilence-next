@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import useFormInput from '../../helpers/custom-hooks';
+import useFormInput from '../../hooks/custom-hooks';
 import { userService } from '../../services/user.service';
 import { withSubscription } from '../with-subscription/WithSubscription';
 import LoginForm from './LoginForm';
@@ -12,8 +12,8 @@ const destroy$: Subject<boolean> = new Subject<boolean>();
 
 const LoginFormContainer: React.FC = () => {
 
-  const username = useFormInput('');
-  const password = useFormInput('');
+  const accountName = useFormInput('');
+  const sessionId = useFormInput('');
 
   const [, dispatch] = useStateValue();
   const history = useHistory();
@@ -23,7 +23,7 @@ const LoginFormContainer: React.FC = () => {
       event.preventDefault();
     }
 
-    userService.login(username.value, password.value).pipe(takeUntil(destroy$))
+    userService.login(accountName.value, sessionId.value).pipe(takeUntil(destroy$))
       .subscribe((user: any) => {
         dispatch({
           type: 'login',
@@ -34,7 +34,7 @@ const LoginFormContainer: React.FC = () => {
   }
 
   return (
-    <LoginForm handleLogin={(event: any) => handleLogin(event)} username={username} password={password}></LoginForm>
+    <LoginForm handleLogin={(event: any) => handleLogin(event)} accountName={accountName} sessionId={sessionId}></LoginForm>
   );
 }
 

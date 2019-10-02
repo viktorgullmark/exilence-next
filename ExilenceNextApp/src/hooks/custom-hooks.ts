@@ -6,4 +6,4 @@ export default function useFormInput (initialValue: any) {
         setValue(event.target.value);
     };
     return { value, onChange: handleChange };
-};
+}

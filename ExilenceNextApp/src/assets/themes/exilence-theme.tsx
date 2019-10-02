@@ -6,12 +6,13 @@ export default function exilenceTheme() {
         palette: {
             primary: {
                 light: '#fff',
-                main: 'rgb(23, 105, 170)',
+                main: '#e91e63',
                 dark: '#000'
              },
              secondary: {
                main: '#f44336',
-             }
+             },
+             type: 'dark'
         } as Palette
     } as ThemeOptions);
 }

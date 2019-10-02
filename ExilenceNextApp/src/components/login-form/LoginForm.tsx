@@ -8,8 +8,8 @@ import React from 'react';
 
 interface LoginFormProps {
   handleLogin: Function;
-  password: any;
-  username: any;
+  sessionId: any;
+  accountName: any;
 }
 
 const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
@@ -33,21 +33,21 @@ const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
                 spacing={3}>
                 <Grid item xs={12}>
                   <TextField
-                    id="user-name"
-                    label="Username"
+                    id="account-name"
+                    label="Account name"
                     className="full-width"
                     margin="normal"
-                    {...props.username}
+                    {...props.accountName}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    id="password"
+                    id="session-id"
                     type="password"
-                    label="Password"
+                    label="Session Id"
                     className="full-width"
                     margin="normal"
-                    {...props.password}
+                    {...props.sessionId}
                   />
                 </Grid>
                 <Grid item xs={12}>

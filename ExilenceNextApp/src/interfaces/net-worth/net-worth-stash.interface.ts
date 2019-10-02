@@ -1,4 +1,4 @@
-import { Tab } from './stash.interface';
+import { Tab } from '../stash.interface';
 
 export interface NetWorthStash {
     tabs: Array<Tab>;
