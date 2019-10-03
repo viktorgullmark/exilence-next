@@ -6,9 +6,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         'html, body': {
             height: "100%"
         },
-        'body': {
-            padding: theme.spacing(2)
-        },
         '#root': {
             height: "100%"
         },

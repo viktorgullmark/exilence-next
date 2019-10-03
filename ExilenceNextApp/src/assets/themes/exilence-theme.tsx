@@ -6,8 +6,7 @@ export default function exilenceTheme() {
         palette: {
             primary: {
                 light: '#fff',
-                main: '#e91e63',
-                dark: '#000'
+                main: '#e91e63'
              },
              secondary: {
                main: '#f44336',
