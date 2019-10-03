@@ -5,12 +5,12 @@ import { takeUntil } from 'rxjs/operators';
 import useFormInput from '../../hooks/custom-hooks';
 import { userService } from '../../services/user.service';
 import { withSubscription } from '../with-subscription/WithSubscription';
-import LoginForm from './LoginForm';
+import LoginStepper from './LoginStepper';
 import { useStateValue } from '../../state';
 
 const destroy$: Subject<boolean> = new Subject<boolean>();
 
-const LoginFormContainer: React.FC = () => {
+const LoginStepperContainer: React.FC = () => {
 
   const accountName = useFormInput('');
   const sessionId = useFormInput('');
@@ -34,8 +34,8 @@ const LoginFormContainer: React.FC = () => {
   }
 
   return (
-    <LoginForm handleLogin={(event: any) => handleLogin(event)} accountName={accountName} sessionId={sessionId}></LoginForm>
+    <LoginStepper handleLogin={(event: any) => handleLogin(event)} accountName={accountName} sessionId={sessionId}></LoginStepper>
   );
 }
 
-export default withSubscription(LoginFormContainer, destroy$);
+export default withSubscription(LoginStepperContainer, destroy$);

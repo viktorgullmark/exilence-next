@@ -7,10 +7,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 
-import { LoginStepConnector } from '../login-step/LoginStepConnector';
-import { LoginStepIcons } from '../login-step/LoginStepIcons';
+import { LoginStepConnector } from './login-step/LoginStepConnector';
+import { LoginStepIcons } from './login-step/LoginStepIcons';
 
-interface LoginFormProps {
+interface LoginStepperProps {
   handleLogin: Function;
   sessionId: any;
   accountName: any;
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   }
 });
 
-const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
+const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => {
   const [activeStep, setActiveStep] = React.useState(1);
   const steps = getSteps();
   const classes = useStyles();
@@ -60,7 +60,7 @@ const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
       direction="row"
       justify="center"
       alignItems="center">
-      <Grid item sm={9} md={6} lg={6}>
+      <Grid item sm={9} md={7} lg={6}>
         <Paper className="paper">
           <Box p={2}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<LoginStepConnector />}>
@@ -83,7 +83,7 @@ const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
               ) : (
                   <div>
                     <div className={classes.stepContent}>
-                      <Typography>{getStepContent(activeStep)}</Typography>
+                      {getStepContent(activeStep)}
                     </div>
                     <div>
                       <Button disabled={activeStep === 0} onClick={handleBack}>
@@ -107,4 +107,4 @@ const LoginForm: React.FC<LoginFormProps> = (props: LoginFormProps) => {
   );
 }
 
-export default LoginForm;
+export default LoginStepper;

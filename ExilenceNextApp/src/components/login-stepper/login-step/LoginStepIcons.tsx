@@ -6,7 +6,7 @@ import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import clsx from 'clsx';
 import React from 'react';
 
-const useColorlibStepIconStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles((theme: Theme) => {
     const gradient = `linear-gradient( 136deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 50%, ${theme.palette.primary.dark} 100%)`;
     return ({
         root: {
@@ -33,13 +33,13 @@ const useColorlibStepIconStyles = makeStyles((theme: Theme) => {
 });
 
 export function LoginStepIcons(props: StepIconProps) {
-    const classes = useColorlibStepIconStyles();
+    const classes = useStyles();
     const { active, completed } = props;
 
     const icons: { [index: string]: React.ReactElement } = {
         1: <VerifiedUser />,
-        2: <PersonIcon />,
-        3: <SettingsIcon />
+        2: <SettingsIcon />,
+        3: <PersonIcon />
     };
 
     return (

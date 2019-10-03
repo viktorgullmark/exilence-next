@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import LoginFormContainer from '../../components/login-form/LoginFormContainer';
+import LoginFormContainer from '../../components/login-stepper/LoginStepperContainer';
 import Image from '../../assets/img/legion-bg.jpg';
 
 const useStyles = makeStyles(theme => ({
