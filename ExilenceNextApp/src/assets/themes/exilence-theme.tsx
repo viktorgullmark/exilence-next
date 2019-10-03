@@ -21,7 +21,7 @@ export default function exilenceTheme() {
                 main: '#e91e63'
              },
              secondary: {
-               main: '#f44336',
+               main: '#000',
              },
              type: 'dark'
         } as Palette
