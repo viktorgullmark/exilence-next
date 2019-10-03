@@ -21,7 +21,6 @@ const useStyles = makeStyles({
   }
 });
 
-
 const Header: React.FC = () => {
 
   const classes = useStyles();
@@ -37,11 +36,11 @@ const Header: React.FC = () => {
           justify="flex-end"
           alignItems="flex-end"
         >
-          <Grid item className={classes.noDrag}>
+          {/* <Grid item className={classes.noDrag}>
             <Button color="inherit" size="small">
               Login
               </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Toolbar>
     </AppBar>

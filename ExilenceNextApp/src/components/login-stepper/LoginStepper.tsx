@@ -9,6 +9,7 @@ import React from 'react';
 
 import { LoginStepConnector } from './login-step/LoginStepConnector';
 import { LoginStepIcons } from './login-step/LoginStepIcons';
+import clsx from 'clsx';
 
 interface LoginStepperProps {
   handleLogin: Function;
@@ -34,6 +35,10 @@ function getStepContent(step: number) {
 }
 
 const useStyles = makeStyles({
+  stepperContainer: {
+    'box-shadow': '0px 0px 32px 1px rgba(0,0,0,0.77)',
+    borderRadius: 0
+  },
   stepContent: {
     height: 200
   }
@@ -61,7 +66,7 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
       justify="center"
       alignItems="center">
       <Grid item sm={9} md={7} lg={6}>
-        <Paper className="paper">
+        <Paper className={clsx('paper', classes.stepperContainer)}>
           <Box p={2}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<LoginStepConnector />}>
               {steps.map(label => (
