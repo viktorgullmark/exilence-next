@@ -1,16 +1,19 @@
+
 const electron = require('electron');
+
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-
 const path = require('path');
 const url = require('url');
 
 let mainWindow;
 
 function createWindow() {
+  const size = electron.screen.getPrimaryDisplay().workAreaSize;
+
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: size.width,
+    height: size.height,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     frame: false,
   });
