@@ -10,27 +10,24 @@ import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Admin from './routes/admin/Admin';
 import { userService } from './services/user.service';
-import { StateProvider, initialState, reducer } from './state';
 
 const theme = responsiveFontSizes(exilenceTheme());
 
 const routing = (
-  <StateProvider initialState={initialState} reducer={reducer}>
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Route path="/" component={App} />
-        <Redirect from="/" to="/admin" />
-        <Route path="/login" component={Login} />
-        <Route path="/admin" render={() => (
-          !userService.isAuthorized() ? (
-            <Redirect to="/login" />
-          ) : (
-              <Admin />
-            )
-        )} />
-      </Router>
-    </ThemeProvider>
-  </StateProvider>
+  <ThemeProvider theme={theme}>
+    <Router>
+      <Route path="/" component={App} />
+      <Redirect from="/" to="/admin" />
+      <Route path="/login" component={Login} />
+      <Route path="/admin" render={() => (
+        !userService.isAuthorized() ? (
+          <Redirect to="/login" />
+        ) : (
+            <Admin />
+          )
+      )} />
+    </Router>
+  </ThemeProvider>
 )
 ReactDOM.render(routing, document.getElementById('root'))
 

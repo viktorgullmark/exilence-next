@@ -9,3 +9,5 @@ interface Window {
   process: any;
   require: any;
 }
+
+declare module 'use-global-storage';

@@ -51,6 +51,7 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
+    props.handleLogin();
   };
 
   const handleBack = () => {
