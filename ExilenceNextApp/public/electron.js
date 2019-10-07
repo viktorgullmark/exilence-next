@@ -1,10 +1,10 @@
-
 const electron = require('electron');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
+const isDev = require('electron-is-dev');
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -18,6 +18,11 @@ const installExtensions = async () => {
 
 let mainWindow;
 
+require('update-electron-app')({
+  repo: 'kitze/react-electron-example',
+  updateInterval: '1 hour'
+});
+
 function createWindow() {
   const size = electron.screen.getPrimaryDisplay().workAreaSize;
 
@@ -25,16 +30,13 @@ function createWindow() {
     width: size.width,
     height: size.height,
     webPreferences: { webSecurity: false, nodeIntegration: true },
-    frame: false,
+    frame: false
   });
 
   mainWindow.loadURL(
-    process.env.ELECTRON_START_URL ||
-      url.format({
-        pathname: path.join(__dirname, '/../public/index.html'),
-        protocol: 'file:',
-        slashes: true
-      })
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
   mainWindow.on('closed', () => {
@@ -43,7 +45,9 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
-  await installExtensions();
+  if (isDev) {
+    await installExtensions();
+  }
   createWindow();
 });
 

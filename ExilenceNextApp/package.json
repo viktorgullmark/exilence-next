@@ -15,7 +15,6 @@
     "@types/uuid": "^3.4.5",
     "axios": "^0.19.0",
     "clsx": "^1.0.4",
-    "electron": "^6.0.10",
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react": "^7.15.0",
@@ -30,20 +29,20 @@
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
     "typescript": "3.6.3",
+    "update-electron-app": "^1.5.0",
     "uuid": "^3.3.3"
   },
-  "main": "src/start.js",
+  "main": "public/electron.js",
+  "homepage": "./",
   "scripts": {
-    "start": "nf start -p 3000",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "electron": "electron .",
-    "electron-start": "node src/start-react",
     "react-start": "react-scripts start",
-    "pack": "build --dir",
-    "dist": "npm run build && build",
-    "postinstall": "install-app-deps"
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "npm run react-build && electron-builder --publish=never",
+    "build": "npm run react-build && npm run electron-build",
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -66,17 +65,21 @@
     "@types/react-router-dom": "^4.3.5",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
+    "concurrently": "^5.0.0",
+    "cross-env": "^6.0.3",
+    "electron": "^6.0.10",
     "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
-    "redux": "^4.0.4"
+    "redux": "^4.0.4",
+    "wait-on": "^3.3.0"
   },
   "build": {
     "appId": "com.exilence.exilence-next-app",
-    "win": {
-      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
-    },
+    "files": [
+      "build/**/*"
+    ],
     "directories": {
-      "buildResources": "public"
+      "buildResources": "src/assets/**/*"
     }
   }
 }

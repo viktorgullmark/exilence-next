@@ -18,6 +18,9 @@ const logger = createLogger({
   collapsed: true
 });
 
+// Skip redux logs in console during the tests
+console.log(process.env.NODE_ENV);
+
 middleware.push(logger);
 
 // Redux DevTools Configuration

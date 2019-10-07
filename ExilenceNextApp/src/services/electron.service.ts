@@ -10,11 +10,6 @@ export const electronService = {
     webFrame,
     remote,
     childProcess,
-    fs,
-    isElectron
+    fs
 };
-
-function isElectron() {
-    return window && window.process && window.process.type;
-}
 
