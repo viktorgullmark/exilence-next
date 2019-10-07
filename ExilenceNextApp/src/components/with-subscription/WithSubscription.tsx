@@ -7,6 +7,7 @@ export const withSubscription = <P extends object>(Component: React.FC<P>, destr
     useEffect(() => {
         return () => {
             destroy$.next(true);
+            destroy$.unsubscribe();
         }
     }, [])
     return <Component {...props as P} />;
