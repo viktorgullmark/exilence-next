@@ -1,7 +1,9 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { sessionReducer } from './session/reducers';
 import * as sessionActions from './session/actions';
+import sessionSagas from './session/sagas';
 import { createLogger } from 'redux-logger';
+import createSagaMiddleware from 'redux-saga'
 
 const rootReducer = combineReducers({
   session: sessionReducer
@@ -12,27 +14,30 @@ export type AppState = ReturnType<typeof rootReducer>;
 const enhancers = [];
 const middleware = [];
 
-// Logging Middleware
-const logger = createLogger({
-  level: 'info',
-  collapsed: true
-});
+// logging middleware, only use in dev
+if (process.env.NODE_ENV === 'development') {
+  const logger = createLogger({
+    level: 'info',
+    collapsed: true
+  });
 
-// Skip redux logs in console during the tests
-console.log(process.env.NODE_ENV);
+  middleware.push(logger);
+}
 
-middleware.push(logger);
+// create the saga middleware
+const sagaMiddleware = createSagaMiddleware();
 
-// Redux DevTools Configuration
+middleware.push(sagaMiddleware);
+
+// pass all actions to redux devtools
 const actionCreators = {
   ...sessionActions
 };
 
-// If Redux DevTools Extension is installed use it, otherwise use Redux compose
+// if redux devtools is installed and is in dev mode, use it
 /* eslint-disable no-underscore-dangle */
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && process.env.NODE_ENV === 'development'
   ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    // Options: http://extension.remotedev.io/docs/API/Arguments.html
     actionCreators
   })
   : compose;
@@ -47,6 +52,8 @@ export default function configureStore() {
     rootReducer,
     enhancer
   );
+
+  sagaMiddleware.run(sessionSagas);
 
   return store;
 }

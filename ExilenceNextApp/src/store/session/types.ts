@@ -5,10 +5,15 @@ export interface SessionState {
 }
 
 export const INIT_SESSION = "INIT_SESSION";
+export const INIT_SESSION_SUCCESS = "INIT_SESSION_SUCCESS";
 
-interface InitSessioneAction {
+interface InitSessionAction {
     type: typeof INIT_SESSION;
     payload: ApplicationSession;
 }
 
-export type SessionActionTypes = InitSessioneAction;
+interface InitSessionSuccessAction {
+    type: typeof INIT_SESSION_SUCCESS;
+}
+
+export type SessionActionTypes = InitSessionAction | InitSessionSuccessAction;
