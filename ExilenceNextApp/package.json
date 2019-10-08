@@ -19,6 +19,7 @@
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react": "^7.15.0",
+    "localforage": "^1.7.3",
     "moment": "^2.24.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",

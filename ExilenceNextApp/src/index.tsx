@@ -10,27 +10,30 @@ import Admin from './routes/admin/Admin';
 import Login from './routes/login/Login';
 import { userService } from './services/user.service';
 import configureStore from './store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const theme = responsiveFontSizes(exilenceTheme());
 
-const store = configureStore();
+const { store, persistor } = configureStore();
 
 const routing = (
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Route path="/" component={App} />
-        <Redirect from="/" to="/admin" />
-        <Route path="/login" component={Login} />
-        <Route path="/admin" render={() => (
-          !userService.isAuthorized() ? (
-            <Redirect to="/login" />
-          ) : (
-              <Admin />
-            )
-        )} />
-      </Router>
-    </ThemeProvider>
-  </Provider>
+    <PersistGate loading={null} persistor={persistor}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Route path="/" component={App} />
+          <Redirect from="/" to="/admin" />
+          <Route path="/login" component={Login} />
+          <Route path="/admin" render={() => (
+            !userService.isAuthorized() ? (
+              <Redirect to="/login" />
+            ) : (
+                <Admin />
+              )
+          )} />
+        </Router>
+      </ThemeProvider>
+    </PersistGate>
+  </Provider >
 )
 ReactDOM.render(routing, document.getElementById('root'))

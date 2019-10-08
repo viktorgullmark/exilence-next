@@ -4,6 +4,9 @@ import * as sessionActions from './session/actions';
 import sessionSagas from './session/sagas';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga'
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import localForage from 'localforage';
 
 const rootReducer = combineReducers({
   session: sessionReducer
@@ -48,12 +51,26 @@ const enhancer = composeEnhancers(...enhancers);
 
 export default function configureStore() {
 
+  localForage.config({
+    name: 'exilence-next-db',
+    driver: localForage.INDEXEDDB,
+  });
+
+  const persistConfig = {
+    key: 'root',
+    storage: localForage
+  }
+  
+  const persistedReducer = persistReducer(persistConfig, rootReducer)
+
   const store = createStore(
-    rootReducer,
+    persistedReducer,
     enhancer
   );
 
+  const persistor = persistStore(store);
+
   sagaMiddleware.run(sessionSagas);
 
-  return store;
+  return { store, persistor };
 }
