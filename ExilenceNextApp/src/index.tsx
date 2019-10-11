@@ -8,7 +8,6 @@ import exilenceTheme from './assets/themes/exilence-theme';
 import App from './core/app/App';
 import Admin from './routes/admin/Admin';
 import Login from './routes/login/Login';
-import { userService } from './services/user.service';
 import configureStore from './store';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -25,7 +24,8 @@ const routing = (
           <Redirect from="/" to="/admin" />
           <Route path="/login" component={Login} />
           <Route path="/admin" render={() => (
-            !userService.isAuthorized() ? (
+            // todo: implement proper auth check
+            false ? (
               <Redirect to="/login" />
             ) : (
                 <Admin />
