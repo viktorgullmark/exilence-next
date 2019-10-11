@@ -11,7 +11,7 @@ type Action = ActionType<typeof actions>;
 const initSessionEpic: Epic<Action, Action, AppState> = (action$, store) =>
   action$.pipe(
     filter(isActionOf(actions.initSessionAction)),
-    switchMap(action => {
+    switchMap((action: Action) => {
         // testing chain of actions
         return of(actions.initSessionSuccessAction())
       }
