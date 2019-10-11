@@ -1,18 +1,18 @@
-import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
-import { sessionReducer } from './session/reducers';
-import * as sessionActions from './session/actions';
-import sessionSagas from './session/sagas';
-import { createLogger } from 'redux-logger';
-import createSagaMiddleware from 'redux-saga'
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import localForage from 'localforage';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { createLogger } from 'redux-logger';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { persistReducer, persistStore } from 'redux-persist';
+import * as sessionActions from './session/actions';
+import sessionEpic from './session/epics';
+import { sessionReducer } from './session/reducers';
+import { ActionType } from 'typesafe-actions';
 
-const rootReducer = combineReducers({
+export const RootReducer = combineReducers({
   session: sessionReducer
 });
 
-export type AppState = ReturnType<typeof rootReducer>;
+export type AppState = ReturnType<typeof RootReducer>;
 
 const enhancers = [];
 const middleware = [];
@@ -27,13 +27,17 @@ if (process.env.NODE_ENV === 'development') {
   middleware.push(logger);
 }
 
-// create the saga middleware
-const sagaMiddleware = createSagaMiddleware();
+const epics = combineEpics(
+  ...sessionEpic,
+);
 
-middleware.push(sagaMiddleware);
+// create the epic middleware
+const epicMiddleware = createEpicMiddleware<ActionType<any>, ActionType<any>, AppState>();
+
+middleware.push(epicMiddleware);
 
 // pass all actions to redux devtools
-const actionCreators = {
+export const ActionCreators = {
   ...sessionActions
 };
 
@@ -41,7 +45,7 @@ const actionCreators = {
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && process.env.NODE_ENV === 'development'
   ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    actionCreators
+    ActionCreators
   })
   : compose;
 /* eslint-enable no-underscore-dangle */
@@ -60,8 +64,8 @@ export default function configureStore() {
     key: 'root',
     storage: localForage
   }
-  
-  const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+  const persistedReducer = persistReducer(persistConfig, RootReducer)
 
   const store = createStore(
     persistedReducer,
@@ -70,7 +74,9 @@ export default function configureStore() {
 
   const persistor = persistStore(store);
 
-  sagaMiddleware.run(sessionSagas);
+  epicMiddleware.run(epics);
 
   return { store, persistor };
 }
+
+
