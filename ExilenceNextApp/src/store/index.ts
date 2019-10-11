@@ -27,19 +27,19 @@ if (process.env.NODE_ENV === 'development') {
   middleware.push(logger);
 }
 
+// pass all actions to redux devtools
+export const ActionCreators = {
+  ...sessionActions
+};
+
 const epics = combineEpics(
   ...sessionEpic,
 );
 
 // create the epic middleware
-const epicMiddleware = createEpicMiddleware<ActionType<any>, ActionType<any>, AppState>();
+const epicMiddleware = createEpicMiddleware<ActionType<typeof ActionCreators>, ActionType<typeof ActionCreators>, AppState>();
 
 middleware.push(epicMiddleware);
-
-// pass all actions to redux devtools
-export const ActionCreators = {
-  ...sessionActions
-};
 
 // if redux devtools is installed and is in dev mode, use it
 /* eslint-disable no-underscore-dangle */
