@@ -86,6 +86,9 @@
     "files": [
       "build/**/*"
     ],
+    "extraFiles": [
+      "public/i18n/**/*"
+    ],
     "directories": {
       "buildResources": "src/assets/**/*"
     }

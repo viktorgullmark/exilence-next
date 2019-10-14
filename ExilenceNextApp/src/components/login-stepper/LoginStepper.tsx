@@ -10,6 +10,8 @@ import React from 'react';
 import { LoginStepConnector } from './login-step/LoginStepConnector';
 import { LoginStepIcons } from './login-step/LoginStepIcons';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { electronService } from '../../services/electron.service';
 
 interface LoginStepperProps {
   handleLogin: Function;
@@ -48,6 +50,7 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
   const [activeStep, setActiveStep] = React.useState(1);
   const steps = getSteps();
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -90,6 +93,7 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
                   <div>
                     <div className={classes.stepContent}>
                       {getStepContent(activeStep)}
+                      {t('hello')}
                     </div>
                     <div>
                       <Button disabled={activeStep === 0} onClick={handleBack}>
