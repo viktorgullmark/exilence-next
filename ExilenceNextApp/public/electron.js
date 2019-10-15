@@ -8,8 +8,8 @@ const isDev = require('electron-is-dev');
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
-  const forceDownload = true;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
+  const forceDownload = isDev;
+  const extensions = ['MOBX_DEVTOOLS', 'REACT_DEVELOPER_TOOLS']; 
 
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
