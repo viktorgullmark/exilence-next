@@ -2,20 +2,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 
 const useStyles = makeStyles(theme => ({
-    adminWrapper: {
+    netWorthWrapper: {
         height: "100%",
         display: "flex"
     }
 }));
 
-const Admin: React.FC = (props: any) => {
+const NetWorth: React.FC = (props: any) => {
     const classes = useStyles();
 
     return (
-        <div className={classes.adminWrapper}>
-           <h3>Admin area</h3>
+        <div className={classes.netWorthWrapper}>
+           <h3>Net worth area</h3>
         </div>
     );
 }
 
-export default Admin;
+export default NetWorth;
