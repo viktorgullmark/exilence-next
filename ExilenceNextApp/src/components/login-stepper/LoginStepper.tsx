@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-
+import { observer } from 'mobx-react'
 import { LoginStepConnector } from './login-step/LoginStepConnector';
 import { LoginStepIcons } from './login-step/LoginStepIcons';
 import clsx from 'clsx';
@@ -91,4 +91,4 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
   );
 }
 
-export default LoginStepper;
+export default observer(LoginStepper);

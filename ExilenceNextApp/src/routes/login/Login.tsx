@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import LoginFormContainer from '../../components/login-stepper/LoginStepperContainer';
 import Image from '../../assets/img/blight-bg.jpg';
+import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
     loginWrapper: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 
 const Login: React.FC = () => {
     const classes = useStyles();
-
+    console.log('INIT LOGIN');
     return (
         <div className={classes.loginWrapper}>
             <LoginFormContainer />
@@ -23,4 +24,5 @@ const Login: React.FC = () => {
     );
 }
 
-export default Login;
+export default observer(Login);
+

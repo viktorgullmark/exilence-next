@@ -9,7 +9,7 @@ const isDev = require('electron-is-dev');
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = isDev;
-  const extensions = ['MOBX_DEVTOOLS', 'REACT_DEVELOPER_TOOLS']; 
+  const extensions = ['REACT_DEVELOPER_TOOLS']; 
 
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))

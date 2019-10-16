@@ -8,8 +8,6 @@ const destroy$: Subject<boolean> = new Subject<boolean>();
 
 const HeaderContainer: React.FC = () => {
 
-  const history = useHistory();
-
   return (
     <Header></Header>
   );

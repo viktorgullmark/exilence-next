@@ -7,10 +7,14 @@ import { withSubscription } from '../with-subscription/WithSubscription';
 import LoginStepper from './LoginStepper';
 import { ApplicationSession } from './../../interfaces/application-session.interface';
 import { useTranslation } from 'react-i18next';
+import { observer, inject } from 'mobx-react';
+import { SessionStore } from './../../store/session/store';
 
-const destroy$: Subject<boolean> = new Subject<boolean>();
+interface LoginStepperProps {
+  sessionStore?: SessionStore
+}
 
-const LoginStepperContainer: React.FC = () => {
+const LoginStepperContainer: React.FC<LoginStepperProps> = ({ sessionStore }: LoginStepperProps) => {
   const { t } = useTranslation();
 
   const [activeStep, setActiveStep] = useState(1);
@@ -36,7 +40,7 @@ const LoginStepperContainer: React.FC = () => {
   }
 
   const handleLogin = () => {
-    // dispatch login action
+    sessionStore!.initSession({ account: 'test', sessionId: '123'});
   }
 
   const handleNext = () => {
@@ -66,4 +70,4 @@ const LoginStepperContainer: React.FC = () => {
   );
 }
 
-export default withSubscription(LoginStepperContainer, destroy$);
+export default inject('sessionStore')(observer(LoginStepperContainer));

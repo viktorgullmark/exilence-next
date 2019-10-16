@@ -1,4 +1,4 @@
-export interface ApplicationSessionDetails {
+export interface AccountDetails {
     account: string;
     sessionId: string;
 }
