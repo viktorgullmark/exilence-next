@@ -16,6 +16,7 @@ import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import { authService } from './services/auth.service';
 import { SessionStore } from './store/session/store';
+import { create } from 'mobx-persist';
 
 enableLogging();
 configureI18n();
@@ -27,9 +28,14 @@ localForage.config({
   driver: localForage.INDEXEDDB,
 });
 
-// todo: implement middleware to persist store with localforage
+const hydrate = create({
+  storage: localForage,
+  jsonify: true
+})
 
 const sessionStore = new SessionStore();
+
+hydrate('session', sessionStore);
 
 const app = (
   <React.Fragment>

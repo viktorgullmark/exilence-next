@@ -22,6 +22,7 @@
     "localforage": "^1.7.3",
     "mobx": "^5.14.0",
     "mobx-logger": "^0.7.1",
+    "mobx-persist": "^0.4.1",
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",
     "react": "^16.10.1",
