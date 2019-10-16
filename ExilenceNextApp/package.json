@@ -35,6 +35,7 @@
     "redux-persist": "^6.0.0",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
+    "tslib": "^1.10.0",
     "typesafe-actions": "^4.4.2",
     "typescript": "3.6.3",
     "update-electron-app": "^1.5.0",
