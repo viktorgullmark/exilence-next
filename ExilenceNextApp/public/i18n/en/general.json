@@ -1,3 +1,9 @@
 {
-  "hello": "world"
+  "action.finish": "Finish",
+  "action.next": "Next",
+  "action.reset": "Reset",
+  "action.back": "Back",
+  "title.enter_acc_info": "Enter account information",
+  "title.select_leagues": "Select your leagues",
+  "title.select_characters": "Select your characters"
 }
