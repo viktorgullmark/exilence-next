@@ -11,29 +11,17 @@ import { LoginStepConnector } from './login-step/LoginStepConnector';
 import { LoginStepIcons } from './login-step/LoginStepIcons';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { electronService } from '../../services/electron.service';
+import { FormInput } from '../../interfaces/form-input.interface';
 
 interface LoginStepperProps {
-  handleLogin: Function;
-  sessionId: any;
-  accountName: any;
-}
-
-function getSteps() {
-  return ['Enter account information', 'Select your league', 'Select your characters'];
-}
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return '';
-    case 1:
-      return '';
-    case 2:
-      return '';
-    default:
-      return '';
-  }
+  handleNext: Function;
+  handleBack: Function;
+  handleReset: Function;
+  getStepContent: Function;
+  steps: string[];
+  activeStep: number;
+  sessionId: FormInput;
+  accountName: FormInput;
 }
 
 const useStyles = makeStyles({
@@ -47,23 +35,10 @@ const useStyles = makeStyles({
 });
 
 const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => {
-  const [activeStep, setActiveStep] = React.useState(1);
-  const steps = getSteps();
+
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    props.handleLogin();
-  };
-
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
   return (
     <Grid container
       direction="row"
@@ -72,39 +47,38 @@ const LoginStepper: React.FC<LoginStepperProps> = (props: LoginStepperProps) => 
       <Grid item sm={9} md={7} lg={6}>
         <Paper className={clsx('paper', classes.stepperContainer)}>
           <Box p={2}>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<LoginStepConnector />}>
-              {steps.map(label => (
+            <Stepper alternativeLabel activeStep={props.activeStep} connector={<LoginStepConnector />}>
+              {props.steps.map((label: string) => (
                 <Step key={label}>
                   <StepLabel StepIconComponent={LoginStepIcons}>{label}</StepLabel>
                 </Step>
               ))}
             </Stepper>
             <div>
-              {activeStep === steps.length ? (
+              {props.activeStep === props.steps.length ? (
                 <div>
                   <Typography>
                     All steps completed - you&apos;re finished
                   </Typography>
-                  <Button onClick={handleReset}>
-                    Reset
+                  <Button onClick={() => props.handleReset()}>
+                    {t('action.reset')}
                   </Button>
                 </div>
               ) : (
                   <div>
                     <div className={classes.stepContent}>
-                      {getStepContent(activeStep)}
-                      {t('hello')}
+                      {props.getStepContent(props.activeStep)}
                     </div>
                     <div>
-                      <Button disabled={activeStep === 0} onClick={handleBack}>
-                        Back
+                      <Button disabled={props.activeStep === 0} onClick={() => props.handleBack()}>
+                        {t('action.back')}
                       </Button>
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleNext}
+                        onClick={() => props.handleNext()}
                       >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        {props.activeStep === props.steps.length - 1 ? t('action.finish') : t('action.next')}
                       </Button>
                     </div>
                   </div>
