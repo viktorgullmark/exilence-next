@@ -3,11 +3,11 @@ import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import localForage from 'localforage';
 import { enableLogging } from 'mobx-logger';
+import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
-
+import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import exilenceTheme from './assets/themes/exilence-theme';
 import HeaderContainer from './components/header/HeaderContainer';
 import GlobalStyles from './core/global-styles/GlobalStyles';
@@ -16,7 +16,6 @@ import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import { authService } from './services/auth.service';
 import { SessionStore } from './store/session/store';
-import { create } from 'mobx-persist';
 
 enableLogging();
 configureI18n();
@@ -46,7 +45,6 @@ const app = (
             <CssBaseline />
             <GlobalStyles />
             <HeaderContainer />
-
             <Route path="/net-worth" component={NetWorth} />
             <Route path="/login" component={Login} />
             <Route exact path="/" render={() => (

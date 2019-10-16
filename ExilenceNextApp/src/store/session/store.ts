@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx'
 import { AccountDetails } from './../../interfaces/account-details.interface';
-import { create, persist } from 'mobx-persist'
+import { persist } from 'mobx-persist'
 
 export class SessionStore {
     @persist('object') @observable accountDetails: AccountDetails = { account: '', sessionId: '' };
