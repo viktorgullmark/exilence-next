@@ -11,7 +11,6 @@
     "@types/node": "12.7.8",
     "@types/react": "16.9.4",
     "@types/react-dom": "16.9.1",
-    "@types/uuid": "^3.4.5",
     "axios": "^0.19.0",
     "clsx": "^1.0.4",
     "eslint": "^6.5.1",
@@ -35,8 +34,7 @@
     "rxjs-ratelimiter": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "3.6.3",
-    "update-electron-app": "^1.5.0",
-    "uuid": "^3.3.3"
+    "update-electron-app": "^1.5.0"
   },
   "main": "public/electron.js",
   "homepage": "./",
