@@ -15,7 +15,8 @@ import configureI18n from './i18n';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import { authService } from './services/auth.service';
-import { SessionStore } from './store/session/store';
+import { AccountStore } from './store/account/store';
+import { UiStateStore } from './store/ui-state/store';
 
 enableLogging();
 configureI18n();
@@ -32,14 +33,19 @@ const hydrate = create({
   jsonify: true
 })
 
-const sessionStore = new SessionStore();
+const accountStore = new AccountStore();
+const uiStateStore = new UiStateStore();
 
-hydrate('session', sessionStore);
+const stores = { accountStore, uiStateStore };
+
+hydrate('account', accountStore);
+
+// todo: hydrate ui-state when we have something to persist
 
 const app = (
   <React.Fragment>
     <ThemeProvider theme={theme}>
-      <Provider sessionStore={sessionStore}>
+      <Provider {...stores}>
         <Suspense fallback={null}>
           <Router>
             <CssBaseline />

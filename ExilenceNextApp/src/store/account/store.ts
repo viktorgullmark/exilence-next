@@ -1,8 +1,8 @@
 import { observable, action } from 'mobx'
-import { AccountDetails } from './../../interfaces/account-details.interface';
+import { AccountDetails } from '../../interfaces/account-details.interface';
 import { persist } from 'mobx-persist'
 
-export class SessionStore {
+export class AccountStore {
     @persist('object') @observable accountDetails: AccountDetails = { account: '', sessionId: '' };
     @observable state = "pending" // "pending" / "done" / "error"
 
@@ -23,5 +23,3 @@ export class SessionStore {
         this.state = "error"
     }
 }
-
-export const sessionStore = new SessionStore()

@@ -1,20 +1,15 @@
+import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router';
-import { Subject } from 'rxjs';
-
-import useFormInput from '../../hooks/useFormInput';
-import { withSubscription } from '../with-subscription/WithSubscription';
-import LoginStepper from './LoginStepper';
-import { ApplicationSession } from './../../interfaces/application-session.interface';
 import { useTranslation } from 'react-i18next';
-import { observer, inject } from 'mobx-react';
-import { SessionStore } from './../../store/session/store';
+import useFormInput from '../../hooks/useFormInput';
+import { AccountStore } from '../../store/account/store';
+import LoginStepper from './LoginStepper';
 
 interface LoginStepperProps {
-  sessionStore?: SessionStore
+  accountStore?: AccountStore
 }
 
-const LoginStepperContainer: React.FC<LoginStepperProps> = ({ sessionStore }: LoginStepperProps) => {
+const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: LoginStepperProps) => {
   const { t } = useTranslation();
 
   const [activeStep, setActiveStep] = useState(1);
@@ -40,7 +35,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ sessionStore }: Lo
   }
 
   const handleLogin = () => {
-    sessionStore!.initSession({ account: 'test', sessionId: '123'});
+    accountStore!.initSession({ account: 'test', sessionId: '123'});
   }
 
   const handleNext = () => {
@@ -70,4 +65,4 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ sessionStore }: Lo
   );
 }
 
-export default inject('sessionStore')(observer(LoginStepperContainer));
+export default inject('accountStore')(observer(LoginStepperContainer));
