@@ -9,29 +9,23 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node-dev --respawn --transpileOnly src/index.ts",
-    "start:production": "tsc && node dist/index.js"
+    "start": "ts-node-dev --respawn --transpileOnly src/server.ts",
+    "start:production": "tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.10.0",
-    "koa-bodyparser": "^4.2.1",
-    "koa-logger": "^3.2.1",
-    "koa-router": "^7.4.0"
+    "@marblejs/core": "2.1.0",
+    "@marblejs/middleware-body": "2.1.0",
+    "@marblejs/middleware-cors": "2.1.0",
+    "@marblejs/middleware-io": "2.1.0",
+    "@marblejs/middleware-jwt": "2.1.0",
+    "@marblejs/middleware-logger": "2.1.0",
+    "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1",
-    "@types/koa": "^2.0.50",
-    "@types/koa-bodyparser": "^4.3.0",
-    "@types/koa-logger": "^3.1.1",
-    "@types/koa-router": "^7.0.42",
     "@types/node": "^12.7.12",
-    "@typescript-eslint/eslint-plugin": "^2.4.0",
-    "@typescript-eslint/parser": "^2.4.0",
-    "eslint": "^6.5.1",
-    "eslint-plugin-node": "^10.0.0",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.0",
     "typescript": "^3.6.4"
