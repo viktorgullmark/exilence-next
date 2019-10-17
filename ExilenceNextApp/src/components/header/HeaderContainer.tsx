@@ -1,10 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router';
-import { Subject } from 'rxjs';
-import { withSubscription } from '../with-subscription/WithSubscription';
 import Header from './Header';
-
-const destroy$: Subject<boolean> = new Subject<boolean>();
 
 const HeaderContainer: React.FC = () => {
 
@@ -13,4 +8,4 @@ const HeaderContainer: React.FC = () => {
   );
 }
 
-export default withSubscription(HeaderContainer, destroy$);
+export default HeaderContainer;
