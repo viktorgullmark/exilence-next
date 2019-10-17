@@ -1,33 +1,33 @@
 {
-  "name": "exilence-next-backend",
-  "version": "1.0.0",
-  "type": "commonjs",
-  "engines": {
-    "node": ">=8.10.0"
-  },
-  "description": "",
-  "main": "src/index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "ts-node-dev --respawn --transpileOnly src/server.ts",
-    "start:production": "tsc && node dist/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@marblejs/core": "2.1.0",
-    "@marblejs/middleware-body": "2.1.0",
-    "@marblejs/middleware-cors": "2.1.0",
-    "@marblejs/middleware-io": "2.1.0",
-    "@marblejs/middleware-jwt": "2.1.0",
-    "@marblejs/middleware-logger": "2.1.0",
-    "rxjs": "^6.5.3"
-  },
-  "devDependencies": {
-    "@types/node": "^12.7.12",
-    "ts-node-dev": "^1.0.0-pre.43",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.4"
-  }
+   "name": "exilence-next-backend",
+   "version": "1.0.0",
+   "type": "commonjs",
+   "engines": {
+      "node": ">=8.10.0"
+   },
+   "description": "",
+   "main": "src/index.js",
+   "scripts": {
+      "build": "tsc",
+      "start": "ts-node-dev --respawn --transpileOnly src/server.ts",
+      "start:production": "tsc && node dist/server.js"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "dependencies": {
+      "@marblejs/core": "2.1.0",
+      "@marblejs/middleware-body": "2.1.0",
+      "@marblejs/middleware-logger": "2.1.0",
+      "mssql": "^4.0.4",
+      "reflect-metadata": "^0.1.10",
+      "rxjs": "^6.3.3",
+      "typeorm": "0.2.19"
+   },
+   "devDependencies": {
+      "ts-node-dev": "^1.0.0-pre.43",
+      "tslint": "^5.20.0",
+      "typescript": "3.3.3333",
+      "ts-node": "3.3.0"
+   }
 }
