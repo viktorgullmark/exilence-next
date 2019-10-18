@@ -20,14 +20,14 @@
       "@marblejs/middleware-body": "2.1.0",
       "@marblejs/middleware-logger": "2.1.0",
       "mssql": "^4.0.4",
-      "reflect-metadata": "^0.1.10",
       "rxjs": "^6.3.3",
       "typeorm": "0.2.19"
    },
    "devDependencies": {
+      "reflect-metadata": "^0.1.13",
+      "ts-node": "3.3.0",
       "ts-node-dev": "^1.0.0-pre.43",
       "tslint": "^5.20.0",
-      "typescript": "3.3.3333",
-      "ts-node": "3.3.0"
+      "typescript": "3.3.3333"
    }
 }
