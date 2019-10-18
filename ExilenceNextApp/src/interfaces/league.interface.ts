@@ -1,5 +1,4 @@
-export interface League {
+export interface ILeague {
     id: string;
     description: string;
-    event: boolean;
 }

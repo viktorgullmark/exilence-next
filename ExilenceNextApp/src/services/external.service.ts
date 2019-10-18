@@ -5,8 +5,8 @@ import RateLimiter from 'rxjs-ratelimiter';
 import { Stash, Tab } from '../interfaces/stash.interface';
 import { map } from 'rxjs/operators';
 import { PricedItem } from '../interfaces/priced-item.interface';
-import { League } from '../interfaces/league.interface';
-import { Character } from '../interfaces/character.interface';
+import { ILeague } from '../interfaces/league.interface';
+import { ICharacter } from '../interfaces/character.interface';
 import { Item } from '../interfaces/item.interface';
 import { ItemHelper } from '../helpers/item.helper';
 
@@ -72,16 +72,16 @@ function getItemsForTabs(tabs: Tab[], account: string, league: string) {
     })));
 }
 
-function getLeagues(type: string = 'main', compact: number = 1): Observable<AxiosResponse<League[]>> {
+function getLeagues(type: string = 'main', compact: number = 1): Observable<AxiosResponse<ILeague[]>> {
     const parameters = `?type=${type}&compact=${compact}`;
     return rateLimiter.limit(
-        from(axios.get<League[]>(apiUrl + '/leagues' + parameters)));
+        from(axios.get<ILeague[]>(apiUrl + '/leagues' + parameters)));
 }
 
-function getCharacters(account: string): Observable<AxiosResponse<Character[]>> {
+function getCharacters(account: string): Observable<AxiosResponse<ICharacter[]>> {
     const parameters = `?accountName=${account}`;
     return rateLimiter.limit(
-        from(axios.get<Character[]>(poeUrl + '/character-window/get-characters' + parameters)));
+        from(axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters' + parameters)));
 }
 
 /* #endregion */

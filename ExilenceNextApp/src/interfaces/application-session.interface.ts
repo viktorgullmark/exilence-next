@@ -1,4 +1,4 @@
-import { Character } from './character.interface';
+import { ICharacter } from './character.interface';
 
 export interface ApplicationSession {
     account: string;
@@ -10,5 +10,5 @@ export interface ApplicationSession {
     moduleIndex: number;
     characterLeagues: string[];
     tradeLeagues: string[];
-    characters: Character[];
+    characters: ICharacter[];
 }

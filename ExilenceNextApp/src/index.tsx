@@ -15,11 +15,14 @@ import configureI18n from './i18n';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import { authService } from './services/auth.service';
-import { AccountStore } from './store/account/store';
-import { UiStateStore } from './store/ui-state/store';
+import { AccountStore } from './store/accountStore';
+import { UiStateStore } from './store/uiStateStore';
+import { configure } from 'mobx';
 
 enableLogging();
 configureI18n();
+
+configure({ enforceActions: 'observed' })
 
 const theme = responsiveFontSizes(exilenceTheme());
 

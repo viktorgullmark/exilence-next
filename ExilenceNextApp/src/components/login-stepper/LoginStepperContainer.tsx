@@ -2,7 +2,7 @@ import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useFormInput from '../../hooks/useFormInput';
-import { AccountStore } from '../../store/account/store';
+import { AccountStore } from '../../store/accountStore';
 import LoginStepper from './LoginStepper';
 
 interface LoginStepperProps {
@@ -35,7 +35,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
   }
 
   const handleLogin = () => {
-    accountStore!.initSession({ account: 'test', sessionId: '123'});
+    accountStore!.initSession({ name: 'test', sessionId: '123'});
   }
 
   const handleNext = () => {

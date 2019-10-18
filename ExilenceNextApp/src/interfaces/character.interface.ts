@@ -1,4 +1,4 @@
-export interface Character {
+export interface ICharacter {
     name: string;
     league: string;
     classId: number;
