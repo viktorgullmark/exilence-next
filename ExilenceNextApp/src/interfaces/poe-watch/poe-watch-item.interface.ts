@@ -1,4 +1,4 @@
-export interface PoeWatchItem {
+export interface IPoeWatchItem {
     id: number;
     name: string;
     type: string;

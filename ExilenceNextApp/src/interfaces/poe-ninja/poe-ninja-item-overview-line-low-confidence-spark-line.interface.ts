@@ -1,4 +1,4 @@
-export interface PoeNinjaItemOverviewLineLowConfidenceSparkline {
+export interface IPoeNinjaItemOverviewLineLowConfidenceSparkline {
     data: number[];
     totalChange: number;
 }

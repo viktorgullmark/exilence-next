@@ -1,4 +1,4 @@
-export interface PoeNinjaCurrencyOverviewLinePayOrReceive {
+export interface IPoeNinjaCurrencyOverviewLinePayOrReceive {
     id: number;
     league_id: number;
     pay_currency_id: number;

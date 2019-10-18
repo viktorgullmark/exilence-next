@@ -1,4 +1,4 @@
-export interface Property {
+export interface IProperty {
     name: string;
     values: Array<Array<string>>;
     displayMode: number;

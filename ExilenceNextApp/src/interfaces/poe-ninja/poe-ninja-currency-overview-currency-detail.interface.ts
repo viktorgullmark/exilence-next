@@ -1,4 +1,4 @@
-export interface PoeNinjaCurrencyOverviewCurrencyDetail {
+export interface IPoeNinjaCurrencyOverviewCurrencyDetail {
     id: number;
     icon: string;
     name: string;

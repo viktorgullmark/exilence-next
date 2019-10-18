@@ -1,8 +1,8 @@
-import { Category } from './category.interface';
-import { Property } from './property.interface';
-import { Requirement } from './requirement.interface';
+import { ICategory } from './category.interface';
+import { IProperty } from './property.interface';
+import { IRequirement } from './requirement.interface';
 
-export interface SocketedItem {
+export interface ISocketedItem {
     id: string;
     verified: boolean;
     w: number;
@@ -13,15 +13,15 @@ export interface SocketedItem {
     typeLine: string;
     corrupted: boolean;
     lockedToCharacter: boolean;
-    category: Category;
-    requirements: Array<Requirement>;
-    nextLevelRequirements: Array<Requirement>;
+    category: ICategory;
+    requirements: Array<IRequirement>;
+    nextLevelRequirements: Array<IRequirement>;
     explicitMods: Array<string>;
     frameType: number;
     x: number;
     y: number;
-    properties: Array<Property>;
-    additionalProperties: Array<Property>;
+    properties: Array<IProperty>;
+    additionalProperties: Array<IProperty>;
     descrText: string;
     secDescrText: string;
     socket: number;

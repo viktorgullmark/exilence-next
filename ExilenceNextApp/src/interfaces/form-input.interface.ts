@@ -1,4 +1,4 @@
-export interface FormInput {
+export interface IFormInput {
     value: any;
     onChange: Function;
 }

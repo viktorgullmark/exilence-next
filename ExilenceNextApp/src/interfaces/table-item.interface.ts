@@ -1,7 +1,7 @@
-import { CompactTab } from "./stash.interface";
+import { ICompactTab } from "./stash.interface";
 
-export interface TableItem {
-    tabs: CompactTab[];
+export interface ITableItem {
+    tabs: ICompactTab[];
     name: string;
     frameType: number;
     calculated: number;

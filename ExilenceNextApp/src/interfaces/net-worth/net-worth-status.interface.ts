@@ -1,4 +1,4 @@
-export interface NetWorthStatus {
+export interface INetWorthStatus {
     snapshotting: boolean;
     lastSnapshot: Date;
 }

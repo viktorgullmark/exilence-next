@@ -1,4 +1,4 @@
-export interface PoeWatchCategoryGroup {
+export interface IPoeWatchCategoryGroup {
     id: number;
     name: string;
     display: string;

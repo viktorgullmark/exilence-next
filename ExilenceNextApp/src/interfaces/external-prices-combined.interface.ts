@@ -1,6 +1,6 @@
-import { ExternalPrice } from './external-price.interface';
+import { IExternalPrice } from './external-price.interface';
 
-export interface ExternalPricesCombined {
-    poeNinja: ExternalPrice[];
-    poeWatch: ExternalPrice[];
+export interface IExternalPricesCombined {
+    poeNinja: IExternalPrice[];
+    poeWatch: IExternalPrice[];
 }

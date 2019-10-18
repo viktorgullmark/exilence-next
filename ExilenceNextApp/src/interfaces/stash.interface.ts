@@ -1,7 +1,7 @@
 import { Item } from './item.interface';
 import { PricedItem } from './priced-item.interface';
 
-export interface Stash {
+export interface IStash {
     numTabs: number;
     tabs: Tab[];
     items: Item[];
@@ -9,7 +9,7 @@ export interface Stash {
     [x: string]: any;
 }
 
-export interface Tab {
+export interface ITab {
     n: string;
     i: number;
     id: string;
@@ -24,14 +24,14 @@ export interface Tab {
     items: PricedItem[];
 }
 
-export interface CompactTab {
+export interface ICompactTab {
     n: string;
     i: number;
     id: string;
     colour: Colour;
 }
 
-export interface Colour {
+export interface IColour {
     r: number;
     g: number;
     b: number;

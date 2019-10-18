@@ -1,6 +1,6 @@
-import { ExternalPrice } from './external-price.interface';
+import { IExternalPrice } from './external-price.interface';
 
-export interface PricedItem {
+export interface IPricedItem {
     id: string;
     name: string;
     typeLine: string;

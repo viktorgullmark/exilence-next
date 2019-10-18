@@ -1,4 +1,4 @@
-  export interface PoeNinjaItemOverviewLineExplicitModifier {
+  export interface IPoeNinjaItemOverviewLineExplicitModifier {
         text: string;
         optional: boolean;
     }

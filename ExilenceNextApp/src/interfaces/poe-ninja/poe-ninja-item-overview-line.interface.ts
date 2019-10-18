@@ -1,8 +1,8 @@
-import { PoeNinjaItemOverviewLineSparkline } from './poe-ninja-item-overview-line-spark-line.interface';
-import { PoeNinjaItemOverviewLineLowConfidenceSparkline } from './poe-ninja-item-overview-line-low-confidence-spark-line.interface';
-import { PoeNinjaItemOverviewLineExplicitModifier } from './poe-ninja-item-overview-line-explicit-modifier.interface';
+import { IPoeNinjaItemOverviewLineSparkline } from './poe-ninja-item-overview-line-spark-line.interface';
+import { IPoeNinjaItemOverviewLineLowConfidenceSparkline } from './poe-ninja-item-overview-line-low-confidence-spark-line.interface';
+import { IPoeNinjaItemOverviewLineExplicitModifier } from './poe-ninja-item-overview-line-explicit-modifier.interface';
 
-    export interface PoeNinjaItemOverviewLine {
+    export interface IPoeNinjaItemOverviewLine {
         id: number;
         name: string;
         icon: string;
@@ -15,10 +15,10 @@ import { PoeNinjaItemOverviewLineExplicitModifier } from './poe-ninja-item-overv
         artFilename?: any;
         links: number;
         itemClass: number;
-        sparkline: PoeNinjaItemOverviewLineSparkline;
-        lowConfidenceSparkline: PoeNinjaItemOverviewLineLowConfidenceSparkline;
+        sparkline: IPoeNinjaItemOverviewLineSparkline;
+        lowConfidenceSparkline: IPoeNinjaItemOverviewLineLowConfidenceSparkline;
         implicitModifiers: any[];
-        explicitModifiers: PoeNinjaItemOverviewLineExplicitModifier[];
+        explicitModifiers: IPoeNinjaItemOverviewLineExplicitModifier[];
         flavourText: string;
         corrupted: boolean;
         gemLevel: number;

@@ -1,7 +1,7 @@
-import { Tab } from '../stash.interface';
+import { ITab } from '../stash.interface';
 
-export interface NetWorthStash {
-    tabs: Array<Tab>;
+export interface INetWorthStash {
+    tabs: Array<ITab>;
     tabCount: number;
     tabCountFetched: number;
 }

@@ -1,4 +1,4 @@
-export interface NetWorthItem {
+export interface INetWorthItem {
     icon: string;
     value: number;
     valueMin: number;

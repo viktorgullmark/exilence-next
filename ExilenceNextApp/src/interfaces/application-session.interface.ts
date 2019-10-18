@@ -1,6 +1,6 @@
 import { ICharacter } from './character.interface';
 
-export interface ApplicationSession {
+export interface IApplicationSession {
     account: string;
     sessionId: string;
     league: string;

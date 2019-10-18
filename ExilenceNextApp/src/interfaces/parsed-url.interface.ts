@@ -1,4 +1,4 @@
-export interface ParsedUrl {
+export interface IParsedUrl {
   origin: string;
   host: string;
   hostname: string;

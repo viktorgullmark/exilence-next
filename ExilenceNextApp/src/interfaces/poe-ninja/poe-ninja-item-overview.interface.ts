@@ -1,5 +1,5 @@
-import { PoeNinjaItemOverviewLine } from './poe-ninja-item-overview-line.interface';
+import { IPoeNinjaItemOverviewLine } from './poe-ninja-item-overview-line.interface';
 
-export interface PoeNinjaItemOverview {
-    lines: PoeNinjaItemOverviewLine[];
+export interface IPoeNinjaItemOverview {
+    lines: IPoeNinjaItemOverviewLine[];
 }

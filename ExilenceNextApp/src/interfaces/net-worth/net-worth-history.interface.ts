@@ -1,5 +1,5 @@
-import { Snapshot } from '../snapshot.interface';
+import { ISnapshot } from '../snapshot.interface';
 
-export interface NetWorthHistory {
-    snapshots: Array<Snapshot>;
+export interface INetWorthHistory {
+    snapshots: Array<ISnapshot>;
 }

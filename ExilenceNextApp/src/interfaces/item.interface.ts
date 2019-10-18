@@ -1,9 +1,9 @@
-import { Property } from './property.interface';
-import { Requirement } from './requirement.interface';
-import { Socket } from './socket.interface';
-import { SocketedItem } from './socketed-item.interface';
+import { IProperty } from './property.interface';
+import { IRequirement } from './requirement.interface';
+import { ISocket } from './socket.interface';
+import { ISocketedItem } from './socketed-item.interface';
 
-export interface Item {
+export interface IItem {
     id: string;
     verified: boolean;
     w: number;
@@ -11,7 +11,7 @@ export interface Item {
     ilvl: number;
     icon: string;
     league: string;
-    sockets: Array<Socket>;
+    sockets: Array<ISocket>;
     name: string;
     shaper: boolean;
     elder: boolean;
@@ -21,7 +21,7 @@ export interface Item {
     identified: boolean;
     corrupted: boolean;
     lockedToCharacter: boolean;
-    requirements: Array<Requirement>;
+    requirements: Array<IRequirement>;
     implicitMods: Array<string>;
     explicitMods: Array<string>;
     fracturedMods: Array<string>;
@@ -29,8 +29,8 @@ export interface Item {
     x: number;
     y: number;
     inventoryId: string;
-    socketedItems: Array<SocketedItem>;
-    properties: Array<Property>;
+    socketedItems: Array<ISocketedItem>;
+    properties: Array<IProperty>;
     flavourText: Array<string>;
     craftedMods: Array<string>;
     enchantMods: Array<string>;

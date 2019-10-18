@@ -1,8 +1,8 @@
-import { PoeWatchCategoryGroup } from './poe-watch-category-group.interface';
+import { IPoeWatchCategoryGroup } from './poe-watch-category-group.interface';
 
-export interface PoeWatchCategory {
+export interface IPoeWatchCategory {
     id: number;
     name: string;
     display: string;
-    groups: PoeWatchCategoryGroup[];
+    groups: IPoeWatchCategoryGroup[];
 }

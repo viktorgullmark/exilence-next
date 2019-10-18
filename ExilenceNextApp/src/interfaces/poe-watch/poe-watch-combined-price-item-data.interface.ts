@@ -1,4 +1,4 @@
-export interface PoeWatchCombinedPriceItemData {
+export interface IPoeWatchCombinedPriceItemData {
     id: number;
     mean: number;
     median: number;

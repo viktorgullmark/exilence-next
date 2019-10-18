@@ -1,6 +1,6 @@
-import { TabSelection } from '../tab-selection.interface';
+import { ITabSelection } from '../tab-selection.interface';
 
-export interface NetWorthSettings {
-    selectedTabs: Array<TabSelection>;
+export interface INetWorthSettings {
+    selectedTabs: Array<ITabSelection>;
     automaticSnapshotting: boolean;
 }

@@ -1,4 +1,4 @@
-export interface ExternalPrice {
+export interface IExternalPrice {
     name?: string;
     calculated?: number;
     max?: number;
