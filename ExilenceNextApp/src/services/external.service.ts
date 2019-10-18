@@ -2,12 +2,12 @@
 import axios, { AxiosResponse } from 'axios';
 import { Observable, from, forkJoin } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
-import { Stash, Tab } from '../interfaces/stash.interface';
+import { IStash, ITab } from '../interfaces/stash.interface';
 import { map } from 'rxjs/operators';
-import { PricedItem } from '../interfaces/priced-item.interface';
+import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ILeague } from '../interfaces/league.interface';
 import { ICharacter } from '../interfaces/character.interface';
-import { Item } from '../interfaces/item.interface';
+import { IItem } from '../interfaces/item.interface';
 import { ItemHelper } from '../helpers/item.helper';
 
 const rateLimiter = new RateLimiter(5, 10000);
@@ -23,28 +23,28 @@ export const externalService = {
 };
 
 /* #region pathofexile.com */
-function getStashTab(account: string, league: string, index: number): Observable<AxiosResponse<Stash>> {
+function getStashTab(account: string, league: string, index: number): Observable<AxiosResponse<IStash>> {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return rateLimiter.limit(
-        from(axios.get<Stash>(poeUrl + '/character-window/get-stash-items' + parameters))
+        from(axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters))
     );
 }
 
-function getStashTabs(account: string, league: string): Observable<AxiosResponse<Stash>> {
+function getStashTabs(account: string, league: string): Observable<AxiosResponse<IStash>> {
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return rateLimiter.limit(
-        from(axios.get<Stash>(poeUrl + '/character-window/get-stash-items' + parameters))
+        from(axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters))
     );
 }
 
-function getItemsForTabs(tabs: Tab[], account: string, league: string) {
+function getItemsForTabs(tabs: ITab[], account: string, league: string) {
     // todo: reset fetched tabs count
     
-    return forkJoin(((tabs).map((tab: Tab) => {
-        return getStashTab(account, league, tab.i).pipe(map((stash: AxiosResponse<Stash>) => {
+    return forkJoin(((tabs).map((tab: ITab) => {
+        return getStashTab(account, league, tab.i).pipe(map((stash: AxiosResponse<IStash>) => {
             // todo: increment fetched tabs count
             const tabData = {
-                league: league, items: stash.data.items.map((item: Item) => {
+                league: league, items: stash.data.items.map((item: IItem) => {
                     return {
                         id: item.id,
                         name: ItemHelper.getItemName(item.typeLine, item.name),
@@ -64,9 +64,9 @@ function getItemsForTabs(tabs: Tab[], account: string, league: string) {
                         stackSize: item.stackSize || 1,
                         totalStacksize: item.maxStackSize || 1,
                         variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods) : ''
-                    } as PricedItem;
+                    } as IPricedItem;
                 })
-            } as Tab;
+            } as ITab;
             return { ...tab, ...tabData };
         }));
     })));

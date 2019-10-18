@@ -1,10 +1,10 @@
-import { Item } from './item.interface';
-import { PricedItem } from './priced-item.interface';
+import { IItem } from './item.interface';
+import { IPricedItem } from './priced-item.interface';
 
 export interface IStash {
     numTabs: number;
-    tabs: Tab[];
-    items: Item[];
+    tabs: ITab[];
+    items: IItem[];
     mapLayout: any;
     [x: string]: any;
 }
@@ -16,19 +16,19 @@ export interface ITab {
     type: string;
     hidden: boolean;
     selected: boolean;
-    colour: Colour;
+    colour: IColour;
     srcL: string;
     srcC: string;
     srcR: string;
     league: string;
-    items: PricedItem[];
+    items: IPricedItem[];
 }
 
 export interface ICompactTab {
     n: string;
     i: number;
     id: string;
-    colour: Colour;
+    colour: IColour;
 }
 
 export interface IColour {

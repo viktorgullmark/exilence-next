@@ -11,7 +11,7 @@ import { LoginStepConnector } from './login-step/LoginStepConnector';
 import { LoginStepIcons } from './login-step/LoginStepIcons';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { FormInput } from '../../interfaces/form-input.interface';
+import { IFormInput } from '../../interfaces/form-input.interface';
 
 interface LoginStepperProps {
   handleNext: Function;
@@ -20,8 +20,8 @@ interface LoginStepperProps {
   getStepContent: Function;
   steps: string[];
   activeStep: number;
-  sessionId: FormInput;
-  accountName: FormInput;
+  sessionId: IFormInput;
+  accountName: IFormInput;
 }
 
 const useStyles = makeStyles({

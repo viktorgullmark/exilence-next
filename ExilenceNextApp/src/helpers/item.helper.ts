@@ -1,5 +1,5 @@
-import { Property } from '../interfaces/property.interface';
-import { Socket } from '../interfaces/socket.interface';
+import { IProperty } from '../interfaces/property.interface';
+import { ISocket } from '../interfaces/socket.interface';
 
 export class ItemHelper {
     public static isDivinationCard(icon: string) {
@@ -18,19 +18,19 @@ export class ItemHelper {
         return greatestFreq;
     }
 
-    public static getQuality(props: Property[]) {
+    public static getQuality(props: IProperty[]) {
         const quality =
         props.find(t => t.name === 'Quality') ?
         props.find(t => t.name === 'Quality')!.values[0][0] : '0';
         return parseInt(quality, 10);
     }
 
-    public static getLevel(props: Property[]) {
+    public static getLevel(props: IProperty[]) {
         const levelStr = props.find(p => p.name === 'Level')!.values[0][0];
         return parseInt(levelStr, 10);
     }
 
-    public static getMapTier(properties: Property[]) {
+    public static getMapTier(properties: IProperty[]) {
         for (let i = 0; i < properties.length; i++) {
             const prop = properties[i];
             if (prop.name === 'Map Tier') {
@@ -48,7 +48,7 @@ export class ItemHelper {
         return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
     }
 
-    public static getItemVariant(sockets: Socket[], explicitMods: string[]): string {
+    public static getItemVariant(sockets: ISocket[], explicitMods: string[]): string {
         if (sockets === null ||sockets === undefined) {
             return '';
         }
