@@ -2,6 +2,10 @@
     "compilerOptions": {
         "module": "commonjs",
         "esModuleInterop": true,
+        "lib": [
+            "es5",
+            "es6"
+        ],
         "target": "es6",
         "noImplicitAny": true,
         "moduleResolution": "node",
@@ -12,7 +16,9 @@
             "*": [
                 "node_modules/*"
             ]
-        }
+        },
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     },
     "include": [
         "src/**/*"
