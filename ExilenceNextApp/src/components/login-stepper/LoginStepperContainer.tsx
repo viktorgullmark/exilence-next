@@ -1,9 +1,13 @@
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import useFormInput from '../../hooks/useFormInput';
 import { AccountStore } from '../../store/accountStore';
+import AccountValidationStep from './account-validation-step/AccountValidationStep';
 import LoginStepper from './LoginStepper';
+import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
+import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
 
 interface LoginStepperProps {
   accountStore?: AccountStore
@@ -24,11 +28,11 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return '';
+        return <AccountValidationStep />;
       case 1:
-        return '';
+        return <LeagueSelectionStep />;
       case 2:
-        return '';
+        return <CharacterSelectionStep />;
       default:
         return '';
     }

@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { observer } from 'mobx-react'
-import { LoginStepConnector } from './login-step/LoginStepConnector';
-import { LoginStepIcons } from './login-step/LoginStepIcons';
+import { LoginStepConnector } from './login-step-connector/LoginStepConnector';
+import { LoginStepIcons } from './login-step-icons/LoginStepIcons';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { IFormInput } from '../../interfaces/form-input.interface';
