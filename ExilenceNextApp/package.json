@@ -16,6 +16,7 @@
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react": "^7.15.0",
+    "formik": "^1.5.8",
     "i18next": "^17.2.0",
     "i18next-xhr-backend": "^3.2.0",
     "localforage": "^1.7.3",
@@ -34,7 +35,8 @@
     "rxjs-ratelimiter": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "3.6.3",
-    "update-electron-app": "^1.5.0"
+    "update-electron-app": "^1.5.0",
+    "yup": "^0.27.0"
   },
   "main": "public/electron.js",
   "homepage": "./",

@@ -10,4 +10,4 @@ declare var Window: {
   new(): Window;
 };
 
-declare module 'use-global-storage';
+declare module 'yup';
