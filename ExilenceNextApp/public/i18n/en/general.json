@@ -7,5 +7,7 @@
   "title.select_leagues": "Select your leagues",
   "title.select_characters": "Select your characters",
   "label.account_name": "Account name",
-  "label.session_id": "Session Id"
+  "label.session_id": "Session Id",
+  "label.select_main_league": "Select league",
+  "label.select_pricing_league": "Select pricing league"
 }

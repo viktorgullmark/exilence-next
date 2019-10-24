@@ -5,22 +5,30 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  FormHelperText
 } from '@material-ui/core';
-import { Formik } from 'formik';
+import { Formik, FormikActions } from 'formik';
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 import { AccountStore } from '../../../store/accountStore';
+import { League } from './../../../store/types/league';
 
 interface LeagueSelectionStepProps {
   accountStore?: AccountStore;
   handleBack: Function;
+  handleLeagueSubmit: Function;
   handleReset: Function;
   activeStep: number;
   styles: Record<string, string>;
+}
+
+interface LeagueFormValues {
+  league: string;
+  priceLeague: string;
 }
 
 const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
@@ -31,15 +39,16 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
 
   return (
     <Formik
-      initialValues={{ league: '', pricingLeague: '' }}
-      onSubmit={(values, { setSubmitting }) => {
+      initialValues={{ league: '', priceLeague: '' }}
+      onSubmit={(values: LeagueFormValues, { setSubmitting }: FormikActions<LeagueFormValues>
+      ) => {
         setSubmitComplete(true);
-        // props.handleNext();
+        props.handleLeagueSubmit();
       }}
-      // validationSchema={Yup.object().shape({
-      //   league: Yup.string().required('Required'),
-      //   pricingLeague: Yup.string().required('Required')
-      // })}
+      validationSchema={Yup.object().shape({
+        league: Yup.string().required('Required'),
+        priceLeague: Yup.string().required('Required')
+      })}
     >
       {formProps => {
         const {
@@ -56,20 +65,69 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
         return (
           <form onSubmit={handleSubmit}>
             <div className={props.styles.stepMainContent}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="age-simple">Age</InputLabel>
+              <FormControl
+                fullWidth
+                margin="normal"
+                error={touched.league && errors.league != undefined}
+              >
+                <InputLabel htmlFor="league-dd">
+                  {t('label.select_main_league')}
+                </InputLabel>
                 <Select
                   value={values.league}
                   onChange={handleChange}
                   inputProps={{
-                    name: 'age',
-                    id: 'age-simple'
+                    name: 'league',
+                    id: 'league-dd'
                   }}
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {props.accountStore!.getSelectedAccount.leagues.map(
+                    (league: League) => {
+                      return (
+                        <MenuItem key={league.uuid} value={league.id}>
+                          {league.id}
+                        </MenuItem>
+                      );
+                    }
+                  )}
                 </Select>
+                {touched.league && errors.league && (
+                  <FormHelperText error>
+                    {errors.league && touched.league && errors.league}
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <FormControl
+                fullWidth
+                margin="normal"
+                error={touched.priceLeague && errors.priceLeague != undefined}
+              >
+                <InputLabel htmlFor="price-league-dd">
+                  {t('label.select_main_league')}
+                </InputLabel>
+                <Select
+                  value={values.priceLeague}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: 'priceLeague',
+                    id: 'price-league-dd'
+                  }}
+                >
+                  {props.accountStore!.getSelectedAccount.leagues.map(
+                    (priceLeague: League) => {
+                      return (
+                        <MenuItem key={priceLeague.uuid} value={priceLeague.id}>
+                          {priceLeague.id}
+                        </MenuItem>
+                      );
+                    }
+                  )}
+                </Select>
+                {touched.priceLeague && errors.priceLeague && (
+                  <FormHelperText error>
+                    {errors.priceLeague && touched.priceLeague && errors.priceLeague}
+                  </FormHelperText>
+                )}
               </FormControl>
             </div>
             <div className={props.styles.stepFooter}>

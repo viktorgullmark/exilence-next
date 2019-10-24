@@ -19,6 +19,7 @@ import { IAccount } from './../../interfaces/account.interface';
 
 interface LoginStepperProps {
   handleValidate: Function;
+  handleLeagueSubmit: Function;
   handleBack: Function;
   handleReset: Function;
   steps: string[];
@@ -61,6 +62,7 @@ const LoginStepper: React.FC<LoginStepperProps> = (
       case 1:
         return (
           <LeagueSelectionStep
+            handleLeagueSubmit={() => props.handleLeagueSubmit()}
             handleBack={() => props.handleBack()}
             handleReset={() => props.handleReset()}
             activeStep={props.activeStep}

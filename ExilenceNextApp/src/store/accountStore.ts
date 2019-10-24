@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
@@ -75,7 +75,15 @@ export class AccountStore {
           acc!.setLeagues(requests[0].data);
           acc!.addCharactersToLeagues(requests[1].data);
           this.uiStateStore.setSessIdCookie(acc!.sessionId);
-          this.initSessionSuccess();
+
+          reaction(
+            () => this.uiStateStore.sessIdCookie,
+            (cookie, reaction) => {
+              // todo: create notification
+              this.initSessionSuccess();
+              reaction.dispose();
+            }
+          );        
         }),
         catchError((e: Error) => {
           return of(this.initSessionFail(e));
@@ -114,6 +122,8 @@ export class AccountStore {
   @action
   validateSessionSuccess() {
     // todo: create notification
+    const activeStep = this.uiStateStore.loginStepper.activeStep;
+    this.uiStateStore.loginStepper.setActiveStep(activeStep + 1);
   }
 
   @action

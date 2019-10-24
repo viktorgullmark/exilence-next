@@ -1,24 +1,14 @@
 import { electronService } from "./electron.service";
 import { from, Observable } from "rxjs";
 import { mergeMap, switchMap } from "rxjs/operators";
+import { ICookie } from './../interfaces/cookie.interface';
 
 export const authService = {
     setAuthCookie,
     isLoggedIn
 };
 
-function setAuthCookie(sessionId: string): Observable<any> {
-
-    const cookie = {
-        url: 'https://www.pathofexile.com',
-        name: 'POESESSID',
-        value: sessionId,
-        domain: '.pathofexile.com',
-        path: '/',
-        secure: true,
-        expirationDate: undefined
-    };
-
+function setAuthCookie(cookie: ICookie): Observable<any> {
     return removeAuthCookie().pipe(switchMap(() => {
         return from(electronService.remote.session.defaultSession.cookies.set(cookie));
     }));

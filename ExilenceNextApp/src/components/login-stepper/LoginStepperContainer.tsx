@@ -4,24 +4,27 @@ import { useTranslation } from 'react-i18next';
 
 import useFormInput from '../../hooks/useFormInput';
 import { AccountStore } from '../../store/accountStore';
-import AccountValidationStep from './account-validation-step/AccountValidationStep';
-import LoginStepper from './LoginStepper';
-import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
-import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
 import { IAccount } from './../../interfaces/account.interface';
+import { UiStateStore } from './../../store/uiStateStore';
+import LoginStepper from './LoginStepper';
+import { electronService } from '../../services/electron.service';
 
 interface LoginStepperProps {
-  accountStore?: AccountStore
+  accountStore?: AccountStore,
+  uiStateStore?: UiStateStore
 }
 
-const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: LoginStepperProps) => {
+const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore, uiStateStore }: LoginStepperProps) => {
   const { t } = useTranslation();
-
-  const [activeStep, setActiveStep] = useState(0);
+  const { activeStep } = uiStateStore!.loginStepper;
 
   const accountName = useFormInput('');
   const sessionId = useFormInput('');
 
+  const changeStep = (index: number) => {
+    uiStateStore!.loginStepper.setActiveStep(index);
+  };
+  
   const getSteps = () => {
     return [t('title.enter_acc_info'), t('title.select_leagues'), t('title.select_characters')];
   }
@@ -31,21 +34,25 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
   }
 
   const handleValidate = (details: IAccount) => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
     handleLogin(details);
   };
 
+  const handleLeagueSubmit = () => {
+    changeStep(activeStep + 1);
+  }
+
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    changeStep(activeStep - 1);
   };
 
   const handleReset = () => {
-    setActiveStep(0);
+    changeStep(0);
   };
 
   return (
     <LoginStepper
       handleValidate={(details: IAccount) => handleValidate(details)}
+      handleLeagueSubmit={() => handleLeagueSubmit()}
       handleBack={() => handleBack()}
       handleReset={() => handleReset()}
       steps={getSteps()}
@@ -56,4 +63,4 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
   );
 }
 
-export default inject('accountStore')(observer(LoginStepperContainer));
+export default inject('accountStore', 'uiStateStore')(observer(LoginStepperContainer));

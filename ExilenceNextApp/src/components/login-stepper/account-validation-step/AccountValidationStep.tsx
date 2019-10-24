@@ -1,5 +1,5 @@
 import { TextField, makeStyles, Button, LinearProgress } from '@material-ui/core';
-import { Formik } from 'formik';
+import { Formik, FormikActions } from 'formik';
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,11 @@ interface AccountValidationStepProps {
   styles: Record<string, string>;
 }
 
+interface AccountFormValues {
+  accountName: string;
+  sessionId: string;
+}
+
 const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   props: AccountValidationStepProps
 ) => {
@@ -24,7 +29,7 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   return (
     <Formik
       initialValues={{ accountName: '', sessionId: '' }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values: AccountFormValues, { setSubmitting }: FormikActions<AccountFormValues>) => {
         setSubmitting(true);
 
         // todo: show loading indicator instead, with real api calls
