@@ -66,13 +66,19 @@ export class AccountStore {
         externalService.getCharacters(acc!.name)
       ).pipe(
         map(requests => {
+          if (requests[0].data.length === 0) {
+            throw new Error('error.no_leagues');
+          }
+          if (requests[1].data.length === 0) {
+            throw new Error('error.no_characters');
+          }
           acc!.setLeagues(requests[0].data);
           acc!.addCharactersToLeagues(requests[1].data);
           this.uiStateStore.setSessIdCookie(acc!.sessionId);
           this.initSessionSuccess();
         }),
-        catchError((error: Error) => {
-          return of(this.initSessionFail(error));
+        catchError((e: Error) => {
+          return of(this.initSessionFail(e));
         })
       )
     );
