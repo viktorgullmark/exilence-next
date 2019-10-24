@@ -5,5 +5,7 @@
   "action.back": "Back",
   "title.enter_acc_info": "Enter account information",
   "title.select_leagues": "Select your leagues",
-  "title.select_characters": "Select your characters"
+  "title.select_characters": "Select your characters",
+  "label.account_name": "Account name",
+  "label.session_id": "Session Id"
 }
