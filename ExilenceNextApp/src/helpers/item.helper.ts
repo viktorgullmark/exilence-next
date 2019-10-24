@@ -48,7 +48,7 @@ export class ItemHelper {
         return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
     }
 
-    public static getItemVariant(sockets: ISocket[], explicitMods: string[]): string {
+    public static getItemVariant(sockets: ISocket[], explicitMods: string[], name: string): string {
         if (sockets === null ||sockets === undefined) {
             return '';
         }

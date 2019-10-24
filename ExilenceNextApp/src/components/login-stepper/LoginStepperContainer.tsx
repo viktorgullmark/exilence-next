@@ -8,6 +8,7 @@ import AccountValidationStep from './account-validation-step/AccountValidationSt
 import LoginStepper from './LoginStepper';
 import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
 import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
+import { IAccount } from './../../interfaces/account.interface';
 
 interface LoginStepperProps {
   accountStore?: AccountStore
@@ -16,7 +17,7 @@ interface LoginStepperProps {
 const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: LoginStepperProps) => {
   const { t } = useTranslation();
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
 
   const accountName = useFormInput('');
   const sessionId = useFormInput('');
@@ -24,27 +25,14 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
   const getSteps = () => {
     return [t('title.enter_acc_info'), t('title.select_leagues'), t('title.select_characters')];
   }
-  
-  const getStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return <AccountValidationStep />;
-      case 1:
-        return <LeagueSelectionStep />;
-      case 2:
-        return <CharacterSelectionStep />;
-      default:
-        return '';
-    }
+
+  const handleLogin = (details: IAccount) => {
+    accountStore!.initSession({ name: details.name, sessionId: details.sessionId});
   }
 
-  const handleLogin = () => {
-    accountStore!.initSession({ name: 'test', sessionId: '123'});
-  }
-
-  const handleNext = () => {
+  const handleValidate = (details: IAccount) => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
-    handleLogin();
+    handleLogin(details);
   };
 
   const handleBack = () => {
@@ -57,10 +45,9 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({ accountStore }: Lo
 
   return (
     <LoginStepper
-      handleNext={() => handleNext()}
+      handleValidate={(details: IAccount) => handleValidate(details)}
       handleBack={() => handleBack()}
       handleReset={() => handleReset()}
-      getStepContent={(i: number) => getStepContent(i)}
       steps={getSteps()}
       activeStep={activeStep}
       accountName={accountName}

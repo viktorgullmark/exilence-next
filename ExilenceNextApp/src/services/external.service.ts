@@ -63,7 +63,7 @@ function getItemsForTabs(tabs: ITab[], account: string, league: string) {
                         level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
                         stackSize: item.stackSize || 1,
                         totalStacksize: item.maxStackSize || 1,
-                        variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods) : ''
+                        variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods, ItemHelper.getItemName(item.typeLine, item.name)) : ''
                     } as IPricedItem;
                 })
             } as ITab;

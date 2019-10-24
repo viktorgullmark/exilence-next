@@ -36,8 +36,8 @@ const hydrate = create({
   jsonify: true
 })
 
-const accountStore = new AccountStore();
 const uiStateStore = new UiStateStore();
+const accountStore = new AccountStore(uiStateStore);
 
 const stores = { accountStore, uiStateStore };
 
