@@ -8,6 +8,7 @@ import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
 import { UiStateStore } from './uiStateStore';
+import { switchMap } from 'rxjs/operators';
 
 export class AccountStore {
   uiStateStore: UiStateStore;
@@ -53,6 +54,8 @@ export class AccountStore {
 
   @action
   initSession(details?: IAccount) {
+    this.uiStateStore.loginStepper.setSubmitting(true);
+
     if (details !== undefined) {
       this.addAccount(details);
       this.selectAccountByName(details.name);
@@ -74,21 +77,23 @@ export class AccountStore {
           }
           acc!.setLeagues(requests[0].data);
           acc!.addCharactersToLeagues(requests[1].data);
-          this.uiStateStore.setSessIdCookie(acc!.sessionId);
-
-          reaction(
-            () => this.uiStateStore.sessIdCookie,
-            (cookie, reaction) => {
-              // todo: create notification "cookie successfully set"
-              this.initSessionSuccess();
-              reaction.dispose();
-            }
-          );        
+        }),
+        switchMap(() => {
+          return this.uiStateStore.setSessIdCookie(acc!.sessionId);
         }),
         catchError((e: Error) => {
           return of(this.initSessionFail(e));
         })
       )
+    );
+
+    reaction(
+      () => this.uiStateStore.sessIdCookie,
+      (cookie, reaction) => {
+        // todo: create notification "cookie successfully set"
+        this.initSessionSuccess();
+        reaction.dispose();
+      }
     );
   }
 
@@ -100,6 +105,7 @@ export class AccountStore {
 
   @action
   initSessionFail(error: Error | string) {
+    this.uiStateStore.loginStepper.setSubmitting(false);
     // todo: create notification
     console.error(error);
   }
@@ -122,6 +128,8 @@ export class AccountStore {
   @action
   validateSessionSuccess() {
     // todo: create notification
+    this.uiStateStore.loginStepper.setSubmitting(false);
+    
     const activeStep = this.uiStateStore.loginStepper.activeStep;
     this.uiStateStore.loginStepper.setActiveStep(activeStep + 1);
   }
@@ -129,6 +137,7 @@ export class AccountStore {
   @action
   validateSessionFail(error: Error | string) {
     // todo: create notification
+    this.uiStateStore.loginStepper.setSubmitting(false);
     console.error(error);
   }
 }

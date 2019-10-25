@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 import { AccountStore } from '../../../store/accountStore';
+import { UiStateStore } from './../../../store/uiStateStore';
 
 interface AccountValidationStepProps {
   accountStore?: AccountStore;
+  uiStateStore?: UiStateStore;
   handleValidate: Function;
   handleBack: Function;
   activeStep: number;
@@ -24,20 +26,13 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   props: AccountValidationStepProps
 ) => {
   const { t } = useTranslation();
-  const [, setSubmitComplete] = useState(false);
-  
+  const { isSubmitting } = props.uiStateStore!.loginStepper;
+
   return (
     <Formik
       initialValues={{ accountName: '', sessionId: '' }}
       onSubmit={(values: AccountFormValues, { setSubmitting }: FormikActions<AccountFormValues>) => {
-        setSubmitting(true);
-
-        // todo: show loading indicator instead, with real api calls
-        setTimeout(() => {
-          setSubmitComplete(true);
-          setSubmitting(false);
-          props.handleValidate({ name: values.accountName, sessionId: values.sessionId });
-        }, 1500);
+        props.handleValidate({ name: values.accountName, sessionId: values.sessionId });
       }}
       validationSchema={Yup.object().shape({
         accountName: Yup.string().required('Required'),
@@ -50,7 +45,6 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
           touched,
           errors,
           dirty,
-          isSubmitting,
           handleChange,
           handleBlur,
           handleSubmit
@@ -112,4 +106,4 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   );
 };
 
-export default inject('accountStore')(observer(AccountValidationStep));
+export default inject('accountStore', 'uiStateStore')(observer(AccountValidationStep));

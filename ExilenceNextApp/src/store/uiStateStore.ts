@@ -17,17 +17,12 @@ export class UiStateStore {
   @action
   setSessIdCookie(sessionId: string) {
     const cookie = CookieHelper.constructCookie(sessionId);
-    fromStream(
-      authService.setAuthCookie(cookie).pipe(
-        map(() => {
-          return runInAction(() => {
-            this.sessIdCookie = cookie;
-          })
-        }),
-        catchError(error => {
-          return of(console.error(error));
-        })
-      )
+    return authService.setAuthCookie(cookie).pipe(
+      map(() => {
+        return runInAction(() => {
+          this.sessIdCookie = cookie;
+        });
+      })
     );
   }
 }
