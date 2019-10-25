@@ -7,7 +7,6 @@ import { AccountStore } from '../../store/accountStore';
 import { IAccount } from './../../interfaces/account.interface';
 import { UiStateStore } from './../../store/uiStateStore';
 import LoginStepper from './LoginStepper';
-import { electronService } from '../../services/electron.service';
 
 interface LoginStepperProps {
   accountStore?: AccountStore,

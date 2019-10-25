@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 import { AccountStore } from '../../../store/accountStore';
-import { League } from './../../../store/types/league';
+import { League } from '../../../store/domains/league';
 
 interface LeagueSelectionStepProps {
   accountStore?: AccountStore;

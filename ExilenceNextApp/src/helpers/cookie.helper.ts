@@ -1,4 +1,3 @@
-import { electronService } from '../services/electron.service';
 import { ICookie } from './../interfaces/cookie.interface';
 
 export class CookieHelper {

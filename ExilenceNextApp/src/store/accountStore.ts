@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
-import { Account } from './types/account';
+import { Account } from './domains/account';
 import { UiStateStore } from './uiStateStore';
 
 export class AccountStore {
@@ -79,7 +79,7 @@ export class AccountStore {
           reaction(
             () => this.uiStateStore.sessIdCookie,
             (cookie, reaction) => {
-              // todo: create notification
+              // todo: create notification "cookie successfully set"
               this.initSessionSuccess();
               reaction.dispose();
             }

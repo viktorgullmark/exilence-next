@@ -3,9 +3,9 @@ import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 
 import { IAccount } from '../../interfaces/account.interface';
-import { ILeague } from './../../interfaces/league.interface';
+import { ILeague } from '../../interfaces/league.interface';
 import { League } from './league';
-import { ICharacter } from './../../interfaces/character.interface';
+import { ICharacter } from '../../interfaces/character.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();

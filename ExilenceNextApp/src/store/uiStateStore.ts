@@ -3,12 +3,10 @@ import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { authService } from './../services/auth.service';
-import { persist } from 'mobx-persist';
-import { StepperProps } from '@material-ui/core/Stepper';
-import { Stepper } from './types/stepper';
 import { CookieHelper } from './../helpers/cookie.helper';
 import { ICookie } from './../interfaces/cookie.interface';
+import { authService } from './../services/auth.service';
+import { Stepper } from './domains/stepper';
 
 export class UiStateStore {
   @observable loginStepper: Stepper = new Stepper();
