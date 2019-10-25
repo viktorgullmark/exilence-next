@@ -9,12 +9,13 @@ import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
 import { UiStateStore } from './uiStateStore';
 import { switchMap } from 'rxjs/operators';
+import { NotificationStore } from './notificationStore';
 
 export class AccountStore {
-  uiStateStore: UiStateStore;
-  constructor(uiStateStore: UiStateStore) {
-    this.uiStateStore = uiStateStore;
-  }
+  constructor(
+    private uiStateStore: UiStateStore,
+    private notificationStore: NotificationStore
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
 
@@ -89,8 +90,7 @@ export class AccountStore {
 
     reaction(
       () => this.uiStateStore.sessIdCookie,
-      (cookie, reaction) => {
-        // todo: create notification "cookie successfully set"
+      (_cookie, reaction) => {
         this.initSessionSuccess();
         reaction.dispose();
       }
@@ -99,14 +99,20 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    // todo: create notification
+    this.notificationStore.createNotification({
+      title: 'action.success.title.init_session',
+      description: 'action.success.desc.init_session'
+    });
     this.validateSession();
   }
 
   @action
   initSessionFail(error: Error | string) {
+    this.notificationStore.createNotification({
+      title: 'action.fail.title.init_session',
+      description: 'action.fail.desc.init_session'
+    });
     this.uiStateStore.loginStepper.setSubmitting(false);
-    // todo: create notification
     console.error(error);
   }
 
@@ -127,16 +133,21 @@ export class AccountStore {
 
   @action
   validateSessionSuccess() {
-    // todo: create notification
+    this.notificationStore.createNotification({
+      title: 'action.success.title.validate_session',
+      description: 'action.success.desc.validate_session'
+    });
     this.uiStateStore.loginStepper.setSubmitting(false);
-    
     const activeStep = this.uiStateStore.loginStepper.activeStep;
     this.uiStateStore.loginStepper.setActiveStep(activeStep + 1);
   }
 
   @action
   validateSessionFail(error: Error | string) {
-    // todo: create notification
+    this.notificationStore.createNotification({
+      title: 'action.fail.title.validate_session',
+      description: 'action.fail.desc.validate_session'
+    });
     this.uiStateStore.loginStepper.setSubmitting(false);
     console.error(error);
   }

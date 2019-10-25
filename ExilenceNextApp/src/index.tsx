@@ -18,8 +18,9 @@ import { authService } from './services/auth.service';
 import { AccountStore } from './store/accountStore';
 import { UiStateStore } from './store/uiStateStore';
 import { configure } from 'mobx';
+import { NotificationStore } from './store/notificationStore';
 
-enableLogging();
+// enableLogging();
 configureI18n();
 
 configure({ enforceActions: 'observed' })
@@ -37,13 +38,12 @@ const hydrate = create({
 })
 
 const uiStateStore = new UiStateStore();
-const accountStore = new AccountStore(uiStateStore);
+const notificationStore = new NotificationStore(uiStateStore);
+const accountStore = new AccountStore(uiStateStore, notificationStore);
 
-const stores = { accountStore, uiStateStore };
+const stores = { accountStore, uiStateStore, notificationStore };
 
 hydrate('account', accountStore);
-
-// todo: hydrate ui-state when we have something to persist
 
 const app = (
   <React.Fragment>
