@@ -20,7 +20,7 @@ import { UiStateStore } from './store/uiStateStore';
 import { configure } from 'mobx';
 import { NotificationStore } from './store/notificationStore';
 
-// enableLogging();
+enableLogging();
 configureI18n();
 
 configure({ enforceActions: 'observed' })

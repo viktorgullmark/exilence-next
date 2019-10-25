@@ -113,6 +113,7 @@ export class AccountStore {
       description: 'action.fail.desc.init_session'
     });
     this.uiStateStore.loginStepper.setSubmitting(false);
+  
     console.error(error);
   }
 
@@ -137,9 +138,9 @@ export class AccountStore {
       title: 'action.success.title.validate_session',
       description: 'action.success.desc.validate_session'
     });
-    this.uiStateStore.loginStepper.setSubmitting(false);
     const activeStep = this.uiStateStore.loginStepper.activeStep;
     this.uiStateStore.loginStepper.setActiveStep(activeStep + 1);
+    this.uiStateStore.loginStepper.setSubmitting(false);
   }
 
   @action
@@ -149,6 +150,7 @@ export class AccountStore {
       description: 'action.fail.desc.validate_session'
     });
     this.uiStateStore.loginStepper.setSubmitting(false);
+  
     console.error(error);
   }
 }
