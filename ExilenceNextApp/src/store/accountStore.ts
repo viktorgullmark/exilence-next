@@ -18,31 +18,25 @@ export class AccountStore {
   ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
+  @persist @observable selectedAccountUuid: string = '';
 
   @computed
   get getSelectedAccount(): Account {
-    const account = this.accounts.find(a => a.selected);
+    debugger;
+    const account = this.accounts.find(a => a.uuid === this.selectedAccountUuid);
     return account ? account : this.accounts[0];
   }
 
   @action
   selectAccountByName(name: string) {
-    this.resetAccountSelection();
+    this.selectedAccountUuid = '';
     const account = this.findAccountByName(name);
-    account!.setSelected();
+    this.selectedAccountUuid = account!.uuid;
   }
 
   @action
   findAccountByName(name: string) {
     return this.accounts.find(a => a.name === name);
-  }
-
-  @action
-  resetAccountSelection() {
-    this.accounts = this.accounts.map(a => {
-      a.selected = false;
-      return a;
-    });
   }
 
   @action
@@ -57,17 +51,10 @@ export class AccountStore {
   initSession(details?: IAccount) {
     this.uiStateStore.loginStepper.setSubmitting(true);
 
-    if (details !== undefined) {
-      this.addAccount(details);
-      this.selectAccountByName(details.name);
-    }
-
-    const acc = this.getSelectedAccount;
-
     fromStream(
       forkJoin(
         externalService.getLeagues(),
-        externalService.getCharacters(acc!.name)
+        externalService.getCharacters(details!.name)
       ).pipe(
         map(requests => {
           if (requests[0].data.length === 0) {
@@ -76,11 +63,16 @@ export class AccountStore {
           if (requests[1].data.length === 0) {
             throw new Error('error.no_characters');
           }
+          if (details !== undefined) {
+            this.addAccount(details);
+            this.selectAccountByName(details.name);
+          }
+          const acc = this.getSelectedAccount;
           acc!.setLeagues(requests[0].data);
           acc!.addCharactersToLeagues(requests[1].data);
         }),
         switchMap(() => {
-          return this.uiStateStore.setSessIdCookie(acc!.sessionId);
+          return this.uiStateStore.setSessIdCookie(details!.sessionId);
         }),
         catchError((e: Error) => {
           return of(this.initSessionFail(e));

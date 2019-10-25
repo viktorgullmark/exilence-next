@@ -43,10 +43,8 @@ const accountStore = new AccountStore(uiStateStore, notificationStore);
 
 const stores = { accountStore, uiStateStore, notificationStore };
 
-hydrate('account', accountStore);
-
 const app = (
-  <React.Fragment>
+  <>
     <ThemeProvider theme={theme}>
       <Provider {...stores}>
         <Suspense fallback={null}>
@@ -67,10 +65,10 @@ const app = (
         </Suspense>
       </Provider>
     </ThemeProvider>
-  </React.Fragment>
+  </>
 )
 
-ReactDOM.render(app, document.getElementById('root'))
-
-
+hydrate('account', accountStore).then(() => {
+  ReactDOM.render(app, document.getElementById('root'))
+});
 

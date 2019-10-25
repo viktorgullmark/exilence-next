@@ -11,7 +11,9 @@ export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist @observable selected: boolean = false;
+  @persist @observable selectedLeagueUuid: string = '';
+  @persist @observable selectedPricingLeagueUuid: string = '';
+
   @persist('list', League) @observable leagues: League[] = [];
 
   constructor(obj?: IAccount) {
@@ -41,10 +43,5 @@ export class Account implements IAccount {
   @action
   setSessionId(sessionId: string) {
     this.sessionId = sessionId;
-  }
-
-  @action
-  setSelected() {
-    this.selected = true;
   }
 }

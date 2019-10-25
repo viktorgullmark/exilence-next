@@ -10,6 +10,8 @@ export class League implements ILeague {
     @persist uuid: string = uuid.v4();
     @persist @observable id: string = '';
     @persist @observable realm: string = '';
+    @persist @observable selectedCharacterUuid: string = '';
+
     @persist('list', Character) @observable characters: Character[] = [];
 
     constructor(obj?: ILeague) {

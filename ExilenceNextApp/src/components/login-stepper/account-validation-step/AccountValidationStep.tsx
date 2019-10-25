@@ -27,10 +27,11 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
 ) => {
   const { t } = useTranslation();
   const { isSubmitting } = props.uiStateStore!.loginStepper;
+  const account = props.accountStore!.getSelectedAccount;
 
   return (
     <Formik
-      initialValues={{ accountName: '', sessionId: '' }}
+      initialValues={{ accountName: account.name, sessionId: account.sessionId }}
       onSubmit={(values: AccountFormValues, { setSubmitting }: FormikActions<AccountFormValues>) => {
         props.handleValidate({ name: values.accountName, sessionId: values.sessionId });
       }}
