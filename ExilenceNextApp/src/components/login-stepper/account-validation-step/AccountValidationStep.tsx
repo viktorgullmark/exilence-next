@@ -1,4 +1,9 @@
-import { TextField, makeStyles, Button, LinearProgress } from '@material-ui/core';
+import {
+  TextField,
+  makeStyles,
+  Button,
+  LinearProgress
+} from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
@@ -7,6 +12,7 @@ import * as Yup from 'yup';
 
 import { AccountStore } from '../../../store/accountStore';
 import { UiStateStore } from './../../../store/uiStateStore';
+import { IAccount } from './../../../interfaces/account.interface';
 
 interface AccountValidationStepProps {
   accountStore?: AccountStore;
@@ -31,9 +37,18 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
 
   return (
     <Formik
-      initialValues={{ accountName: account.name, sessionId: account.sessionId }}
-      onSubmit={(values: AccountFormValues, { setSubmitting }: FormikActions<AccountFormValues>) => {
-        props.handleValidate({ name: values.accountName, sessionId: values.sessionId });
+      initialValues={{
+        accountName: account.name,
+        sessionId: account.sessionId
+      }}
+      onSubmit={(
+        values: AccountFormValues,
+        { setSubmitting }: FormikActions<AccountFormValues>
+      ) => {
+        props.handleValidate({
+          name: values.accountName,
+          sessionId: values.sessionId
+        });
       }}
       validationSchema={Yup.object().shape({
         accountName: Yup.string().required('Required'),
@@ -94,7 +109,7 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
               <Button
                 variant="contained"
                 color="primary"
-                type="submit" 
+                type="submit"
                 disabled={isSubmitting}
               >
                 {t('action.next')}
@@ -107,4 +122,6 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(observer(AccountValidationStep));
+export default inject('accountStore', 'uiStateStore')(
+  observer(AccountValidationStep)
+);

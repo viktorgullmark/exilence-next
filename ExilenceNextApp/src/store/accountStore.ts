@@ -18,20 +18,19 @@ export class AccountStore {
   ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
-  @persist @observable selectedAccountUuid: string = '';
+  @persist @observable activeAccount: string = '';
 
   @computed
   get getSelectedAccount(): Account {
-    debugger;
-    const account = this.accounts.find(a => a.uuid === this.selectedAccountUuid);
-    return account ? account : this.accounts[0];
+    const account = this.accounts.find(a => a.uuid === this.activeAccount);
+    return account ? account : new Account();
   }
 
   @action
   selectAccountByName(name: string) {
-    this.selectedAccountUuid = '';
+    this.activeAccount = '';
     const account = this.findAccountByName(name);
-    this.selectedAccountUuid = account!.uuid;
+    this.activeAccount = account!.uuid;
   }
 
   @action

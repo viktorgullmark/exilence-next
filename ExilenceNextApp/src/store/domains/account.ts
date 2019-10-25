@@ -11,8 +11,8 @@ export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist @observable selectedLeagueUuid: string = '';
-  @persist @observable selectedPricingLeagueUuid: string = '';
+  @persist @observable activeLeague: string = '';
+  @persist @observable activePriceLeague: string = '';
 
   @persist('list', League) @observable leagues: League[] = [];
 
