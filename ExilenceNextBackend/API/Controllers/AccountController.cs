@@ -2,15 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Entities;
+using Shared.Interfaces;
+using Shared.Models;
+using Shared.Repositories;
 
-namespace ExilenceNextBackend.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private IAccountRepository _accountRepository;
+        private IMapper _mapper;
+
+        public AccountController(IAccountRepository accountRepository, IMapper mapper)
+        {
+            _accountRepository = accountRepository;
+            _mapper = mapper;
+        }
+
         // GET: api/Account
         [HttpGet]
         public IEnumerable<string> Get()
@@ -27,8 +41,12 @@ namespace ExilenceNextBackend.Controllers
 
         // POST: api/Account
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<AccountModel> Post([FromBody] AccountModel accountModel)
         {
+            var account = _mapper.Map<Account>(accountModel);
+            account = await _accountRepository.CreateAccount(account);
+            return _mapper.Map<AccountModel>(account);
+
         }
 
         // PUT: api/Account/5

@@ -2,16 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using API.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Shared;
+using Shared.Interfaces;
+using Shared.Repositories;
 
-namespace ExilenceNextBackend
+namespace API
 {
     public class Startup
     {
@@ -26,6 +32,13 @@ namespace ExilenceNextBackend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSignalR();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddDbContext<ExilenceContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ExilenceConnection")));
+
+
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,14 +50,13 @@ namespace ExilenceNextBackend
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<AccountHub>("/accountHub");
             });
         }
     }
