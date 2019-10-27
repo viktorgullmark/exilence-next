@@ -1,22 +1,26 @@
 import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import { AccountStore } from '../../../store/accountStore';
+
+import { Character } from '../../../store/domains/character';
 import { League } from '../../../store/domains/league';
+import error from './../../../helpers/validation.helper';
 
 interface LeagueSelectionStepProps {
-  accountStore?: AccountStore;
   handleBack: Function;
   handleLeagueSubmit: Function;
+  handleLeagueChange: Function;
   handleReset: Function;
   activeStep: number;
   styles: Record<string, string>;
   selectedLeague?: string;
   selectedPriceLeague?: string;
   leagues: League[];
+  priceLeagues: League[];
+  characters: Character[];
 }
 
 interface LeagueFormValues {
@@ -28,19 +32,22 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
   props: LeagueSelectionStepProps
 ) => {
   const { t } = useTranslation();
-
+  const noCharacters = t(error.noCharacters(props.characters));
   return (
     <Formik
-      initialValues={{ league: props.selectedLeague, priceLeague: props.selectedPriceLeague }}
-      onSubmit={(values: LeagueFormValues, { setSubmitting }: FormikActions<LeagueFormValues>
+      initialValues={{
+        league: props.selectedLeague,
+        priceLeague: props.selectedPriceLeague
+      }}
+      onSubmit={(
+        values: LeagueFormValues,
+        { setSubmitting }: FormikActions<LeagueFormValues>
       ) => {
-        props.handleLeagueSubmit({
-          league: values.league,
-          priceLeague: values.priceLeague
-        });
+        props.handleLeagueSubmit();
       }}
       validationSchema={Yup.object().shape({
-        league: Yup.string().required('Required'),
+        league: Yup.string()
+          .required('Required'),
         priceLeague: Yup.string().required('Required')
       })}
     >
@@ -56,38 +63,40 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
           handleSubmit,
           handleReset
         } = formProps;
+
         return (
           <form onSubmit={handleSubmit}>
             <div className={props.styles.stepMainContent}>
               <FormControl
                 fullWidth
                 margin="normal"
-                error={touched.league && errors.league != undefined}
+                error={(touched.league && errors.league != undefined) || noCharacters.length > 0}
               >
                 <InputLabel htmlFor="league-dd">
                   {t('label.select_main_league')}
                 </InputLabel>
                 <Select
                   value={values.league}
-                  onChange={handleChange}
+                  onChange={e => {
+                    handleChange(e);
+                    props.handleLeagueChange(e.target.value);
+                  }}
                   inputProps={{
                     name: 'league',
                     id: 'league-dd'
                   }}
                 >
-                  {props.leagues.map(
-                    (league: League) => {
-                      return (
-                        <MenuItem key={league.uuid} value={league.uuid}>
-                          {league.id}
-                        </MenuItem>
-                      );
-                    }
-                  )}
+                  {props.leagues.map((league: League) => {
+                    return (
+                      <MenuItem key={league.uuid} value={league.uuid}>
+                        {league.id}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
-                {touched.league && errors.league && (
+                {(touched.league && errors.league) || noCharacters && (
                   <FormHelperText error>
-                    {errors.league && touched.league && errors.league}
+                    {(errors.league && touched.league && errors.league) || noCharacters}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -97,7 +106,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                 error={touched.priceLeague && errors.priceLeague != undefined}
               >
                 <InputLabel htmlFor="price-league-dd">
-                  {t('label.select_main_league')}
+                  {t('label.select_price_league')}
                 </InputLabel>
                 <Select
                   value={values.priceLeague}
@@ -107,19 +116,19 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                     id: 'price-league-dd'
                   }}
                 >
-                  {props.leagues.map(
-                    (priceLeague: League) => {
-                      return (
-                        <MenuItem key={priceLeague.uuid} value={priceLeague.uuid}>
-                          {priceLeague.id}
-                        </MenuItem>
-                      );
-                    }
-                  )}
+                  {props.priceLeagues.map((priceLeague: League) => {
+                    return (
+                      <MenuItem key={priceLeague.uuid} value={priceLeague.uuid}>
+                        {priceLeague.id}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
                 {touched.priceLeague && errors.priceLeague && (
                   <FormHelperText error>
-                    {errors.priceLeague && touched.priceLeague && errors.priceLeague}
+                    {errors.priceLeague &&
+                      touched.priceLeague &&
+                      errors.priceLeague}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -135,7 +144,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || noCharacters.length > 0}
               >
                 {t('action.next')}
               </Button>
@@ -147,4 +156,4 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
   );
 };
 
-export default inject('accountStore')(observer(LeagueSelectionStep));
+export default observer(LeagueSelectionStep);

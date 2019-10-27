@@ -10,7 +10,7 @@ export class League implements ILeague {
     @persist uuid: string = uuid.v4();
     @persist id: string = '';
     @persist realm: string = '';
-    @persist @observable selectedCharacterUuid: string = '';
+    @persist @observable activeCharacterUuid: string = '';
 
     @persist('list', Character) @observable characters: Character[] = [];
 

@@ -1,4 +1,11 @@
-import { action, observable, computed } from 'mobx';
+import {
+  action,
+  observable,
+  computed,
+  reaction,
+  IReactionDisposer,
+  autorun
+} from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 
@@ -11,13 +18,24 @@ export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist @observable activeLeague: string = '';
-  @persist @observable activePriceLeague: string = '';
+  @persist @observable activeLeagueUuid: string = '';
+  @persist @observable activePriceLeagueUuid: string = '';
 
   @persist('list', League) @observable leagues: League[] = [];
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
+  }
+
+  @computed
+  get activeLeague() {
+    const league = this.leagues.find(l => l.uuid === this.activeLeagueUuid);
+    return league ? league : new League();
+  }
+
+  @computed
+  get priceLeagues() {
+    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
   }
 
   @computed
@@ -27,32 +45,39 @@ export class Account implements IAccount {
 
   @action
   setActiveLeague(uuid: string) {
-    this.activeLeague = uuid;
+    console.log(this.leagues.find(l => l.uuid === uuid))
+    this.activeLeagueUuid = uuid;
   }
 
   @action
   setActivePriceLeague(uuid: string) {
-    this.activePriceLeague = uuid;
+    this.activePriceLeagueUuid = uuid;
   }
 
   @action
   updateLeagues(leagues: ILeague[]) {
-    const newLeagues = leagues.filter(l => this.leagues.find(el => el.id === l.id) === undefined)
-    this.leagues = this.leagues.concat(newLeagues.map(league => {
-      return new League(league);
-    }));
+    const newLeagues = leagues.filter(
+      l => this.leagues.find(el => el.id === l.id) === undefined
+    );
+    this.leagues = this.leagues.concat(
+      newLeagues.map(league => {
+        return new League(league);
+      })
+    );
 
-    const existingLeague = this.leagues.find(l => l.uuid === this.activeLeague);
+    const existingLeague = this.leagues.find(
+      l => l.uuid === this.activeLeagueUuid
+    );
     const existingPriceLeague = this.leagues.find(
-      l => l.uuid === this.activePriceLeague
+      l => l.uuid === this.activePriceLeagueUuid
     );
 
     if (!existingLeague) {
-      this.activeLeague = this.leagues[0].uuid;
+      this.activeLeagueUuid = this.leagues[0].uuid;
     }
 
     if (!existingPriceLeague) {
-      this.activePriceLeague = this.leagues[0].uuid;
+      this.activePriceLeagueUuid = this.leagues[0].uuid;
     }
   }
 

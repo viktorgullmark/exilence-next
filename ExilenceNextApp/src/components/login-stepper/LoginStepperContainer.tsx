@@ -8,6 +8,7 @@ import { UiStateStore } from './../../store/uiStateStore';
 import LoginStepper from './LoginStepper';
 import { ILeagueSelection } from './../../interfaces/league-selection.interface';
 import { DropdownHelper } from './../../helpers/dropdown.helper';
+import { Character } from './../../store/domains/character';
 
 interface LoginStepperProps {
   accountStore?: AccountStore;
@@ -19,19 +20,30 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   uiStateStore
 }: LoginStepperProps) => {
   const { t } = useTranslation();
-  const { activeStep } = uiStateStore!.loginStepper;
+  const { activeStep, isSubmitting } = uiStateStore!.loginStepper;
   const {
-    activeLeague,
-    activePriceLeague,
-    leagues
+    activeLeagueUuid,
+    activePriceLeagueUuid,
+    leagues,
+    priceLeagues
   } = accountStore!.getSelectedAccount;
 
+  const account = accountStore!.getSelectedAccount;
+  const {
+    characters,
+    activeCharacterUuid
+  } = accountStore!.getSelectedAccount!.activeLeague;
+
   const selectedLeague = () => {
-    return DropdownHelper.getDropdownSelection(leagues, activeLeague);
+    return DropdownHelper.getDropdownSelection(leagues, activeLeagueUuid);
   };
 
   const selectedPriceLeague = () => {
-    return DropdownHelper.getDropdownSelection(leagues, activePriceLeague);
+    return DropdownHelper.getDropdownSelection(leagues, activePriceLeagueUuid);
+  };
+
+  const selectedCharacter = () => {
+    return DropdownHelper.getDropdownSelection(characters, activeCharacterUuid);
   };
 
   const changeStep = (index: number) => {
@@ -53,10 +65,17 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
     });
   };
 
-  const handleLeagueSubmit = (leagues: ILeagueSelection) => {
-    accountStore!.getSelectedAccount.setActiveLeague(leagues.league);
-    accountStore!.getSelectedAccount.setActivePriceLeague(leagues.priceLeague);
+  const handleLeagueSubmit = () => {
     changeStep(activeStep + 1);
+  };
+
+  const handleLeagueChange = (selectedLeagueUuid: string) => {
+    accountStore!.getSelectedAccount.setActiveLeague(selectedLeagueUuid);
+  };
+
+  const handleCharacterSubmit = (character: Character) => {
+    // todo: set active character
+    // todo: complete and redirect to /authorized
   };
 
   const handleBack = () => {
@@ -70,16 +89,23 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   return (
     <LoginStepper
       handleValidate={(details: IAccount) => handleValidate(details)}
-      handleLeagueSubmit={(leagues: ILeagueSelection) =>
-        handleLeagueSubmit(leagues)
+      handleLeagueSubmit={() => handleLeagueSubmit()}
+      handleLeagueChange={(uuid: string) => handleLeagueChange(uuid)}
+      handleCharacterSubmit={(character: Character) =>
+        handleCharacterSubmit(character)
       }
       handleBack={() => handleBack()}
       handleReset={() => handleReset()}
       selectedLeague={selectedLeague()}
       selectedPriceLeague={selectedPriceLeague()}
+      selectedCharacter={selectedCharacter()}
       steps={getSteps()}
       leagues={leagues}
+      priceLeagues={priceLeagues}
+      characters={characters}
       activeStep={activeStep}
+      isSubmitting={isSubmitting}
+      account={account}
     ></LoginStepper>
   );
 };

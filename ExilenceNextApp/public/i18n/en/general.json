@@ -9,5 +9,7 @@
   "label.account_name": "Account name",
   "label.session_id": "Session Id",
   "label.select_main_league": "Select league",
-  "label.select_pricing_league": "Select pricing league"
+  "label.select_price_league": "Select pricing league",
+  "label.select_character": "Select character",
+  "error.no_characters_in_league": "You have no characters in the selected league"
 }

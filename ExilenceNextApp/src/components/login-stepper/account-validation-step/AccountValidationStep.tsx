@@ -1,26 +1,18 @@
-import {
-  TextField,
-  makeStyles,
-  Button,
-  LinearProgress
-} from '@material-ui/core';
+import { Button, LinearProgress, TextField, CircularProgress } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
-import { inject, observer } from 'mobx-react';
-import React, { useState } from 'react';
+import { observer } from 'mobx-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
-import { AccountStore } from '../../../store/accountStore';
-import { UiStateStore } from './../../../store/uiStateStore';
-import { IAccount } from './../../../interfaces/account.interface';
+import { Account } from '../../../store/domains/account';
 
 interface AccountValidationStepProps {
-  accountStore?: AccountStore;
-  uiStateStore?: UiStateStore;
   handleValidate: Function;
   handleBack: Function;
   activeStep: number;
   styles: Record<string, string>;
+  isSubmitting: boolean;
+  account: Account;
 }
 
 interface AccountFormValues {
@@ -32,14 +24,12 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   props: AccountValidationStepProps
 ) => {
   const { t } = useTranslation();
-  const { isSubmitting } = props.uiStateStore!.loginStepper;
-  const account = props.accountStore!.getSelectedAccount;
 
   return (
     <Formik
       initialValues={{
-        accountName: account.name,
-        sessionId: account.sessionId
+        accountName: props.account.name,
+        sessionId: props.account.sessionId
       }}
       onSubmit={(
         values: AccountFormValues,
@@ -98,10 +88,9 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                 fullWidth
               />
             </div>
-            {isSubmitting && <LinearProgress />}
             <div className={props.styles.stepFooter}>
               <Button
-                disabled={props.activeStep === 0 || isSubmitting}
+                disabled={props.activeStep === 0 || props.isSubmitting}
                 onClick={() => props.handleBack()}
               >
                 {t('action.back')}
@@ -110,10 +99,11 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={props.isSubmitting}
               >
                 {t('action.next')}
               </Button>
+              {props.isSubmitting && <CircularProgress className={props.styles.progressRight} size={36} />}
             </div>
           </form>
         );
@@ -122,6 +112,4 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(
-  observer(AccountValidationStep)
-);
+export default observer(AccountValidationStep);
