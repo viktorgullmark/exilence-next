@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{CECAA008-D3A2-46F7-8069-BAE7DD93216D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundProcessor", "BackgroundProcessor\BackgroundProcessor.csproj", "{B95DEA96-A058-4718-83EA-A60CE19C7AA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

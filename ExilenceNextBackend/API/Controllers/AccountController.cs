@@ -19,10 +19,10 @@ namespace API.Controllers
         private IAccountRepository _accountRepository;
         private IMapper _mapper;
 
-        public AccountController(IAccountRepository accountRepository, IMapper mapper)
+        public AccountController(IMapper mapper, IAccountRepository accountRepository)
         {
-            _accountRepository = accountRepository;
             _mapper = mapper;
+            _accountRepository = accountRepository;
         }
 
         // GET: api/Account
