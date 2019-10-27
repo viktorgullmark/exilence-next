@@ -8,8 +8,8 @@ import { ICharacter } from '../../interfaces/character.interface';
 
 export class League implements ILeague {
     @persist uuid: string = uuid.v4();
-    @persist @observable id: string = '';
-    @persist @observable realm: string = '';
+    @persist id: string = '';
+    @persist realm: string = '';
     @persist @observable selectedCharacterUuid: string = '';
 
     @persist('list', Character) @observable characters: Character[] = [];
@@ -19,9 +19,10 @@ export class League implements ILeague {
     }
 
     @action
-    setCharacters(characters: ICharacter[]) {
-        this.characters = characters.map(c => {
+    updateCharacters(characters: ICharacter[]) {
+        const newCharacters = characters.filter(c => this.characters.find(ec => ec.name === ec.name) === undefined)
+        this.characters = this.characters.concat(newCharacters.map(c => {
             return new Character(c);
-        });
+        }));
     }
   }

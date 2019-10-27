@@ -41,7 +41,7 @@ export class AccountStore {
   @action
   addAccount(details: IAccount) {
     let acc = this.findAccountByName(details.name);
-    acc !== undefined
+    acc
       ? acc.setSessionId(details.sessionId)
       : this.accounts.push(new Account(details));
   }
@@ -62,12 +62,12 @@ export class AccountStore {
           if (requests[1].data.length === 0) {
             throw new Error('error.no_characters');
           }
-          if (details !== undefined) {
+          if (details) {
             this.addAccount(details);
             this.selectAccountByName(details.name);
           }
           const acc = this.getSelectedAccount;
-          acc!.setLeagues(requests[0].data);
+          acc!.updateLeagues(requests[0].data);
           acc!.addCharactersToLeagues(requests[1].data);
         }),
         switchMap(() => {
@@ -113,7 +113,7 @@ export class AccountStore {
     const acc = this.getSelectedAccount;
     const leagueWithChar = acc.leagueWithCharacters;
 
-    leagueWithChar !== undefined
+    leagueWithChar
       ? fromStream(
           externalService.getStashTabs(acc.name, leagueWithChar.id).pipe(
             map(() => this.validateSessionSuccess()),

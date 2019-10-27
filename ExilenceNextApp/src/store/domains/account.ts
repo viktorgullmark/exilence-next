@@ -19,23 +19,47 @@ export class Account implements IAccount {
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
   }
-  
+
   @computed
   get leagueWithCharacters() {
     return this.leagues.find(l => l.characters.length > 0);
   }
 
   @action
-  setLeagues(leagues: ILeague[]) {
-    this.leagues = leagues.map(league => {
+  setActiveLeague(uuid: string) {
+    this.activeLeague = uuid;
+  }
+
+  @action
+  setActivePriceLeague(uuid: string) {
+    this.activePriceLeague = uuid;
+  }
+
+  @action
+  updateLeagues(leagues: ILeague[]) {
+    const newLeagues = leagues.filter(l => this.leagues.find(el => el.id === l.id) === undefined)
+    this.leagues = this.leagues.concat(newLeagues.map(league => {
       return new League(league);
-    });
+    }));
+
+    const existingLeague = this.leagues.find(l => l.uuid === this.activeLeague);
+    const existingPriceLeague = this.leagues.find(
+      l => l.uuid === this.activePriceLeague
+    );
+
+    if (!existingLeague) {
+      this.activeLeague = this.leagues[0].uuid;
+    }
+
+    if (!existingPriceLeague) {
+      this.activePriceLeague = this.leagues[0].uuid;
+    }
   }
 
   @action
   addCharactersToLeagues(characters: ICharacter[]) {
     this.leagues = this.leagues.map(l => {
-      l.setCharacters(characters.filter(c => c.league === l.id)) 
+      l.updateCharacters(characters.filter(c => c.league === l.id));
       return l;
     });
   }

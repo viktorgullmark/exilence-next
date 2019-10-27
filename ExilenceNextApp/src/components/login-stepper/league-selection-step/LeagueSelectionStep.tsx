@@ -1,19 +1,9 @@
-import {
-  TextField,
-  makeStyles,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText
-} from '@material-ui/core';
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { inject, observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
 import { AccountStore } from '../../../store/accountStore';
 import { League } from '../../../store/domains/league';
 
@@ -24,26 +14,30 @@ interface LeagueSelectionStepProps {
   handleReset: Function;
   activeStep: number;
   styles: Record<string, string>;
+  selectedLeague?: string;
+  selectedPriceLeague?: string;
+  leagues: League[];
 }
 
 interface LeagueFormValues {
-  league: string;
-  priceLeague: string;
+  league?: string;
+  priceLeague?: string;
 }
 
 const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
   props: LeagueSelectionStepProps
 ) => {
   const { t } = useTranslation();
-  const [, setSubmitComplete] = useState(false);
 
   return (
     <Formik
-      initialValues={{ league: '', priceLeague: '' }}
+      initialValues={{ league: props.selectedLeague, priceLeague: props.selectedPriceLeague }}
       onSubmit={(values: LeagueFormValues, { setSubmitting }: FormikActions<LeagueFormValues>
       ) => {
-        setSubmitComplete(true);
-        props.handleLeagueSubmit();
+        props.handleLeagueSubmit({
+          league: values.league,
+          priceLeague: values.priceLeague
+        });
       }}
       validationSchema={Yup.object().shape({
         league: Yup.string().required('Required'),
@@ -81,10 +75,10 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                     id: 'league-dd'
                   }}
                 >
-                  {props.accountStore!.getSelectedAccount.leagues.map(
+                  {props.leagues.map(
                     (league: League) => {
                       return (
-                        <MenuItem key={league.uuid} value={league.id}>
+                        <MenuItem key={league.uuid} value={league.uuid}>
                           {league.id}
                         </MenuItem>
                       );
@@ -113,10 +107,10 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                     id: 'price-league-dd'
                   }}
                 >
-                  {props.accountStore!.getSelectedAccount.leagues.map(
+                  {props.leagues.map(
                     (priceLeague: League) => {
                       return (
-                        <MenuItem key={priceLeague.uuid} value={priceLeague.id}>
+                        <MenuItem key={priceLeague.uuid} value={priceLeague.uuid}>
                           {priceLeague.id}
                         </MenuItem>
                       );

@@ -5,17 +5,19 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { IAccount } from './../../interfaces/account.interface';
+import { ILeagueSelection } from './../../interfaces/league-selection.interface';
+import AccountValidationStep from './account-validation-step/AccountValidationStep';
+import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
+import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
 import { LoginStepConnector } from './login-step-connector/LoginStepConnector';
 import { LoginStepIcons } from './login-step-icons/LoginStepIcons';
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
-import { IFormInput } from '../../interfaces/form-input.interface';
-import AccountValidationStep from './account-validation-step/AccountValidationStep';
-import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
-import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
-import { IAccount } from './../../interfaces/account.interface';
+import { League } from '../../store/domains/league';
 
 interface LoginStepperProps {
   handleValidate: Function;
@@ -24,8 +26,9 @@ interface LoginStepperProps {
   handleReset: Function;
   steps: string[];
   activeStep: number;
-  sessionId: IFormInput;
-  accountName: IFormInput;
+  selectedLeague?: string;
+  selectedPriceLeague?: string;
+  leagues: League[];
 }
 
 const useStyles = makeStyles((theme: Theme)  => ({
@@ -62,10 +65,13 @@ const LoginStepper: React.FC<LoginStepperProps> = (
       case 1:
         return (
           <LeagueSelectionStep
-            handleLeagueSubmit={() => props.handleLeagueSubmit()}
+            handleLeagueSubmit={(leagues: ILeagueSelection) => props.handleLeagueSubmit(leagues)}
             handleBack={() => props.handleBack()}
             handleReset={() => props.handleReset()}
             activeStep={props.activeStep}
+            selectedLeague={props.selectedLeague}
+            selectedPriceLeague={props.selectedPriceLeague}
+            leagues={props.leagues}
             styles={classes}
           />
         );
