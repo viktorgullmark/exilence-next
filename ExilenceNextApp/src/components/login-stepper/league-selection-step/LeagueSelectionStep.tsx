@@ -56,12 +56,9 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
           values,
           touched,
           errors,
-          dirty,
           isSubmitting,
           handleChange,
-          handleBlur,
           handleSubmit,
-          handleReset
         } = formProps;
 
         return (
@@ -70,7 +67,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
               <FormControl
                 fullWidth
                 margin="normal"
-                error={(touched.league && errors.league != undefined) || noCharacters.length > 0}
+                error={(touched.league && errors.league !== undefined) || noCharacters.length > 0}
               >
                 <InputLabel htmlFor="league-dd">
                   {t('label.select_main_league')}
@@ -94,7 +91,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                     );
                   })}
                 </Select>
-                {(touched.league && errors.league) || noCharacters && (
+                {((touched.league && errors.league) || noCharacters) && (
                   <FormHelperText error>
                     {(errors.league && touched.league && errors.league) || noCharacters}
                   </FormHelperText>
@@ -103,7 +100,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
               <FormControl
                 fullWidth
                 margin="normal"
-                error={touched.priceLeague && errors.priceLeague != undefined}
+                error={touched.priceLeague && errors.priceLeague !== undefined}
               >
                 <InputLabel htmlFor="price-league-dd">
                   {t('label.select_price_league')}

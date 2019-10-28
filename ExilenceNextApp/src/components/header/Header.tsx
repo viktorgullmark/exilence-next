@@ -1,15 +1,16 @@
-import { AppBar, Button, makeStyles, Toolbar, Theme } from '@material-ui/core';
+import { AppBar, makeStyles, Theme, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import React, { useState } from 'react';
-import clsx from 'clsx';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import MinimizeIcon from '@material-ui/icons/Minimize';
 import CloseIcon from '@material-ui/icons/Close';
 import FilterNone from '@material-ui/icons/FilterNone';
+import MinimizeIcon from '@material-ui/icons/Minimize';
+import clsx from 'clsx';
+import React from 'react';
+
 import { WindowHelper } from './../../helpers/window.helper';
 
-const resizeHandleContainerHeight = 5;
-const toolbarHeight = 30;
+export const resizeHandleContainerHeight = 5;
+export const toolbarHeight = 30;
 
 const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
@@ -32,9 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  maximized: boolean;
+  setMaximized: Function;
+}
+
+const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
-  const [maximized, setMaximized] = useState(false);
 
   return (
 
@@ -49,10 +54,10 @@ const Header: React.FC = () => {
         >
           <Grid item className={clsx(classes.noDrag)}>
             <MinimizeIcon className={classes.windowIcon} onClick={() => WindowHelper.minimize()} />
-            {!maximized ? (
-              <CheckBoxOutlineBlankIcon className={classes.windowIcon} onClick={() => { WindowHelper.maximize(); setMaximized(true); }} />
+            {!props.maximized ? (
+              <CheckBoxOutlineBlankIcon className={classes.windowIcon} onClick={() => { WindowHelper.maximize(); props.setMaximized(true); }} />
               ) : (
-              <FilterNone className={classes.windowIcon} onClick={() => { WindowHelper.unmaximize(); setMaximized(false); }} />
+              <FilterNone className={classes.windowIcon} onClick={() => { WindowHelper.unmaximize(); props.setMaximized(false); }} />
               )}
             <CloseIcon className={classes.windowIcon} onClick={() => WindowHelper.close()} />
           </Grid>

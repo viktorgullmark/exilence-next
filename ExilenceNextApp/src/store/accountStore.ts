@@ -1,15 +1,14 @@
-import { action, computed, observable, runInAction, reaction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
-import { UiStateStore } from './uiStateStore';
-import { switchMap } from 'rxjs/operators';
 import { NotificationStore } from './notificationStore';
+import { UiStateStore } from './uiStateStore';
 
 export class AccountStore {
   constructor(

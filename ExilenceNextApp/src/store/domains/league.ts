@@ -19,8 +19,13 @@ export class League implements ILeague {
     }
 
     @action
+    setActiveCharacter(uuid: string) {
+      this.activeCharacterUuid = uuid;
+    }
+    
+    @action
     updateCharacters(characters: ICharacter[]) {
-        const newCharacters = characters.filter(c => this.characters.find(ec => ec.name === ec.name) === undefined)
+        const newCharacters = characters.filter(c => this.characters.find(ec => ec.name === c.name) === undefined)
         this.characters = this.characters.concat(newCharacters.map(c => {
             return new Character(c);
         }));

@@ -1,9 +1,10 @@
-import { Button, LinearProgress, TextField, CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
+
 import { Account } from '../../../store/domains/account';
 
 interface AccountValidationStepProps {
@@ -50,7 +51,6 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
           values,
           touched,
           errors,
-          dirty,
           handleChange,
           handleBlur,
           handleSubmit
@@ -69,7 +69,7 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                   touched.accountName &&
                   errors.accountName
                 }
-                error={touched.accountName && errors.accountName != undefined}
+                error={touched.accountName && errors.accountName !== undefined}
                 margin="normal"
                 fullWidth
               />
@@ -83,7 +83,7 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                 helperText={
                   errors.sessionId && touched.sessionId && errors.sessionId
                 }
-                error={touched.sessionId && errors.sessionId != undefined}
+                error={touched.sessionId && errors.sessionId !== undefined}
                 margin="normal"
                 fullWidth
               />

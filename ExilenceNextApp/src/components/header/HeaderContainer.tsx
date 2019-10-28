@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 
 const HeaderContainer: React.FC = () => {
-
+  const [maximized, setMaximized] = useState(false);
   return (
-    <Header></Header>
+    <Header maximized={maximized} setMaximized={setMaximized}></Header>
   );
 }
 

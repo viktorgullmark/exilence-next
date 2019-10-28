@@ -1,7 +1,6 @@
-import { observable, computed, action } from 'mobx';
+import { action, observable } from 'mobx';
 
 import { IStepper } from '../../interfaces/stepper.interface';
-import { IAccount } from './../../interfaces/account.interface';
 
 export class Stepper implements IStepper {
   @observable activeStep: number = 0;

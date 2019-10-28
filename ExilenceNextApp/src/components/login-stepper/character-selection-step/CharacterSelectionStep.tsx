@@ -36,12 +36,9 @@ const CharacterSelectionStep: React.FC<CharacterSelectionStepProps> = (props: Ch
         values,
         touched,
         errors,
-        dirty,
         isSubmitting,
         handleChange,
-        handleBlur,
         handleSubmit,
-        handleReset
       } = formProps;
       return (
         <form onSubmit={handleSubmit}>
@@ -49,7 +46,7 @@ const CharacterSelectionStep: React.FC<CharacterSelectionStepProps> = (props: Ch
             <FormControl
               fullWidth
               margin="normal"
-              error={touched.character && errors.character != undefined}
+              error={touched.character && errors.character !== undefined}
             >
               <InputLabel htmlFor="char-dd">
                 {t('label.select_character')}

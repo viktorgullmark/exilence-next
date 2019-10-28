@@ -1,14 +1,14 @@
 import { inject, observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
 
 import { AccountStore } from '../../store/accountStore';
+import { DropdownHelper } from './../../helpers/dropdown.helper';
 import { IAccount } from './../../interfaces/account.interface';
+import { Character } from './../../store/domains/character';
 import { UiStateStore } from './../../store/uiStateStore';
 import LoginStepper from './LoginStepper';
-import { ILeagueSelection } from './../../interfaces/league-selection.interface';
-import { DropdownHelper } from './../../helpers/dropdown.helper';
-import { Character } from './../../store/domains/character';
 
 interface LoginStepperProps {
   accountStore?: AccountStore;
@@ -19,6 +19,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   accountStore,
   uiStateStore
 }: LoginStepperProps) => {
+  const history = useHistory();
   const { t } = useTranslation();
   const { activeStep, isSubmitting } = uiStateStore!.loginStepper;
   const {
@@ -74,8 +75,10 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   };
 
   const handleCharacterSubmit = (character: Character) => {
-    // todo: set active character
-    // todo: complete and redirect to /authorized
+    accountStore!.getSelectedAccount.activeLeague.setActiveCharacter(
+      character.uuid
+    );
+    history.push('/net-worth');
   };
 
   const handleBack = () => {
@@ -91,9 +94,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
       handleValidate={(details: IAccount) => handleValidate(details)}
       handleLeagueSubmit={() => handleLeagueSubmit()}
       handleLeagueChange={(uuid: string) => handleLeagueChange(uuid)}
-      handleCharacterSubmit={(character: Character) =>
-        handleCharacterSubmit(character)
-      }
+      handleCharacterSubmit={(c: Character) => handleCharacterSubmit(c)}
       handleBack={() => handleBack()}
       handleReset={() => handleReset()}
       selectedLeague={selectedLeague()}

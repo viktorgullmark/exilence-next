@@ -1,18 +1,11 @@
-import {
-  action,
-  observable,
-  computed,
-  reaction,
-  IReactionDisposer,
-  autorun
-} from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 
 import { IAccount } from '../../interfaces/account.interface';
+import { ICharacter } from '../../interfaces/character.interface';
 import { ILeague } from '../../interfaces/league.interface';
 import { League } from './league';
-import { ICharacter } from '../../interfaces/character.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -45,7 +38,6 @@ export class Account implements IAccount {
 
   @action
   setActiveLeague(uuid: string) {
-    console.log(this.leagues.find(l => l.uuid === uuid))
     this.activeLeagueUuid = uuid;
   }
 

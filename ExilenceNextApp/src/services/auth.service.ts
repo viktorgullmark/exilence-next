@@ -1,7 +1,8 @@
-import { electronService } from "./electron.service";
-import { from, Observable } from "rxjs";
-import { mergeMap, switchMap } from "rxjs/operators";
+import { from, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 import { ICookie } from './../interfaces/cookie.interface';
+import { electronService } from './electron.service';
 
 export const authService = {
     setAuthCookie,
