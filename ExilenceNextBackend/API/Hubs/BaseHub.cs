@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace API.Hubs
 {
-    public  class BaseHub : Hub
+    public partial class BaseHub : Hub
     {
         IMapper _mapper;
 
