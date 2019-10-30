@@ -35,9 +35,29 @@ namespace Shared.Repositories
             return group;
         }
 
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            var connection = await _exilenceContext.Connections.FirstOrDefaultAsync(c => c.ConnectionId == connectionId);
+            return connection;
+        }
+
+        public async Task<Connection> RemoveConnection(string connectionId)
+        {
+            var connection = await GetConnection(connectionId);
+            _exilenceContext.Remove(connection);
+            return connection;
+        }
+
+        public async Task<Connection> AddConnection(Connection connection)
+        {
+            await _exilenceContext.Connections.AddAsync(connection);
+            return connection;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _exilenceContext.SaveChangesAsync();
         }
+
     }
 }

@@ -12,6 +12,9 @@ namespace BackgroundProcessor
 
         public static async Task Main(string[] args)
         {
+
+            await Task.Delay(2000);
+
             _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub").Build();
 
             _connection.Closed += async (error) =>

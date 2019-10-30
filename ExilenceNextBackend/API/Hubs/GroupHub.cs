@@ -12,7 +12,7 @@ namespace API.Hubs
     {
         public async Task JoinGroup(string name)
         {
-            var connection = new Connection(Context.ConnectionId);
+            var connection = await _groupRepository.GetConnection(Context.ConnectionId);
             var group = await _groupRepository.GetGroup(name);
             if (group == null)
             {
