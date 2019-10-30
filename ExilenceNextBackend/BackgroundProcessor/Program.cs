@@ -22,7 +22,7 @@ namespace BackgroundProcessor
 
             _connection.On<string>("Log", (message) => {
 
-                Console.WriteLine($"{DateTime.Now.ToShortTimeString()}: {message}");
+                Console.WriteLine($"{DateTime.Now.ToShortTimeString()} Server: {message}");
 
             });
 

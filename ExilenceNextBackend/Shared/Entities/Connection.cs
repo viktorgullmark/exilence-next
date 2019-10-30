@@ -10,12 +10,12 @@ namespace Shared.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string ConnectionId { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Created { get; set; }
 
         public Connection(string connectionId)
         {
             ConnectionId = connectionId;
+            Created = DateTime.UtcNow;
         }
     }
 }

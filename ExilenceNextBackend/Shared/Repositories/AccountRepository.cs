@@ -35,6 +35,11 @@ namespace Shared.Repositories
             return account;
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _exilenceContext.SaveChangesAsync();
+        }
+
 
     }
 }

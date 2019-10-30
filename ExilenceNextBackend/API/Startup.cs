@@ -34,10 +34,13 @@ namespace API
             services.AddControllers();
             services.AddSignalR();
             services.AddAutoMapper(typeof(Startup));
-            services.AddDbContext<ExilenceContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ExilenceConnection")));
+            services.AddDbContext<ExilenceContext>(
+                options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"))
+            );
 
 
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
 
         }
 
