@@ -11,15 +11,21 @@ namespace Shared.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Code { get; set; }
-        public ICollection<Connection> Connections { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string Name { get; set; }
+        public virtual ICollection<Connection> Connections { get; set; }
         public DateTime Created { get; set; }
+
+
+        public Group()
+        {
+
+        }
 
         public Group(string code, ICollection<Connection> connections)
         {
-            Code = code;
+            Name = code;
             Connections = connections;
+            Created = DateTime.UtcNow;
         }
 
     }

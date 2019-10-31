@@ -6,12 +6,15 @@ namespace BackgroundProcessor
 {
     class Program
     {
-        private static HubConnection _connection;
+        public static HubConnection _connection;
         private static bool _keepRunning = true;
 
 
         public static async Task Main(string[] args)
         {
+
+            await Task.Delay(2000);
+
             _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub").Build();
 
             _connection.Closed += async (error) =>
@@ -20,12 +23,11 @@ namespace BackgroundProcessor
                 await _connection.StartAsync();
             };
 
-            _connection.On<string>("Pong", (message) => {
+            _connection.On<string>("Log", (message) => {
 
-                Console.WriteLine($"Retrived: {message}");
+                Console.WriteLine($"{DateTime.Now.ToShortTimeString()} Server: {message}");
 
             });
-
 
             Console.CancelKeyPress += async delegate (object sender, ConsoleCancelEventArgs e)
             {
@@ -36,15 +38,18 @@ namespace BackgroundProcessor
 
             await _connection.StartAsync();
 
+            var commandHandler = new CommandHandler();
+
             while (_keepRunning)
             {
-                var debug = Console.ReadLine();
-
-                Console.WriteLine("Sending ping");
-                await _connection.InvokeAsync("ping", "ping");
+                var commandLine = Console.ReadLine();
+                await commandHandler.RouteCommand(commandLine);
 
 
             }
         }
+
+
+
     }
 }

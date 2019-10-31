@@ -11,5 +11,6 @@ namespace Shared.Interfaces
         Task<Account> CreateAccount(Account account);
         Task<Account> GetAccount(int id);
         Task<Account> GetAccount(string name);
+        Task SaveChangesAsync();
     }
 }
