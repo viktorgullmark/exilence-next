@@ -6,7 +6,6 @@ import { useHistory } from 'react-router';
 import { AccountStore } from '../../store/accountStore';
 import { DropdownHelper } from './../../helpers/dropdown.helper';
 import { IAccount } from './../../interfaces/account.interface';
-import { Character } from './../../store/domains/character';
 import { UiStateStore } from './../../store/uiStateStore';
 import LoginStepper from './LoginStepper';
 
@@ -31,8 +30,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
 
   const account = accountStore!.getSelectedAccount;
   const {
-    characters,
-    activeCharacterUuid
+    characters
   } = accountStore!.getSelectedAccount!.activeLeague;
 
   const selectedLeague = () => {
@@ -43,10 +41,6 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
     return DropdownHelper.getDropdownSelection(leagues, activePriceLeagueUuid);
   };
 
-  const selectedCharacter = () => {
-    return DropdownHelper.getDropdownSelection(characters, activeCharacterUuid);
-  };
-
   const changeStep = (index: number) => {
     uiStateStore!.loginStepper.setActiveStep(index);
   };
@@ -54,8 +48,7 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   const getSteps = () => {
     return [
       t('title.enter_acc_info'),
-      t('title.select_leagues'),
-      t('title.select_characters')
+      t('title.select_leagues')
     ];
   };
 
@@ -67,18 +60,11 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   };
 
   const handleLeagueSubmit = () => {
-    changeStep(activeStep + 1);
+    history.push('/net-worth');
   };
 
   const handleLeagueChange = (selectedLeagueUuid: string) => {
     accountStore!.getSelectedAccount.setActiveLeague(selectedLeagueUuid);
-  };
-
-  const handleCharacterSubmit = (character: Character) => {
-    accountStore!.getSelectedAccount.activeLeague.setActiveCharacter(
-      character.uuid
-    );
-    history.push('/net-worth');
   };
 
   const handleBack = () => {
@@ -94,12 +80,10 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
       handleValidate={(details: IAccount) => handleValidate(details)}
       handleLeagueSubmit={() => handleLeagueSubmit()}
       handleLeagueChange={(uuid: string) => handleLeagueChange(uuid)}
-      handleCharacterSubmit={(c: Character) => handleCharacterSubmit(c)}
       handleBack={() => handleBack()}
       handleReset={() => handleReset()}
       selectedLeague={selectedLeague()}
       selectedPriceLeague={selectedPriceLeague()}
-      selectedCharacter={selectedCharacter()}
       steps={getSteps()}
       leagues={leagues}
       priceLeagues={priceLeagues}

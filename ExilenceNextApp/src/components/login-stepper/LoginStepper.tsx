@@ -25,14 +25,12 @@ interface LoginStepperProps {
   handleValidate: Function;
   handleLeagueSubmit: Function;
   handleLeagueChange: Function;
-  handleCharacterSubmit: Function;
   handleBack: Function;
   handleReset: Function;
   steps: string[];
   activeStep: number;
   selectedLeague?: string;
   selectedPriceLeague?: string;
-  selectedCharacter?: string;
   characters: Character[];
   leagues: League[];
   priceLeagues: League[];
@@ -92,20 +90,6 @@ const LoginStepper: React.FC<LoginStepperProps> = (
             selectedPriceLeague={props.selectedPriceLeague}
             leagues={props.leagues}
             priceLeagues={props.priceLeagues}
-            characters={props.characters}
-            styles={classes}
-          />
-        );
-      case 2:
-        return (
-          <CharacterSelectionStep
-            handleCharacterSubmit={(character: Character) =>
-              props.handleCharacterSubmit(character)
-            }
-            handleBack={() => props.handleBack()}
-            handleReset={() => props.handleReset()}
-            activeStep={props.activeStep}
-            selectedCharacter={props.selectedCharacter}
             characters={props.characters}
             styles={classes}
           />

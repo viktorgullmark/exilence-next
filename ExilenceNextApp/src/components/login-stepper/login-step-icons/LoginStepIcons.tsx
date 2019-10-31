@@ -38,8 +38,7 @@ export function LoginStepIcons(props: StepIconProps) {
 
     const icons: { [index: string]: React.ReactElement } = {
         1: <VerifiedUser />,
-        2: <SettingsIcon />,
-        3: <PersonIcon />
+        2: <SettingsIcon />
     };
 
     return (

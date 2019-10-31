@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
   featureWrapper: {
     height: '100%',
     display: 'flex',
-    margin: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(2)}px) 
+    padding: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(2)}px) 
     ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`
   }
 }));
