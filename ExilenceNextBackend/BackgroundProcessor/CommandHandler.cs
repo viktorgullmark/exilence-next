@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
 
 namespace BackgroundProcessor
 {
@@ -23,6 +24,10 @@ namespace BackgroundProcessor
                 case "leave":
                     await LeaveGroup(commandData);
                     break;
+                case "snapshots":
+                    await DownloadSnapshots(int.Parse(commandData));
+                    break;
+
 
 
                 default:
@@ -40,5 +45,24 @@ namespace BackgroundProcessor
         {
             await Program._connection.InvokeAsync("LeaveGroup", group);
         }
+
+        public async Task DownloadSnapshots(int snapshotsToFetch)
+        {
+            // Call "Cancel" on this CancellationTokenSource to send a cancellation message to
+            // the server, which will trigger the corresponding token in the hub method.
+            var cancellationTokenSource = new CancellationTokenSource();
+            var snapshots = Program._connection.StreamAsync<int>("DownloadSnapshots", snapshotsToFetch, 100, cancellationTokenSource.Token);
+
+
+            Console.WriteLine("Retriving snapshots: ");
+            await foreach (var snapshot in snapshots)
+            {
+                Console.Write($" {snapshot},");
+            }
+
+            Console.WriteLine("Finished retriving snapshots");
+        }
+
+
     }
 }

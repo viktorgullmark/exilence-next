@@ -4,6 +4,8 @@ using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -42,6 +44,32 @@ namespace API.Hubs
             }
             await _groupRepository.SaveChangesAsync();
 
+        }
+
+        public async Task UploadStream(IAsyncEnumerable<string> stream)
+        {
+            await foreach (var item in stream)
+            {
+                Console.WriteLine(item);
+            }
+        }
+        public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, CancellationToken cancellationToken)
+        {
+            //Can be something else then ints
+            var listOfSnapshots = Enumerable.Range(0, count).ToList();//.AsQueryable();
+
+            foreach (var snapshot in listOfSnapshots)
+            {
+                // Check the cancellation token regularly so that the server will stop
+                // producing items if the client disconnects.
+                cancellationToken.ThrowIfCancellationRequested();
+
+                yield return snapshot;
+
+                // Use the cancellationToken in other APIs that accept cancellation
+                // tokens so the cancellation can flow down to them.
+                await Task.Delay(delay, cancellationToken);
+            }
         }
     }
 }

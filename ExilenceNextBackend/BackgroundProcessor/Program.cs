@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BackgroundProcessor
@@ -24,10 +25,13 @@ namespace BackgroundProcessor
             };
 
             _connection.On<string>("Log", (message) => {
-
                 Console.WriteLine($"{DateTime.Now.ToShortTimeString()} Server: {message}");
-
             });
+
+
+
+
+
 
             Console.CancelKeyPress += async delegate (object sender, ConsoleCancelEventArgs e)
             {
