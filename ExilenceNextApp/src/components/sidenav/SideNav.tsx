@@ -22,10 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: drawerWidth
   },
   drawerHeader: {
+    height: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
+    background: theme.palette.secondary.light,
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
     justifyContent: 'flex-end'
   },
   content: {
@@ -76,6 +77,7 @@ const SideNav: React.FC<SideNavProps> = ({
           className={classes.drawer}
           variant="persistent"
           anchor="left"
+          color="secondary"
           open={open}
           classes={{
             paper: classes.drawerPaper

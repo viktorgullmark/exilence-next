@@ -13,6 +13,7 @@ import { WindowHelper } from './../../helpers/window.helper';
 import { observer } from 'mobx-react';
 import { drawerWidth } from './../sidenav/SideNav';
 import { useLocation } from 'react-router';
+import Typography from '@material-ui/core/Typography';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -23,6 +24,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
+  },
+  title: {
+    flexGrow: 1,
+    fontSize: '0.85rem',
+    textTransform: 'uppercase',
+    letterSpacing: '4px',
+    color: theme.palette.primary.dark,
+    fontWeight: 700
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -39,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: resizeHandleContainerHeight
   },
   menuButton: {
-    marginRight: theme.spacing(2)
   },
   hide: {
     display: 'none'
@@ -71,7 +79,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
-  }
+  };
 
   return (
     <AppBar
@@ -100,12 +108,16 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
             <MenuIcon />
           </IconButton>
         )}
+
         <Grid
           container
           direction="row"
           justify="flex-end"
           alignItems="flex-end"
         >
+          <Typography variant="h6" noWrap className={clsx(classes.title, props.sidenavOpened && classes.hide)}>
+            Exilence Next
+          </Typography>
           <Grid item className={clsx(classes.noDrag)}>
             <MinimizeIcon
               className={classes.windowIcon}
