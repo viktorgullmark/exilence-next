@@ -11,7 +11,8 @@ import { Stepper } from './domains/stepper';
 export class UiStateStore {
   @observable loginStepper: Stepper = new Stepper();
   @observable sessIdCookie: ICookie | undefined = undefined;
-  @persist @observable accountForm: IAccount = { name: 'test', sessionId: '' }
+  @persist('object') @observable accountForm: IAccount = { name: 'test', sessionId: '' }
+  @persist @observable sidenavOpen: boolean = true;
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -23,5 +24,11 @@ export class UiStateStore {
         });
       })
     );
+  }
+
+  @action
+  toggleSidenav() {
+    this.sidenavOpen = !this.sidenavOpen;
+    console.log('TOGLGED', this.sidenavOpen);
   }
 }
