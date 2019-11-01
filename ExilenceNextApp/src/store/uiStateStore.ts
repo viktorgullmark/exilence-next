@@ -12,7 +12,7 @@ export class UiStateStore {
   @observable loginStepper: Stepper = new Stepper();
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist('object') @observable accountForm: IAccount = { name: 'test', sessionId: '' }
-  @persist @observable sidenavOpen: boolean = true;
+  @persist @observable sidenavOpen: boolean = false;
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -27,8 +27,7 @@ export class UiStateStore {
   }
 
   @action
-  toggleSidenav() {
-    this.sidenavOpen = !this.sidenavOpen;
-    console.log('TOGLGED', this.sidenavOpen);
+  toggleSidenav(open?: boolean) {
+    this.sidenavOpen = open || !this.sidenavOpen;
   }
 }

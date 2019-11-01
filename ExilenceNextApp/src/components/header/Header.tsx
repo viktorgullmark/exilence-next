@@ -12,6 +12,7 @@ import React from 'react';
 import { WindowHelper } from './../../helpers/window.helper';
 import { observer } from 'mobx-react';
 import { drawerWidth } from './../sidenav/SideNav';
+import { useLocation } from 'react-router';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -20,16 +21,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+      duration: theme.transitions.duration.leavingScreen
+    })
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+      duration: theme.transitions.duration.enteringScreen
+    })
   },
   toolbar: {
     minHeight: toolbarHeight,
@@ -66,36 +67,39 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
+  const location = useLocation();
 
-  const handleDrawerOpen = () => {
-    console.log('should open');
-  };
+  const atLoginRoute = () => {
+    return location.pathname === '/login';
+  }
 
   return (
     <AppBar
       position="fixed"
       color="secondary"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: props.sidenavOpened
+        [classes.appBarShift]: props.sidenavOpened && !atLoginRoute()
       })}
     >
       <div
         className={clsx(classes.noDrag, classes.resizeHandleContainer)}
       ></div>
       <Toolbar className={classes.toolbar}>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={() => props.toggleSidenav()}
-          edge="start"
-          className={clsx(
-            classes.menuButton,
-            classes.noDrag,
-            props.sidenavOpened && classes.hide
-          )}
-        >
-          <MenuIcon />
-        </IconButton>
+        {!atLoginRoute() && (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => props.toggleSidenav()}
+            edge="start"
+            className={clsx(
+              classes.menuButton,
+              classes.noDrag,
+              props.sidenavOpened && classes.hide
+            )}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         <Grid
           container
           direction="row"
