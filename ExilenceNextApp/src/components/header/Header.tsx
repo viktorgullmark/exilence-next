@@ -115,7 +115,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
           justify="flex-end"
           alignItems="flex-end"
         >
-          <Typography variant="h6" noWrap className={clsx(classes.title, props.sidenavOpened && classes.hide)}>
+          <Typography variant="h6" noWrap className={clsx(classes.title, props.sidenavOpened && !atLoginRoute() && classes.hide)}>
             Exilence Next
           </Typography>
           <Grid item className={clsx(classes.noDrag)}>
