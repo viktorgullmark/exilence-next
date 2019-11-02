@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SideNav from './SideNav';
 import { observer, inject } from 'mobx-react';
 import { UiStateStore } from '../../store/uiStateStore';

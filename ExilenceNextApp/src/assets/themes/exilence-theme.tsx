@@ -8,7 +8,7 @@ export default function exilenceTheme() {
         overrides: {
             MuiToolbar: {
               gutters: {
-                [defaultTheme.breakpoints.up('sm')]: {
+                [defaultTheme.breakpoints.up('xs')]: {
                   paddingLeft: '8px',
                   paddingRight: '8px',
                 },

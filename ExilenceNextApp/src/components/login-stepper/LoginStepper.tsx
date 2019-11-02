@@ -9,17 +9,16 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
 import { Account } from '../../store/domains/account';
 import { League } from '../../store/domains/league';
 import { IAccount } from './../../interfaces/account.interface';
 import { ILeagueSelection } from './../../interfaces/league-selection.interface';
 import { Character } from './../../store/domains/character';
 import AccountValidationStep from './account-validation-step/AccountValidationStep';
-import CharacterSelectionStep from './character-selection-step/CharacterSelectionStep';
 import LeagueSelectionStep from './league-selection-step/LeagueSelectionStep';
 import { LoginStepConnector } from './login-step-connector/LoginStepConnector';
 import { LoginStepIcons } from './login-step-icons/LoginStepIcons';
+
 
 interface LoginStepperProps {
   handleValidate: Function;
