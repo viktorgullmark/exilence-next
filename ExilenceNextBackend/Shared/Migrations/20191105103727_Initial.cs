@@ -3,10 +3,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shared.Migrations
 {
-    public partial class GroupsConnections : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
@@ -27,7 +40,8 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ConnectionId = table.Column<string>(nullable: true),
+                    ConnectionId = table.Column<string>(maxLength: 100, nullable: false),
+                    InstanceName = table.Column<string>(maxLength: 20, nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     GroupId = table.Column<int>(nullable: true)
                 },
@@ -50,6 +64,9 @@ namespace Shared.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Accounts");
+
             migrationBuilder.DropTable(
                 name: "Connections");
 

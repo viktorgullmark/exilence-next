@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Shared.Entities;
 using Shared.Interfaces;
 using System;
@@ -11,21 +12,23 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
+        readonly string _instanceName;
         readonly IMapper _mapper;
         readonly IAccountRepository _accountRepository;
         readonly IGroupRepository _groupRepository;
 
-        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository)
+        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration)
         {
             _mapper = mapper;
             _groupRepository = groupRepository;
             _accountRepository = accountRepository;
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];
         }
 
         public override async Task OnConnectedAsync()
         {
             await Log($"ConnectionId: {Context.ConnectionId} Connected");
-            var connection = new Connection(Context.ConnectionId);
+            var connection = new Connection(Context.ConnectionId, _instanceName);
             await _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
             await base.OnConnectedAsync();

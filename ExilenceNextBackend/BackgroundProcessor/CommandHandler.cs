@@ -18,6 +18,9 @@ namespace BackgroundProcessor
 
             switch (command)
             {
+                case "connect":
+                    await Program._connection.StartAsync();
+                    break;
                 case "join":
                     await JoinGroup(commandData);
                     break;
