@@ -1,6 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core';
 import { StepIconProps } from '@material-ui/core/StepIcon';
-import PersonIcon from '@material-ui/icons/Person';
 import SettingsIcon from '@material-ui/icons/Settings';
 import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import clsx from 'clsx';

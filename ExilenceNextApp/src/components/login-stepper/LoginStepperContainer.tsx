@@ -60,6 +60,8 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
   };
 
   const handleLeagueSubmit = () => {
+    // reset sidenav when loginstepper finished
+    uiStateStore!.toggleSidenav(false);
     history.push('/net-worth');
   };
 

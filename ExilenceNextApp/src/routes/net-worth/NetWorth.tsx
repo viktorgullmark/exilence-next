@@ -1,24 +1,23 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
 import React from 'react';
-import { toolbarHeight } from '../../components/header/Header';
-import { resizeHandleContainerHeight } from './../../components/header/Header';
-
-const useStyles = makeStyles(theme => ({
-  featureWrapper: {
-    height: '100%',
-    display: 'flex',
-    padding: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(2)}px) 
-    ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`
-  }
-}));
+import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
+import Widget from '../../components/widget/Widget';
 
 const NetWorth: React.FC = (props: any) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.featureWrapper}>
-      <h3>Net worth area</h3>
-    </div>
+    <FeatureWrapper>
+      <Grid container spacing={3}>
+        <Grid item sm={12} xs={12}>
+          <Widget>profile widget</Widget>
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Widget>networth stats</Widget>
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Widget>networth actions</Widget>
+        </Grid>
+      </Grid>
+    </FeatureWrapper>
   );
 };
 

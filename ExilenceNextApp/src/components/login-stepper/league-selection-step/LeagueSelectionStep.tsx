@@ -1,4 +1,11 @@
-import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select
+} from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -8,6 +15,8 @@ import * as Yup from 'yup';
 import { Character } from '../../../store/domains/character';
 import { League } from '../../../store/domains/league';
 import error from './../../../helpers/validation.helper';
+import LeagueDropdown from '../../league-dropdown/LeagueDropdown';
+import PriceLeagueDropdown from '../../price-league-dropdown/PriceLeagueDropdown';
 
 interface LeagueSelectionStepProps {
   handleBack: Function;
@@ -23,7 +32,7 @@ interface LeagueSelectionStepProps {
   characters: Character[];
 }
 
-interface LeagueFormValues {
+export interface LeagueFormValues {
   league?: string;
   priceLeague?: string;
 }
@@ -46,8 +55,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
         props.handleLeagueSubmit();
       }}
       validationSchema={Yup.object().shape({
-        league: Yup.string()
-          .required('Required'),
+        league: Yup.string().required('Required'),
         priceLeague: Yup.string().required('Required')
       })}
     >
@@ -58,77 +66,28 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
           errors,
           isSubmitting,
           handleChange,
-          handleSubmit,
+          handleSubmit
         } = formProps;
 
         return (
           <form onSubmit={handleSubmit}>
             <div className={props.styles.stepMainContent}>
-              <FormControl
-                fullWidth
-                margin="normal"
-                error={(touched.league && errors.league !== undefined) || noCharacters.length > 0}
-              >
-                <InputLabel htmlFor="league-dd">
-                  {t('label.select_main_league')}
-                </InputLabel>
-                <Select
-                  value={values.league}
-                  onChange={e => {
-                    handleChange(e);
-                    props.handleLeagueChange(e.target.value);
-                  }}
-                  inputProps={{
-                    name: 'league',
-                    id: 'league-dd'
-                  }}
-                >
-                  {props.leagues.map((league: League) => {
-                    return (
-                      <MenuItem key={league.uuid} value={league.uuid}>
-                        {league.id}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                {((touched.league && errors.league) || noCharacters) && (
-                  <FormHelperText error>
-                    {(errors.league && touched.league && errors.league) || noCharacters}
-                  </FormHelperText>
-                )}
-              </FormControl>
-              <FormControl
-                fullWidth
-                margin="normal"
-                error={touched.priceLeague && errors.priceLeague !== undefined}
-              >
-                <InputLabel htmlFor="price-league-dd">
-                  {t('label.select_price_league')}
-                </InputLabel>
-                <Select
-                  value={values.priceLeague}
-                  onChange={handleChange}
-                  inputProps={{
-                    name: 'priceLeague',
-                    id: 'price-league-dd'
-                  }}
-                >
-                  {props.priceLeagues.map((priceLeague: League) => {
-                    return (
-                      <MenuItem key={priceLeague.uuid} value={priceLeague.uuid}>
-                        {priceLeague.id}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                {touched.priceLeague && errors.priceLeague && (
-                  <FormHelperText error>
-                    {errors.priceLeague &&
-                      touched.priceLeague &&
-                      errors.priceLeague}
-                  </FormHelperText>
-                )}
-              </FormControl>
+              <LeagueDropdown
+                leagues={props.leagues}
+                touched={touched}
+                errors={errors}
+                noCharacters={noCharacters}
+                handleLeagueChange={(l: string) => props.handleLeagueChange(l)}
+                handleChange={(e: any) => handleChange(e)}
+                values={values}
+              />
+              <PriceLeagueDropdown
+                priceLeagues={props.leagues}
+                touched={touched}
+                errors={errors}
+                handleChange={(e: any) => handleChange(e)}
+                values={values}
+              />
             </div>
             <div className={props.styles.stepFooter}>
               <Button
