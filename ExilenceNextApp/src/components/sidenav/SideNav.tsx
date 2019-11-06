@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexShrink: 0
   },
   drawerPaper: {
-    top: toolbarHeight,
+    top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
     width: drawerWidth
   },
   drawerHeader: {

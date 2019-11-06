@@ -20,7 +20,7 @@ export const toolbarHeight = 30;
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    zIndex: 3000
+    zIndex: 1290
   },
   title: {
     flexGrow: 1,

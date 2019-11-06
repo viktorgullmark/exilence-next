@@ -58,7 +58,7 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
           value={values.league}
           onChange={e => {
             handleChange(e);
-            handleLeagueChange(e.target.value);
+            handleLeagueChange(e);
           }}
           inputProps={{
             name: 'league',

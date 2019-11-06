@@ -2,7 +2,7 @@ export class DropdownHelper {
   public static getDropdownSelection<T extends { uuid: string }>(
     items: T[],
     activeUuid?: string
-  ): string | undefined {
+  ): string {
     const item = activeUuid
       ? items.find(i => i.uuid === activeUuid)
       : undefined;
@@ -11,5 +11,6 @@ export class DropdownHelper {
     } else if (items.length > 0) {
       return items[0].uuid;
     }
+    return '';
   }
 }

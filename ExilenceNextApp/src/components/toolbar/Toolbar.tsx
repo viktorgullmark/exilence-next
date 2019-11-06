@@ -1,26 +1,21 @@
-import {
-  AppBar,
-  Select,
-  FormControl,
-  InputLabel,
-  Grid,
-  MenuItem,
-  Fab,
-  Button
-} from '@material-ui/core';
-import MuiToolbar from '@material-ui/core/Toolbar';
+import { AppBar, FormControl, Grid, MenuItem, Select } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import MuiToolbar from '@material-ui/core/Toolbar';
+import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router';
-import { drawerWidth } from '../sidenav/SideNav';
+import { DropdownHelper } from '../../helpers/dropdown.helper';
 import { toolbarHeight } from '../header/Header';
-import { useTranslation } from 'react-i18next';
-import AddIcon from '@material-ui/icons/Add';
+import { drawerWidth } from '../sidenav/SideNav';
+import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import ProfileDialog from '../profile-dialog/ProfileDialog';
+import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -65,9 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectMenu: {
     fontSize: '0.9rem'
   },
+  iconButtonContainer: {
+    margin: `0 ${theme.spacing(0.5)}px 0 ${theme.spacing(0.5)}px`
+  },
   iconButton: {
-    padding: theme.spacing(0.5),
-    margin: `0 ${theme.spacing(0.5)}px 0 ${theme.spacing(0.5)}px` 
+    padding: theme.spacing(0.5)
   },
   toolbarGrid: {
     maxHeight: innerToolbarHeight,
@@ -78,75 +75,106 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface ToolbarProps {
   sidenavOpened: boolean;
   toggleSidenav: Function;
+  activeProfile: Profile;
+  profiles: Profile[];
+  handleProfileChange: Function;
 }
 
 const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
   const classes = useStyles();
   const location = useLocation();
-  const { t } = useTranslation();
+
+  const [createOpen, setCreateOpen] = useState(false);
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
   };
 
-  const handleProfileChange = (profileUuid: string) => {
-    console.log(profileUuid);
+  const handleCreateOpen = () => {
+    setCreateOpen(true);
   };
 
-  // todo: remove mock
-  const profiles = [
-    { name: 'Profile 1', uuid: '123' },
-    { name: 'Profile 2', uuid: '345' },
-    { name: 'Profile 3', uuid: '456' }
-  ];
+  const handleCreateClose = () => {
+    setCreateOpen(false);
+  };
 
   return (
     <>
       {!atLoginRoute() && (
-        <AppBar
-          position="fixed"
-          color="secondary"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: props.sidenavOpened
-          })}
-        >
-          <MuiToolbar className={classes.toolbar}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() => props.toggleSidenav()}
-              edge="start"
-              className={clsx(props.sidenavOpened && classes.hide)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
-              <Grid item>
-                <FormControl>
-                  <Select
-                    className={classes.selectMenu}
-                    value="123"
-                    inputProps={{
-                      name: 'profile',
-                      id: 'profile-dd'
-                    }}
-                  >
-                    {profiles.map((profile: any) => {
-                      return (
-                        <MenuItem key={profile.uuid} value={profile.uuid}>
-                          {profile.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-                <IconButton aria-label="create" className={classes.iconButton}>
-                  <AddIcon fontSize="small" />
-                </IconButton>
+        <>
+          <AppBar
+            position="fixed"
+            color="secondary"
+            className={clsx(classes.appBar, {
+              [classes.appBarShift]: props.sidenavOpened
+            })}
+          >
+            <MuiToolbar className={classes.toolbar}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={() => props.toggleSidenav()}
+                edge="start"
+                className={clsx(props.sidenavOpened && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Grid
+                container
+                alignItems="center"
+                justify="flex-end"
+                className={classes.toolbarGrid}
+              >
+                <Grid item>
+                  <FormControl>
+                    <Select
+                      className={classes.selectMenu}
+                      value={DropdownHelper.getDropdownSelection(
+                        props.profiles,
+                        props.activeProfile.uuid
+                      )}
+                      onChange={e => props.handleProfileChange(e)}
+                      inputProps={{
+                        name: 'profile',
+                        id: 'profile-dd'
+                      }}
+                    >
+                      {props.profiles.map((profile: Profile) => {
+                        return (
+                          <MenuItem key={profile.uuid} value={profile.uuid}>
+                            {profile.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <div className={classes.iconButtonContainer}>
+                    <IconButton
+                      aria-label="edit"
+                      className={classes.iconButton}
+                    >
+                      <SettingsIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      onClick={handleCreateOpen}
+                      aria-label="create"
+                      className={classes.iconButton}
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  </div>
+                </Grid>
               </Grid>
-            </Grid>
-          </MuiToolbar>
-        </AppBar>
+            </MuiToolbar>
+          </AppBar>
+          <ProfileDialogContainer
+            isOpen={createOpen}
+            handleClickClose={handleCreateClose}
+            handleClickOpen={handleCreateOpen}
+          />
+        </>
       )}
     </>
   );

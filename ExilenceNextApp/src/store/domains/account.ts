@@ -6,29 +6,50 @@ import { IAccount } from '../../interfaces/account.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { ILeague } from '../../interfaces/league.interface';
 import { League } from './league';
+import { Profile } from './profile';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist @observable activeLeagueUuid: string = '';
-  @persist @observable activePriceLeagueUuid: string = '';
 
   @persist('list', League) @observable leagues: League[] = [];
+  @persist('list', Profile) @observable profiles: Profile[] = [
+    new Profile({ name: 'profile 1' }),
+    new Profile({ name: 'profile 2' })
+  ];
+
+  @persist @observable activeProfileUuid: string = '';
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
   }
 
   @computed
+  get priceLeagues() {
+    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
+  }
+
+  @computed
   get activeLeague() {
-    const league = this.leagues.find(l => l.uuid === this.activeLeagueUuid);
+    const league = this.leagues.find(
+      l => l.uuid === this.activeProfile.activeLeagueUuid
+    );
     return league ? league : new League();
   }
 
   @computed
-  get priceLeagues() {
-    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
+  get activePriceLeague() {
+    const league = this.leagues.find(
+      l => l.uuid === this.activeProfile.activePriceLeagueUuid
+    );
+    return league ? league : new League();
+  }
+
+  @computed
+  get activeProfile() {
+    const profile = this.profiles.find(p => p.uuid === this.activeProfileUuid);
+    return profile ? profile : new Profile();
   }
 
   @computed
@@ -42,13 +63,8 @@ export class Account implements IAccount {
   }
 
   @action
-  setActiveLeague(uuid: string) {
-    this.activeLeagueUuid = uuid;
-  }
-
-  @action
-  setActivePriceLeague(uuid: string) {
-    this.activePriceLeagueUuid = uuid;
+  setActiveProfile(uuid: string) {
+    this.activeProfileUuid = uuid;
   }
 
   @action
@@ -61,21 +77,6 @@ export class Account implements IAccount {
         return new League(league);
       })
     );
-
-    const existingLeague = this.leagues.find(
-      l => l.uuid === this.activeLeagueUuid
-    );
-    const existingPriceLeague = this.leagues.find(
-      l => l.uuid === this.activePriceLeagueUuid
-    );
-
-    if (!existingLeague) {
-      this.activeLeagueUuid = this.leagues[0].uuid;
-    }
-
-    if (!existingPriceLeague) {
-      this.activePriceLeagueUuid = this.leagues[0].uuid;
-    }
   }
 
   @action

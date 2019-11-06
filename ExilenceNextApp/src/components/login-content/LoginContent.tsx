@@ -15,13 +15,6 @@ import Typography from '@material-ui/core/Typography';
 
 interface LoginContentProps {
   handleValidate: Function;
-  handleLeagueSubmit: Function;
-  handleLeagueChange: Function;
-  selectedLeague?: string;
-  selectedPriceLeague?: string;
-  characters: Character[];
-  leagues: League[];
-  priceLeagues: League[];
   isSubmitting: boolean;
   account: Account;
 }
@@ -38,9 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase',
     paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.primary.main}`
-  },
-  formWrapper: {
-    // padding: theme.spacing(5, 2)
   },
   loginFooter: {
     marginTop: theme.spacing(2),
@@ -64,9 +54,9 @@ const LoginContent: React.FC<LoginContentProps> = (
         <Grid item sm={9} md={5} lg={3}>
           <Paper className={clsx('paper', classes.loginContentContainer)}>
             <Typography variant="h5" className={classes.loginTitle}>
-              Login
+              {t('title.login')}
             </Typography>
-            <Box className={classes.formWrapper}>
+            <Box>
               <AccountValidationForm
                 handleValidate={(details: IAccount) =>
                   props.handleValidate(details)
