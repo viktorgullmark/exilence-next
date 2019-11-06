@@ -45,7 +45,7 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ExilenceContext exilenceContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, ExilenceContext exilenceContext)
         {
             if (env.IsDevelopment())
             {
@@ -62,8 +62,8 @@ namespace API
                 endpoints.MapHub<BaseHub>("/hub");
             });
 
-            exilenceContext.Database.ExecuteSqlRaw("DELETE FROM Connections");
-            exilenceContext.Database.ExecuteSqlRaw("DELETE FROM Groups");
+            var instanceName = configuration.GetSection("Settings")["InstanceName"];
+            exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
         }
     }
 }

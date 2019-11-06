@@ -24,13 +24,10 @@ namespace BackgroundProcessor
                 await _connection.StartAsync();
             };
 
-            _connection.On<string>("Log", (message) => {
+            _connection.On<string>("Log", (message) =>
+            {
                 Console.WriteLine($"{DateTime.Now.ToShortTimeString()} Server: {message}");
             });
-
-
-
-
 
 
             Console.CancelKeyPress += async delegate (object sender, ConsoleCancelEventArgs e)
@@ -40,20 +37,28 @@ namespace BackgroundProcessor
                 await _connection.DisposeAsync();
             };
 
-            await _connection.StartAsync();
-
             var commandHandler = new CommandHandler();
-
+            StartupMessage();
             while (_keepRunning)
             {
-                var commandLine = Console.ReadLine();
-                await commandHandler.RouteCommand(commandLine);
+                try
+                {
+                    var commandLine = Console.ReadLine();
+                    await commandHandler.RouteCommand(commandLine);
 
-
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
         }
 
-
+        public static void StartupMessage()
+        {
+            Console.WriteLine("Welcome to Exilence ");
+            Console.WriteLine("Available commands are: Connect, and then Join XXX or Leave XXX");
+        }
 
     }
 }
