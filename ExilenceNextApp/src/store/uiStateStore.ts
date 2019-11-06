@@ -1,18 +1,18 @@
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
-
-import { IAccount } from '../interfaces/account.interface';
 import { CookieHelper } from './../helpers/cookie.helper';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Stepper } from './domains/stepper';
 
+
 export class UiStateStore {
   @observable loginStepper: Stepper = new Stepper();
   @observable sessIdCookie: ICookie | undefined = undefined;
-  @persist('object') @observable accountForm: IAccount = { name: 'test', sessionId: '' }
   @persist @observable sidenavOpen: boolean = false;
+  @observable validated: boolean = false;
+  @observable isSubmitting: boolean = false;
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -29,5 +29,15 @@ export class UiStateStore {
   @action
   toggleSidenav(open?: boolean) {
     this.sidenavOpen = open || !this.sidenavOpen;
+  }
+
+  @action
+  setValidated(validated: boolean) {
+    this.validated = validated;
+  }
+
+  @action
+  setSubmitting(submitting: boolean) {
+    this.isSubmitting = submitting;
   }
 }

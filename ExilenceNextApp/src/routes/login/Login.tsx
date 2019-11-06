@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import LoginStepperContainer from '../../components/login-stepper/LoginStepperContainer';
+import LoginContentContainer from '../../components/login-content/LoginContentContainer';
 import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +14,7 @@ const Login: React.FC = () => {
     const classes = useStyles();
     return (
         <div className={classes.loginWrapper}>
-            <LoginStepperContainer />
+            <LoginContentContainer />
         </div>
     );
 }

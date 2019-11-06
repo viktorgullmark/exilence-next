@@ -20,6 +20,7 @@ import { authService } from './services/auth.service';
 import { AccountStore } from './store/accountStore';
 import { NotificationStore } from './store/notificationStore';
 import { UiStateStore } from './store/uiStateStore';
+import ToolbarContainer from './components/toolbar/ToolbarContainer';
 
 enableLogging();
 configureI18n();
@@ -54,6 +55,7 @@ const app = (
             <GlobalStyles />
             <HeaderContainer />
             <SideNavContainer>
+              <ToolbarContainer />
               <Route path="/net-worth" component={NetWorth} />
               <Route path="/login" component={Login} />
               <Route

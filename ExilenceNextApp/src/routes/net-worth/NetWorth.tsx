@@ -7,14 +7,11 @@ const NetWorth: React.FC = (props: any) => {
   return (
     <FeatureWrapper>
       <Grid container spacing={3}>
-        <Grid item sm={12} xs={12}>
-          <Widget>profile widget</Widget>
+        <Grid item sm={3} xs={6}>
+          <Widget>card 1</Widget>
         </Grid>
-        <Grid item sm={6} xs={12}>
-          <Widget>networth stats</Widget>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Widget>networth actions</Widget>
+        <Grid item sm={3} xs={6}>
+          <Widget>card 2</Widget>
         </Grid>
       </Grid>
     </FeatureWrapper>

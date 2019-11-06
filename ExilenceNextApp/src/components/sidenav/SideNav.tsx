@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
+import { innerToolbarHeight } from './../toolbar/Toolbar';
 
 export const drawerWidth = 240;
 
@@ -19,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexShrink: 0
   },
   drawerPaper: {
+    top: toolbarHeight,
     width: drawerWidth
   },
   drawerHeader: {
-    height: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
     background: theme.palette.secondary.light,
     display: 'flex',
     alignItems: 'center',
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     height: '100%',
-    padding: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
+    padding: `calc(${toolbarHeight}px + ${innerToolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
       2
     )}px) 
     ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,

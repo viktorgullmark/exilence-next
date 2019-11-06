@@ -47,7 +47,7 @@ export class AccountStore {
 
   @action
   initSession(details?: IAccount) {
-    this.uiStateStore.loginStepper.setSubmitting(true);
+    this.uiStateStore.setSubmitting(true);
 
     fromStream(
       forkJoin(
@@ -102,13 +102,14 @@ export class AccountStore {
       title: 'action.fail.title.init_session',
       description: 'action.fail.desc.init_session'
     });
-    this.uiStateStore.loginStepper.setSubmitting(false);
+    this.uiStateStore.setSubmitting(false);
   
     console.error(error);
   }
 
   @action
   validateSession() {
+    this.uiStateStore.setValidated(false);
     const acc = this.getSelectedAccount;
     const leagueWithChar = acc.leagueWithCharacters;
 
@@ -128,9 +129,8 @@ export class AccountStore {
       title: 'action.success.title.validate_session',
       description: 'action.success.desc.validate_session'
     });
-    const activeStep = this.uiStateStore.loginStepper.activeStep;
-    this.uiStateStore.loginStepper.setActiveStep(activeStep + 1);
-    this.uiStateStore.loginStepper.setSubmitting(false);
+    this.uiStateStore.setSubmitting(false);
+    this.uiStateStore.setValidated(true);
   }
 
   @action
@@ -139,8 +139,8 @@ export class AccountStore {
       title: 'action.fail.title.validate_session',
       description: 'action.fail.desc.validate_session'
     });
-    this.uiStateStore.loginStepper.setSubmitting(false);
-  
+    this.uiStateStore.setSubmitting(false);
+    this.uiStateStore.setValidated(false);
     console.error(error);
   }
 }

@@ -1,16 +1,20 @@
-import { Button, CircularProgress, TextField } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  makeStyles,
+  Theme
+} from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
 
-interface AccountValidationStepProps {
+interface AccountValidationFormProps {
   handleValidate: Function;
-  handleBack: Function;
-  activeStep: number;
   styles: Record<string, string>;
   isSubmitting: boolean;
   account: Account;
@@ -21,10 +25,25 @@ interface AccountFormValues {
   sessionId: string;
 }
 
-const AccountValidationStep: React.FC<AccountValidationStepProps> = (
-  props: AccountValidationStepProps
+const useStyles = makeStyles((theme: Theme) => ({
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  },
+  wrapper: {
+    position: 'relative',
+    width: '100%'
+  },
+}));
+
+const AccountValidationForm: React.FC<AccountValidationFormProps> = (
+  props: AccountValidationFormProps
 ) => {
   const { t } = useTranslation();
+  const classes = useStyles();
 
   return (
     <Formik
@@ -51,13 +70,16 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
           values,
           touched,
           errors,
+          dirty,
           handleChange,
           handleBlur,
-          handleSubmit
+          handleSubmit,
+          isValid,
+          isInitialValid,
         } = formProps;
         return (
           <form onSubmit={handleSubmit}>
-            <div className={props.styles.stepMainContent}>
+            <div>
               <TextField
                 label={t('label.account_name')}
                 name="accountName"
@@ -70,7 +92,7 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                   errors.accountName
                 }
                 error={touched.accountName && errors.accountName !== undefined}
-                margin="normal"
+                margin="none"
                 fullWidth
               />
               <TextField
@@ -88,22 +110,25 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
                 fullWidth
               />
             </div>
-            <div className={props.styles.stepFooter}>
-              <Button
-                disabled={props.activeStep === 0 || props.isSubmitting}
-                onClick={() => props.handleBack()}
-              >
-                {t('action.back')}
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={props.isSubmitting}
-              >
-                {t('action.next')}
-              </Button>
-              {props.isSubmitting && <CircularProgress className={props.styles.progressRight} size={36} />}
+            <div className={props.styles.loginFooter}>
+              <div className={classes.wrapper}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                  disabled={props.isSubmitting || (dirty && !isValid)}
+                  endIcon={<ExitToApp />}
+                >
+                  {t('action.authorize')}
+                </Button>
+                { props.isSubmitting &&
+                  <CircularProgress
+                    className={classes.buttonProgress}
+                    size={26}
+                  />
+                }
+              </div>
             </div>
           </form>
         );
@@ -112,4 +137,4 @@ const AccountValidationStep: React.FC<AccountValidationStepProps> = (
   );
 };
 
-export default observer(AccountValidationStep);
+export default observer(AccountValidationForm);

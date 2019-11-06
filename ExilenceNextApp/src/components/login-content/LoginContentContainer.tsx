@@ -4,34 +4,30 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 
 import { AccountStore } from '../../store/accountStore';
-import { DropdownHelper } from './../../helpers/dropdown.helper';
-import { IAccount } from './../../interfaces/account.interface';
-import { UiStateStore } from './../../store/uiStateStore';
-import LoginStepper from './LoginStepper';
+import { DropdownHelper } from '../../helpers/dropdown.helper';
+import { IAccount } from '../../interfaces/account.interface';
+import { UiStateStore } from '../../store/uiStateStore';
+import LoginContent from './LoginContent';
+import { reaction } from 'mobx';
 
-interface LoginStepperProps {
+interface LoginContentProps {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
 }
 
-const LoginStepperContainer: React.FC<LoginStepperProps> = ({
+const LoginContentContainer: React.FC<LoginContentProps> = ({
   accountStore,
   uiStateStore
-}: LoginStepperProps) => {
+}: LoginContentProps) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const { activeStep, isSubmitting } = uiStateStore!.loginStepper;
   const {
     activeLeagueUuid,
     activePriceLeagueUuid,
     leagues,
-    priceLeagues
+    priceLeagues,
+    activeLeague
   } = accountStore!.getSelectedAccount;
-
-  const account = accountStore!.getSelectedAccount;
-  const {
-    characters
-  } = accountStore!.getSelectedAccount!.activeLeague;
 
   const selectedLeague = () => {
     return DropdownHelper.getDropdownSelection(leagues, activeLeagueUuid);
@@ -41,22 +37,19 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
     return DropdownHelper.getDropdownSelection(leagues, activePriceLeagueUuid);
   };
 
-  const changeStep = (index: number) => {
-    uiStateStore!.loginStepper.setActiveStep(index);
-  };
-
-  const getSteps = () => {
-    return [
-      t('title.enter_acc_info'),
-      t('title.select_leagues')
-    ];
-  };
-
   const handleValidate = (details: IAccount) => {
     accountStore!.initSession({
       name: details.name,
       sessionId: details.sessionId
     });
+
+    reaction(
+      () => uiStateStore!.validated,
+      (_cookie, reaction) => {
+        history.push('/net-worth');
+        reaction.dispose();
+      }
+    );
   };
 
   const handleLeagueSubmit = () => {
@@ -69,34 +62,22 @@ const LoginStepperContainer: React.FC<LoginStepperProps> = ({
     accountStore!.getSelectedAccount.setActiveLeague(selectedLeagueUuid);
   };
 
-  const handleBack = () => {
-    changeStep(activeStep - 1);
-  };
-
-  const handleReset = () => {
-    changeStep(0);
-  };
-
   return (
-    <LoginStepper
+    <LoginContent
       handleValidate={(details: IAccount) => handleValidate(details)}
       handleLeagueSubmit={() => handleLeagueSubmit()}
       handleLeagueChange={(uuid: string) => handleLeagueChange(uuid)}
-      handleBack={() => handleBack()}
-      handleReset={() => handleReset()}
       selectedLeague={selectedLeague()}
       selectedPriceLeague={selectedPriceLeague()}
-      steps={getSteps()}
       leagues={leagues}
       priceLeagues={priceLeagues}
-      characters={characters}
-      activeStep={activeStep}
-      isSubmitting={isSubmitting}
-      account={account}
-    ></LoginStepper>
+      characters={activeLeague.characters}
+      isSubmitting={uiStateStore!.isSubmitting}
+      account={accountStore!.getSelectedAccount}
+    ></LoginContent>
   );
 };
 
 export default inject('accountStore', 'uiStateStore')(
-  observer(LoginStepperContainer)
+  observer(LoginContentContainer)
 );

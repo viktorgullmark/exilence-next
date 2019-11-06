@@ -6,7 +6,6 @@ import React from 'react';
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
     color: theme.palette.text.secondary
   }
 }));

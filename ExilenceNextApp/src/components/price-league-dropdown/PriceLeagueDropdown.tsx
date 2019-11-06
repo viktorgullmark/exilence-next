@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { League } from '../../store/domains/league';
-import { LeagueFormValues } from '../login-stepper/league-selection-step/LeagueSelectionStep';
+import { LeagueFormValues } from '../league-selection-form/LeagueSelectionForm';
 
 interface PriceLeagueDropdownProps {
   touched: FormikTouched<any>;

@@ -12,18 +12,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
-import { Character } from '../../../store/domains/character';
-import { League } from '../../../store/domains/league';
-import error from './../../../helpers/validation.helper';
-import LeagueDropdown from '../../league-dropdown/LeagueDropdown';
-import PriceLeagueDropdown from '../../price-league-dropdown/PriceLeagueDropdown';
+import { Character } from '../../store/domains/character';
+import { League } from '../../store/domains/league';
+import error from '../../helpers/validation.helper';
+import LeagueDropdown from '../league-dropdown/LeagueDropdown';
+import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 
-interface LeagueSelectionStepProps {
-  handleBack: Function;
+interface LeagueSelectionFormProps {
   handleLeagueSubmit: Function;
   handleLeagueChange: Function;
-  handleReset: Function;
-  activeStep: number;
   styles: Record<string, string>;
   selectedLeague?: string;
   selectedPriceLeague?: string;
@@ -37,8 +34,8 @@ export interface LeagueFormValues {
   priceLeague?: string;
 }
 
-const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
-  props: LeagueSelectionStepProps
+const LeagueSelectionForm: React.FC<LeagueSelectionFormProps> = (
+  props: LeagueSelectionFormProps
 ) => {
   const { t } = useTranslation();
   const noCharacters = t(error.noCharacters(props.characters));
@@ -76,6 +73,7 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
                 leagues={props.leagues}
                 touched={touched}
                 errors={errors}
+                fullWidth
                 noCharacters={noCharacters}
                 handleLeagueChange={(l: string) => props.handleLeagueChange(l)}
                 handleChange={(e: any) => handleChange(e)}
@@ -90,12 +88,6 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
               />
             </div>
             <div className={props.styles.stepFooter}>
-              <Button
-                disabled={props.activeStep === 0 || isSubmitting}
-                onClick={() => props.handleBack()}
-              >
-                {t('action.back')}
-              </Button>
               <Button
                 variant="contained"
                 color="primary"
@@ -112,4 +104,4 @@ const LeagueSelectionStep: React.FC<LeagueSelectionStepProps> = (
   );
 };
 
-export default observer(LeagueSelectionStep);
+export default observer(LeagueSelectionForm);

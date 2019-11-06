@@ -19,11 +19,8 @@ export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+  header: {
+    zIndex: 3000
   },
   title: {
     flexGrow: 1,
@@ -32,14 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: '4px',
     color: theme.palette.primary.dark,
     fontWeight: 700
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
   },
   toolbar: {
     minHeight: toolbarHeight,
@@ -85,37 +74,19 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
     <AppBar
       position="fixed"
       color="secondary"
-      className={clsx(classes.appBar, {
-        [classes.appBarShift]: props.sidenavOpened && !atLoginRoute()
-      })}
+      className={classes.header}
     >
       <div
         className={clsx(classes.noDrag, classes.resizeHandleContainer)}
       ></div>
       <Toolbar className={classes.toolbar}>
-        {!atLoginRoute() && (
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => props.toggleSidenav()}
-            edge="start"
-            className={clsx(
-              classes.menuButton,
-              classes.noDrag,
-              props.sidenavOpened && classes.hide
-            )}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-
         <Grid
           container
           direction="row"
           justify="flex-end"
           alignItems="flex-end"
         >
-          <Typography variant="h6" noWrap className={clsx(classes.title, props.sidenavOpened && !atLoginRoute() && classes.hide)}>
+          <Typography variant="h6" noWrap className={classes.title}>
             Exilence Next
           </Typography>
           <Grid item className={clsx(classes.noDrag)}>

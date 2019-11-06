@@ -5,22 +5,24 @@ import { ILeague } from '../../interfaces/league.interface';
 import { Character } from './character';
 import uuid from 'uuid';
 import { ICharacter } from '../../interfaces/character.interface';
+import { Profile } from './profile';
 
 export class League implements ILeague {
     @persist uuid: string = uuid.v4();
     @persist id: string = '';
     @persist realm: string = '';
-    @persist @observable activeCharacterUuid: string = '';
+    @persist @observable activeProfileUuid: string = '';
 
     @persist('list', Character) @observable characters: Character[] = [];
+    @persist('list', Profile) @observable profiles: Profile[] = [];
 
     constructor(obj?: ILeague) {
         Object.assign(this, obj);
     }
 
     @action
-    setActiveCharacter(uuid: string) {
-      this.activeCharacterUuid = uuid;
+    setActiveProfile(uuid: string) {
+      this.activeProfileUuid = uuid;
     }
     
     @action

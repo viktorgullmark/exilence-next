@@ -32,6 +32,11 @@ export class Account implements IAccount {
   }
 
   @computed
+  get leaguesWithCharacters() {
+    return this.leagues.filter(l => l.characters.length > 0);
+  }
+
+  @computed
   get leagueWithCharacters() {
     return this.leagues.find(l => l.characters.length > 0);
   }
