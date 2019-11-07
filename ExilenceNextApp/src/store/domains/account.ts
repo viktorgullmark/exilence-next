@@ -7,6 +7,7 @@ import { ICharacter } from '../../interfaces/character.interface';
 import { ILeague } from '../../interfaces/league.interface';
 import { League } from './league';
 import { Profile } from './profile';
+import { IProfile } from './../../interfaces/profile.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -90,5 +91,11 @@ export class Account implements IAccount {
   @action
   setSessionId(sessionId: string) {
     this.sessionId = sessionId;
+  }
+
+  @action
+  createProfile(profile: IProfile) {
+    const created = new Profile(profile);
+    this.profiles.push(created);
   }
 }

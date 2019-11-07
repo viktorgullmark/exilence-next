@@ -16,6 +16,7 @@
   "title.select_characters": "Select your characters",
   "label.account_name": "Account name",
   "label.session_id": "Session Id",
+  "label.profile_name": "Profile name",
   "label.select_main_league": "Select league",
   "label.select_price_league": "Select pricing league",
   "label.select_profile": "Select profile",

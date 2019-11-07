@@ -8,7 +8,6 @@ import { Stepper } from './domains/stepper';
 
 
 export class UiStateStore {
-  @observable loginStepper: Stepper = new Stepper();
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = false;
   @observable validated: boolean = false;

@@ -13,27 +13,37 @@ import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 import { Character } from '../../store/domains/character';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Profile } from './../../store/domains/profile';
+import { TextField } from '@material-ui/core';
 
 interface ProfileDialogProps {
   handleClickOpen: Function;
   handleClickClose: Function;
   isOpen: boolean;
-  profileUuid?: string;
-  selectedLeague: League;
-  selectedPriceLeagueUuid?: string;
+  isEditing?: boolean;
+  profile: Profile;
+  leagueUuid: string;
+  priceLeagueUuid: string;
   leagues: League[];
+  characters: Character[];
   handleLeagueChange: Function;
   handleSubmit: Function;
 }
 
 export interface ProfileFormValues {
+  profileName: string;
   league?: string;
   priceLeague?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {
-    minWidth: 400
+    minWidth: 500
+  },
+  dialogActions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    margin: theme.spacing(2, 0)
   }
 }));
 
@@ -43,7 +53,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const noCharacters = t(error.noCharacters(props.selectedLeague.characters));
+  const noCharacters = t(error.noCharacters(props.characters));
   return (
     <div>
       <Dialog
@@ -52,23 +62,25 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
-          {props.profileUuid
+          {props.isEditing
             ? t('title.save_profile')
             : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              league: props.selectedLeague.uuid,
-              priceLeague: props.selectedPriceLeagueUuid
+              profileName: props.isEditing ? props.profile.name : '',
+              league: props.leagueUuid,
+              priceLeague: props.priceLeagueUuid
             }}
             onSubmit={(
               values: ProfileFormValues,
               { setSubmitting }: FormikActions<ProfileFormValues>
             ) => {
-              props.handleSubmit();
+              props.handleSubmit(values);
             }}
             validationSchema={Yup.object().shape({
+              profileName: Yup.string().required('Required'),
               league: Yup.string().required('Required'),
               priceLeague: Yup.string().required('Required')
             })}
@@ -80,11 +92,29 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                 errors,
                 isSubmitting,
                 handleChange,
-                handleSubmit
+                handleSubmit,
+                handleBlur
               } = formProps;
 
               return (
                 <form onSubmit={handleSubmit}>
+                  <TextField
+                    label={t('label.profile_name')}
+                    name="profileName"
+                    value={values.profileName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    helperText={
+                      errors.profileName &&
+                      touched.profileName &&
+                      errors.profileName
+                    }
+                    error={
+                      touched.profileName && errors.profileName !== undefined
+                    }
+                    margin="none"
+                    fullWidth
+                  />
                   <LeagueDropdown
                     leagues={props.leagues}
                     touched={touched}
@@ -102,25 +132,26 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     handleChange={handleChange}
                     values={values}
                   />
+                  <div className={classes.dialogActions}>
+                    <Button onClick={() => props.handleClickClose()}>
+                      {t('action.cancel')}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      color="primary"
+                      disabled={noCharacters.length > 0}
+                    >
+                      {props.isEditing
+                        ? t('action.save_profile')
+                        : t('action.create_profile')}
+                    </Button>
+                  </div>
                 </form>
               );
             }}
           </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => props.handleClickClose()}>
-            {t('action.cancel')}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => props.handleClickClose()}
-            color="primary"
-          >
-            {props.profileUuid
-              ? t('action.save_profile')
-              : t('action.create_profile')}
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

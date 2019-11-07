@@ -15,7 +15,8 @@ import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import ProfileDialog from '../profile-dialog/ProfileDialog';
-import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
+import { Character } from './../../store/domains/character';
+import { League } from '../../store/domains/league';
 
 export const innerToolbarHeight = 50;
 
@@ -78,24 +79,24 @@ interface ToolbarProps {
   activeProfile: Profile;
   profiles: Profile[];
   handleProfileChange: Function;
+  profileOpen: boolean;
+  isEditing: boolean;
+  handleProfileOpen: Function;
+  handleProfileClose: Function;
+  leagueUuid: string;
+  priceLeagueUuid: string;
+  characters: Character[];
+  leagues: League[];
+  handleSubmit: Function;
+  handleLeagueChange: Function;
 }
 
 const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
   const classes = useStyles();
   const location = useLocation();
 
-  const [createOpen, setCreateOpen] = useState(false);
-
   const atLoginRoute = () => {
     return location.pathname === '/login';
-  };
-
-  const handleCreateOpen = () => {
-    setCreateOpen(true);
-  };
-
-  const handleCreateClose = () => {
-    setCreateOpen(false);
   };
 
   return (
@@ -154,11 +155,12 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                     <IconButton
                       aria-label="edit"
                       className={classes.iconButton}
+                      onClick={() => props.handleProfileOpen(true)}
                     >
                       <SettingsIcon fontSize="small" />
                     </IconButton>
                     <IconButton
-                      onClick={handleCreateOpen}
+                      onClick={() => props.handleProfileOpen()}
                       aria-label="create"
                       className={classes.iconButton}
                     >
@@ -169,10 +171,18 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
               </Grid>
             </MuiToolbar>
           </AppBar>
-          <ProfileDialogContainer
-            isOpen={createOpen}
-            handleClickClose={handleCreateClose}
-            handleClickOpen={handleCreateOpen}
+          <ProfileDialog
+            profile={props.activeProfile}
+            isOpen={props.profileOpen}
+            isEditing={props.isEditing}
+            handleClickClose={props.handleProfileClose}
+            handleClickOpen={props.handleProfileOpen}
+            leagues={props.leagues}
+            characters={props.characters}
+            leagueUuid={props.leagueUuid}
+            priceLeagueUuid={props.priceLeagueUuid}
+            handleLeagueChange={props.handleLeagueChange}
+            handleSubmit={props.handleSubmit}
           />
         </>
       )}

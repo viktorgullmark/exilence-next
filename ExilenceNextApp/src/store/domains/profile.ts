@@ -23,4 +23,10 @@ export class Profile {
   setActivePriceLeague(uuid: string) {
     this.activePriceLeagueUuid = uuid;
   }
+
+  @action
+  editProfile(profile: IProfile) {
+    Object.assign(this, profile);
+    console.log('updated:', this);
+  }
 }
