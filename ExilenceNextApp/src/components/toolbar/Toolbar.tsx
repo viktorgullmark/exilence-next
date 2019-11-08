@@ -87,6 +87,7 @@ interface ToolbarProps {
   priceLeagueUuid: string;
   characters: Character[];
   leagues: League[];
+  priceLeagues: League[];
   handleSubmit: Function;
   handleLeagueChange: Function;
 }
@@ -173,6 +174,7 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
           </AppBar>
           <ProfileDialog
             profile={props.activeProfile}
+            priceLeagues={props.priceLeagues}
             isOpen={props.profileOpen}
             isEditing={props.isEditing}
             handleClickClose={props.handleProfileClose}

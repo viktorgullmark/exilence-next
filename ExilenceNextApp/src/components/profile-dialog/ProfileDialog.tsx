@@ -25,6 +25,7 @@ interface ProfileDialogProps {
   leagueUuid: string;
   priceLeagueUuid: string;
   leagues: League[];
+  priceLeagues: League[];
   characters: Character[];
   handleLeagueChange: Function;
   handleSubmit: Function;
@@ -126,7 +127,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     values={values}
                   />
                   <PriceLeagueDropdown
-                    priceLeagues={props.leagues}
+                    priceLeagues={props.priceLeagues}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}

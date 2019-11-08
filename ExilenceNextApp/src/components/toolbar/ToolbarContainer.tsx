@@ -97,6 +97,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       handleProfileChange={handleProfileChange}
       handleLeagueChange={handleLeagueChange}
       leagues={leagues}
+      priceLeagues={leagueStore!.priceLeagues}
       characters={characters}
       isEditing={isEditing}
       profileOpen={profileOpen}
