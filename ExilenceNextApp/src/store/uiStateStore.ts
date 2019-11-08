@@ -4,8 +4,6 @@ import { map } from 'rxjs/operators';
 import { CookieHelper } from './../helpers/cookie.helper';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
-import { Stepper } from './domains/stepper';
-
 
 export class UiStateStore {
   @observable sessIdCookie: ICookie | undefined = undefined;
