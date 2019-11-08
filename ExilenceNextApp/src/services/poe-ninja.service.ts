@@ -11,12 +11,12 @@ const rateLimiter = new RateLimiter(1, 1);
 const apiUrl = 'https://poe.ninja/api/data';
 
 export const poeninjaService = {
-    getCurrencyCategories,
-    getItemCategories,
-    getItemCategoryOverview,
-    getCurrencyCategoryOverview,
-    getItemPrices,
-    getCurrencyPrices
+  getCurrencyCategories,
+  getItemCategories,
+  getItemCategoryOverview,
+  getCurrencyCategoryOverview,
+  getItemPrices,
+  getCurrencyPrices
 };
 
 function getCurrencyCategories() {
@@ -50,33 +50,33 @@ function getItemCategories() {
 function getItemCategoryOverview(league: string, type: string) {
   const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(axios.get<IPoeNinjaItemOverview>(
-      `${apiUrl}/itemoverview${parameters}`
-    ))
+    from(
+      axios.get<IPoeNinjaItemOverview>(`${apiUrl}/itemoverview${parameters}`)
+    )
   );
 }
 
 function getCurrencyCategoryOverview(league: string, type: string) {
   const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(axios.get<IPoeNinjaCurrencyOverview>(
+    from(
+      axios.get<IPoeNinjaCurrencyOverview>(
         `${apiUrl}/currencyoverview${parameters}`
-      ))
+      )
+    )
   );
 }
 
 function getItemPrices(league: string) {
   return forkJoin(
-    getItemCategories().map((type: any) => {
+    getItemCategories().map(type => {
       return getItemCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
-          if (response.data !== null) {
-            return response.data.lines.map(lines => {
-              return PriceHelper.getExternalPriceFromNinjaItem(
-                lines
-              ) as IExternalPrice;
-            });
-          }
+          return response.data.lines.map(lines => {
+            return PriceHelper.getExternalPriceFromNinjaItem(
+              lines
+            ) as IExternalPrice;
+          });
         })
       );
     })
@@ -85,20 +85,18 @@ function getItemPrices(league: string) {
 
 function getCurrencyPrices(league: string) {
   return forkJoin(
-    getCurrencyCategories().map((type: any) => {
+    getCurrencyCategories().map(type => {
       return getCurrencyCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaCurrencyOverview>) => {
-          if (response.data !== null) {
-            return response.data.lines.map(lines => {
-              const currencyDetail = response.data.currencyDetails.find(
-                detail => detail.name === lines.currencyTypeName
-              );
-              return PriceHelper.getExternalPriceFromNinjaCurrencyItem(
-                lines,
-                currencyDetail
-              ) as IExternalPrice;
-            });
-          }
+          return response.data.lines.map(lines => {
+            const currencyDetail = response.data.currencyDetails.find(
+              detail => detail.name === lines.currencyTypeName
+            );
+            return PriceHelper.getExternalPriceFromNinjaCurrencyItem(
+              lines,
+              currencyDetail
+            ) as IExternalPrice;
+          });
         })
       );
     })

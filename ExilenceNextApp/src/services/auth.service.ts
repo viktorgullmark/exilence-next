@@ -11,12 +11,12 @@ export const authService = {
 
 function setAuthCookie(cookie: ICookie): Observable<any> {
     return removeAuthCookie().pipe(switchMap(() => {
-        return from(electronService.remote.session.defaultSession.cookies.set(cookie));
+        return from(electronService.remote.session.defaultSession!.cookies.set(cookie));
     }));
 }
 
 function removeAuthCookie(): Observable<any> {
-    return from(electronService.remote.session.defaultSession.cookies.remove('https://www.pathofexile.com', 'POESESSID'));
+    return from(electronService.remote.session.defaultSession!.cookies.remove('https://www.pathofexile.com', 'POESESSID'));
 }
 
 function isLoggedIn() {

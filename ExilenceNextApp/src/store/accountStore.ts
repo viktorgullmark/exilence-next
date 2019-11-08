@@ -7,16 +7,19 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
-import { NotificationStore } from './notificationStore';
-import { UiStateStore } from './uiStateStore';
 import { LeagueStore } from './leagueStore';
+import { NotificationStore } from './notificationStore';
+import { PriceStore } from './priceStore';
+import { UiStateStore } from './uiStateStore';
 
 export class AccountStore {
   constructor(
     private uiStateStore: UiStateStore,
     private notificationStore: NotificationStore,
-    private leagueStore: LeagueStore
-  ) {}
+    private leagueStore: LeagueStore,
+    private priceStore: PriceStore
+  ) {
+  }
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -69,6 +72,11 @@ export class AccountStore {
           }
           const acc = this.getSelectedAccount;
           this.leagueStore.updateLeagues(requests[0].data);
+
+          // todo: create separate action
+          this.leagueStore.priceLeagues.forEach(l => {
+            this.priceStore.getPricesForLeague(l.uuid);
+          });
 
           // todo: make sure leagues are set here
           acc!.addAccountLeagues(this.leagueStore.leagues, requests[1].data);

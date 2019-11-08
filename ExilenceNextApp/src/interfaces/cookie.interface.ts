@@ -5,5 +5,5 @@ export interface ICookie {
     domain: string;
     path: string;
     secure: boolean,
-    expirationDate: Date | undefined;
+    expirationDate?: number;
 }
