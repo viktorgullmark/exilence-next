@@ -21,6 +21,8 @@ import { AccountStore } from './store/accountStore';
 import { NotificationStore } from './store/notificationStore';
 import { UiStateStore } from './store/uiStateStore';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
+import { PriceStore } from './store/priceStore';
+import { LeagueStore } from './store/leagueStore';
 
 enableLogging();
 configureI18n();
@@ -40,10 +42,12 @@ const hydrate = create({
 });
 
 const uiStateStore = new UiStateStore();
+const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const accountStore = new AccountStore(uiStateStore, notificationStore);
+// const priceStore = new PriceStore(uiStateStore, leagueStore);
+const accountStore = new AccountStore(uiStateStore, notificationStore, leagueStore);
 
-const stores = { accountStore, uiStateStore, notificationStore };
+const stores = { accountStore, uiStateStore, notificationStore, leagueStore };
 
 const app = (
   <>
@@ -79,7 +83,8 @@ const app = (
 
 Promise.all([
   hydrate('account', accountStore),
-  hydrate('uiState', uiStateStore)
+  hydrate('uiState', uiStateStore),
+  hydrate('league', leagueStore)
 ]).then(() => {
   ReactDOM.render(app, document.getElementById('root'));
 });

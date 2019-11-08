@@ -7,7 +7,6 @@ export interface IExternalPrice {
     min?: number;
     mode?: number;
     frameType?: number;
-    // additional properties
     variant?: string;
     elder?: boolean;
     shaper?: boolean;

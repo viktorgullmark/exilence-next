@@ -6,15 +6,18 @@ import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import LoginContent from './LoginContent';
+import { LeagueStore } from './../../store/leagueStore';
 
 interface LoginContentProps {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
+  leagueStore?: LeagueStore;
 }
 
 const LoginContentContainer: React.FC<LoginContentProps> = ({
   accountStore,
-  uiStateStore
+  uiStateStore,
+  leagueStore
 }: LoginContentProps) => {
   const history = useHistory();
 
@@ -42,6 +45,6 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(
+export default inject('accountStore', 'uiStateStore', 'leagueStore')(
   observer(LoginContentContainer)
 );

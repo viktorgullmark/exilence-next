@@ -9,11 +9,13 @@ import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
+import { LeagueStore } from './leagueStore';
 
 export class AccountStore {
   constructor(
     private uiStateStore: UiStateStore,
-    private notificationStore: NotificationStore
+    private notificationStore: NotificationStore,
+    private leagueStore: LeagueStore
   ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -66,8 +68,10 @@ export class AccountStore {
             this.selectAccountByName(details.name);
           }
           const acc = this.getSelectedAccount;
-          acc!.updateLeagues(requests[0].data);
-          acc!.addCharactersToLeagues(requests[1].data);
+          this.leagueStore.updateLeagues(requests[0].data);
+
+          // todo: make sure leagues are set here
+          acc!.addAccountLeagues(this.leagueStore.leagues, requests[1].data);
         }),
         switchMap(() => {
           return this.uiStateStore.setSessIdCookie(details!.sessionId);
@@ -111,11 +115,13 @@ export class AccountStore {
   validateSession() {
     this.uiStateStore.setValidated(false);
     const acc = this.getSelectedAccount;
-    const leagueWithChar = acc.leagueWithCharacters;
+    const leagueWithChar = acc.accountLeagues[0];
 
-    leagueWithChar
+    const league = this.leagueStore!.leagues.find(l => l.uuid === leagueWithChar.uuid);
+
+    leagueWithChar && league
       ? fromStream(
-          externalService.getStashTabs(acc.name, leagueWithChar.id).pipe(
+          externalService.getStashTabs(acc.name, league.id).pipe(
             map(() => this.validateSessionSuccess()),
             catchError((e: Error) => of(this.validateSessionFail(e)))
           )

@@ -5,16 +5,17 @@ import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { ILeague } from '../../interfaces/league.interface';
-import { League } from './league';
+import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 import { IProfile } from './../../interfaces/profile.interface';
+import { League } from './league';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
 
-  @persist('list', League) @observable leagues: League[] = [];
+  @persist('list', AccountLeague) @observable accountLeagues: AccountLeague[] = [];
   @persist('list', Profile) @observable profiles: Profile[] = [
     new Profile({ name: 'profile 1' }),
     new Profile({ name: 'profile 2' })
@@ -27,24 +28,19 @@ export class Account implements IAccount {
   }
 
   @computed
-  get priceLeagues() {
-    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
-  }
-
-  @computed
   get activeLeague() {
-    const league = this.leagues.find(
+    const league = this.accountLeagues.find(
       l => l.uuid === this.activeProfile.activeLeagueUuid
     );
-    return league ? league : new League();
+    return league ? league : new AccountLeague();
   }
 
   @computed
   get activePriceLeague() {
-    const league = this.leagues.find(
+    const league = this.accountLeagues.find(
       l => l.uuid === this.activeProfile.activePriceLeagueUuid
     );
-    return league ? league : new League();
+    return league ? league : new AccountLeague();
   }
 
   @computed
@@ -53,38 +49,18 @@ export class Account implements IAccount {
     return profile ? profile : new Profile();
   }
 
-  @computed
-  get leaguesWithCharacters() {
-    return this.leagues.filter(l => l.characters.length > 0);
-  }
-
-  @computed
-  get leagueWithCharacters() {
-    return this.leagues.find(l => l.characters.length > 0);
-  }
-
   @action
   setActiveProfile(uuid: string) {
     this.activeProfileUuid = uuid;
   }
 
   @action
-  updateLeagues(leagues: ILeague[]) {
-    const newLeagues = leagues.filter(
-      l => this.leagues.find(el => el.id === l.id) === undefined
-    );
-    this.leagues = this.leagues.concat(
-      newLeagues.map(league => {
-        return new League(league);
-      })
-    );
-  }
-
-  @action
-  addCharactersToLeagues(characters: ICharacter[]) {
-    this.leagues = this.leagues.map(l => {
-      l.updateCharacters(characters.filter(c => c.league === l.id));
-      return l;
+  addAccountLeagues(leagues: League[], characters: ICharacter[]) {
+    this.accountLeagues = leagues.map(l => {
+      const accLeague = new AccountLeague();
+      accLeague.uuid = l.uuid;
+      accLeague.updateCharacters(characters.filter(c => c.league === l.id))
+      return accLeague;
     });
   }
 
