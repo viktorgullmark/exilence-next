@@ -39,7 +39,8 @@ export interface ProfileFormValues {
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {
-    minWidth: 500
+    minWidth: 500,
+    maxWidth: 500
   },
   dialogActions: {
     display: 'flex',

@@ -2,6 +2,7 @@ import { observable, action } from 'mobx';
 import { Notification } from './domains/notification';
 import { INotification } from './../interfaces/notification.interface';
 import { UiStateStore } from './uiStateStore';
+import { NotificationType } from '../enums/notification-type.enum';
 
 export class NotificationStore {
   uiStateStore: UiStateStore;
@@ -13,6 +14,9 @@ export class NotificationStore {
 
   @action
   createNotification(n: INotification) {
+    const prefix = `notification:${NotificationType[n.type].toLowerCase()}.`;
+    n.title = `title.${prefix}${n.title}`;
+    n.description = `description.${prefix}${n.description}`;
     const notification = new Notification(n);
     this.notifications.push(notification);
     return notification;

@@ -11,6 +11,7 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
+import { NotificationType } from '../enums/notification-type.enum';
 
 export class AccountStore {
   constructor(
@@ -61,10 +62,10 @@ export class AccountStore {
       ).pipe(
         map(requests => {
           if (requests[0].data.length === 0) {
-            throw new Error('error.no_leagues');
+            throw new Error('error:no_leagues');
           }
           if (requests[1].data.length === 0) {
-            throw new Error('error.no_characters');
+            throw new Error('error:no_characters');
           }
           if (details) {
             this.addAccount(details);
@@ -102,8 +103,9 @@ export class AccountStore {
   @action
   initSessionSuccess() {
     this.notificationStore.createNotification({
-      title: 'action.success.title.init_session',
-      description: 'action.success.desc.init_session'
+      title: 'init_session',
+      description: 'init_session',
+      type: NotificationType.Success
     });
     this.validateSession();
   }
@@ -111,8 +113,9 @@ export class AccountStore {
   @action
   initSessionFail(error: Error | string) {
     this.notificationStore.createNotification({
-      title: 'action.fail.title.init_session',
-      description: 'action.fail.desc.init_session'
+      title: 'init_session',
+      description: 'init_session',
+      type: NotificationType.Error
     });
     this.uiStateStore.setSubmitting(false);
   
@@ -134,14 +137,15 @@ export class AccountStore {
             catchError((e: Error) => of(this.validateSessionFail(e)))
           )
         )
-      : this.validateSessionFail('error.no_characters_in_leagues');
+      : this.validateSessionFail('error:no_characters_in_leagues');
   }
 
   @action
   validateSessionSuccess() {
     this.notificationStore.createNotification({
-      title: 'action.success.title.validate_session',
-      description: 'action.success.desc.validate_session'
+      title: 'validate_session',
+      description: 'validate_session',
+      type: NotificationType.Success
     });
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
@@ -150,8 +154,9 @@ export class AccountStore {
   @action
   validateSessionFail(error: Error | string) {
     this.notificationStore.createNotification({
-      title: 'action.fail.title.validate_session',
-      description: 'action.fail.desc.validate_session'
+      title: 'validate_session',
+      description: 'validate_session',
+      type: NotificationType.Error
     });
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);

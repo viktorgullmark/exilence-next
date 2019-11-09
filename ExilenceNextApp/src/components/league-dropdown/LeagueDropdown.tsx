@@ -3,7 +3,9 @@ import {
   FormHelperText,
   MenuItem,
   Select,
-  InputLabel
+  InputLabel,
+  makeStyles,
+  Theme
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
@@ -25,6 +27,9 @@ interface LeagueDropdownProps {
   hideLabel?: boolean;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+}));
+
 const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   margin = 'normal',
   hideLabel = false,
@@ -38,6 +43,7 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   values
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
+  const classes = useStyles();
 
   return (
     <>

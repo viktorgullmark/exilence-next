@@ -15,9 +15,8 @@ function configureI18n() {
             },
             fallbackLng: 'en',
             debug: !AppConfig.production,
-            ns: ['general'],
-            defaultNS: 'general',
-            keySeparator: false,
+            ns: ['common', 'notification', 'error'],
+            defaultNS: 'common',
             interpolation: {
                 escapeValue: false,
                 formatSeparator: ','

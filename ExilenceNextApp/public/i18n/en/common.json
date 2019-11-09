@@ -1,0 +1,31 @@
+{
+  "action": {
+    "finish": "Finish",
+    "next": "Next",
+    "authorize": "Authorize",
+    "reset": "Reset",
+    "back": "Back",
+    "cancel": "Cancel",
+    "save_profile": "Save profile",
+    "create_profile": "Create profile",
+    "new_profile": "New profile"
+  },
+  "title": {
+    "login": "Login",
+    "save_profile": "Edit profile",
+    "create_profile": "Create new profile",
+    "enter_acc_info": "Enter account information",
+    "select_leagues": "Select your leagues",
+    "select_characters": "Select your characters"
+  },
+  "label": {
+    "account_name": "Account name",
+    "session_id": "Session Id",
+    "profile_name": "Profile name",
+    "select_main_league": "Select league",
+    "select_price_league": "Select pricing league",
+    "select_profile": "Select profile",
+    "select_character": "Select character",
+    "profile_placeholder": "Select a profile"
+  }
+}

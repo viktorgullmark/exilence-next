@@ -11,6 +11,8 @@ import { map, catchError } from 'rxjs/operators';
 import { NotificationStore } from './notificationStore';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { LeaguePriceSource } from './domains/league-price-source';
+import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
+import { NotificationType } from '../enums/notification-type.enum';
 
 export class PriceStore {
   @persist('list', PriceSource) @observable priceSources: PriceSource[] = [
@@ -50,7 +52,7 @@ export class PriceStore {
     }
 
     if (!league) {
-      throw Error('error.no_league');
+      throw Error('error:no_league');
     }
 
     fromStream(
@@ -64,20 +66,21 @@ export class PriceStore {
             [],
             [prices[0], prices[1]]
           );
-          let ninjaPrices: IExternalPrice[] = [];
-          combinedPrices.forEach(cat => {
-            ninjaPrices = ninjaPrices.concat(cat);
+          const ninjaPrices: IExternalPrice[] = [];
+          combinedPrices.forEach(p => {
+            ninjaPrices.push(p);
           });
           // todo: remove hardcoded check for poeninja
           let leaguePriceSource = details!.leaguePriceSources.find(
             lps => lps.priceSourceUuid === this.priceSources[0].uuid
           );
+          
           runInAction(() => {
             if (!leaguePriceSource) {
-              leaguePriceSource = new LeaguePriceSource();
-              leaguePriceSource.prices = ninjaPrices;
-              leaguePriceSource.priceSourceUuid = this.priceSources[0].uuid;
-              details!.leaguePriceSources.push(leaguePriceSource);
+              details!.addLeaguePriceSource(<ILeaguePriceSource>{
+                priceSourceUuid: this.priceSources[0].uuid,
+                prices: ninjaPrices
+              })
             } else {
               leaguePriceSource.prices = ninjaPrices;
             }
@@ -92,16 +95,18 @@ export class PriceStore {
   @action
   getPricesforLeagueSuccess() {
     this.notificationStore.createNotification({
-      title: 'action.success.title.get_prices_for_league',
-      description: 'action.success.desc.get_prices_for_league'
+      title: 'get_prices_for_league',
+      description: 'get_prices_for_league',
+      type: NotificationType.Success
     });
   }
 
   @action
   getPricesforLeagueFail(error: Error | string) {
     this.notificationStore.createNotification({
-      title: 'action.fail.title.get_prices_for_league',
-      description: 'action.fail.desc.get_prices_for_league'
+      title: 'get_prices_for_league',
+      description: 'get_prices_for_league',
+      type: NotificationType.Error
     });
 
     console.error(error);

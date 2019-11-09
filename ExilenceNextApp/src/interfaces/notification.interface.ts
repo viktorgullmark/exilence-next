@@ -6,5 +6,5 @@ export interface INotification {
   timestamp?: Moment;
   description?: string;
   read?: boolean;
-  type?: NotificationType;
+  type: NotificationType;
 }
