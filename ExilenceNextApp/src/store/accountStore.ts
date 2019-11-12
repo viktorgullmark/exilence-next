@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
@@ -12,6 +12,8 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
 import { NotificationType } from '../enums/notification-type.enum';
+import { AxiosResponse } from 'axios';
+import { IStash } from '../interfaces/stash.interface';
 
 export class AccountStore {
   constructor(
@@ -19,8 +21,7 @@ export class AccountStore {
     private notificationStore: NotificationStore,
     private leagueStore: LeagueStore,
     private priceStore: PriceStore
-  ) {
-  }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -80,7 +81,11 @@ export class AccountStore {
           });
 
           // todo: make sure leagues are set here
-          acc!.addAccountLeagues(this.leagueStore.leagues, requests[1].data);
+          acc!.mapAccountLeagues(
+            this.leagueStore.leagues,
+            requests[1].data,
+            this.leagueStore.priceLeagues
+          );
         }),
         switchMap(() => {
           return this.uiStateStore.setSessIdCookie(details!.sessionId);
@@ -118,7 +123,7 @@ export class AccountStore {
       type: NotificationType.Error
     });
     this.uiStateStore.setSubmitting(false);
-  
+
     console.error(error);
   }
 
@@ -128,7 +133,9 @@ export class AccountStore {
     const acc = this.getSelectedAccount;
     const leagueWithChar = acc.accountLeagues[0];
 
-    const league = this.leagueStore!.leagues.find(l => l.uuid === leagueWithChar.uuid);
+    const league = this.leagueStore!.leagues.find(
+      l => l.uuid === leagueWithChar.uuid
+    );
 
     leagueWithChar && league
       ? fromStream(

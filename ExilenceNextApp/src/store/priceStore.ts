@@ -41,14 +41,14 @@ export class PriceStore {
   @action
   getPricesForLeague(leagueUuid: string) {
     const league = this.leagueStore.leagues.find(l => l.uuid === leagueUuid);
-    let details = this.leaguePriceDetails.find(
+    let leaguePriceDetails = this.leaguePriceDetails.find(
       l => l.leagueUuid === leagueUuid
     );
 
-    if (!details) {
-      details = new LeaguePriceDetails();
-      details.leagueUuid = leagueUuid;
-      this.leaguePriceDetails.push(details);
+    if (!leaguePriceDetails) {
+      leaguePriceDetails = new LeaguePriceDetails();
+      leaguePriceDetails.leagueUuid = leagueUuid;
+      this.leaguePriceDetails.push(leaguePriceDetails);
     }
 
     if (!league) {
@@ -71,13 +71,13 @@ export class PriceStore {
             ninjaPrices.push(p);
           });
           // todo: remove hardcoded check for poeninja
-          let leaguePriceSource = details!.leaguePriceSources.find(
+          let leaguePriceSource = leaguePriceDetails!.leaguePriceSources.find(
             lps => lps.priceSourceUuid === this.priceSources[0].uuid
           );
           
           runInAction(() => {
             if (!leaguePriceSource) {
-              details!.addLeaguePriceSource(<ILeaguePriceSource>{
+              leaguePriceDetails!.addLeaguePriceSource(<ILeaguePriceSource>{
                 priceSourceUuid: this.priceSources[0].uuid,
                 prices: ninjaPrices
               })

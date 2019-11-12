@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AddIcon from '@material-ui/icons/Add';
+import UpdateIcon from '@material-ui/icons/Update';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
@@ -17,6 +18,7 @@ import { resizeHandleContainerHeight } from './../header/Header';
 import ProfileDialog from '../profile-dialog/ProfileDialog';
 import { Character } from './../../store/domains/character';
 import { League } from '../../store/domains/league';
+import { IStashTab } from '../../interfaces/stash.interface';
 
 export const innerToolbarHeight = 50;
 
@@ -88,8 +90,10 @@ interface ToolbarProps {
   characters: Character[];
   leagues: League[];
   priceLeagues: League[];
+  stashTabs: IStashTab[];
   handleSubmit: Function;
   handleLeagueChange: Function;
+  handleSnapshot: Function;
 }
 
 const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
@@ -167,6 +171,13 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                     >
                       <AddIcon fontSize="small" />
                     </IconButton>
+                    <IconButton
+                      onClick={() => props.handleSnapshot()}
+                      aria-label="snapshot"
+                      className={classes.iconButton}
+                    >
+                      <UpdateIcon fontSize="small" />
+                    </IconButton>
                   </div>
                 </Grid>
               </Grid>
@@ -175,6 +186,7 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
           <ProfileDialog
             profile={props.activeProfile}
             priceLeagues={props.priceLeagues}
+            stashTabs={props.stashTabs}
             isOpen={props.profileOpen}
             isEditing={props.isEditing}
             handleClickClose={props.handleProfileClose}

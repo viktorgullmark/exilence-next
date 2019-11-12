@@ -9,17 +9,22 @@ import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 import { IProfile } from './../../interfaces/profile.interface';
 import { League } from './league';
+import { externalService } from './../../services/external.service';
+import { fromStream } from 'mobx-utils';
+import { map } from 'rxjs/operators';
+import { AxiosResponse } from 'axios';
+import { IStash } from './../../interfaces/stash.interface';
+import { stores } from './../../index';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
 
-  @persist('list', AccountLeague) @observable accountLeagues: AccountLeague[] = [];
-  @persist('list', Profile) @observable profiles: Profile[] = [
-    new Profile({ name: 'profile 1' }),
-    new Profile({ name: 'profile 2' })
-  ];
+  @persist('list', AccountLeague)
+  @observable
+  accountLeagues: AccountLeague[] = [];
+  @persist('list', Profile) @observable profiles: Profile[] = [];
 
   @persist @observable activeProfileUuid: string = '';
 
@@ -29,18 +34,18 @@ export class Account implements IAccount {
 
   @computed
   get activeLeague() {
-    const league = this.accountLeagues.find(
+    const league = stores.leagueStore.leagues.find(
       l => l.uuid === this.activeProfile.activeLeagueUuid
     );
-    return league ? league : new AccountLeague();
+    return league!;
   }
 
   @computed
   get activePriceLeague() {
-    const league = this.accountLeagues.find(
+    const league = stores.leagueStore.priceLeagues.find(
       l => l.uuid === this.activeProfile.activePriceLeagueUuid
     );
-    return league ? league : new AccountLeague();
+    return league!;
   }
 
   @computed
@@ -55,13 +60,33 @@ export class Account implements IAccount {
   }
 
   @action
-  addAccountLeagues(leagues: League[], characters: ICharacter[]) {
-    this.accountLeagues = leagues.map(l => {
+  mapAccountLeagues(leagues: League[], characters: ICharacter[], priceLeagues: League[]) {
+    this.accountLeagues = [];
+    const mappedLeagues: AccountLeague[] = [];
+
+    leagues.forEach(l => {
       const accLeague = new AccountLeague();
       accLeague.uuid = l.uuid;
-      accLeague.updateCharacters(characters.filter(c => c.league === l.id))
-      return accLeague;
+      accLeague.updateCharacters(characters.filter(c => c.league === l.id));
+      if (accLeague.characters.length > 0) {
+        mappedLeagues.push(accLeague);
+      }
     });
+
+    if (this.profiles.length === 0 && mappedLeagues.length > 0) {
+      this.profiles.push(
+        new Profile({
+          name: 'profile 1',
+          activeLeagueUuid: mappedLeagues[0]!.uuid,
+          activePriceLeagueUuid: priceLeagues[0].uuid
+        })
+      );
+      this.setActiveProfile(this.profiles[0].uuid);
+    } else {
+      throw Error('error:no_leagues_with_characters');
+    }
+
+    this.accountLeagues = mappedLeagues;
   }
 
   @action

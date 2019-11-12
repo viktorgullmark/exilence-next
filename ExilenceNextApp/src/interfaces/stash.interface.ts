@@ -3,13 +3,13 @@ import { IPricedItem } from './priced-item.interface';
 
 export interface IStash {
     numTabs: number;
-    tabs: ITab[];
+    tabs: IStashTab[];
     items: IItem[];
     mapLayout: any;
     [x: string]: any;
 }
 
-export interface ITab {
+export interface IStashTab {
     n: string;
     i: number;
     id: string;
@@ -20,8 +20,6 @@ export interface ITab {
     srcL: string;
     srcC: string;
     srcR: string;
-    league: string;
-    items: IPricedItem[];
 }
 
 export interface ICompactTab {

@@ -27,6 +27,5 @@ export class Profile {
   @action
   editProfile(profile: IProfile) {
     Object.assign(this, profile);
-    console.log('updated:', this);
   }
 }

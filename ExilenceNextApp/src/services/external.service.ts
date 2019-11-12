@@ -2,7 +2,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { Observable, from, forkJoin } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
-import { IStash, ITab } from '../interfaces/stash.interface';
+import { IStash, IStashTab } from '../interfaces/stash.interface';
 import { map } from 'rxjs/operators';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ILeague } from '../interfaces/league.interface';
@@ -37,14 +37,14 @@ function getStashTabs(account: string, league: string): Observable<AxiosResponse
     );
 }
 
-function getItemsForTabs(tabs: ITab[], account: string, league: string) {
+function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
     // todo: reset fetched tabs count
     
-    return forkJoin(((tabs).map((tab: ITab) => {
+    return forkJoin(((tabs).map((tab: IStashTab) => {
         return getStashTab(account, league, tab.i).pipe(map((stash: AxiosResponse<IStash>) => {
             // todo: increment fetched tabs count
-            const tabData = {
-                league: league, items: stash.data.items.map((item: IItem) => {
+            const tabItems = {
+                items: stash.data.items.map((item: IItem) => {
                     return {
                         id: item.id,
                         name: ItemHelper.getItemName(item.typeLine, item.name),
@@ -66,8 +66,8 @@ function getItemsForTabs(tabs: ITab[], account: string, league: string) {
                         variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods, ItemHelper.getItemName(item.typeLine, item.name)) : ''
                     } as IPricedItem;
                 })
-            } as ITab;
-            return { ...tab, ...tabData };
+            };
+            return { ...tab, ...tabItems };
         }));
     })));
 }

@@ -1,13 +1,14 @@
+import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
-import Toolbar from './Toolbar';
-import { observer, inject } from 'mobx-react';
-import { UiStateStore } from './../../store/uiStateStore';
-import { AccountStore } from '../../store/accountStore';
 import { DropdownHelper } from '../../helpers/dropdown.helper';
+import { AccountStore } from '../../store/accountStore';
 import { Character } from '../../store/domains/character';
 import { IProfile } from './../../interfaces/profile.interface';
-import { ProfileFormValues } from './../profile-dialog/ProfileDialog';
+import { externalService } from './../../services/external.service';
 import { LeagueStore } from './../../store/leagueStore';
+import { UiStateStore } from './../../store/uiStateStore';
+import { ProfileFormValues } from './../profile-dialog/ProfileDialog';
+import Toolbar from './Toolbar';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -22,16 +23,19 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 }: ToolbarContainerProps) => {
   const account = accountStore!.getSelectedAccount;
   const { activeLeague, activePriceLeague, accountLeagues } = account;
-  const { leagues } = leagueStore!;
+  const { leagues, priceLeagues } = leagueStore!;
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleOpen = (edit: boolean = false) => {
+    const foundLeague = getLeagueSelection(edit);
     setIsEditing(edit);
-    setLeague(getLeagueSelection(edit).uuid);
+    setLeague(foundLeague.uuid);
     setPriceLeague(getPriceLeagueSelection(edit).uuid);
-    setCharacters(getLeagueSelection(edit).characters);
+    setCharacters(
+      accountLeagues.find(l => l.uuid === foundLeague.uuid)!.characters
+    );
     setProfileOpen(true);
   };
 
@@ -41,18 +45,25 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
   const getLeagueSelection = (edit: boolean) => {
     const uuid = DropdownHelper.getDropdownSelection(
-      accountLeagues,
+      leagues,
       edit ? activeLeague.uuid : ''
     );
-    return accountLeagues.find(l => l.uuid === uuid)!;
+
+    const accountLeague = accountLeagues.find(l => l.uuid === uuid);
+    if (accountLeague) {
+      accountLeague.getStashTabs();
+    }
+
+    const foundLeague = leagues.find(l => l.uuid === uuid);
+    return foundLeague!;
   };
 
   const getPriceLeagueSelection = (edit: boolean) => {
     const uuid = DropdownHelper.getDropdownSelection(
-      leagues,
+      priceLeagues,
       edit ? activePriceLeague.uuid : ''
     );
-    return leagues.find(l => l.uuid === uuid)!;
+    return priceLeagues.find(l => l.uuid === uuid)!;
   };
 
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -61,11 +72,23 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
   const handleLeagueChange = (event: React.ChangeEvent<{ value: string }>) => {
     const uuid = event.target.value;
-    setLeague(uuid);
-    setCharacters(
-      accountStore!.getSelectedAccount.accountLeagues.find(l => l.uuid === uuid)!
-        .characters
+    const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
+      l => l.uuid === uuid
     );
+
+    let characters: Character[] = [];
+
+    if (accountLeague) {
+      accountLeague.getStashTabs();
+      characters = accountLeague.characters;
+    }
+
+    setLeague(uuid);
+    setCharacters(characters);
+  };
+
+  const handleSnapshot = () => {
+    console.log('handle snapshot');
   };
 
   const handleSubmit = (values: ProfileFormValues) => {
@@ -83,8 +106,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleProfileChange = (event: React.ChangeEvent<{ value: string }>) => {
-    console.log('profile change!');
-    console.log(event.target.value);
     accountStore!.getSelectedAccount.setActiveProfile(event.target.value);
   };
 
@@ -96,8 +117,10 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       toggleSidenav={() => uiStateStore!.toggleSidenav()}
       handleProfileChange={handleProfileChange}
       handleLeagueChange={handleLeagueChange}
+      handleSnapshot={handleSnapshot}
       leagues={leagues}
       priceLeagues={leagueStore!.priceLeagues}
+      stashTabs={accountStore!.getSelectedAccount.accountLeagues[0].stashtabs}
       characters={characters}
       isEditing={isEditing}
       profileOpen={profileOpen}

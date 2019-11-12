@@ -24,7 +24,7 @@ import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import { PriceStore } from './store/priceStore';
 import { LeagueStore } from './store/leagueStore';
 
-// enableLogging();
+enableLogging();
 configureI18n();
 
 configure({ enforceActions: 'observed' });
@@ -47,7 +47,7 @@ const notificationStore = new NotificationStore(uiStateStore);
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
 const accountStore = new AccountStore(uiStateStore, notificationStore, leagueStore, priceStore);
 
-const stores = { accountStore, uiStateStore, notificationStore, leagueStore, priceStore };
+export const stores = { accountStore, uiStateStore, notificationStore, leagueStore, priceStore };
 
 const app = (
   <>
