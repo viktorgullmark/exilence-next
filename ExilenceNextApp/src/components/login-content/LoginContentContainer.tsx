@@ -21,6 +21,8 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
 }: LoginContentProps) => {
   const history = useHistory();
 
+  uiStateStore!.setValidated(false);
+
   const handleValidate = (details: IAccount) => {
     accountStore!.initSession({
       name: details.name,

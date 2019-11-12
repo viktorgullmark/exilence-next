@@ -1,26 +1,23 @@
+import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik, FormikActions } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import error from '../../helpers/validation.helper';
+import { IStashTab } from '../../interfaces/stash.interface';
+import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
-import { Character } from '../../store/domains/character';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Profile } from './../../store/domains/profile';
-import { TextField } from '@material-ui/core';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
-import { IStashTab } from '../../interfaces/stash.interface';
+import { Profile } from './../../store/domains/profile';
 
 interface ProfileDialogProps {
-  handleClickOpen: Function;
-  handleClickClose: Function;
   isOpen: boolean;
   isEditing?: boolean;
   profile: Profile;
@@ -29,9 +26,12 @@ interface ProfileDialogProps {
   leagues: League[];
   priceLeagues: League[];
   stashTabs: IStashTab[];
+  stashTabIds: string[];
   characters: Character[];
+  handleClickClose: Function;
   handleLeagueChange: Function;
   handleSubmit: Function;
+  handleStashTabChange: Function;
 }
 
 export interface ProfileFormValues {
@@ -142,8 +142,9 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     stashTabs={props.stashTabs}
                     touched={touched}
                     errors={errors}
+                    stashTabIds={props.stashTabIds}
+                    handleStashTabChange={props.handleStashTabChange}
                     handleChange={handleChange}
-                    values={values}
                   />
                   <div className={classes.dialogActions}>
                     <Button onClick={() => props.handleClickClose()}>

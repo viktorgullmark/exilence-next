@@ -9,6 +9,7 @@ export class Profile {
 
   @persist @observable activeLeagueUuid: string = '';
   @persist @observable activePriceLeagueUuid: string = '';
+  @persist('list') @observable activeStashTabIds: string[] = [];
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -22,6 +23,12 @@ export class Profile {
   @action
   setActivePriceLeague(uuid: string) {
     this.activePriceLeagueUuid = uuid;
+  }
+
+  @action
+  setActiveStashTabs(stashTabIds: string[]) {
+    console.log('should select', stashTabIds);
+    this.activeStashTabIds = stashTabIds;
   }
 
   @action

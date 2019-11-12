@@ -14,6 +14,7 @@ import { UiStateStore } from './uiStateStore';
 import { NotificationType } from '../enums/notification-type.enum';
 import { AxiosResponse } from 'axios';
 import { IStash } from '../interfaces/stash.interface';
+import { AccountLeague } from './domains/account-league';
 
 export class AccountStore {
   constructor(
@@ -100,6 +101,7 @@ export class AccountStore {
       () => this.uiStateStore.sessIdCookie,
       (_cookie, reaction) => {
         this.initSessionSuccess();
+
         reaction.dispose();
       }
     );
@@ -131,20 +133,23 @@ export class AccountStore {
   validateSession() {
     this.uiStateStore.setValidated(false);
     const acc = this.getSelectedAccount;
-    const leagueWithChar = acc.accountLeagues[0];
 
-    const league = this.leagueStore!.leagues.find(
-      l => l.uuid === leagueWithChar.uuid
-    );
-
-    leagueWithChar && league
-      ? fromStream(
-          externalService.getStashTabs(acc.name, league.id).pipe(
-            map(() => this.validateSessionSuccess()),
-            catchError((e: Error) => of(this.validateSessionFail(e)))
-          )
+    fromStream(
+      of(acc.accountLeagues)
+        .pipe(
+          map(leagues => {
+            leagues.map(league => {
+              league.getStashTabs();
+            });
+          })
         )
-      : this.validateSessionFail('error:no_characters_in_leagues');
+        .pipe(
+          map(() => {
+            this.validateSessionSuccess();
+          }),
+          catchError((e: Error) => of(this.validateSessionFail(e)))
+        ),
+    );
   }
 
   @action

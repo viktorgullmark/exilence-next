@@ -3,22 +3,19 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AddIcon from '@material-ui/icons/Add';
-import UpdateIcon from '@material-ui/icons/Update';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
+import UpdateIcon from '@material-ui/icons/Update';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router';
 import { DropdownHelper } from '../../helpers/dropdown.helper';
 import { toolbarHeight } from '../header/Header';
+import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
-import ProfileDialog from '../profile-dialog/ProfileDialog';
-import { Character } from './../../store/domains/character';
-import { League } from '../../store/domains/league';
-import { IStashTab } from '../../interfaces/stash.interface';
 
 export const innerToolbarHeight = 50;
 
@@ -75,28 +72,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface ToolbarProps {
+interface Props {
   sidenavOpened: boolean;
-  toggleSidenav: Function;
   activeProfile: Profile;
   profiles: Profile[];
-  handleProfileChange: Function;
   profileOpen: boolean;
   isEditing: boolean;
+  toggleSidenav: Function;
   handleProfileOpen: Function;
   handleProfileClose: Function;
-  leagueUuid: string;
-  priceLeagueUuid: string;
-  characters: Character[];
-  leagues: League[];
-  priceLeagues: League[];
-  stashTabs: IStashTab[];
-  handleSubmit: Function;
-  handleLeagueChange: Function;
+  handleProfileChange: Function;
   handleSnapshot: Function;
 }
 
-const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
+const Toolbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -183,20 +172,12 @@ const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
               </Grid>
             </MuiToolbar>
           </AppBar>
-          <ProfileDialog
+          <ProfileDialogContainer
             profile={props.activeProfile}
-            priceLeagues={props.priceLeagues}
-            stashTabs={props.stashTabs}
             isOpen={props.profileOpen}
             isEditing={props.isEditing}
             handleClickClose={props.handleProfileClose}
             handleClickOpen={props.handleProfileOpen}
-            leagues={props.leagues}
-            characters={props.characters}
-            leagueUuid={props.leagueUuid}
-            priceLeagueUuid={props.priceLeagueUuid}
-            handleLeagueChange={props.handleLeagueChange}
-            handleSubmit={props.handleSubmit}
           />
         </>
       )}

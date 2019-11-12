@@ -60,7 +60,11 @@ export class Account implements IAccount {
   }
 
   @action
-  mapAccountLeagues(leagues: League[], characters: ICharacter[], priceLeagues: League[]) {
+  mapAccountLeagues(
+    leagues: League[],
+    characters: ICharacter[],
+    priceLeagues: League[]
+  ) {
     this.accountLeagues = [];
     const mappedLeagues: AccountLeague[] = [];
 
@@ -73,7 +77,7 @@ export class Account implements IAccount {
       }
     });
 
-    if (this.profiles.length === 0 && mappedLeagues.length > 0) {
+    if (this.profiles.length === 0) {
       this.profiles.push(
         new Profile({
           name: 'profile 1',
@@ -82,7 +86,9 @@ export class Account implements IAccount {
         })
       );
       this.setActiveProfile(this.profiles[0].uuid);
-    } else {
+    }
+
+    if (mappedLeagues.length === 0) {
       throw Error('error:no_leagues_with_characters');
     }
 
@@ -98,5 +104,12 @@ export class Account implements IAccount {
   createProfile(profile: IProfile) {
     const created = new Profile(profile);
     this.profiles.push(created);
+  }
+
+  @action
+  getAllStashTabs() {
+    this.accountLeagues.forEach(l => {
+      l.getStashTabs();
+    })
   }
 }
