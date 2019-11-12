@@ -15,15 +15,17 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { IStashTab } from '../../interfaces/stash.interface';
+import { IStashTab, IColour } from '../../interfaces/stash.interface';
 import { ProfileFormValues } from './../profile-dialog/ProfileDialog';
+import { ColourHelper } from '../../helpers/colour.helper';
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   stashTabs: IStashTab[];
+  stashTabIds: string[];
   handleChange: Function;
-  values: ProfileFormValues;
+  handleStashTabChange: Function;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,21 +66,25 @@ function getStyles(name: string, stashTabIds: string[], theme: Theme) {
 }
 
 const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
-  stashTabs
+  stashTabs,
+  stashTabIds,
+  handleChange,
+  handleStashTabChange
 }: StashTabDropdownProps) => {
 
   const theme = useTheme();
   const { t } = useTranslation();
   const classes = useStyles();
-  const [stashTabIds, setStashTabIds] = React.useState<string[]>([]);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setStashTabIds(event.target.value as string[]);
-  };
 
   const getStashTabName = (id: string) => {
-    return stashTabs.find(st => st.id === id)!.n;
+    const foundTab = stashTabs.find(st => st.id === id);
+    return foundTab ? foundTab.n : '';
   };
+
+  const getColour = (id: string) => {
+    const foundTab = stashTabs.find(st => st.id === id);
+    return foundTab ? ColourHelper.rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
+  }
 
   return (
     <>
@@ -89,12 +95,15 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           id="mutiple-chip"
           multiple
           value={stashTabIds}
-          onChange={handleChange}
+          onChange={e => {
+            handleChange(e);
+            handleStashTabChange(e);
+          }}
           input={<Input id="select-multiple-chip" />}
           renderValue={selected => (
             <div className={classes.chips}>
               {(selected as string[]).map(value => (
-                <Chip key={value} label={getStashTabName(value)} className={classes.chip} />
+                <Chip key={value} label={getStashTabName(value)} className={classes.chip} style={{ background: getColour(value)}} />
               ))}
             </div>
           )}
