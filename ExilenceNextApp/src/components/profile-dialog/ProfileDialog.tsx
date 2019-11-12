@@ -15,6 +15,8 @@ import { Character } from '../../store/domains/character';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Profile } from './../../store/domains/profile';
 import { TextField } from '@material-ui/core';
+import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
+import { IStashTab } from '../../interfaces/stash.interface';
 
 interface ProfileDialogProps {
   handleClickOpen: Function;
@@ -26,6 +28,7 @@ interface ProfileDialogProps {
   priceLeagueUuid: string;
   leagues: League[];
   priceLeagues: League[];
+  stashTabs: IStashTab[];
   characters: Character[];
   handleLeagueChange: Function;
   handleSubmit: Function;
@@ -35,6 +38,7 @@ export interface ProfileFormValues {
   profileName: string;
   league?: string;
   priceLeague?: string;
+  stashTabIds?: string[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -129,6 +133,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                   />
                   <PriceLeagueDropdown
                     priceLeagues={props.priceLeagues}
+                    touched={touched}
+                    errors={errors}
+                    handleChange={handleChange}
+                    values={values}
+                  />
+                  <StashTabDropdown
+                    stashTabs={props.stashTabs}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
