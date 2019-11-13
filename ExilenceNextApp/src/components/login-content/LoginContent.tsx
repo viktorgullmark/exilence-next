@@ -2,16 +2,14 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Account } from '../../store/domains/account';
-import { League } from '../../store/domains/league';
 import { IAccount } from '../../interfaces/account.interface';
-import { Character } from '../../store/domains/character';
+import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
-import Typography from '@material-ui/core/Typography';
 
 interface LoginContentProps {
   handleValidate: Function;
@@ -27,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loginTitle: {
     marginTop: 0,
+    textAlign: 'center',
     marginBottom: theme.spacing(5),
     textTransform: 'uppercase',
     paddingBottom: theme.spacing(2),

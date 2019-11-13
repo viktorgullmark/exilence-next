@@ -86,6 +86,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 value={values.accountName}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                variant="outlined"
                 helperText={
                   errors.accountName &&
                   touched.accountName &&
@@ -99,6 +100,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 label={t('label.session_id')}
                 name="sessionId"
                 type="password"
+                variant="outlined"
                 value={values.sessionId}
                 onChange={handleChange}
                 onBlur={handleBlur}
