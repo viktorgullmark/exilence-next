@@ -6,19 +6,15 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class Account
+    public class Snapshot
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string ClientId { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public virtual ICollection<Character> Characters { get; set; }
+        public decimal TotalValue { get; set; }
+        public virtual ICollection<StashTab> StashTabs { get; set; }
+        public DateTime Datestamp { get; set; }
 
-        public Account()
-        {
-
-        }
     }
 }
