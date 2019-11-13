@@ -104,6 +104,7 @@ export class Account implements IAccount {
   createProfile(profile: IProfile) {
     const created = new Profile(profile);
     this.profiles.push(created);
+    this.setActiveProfile(created.uuid);
   }
 
   @action

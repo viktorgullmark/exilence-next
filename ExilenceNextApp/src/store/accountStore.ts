@@ -1,9 +1,9 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-
+import { NotificationType } from '../enums/notification-type.enum';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
@@ -11,10 +11,7 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
-import { NotificationType } from '../enums/notification-type.enum';
-import { AxiosResponse } from 'axios';
-import { IStash } from '../interfaces/stash.interface';
-import { AccountLeague } from './domains/account-league';
+
 
 export class AccountStore {
   constructor(
@@ -109,21 +106,13 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.notificationStore.createNotification({
-      title: 'init_session',
-      description: 'init_session',
-      type: NotificationType.Success
-    });
+    this.notificationStore.createNotification('init_session', NotificationType.Success);
     this.validateSession();
   }
 
   @action
   initSessionFail(error: Error | string) {
-    this.notificationStore.createNotification({
-      title: 'init_session',
-      description: 'init_session',
-      type: NotificationType.Error
-    });
+    this.notificationStore.createNotification('init_session', NotificationType.Error);
     this.uiStateStore.setSubmitting(false);
 
     console.error(error);
@@ -154,22 +143,14 @@ export class AccountStore {
 
   @action
   validateSessionSuccess() {
-    this.notificationStore.createNotification({
-      title: 'validate_session',
-      description: 'validate_session',
-      type: NotificationType.Success
-    });
+    this.notificationStore.createNotification('validate_session', NotificationType.Success);
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
   }
 
   @action
   validateSessionFail(error: Error | string) {
-    this.notificationStore.createNotification({
-      title: 'validate_session',
-      description: 'validate_session',
-      type: NotificationType.Error
-    });
+    this.notificationStore.createNotification('validate_session', NotificationType.Error);
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
     console.error(error);

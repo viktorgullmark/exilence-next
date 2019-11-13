@@ -94,20 +94,12 @@ export class PriceStore {
 
   @action
   getPricesforLeagueSuccess() {
-    this.notificationStore.createNotification({
-      title: 'get_prices_for_league',
-      description: 'get_prices_for_league',
-      type: NotificationType.Success
-    });
+    this.notificationStore.createNotification('get_prices_for_league', NotificationType.Success);
   }
 
   @action
   getPricesforLeagueFail(error: Error | string) {
-    this.notificationStore.createNotification({
-      title: 'get_prices_for_league',
-      description: 'get_prices_for_league',
-      type: NotificationType.Error
-    });
+    this.notificationStore.createNotification('get_prices_for_league', NotificationType.Error);
 
     console.error(error);
   }

@@ -103,7 +103,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           renderValue={selected => (
             <div className={classes.chips}>
               {(selected as string[]).map(value => (
-                <Chip key={value} label={getStashTabName(value)} className={classes.chip} style={{ background: getColour(value)}} />
+                <Chip key={value} label={getStashTabName(value)} className={classes.chip} style={{ border: `3px solid ${getColour(value)}`}} />
               ))}
             </div>
           )}

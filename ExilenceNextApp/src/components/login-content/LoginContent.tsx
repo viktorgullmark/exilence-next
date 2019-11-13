@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loginTitle: {
     marginTop: 0,
-    marginBottom: theme.spacing(7),
+    marginBottom: theme.spacing(5),
     textTransform: 'uppercase',
     paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.primary.main}`
@@ -51,7 +51,7 @@ const LoginContent: React.FC<LoginContentProps> = (
   return (
     <>
       <Grid container direction="row" justify="center" alignItems="center">
-        <Grid item sm={9} md={5} lg={3}>
+        <Grid item sm={9} md={5} lg={4} xl={3}>
           <Paper className={clsx('paper', classes.loginContentContainer)}>
             <Typography variant="h5" className={classes.loginTitle}>
               {t('title.login')}

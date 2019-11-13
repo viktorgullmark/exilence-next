@@ -77,7 +77,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
             initialValues={{
               profileName: props.isEditing ? props.profile.name : '',
               league: props.leagueUuid,
-              priceLeague: props.priceLeagueUuid
+              priceLeague: props.priceLeagueUuid,
+              stashTabIds: props.stashTabIds
             }}
             onSubmit={(
               values: ProfileFormValues,
@@ -99,7 +100,9 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                 isSubmitting,
                 handleChange,
                 handleSubmit,
-                handleBlur
+                handleBlur,
+                dirty,
+                isValid
               } = formProps;
 
               return (
@@ -154,7 +157,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                       variant="contained"
                       type="submit"
                       color="primary"
-                      disabled={noCharacters.length > 0}
+                      disabled={noCharacters.length > 0 || (dirty && !isValid)}
                     >
                       {props.isEditing
                         ? t('action.save_profile')

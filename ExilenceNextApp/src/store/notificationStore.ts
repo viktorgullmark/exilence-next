@@ -13,11 +13,11 @@ export class NotificationStore {
   }
 
   @action
-  createNotification(n: INotification) {
-    const prefix = `notification:${NotificationType[n.type].toLowerCase()}.`;
-    n.title = `title.${prefix}${n.title}`;
-    n.description = `description.${prefix}${n.description}`;
-    const notification = new Notification(n);
+  createNotification(key: string, type: NotificationType) {
+    const prefix = `notification:${NotificationType[type].toLowerCase()}.`;
+    const title = `${prefix}.title.${key}`;
+    const description = `${prefix}.description.${key}`;
+    const notification = new Notification({ title, description, type });
     this.notifications.push(notification);
     return notification;
   }
