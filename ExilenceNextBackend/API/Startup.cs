@@ -35,7 +35,7 @@ namespace API
             services.AddSignalR();
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<ExilenceContext>(
-                options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"))
+                options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
             );
 
 

@@ -60,6 +60,12 @@ namespace API.Hubs
             }
         }
 
+
+        public async Task AddSnapshot()
+        {
+
+        }
+
         //public async Task UploadStream(IAsyncEnumerable<string> stream)
         //{
         //    await foreach (var item in stream)

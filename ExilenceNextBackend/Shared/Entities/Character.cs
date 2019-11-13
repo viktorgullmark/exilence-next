@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,25 +7,21 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class Group
+    public class Character
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string ClientId { get; set; }
-        [Required]
         public string Name { get; set; }
-        public virtual ICollection<Connection> Connections { get; set; }
-        public DateTime Created { get; set; }
+        public  virtual League League { get; set; }
+        public Class Class { get; set; }
+        public Ascendancy Ascendancy{ get; set; }
+        public int Level { get; set; }
 
-        public Group(){}
-
-        public Group(string code, ICollection<Connection> connections)
+        public Character()
         {
-            Name = code;
-            Connections = connections;
-            Created = DateTime.UtcNow;
-        }
 
+        }
     }
 }

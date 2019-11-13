@@ -4,11 +4,9 @@ using System.Text;
 
 namespace Shared.Models
 {
-    public class GroupModel
+    public class LeagueModel
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        public List<ConnectionModel> Connections { get; set; }
-        public DateTime Created { get; set; }
     }
 }

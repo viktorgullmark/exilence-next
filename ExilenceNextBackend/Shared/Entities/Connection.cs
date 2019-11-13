@@ -16,7 +16,7 @@ namespace Shared.Entities
         public string InstanceName { get; set; }
         [Required, StringLength(20)]
         public DateTime Created { get; set; }
-
+        public virtual Account Account { get; set; }
 
         public Connection(string connectionId, string instanceName)
         {
