@@ -76,8 +76,9 @@ const ProfileDialogContainer: React.FC<Props> = ({
       edit ? activeLeague.uuid : ""
     );
 
+    // fallback in case league doesnt exist anymore
     const foundLeague = leagues.find(l => l.uuid === uuid);
-    return foundLeague!;
+    return foundLeague ? foundLeague : leagues[0];
   };
 
   const getPriceLeagueSelection = (edit: boolean) => {
@@ -85,12 +86,15 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues,
       edit ? activePriceLeague.uuid : ""
     );
-    return priceLeagues.find(l => l.uuid === uuid)!;
+
+    // fallback in case league doesnt exist anymore
+    const foundLeague = priceLeagues.find(l => l.uuid === uuid);
+    return foundLeague ? foundLeague : priceLeagues[0];
   };
 
   const handleLeagueChange = (event: React.ChangeEvent<{ value: string }>) => {
     const uuid = event.target.value;
-    const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
+    let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.uuid === uuid
     );
 
@@ -98,10 +102,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
 
     setStashTabIds([]);
 
-    if (accountLeague) {
-      characters = accountLeague.characters;
-      setStashTabs(accountLeague.stashtabs);
+    // fallback in case league doesnt exist anymore
+    if (!accountLeague) {
+      accountLeague = accountStore!.getSelectedAccount.accountLeagues[0];
     }
+
+    characters = accountLeague.characters;
+    setStashTabs(accountLeague.stashtabs);
 
     setLeague(uuid);
     setCharacters(characters);
