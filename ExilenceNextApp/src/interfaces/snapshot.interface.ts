@@ -1,7 +1,6 @@
-import { ITabSnapshot } from './tab-snapshot.interface';
+import { IStashTabSnapshot } from './stash-tab-snapshot.interface';
 
 export interface ISnapshot {
     timestamp: Date;
-    league: string;
-    tabSnapshots: Array<ITabSnapshot>;
+    stashTabSnapshots: Array<IStashTabSnapshot>;
 }
