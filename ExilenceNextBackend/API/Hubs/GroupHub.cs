@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,10 @@ namespace API.Hubs
         {
             try
             {
+                var test = await _groupRepository.GetGroupQuery(g => g.Name == name).FirstOrDefaultAsync();
+
                 var group = await _groupRepository.GetGroup(name);
+
                 var connection = group.Connections.FirstOrDefault(t => t.ConnectionId == Context.ConnectionId);
                 group.Connections.Remove(connection);
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, name);
