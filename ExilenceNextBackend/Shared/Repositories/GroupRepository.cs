@@ -3,6 +3,8 @@ using Shared.Entities;
 using Shared.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +28,11 @@ namespace Shared.Repositories
         {
             var group = await _exilenceContext.Groups.FirstOrDefaultAsync(g => g.Name == name);
             return group;
+        }
+
+        public IQueryable<Group> GetGroupQuery(Expression<Func<Group, bool>> predicate)
+        {
+            return _exilenceContext.Groups.Where(predicate);
         }
 
         public async Task<Group> RemoveGroup(string name)

@@ -53,5 +53,15 @@ namespace API.Hubs
         }
 
 
+        // EXAMPLE OF HOW TO RECIVE A STREAM
+        //public async Task UploadStream(IAsyncEnumerable<string> stream)
+        //{
+        //    await foreach (var item in stream)
+        //    {
+        //        Console.WriteLine(item);
+        //    }
+        //}
+
+
     }
 }
