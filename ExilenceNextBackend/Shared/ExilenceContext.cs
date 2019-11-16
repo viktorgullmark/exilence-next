@@ -13,10 +13,13 @@ namespace Shared
         }
 
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<Connection> Connections { get; set; }
         public DbSet<Character> Characters { get; set; }
+        public DbSet<Connection> Connections { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<League> Leagues { get; set; }
+        public DbSet<PricedItem> PricedItems { get; set; }
+        public DbSet<Snapshot> Snapshots { get; set; }
+        public DbSet<StashTab> StashTabs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
