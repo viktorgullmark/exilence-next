@@ -5,14 +5,21 @@ import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
+import { UiStateStore } from '../../store/uiStateStore';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
+  uiStateStore?: UiStateStore;
 }
 
-const NetWorth: React.FC<NetWorthProps> = ({ accountStore }: NetWorthProps) => {
+const NetWorth: React.FC<NetWorthProps> = ({
+  accountStore,
+  uiStateStore
+}: NetWorthProps) => {
 
-  accountStore!.updateAccountData();
+  if (!uiStateStore!.validated) {
+    accountStore!.initSession();
+  }
 
   return (
     <FeatureWrapper>
@@ -28,4 +35,4 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore }: NetWorthProps) => {
   );
 };
 
-export default inject('accountStore')(observer(NetWorth));
+export default inject('accountStore', 'uiStateStore')(observer(NetWorth));
