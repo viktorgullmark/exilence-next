@@ -73,7 +73,7 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
         >
           {leagues.map((league: League) => {
             return (
-              <MenuItem key={league.uuid} value={league.uuid}>
+              <MenuItem key={league.uuid} value={league.id}>
                 {league.id}
               </MenuItem>
             );

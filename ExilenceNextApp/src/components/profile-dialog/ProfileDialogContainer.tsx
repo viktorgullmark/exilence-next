@@ -45,13 +45,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
     if (isOpen) {
       const foundLeague = getLeagueSelection(isEditing);
       const accountLeague = accountLeagues.find(
-        l => l.uuid === foundLeague.uuid
+        l => l.leagueId === foundLeague.id
       );
       setStashTabIds([]);
-      setLeague(foundLeague.uuid);
+      setLeague(foundLeague.id);
 
       if (foundLeague && accountLeague) {
-        setPriceLeague(getPriceLeagueSelection(isEditing).uuid);
+        setPriceLeague(getPriceLeagueSelection(isEditing).id);
         setCharacters(accountLeague.characters);
         setStashTabs(accountLeague.stashtabs);
       }
@@ -71,31 +71,31 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const uuid = DropdownHelper.getDropdownSelection(
+    const id = DropdownHelper.getLeagueSelection(
       leagues,
-      edit ? activeLeague.uuid : ""
+      edit ? activeLeague.id : ""
     );
 
     // fallback in case league doesnt exist anymore
-    const foundLeague = leagues.find(l => l.uuid === uuid);
+    const foundLeague = leagues.find(l => l.id === id);
     return foundLeague ? foundLeague : leagues[0];
   };
 
   const getPriceLeagueSelection = (edit: boolean) => {
-    const uuid = DropdownHelper.getDropdownSelection(
+    const id = DropdownHelper.getLeagueSelection(
       priceLeagues,
-      edit ? activePriceLeague.uuid : ""
+      edit ? activePriceLeague.id : ""
     );
 
     // fallback in case league doesnt exist anymore
-    const foundLeague = priceLeagues.find(l => l.uuid === uuid);
+    const foundLeague = priceLeagues.find(l => l.id === id);
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
   const handleLeagueChange = (event: React.ChangeEvent<{ value: string }>) => {
-    const uuid = event.target.value;
+    const id = event.target.value;
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
-      l => l.uuid === uuid
+      l => l.leagueId === id
     );
 
     let characters: Character[] = [];
@@ -110,15 +110,15 @@ const ProfileDialogContainer: React.FC<Props> = ({
     characters = accountLeague.characters;
     setStashTabs(accountLeague.stashtabs);
 
-    setLeague(uuid);
+    setLeague(id);
     setCharacters(characters);
   };
 
   const handleSubmit = (values: ProfileFormValues) => {
     const profile: IProfile = {
       name: values.profileName,
-      activeLeagueUuid: values.league,
-      activePriceLeagueUuid: values.priceLeague,
+      activeLeagueId: values.league,
+      activePriceLeagueId: values.priceLeague,
       activeStashTabIds: stashTabIds
     };
     if (isEditing) {

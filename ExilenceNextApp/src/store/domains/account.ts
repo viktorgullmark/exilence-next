@@ -28,7 +28,7 @@ export class Account implements IAccount {
   @computed
   get activeLeague() {
     const league = stores.leagueStore.leagues.find(
-      l => l.uuid === this.activeProfile.activeLeagueUuid
+      l => l.id === this.activeProfile.activeLeagueId
     );
     return league!;
   }
@@ -36,7 +36,7 @@ export class Account implements IAccount {
   @computed
   get activePriceLeague() {
     const league = stores.leagueStore.priceLeagues.find(
-      l => l.uuid === this.activeProfile.activePriceLeagueUuid
+      l => l.id === this.activeProfile.activePriceLeagueId
     );
     return league!;
   }
@@ -63,7 +63,7 @@ export class Account implements IAccount {
 
     leagues.forEach(l => {
       const accLeague = new AccountLeague();
-      accLeague.uuid = l.uuid;
+      accLeague.leagueId = l.id;
       accLeague.updateCharacters(characters.filter(c => c.league === l.id));
       if (accLeague.characters.length > 0) {
         mappedLeagues.push(accLeague);
@@ -74,8 +74,8 @@ export class Account implements IAccount {
       this.profiles.push(
         new Profile({
           name: 'profile 1',
-          activeLeagueUuid: mappedLeagues[0]!.uuid,
-          activePriceLeagueUuid: priceLeagues[0].uuid
+          activeLeagueId: mappedLeagues[0]!.leagueId,
+          activePriceLeagueId: priceLeagues[0].id
         })
       );
       this.setActiveProfile(this.profiles[0].uuid);

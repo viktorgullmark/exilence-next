@@ -1,6 +1,6 @@
 export interface IProfile {
   name: string;
-  activeLeagueUuid?: string;
-  activePriceLeagueUuid?: string;
+  activeLeagueId?: string;
+  activePriceLeagueId?: string;
   activeStashTabIds?: string[];
 }

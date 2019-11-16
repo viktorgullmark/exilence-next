@@ -6,7 +6,7 @@ import { ILeaguePriceSource } from './../../interfaces/league-price-source.inter
 
 export class LeaguePriceDetails {
     @persist uuid: string = uuid.v4();
-    @persist leagueUuid: string = '';
+    @persist leagueId: string = '';
     
     @persist('list', LeaguePriceSource) @observable leaguePriceSources: LeaguePriceSource[] = [];
 

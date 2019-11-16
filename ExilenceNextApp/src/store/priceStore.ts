@@ -42,21 +42,21 @@ export class PriceStore {
   }
 
   @action
-  getPricesForLeagues(leagueUuids: string[]) {
+  getPricesForLeagues(leagueIds: string[]) {
     this.isUpdatingPrices = true;
     fromStream(
-      from(leagueUuids).pipe(
-        map(leagueUuid => {
+      from(leagueIds).pipe(
+        map(leagueId => {
           const league = this.leagueStore.leagues.find(
-            l => l.uuid === leagueUuid
+            l => l.id === leagueId
           );
           let leaguePriceDetails = this.leaguePriceDetails.find(
-            l => l.leagueUuid === leagueUuid
+            l => l.leagueId === leagueId
           );
 
           if (!leaguePriceDetails) {
             leaguePriceDetails = new LeaguePriceDetails();
-            leaguePriceDetails.leagueUuid = leagueUuid;
+            leaguePriceDetails.leagueId = leagueId;
             this.leaguePriceDetails.push(leaguePriceDetails);
           }
 

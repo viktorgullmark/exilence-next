@@ -12,7 +12,7 @@ import { stores } from './../../index';
 
 export class AccountLeague {
   @persist uuid: string = '';
-
+  @persist leagueId: string = '';
   @persist('list', Character) @observable characters: Character[] = [];
   @persist('list') @observable stashtabs: IStashTab[] = [];
 
@@ -36,7 +36,7 @@ export class AccountLeague {
       externalService
         .getStashTabs(
           stores.accountStore.getSelectedAccount.name,
-          stores.leagueStore.leagues.find(l => l.uuid === this.uuid)!.id
+          this.leagueId
         )
         .pipe(
           map((response: AxiosResponse<IStash>) => {

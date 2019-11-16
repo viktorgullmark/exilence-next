@@ -20,8 +20,8 @@ export class Profile {
   @persist uuid: string = uuid.v4();
 
   @persist name: string = '';
-  @persist @observable activeLeagueUuid: string = '';
-  @persist @observable activePriceLeagueUuid: string = '';
+  @persist @observable activeLeagueId: string = '';
+  @persist @observable activePriceLeagueId: string = '';
   @persist('list') @observable activeStashTabIds: string[] = [];
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
@@ -31,13 +31,13 @@ export class Profile {
   }
 
   @action
-  setActiveLeague(uuid: string) {
-    this.activeLeagueUuid = uuid;
+  setActiveLeague(id: string) {
+    this.activeLeagueId = id;
   }
 
   @action
-  setActivePriceLeague(uuid: string) {
-    this.activePriceLeagueUuid = uuid;
+  setActivePriceLeague(id: string) {
+    this.activePriceLeagueId = id;
   }
 
   @action
@@ -70,13 +70,14 @@ export class Profile {
 
   @action getItems() {
     const accountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
-      al => al.uuid === this.activeLeagueUuid
+      al => al.leagueId === this.activeLeagueId
     );
 
     const league = stores.leagueStore.leagues.find(
-      l => l.uuid === this.activeLeagueUuid
+      l => l.id === this.activeLeagueId
     );
 
+    // todo: catch these errors
     if (!accountLeague || !league) {
       throw Error('error:no_matching_league');
     }
@@ -84,6 +85,11 @@ export class Profile {
     const selectedStashTabs = accountLeague.stashtabs.filter(
       st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
     );
+
+    if(selectedStashTabs.length === 0) {
+      throw Error('error:no_stash_tabs_for_profile');
+    }
+
     fromStream(
       externalService
         .getItemsForTabs(
@@ -125,8 +131,8 @@ export class Profile {
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
     const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
       l =>
-        l.leagueUuid ===
-        stores.accountStore.getSelectedAccount.activePriceLeague.uuid
+        l.leagueId ===
+        stores.accountStore.getSelectedAccount.activePriceLeague.id
     );
 
     if (!activePriceDetails) {

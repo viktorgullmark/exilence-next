@@ -74,7 +74,7 @@ export class AccountStore {
 
           // todo: create separate action
           this.priceStore.getPricesForLeagues(
-            this.leagueStore.priceLeagues.map(l => l.uuid)
+            this.leagueStore.priceLeagues.map(l => l.id)
           );
 
           // todo: make sure leagues are set here
@@ -186,12 +186,11 @@ export class AccountStore {
 
           this.leagueStore.updateLeagues(requests[0].data);
 
-          // todo: only map data for snapshots
-          // this.getSelectedAccount.mapAccountLeagues(
-          //   this.leagueStore.leagues,
-          //   requests[1].data,
-          //   this.leagueStore.priceLeagues
-          // );
+          this.getSelectedAccount.mapAccountLeagues(
+            this.leagueStore.leagues,
+            requests[1].data,
+            this.leagueStore.priceLeagues
+          );
 
           this.updateAccountDataSuccess();
         }),
@@ -210,8 +209,10 @@ export class AccountStore {
     );
 
     this.priceStore.getPricesForLeagues(
-      this.leagueStore.priceLeagues.map(l => l.uuid)
+      this.leagueStore.priceLeagues.map(l => l.id)
     );
+
+    this.validateSession();
   }
 
   @action

@@ -66,7 +66,7 @@ const app = (
                 exact
                 path="/"
                 render={() =>
-                  accountStore.getSelectedAccount ? (
+                  accountStore.getSelectedAccount.name !== '' ? (
                     <Redirect to="/net-worth" />
                   ) : (
                     <Redirect to="/login" />
