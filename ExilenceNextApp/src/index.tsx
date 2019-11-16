@@ -66,7 +66,7 @@ const app = (
                 exact
                 path="/"
                 render={() =>
-                  authService.isLoggedIn() ? (
+                  accountStore.getSelectedAccount ? (
                     <Redirect to="/net-worth" />
                   ) : (
                     <Redirect to="/login" />
@@ -84,8 +84,7 @@ const app = (
 Promise.all([
   hydrate('account', accountStore),
   hydrate('uiState', uiStateStore),
-  hydrate('league', leagueStore),
-  hydrate('prices', priceStore)
+  hydrate('league', leagueStore)
 ]).then(() => {
   ReactDOM.render(app, document.getElementById('root'));
 });

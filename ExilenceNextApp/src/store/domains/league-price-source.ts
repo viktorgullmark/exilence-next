@@ -1,3 +1,4 @@
+import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 import { IExternalPrice } from '../../interfaces/external-price.interface';
@@ -7,9 +8,14 @@ export class LeaguePriceSource {
   @persist uuid: string = uuid.v4();
   @persist priceSourceUuid: string = '';
 
-  @persist('list') prices: IExternalPrice[] = [];
+  prices: IExternalPrice[] = [];
 
   constructor(obj?: ILeaguePriceSource) {
     Object.assign(this, obj);
+  }
+
+  @action
+  updatePrices(newPrices: IExternalPrice[]) {
+    this.prices = newPrices;
   }
 }

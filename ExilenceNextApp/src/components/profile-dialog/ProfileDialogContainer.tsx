@@ -144,7 +144,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
       characters={characters}
-    ></ProfileDialog>
+    />
   );
 };
 

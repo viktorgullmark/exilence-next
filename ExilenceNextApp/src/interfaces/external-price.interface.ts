@@ -1,5 +1,5 @@
 export interface IExternalPrice {
-    name?: string;
+    name: string;
     calculated?: number;
     max?: number;
     mean?: number;
@@ -17,7 +17,7 @@ export interface IExternalPrice {
     level?: number;
     corrupted?: boolean;
     totalStacksize?: number;
-    icon?: string;
+    icon: string;
     tier?: number;
 }
 

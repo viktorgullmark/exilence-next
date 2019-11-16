@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
@@ -11,7 +11,6 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
-
 
 export class AccountStore {
   constructor(
@@ -74,9 +73,9 @@ export class AccountStore {
           this.leagueStore.updateLeagues(requests[0].data);
 
           // todo: create separate action
-          this.leagueStore.priceLeagues.forEach(l => {
-            this.priceStore.getPricesForLeague(l.uuid);
-          });
+          this.priceStore.getPricesForLeagues(
+            this.leagueStore.priceLeagues.map(l => l.uuid)
+          );
 
           // todo: make sure leagues are set here
           acc!.mapAccountLeagues(
@@ -106,13 +105,19 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.notificationStore.createNotification('init_session', NotificationType.Success);
+    this.notificationStore.createNotification(
+      'init_session',
+      NotificationType.Success
+    );
     this.validateSession();
   }
 
   @action
   initSessionFail(error: Error | string) {
-    this.notificationStore.createNotification('init_session', NotificationType.Error);
+    this.notificationStore.createNotification(
+      'init_session',
+      NotificationType.Error
+    );
     this.uiStateStore.setSubmitting(false);
 
     console.error(error);
@@ -137,22 +142,83 @@ export class AccountStore {
             this.validateSessionSuccess();
           }),
           catchError((e: Error) => of(this.validateSessionFail(e)))
-        ),
+        )
     );
   }
 
   @action
   validateSessionSuccess() {
-    this.notificationStore.createNotification('validate_session', NotificationType.Success);
+    this.notificationStore.createNotification(
+      'validate_session',
+      NotificationType.Success
+    );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
   }
 
   @action
   validateSessionFail(error: Error | string) {
-    this.notificationStore.createNotification('validate_session', NotificationType.Error);
+    this.notificationStore.createNotification(
+      'validate_session',
+      NotificationType.Error
+    );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
     console.error(error);
+  }
+
+  // todo: make this reusable and use in initSession
+  @action
+  updateAccountData() {
+    fromStream(
+      forkJoin(
+        externalService.getLeagues(),
+        externalService.getCharacters(this.getSelectedAccount.name)
+      ).pipe(
+        map(requests => {
+          // todo: should only warn (notifications)
+          if (requests[0].data.length === 0) {
+            throw new Error('error:no_leagues');
+          }
+          if (requests[1].data.length === 0) {
+            throw new Error('error:no_characters');
+          }
+
+          this.leagueStore.updateLeagues(requests[0].data);
+
+          // todo: only map data for snapshots
+          // this.getSelectedAccount.mapAccountLeagues(
+          //   this.leagueStore.leagues,
+          //   requests[1].data,
+          //   this.leagueStore.priceLeagues
+          // );
+
+          this.updateAccountDataSuccess();
+        }),
+        catchError((e: Error) => {
+          return of(this.updateAccountDataFail(e));
+        })
+      )
+    );
+  }
+
+  @action
+  updateAccountDataSuccess() {
+    this.notificationStore.createNotification(
+      'update_account_data',
+      NotificationType.Success
+    );
+
+    this.priceStore.getPricesForLeagues(
+      this.leagueStore.priceLeagues.map(l => l.uuid)
+    );
+  }
+
+  @action
+  updateAccountDataFail(e: Error) {
+    this.notificationStore.createNotification(
+      'update_account_data',
+      NotificationType.Error
+    );
   }
 }

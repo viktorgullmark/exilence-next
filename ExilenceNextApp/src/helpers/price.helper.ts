@@ -63,7 +63,7 @@ export class PriceHelper {
 
     public static mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
         if (price !== undefined) {
-            item.calculated = price.calculated;
+            item.calculated = price.calculated ? price.calculated : 0;
             item.max = price.max;
             item.mean = price.mean;
             item.mode = price.mode;

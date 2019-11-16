@@ -10,6 +10,7 @@ import { IItem } from '../interfaces/item.interface';
 import { ILeague } from '../interfaces/league.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStash, IStashTab } from '../interfaces/stash.interface';
+import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
@@ -40,7 +41,7 @@ function getStashTabs(account: string, league: string): Observable<AxiosResponse
 
 function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
     // todo: reset fetched tabs count
-    return forkJoin(((tabs.slice(0, 10)).map((tab: IStashTab) => {
+    return forkJoin(((tabs).map((tab: IStashTab) => {
         return getStashTab(account, league, tab.i).pipe(map((stash: AxiosResponse<IStash>) => {
             // todo: increment fetched tabs count
             const items = {
@@ -67,7 +68,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                     } as IPricedItem;
                 })
             };
-            return { ...{ id: tab.id }, ...items };
+            return <IStashTabSnapshot>{ ...{ stashTabId: tab.id }, ...items };
         }));
     })));
 }

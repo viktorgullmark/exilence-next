@@ -1,18 +1,20 @@
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import { fromStream } from 'mobx-utils';
+import { forkJoin, of, from } from 'rxjs';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { stores } from '..';
+import { NotificationType } from '../enums/notification-type.enum';
+import { IExternalPrice } from '../interfaces/external-price.interface';
+import { IPricedItem } from '../interfaces/priced-item.interface';
+import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
+import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
+import { poeninjaService } from './../services/poe-ninja.service';
 import { LeaguePriceDetails } from './domains/league-price-details';
 import { PriceSource } from './domains/price-source';
 import { LeagueStore } from './leagueStore';
-import { UiStateStore } from './uiStateStore';
-import { fromStream } from 'mobx-utils';
-import { forkJoin, of } from 'rxjs';
-import { poeninjaService } from './../services/poe-ninja.service';
-import { map, catchError } from 'rxjs/operators';
 import { NotificationStore } from './notificationStore';
-import { IExternalPrice } from '../interfaces/external-price.interface';
-import { LeaguePriceSource } from './domains/league-price-source';
-import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
-import { NotificationType } from '../enums/notification-type.enum';
+import { UiStateStore } from './uiStateStore';
 
 export class PriceStore {
   @persist('list', PriceSource) @observable priceSources: PriceSource[] = [
@@ -26,6 +28,7 @@ export class PriceStore {
   @observable
   leaguePriceDetails: LeaguePriceDetails[] = [];
   @persist @observable activePriceSourceUuid: string = '';
+  @observable isUpdatingPrices: boolean = false;
 
   constructor(
     private uiStateStore: UiStateStore,
@@ -39,67 +42,88 @@ export class PriceStore {
   }
 
   @action
-  getPricesForLeague(leagueUuid: string) {
-    const league = this.leagueStore.leagues.find(l => l.uuid === leagueUuid);
-    let leaguePriceDetails = this.leaguePriceDetails.find(
-      l => l.leagueUuid === leagueUuid
-    );
-
-    if (!leaguePriceDetails) {
-      leaguePriceDetails = new LeaguePriceDetails();
-      leaguePriceDetails.leagueUuid = leagueUuid;
-      this.leaguePriceDetails.push(leaguePriceDetails);
-    }
-
-    if (!league) {
-      throw Error('error:no_league');
-    }
-
+  getPricesForLeagues(leagueUuids: string[]) {
+    this.isUpdatingPrices = true;
     fromStream(
-      forkJoin(
-        // todo: add watch and other sources here
-        poeninjaService.getCurrencyPrices(league.id),
-        poeninjaService.getItemPrices(league.id)
-      ).pipe(
-        map(prices => {
-          const combinedPrices: IExternalPrice[] = ([] as any).concat.apply(
-            [],
-            [prices[0], prices[1]]
+      from(leagueUuids).pipe(
+        map(leagueUuid => {
+          const league = this.leagueStore.leagues.find(
+            l => l.uuid === leagueUuid
           );
-          const ninjaPrices: IExternalPrice[] = [];
-          combinedPrices.forEach(p => {
-            ninjaPrices.push(p);
-          });
+          let leaguePriceDetails = this.leaguePriceDetails.find(
+            l => l.leagueUuid === leagueUuid
+          );
+
+          if (!leaguePriceDetails) {
+            leaguePriceDetails = new LeaguePriceDetails();
+            leaguePriceDetails.leagueUuid = leagueUuid;
+            this.leaguePriceDetails.push(leaguePriceDetails);
+          }
+
           // todo: remove hardcoded check for poeninja
           let leaguePriceSource = leaguePriceDetails!.leaguePriceSources.find(
             lps => lps.priceSourceUuid === this.priceSources[0].uuid
           );
-          
-          runInAction(() => {
-            if (!leaguePriceSource) {
-              leaguePriceDetails!.addLeaguePriceSource(<ILeaguePriceSource>{
-                priceSourceUuid: this.priceSources[0].uuid,
-                prices: ninjaPrices
-              })
-            } else {
-              leaguePriceSource.prices = ninjaPrices;
-            }
-          });
-          this.getPricesforLeagueSuccess();
+
+          if (!leaguePriceSource) {
+            // todo: add function for lookup
+            leaguePriceDetails!.addLeaguePriceSource(<ILeaguePriceSource>{
+              priceSourceUuid: this.priceSources[0].uuid
+            });
+          }
+
+          if (!league) {
+            throw Error('error:no_league');
+          }
+
+          return forkJoin(
+            // todo: add watch and other sources here
+            poeninjaService.getCurrencyPrices(league.id),
+            poeninjaService.getItemPrices(league.id)
+          ).pipe(
+            map(prices => {
+              const combinedPrices: IExternalPrice[] = ([] as any).concat.apply(
+                [],
+                [prices[0], prices[1]]
+              );
+              const ninjaPrices: IExternalPrice[] = [];
+              combinedPrices.forEach(p => {
+                ninjaPrices.push(p);
+              });
+
+              const lps = leaguePriceDetails!.leaguePriceSources.find(
+                lps => lps.priceSourceUuid === this.priceSources[0].uuid
+              );
+
+              runInAction(() => {
+                lps!.updatePrices(ninjaPrices);
+              });
+            })
+          );
         }),
-        catchError((e: Error) => of(this.getPricesforLeagueFail(e)))
+        catchError((e: Error) => of(this.getPricesforLeaguesFail(e)))
       )
+    );
+
+    this.getPricesforLeaguesSuccess();
+  }
+
+  @action
+  getPricesforLeaguesSuccess() {
+    this.isUpdatingPrices = false;
+    this.notificationStore.createNotification(
+      'get_prices_for_leagues',
+      NotificationType.Success
     );
   }
 
   @action
-  getPricesforLeagueSuccess() {
-    this.notificationStore.createNotification('get_prices_for_league', NotificationType.Success);
-  }
-
-  @action
-  getPricesforLeagueFail(error: Error | string) {
-    this.notificationStore.createNotification('get_prices_for_league', NotificationType.Error);
+  getPricesforLeaguesFail(error: Error | string) {
+    this.isUpdatingPrices = false;
+    this.notificationStore.createNotification(
+      'get_prices_for_leagues',
+      NotificationType.Error
+    );
 
     console.error(error);
   }

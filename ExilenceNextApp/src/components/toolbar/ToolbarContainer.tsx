@@ -33,7 +33,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleSnapshot = () => {
-    console.log('handle snapshot');
     accountStore!.getSelectedAccount.activeProfile.snapshot();
   };
 

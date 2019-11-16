@@ -5,7 +5,7 @@ export interface IPricedItem {
     name: string;
     typeLine: string;
     frameType: number;
-    calculated?: number;
+    calculated: number;
     max?: number;
     elder: boolean;
     shaper: boolean;

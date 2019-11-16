@@ -1,5 +1,5 @@
 import RateLimiter from 'rxjs-ratelimiter';
-import { map } from 'rxjs/operators';
+import { map, concatAll, flatMap } from 'rxjs/operators';
 import { forkJoin, from } from 'rxjs';
 import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-currency-overview.interface';
 import { IExternalPrice } from '../interfaces/external-price.interface';
@@ -80,7 +80,7 @@ function getItemPrices(league: string) {
         })
       );
     })
-  );
+  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }
 
 function getCurrencyPrices(league: string) {
@@ -100,5 +100,5 @@ function getCurrencyPrices(league: string) {
         })
       );
     })
-  );
+  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }

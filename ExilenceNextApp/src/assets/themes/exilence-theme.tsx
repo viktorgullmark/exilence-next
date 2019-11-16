@@ -24,6 +24,6 @@ export default function exilenceTheme() {
                main: '#000',
              },
              type: 'dark'
-        } as Palette
-    } as ThemeOptions);
+        }
+    });
 }

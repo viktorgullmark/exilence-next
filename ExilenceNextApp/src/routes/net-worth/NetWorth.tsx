@@ -2,8 +2,18 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import Widget from '../../components/widget/Widget';
+import { AccountStore } from '../../store/accountStore';
+import { inject } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
-const NetWorth: React.FC = (props: any) => {
+interface NetWorthProps {
+  accountStore?: AccountStore;
+}
+
+const NetWorth: React.FC<NetWorthProps> = ({ accountStore }: NetWorthProps) => {
+
+  accountStore!.updateAccountData();
+
   return (
     <FeatureWrapper>
       <Grid container spacing={3}>
@@ -18,4 +28,4 @@ const NetWorth: React.FC = (props: any) => {
   );
 };
 
-export default NetWorth;
+export default inject('accountStore')(observer(NetWorth));
