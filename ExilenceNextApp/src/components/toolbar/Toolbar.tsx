@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useLocation } from 'react-router';
-import { DropdownHelper } from '../../helpers/dropdown.helper';
+import Dd from '../../helpers/dropdown.helper';
 import { toolbarHeight } from '../header/Header';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
@@ -124,8 +124,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   <FormControl>
                     <Select
                       className={classes.selectMenu}
-                      value={DropdownHelper.getDropdownSelection(
-                        props.profiles,
+                      value={Dd.getDropdownSelection(
+                        Dd.mapDomainToDropdown(props.profiles),
                         props.activeProfile.uuid
                       )}
                       onChange={e => props.handleProfileChange(e)}

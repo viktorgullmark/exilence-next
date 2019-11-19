@@ -50,12 +50,24 @@ export class AccountStore {
   }
 
   @action
-  initSession(details?: IAccount) {
-    if (!details) {
+  initSession(account?: IAccount) {
+    let details: IAccount;
+
+    if (!account) {
       details = {
         name: this.getSelectedAccount.name,
         sessionId: this.getSelectedAccount.sessionId
       };
+    } else {
+      details = account;
+      reaction(
+        () => this.uiStateStore.sessIdCookie,
+        (_cookie, reaction) => {
+          this.initSessionSuccess();
+
+          reaction.dispose();
+        }
+      );
     }
 
     this.uiStateStore.setSubmitting(true);
@@ -63,7 +75,7 @@ export class AccountStore {
     fromStream(
       forkJoin(
         externalService.getLeagues(),
-        externalService.getCharacters(details!.name)
+        externalService.getCharacters(details.name)
       ).pipe(
         map(requests => {
           if (requests[0].data.length === 0) {
@@ -72,8 +84,8 @@ export class AccountStore {
           if (requests[1].data.length === 0) {
             throw new Error('error:no_characters');
           }
-          if (details) {
-            this.addAccount(details);
+          if (account) {
+            this.addAccount(details)
             this.selectAccountByName(details.name);
           }
           const acc = this.getSelectedAccount;
@@ -92,21 +104,14 @@ export class AccountStore {
           );
         }),
         switchMap(() => {
-          return this.uiStateStore.setSessIdCookie(details!.sessionId);
+          return account
+            ? this.uiStateStore.setSessIdCookie(details.sessionId)
+            : of(this.initSessionSuccess());
         }),
         catchError((e: Error) => {
           return of(this.initSessionFail(e));
         })
       )
-    );
-
-    reaction(
-      () => this.uiStateStore.sessIdCookie,
-      (_cookie, reaction) => {
-        this.initSessionSuccess();
-
-        reaction.dispose();
-      }
     );
   }
 

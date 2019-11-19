@@ -1,14 +1,10 @@
 import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
-
-import { DropdownHelper } from '../../helpers/dropdown.helper';
 import { AccountStore } from '../../store/accountStore';
-import { Character } from '../../store/domains/character';
-import { IProfile } from './../../interfaces/profile.interface';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
-import { ProfileFormValues } from './../profile-dialog/ProfileDialog';
 import Toolbar from './Toolbar';
+
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;

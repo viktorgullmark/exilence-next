@@ -8,7 +8,8 @@ export class CookieHelper {
       value: sessionId,
       domain: '.pathofexile.com',
       path: '/',
-      secure: true
+      secure: true,
+      expirationDate: 2550873600
     };
     return cookie;
   }
