@@ -101,11 +101,10 @@ export class PriceStore {
             })
           );
         }),
+        switchMap(() => of(this.getPricesforLeaguesSuccess())),
         catchError((e: Error) => of(this.getPricesforLeaguesFail(e)))
       )
     );
-
-    this.getPricesforLeaguesSuccess();
   }
 
   @action

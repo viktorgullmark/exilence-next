@@ -1,6 +1,7 @@
 import { IProperty } from "../interfaces/property.interface";
 import { ISocket } from "../interfaces/socket.interface";
 import { IPricedItem } from "../interfaces/priced-item.interface";
+import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
 
 export class ItemHelper {
   public static mergeItemStacks(items: IPricedItem[]) {
@@ -18,6 +19,16 @@ export class ItemHelper {
     });
 
     return mergedItems;
+  }
+
+  public static formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) {
+    let mergedStashTabs: IPricedItem[] = [];
+
+    stashTabSnapshots.forEach(snapshot => {
+      mergedStashTabs = mergedStashTabs.concat(snapshot.items);
+    });
+
+    return this.mergeItemStacks(mergedStashTabs);
   }
 
   public static findItem(array: IPricedItem[], itemToFind: IPricedItem) {

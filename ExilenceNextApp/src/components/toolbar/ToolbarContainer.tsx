@@ -5,7 +5,6 @@ import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
 
-
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
@@ -52,6 +51,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   );
 };
 
-export default inject('uiStateStore', 'accountStore')(
-  observer(ToolbarContainer)
-);
+export default inject(
+  'uiStateStore',
+  'accountStore'
+)(observer(ToolbarContainer));
