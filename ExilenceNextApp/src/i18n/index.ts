@@ -15,7 +15,7 @@ function configureI18n() {
             },
             fallbackLng: 'en',
             debug: !AppConfig.production,
-            ns: ['common', 'notification', 'error'],
+            ns: ['common', 'notification', 'error', 'tables'],
             defaultNS: 'common',
             interpolation: {
                 escapeValue: false,

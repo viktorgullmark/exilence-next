@@ -1,0 +1,13 @@
+{
+  "header": {
+    "icon": "Icon",
+    "name": "Name",
+    "links": "Links",
+    "level": "Level",
+    "quality": "Quality",
+    "corrupted": "Corrupted",
+    "stacksize": "Stacksize",
+    "calculated": "Price",
+    "total": "Total"
+  }
+}

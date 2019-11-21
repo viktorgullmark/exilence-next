@@ -33,9 +33,9 @@ export class Profile {
   @computed
   get tableItems() {
     if (this.snapshots.length === 0) {
-      throw Error('error:no_snapshots');
+      return [];
     }
-    return ItemHelper.formatSnapshotsForTable(this.snapshots[0].stashTabSnapshots);
+    return ItemHelper.mergeItemStacks(this.snapshots[0].stashTabSnapshots.flatMap(sts => sts.items));
   }
 
   @action

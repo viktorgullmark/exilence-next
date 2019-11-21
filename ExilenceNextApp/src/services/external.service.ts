@@ -48,7 +48,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                 items: stash.data.items.map((item: IItem) => {
                     return {
                         id: item.id,
-                        name: ItemHelper.getItemName(item.typeLine, item.name),
+                        name: ItemHelper.getItemName(item.name),
                         typeLine: item.typeLine,
                         frameType: item.frameType,
                         calculated: 0,
@@ -64,7 +64,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                         level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
                         stackSize: item.stackSize || 1,
                         totalStacksize: item.maxStackSize || 1,
-                        variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods, ItemHelper.getItemName(item.typeLine, item.name)) : ''
+                        variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods, ItemHelper.getItemName(item.name)) : ''
                     } as IPricedItem;
                 })
             };
