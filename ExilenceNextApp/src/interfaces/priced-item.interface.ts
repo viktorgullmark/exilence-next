@@ -5,6 +5,7 @@ export interface IPricedItem {
     name: string;
     typeLine: string;
     frameType: number;
+    total: number;
     calculated: number;
     max?: number;
     elder: boolean;

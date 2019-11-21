@@ -1,4 +1,4 @@
-import { action, observable, reaction } from 'mobx';
+import { action, observable, reaction, computed } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { map, catchError, mergeMap } from 'rxjs/operators';
@@ -30,6 +30,14 @@ export class Profile {
     Object.assign(this, obj);
   }
 
+  @computed
+  get tableItems() {
+    if (this.snapshots.length === 0) {
+      return [];
+    }
+    return ItemHelper.mergeItemStacks(this.snapshots[0].stashTabSnapshots.flatMap(sts => sts.items));
+  }
+
   @action
   setActiveLeague(id: string) {
     this.activeLeagueId = id;
@@ -51,6 +59,7 @@ export class Profile {
   }
 
   @action snapshot() {
+    console.log('starting...');
     this.getItems();
   }
 
@@ -59,6 +68,7 @@ export class Profile {
       'snapshot',
       NotificationType.Success
     );
+    console.log('success!');
   }
 
   @action snapshotFail() {
@@ -66,6 +76,7 @@ export class Profile {
       'snapshot',
       NotificationType.Error
     );
+    console.log('fail');
   }
 
   @action getItems() {
@@ -86,7 +97,7 @@ export class Profile {
       st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
     );
 
-    if(selectedStashTabs.length === 0) {
+    if (selectedStashTabs.length === 0) {
       throw Error('error:no_stash_tabs_for_profile');
     }
 
@@ -99,14 +110,16 @@ export class Profile {
         )
         .pipe(
           map(stashTabsWithItems => {
-            stashTabsWithItems.map(stashTabWithItems => {
+            return stashTabsWithItems.map(stashTabWithItems => {
               stashTabWithItems.items = ItemHelper.mergeItemStacks(
                 stashTabWithItems.items
               );
               return stashTabWithItems;
             });
-            return this.getItemsSuccess(stashTabsWithItems);
           }),
+          mergeMap(stashTabsWithItems =>
+            of(this.getItemsSuccess(stashTabsWithItems))
+          ),
           catchError((e: Error) => of(this.getItemsFail(e)))
         )
     );

@@ -46,16 +46,19 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         }
         break;
       case 3: // unique
+        if (item.name.startsWith('Bisco')) {
+          const bisco = prices.find(x => x.name === item.name);
+        }
         price = prices.find(
           p =>
             p.name === item.name &&
             p.links === item.links &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
-            p.quality === item.quality &&
             (p.variant === item.variant ||
               p.variant === undefined ||
-              p.variant === null)
+              p.variant === null) &&
+            (!p.quality || p.quality === item.quality)
         );
         break;
       case 4: // gem
@@ -88,10 +91,18 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     }
   }
 
-  return {
+  if (price) {
+    item.total = item.stackSize * (price.calculated ? price.calculated : 1);
+  }
+
+  const data = {
     ...item,
-    ...price,
-    calculated:
-      item.stackSize * (price && price.calculated ? price.calculated : 1)
+    ...price
   };
+
+  if (data.name.startsWith('Scroll of W')) {
+    console.log(data);
+  }
+
+  return data;
 }
