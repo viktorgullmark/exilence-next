@@ -24,11 +24,24 @@ namespace API.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpPost]
-        public async Task<AccountModel> Post([FromBody] SnapshotModel snapshotModel)
+        [HttpGet]
+        public string Get()
         {
-            var account = _mapper.Map<Snapshot>(snapshotModel);
-            return _mapper.Map<AccountModel>(account);
+            return "Hello";
+        }
+
+        [HttpPost]
+        public async Task<SnapshotModel> Post([FromBody] SnapshotModel snapshotModel)
+        {
+            var snapshot = _mapper.Map<Snapshot>(snapshotModel);
+            return _mapper.Map<SnapshotModel>(snapshot);
+        }
+
+        [HttpPost("{stashtabId}")]
+        public async Task<StashtabModel> Post(string stashtabId, [FromBody] StashtabModel stashtabModel)
+        {
+            var stashtab = _mapper.Map<Stashtab>(stashtabModel);
+            return _mapper.Map<StashtabModel>(stashtab);
         }
     }
 }
