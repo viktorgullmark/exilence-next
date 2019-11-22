@@ -25,7 +25,7 @@ namespace Shared.Models
         public int Sockets { get; set; }
         public int Links { get; set; }
         public bool Corrupted { get; set; }
-        public int Tier { get; set; }
+        public int Tier { get; set; }   
         public int Level { get; set; }
         public int Quality { get; set; }
         public string Icon { get; set; }

@@ -13,7 +13,7 @@ namespace Shared.Entities
         [Required, StringLength(50)]
         public string ClientId { get; set; }
         public decimal TotalValue { get; set; }
-        public virtual ICollection<StashTab> StashTabs { get; set; }
+        public virtual ICollection<Stashtab> StashTabs { get; set; }
         public DateTime Datestamp { get; set; }
 
     }

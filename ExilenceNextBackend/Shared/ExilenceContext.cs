@@ -19,7 +19,7 @@ namespace Shared
         public DbSet<League> Leagues { get; set; }
         public DbSet<PricedItem> PricedItems { get; set; }
         public DbSet<Snapshot> Snapshots { get; set; }
-        public DbSet<StashTab> StashTabs { get; set; }
+        public DbSet<Stashtab> StashTabs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
