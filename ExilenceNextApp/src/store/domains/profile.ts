@@ -26,8 +26,25 @@ export class Profile {
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
+  @observable isSnapshotting: boolean = false;
+
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
+  }
+
+  @computed
+  get readyToSnapshot() {
+    const account = stores.accountStore.getSelectedAccount;
+    const league = account.accountLeagues.find(
+      al => al.leagueId === account.activeLeague.id
+    );
+    return (
+      league &&
+      league.stashtabs.length > 0 &&
+      !stores.priceStore.isUpdatingPrices &&
+      stores.uiStateStore.validated &&
+      !this.isSnapshotting
+    );
   }
 
   @computed
@@ -35,7 +52,9 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemHelper.mergeItemStacks(this.snapshots[0].stashTabSnapshots.flatMap(sts => sts.items));
+    return ItemHelper.mergeItemStacks(
+      this.snapshots[0].stashTabSnapshots.flatMap(sts => sts.items.filter(i => i.calculated > 0))
+    );
   }
 
   @action
@@ -58,8 +77,13 @@ export class Profile {
     Object.assign(this, profile);
   }
 
+  @action
+  setIsSnapshotting(snapshotting: boolean = true) {
+    this.isSnapshotting = snapshotting;
+  }
+
   @action snapshot() {
-    console.log('starting...');
+    this.setIsSnapshotting();
     this.getItems();
   }
 
@@ -68,7 +92,7 @@ export class Profile {
       'snapshot',
       NotificationType.Success
     );
-    console.log('success!');
+    this.setIsSnapshotting(false);
   }
 
   @action snapshotFail() {
@@ -76,7 +100,7 @@ export class Profile {
       'snapshot',
       NotificationType.Error
     );
-    console.log('fail');
+    this.setIsSnapshotting(false);
   }
 
   @action getItems() {

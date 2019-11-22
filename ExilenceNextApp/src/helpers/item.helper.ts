@@ -3,6 +3,7 @@ import { ISocket } from '../interfaces/socket.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
 import { toJS } from 'mobx';
+import { Rarity } from '../assets/themes/exilence-theme';
 
 export interface IMergedItem extends IPricedItem {
   total: number;
@@ -13,7 +14,7 @@ export class ItemHelper {
     const mergedItems: IPricedItem[] = [];
 
     items.forEach(item => {
-      const clonedItem = {...item};
+      const clonedItem = { ...item };
       const foundItem = this.findItem(mergedItems, clonedItem);
 
       if (!foundItem) {
@@ -78,6 +79,37 @@ export class ItemHelper {
     return parseInt(quality, 10);
   }
 
+  public static getRarity(identifier: number) {
+    let rarity: keyof Rarity = 'normal';
+    switch (identifier) {
+      case 0:
+        rarity = 'normal';
+        break;
+      case 1:
+        rarity = 'magic';
+        break;
+      case 2:
+        rarity = 'rare';
+        break;
+      case 3:
+        rarity = 'unique';
+        break;
+      case 4:
+        rarity = 'gem';
+        break;
+      case 5:
+        rarity = 'currency';
+        break;
+      case 6:
+        rarity = 'quest';
+        break;
+      default:
+        break;
+    }
+
+    return rarity;
+  }
+
   public static getLevel(props: IProperty[]) {
     const levelStr = props.find(p => p.name === 'Level')!.values[0][0];
     return parseInt(levelStr, 10);
@@ -93,8 +125,12 @@ export class ItemHelper {
     return 0;
   }
 
-  public static getItemName(name: string) {
-    return name.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+  public static getItemName(typeline: string, name: string) {
+    let itemName = name;
+    if (typeline) {
+      itemName += ' ' + typeline;
+    }
+    return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
   }
 
   public static getItemVariant(

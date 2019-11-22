@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.85rem',
     textTransform: 'uppercase',
     letterSpacing: '4px',
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.light,
     fontWeight: 700
   },
   toolbar: {

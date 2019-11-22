@@ -8,6 +8,7 @@ export const pricingService = {
 
 function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   let price: IExternalPrice | undefined;
+  item.total = 0;
 
   if (item.name === 'Chaos Orb') {
     price = {
@@ -46,12 +47,9 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         }
         break;
       case 3: // unique
-        if (item.name.startsWith('Bisco')) {
-          const bisco = prices.find(x => x.name === item.name);
-        }
         price = prices.find(
           p =>
-            p.name === item.name &&
+            item.name.startsWith(p.name) &&
             p.links === item.links &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
@@ -99,10 +97,6 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     ...item,
     ...price
   };
-
-  if (data.name.startsWith('Scroll of W')) {
-    console.log(data);
-  }
 
   return data;
 }

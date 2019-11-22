@@ -27,6 +27,8 @@
     "select_profile": "Select profile",
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
-    "profile_placeholder": "Select a profile"
+    "profile_placeholder": "Select a profile",
+    "item_table": "Items",
+    "graphs": "Graphs"
   }
 }

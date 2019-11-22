@@ -16,25 +16,18 @@ import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import { primaryGradient } from '../../assets/themes/exilence-theme';
 
 export const innerToolbarHeight = 50;
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    background: theme.palette.primary.dark,
+    background: primaryGradient,
     top: toolbarHeight + resizeHandleContainerHeight,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
-  },
-  title: {
-    flexGrow: 1,
-    fontSize: '0.85rem',
-    textTransform: 'uppercase',
-    letterSpacing: '4px',
-    color: theme.palette.primary.dark,
-    fontWeight: 700
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -160,7 +153,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     >
                       <AddIcon fontSize="small" />
                     </IconButton>
+
                     <IconButton
+                      disabled={!props.activeProfile.readyToSnapshot}
                       onClick={() => props.handleSnapshot()}
                       aria-label="snapshot"
                       className={classes.iconButton}

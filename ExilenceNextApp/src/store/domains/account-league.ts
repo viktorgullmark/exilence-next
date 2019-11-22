@@ -6,9 +6,11 @@ import { Profile } from './profile';
 import { IStashTab, IStash } from '../../interfaces/stash.interface';
 import { fromStream } from 'mobx-utils';
 import { externalService } from '../../services/external.service';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { AxiosResponse } from 'axios';
 import { stores } from './../../index';
+import { of } from 'rxjs';
+import { NotificationType } from '../../enums/notification-type.enum';
 
 export class AccountLeague {
   @persist uuid: string = '';
@@ -41,10 +43,28 @@ export class AccountLeague {
         .pipe(
           map((response: AxiosResponse<IStash>) => {
             runInAction(() => {
-              this.stashtabs = response.data.tabs;
+              if (response.data.tabs.length > 0) {
+                this.stashtabs = response.data.tabs;
+              }
+              this.getStashTabsSuccess();
             });
-          })
-        )
+          }),
+          catchError((e: Error) => of(this.getStashTabsFail(e)))
+        ),   
+    );
+  }
+
+  @action getStashTabsSuccess() {
+    stores.notificationStore.createNotification(
+      'get_stash_tabs',
+      NotificationType.Success
+    );
+  }
+
+  @action getStashTabsFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'get_stash_tabs',
+      NotificationType.Error
     );
   }
 }

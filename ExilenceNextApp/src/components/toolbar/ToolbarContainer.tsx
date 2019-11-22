@@ -4,16 +4,19 @@ import { AccountStore } from '../../store/accountStore';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
+import { PriceStore } from '../../store/priceStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
+  priceStore?: PriceStore;
   leagueStore?: LeagueStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   uiStateStore,
-  accountStore
+  accountStore,
+  priceStore
 }: ToolbarContainerProps) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -53,5 +56,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
 export default inject(
   'uiStateStore',
-  'accountStore'
+  'accountStore',
+  'priceStore'
 )(observer(ToolbarContainer));
