@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class StashTab
+    public class Stashtab
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

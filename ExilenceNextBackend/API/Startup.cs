@@ -37,10 +37,11 @@ namespace API
             services.AddDbContext<ExilenceContext>(
                 options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
             );
-
-
+            
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+
+            services.AddSignalR().AddMessagePackProtocol();
 
         }
 

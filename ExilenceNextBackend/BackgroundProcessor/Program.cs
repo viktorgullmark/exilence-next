@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace BackgroundProcessor
 
             await Task.Delay(2000);
 
-            _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub").Build();
+            _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub").AddMessagePackProtocol().Build();
 
             _connection.Closed += async (error) =>
             {
