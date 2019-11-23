@@ -25,7 +25,7 @@ namespace API.Hubs
                     group = new Group(name, new List<Connection>() { connection });
                     group = await _groupRepository.AddGroup(group);
                 }
-                else
+                else if(!group.Connections.Any(c => c.ConnectionId == connection.ConnectionId))
                 {
                     group.Connections.Add(connection);
                 }
@@ -36,9 +36,9 @@ namespace API.Hubs
             catch (Exception e)
             {
                 await Log(e.Message);
-                await Clients.Caller.SendAsync("OnJoinGroup", false);
+                await Clients.Caller.SendAsync("JoinGroup", false);
             }
-            await Clients.Caller.SendAsync("OnJoinGroup", true);
+            await Clients.Caller.SendAsync("JoinGroup", true);
         }
 
         public async Task LeaveGroup(string name)
@@ -59,13 +59,13 @@ namespace API.Hubs
                     await Log($"Removed group: {group.Name}, Reason: No connections left");
                 }
                 await _groupRepository.SaveChangesAsync();
+                await Clients.Caller.SendAsync("LeaveGroup", group);
             }
             catch (Exception e)
             {
                 await Log(e.Message);
-                await Clients.Caller.SendAsync("OnLeaveGroup", false);
+                await Clients.Caller.SendAsync("LeaveGroup", e);
             }
-            await Clients.Caller.SendAsync("OnLeaveGroup", true);
         }
 
 
