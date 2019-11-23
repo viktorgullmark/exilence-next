@@ -1,5 +1,4 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' }});
 
 const primaryLight = '#e91e63';
@@ -14,6 +13,7 @@ export const rarityColors = {
   unique: '#da7a36',
   gem: '#1ba29b',
   currency: '#AD904B',
+  divination: '#c0c0c0',
   quest: '#6eb930'
 };
 

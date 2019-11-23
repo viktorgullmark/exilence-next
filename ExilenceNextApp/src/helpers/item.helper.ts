@@ -101,6 +101,9 @@ export class ItemHelper {
         rarity = 'currency';
         break;
       case 6:
+        rarity = 'divination';
+        break;
+      case 7:
         rarity = 'quest';
         break;
       default:
