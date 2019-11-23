@@ -43,9 +43,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ItemTableProps {
   items: IPricedItem[];
+  pageIndex: number;
+  changePage: (i: number) => void;
 }
 
-const ItemTable: React.FC<ItemTableProps> = ({ items }: ItemTableProps) => {
+const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: ItemTableProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -79,18 +81,16 @@ const ItemTable: React.FC<ItemTableProps> = ({ items }: ItemTableProps) => {
     img.src = item.icon;
   });
 
-  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    changePage(newPage);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(+event.target.value);
-    setPage(0);
   };
 
   return (
@@ -112,7 +112,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ items }: ItemTableProps) => {
           </TableHead>
           <TableBody>
             {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .slice(pageIndex * rowsPerPage, pageIndex * rowsPerPage + rowsPerPage)
               .map(row => {
                 return (
                   <ItemTableRow key={uuid.v4()} columns={columns} row={row} />
@@ -127,7 +127,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ items }: ItemTableProps) => {
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
-        page={page}
+        page={pageIndex}
         backIconButtonProps={{
           'aria-label': 'previous page'
         }}

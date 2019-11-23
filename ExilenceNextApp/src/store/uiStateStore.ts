@@ -10,6 +10,7 @@ export class UiStateStore {
   @persist @observable sidenavOpen: boolean = false;
   @observable validated: boolean = false;
   @observable isSubmitting: boolean = false;
+  @observable itemTablePageIndex: number = 0;
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -21,6 +22,11 @@ export class UiStateStore {
         });
       })
     );
+  }
+
+  @action
+  changeItemTablePage(index: number) {
+    this.itemTablePageIndex = index;
   }
 
   @action

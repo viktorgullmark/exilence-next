@@ -1,13 +1,13 @@
-import { inject, observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
-import Dd from "../../helpers/dropdown.helper";
-import { IProfile } from "../../interfaces/profile.interface";
-import { IStashTab } from "../../interfaces/stash.interface";
-import { Character } from "../../store/domains/character";
-import { Profile } from "../../store/domains/profile";
-import { LeagueStore } from "../../store/leagueStore";
-import { AccountStore } from "./../../store/accountStore";
-import ProfileDialog, { ProfileFormValues } from "./ProfileDialog";
+import { inject, observer } from 'mobx-react';
+import React, { useEffect, useState } from 'react';
+import Dd from '../../helpers/dropdown.helper';
+import { IProfile } from '../../interfaces/profile.interface';
+import { IStashTab } from '../../interfaces/stash.interface';
+import { Character } from '../../store/domains/character';
+import { Profile } from '../../store/domains/profile';
+import { LeagueStore } from '../../store/leagueStore';
+import { AccountStore } from './../../store/accountStore';
+import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 
 interface Props {
   accountStore?: AccountStore;
@@ -37,8 +37,8 @@ const ProfileDialogContainer: React.FC<Props> = ({
   const { leagues, priceLeagues } = leagueStore!;
 
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [league, setLeague] = useState("");
-  const [priceLeague, setPriceLeague] = useState("");
+  const [league, setLeague] = useState('');
+  const [priceLeague, setPriceLeague] = useState('');
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
 
   useEffect(() => {
@@ -71,10 +71,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(
-      leagues,
-      edit ? activeLeague.id : ""
-    );
+    const id = Dd.getDropdownSelection(leagues, edit ? activeLeague.id : '');
 
     // fallback in case league doesnt exist anymore
     const foundLeague = leagues.find(l => l.id === id);
@@ -84,7 +81,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   const getPriceLeagueSelection = (edit: boolean) => {
     const id = Dd.getDropdownSelection(
       priceLeagues,
-      edit ? activePriceLeague.id : ""
+      edit ? activePriceLeague.id : ''
     );
 
     // fallback in case league doesnt exist anymore
@@ -101,17 +98,16 @@ const ProfileDialogContainer: React.FC<Props> = ({
     let characters: Character[] = [];
 
     setStashTabIds([]);
-
-    // fallback in case league doesnt exist anymore
-    if (!accountLeague) {
-      accountLeague = accountStore!.getSelectedAccount.accountLeagues[0];
+  
+    if (accountLeague) {
+      characters = accountLeague.characters;
+      setStashTabs(accountLeague.stashtabs);
+      setCharacters(characters);
+    } else {
+      setStashTabs([]);
+      setCharacters([]);
     }
-
-    characters = accountLeague.characters;
-    setStashTabs(accountLeague.stashtabs);
-
     setLeague(id);
-    setCharacters(characters);
   };
 
   const handleSubmit = (values: ProfileFormValues) => {
@@ -149,6 +145,6 @@ const ProfileDialogContainer: React.FC<Props> = ({
 };
 
 export default inject(
-  "accountStore",
-  "leagueStore"
+  'accountStore',
+  'leagueStore'
 )(observer(ProfileDialogContainer));

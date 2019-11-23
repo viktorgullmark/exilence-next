@@ -10,12 +10,13 @@ interface ItemTableContainerProps {
 }
 
 const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
-  accountStore
+  accountStore,
+  uiStateStore
 }: ItemTableContainerProps) => {
 
   const tableItems = accountStore!.getSelectedAccount.activeProfile.tableItems;
-
-  return <ItemTable items={tableItems} />;
+  
+  return <ItemTable items={tableItems} pageIndex={uiStateStore!.itemTablePageIndex} changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}/>;
 };
 
 export default inject('uiStateStore', 'accountStore')(observer(ItemTableContainer));
