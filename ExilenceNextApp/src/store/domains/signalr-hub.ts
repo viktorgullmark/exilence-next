@@ -1,8 +1,7 @@
-import { persist } from 'mobx-persist';
-import uuid from 'uuid';
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import { IGroup } from '../../interfaces/group.interface';
+import { persist } from 'mobx-persist';
+import uuid from 'uuid';
 
 export class SignalrHub {
   @persist uuid: string = uuid.v4();
@@ -11,16 +10,16 @@ export class SignalrHub {
     .build();
 
   constructor() {
-    this.connection.start().catch(err => document.write(err));
+    // this.connection.start().catch(err => document.write(err));
   }
 
   @action
-  onJoinGroup(callback: (response: IGroup) => void) {
-    this.connection.on('JoinGroup', callback);
+  onEvent<T>(event: string, callback: (response: T) => void) {
+    this.connection.on(event, callback);
   }
 
   @action
-  sendJoinGroup(groupName: string) {
-    this.connection.send('JoinGroup', groupName);
+  sendEvent<T>(event: string, params: T) {
+    this.connection.send(event, params);
   }
 }

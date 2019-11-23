@@ -10,7 +10,7 @@ export class SignalrStore {
   @observable activeGroup?: Group = undefined;
 
   constructor() {
-    this.signalrHub.onJoinGroup(group => {
+    this.signalrHub.onEvent<IGroup>('JoinGroup', group => {
       this.onJoinGroup(group);
     });
 
@@ -25,12 +25,12 @@ export class SignalrStore {
   }
 
   @action
-  onJoinGroup(group: IGroup) {
-    this.activeGroup = new Group(group);
+  joinGroup(groupName: string) {
+    this.signalrHub.sendEvent<string>('JoinGroup', groupName);
   }
 
   @action
-  joinGroup(groupName: string) {
-    this.signalrHub.sendJoinGroup(groupName);
+  private onJoinGroup(group: IGroup) {
+    this.activeGroup = new Group(group);
   }
 }
