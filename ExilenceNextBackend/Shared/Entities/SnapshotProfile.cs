@@ -6,20 +6,16 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class Account
+    public class SnapshotProfile
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string ClientId { get; set; }
-        [Required]
         public string Name { get; set; }
-        public virtual ICollection<Character> Characters { get; set; }
-        public virtual ICollection<SnapshotProfile> Profiles { get; set; }
-
-        public Account()
-        {
-
-        }
+        public string ActiveLeagueId { get; set; }
+        public string ActivePriceLeagueId { get; set; }
+        public ICollection<string> ActiveStashTabIds { get; set; }
+        public virtual ICollection<Snapshot> Snapshots { get; set; }
     }
 }

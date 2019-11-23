@@ -20,11 +20,16 @@ namespace Shared
         public DbSet<PricedItem> PricedItems { get; set; }
         public DbSet<Snapshot> Snapshots { get; set; }
         public DbSet<Stashtab> StashTabs { get; set; }
+        public DbSet<SnapshotProfile> SnapshotProfiles { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<SnapshotProfile>()
+            .Property(e => e.ActiveStashTabIds)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }
