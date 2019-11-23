@@ -22,6 +22,7 @@ namespace Shared.Entities
         public Group(string code, ICollection<Connection> connections)
         {
             Name = code;
+            ClientId = new Guid().ToString();
             Connections = connections;
             Created = DateTime.UtcNow;
         }
