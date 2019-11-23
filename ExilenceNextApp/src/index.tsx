@@ -23,6 +23,7 @@ import { UiStateStore } from './store/uiStateStore';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import { PriceStore } from './store/priceStore';
 import { LeagueStore } from './store/leagueStore';
+import { SignalrStore } from './store/signalrStore';
 
 enableLogging();
 configureI18n();
@@ -46,8 +47,9 @@ const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
 const accountStore = new AccountStore(uiStateStore, notificationStore, leagueStore, priceStore);
+const signalrStore = new SignalrStore();
 
-export const stores = { accountStore, uiStateStore, notificationStore, leagueStore, priceStore };
+export const stores = { accountStore, uiStateStore, notificationStore, leagueStore, priceStore, signalrStore };
 
 const app = (
   <>
