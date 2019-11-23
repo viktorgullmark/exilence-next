@@ -21,6 +21,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '.form-title': {
       textAlign: 'center'
+    },
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: '1rem'
+      },
+      '*::-webkit-scrollbar-track': {
+        '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.secondary.light,
+        outline: '1px solid slategrey'
+      }
     }
   }
 }));

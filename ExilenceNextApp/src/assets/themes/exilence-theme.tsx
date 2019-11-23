@@ -28,6 +28,17 @@ export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${prim
 export default function exilenceTheme() {
   return createMuiTheme({
     overrides: {
+      MuiCssBaseline: {
+        '@global': {
+          '': {
+            'scrollbar-width': 'thin',
+          },
+          '::webkit-scrollbar': {
+            width: 8,
+            background: defaultTheme.palette.background.default
+          },
+        },
+      },
       MuiToolbar: {
         gutters: {
           [defaultTheme.breakpoints.up('xs')]: {
@@ -56,8 +67,9 @@ export default function exilenceTheme() {
         dark: primaryDark
       },
       secondary: {
-        light: '#333333',
-        main: '#000'
+        light: '#696969',
+        main: '#000',
+        dark: '#333333'
       },
       background: {
         default: '#191919',

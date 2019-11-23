@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     pagination: {
       height: tableFooterHeight,
-      backgroundColor: theme.palette.secondary.light
+      backgroundColor: theme.palette.secondary.dark
     }
   })
 );
@@ -103,7 +103,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: I
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth, backgroundColor: theme.palette.secondary.light }}
+                  style={{ minWidth: column.minWidth, backgroundColor: theme.palette.secondary.dark }}
                 >
                   {column.label}
                 </TableCell>
