@@ -13,6 +13,7 @@ export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
+  @persist token: string = uuid.v4();
 
   @persist('list', AccountLeague)
   @observable
