@@ -49,6 +49,7 @@ export class Account implements IAccount {
 
   @action
   setActiveProfile(uuid: string) {
+    stores.uiStateStore.changeItemTablePage(0);
     this.activeProfileUuid = uuid;
   }
 
