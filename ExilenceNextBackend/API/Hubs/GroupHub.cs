@@ -36,7 +36,9 @@ namespace API.Hubs
             catch (Exception e)
             {
                 await Log(e.Message);
+                await Clients.Caller.SendAsync("OnJoinGroup", false);
             }
+            await Clients.Caller.SendAsync("OnJoinGroup", true);
         }
 
         public async Task LeaveGroup(string name)
@@ -61,7 +63,9 @@ namespace API.Hubs
             catch (Exception e)
             {
                 await Log(e.Message);
+                await Clients.Caller.SendAsync("OnLeaveGroup", false);
             }
+            await Clients.Caller.SendAsync("OnLeaveGroup", true);
         }
 
 
