@@ -2,6 +2,7 @@ import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
+import { Account } from './account';
 
 export class SignalrHub {
   @persist uuid: string = uuid.v4();
@@ -10,7 +11,21 @@ export class SignalrHub {
     .build();
 
   constructor() {
-    // this.connection.start().catch(err => document.write(err));
+    this.connection.start().catch(err => document.write(err));
+
+    setTimeout(() => {
+
+      const account = new Account({
+        name: 'Umaycry',
+        sessionId: ''
+      });
+
+      this.sendEvent('AccountLogin', account)
+
+
+    }, 5000);
+
+
   }
 
   @action
@@ -19,7 +34,7 @@ export class SignalrHub {
   }
 
   @action
-  sendEvent<T>(event: string, params: T) {
+  sendEvent<T>(event: string, params: T): T {
     this.connection.send(event, params);
   }
 }

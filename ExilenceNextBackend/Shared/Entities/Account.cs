@@ -14,6 +14,7 @@ namespace Shared.Entities
         public string ClientId { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Token { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
 

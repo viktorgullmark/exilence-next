@@ -12,6 +12,7 @@ namespace Shared.Models
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
         public string Name { get; set; }
+        public string Token { get; set; }
         public List<CharacterModel> Characters { get; set; }
     }
 }

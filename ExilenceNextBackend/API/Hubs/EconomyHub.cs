@@ -15,6 +15,14 @@ namespace API.Hubs
         //    throw new NotImplementedException();
         //}
 
+        /* STUFF TODO
+         * Add Snapshots
+         * Add Stashtabs to Snapshot
+         * Retrive Snapshot
+         * Retrive Stashtabs for Snapshot
+         * 
+         */
+
 
         public async IAsyncEnumerable<int> RetriveSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
