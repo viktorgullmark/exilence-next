@@ -7,21 +7,15 @@ import { Account } from './account';
 export class SignalrHub {
   @persist uuid: string = uuid.v4();
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:5001/hub')
+    .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => "" })
     .build();
 
   constructor() {
-    this.connection.start().catch(err => document.write(err));
+    this.connection.start().catch((err: string) => document.write(err));
 
     setTimeout(() => {
 
-      const account = new Account({
-        name: 'Umaycry',
-        sessionId: ''
-      });
-
-      this.sendEvent('AccountLogin', account)
-
+      this.sendEvent('JoinGroup', "ABC123")
 
     }, 5000);
 
@@ -34,7 +28,7 @@ export class SignalrHub {
   }
 
   @action
-  sendEvent<T>(event: string, params: T): T {
+  sendEvent<T>(event: string, params: T) {
     this.connection.send(event, params);
   }
 }

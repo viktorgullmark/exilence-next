@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Entities;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -30,5 +34,6 @@ namespace API.Hubs
                 return _mapper.Map<AccountModel>(account);
             }
         }
+
     }
 }

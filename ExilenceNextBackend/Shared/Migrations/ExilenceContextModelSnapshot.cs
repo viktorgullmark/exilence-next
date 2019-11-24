@@ -366,7 +366,7 @@ namespace Shared.Migrations
                         .WithMany("PricedItems")
                         .HasForeignKey("StashtabId");
                 });
-
+            
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
                     b.HasOne("Shared.Entities.SnapshotProfile", null)

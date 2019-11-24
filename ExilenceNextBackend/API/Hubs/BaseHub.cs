@@ -22,7 +22,7 @@ namespace API.Hubs
             _mapper = mapper;
             _groupRepository = groupRepository;
             _accountRepository = accountRepository;
-            _instanceName = configuration.GetSection("Settings")["InstanceName"];
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];            
         }
 
         public override async Task OnConnectedAsync()
@@ -59,6 +59,27 @@ namespace API.Hubs
         //    await foreach (var item in stream)
         //    {
         //        Console.WriteLine(item);
+        //    }
+        //}
+
+
+        // EXAMPLE OF HOW TO SEND A STREAM
+        //public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
+        //{
+        //    //Can be something else then ints
+        //    var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
+
+        //    foreach (var snapshot in listOfSnapshots)
+        //    {
+        //        // Check the cancellation token regularly so that the server will stop
+        //        // producing items if the client disconnects.
+        //        cancellationToken.ThrowIfCancellationRequested();
+
+        //        yield return snapshot;
+
+        //        // Use the cancellationToken in other APIs that accept cancellation
+        //        // tokens so the cancellation can flow down to them.
+        //        await Task.Delay(delay, cancellationToken);
         //    }
         //}
 

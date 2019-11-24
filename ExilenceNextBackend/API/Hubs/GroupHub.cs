@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
@@ -14,8 +15,11 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
+        [Authorize]
         public async Task JoinGroup(string name)
         {
+            var IsPremium = Context.User.IsInRole("Premium");
+
             try
             {
                 var connection = await _groupRepository.GetConnection(Context.ConnectionId);
@@ -45,9 +49,12 @@ namespace API.Hubs
         {
             try
             {
-                var test = await _groupRepository.GetGroupQuery(g => g.Name == name).FirstOrDefaultAsync();
+                var group = await _groupRepository.GetGroupQuery(g => g.Name == name).FirstOrDefaultAsync();
 
-                var group = await _groupRepository.GetGroup(name);
+                if (group == null)
+                {
+                    throw new Exception("Group not found");
+                }
 
                 var connection = group.Connections.FirstOrDefault(t => t.ConnectionId == Context.ConnectionId);
                 group.Connections.Remove(connection);
@@ -65,39 +72,6 @@ namespace API.Hubs
             {
                 await Log(e.Message);
                 await Clients.Caller.SendAsync("LeaveGroup", e);
-            }
-        }
-
-
-        public async Task AddSnapshot()
-        {
-
-        }
-
-        //public async Task UploadStream(IAsyncEnumerable<string> stream)
-        //{
-        //    await foreach (var item in stream)
-        //    {
-        //        Console.WriteLine(item);
-        //    }
-        //}
-
-        public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            //Can be something else then ints
-            var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
-
-            foreach (var snapshot in listOfSnapshots)
-            {
-                // Check the cancellation token regularly so that the server will stop
-                // producing items if the client disconnects.
-                cancellationToken.ThrowIfCancellationRequested();
-
-                yield return snapshot;
-
-                // Use the cancellationToken in other APIs that accept cancellation
-                // tokens so the cancellation can flow down to them.
-                await Task.Delay(delay, cancellationToken);
             }
         }
     }

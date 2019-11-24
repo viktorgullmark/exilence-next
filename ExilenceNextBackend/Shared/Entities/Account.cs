@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,7 @@ namespace Shared.Entities
         [Required]
         public string Name { get; set; }
         public string Token { get; set; }
+        public Role Role { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
 
