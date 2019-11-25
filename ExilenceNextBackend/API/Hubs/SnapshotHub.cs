@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Shared.Entities;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -25,17 +26,28 @@ namespace API.Hubs
          */
 
 
-        public async Task AddSnapshot(SnapshotModel snapshotModel)
+        public async Task AddSnapshot(int profileId, SnapshotModel snapshotModel)
         {
             var exists = await _economyRepository.SnapshotExists(snapshotModel.ClientId);
-            if (!exists)
-            {
 
-            }
+            if (exists)
+                throw new Exception("Snapshot already exists");
+            
+            var snapshot = _mapper.Map<Snapshot>(snapshotModel);
+            snapshot = await _economyRepository.AddSnapshot(profileId, snapshot);
 
+            await Log($"Added snapshot with id: {snapshot.Id} and value: {snapshot.TotalValue} to database.");
+            
         }
 
-
+        public async Task AddStashtabs(int stashtabId, IAsyncEnumerable<StashtabModel> stashtabModels)
+        {
+            await foreach (var stashtabModel in stashtabModels)
+            {
+                var stashtab = _mapper.Map<Stashtab>(stashtabModel);
+                stashtab = await _economyRepository.AddStashtab(stashtabId, stashtab);
+            }
+        }
 
         public async IAsyncEnumerable<int> RetriveSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
         {

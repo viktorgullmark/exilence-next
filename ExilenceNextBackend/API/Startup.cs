@@ -43,7 +43,7 @@ namespace API
             
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IEconomyRepository, EconomyRepository>();
+            services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
             services.AddSignalR().AddMessagePackProtocol();
 

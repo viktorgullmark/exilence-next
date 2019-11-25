@@ -17,7 +17,7 @@ namespace API.Hubs
     {
         [Authorize]
         public async Task JoinGroup(string name)
-        {
+        { 
             try
             {
                 var connection = await _groupRepository.GetConnection(Context.ConnectionId);

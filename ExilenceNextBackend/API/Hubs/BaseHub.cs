@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -18,43 +19,49 @@ namespace API.Hubs
         readonly IHttpContextAccessor _accessor;
         readonly IGroupRepository _groupRepository;
         readonly IAccountRepository _accountRepository;
-        readonly IEconomyRepository _economyRepository;
+        readonly ISnapshotRepository _economyRepository;
 
-        private bool IsPremium => _accessor.HttpContext.User.IsInRole("Premium");
-        private bool IsAdmin => _accessor.HttpContext.User.IsInRole("Admin");
+        private bool IsPremium => Context.User.IsInRole("Premium");
+        private bool IsAdmin => Context.User.IsInRole("Admin");
+        private string Account => Context.User.Identity.Name;
+        private string ConnectionId => Context.ConnectionId;
 
-        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration, IHttpContextAccessor accessor, IEconomyRepository economyRepository)
+        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration, ISnapshotRepository economyRepository)
         {
             _mapper = mapper;
-            _accessor = accessor;
             _groupRepository = groupRepository;
             _accountRepository = accountRepository;
             _economyRepository = economyRepository;
             _instanceName = configuration.GetSection("Settings")["InstanceName"];            
         }
 
+        [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"ConnectionId: {Context.ConnectionId} Connected");
-            var connection = new Connection(Context.ConnectionId, _instanceName);
+            await Log($"ConnectionId: {ConnectionId} connected");
+            var connection = new Connection(ConnectionId, _instanceName);
             await _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
+            
             await base.OnConnectedAsync();
         }
 
+        [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"ConnectionId: {Context.ConnectionId} Disconnected");
-            await _groupRepository.RemoveConnection(Context.ConnectionId);
+            await Log($"ConnectionId: {ConnectionId} disconnected");
+            await _groupRepository.RemoveConnection(ConnectionId);
             await _groupRepository.SaveChangesAsync();
             await base.OnDisconnectedAsync(exception);
         }
 
+        [Authorize]
         public string GetConnectionId()
         {
             return Context.ConnectionId;
         }
 
+        [Authorize]
         private async Task Log (string message)
         {
             await Clients.All.SendAsync("Log", message);

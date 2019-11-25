@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using BackgroundProcessor.Models;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,9 +19,15 @@ namespace BackgroundProcessor
         public static async Task Main(string[] args)
         {
 
-            await Task.Delay(2000);
+            await Task.Delay(4000);
 
-            _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub").AddMessagePackProtocol().Build();
+            var response = await GetAccessToken();
+
+            _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub",
+                 options =>
+                 {
+                     options.AccessTokenProvider = () => Task.FromResult(response.Token);
+                 }).AddMessagePackProtocol().Build();
 
             _connection.Closed += async (error) =>
             {
@@ -55,11 +65,22 @@ namespace BackgroundProcessor
             }
         }
 
+        private static async Task<TokenModel> GetAccessToken()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var data = "{\"name\": \"Umaycry\", \"sessionId\": \"Umaycry\"}";
+                var result = await httpClient.PostAsync("https://localhost:5001/api/authentication", new StringContent(data, Encoding.UTF8, "application/json"));
+                string token = await result.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<TokenModel>(token);
+            }
+        }
+
         public static void StartupMessage()
         {
             Console.WriteLine("Welcome to Exilence ");
-            Console.WriteLine("Available commands are: Connect, and then Join XXX or Leave XXX");
-        }
+            Console.WriteLine("Available commands are: connect, and then join XXX or leave XXX");
+        }   
 
     }
 }
