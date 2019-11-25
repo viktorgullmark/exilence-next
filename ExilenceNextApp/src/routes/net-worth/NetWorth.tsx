@@ -16,7 +16,7 @@ import orange from '@material-ui/core/colors/orange';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import cyan from '@material-ui/core/colors/cyan';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import { primaryDarker, cardColor } from '../../assets/themes/exilence-theme';
+import { primaryDarker, cardColor, itemColors } from '../../assets/themes/exilence-theme';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -43,6 +43,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             <OverviewWidgetContent
               value={accountStore!.getSelectedAccount.activeProfile.latestSnapshotValue}
               title="label.total_value"
+              valueColor={itemColors.chaosOrb}
               currencyShort={accountStore!.getSelectedAccount.activeProfile.activeCurrency.short}
               icon={<MonetizationOnIcon fontSize="large" />}
               currency

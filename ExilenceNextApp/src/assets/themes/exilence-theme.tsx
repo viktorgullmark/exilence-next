@@ -19,7 +19,7 @@ export const rarityColors = {
 };
 
 export const itemColors = {
-  chaosOrb: '#f0cc00'
+  chaosOrb: '#d6b600'
 }
 
 export type Rarity = typeof rarityColors;
