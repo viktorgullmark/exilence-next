@@ -23,7 +23,7 @@ export class Profile {
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
-  @persist @observable activeCurrency: ICurrency = { name: 'chaos', short: 'c' };
+  @persist('object') @observable activeCurrency: ICurrency = { name: 'chaos', short: 'c' };
 
   @persist('list') @observable activeStashTabIds: string[] = [];
 
