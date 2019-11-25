@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Shared.Entities;
@@ -16,10 +17,15 @@ namespace API.Hubs
         readonly IMapper _mapper;
         readonly IAccountRepository _accountRepository;
         readonly IGroupRepository _groupRepository;
+        readonly IHttpContextAccessor _accessor;
 
-        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration)
+        private bool IsPremium => _accessor.HttpContext.User.IsInRole("Premium");
+        private bool IsAdmin => _accessor.HttpContext.User.IsInRole("Admin");
+
+        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration, IHttpContextAccessor accessor)
         {
             _mapper = mapper;
+            _accessor = accessor;
             _groupRepository = groupRepository;
             _accountRepository = accountRepository;
             _instanceName = configuration.GetSection("Settings")["InstanceName"];            
