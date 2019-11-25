@@ -18,8 +18,6 @@ namespace API.Hubs
         [Authorize]
         public async Task JoinGroup(string name)
         {
-            var IsPremium = Context.User.IsInRole("Premium");
-
             try
             {
                 var connection = await _groupRepository.GetConnection(Context.ConnectionId);

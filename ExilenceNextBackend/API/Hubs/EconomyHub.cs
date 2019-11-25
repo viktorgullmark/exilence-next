@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,18 @@ namespace API.Hubs
          * Retrive Stashtabs for Snapshot
          * 
          */
+
+
+        public async Task AddSnapshot(SnapshotModel snapshotModel)
+        {
+            var exists = await _economyRepository.SnapshotExists(snapshotModel.ClientId);
+            if (!exists)
+            {
+
+            }
+
+        }
+
 
 
         public async IAsyncEnumerable<int> RetriveSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
