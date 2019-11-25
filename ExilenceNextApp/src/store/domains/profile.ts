@@ -15,6 +15,7 @@ import { of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { NotificationType } from '../../enums/notification-type.enum';
+import { ICurrency } from '../../interfaces/currency.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -22,6 +23,8 @@ export class Profile {
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
+  @persist @observable activeCurrency: ICurrency = { name: 'chaos', short: 'c' };
+
   @persist('list') @observable activeStashTabIds: string[] = [];
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
@@ -53,8 +56,33 @@ export class Profile {
       return [];
     }
     return ItemHelper.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts => sts.items.filter(i => i.calculated > 0))
+      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
+        sts.items.filter(i => i.calculated > 0)
+      )
     );
+  }
+
+  @computed
+  get latestSnapshotValue() {
+    if (this.snapshots.length === 0) {
+      return 0;
+    }
+   
+    const values = this.snapshots
+      .flatMap(s => s.stashTabSnapshots)
+      .flatMap(sts => sts.value).reduce((a, b) => a + b, 0);
+
+    return +values.toFixed(2);
+  }
+
+  @computed
+  get latestSnapshotItemCount() {
+    if (this.snapshots.length === 0) {
+      return 0;
+    }
+    return this.snapshots.flatMap(s =>
+      s.stashTabSnapshots.flatMap(sts => sts.items)
+    ).length;
   }
 
   @action

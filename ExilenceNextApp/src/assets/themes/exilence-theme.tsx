@@ -4,7 +4,8 @@ const defaultTheme = createMuiTheme({ palette: { type: 'dark' }});
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
-const primaryDarker = '#4a091f';
+export const primaryDarker = '#4a091f';
+export const cardColor = '#15313e';
 
 export const rarityColors = {
   normal: '#c0c0c0',
@@ -17,28 +18,18 @@ export const rarityColors = {
   quest: '#6eb930'
 };
 
-export type Rarity = typeof rarityColors;
-
 export const itemColors = {
   chaosOrb: '#f0cc00'
 }
+
+export type Rarity = typeof rarityColors;
+export type ItemColors = typeof itemColors;
 
 export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
 
 export default function exilenceTheme() {
   return createMuiTheme({
     overrides: {
-      MuiCssBaseline: {
-        '@global': {
-          '': {
-            'scrollbar-width': 'thin',
-          },
-          '::webkit-scrollbar': {
-            width: 8,
-            background: defaultTheme.palette.background.default
-          },
-        },
-      },
       MuiToolbar: {
         gutters: {
           [defaultTheme.breakpoints.up('xs')]: {
@@ -58,7 +49,7 @@ export default function exilenceTheme() {
         root: {
           fontSize: '0.75rem'
         }
-      }
+      },
     },
     palette: {
       primary: {
