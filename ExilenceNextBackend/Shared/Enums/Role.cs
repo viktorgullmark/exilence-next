@@ -6,8 +6,8 @@ namespace Shared.Enums
 {
     public enum Role
     {
-        Admin = 0,
-        User = 1,
-        Premium = 2
+        User = 0,
+        Premium = 5,
+        Admin = 10
     }
 }

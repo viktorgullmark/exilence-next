@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Entities;
+using Shared.Enums;
 using Shared.Interfaces;
 using Shared.Models;
 
@@ -33,13 +34,26 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<string> Token([FromBody]AccountModel accountModel)
+        public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
         {
+            bool verified = false;
+            bool valid = false;
+
+            if (true)
+            {
+                valid = await ValidateSessionId(accountModel.Name, accountModel.SessionId);
+                if (!valid)
+                    return BadRequest("Could not validate the sessionId");
+            }
+
+
             var account = await _accountRepository.GetAccount(accountModel.Name);
 
-            // return null if user not found
             if (account == null)
-                return null;
+            {
+                account = _mapper.Map<Account>(accountModel);
+                account = await _accountRepository.CreateAccount(account);
+            }
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -54,14 +68,27 @@ namespace API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            if (true)
+            if (account.Role == Role.Admin)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+            }
+            else if (account.Role == Role.Premium)
             {
                 tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "Premium"));
             }
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var serializedToken = tokenHandler.WriteToken(token);
-            return serializedToken;
+            return Ok(new { token = serializedToken });
+        }
+
+        private async Task<bool> ValidateSessionId(string accountName, string sessionId)
+        {
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                return false;
+            }
+            return true;
         }
 
     }

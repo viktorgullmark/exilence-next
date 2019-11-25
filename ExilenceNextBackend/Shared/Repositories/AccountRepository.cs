@@ -18,6 +18,9 @@ namespace Shared.Repositories
 
         public async Task<Account> CreateAccount(Account account)
         {
+
+            account.Created = DateTime.UtcNow;
+
             await _exilenceContext.Accounts.AddAsync(account);
             await _exilenceContext.SaveChangesAsync();
             return account;

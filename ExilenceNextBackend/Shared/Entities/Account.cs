@@ -15,10 +15,11 @@ namespace Shared.Entities
         public string ClientId { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Token { get; set; }
+        public bool Verified { get; set; }
         public Role Role { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
+        public DateTime Created { get; set; }
 
         public Account()
         {
