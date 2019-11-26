@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Shared.Models
 {
-    class SnapshotProfileModel
+    public class SnapshotProfileModel
     {
         public int? Id { get; set; }
         [JsonPropertyName("uuid")]

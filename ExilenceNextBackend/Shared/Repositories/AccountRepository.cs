@@ -3,6 +3,8 @@ using Shared.Entities;
 using Shared.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +20,6 @@ namespace Shared.Repositories
 
         public async Task<Account> CreateAccount(Account account)
         {
-
             account.Created = DateTime.UtcNow;
 
             await _exilenceContext.Accounts.AddAsync(account);
@@ -26,16 +27,14 @@ namespace Shared.Repositories
             return account;
         }
 
-        public async Task<Account> GetAccount(int id)
+        public IQueryable<Account> GetAccounts(Expression<Func<Account, bool>> predicate)
         {
-            var account = await _exilenceContext.Accounts.FirstOrDefaultAsync(t => t.Id == id);
-            return account;
+            return _exilenceContext.Accounts.Where(predicate);
         }
 
-        public async Task<Account> GetAccount(string name)
+        public IQueryable<SnapshotProfile> GetProfiles(Expression<Func<SnapshotProfile, bool>> predicate)
         {
-            var account = await _exilenceContext.Accounts.FirstOrDefaultAsync(t => t.Name == name);
-            return account;
+            return _exilenceContext.SnapshotProfiles.Where(predicate);
         }
 
         public async Task SaveChangesAsync()

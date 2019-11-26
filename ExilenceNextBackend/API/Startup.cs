@@ -19,6 +19,8 @@ using Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using API.Services;
+using API.Interfaces;
 
 namespace API
 {
@@ -40,7 +42,11 @@ namespace API
             services.AddDbContext<ExilenceContext>(
                 options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
             );
-            
+
+            //Services
+            services.AddScoped<ISnapshotService, SnapshotService>();
+
+            // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();

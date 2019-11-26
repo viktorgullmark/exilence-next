@@ -12,11 +12,6 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        //public async Task AddSnapshot()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         /* STUFF TODO
          * Add Snapshots
          * Add Stashtabs to Snapshot
@@ -25,27 +20,24 @@ namespace API.Hubs
          * 
          */
 
-
-        public async Task AddSnapshot(int profileId, SnapshotModel snapshotModel)
+        public async Task AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
-            var exists = await _economyRepository.SnapshotExists(snapshotModel.ClientId);
+            var exists = await _snapshotRepository.SnapshotExists(snapshotModel.ClientId);
 
             if (exists)
                 throw new Exception("Snapshot already exists");
-            
-            var snapshot = _mapper.Map<Snapshot>(snapshotModel);
-            snapshot = await _economyRepository.AddSnapshot(profileId, snapshot);
 
-            await Log($"Added snapshot with id: {snapshot.Id} and value: {snapshot.TotalValue} to database.");
+            snapshotModel = await _snapshotService.AddSnapshot(profileClientId, snapshotModel);
+
+            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} to database.");
             
         }
 
-        public async Task AddStashtabs(int stashtabId, IAsyncEnumerable<StashtabModel> stashtabModels)
+        public async Task AddStashtabs(string stashtabClientId, IAsyncEnumerable<StashtabModel> stashtabModels)
         {
             await foreach (var stashtabModel in stashtabModels)
             {
-                var stashtab = _mapper.Map<Stashtab>(stashtabModel);
-                stashtab = await _economyRepository.AddStashtab(stashtabId, stashtab);
+                await _snapshotService.AddStashtab(stashtabClientId, stashtabModel);
             }
         }
 
@@ -53,7 +45,7 @@ namespace API.Hubs
         {
             //Can be something else then ints
             var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
-
+            
             foreach (var snapshot in listOfSnapshots)
             {
                 // Check the cancellation token regularly so that the server will stop

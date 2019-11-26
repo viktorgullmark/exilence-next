@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
@@ -16,22 +17,24 @@ namespace API.Hubs
     {
         readonly IMapper _mapper;
         readonly string _instanceName;
-        readonly IHttpContextAccessor _accessor;
+
+        readonly ISnapshotService _snapshotService;
+
         readonly IGroupRepository _groupRepository;
         readonly IAccountRepository _accountRepository;
-        readonly ISnapshotRepository _economyRepository;
+        readonly ISnapshotRepository _snapshotRepository;
 
         private bool IsPremium => Context.User.IsInRole("Premium");
         private bool IsAdmin => Context.User.IsInRole("Admin");
         private string Account => Context.User.Identity.Name;
         private string ConnectionId => Context.ConnectionId;
 
-        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration, ISnapshotRepository economyRepository)
+        public BaseHub(IMapper mapper, IAccountRepository accountRepository, IGroupRepository groupRepository, IConfiguration configuration, ISnapshotService snapshotService)
         {
             _mapper = mapper;
             _groupRepository = groupRepository;
             _accountRepository = accountRepository;
-            _economyRepository = economyRepository;
+            _snapshotService = snapshotService;
             _instanceName = configuration.GetSection("Settings")["InstanceName"];            
         }
 
