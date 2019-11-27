@@ -42,7 +42,7 @@ export class AccountStore {
   }
 
   @action
-  addAccount(details: IAccount) {
+  addOrUpdateAccount(details: IAccount) {
     let acc = this.findAccountByName(details.name);
     acc
       ? acc.setSessionId(details.sessionId)
@@ -50,21 +50,20 @@ export class AccountStore {
   }
 
   @action
-  initSession(account?: IAccount) {
-    let details: IAccount;
+  initSession(newAccount?: IAccount) {
+    let account: IAccount;
 
-    if (!account) {
-      details = {
+    if (!newAccount) {
+      account = {
         name: this.getSelectedAccount.name,
         sessionId: this.getSelectedAccount.sessionId
       };
     } else {
-      details = account;
+      account = newAccount;
       reaction(
         () => this.uiStateStore.sessIdCookie,
         (_cookie, reaction) => {
           this.initSessionSuccess();
-
           reaction.dispose();
         }
       );
@@ -75,37 +74,32 @@ export class AccountStore {
     fromStream(
       forkJoin(
         externalService.getLeagues(),
-        externalService.getCharacters(details.name)
+        externalService.getCharacters(account.name)
       ).pipe(
         map(requests => {
-          if (requests[0].data.length === 0) {
+          const retrievedLeagues = requests[0].data;
+          const retrievedCharacters = requests[1].data;
+
+          if (retrievedLeagues.length === 0) {
             throw new Error('error:no_leagues');
           }
-          if (requests[1].data.length === 0) {
+          if (retrievedCharacters.length === 0) {
             throw new Error('error:no_characters');
           }
-          if (account) {
-            this.addAccount(details)
-            this.selectAccountByName(details.name);
+
+          if (newAccount) {
+            this.addOrUpdateAccount(account);
+            this.selectAccountByName(account.name);
           }
-          const acc = this.getSelectedAccount;
-          this.leagueStore.updateLeagues(requests[0].data);
 
-          // todo: create separate action
-          this.priceStore.getPricesForLeagues(
-            this.leagueStore.priceLeagues.map(l => l.id)
-          );
-
-          // todo: make sure leagues are set here
-          acc!.mapAccountLeagues(
-            this.leagueStore.leagues,
-            requests[1].data,
-            this.leagueStore.priceLeagues
-          );
+          this.leagueStore.updateLeagues(retrievedLeagues);
+          this.priceStore.getPricesForLeagues();
+          this.getSelectedAccount.mapAccountLeagues(retrievedCharacters);
+          this.getSelectedAccount.checkDefaultProfile();
         }),
         switchMap(() => {
-          return account
-            ? this.uiStateStore.setSessIdCookie(details.sessionId)
+          return newAccount
+            ? this.uiStateStore.setSessIdCookie(account.sessionId)
             : of(this.initSessionSuccess());
         }),
         catchError((e: Error) => {
@@ -131,8 +125,6 @@ export class AccountStore {
       NotificationType.Error
     );
     this.uiStateStore.setSubmitting(false);
-
-    console.error(error);
   }
 
   @action
@@ -176,6 +168,5 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
-    console.error(error);
   }
 }
