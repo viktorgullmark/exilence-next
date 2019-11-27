@@ -29,6 +29,9 @@
     "select_stash_tabs": "Select stash tabs",
     "profile_placeholder": "Select a profile",
     "item_table": "Items",
-    "graphs": "Graphs"
+    "graphs": "Graphs",
+    "total_value": "Net worth",
+    "total_items": "Items",
+    "total_snapshots": "Snapshots"
   }
 }

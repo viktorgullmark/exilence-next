@@ -1,13 +1,15 @@
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { TableRow, TableCell } from '@material-ui/core';
+import React, { useState } from 'react';
+import { TableRow, TableCell, Box } from '@material-ui/core';
 import { IColumn } from '../../../interfaces/column.interface';
 import uuid from 'uuid';
 import clsx from 'clsx';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import { rarityColors } from '../../../assets/themes/exilence-theme';
 import { ItemHelper } from '../../../helpers/item.helper';
+import ImageIcon from '@material-ui/icons/Image';
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   tableCell: {
@@ -23,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 35,
     maxHeight: 35,
     maxWidth: 120
-  }
+  },
 }));
 
 interface ItemTableRowProps<T> extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,6 +39,12 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
 }: ItemTableRowProps<IPricedItem>) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [iconLoaded, setIconLoaded] = useState(false);
+
+  const handleImageLoad = () => {
+    setIconLoaded(true);
+  };
+
   return (
     <TableRow hover role="checkbox" tabIndex={-1} key={uuid.v4()}>
       {columns.map(column => {
@@ -62,12 +70,19 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
                         [classes.iconCell]: column.id === 'icon'
                       })}
                     >
-                      <img
-                        className={classes.iconImg}
-                        alt={row['name']}
-                        title={row['name']}
-                        src={typeof value === 'string' ? value : ''}
-                      />
+                      <Box position="relative" alignItems="center" justifyContent="center" className={classes.iconImg}>
+                        {!iconLoaded && (
+                          <CircularProgress size={20} />
+                        )}
+                        <img
+                          className={classes.iconImg}
+                          alt={row['name']}
+                          title={row['name']}
+                          style={!iconLoaded ? { display: 'none' } : {}}
+                          src={typeof value === 'string' ? value : ''}
+                          onLoad={handleImageLoad}
+                        />
+                      </Box>
                     </div>
                   );
                 case 'name':

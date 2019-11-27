@@ -13,12 +13,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
+  backgroundColor?: string;
+  textColor?: string;
+}
 
-const Widget: React.FC<WidgetProps> = ({ children }: WidgetProps) => {
+const Widget: React.FC<WidgetProps> = ({
+  children,
+  backgroundColor,
+  textColor
+}: WidgetProps) => {
   const classes = useStyles();
 
-  return <Paper className={classes.paper}>{children}</Paper>;
+  return (
+    <Paper className={classes.paper} style={{ background: backgroundColor, color: textColor }}>
+      {children}
+    </Paper>
+  );
 };
 
 export default observer(Widget);
