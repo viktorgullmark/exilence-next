@@ -8,7 +8,7 @@ export class LeaguePriceSource {
   uuid: string = uuid.v4();
   priceSourceUuid: string = '';
 
-  @observable prices: IExternalPrice[] = [];
+  prices: IExternalPrice[] = [];
 
   constructor(obj?: ILeaguePriceSource) {
     Object.assign(this, obj);
