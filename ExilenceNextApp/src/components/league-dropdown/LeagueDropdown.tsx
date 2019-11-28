@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { League } from '../../store/domains/league';
 import { LeagueFormValues } from '../league-selection-form/LeagueSelectionForm';
@@ -19,8 +19,8 @@ interface LeagueDropdownProps {
   errors: FormikErrors<any>;
   noCharacters: string;
   leagues: League[];
-  handleLeagueChange: Function;
-  handleChange: Function;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleChange: (event: ChangeEvent<{ value: unknown; }>) => void;
   values: LeagueFormValues;
   margin?: 'normal' | 'none' | 'dense' | undefined;
   fullWidth?: boolean;
