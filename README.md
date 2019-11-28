@@ -21,7 +21,7 @@ Currently runs with:
 
 ## Contributing with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version.
+If you want to help with development we gladly accept pull-requests. Run the following to get started with the client:
 
 ```
 npm install
