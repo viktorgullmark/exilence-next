@@ -15,9 +15,7 @@ export class Account implements IAccount {
   @persist @observable sessionId: string = '';
   @persist token: string = uuid.v4();
 
-  @persist('list', AccountLeague)
-  @observable
-  accountLeagues: AccountLeague[] = [];
+  @persist('list', AccountLeague) @observable accountLeagues: AccountLeague[] = [];
   @persist('list', Profile) @observable profiles: Profile[] = [];
 
   @persist @observable activeProfileUuid: string = '';
@@ -55,28 +53,17 @@ export class Account implements IAccount {
   }
 
   @action
-  mapAccountLeagues(characters: ICharacter[]) {
-    this.accountLeagues = [];
-    const mappedLeagues: AccountLeague[] = [];
+  updateAccountLeagues(characters: ICharacter[]) {
+    stores.leagueStore.leagues.forEach(l => { 
+      const accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
+      const leagueCharacters = characters.filter(c => c.league === l.id);
 
-    if (stores.leagueStore.priceLeagues.length === 0) {
-      throw new Error('error:no_price_leagues');
-    }
-
-    stores.leagueStore.leagues.forEach(l => {
-      const accLeague = new AccountLeague();
-      accLeague.leagueId = l.id;
-      accLeague.updateCharacters(characters.filter(c => c.league === l.id));
-      if (accLeague.characters.length > 0) {
-        mappedLeagues.push(accLeague);
+      if(!accLeague && leagueCharacters) {
+        const newLeague = new AccountLeague(l.id);
+        newLeague.updateCharacters(leagueCharacters);
+        this.accountLeagues.push(newLeague);
       }
     });
-
-    if (mappedLeagues.length === 0) {
-      throw Error('error:no_leagues_with_characters');
-    }
-
-    this.accountLeagues = mappedLeagues;
   }
 
   @action
