@@ -1,6 +1,5 @@
 import { observable, action } from 'mobx';
 import { Notification } from './domains/notification';
-import { INotification } from './../interfaces/notification.interface';
 import { UiStateStore } from './uiStateStore';
 import { NotificationType } from '../enums/notification-type.enum';
 

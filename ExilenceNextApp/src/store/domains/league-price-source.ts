@@ -5,8 +5,8 @@ import { IExternalPrice } from '../../interfaces/external-price.interface';
 import { ILeaguePriceSource } from '../../interfaces/league-price-source.interface';
 
 export class LeaguePriceSource {
-  @persist uuid: string = uuid.v4();
-  @persist priceSourceUuid: string = '';
+  uuid: string = uuid.v4();
+  priceSourceUuid: string = '';
 
   prices: IExternalPrice[] = [];
 

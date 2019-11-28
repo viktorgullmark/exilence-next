@@ -12,9 +12,10 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
+import { IAccount } from '../../../interfaces/account.interface';
 
 interface AccountValidationFormProps {
-  handleValidate: Function;
+  handleValidate: (account: IAccount) => void;
   styles: Record<string, string>;
   isSubmitting: boolean;
   account: Account;

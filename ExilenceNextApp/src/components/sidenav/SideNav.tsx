@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
-  toggleSidenav: Function;
+  toggleSidenav: () => void;
 }
 
 const SideNav: React.FC<SideNavProps> = ({

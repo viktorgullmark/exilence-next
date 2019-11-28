@@ -12,6 +12,7 @@ import { PriceSource } from './domains/price-source';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
+import { LeaguePriceSource } from './domains/league-price-source';
 
 export class PriceStore {
   @observable priceSources: PriceSource[] = [
@@ -38,7 +39,40 @@ export class PriceStore {
   }
 
   @action
-  getPricesForLeagues(leagueIds: string[]) {
+  getLeaguePriceDetails(leagueId: string) {
+    let leaguePriceDetails = this.leaguePriceDetails.find(
+      l => l.leagueId === leagueId
+    );
+
+    if (!leaguePriceDetails) {
+      leaguePriceDetails = new LeaguePriceDetails();
+      leaguePriceDetails.leagueId = leagueId;
+      this.leaguePriceDetails.push(leaguePriceDetails);
+    }
+
+    return leaguePriceDetails;
+  }
+
+  @action
+  getLeaguePriceSource(leaguePriceDetails: LeaguePriceDetails) {
+    // todo: remove hardcoded check for poeninja
+    let leaguePriceSource = leaguePriceDetails.leaguePriceSources.find(
+      lps => lps.priceSourceUuid === this.priceSources[0].uuid
+    );
+
+    if (!leaguePriceSource) {
+      leaguePriceSource = new LeaguePriceSource(<ILeaguePriceSource>{
+        priceSourceUuid: this.priceSources[0].uuid
+      });
+      leaguePriceDetails.addLeaguePriceSource(leaguePriceSource);
+    }
+
+    return leaguePriceSource;
+  }
+
+  @action
+  getPricesForLeagues() {
+    const leagueIds = this.leagueStore.priceLeagues.map(l => l.id);
     this.isUpdatingPrices = true;
     fromStream(
       forkJoin(
@@ -47,27 +81,8 @@ export class PriceStore {
             const league = this.leagueStore.leagues.find(
               l => l.id === leagueId
             );
-            let leaguePriceDetails = this.leaguePriceDetails.find(
-              l => l.leagueId === leagueId
-            );
 
-            if (!leaguePriceDetails) {
-              leaguePriceDetails = new LeaguePriceDetails();
-              leaguePriceDetails.leagueId = leagueId;
-              this.leaguePriceDetails.push(leaguePriceDetails);
-            }
-
-            // todo: remove hardcoded check for poeninja
-            let leaguePriceSource = leaguePriceDetails!.leaguePriceSources.find(
-              lps => lps.priceSourceUuid === this.priceSources[0].uuid
-            );
-
-            if (!leaguePriceSource) {
-              // todo: add function for lookup
-              leaguePriceDetails!.addLeaguePriceSource(<ILeaguePriceSource>{
-                priceSourceUuid: this.priceSources[0].uuid
-              });
-            }
+            const leaguePriceDetails = this.getLeaguePriceDetails(leagueId);
 
             if (!league) {
               throw Error('error:no_league');
@@ -87,14 +102,10 @@ export class PriceStore {
                   ninjaPrices.push(p);
                 });
 
-                const lps = leaguePriceDetails!.leaguePriceSources.find(
-                  lps => lps.priceSourceUuid === this.priceSources[0].uuid
+                const leaguePriceSource = this.getLeaguePriceSource(
+                  leaguePriceDetails
                 );
-
-                runInAction(() => {
-                  console.log('should update prices')
-                  lps!.updatePrices(ninjaPrices);
-                });
+                leaguePriceSource.updatePrices(ninjaPrices);
               })
             );
           })

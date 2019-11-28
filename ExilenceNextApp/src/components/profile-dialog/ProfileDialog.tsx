@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik, FormikActions } from 'formik';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import error from '../../helpers/validation.helper';
@@ -28,10 +28,10 @@ interface ProfileDialogProps {
   stashTabs: IStashTab[];
   stashTabIds: string[];
   characters: Character[];
-  handleClickClose: Function;
-  handleLeagueChange: Function;
-  handleSubmit: Function;
-  handleStashTabChange: Function;
+  handleClickClose: () => void;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleSubmit: (values: ProfileFormValues) => void;
+  handleStashTabChange: (event: ChangeEvent<{ value: unknown; }>) => void;
 }
 
 export interface ProfileFormValues {

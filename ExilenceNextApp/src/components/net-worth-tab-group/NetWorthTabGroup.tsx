@@ -9,8 +9,8 @@ import ItemTableContainer from '../item-table/ItemTableContainer';
 
 function a11yProps(index: any) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
+    id: `net-worth-tab-${index}`,
+    'aria-controls': `net-worth-tabpanel-${index}`
   };
 }
 
@@ -38,7 +38,6 @@ const NetWorthTabGroup: React.FC = () => {
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="simple tabs example"
         >
           <Tab label={t('label.item_table')} {...a11yProps(0)} />
           <Tab disabled label={t('label.graphs')} {...a11yProps(1)} />

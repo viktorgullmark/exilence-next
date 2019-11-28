@@ -1,31 +1,18 @@
-import {
-  Chip,
-  createStyles,
-  FormControl,
-  Input,
-  InputLabel,
-  makeStyles,
-  MenuItem,
-  Select,
-  Theme,
-  useTheme,
-} from '@material-ui/core';
+import { Chip, createStyles, FormControl, Input, InputLabel, makeStyles, MenuItem, Select, Theme, useTheme } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { IStashTab, IColour } from '../../interfaces/stash.interface';
-import { ProfileFormValues } from './../profile-dialog/ProfileDialog';
 import { ColourHelper } from '../../helpers/colour.helper';
+import { IStashTab } from '../../interfaces/stash.interface';
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   stashTabs: IStashTab[];
   stashTabIds: string[];
-  handleChange: Function;
-  handleStashTabChange: Function;
+  handleChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleStashTabChange: (event: ChangeEvent<{ value: unknown; }>) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
