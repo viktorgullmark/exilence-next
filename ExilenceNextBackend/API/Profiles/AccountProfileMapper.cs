@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Shared.Profiles
 {
-    public class AccountProfile : Profile
+    public class AccountProfileMapper : Profile
     {
-        public AccountProfile()
+        public AccountProfileMapper()
         {
             CreateMap<Account, AccountModel>();
             CreateMap<AccountModel, Account>();

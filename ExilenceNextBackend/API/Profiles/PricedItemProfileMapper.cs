@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class PricedItemProfile : Profile
+    public class PricedItemProfileMapper : Profile
     {
-        public PricedItemProfile()
+        public PricedItemProfileMapper()
         {
             CreateMap<PricedItem, PricedItemModel>();
             CreateMap<PricedItemModel, PricedItem>();

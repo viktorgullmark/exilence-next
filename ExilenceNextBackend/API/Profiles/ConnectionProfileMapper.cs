@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class GroupProfile: Profile
+    public class ConnectionProfileMapper : Profile
     {
-        public GroupProfile()
+        public ConnectionProfileMapper()
         {
-            CreateMap<Group, GroupModel>();
-            CreateMap<GroupModel, Group>();
+            CreateMap<Connection, ConnectionModel>();
+            CreateMap<ConnectionModel, Connection>();
         }
     }
 }

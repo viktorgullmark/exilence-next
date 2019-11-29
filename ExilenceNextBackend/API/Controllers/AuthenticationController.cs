@@ -80,7 +80,7 @@ namespace API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var serializedToken = tokenHandler.WriteToken(token);
-            return Ok(new { token = serializedToken });
+            return Ok(serializedToken);
         }
 
         private async Task<bool> ValidateSessionId(string accountName, string sessionId)

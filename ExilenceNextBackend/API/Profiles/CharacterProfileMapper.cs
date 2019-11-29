@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class LeagueProfile : Profile
+    public class CharacterProfileMapper: Profile
     {
-        public LeagueProfile()
+        public CharacterProfileMapper()
         {
-            CreateMap<League, LeagueModel>();
-            CreateMap<LeagueModel, League>();
+            CreateMap<Character, CharacterModel>();
+            CreateMap<CharacterModel, Character>();
         }
     }
 }

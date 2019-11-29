@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class SnapshotProfile : Profile
+    public class LeagueProfileMapper : Profile
     {
-        public SnapshotProfile()
+        public LeagueProfileMapper()
         {
-            CreateMap<Snapshot, SnapshotModel>();
-            CreateMap<SnapshotModel, Snapshot>();
+            CreateMap<League, LeagueModel>();
+            CreateMap<LeagueModel, League>();
         }
     }
 }

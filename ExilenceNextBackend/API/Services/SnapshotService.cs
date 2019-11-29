@@ -24,15 +24,6 @@ namespace API.Services
             _mapper = mapper;
         }
 
-        public async Task<SnapshotProfileModel> AddProfile(string accountClientId, SnapshotProfileModel profileModel)
-        {
-            var profile = _mapper.Map<SnapshotProfile>(profileModel);
-            var account = await _accountRepository.GetAccounts(account => account.ClientId == accountClientId).FirstOrDefaultAsync();
-            account.Profiles.Add(profile);
-            await _accountRepository.SaveChangesAsync();
-            return _mapper.Map<SnapshotProfileModel>(profile);
-        }
-
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);

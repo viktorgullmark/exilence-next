@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class CharacterProfile: Profile
+    public class GroupProfileMapper: Profile
     {
-        public CharacterProfile()
+        public GroupProfileMapper()
         {
-            CreateMap<Character, CharacterModel>();
-            CreateMap<CharacterModel, Character>();
+            CreateMap<Group, GroupModel>();
+            CreateMap<GroupModel, Group>();
         }
     }
 }
