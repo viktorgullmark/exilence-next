@@ -1,11 +1,11 @@
+import { AxiosResponse } from 'axios';
+import axios from 'axios-observable';
 import { from, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import axios from 'axios-observable';
+import { IAccountAuth } from '../interfaces/account-auth.interface';
+import AppConfig from './../config/app.config';
 import { ICookie } from './../interfaces/cookie.interface';
 import { electronService } from './electron.service';
-import { AxiosResponse } from 'axios';
-import { Account } from '../store/domains/account';
-import AppConfig from './../config/app.config';
 
 export const authService = {
     getToken,
@@ -13,7 +13,7 @@ export const authService = {
     isLoggedIn
 };
 
-function getToken(account: Account): Observable<AxiosResponse<string>> {
+function getToken(account: IAccountAuth): Observable<AxiosResponse<string>> {
     return axios.post<string>(`${AppConfig.baseUrl}/api/authentication`, account)
 }
 

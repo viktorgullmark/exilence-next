@@ -49,13 +49,15 @@ export class Account implements IAccount {
   @action
   authorize() {
     fromStream(
-      authService.getToken(this).pipe(
-        mergeMap(token => {
-          this.authorizeSuccess();
-          return of(stores.signalrStore.signalrHub.startConnection());
-        }),
-        catchError(e => of(this.authorizeFail(e)))
-      )
+      authService
+        .getToken({ uuid: this.uuid, name: this.name, token: this.token })
+        .pipe(
+          mergeMap(token => {
+            this.authorizeSuccess();
+            return of(stores.signalrStore.signalrHub.startConnection());
+          }),
+          catchError(e => of(this.authorizeFail(e)))
+        )
     );
   }
 
