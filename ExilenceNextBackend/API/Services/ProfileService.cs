@@ -23,22 +23,29 @@ namespace API.Services
             _accountRepository = accountRepository;
             _mapper = mapper;
         }
-        public async Task<SnapshotProfileModel> AddProfile(string accountClientId, SnapshotProfileModel profileModel)
+        public async Task<SnapshotProfileModel> UpdateProfile(string accountClientId, SnapshotProfileModel profileModel)
         {
-
             var account = await _accountRepository.GetAccounts(a => a.ClientId == accountClientId).FirstOrDefaultAsync();
             var profile = await _accountRepository.GetProfiles(p => p.ClientId == profileModel.ClientId).FirstOrDefaultAsync();
 
             if (account == null)
                 throw new Exception("Can't find account");
 
-            if (profile != null)
-                throw new Exception("Profile already exists");
+            if (profile == null)
+            {
+                profile = _mapper.Map<SnapshotProfile>(profileModel);
+                account.Profiles.Add(profile);
+            }
+            else
+            {
+                profile = account.Profiles.First(p => p.ClientId == profileModel.ClientId);
+                account.Profiles.Remove(profile);
+                await _accountRepository.SaveChangesAsync();
+            }
 
-            profile = _mapper.Map<SnapshotProfile>(profileModel);
-            account.Profiles.Add(profile);
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
+
         }
     }
 }

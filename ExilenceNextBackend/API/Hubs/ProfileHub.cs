@@ -12,10 +12,10 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        public async Task AddProfile(string acccountId, SnapshotProfileModel profileModel)
+        public async Task<SnapshotProfileModel> UpdateProfile(string acccountId, SnapshotProfileModel profileModel)
         {
-
-
+            profileModel = await _profileService.UpdateProfile(acccountId, profileModel);
+            return profileModel;
         }
     }
 }
