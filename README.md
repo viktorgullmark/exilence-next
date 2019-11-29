@@ -7,7 +7,7 @@ Complete rewrite of Exilence, with performance and user experience in focus
 
 - [Changelog](https://github.com/viktorgullmark/exilence-next/blob/master/CHANGELOG.md)
 - [Platform](#platform)
-- [Contributing with development](#help-with-development)
+- [Contributing with development](#contributing-with-development)
 - [Contact us](#contact-us)
 - [Supporting us](#supporting-us)
 - [Acknowledgements](#acknowledgements)
@@ -16,8 +16,9 @@ Complete rewrite of Exilence, with performance and user experience in focus
 
 Currently runs with:
 
-- Electron
-- React
+- Electron 6.0.1
+- React 16.10.1
+- .NET Core 3.0 (preview)
 
 ## Contributing with development
 
