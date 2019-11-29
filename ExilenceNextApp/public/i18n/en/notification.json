@@ -1,0 +1,13 @@
+{
+  "success": {
+    "title": {
+      "init_session": "Init session success"
+    },
+    "description": {
+      "init_session": "Session was successfully initiated"
+    }
+  },
+  "error": {},
+  "warning": {},
+  "information": {}
+}

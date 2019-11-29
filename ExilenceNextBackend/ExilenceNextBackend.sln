@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{573EE573-AC2E-4D37-B4C1-5660C48680A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{CECAA008-D3A2-46F7-8069-BAE7DD93216D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundProcessor", "BackgroundProcessor\BackgroundProcessor.csproj", "{B95DEA96-A058-4718-83EA-A60CE19C7AA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{573EE573-AC2E-4D37-B4C1-5660C48680A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{573EE573-AC2E-4D37-B4C1-5660C48680A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{573EE573-AC2E-4D37-B4C1-5660C48680A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{573EE573-AC2E-4D37-B4C1-5660C48680A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95DEA96-A058-4718-83EA-A60CE19C7AA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA3A1647-3B5A-4D1B-9128-7822295D03CC}
+	EndGlobalSection
+EndGlobal
