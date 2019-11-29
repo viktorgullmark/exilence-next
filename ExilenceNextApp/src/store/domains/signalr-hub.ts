@@ -11,13 +11,13 @@ export class SignalrHub {
     .build();
 
   constructor() {
-    this.connection.start().catch((err: string) => document.write(err));
+    //this.connection.start().catch((err: string) => document.write(err));
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      this.sendEvent('JoinGroup', "ABC123")
+    //   this.sendEvent('JoinGroup', "ABC123")
 
-    }, 5000);
+    // }, 5000);
 
 
   }
