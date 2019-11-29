@@ -18,7 +18,9 @@ export class AccountLeague {
   @persist('list', Character) @observable characters: Character[] = [];
   @persist('list') @observable stashtabs: IStashTab[] = [];
 
-  constructor() {}
+  constructor(id: string) {
+    this.leagueId = id;
+  }
 
   @action
   updateCharacters(characters: ICharacter[]) {
