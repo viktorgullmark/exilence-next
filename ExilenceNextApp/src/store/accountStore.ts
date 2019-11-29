@@ -94,7 +94,7 @@ export class AccountStore {
 
           this.leagueStore.updateLeagues(retrievedLeagues);
           this.priceStore.getPricesForLeagues();
-          this.getSelectedAccount.mapAccountLeagues(retrievedCharacters);
+          this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
           this.getSelectedAccount.checkDefaultProfile();
         }),
         switchMap(() => {
