@@ -1,13 +1,21 @@
 import { from, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-
+import axios from 'axios-observable';
 import { ICookie } from './../interfaces/cookie.interface';
 import { electronService } from './electron.service';
+import { AxiosResponse } from 'axios';
+import { Account } from '../store/domains/account';
+import AppConfig from './../config/app.config';
 
 export const authService = {
+    getToken,
     setAuthCookie,
     isLoggedIn
 };
+
+function getToken(account: Account): Observable<AxiosResponse<string>> {
+    return axios.post<string>(`${AppConfig.baseUrl}/api/authentication`, account)
+}
 
 function setAuthCookie(cookie: ICookie): Observable<any> {
     return removeAuthCookie().pipe(switchMap(() => {
