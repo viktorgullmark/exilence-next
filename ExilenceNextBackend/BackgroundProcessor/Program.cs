@@ -15,7 +15,6 @@ namespace BackgroundProcessor
         public static HubConnection _connection;
         private static bool _keepRunning = true;
 
-
         public static async Task Main(string[] args)
         {
 
