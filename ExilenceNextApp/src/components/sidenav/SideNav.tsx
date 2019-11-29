@@ -12,7 +12,7 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from './../toolbar/Toolbar';
-
+import SettingsIcon from '@material-ui/icons/Settings';
 export const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -96,7 +96,7 @@ const SideNav: React.FC<SideNavProps> = ({
           </div>
           <Divider />
           <List>
-            <ListItem button key="net-worth">
+            <ListItem button key="net-worth" component={Link} to="/net-worth" >
               <ListItemIcon>
                 <AttachMoneyIcon />
               </ListItemIcon>
@@ -107,6 +107,12 @@ const SideNav: React.FC<SideNavProps> = ({
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary={t('login')} />
+            </ListItem>
+            <ListItem button key="settings" component={Link} to="/settings">
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary={t('settings')} />
             </ListItem>
           </List>
         </Drawer>
