@@ -3,6 +3,7 @@ import { action, observable, reaction, runInAction } from 'mobx';
 import { Group } from './domains/group';
 import { IGroup } from '../interfaces/group.interface';
 import { Profile } from './domains/profile';
+import { stores } from '..';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -32,7 +33,7 @@ export class SignalrStore {
 
   @action
   updateProfile(profile: Profile) {
-    this.signalrHub.sendEvent<Profile>('UpdateProfile', profile);
+    this.signalrHub.sendEventWithId<Profile>('UpdateProfile', profile, stores.accountStore.getSelectedAccount.uuid);
   }
 
   @action

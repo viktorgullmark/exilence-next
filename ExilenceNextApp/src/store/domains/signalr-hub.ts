@@ -27,4 +27,9 @@ export class SignalrHub {
   sendEvent<T>(event: string, params: T) {
     this.connection.send(event, params);
   }
+
+  @action
+  sendEventWithId<T>(event: string, params: T, id: string) {
+    this.connection.send(event, id, params);
+  }
 }
