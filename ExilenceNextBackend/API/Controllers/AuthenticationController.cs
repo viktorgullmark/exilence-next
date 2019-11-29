@@ -42,7 +42,7 @@ namespace API.Controllers
 
             if (true)
             {
-                valid = await ValidateSessionId(accountModel.Name, accountModel.SessionId);
+                valid = await ValidateSessionId(accountModel.Name, accountModel.Token);
                 if (!valid)
                     return BadRequest("Could not validate the sessionId");
             }
