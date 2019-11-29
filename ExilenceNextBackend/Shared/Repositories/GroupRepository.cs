@@ -24,15 +24,16 @@ namespace Shared.Repositories
             return group;
         }
 
+        public IQueryable<Group> GetGroups(Expression<Func<Group, bool>> predicate)
+        {
+            var group = _exilenceContext.Groups.Where(predicate);
+            return group;
+        }
+
         public async Task<Group> GetGroup(string name)
         {
             var group = await _exilenceContext.Groups.FirstOrDefaultAsync(g => g.Name == name);
             return group;
-        }
-
-        public IQueryable<Group> GetGroupQuery(Expression<Func<Group, bool>> predicate)
-        {
-            return _exilenceContext.Groups.Where(predicate);
         }
 
         public async Task<Group> RemoveGroup(string name)

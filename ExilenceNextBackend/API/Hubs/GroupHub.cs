@@ -31,8 +31,8 @@ namespace API.Hubs
                 {
                     group.Connections.Add(connection);
                 }
+                await Groups.AddToGroupAsync(ConnectionId, name);
                 await _groupRepository.SaveChangesAsync();
-                await Groups.AddToGroupAsync(Context.ConnectionId, name);
                 await Log($"Added connectionId: {connection.ConnectionId} to group: {group.Name}");
                 await Clients.Caller.SendAsync("JoinGroup", group);
             }
@@ -47,16 +47,14 @@ namespace API.Hubs
         {
             try
             {
-                var group = await _groupRepository.GetGroupQuery(g => g.Name == name).FirstOrDefaultAsync();
+                var group = await _groupRepository.GetGroups(g => g.Name == name).FirstOrDefaultAsync();
 
-                if (group == null)
-                {
+                if (group == null)                
                     throw new Exception("Group not found");
-                }
-
-                var connection = group.Connections.FirstOrDefault(t => t.ConnectionId == Context.ConnectionId);
+                
+                var connection = group.Connections.FirstOrDefault(t => t.ConnectionId == ConnectionId);
                 group.Connections.Remove(connection);
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, name);
+                await Groups.RemoveFromGroupAsync(ConnectionId, name);
                 await Log($"Removed connectionId: {connection.ConnectionId} from group: {group.Name}");
                 if (!group.Connections.Any())
                 {

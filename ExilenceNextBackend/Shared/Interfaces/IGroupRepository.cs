@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Shared.Interfaces
 {   public interface IGroupRepository
     {
-        IQueryable<Group> GetGroupQuery(Expression<Func<Group, bool>> predicate);
+        IQueryable<Group> GetGroups(Expression<Func<Group, bool>> predicate);
         Task<Group> GetGroup(string name);
         Task<Group> AddGroup(Group group);
         Task<Group> RemoveGroup(string name);
