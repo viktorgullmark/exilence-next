@@ -121,7 +121,6 @@ export class PriceStore {
 
   @action
   getPricesforLeaguesSuccess() {
-    console.log(this.leaguePriceDetails);
     this.isUpdatingPrices = false;
     this.notificationStore.createNotification(
       'get_prices_for_leagues',
