@@ -8,6 +8,6 @@ namespace API.Interfaces
 {
     public interface IProfileService
     {
-        Task<SnapshotProfileModel> AddProfile(string accountClientId, SnapshotProfileModel profileModel);
+        Task<SnapshotProfileModel> UpdateProfile(string accountClientId, SnapshotProfileModel profileModel);
     }
 }
