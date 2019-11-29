@@ -1,5 +1,5 @@
 import { inject, observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import Dd from '../../helpers/dropdown.helper';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -15,8 +15,8 @@ interface Props {
   isOpen: boolean;
   isEditing: boolean;
   profile: Profile;
-  handleClickOpen: Function;
-  handleClickClose: Function;
+  handleClickOpen: () => void;
+  handleClickClose: () => void;
 }
 
 const ProfileDialogContainer: React.FC<Props> = ({
@@ -89,7 +89,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: React.ChangeEvent<{ value: string }>) => {
+  const handleLeagueChange = (event: ChangeEvent<{ value: unknown; }>) => {
     const id = event.target.value;
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.leagueId === id
@@ -107,7 +107,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
       setStashTabs([]);
       setCharacters([]);
     }
-    setLeague(id);
+    setLeague(id as string);
   };
 
   const handleSubmit = (values: ProfileFormValues) => {

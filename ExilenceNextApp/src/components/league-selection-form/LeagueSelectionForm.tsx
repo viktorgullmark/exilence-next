@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
@@ -19,8 +19,8 @@ import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 
 interface LeagueSelectionFormProps {
-  handleLeagueSubmit: Function;
-  handleLeagueChange: Function;
+  handleLeagueSubmit: () => void;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
   styles: Record<string, string>;
   selectedLeague?: string;
   selectedPriceLeague?: string;
@@ -75,15 +75,15 @@ const LeagueSelectionForm: React.FC<LeagueSelectionFormProps> = (
                 errors={errors}
                 fullWidth
                 noCharacters={noCharacters}
-                handleLeagueChange={(l: string) => props.handleLeagueChange(l)}
-                handleChange={(e: any) => handleChange(e)}
+                handleLeagueChange={props.handleLeagueChange}
+                handleChange={handleChange}
                 values={values}
               />
               <PriceLeagueDropdown
                 priceLeagues={props.leagues}
                 touched={touched}
                 errors={errors}
-                handleChange={(e: any) => handleChange(e)}
+                handleChange={handleChange}
                 values={values}
               />
             </div>

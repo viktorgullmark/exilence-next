@@ -8,7 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useLocation } from 'react-router';
 import Dd from '../../helpers/dropdown.helper';
 import { toolbarHeight } from '../header/Header';
@@ -71,11 +71,11 @@ interface Props {
   profiles: Profile[];
   profileOpen: boolean;
   isEditing: boolean;
-  toggleSidenav: Function;
-  handleProfileOpen: Function;
-  handleProfileClose: Function;
-  handleProfileChange: Function;
-  handleSnapshot: Function;
+  toggleSidenav: () => void;
+  handleProfileOpen: (edit?: boolean) => void;
+  handleProfileClose: () => void;
+  handleProfileChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => void;
+  handleSnapshot: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {

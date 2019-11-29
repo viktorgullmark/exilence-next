@@ -57,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface HeaderProps {
   maximized: boolean;
-  setMaximized: Function;
   sidenavOpened: boolean;
-  toggleSidenav: Function;
+  setMaximized: (maximized: boolean) => void;
+  toggleSidenav: () => void;
 }
 
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {

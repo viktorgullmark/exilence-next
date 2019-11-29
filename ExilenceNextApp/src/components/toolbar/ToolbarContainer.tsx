@@ -1,5 +1,5 @@
 import { inject, observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { AccountStore } from '../../store/accountStore';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
@@ -34,8 +34,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     accountStore!.getSelectedAccount.activeProfile.snapshot();
   };
 
-  const handleProfileChange = (event: React.ChangeEvent<{ value: string }>) => {
-    accountStore!.getSelectedAccount.setActiveProfile(event.target.value);
+  const handleProfileChange = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+    accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 
   return (
@@ -48,8 +48,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       handleSnapshot={handleSnapshot}
       isEditing={isEditing}
       profileOpen={profileOpen}
-      handleProfileOpen={(edit: boolean) => handleOpen(edit)}
-      handleProfileClose={() => handleClose()}
+      handleProfileOpen={handleOpen}
+      handleProfileClose={handleClose}
     />
   );
 };

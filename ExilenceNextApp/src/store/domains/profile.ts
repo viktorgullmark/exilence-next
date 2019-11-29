@@ -68,8 +68,7 @@ export class Profile {
       return 0;
     }
    
-    const values = this.snapshots
-      .flatMap(s => s.stashTabSnapshots)
+    const values = this.snapshots[0].stashTabSnapshots
       .flatMap(sts => sts.value).reduce((a, b) => a + b, 0);
 
     return +values.toFixed(2);
@@ -194,6 +193,7 @@ export class Profile {
 
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
+    console.log('price details:', stores.priceStore.leaguePriceDetails);
     const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
       l =>
         l.leagueId ===
@@ -217,7 +217,7 @@ export class Profile {
         );
 
         stashTabWithItems.value = stashTabWithItems.items
-          .map(ts => ts.calculated)
+          .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
 
         return stashTabWithItems;

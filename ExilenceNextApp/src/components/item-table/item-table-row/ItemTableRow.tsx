@@ -70,7 +70,7 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
                         [classes.iconCell]: column.id === 'icon'
                       })}
                     >
-                      <Box position="relative" alignItems="center" justifyContent="center" className={classes.iconImg}>
+                      <Box position="relative" alignItems="center" justifyContent="center" display="flex" className={classes.iconImg}>
                         {!iconLoaded && (
                           <CircularProgress size={20} />
                         )}

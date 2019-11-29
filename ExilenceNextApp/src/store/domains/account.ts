@@ -55,15 +55,15 @@ export class Account implements IAccount {
   }
 
   @action
-  mapAccountLeagues(
-    leagues: League[],
-    characters: ICharacter[],
-    priceLeagues: League[]
-  ) {
+  mapAccountLeagues(characters: ICharacter[]) {
     this.accountLeagues = [];
     const mappedLeagues: AccountLeague[] = [];
 
-    leagues.forEach(l => {
+    if (stores.leagueStore.priceLeagues.length === 0) {
+      throw new Error('error:no_price_leagues');
+    }
+
+    stores.leagueStore.leagues.forEach(l => {
       const accLeague = new AccountLeague();
       accLeague.leagueId = l.id;
       accLeague.updateCharacters(characters.filter(c => c.league === l.id));
@@ -72,22 +72,31 @@ export class Account implements IAccount {
       }
     });
 
-    if (this.profiles.length === 0) {
-      this.profiles.push(
-        new Profile({
-          name: 'profile 1',
-          activeLeagueId: mappedLeagues[0]!.leagueId,
-          activePriceLeagueId: priceLeagues[0].id
-        })
-      );
-      this.setActiveProfile(this.profiles[0].uuid);
-    }
-
     if (mappedLeagues.length === 0) {
       throw Error('error:no_leagues_with_characters');
     }
 
     this.accountLeagues = mappedLeagues;
+  }
+
+  @action
+  checkDefaultProfile() {
+    if (this.accountLeagues.length === 0) {
+      throw Error('error:no_account_leagues');
+    }
+    if (stores.leagueStore.priceLeagues.length === 0) {
+      throw new Error('error:no_price_leagues');
+    }
+    if (this.profiles.length === 0) {
+      this.profiles.push(
+        new Profile({
+          name: 'profile 1',
+          activeLeagueId: this.accountLeagues[0].leagueId,
+          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id
+        })
+      );
+      this.setActiveProfile(this.profiles[0].uuid);
+    }
   }
 
   @action
@@ -106,6 +115,6 @@ export class Account implements IAccount {
   getAllStashTabs() {
     this.accountLeagues.forEach(l => {
       l.getStashTabs();
-    })
+    });
   }
 }

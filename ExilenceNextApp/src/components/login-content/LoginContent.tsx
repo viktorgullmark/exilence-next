@@ -12,7 +12,7 @@ import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 
 interface LoginContentProps {
-  handleValidate: Function;
+  handleValidate: (account: IAccount) => void;
   isSubmitting: boolean;
   account: Account;
 }
