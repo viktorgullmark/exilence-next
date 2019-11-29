@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
@@ -126,6 +126,9 @@ export class Account implements IAccount {
   createProfile(profile: IProfile) {
     const created = new Profile(profile);
     this.profiles.push(created);
+    
+    stores.signalrStore.updateProfile(created);
+
     this.setActiveProfile(created.uuid);
   }
 
