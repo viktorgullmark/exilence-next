@@ -6,10 +6,19 @@ import uuid from 'uuid';
 export class SignalrHub {
   @persist uuid: string = uuid.v4();
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:5001/hub')
+    .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => "" })
     .build();
 
   constructor() {
+    //this.connection.start().catch((err: string) => document.write(err));
+
+    // setTimeout(() => {
+
+    //   this.sendEvent('JoinGroup', "ABC123")
+
+    // }, 5000);
+
+
     // this.connection.start().catch(err => document.write(err));
   }
 
