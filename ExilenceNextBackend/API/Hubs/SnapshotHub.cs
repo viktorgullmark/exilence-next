@@ -48,22 +48,21 @@ namespace API.Hubs
             }
         }
 
-        public async IAsyncEnumerable<int> RetriveSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            //Can be something else then ints
-            var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
+            var snapshots = _snapshotService.GetStashtabs(AccountName, snapshotClientId);
             
-            foreach (var snapshot in listOfSnapshots)
+            foreach (var snapshot in snapshots)
             {
                 // Check the cancellation token regularly so that the server will stop
                 // producing items if the client disconnects.
                 cancellationToken.ThrowIfCancellationRequested();
 
-                yield return snapshot;
+                yield return _mapper.Map<SnapshotModel>(snapshot);
 
                 // Use the cancellationToken in other APIs that accept cancellation
                 // tokens so the cancellation can flow down to them.
-                await Task.Delay(delay, cancellationToken);
+                await Task.Delay(100, cancellationToken);
             }
         }
     }

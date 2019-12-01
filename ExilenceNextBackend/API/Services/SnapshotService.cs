@@ -55,6 +55,11 @@ namespace API.Services
             var stashtab = await _snapshotRepository.GetStashtabs(stashtab => stashtab.Snapshot.Profile.Account.Name == accountName && stashtab.ClientId == stashtabClientId).FirstOrDefaultAsync();
             return _mapper.Map<StashtabModel>(stashtab);
         }
+        public IQueryable<Stashtab> GetStashtabs(string accountName, string snapshotClientId)
+        {
+            var stashtabs = _snapshotRepository.GetStashtabs(stashtab => stashtab.Snapshot.Profile.Account.Name == accountName && stashtab.Snapshot.ClientId == snapshotClientId);
+            return stashtabs;
+        }
         public async Task<StashtabModel> AddStashtab(string accountName, string snapshotClientId, StashtabModel stashtabModel)
         {
             var stashtab = _mapper.Map<Stashtab>(stashtabModel);

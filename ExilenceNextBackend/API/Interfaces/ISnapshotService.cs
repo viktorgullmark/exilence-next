@@ -1,4 +1,6 @@
-﻿using Shared.Models;
+﻿using Shared.Entities;
+using Shared.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Interfaces
@@ -11,6 +13,6 @@ namespace API.Interfaces
         Task<StashtabModel> GetStashtab(string accountName, string stashtabClientId);
         Task<StashtabModel> AddStashtab(string accountName, string snapshotClientId, StashtabModel stashtabModel);
         Task<StashtabModel> RemoveStashtab(string accountName, string snapshotClientId, string stashtabClientId);
-
+        IQueryable<Stashtab> GetStashtabs(string accountName, string snapshotClientId);
     }
 }
