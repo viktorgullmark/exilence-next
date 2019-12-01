@@ -42,7 +42,7 @@ namespace API.Controllers
 
             if (true)
             {
-                valid = await ValidateSessionId(accountModel.Name, accountModel.SessionId);
+                valid = await ValidateSessionId(accountModel.Name, accountModel.Token);
                 if (!valid)
                     return BadRequest("Could not validate the sessionId");
             }
@@ -80,7 +80,7 @@ namespace API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var serializedToken = tokenHandler.WriteToken(token);
-            return Ok(new { token = serializedToken });
+            return Ok(serializedToken);
         }
 
         private async Task<bool> ValidateSessionId(string accountName, string sessionId)

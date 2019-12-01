@@ -1,7 +1,7 @@
 
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, throwError } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
 import { ItemHelper } from '../helpers/item.helper';
@@ -40,6 +40,9 @@ function getStashTabs(account: string, league: string): Observable<AxiosResponse
 }
 
 function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
+    if(tabs.length === 0) {
+        return throwError('error:no_stash_tabs_selected_for_profile');
+    }
     // todo: reset fetched tabs count
     return forkJoin(((tabs).map((tab: IStashTab) => {
         return getStashTab(account, league, tab.i).pipe(map((stash: AxiosResponse<IStash>) => {

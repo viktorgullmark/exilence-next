@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class ConnectionProfile : Profile
+    public class SnapshotProfileMapper : Profile
     {
-        public ConnectionProfile()
+        public SnapshotProfileMapper()
         {
-            CreateMap<Connection, ConnectionModel>();
-            CreateMap<ConnectionModel, Connection>();
+            CreateMap<Snapshot, SnapshotModel>();
+            CreateMap<SnapshotModel, Snapshot>();
         }
     }
 }

@@ -12,10 +12,10 @@ export class NotificationStore {
   }
 
   @action
-  createNotification(key: string, type: NotificationType) {
+  createNotification(key: string, type: NotificationType, desc?: string) {
     const prefix = `notification:${NotificationType[type].toLowerCase()}.`;
     const title = `${prefix}.title.${key}`;
-    const description = `${prefix}.description.${key}`;
+    const description = `${prefix}.description.${desc ? desc : key}`;
     const notification = new Notification({ title, description, type });
     this.notifications.push(notification);
     return notification;

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace API.Profiles
 {
-    public class StashtabProfile : Profile
+    public class StashtabProfileMapper : Profile
     {
-        public StashtabProfile()
+        public StashtabProfileMapper()
         {
 
         }

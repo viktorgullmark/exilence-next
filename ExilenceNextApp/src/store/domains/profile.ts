@@ -139,18 +139,13 @@ export class Profile {
       l => l.id === this.activeLeagueId
     );
 
-    // todo: catch these errors
     if (!accountLeague || !league) {
-      throw Error('error:no_matching_league');
+      return this.getItemsFail(new Error('no_matching_league'))
     }
 
     const selectedStashTabs = accountLeague.stashtabs.filter(
       st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
     );
-
-    if (selectedStashTabs.length === 0) {
-      throw Error('error:no_stash_tabs_for_profile');
-    }
 
     fromStream(
       externalService
@@ -187,13 +182,14 @@ export class Profile {
   @action getItemsFail(e: Error) {
     stores.notificationStore.createNotification(
       'get_items',
-      NotificationType.Error
+      NotificationType.Error,
+      e && e.message
     );
+    this.snapshotFail();
   }
 
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
-    console.log('price details:', stores.priceStore.leaguePriceDetails);
     const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
       l =>
         l.leagueId ===
@@ -201,7 +197,7 @@ export class Profile {
     );
 
     if (!activePriceDetails) {
-      throw Error('error:no_prices_received_for_league');
+      return this.priceItemsForStashTabsFail(new Error('no_prices_received_for_league'));
     }
 
     const pricedStashTabs = stashTabsWithItems.map(
@@ -237,10 +233,11 @@ export class Profile {
   }
 
   @action
-  priceItemsForStashTabsFail() {
+  priceItemsForStashTabsFail(e?: Error) {
     stores.notificationStore.createNotification(
       'price_items_for_stash_tabs',
-      NotificationType.Error
+      NotificationType.Error,
+      e && e.message
     );
     this.snapshotFail();
   }

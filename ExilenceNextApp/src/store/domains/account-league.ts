@@ -11,13 +11,12 @@ import { AxiosResponse } from 'axios';
 import { stores } from './../../index';
 import { of } from 'rxjs';
 import { NotificationType } from '../../enums/notification-type.enum';
-import { StashTab } from './stash-tab';
 
 export class AccountLeague {
   @persist uuid: string = '';
   @persist leagueId: string = '';
   @persist('list', Character) @observable characters: Character[] = [];
-  @persist('list', StashTab) @observable stashtabs: StashTab[] = [];
+  @persist('list') @observable stashtabs: IStashTab[] = [];
 
   constructor(id: string) {
     this.leagueId = id;
@@ -46,12 +45,14 @@ export class AccountLeague {
         .pipe(
           map((response: AxiosResponse<IStash>) => {
             runInAction(() => {
-              this.stashtabs = response.data.tabs.map(t => new StashTab(t));
+              if (response.data.tabs.length > 0) {
+                this.stashtabs = response.data.tabs;
+              }
+              this.getStashTabsSuccess();
             });
-            this.getStashTabsSuccess();
           }),
           catchError((e: Error) => of(this.getStashTabsFail(e)))
-        )
+        ),   
     );
   }
 

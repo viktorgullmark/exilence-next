@@ -2,7 +2,6 @@ import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
-import { Account } from './account';
 
 export class SignalrHub {
   @persist uuid: string = uuid.v4();
@@ -20,6 +19,7 @@ export class SignalrHub {
     // }, 5000);
 
 
+    // this.connection.start().catch(err => document.write(err));
   }
 
   @action
