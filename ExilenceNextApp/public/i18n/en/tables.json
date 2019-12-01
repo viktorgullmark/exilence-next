@@ -11,6 +11,7 @@
     "total": "Total"
   },
     "label": {
-      "stash_tab_placeholder": "No stash items found"
+      "stash_tab_placeholder": "No stash items found",
+      "stash_tab_dropdown_placeholder": "No stash tabs found"
     }
 }

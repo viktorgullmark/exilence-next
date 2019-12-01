@@ -104,7 +104,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             >
               {stashTab.n}
             </MenuItem>
-          )) : <h2>No stash tabs found</h2>}
+          )) : <h2>{t('label.stash_tab_dropdown_placeholder')}</h2>}
         </Select>
       </FormControl>
     </>
