@@ -29,12 +29,12 @@ namespace Shared.Repositories
             return _exilenceContext.Snapshots.Where(predicate);
         }      
 
-        public IQueryable<Snapshot> GetSnapshots(Expression<Func<Group, bool>> predicate)
+        public IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<Stashtab> GetStashtabs(Expression<Func<Group, bool>> predicate)
+        public IQueryable<Stashtab> GetStashtabs(Expression<Func<Stashtab, bool>> predicate)
         {
             throw new NotImplementedException();
         }

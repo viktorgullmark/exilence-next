@@ -18,12 +18,14 @@ namespace Shared.Repositories
             _exilenceContext = context;
         }
 
-        public async Task<Account> CreateAccount(Account account)
+        public async Task<Account> AddAccount(Account account)
         {
-            account.Created = DateTime.UtcNow;
-
             await _exilenceContext.Accounts.AddAsync(account);
-            await _exilenceContext.SaveChangesAsync();
+            return account;
+        }
+        public Account RemoveAccount(Account account)
+        {
+            _exilenceContext.Accounts.Remove(account);
             return account;
         }
 

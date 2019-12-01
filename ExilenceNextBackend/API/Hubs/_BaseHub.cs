@@ -19,37 +19,31 @@ namespace API.Hubs
         readonly string _instanceName;
 
         readonly ISnapshotService _snapshotService;
-        readonly IProfileService _profileService;
+        readonly IAccountService _accountService;
 
         readonly IGroupRepository _groupRepository;
-        readonly IAccountRepository _accountRepository;
-        readonly ISnapshotRepository _snapshotRepository;
 
 
         private bool IsPremium => Context.User.IsInRole("Premium");
         private bool IsAdmin => Context.User.IsInRole("Admin");
-        private string Account => Context.User.Identity.Name;
+        private string AccountName => Context.User.Identity.Name;
         private string ConnectionId => Context.ConnectionId;
 
         public BaseHub(
             IMapper mapper, 
             IConfiguration configuration, 
-            IAccountRepository accountRepository, 
             IGroupRepository groupRepository, 
-            ISnapshotRepository snapshotRepository,
             ISnapshotService snapshotService,
-            IProfileService profileService
+            IAccountService accountService
             )
         {
             _mapper = mapper;
             _instanceName = configuration.GetSection("Settings")["InstanceName"];            
 
             _groupRepository = groupRepository;
-            _accountRepository = accountRepository;
-            _snapshotRepository = snapshotRepository;
 
             _snapshotService = snapshotService;
-            _profileService = profileService;
+            _accountService = accountService;
         }
 
         [Authorize]

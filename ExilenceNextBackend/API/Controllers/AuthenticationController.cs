@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,40 +24,27 @@ namespace API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private IAccountRepository _accountRepository;
+        private IAccountService _accountService;
         private IMapper _mapper;
         private string _secret;
 
-        public AuthenticationController(IMapper mapper, IAccountRepository accountRepository, IConfiguration configuration)
+        public AuthenticationController(IMapper mapper, IAccountService accountRepository, IConfiguration configuration)
         {
             _mapper = mapper;
-            _accountRepository = accountRepository;
+            _accountService = accountRepository;
             _secret = configuration.GetSection("Settings")["Secret"];
         }
 
         [HttpPost]
         public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
         {
-            bool verified = false;
-            bool valid = false;
-
-            if (true)
-            {
-                valid = await ValidateSessionId(accountModel.Name, accountModel.Token);
-                if (!valid)
-                    return BadRequest("Could not validate the sessionId");
-            }
-
-
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).FirstOrDefaultAsync();
+            var account = await _accountService.GetAccount(accountModel.Name);
 
             if (account == null)
             {
-                account = _mapper.Map<Account>(accountModel);
-                account = await _accountRepository.CreateAccount(account);
+                account = await _accountService.AddAccount(accountModel);
             }
 
-            // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -82,15 +70,5 @@ namespace API.Controllers
             var serializedToken = tokenHandler.WriteToken(token);
             return Ok(serializedToken);
         }
-
-        private async Task<bool> ValidateSessionId(string accountName, string sessionId)
-        {
-            if (string.IsNullOrEmpty(sessionId))
-            {
-                return false;
-            }
-            return true;
-        }
-
     }
 }
