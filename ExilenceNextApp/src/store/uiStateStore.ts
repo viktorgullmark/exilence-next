@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { CookieHelper } from './../helpers/cookie.helper';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
+import { Notification } from './domains/notification';
 
 export class UiStateStore {
   @observable sessIdCookie: ICookie | undefined = undefined;
@@ -11,7 +12,9 @@ export class UiStateStore {
   @observable validated: boolean = false;
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
-
+  @observable alertOpen: boolean = false;
+  @observable alertNotification: Notification | undefined = undefined;
+  
   @action
   setSessIdCookie(sessionId: string) {
     const cookie = CookieHelper.constructCookie(sessionId);
@@ -32,6 +35,17 @@ export class UiStateStore {
   @action
   toggleSidenav(open?: boolean) {
     this.sidenavOpen = open || !this.sidenavOpen;
+  }
+
+  @action
+  openAlert(notification: Notification) {
+    this.alertNotification = notification;
+    this.alertOpen = true;
+  }
+
+  @action
+  closeAlert() {
+    this.alertOpen = false;
   }
 
   @action

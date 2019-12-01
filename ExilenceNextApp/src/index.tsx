@@ -10,20 +10,20 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import exilenceTheme from './assets/themes/exilence-theme';
+import AlertMessage from './components/alert-message/AlertMessage';
 import HeaderContainer from './components/header/HeaderContainer';
 import SideNavContainer from './components/sidenav/SideNavContainer';
+import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import GlobalStyles from './core/global-styles/GlobalStyles';
 import configureI18n from './i18n';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
-import { authService } from './services/auth.service';
 import { AccountStore } from './store/accountStore';
-import { NotificationStore } from './store/notificationStore';
-import { UiStateStore } from './store/uiStateStore';
-import ToolbarContainer from './components/toolbar/ToolbarContainer';
-import { PriceStore } from './store/priceStore';
 import { LeagueStore } from './store/leagueStore';
+import { NotificationStore } from './store/notificationStore';
+import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
+import { UiStateStore } from './store/uiStateStore';
 
 enableLogging();
 configureI18n();
@@ -76,6 +76,7 @@ const app = (
                 }
               />
             </SideNavContainer>
+            <AlertMessage />
           </Router>
         </Suspense>
       </Provider>

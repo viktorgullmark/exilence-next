@@ -1,21 +1,19 @@
-import { action, observable, reaction, computed } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { map, catchError, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { ItemHelper } from '../../helpers/item.helper';
+import { ICurrency } from '../../interfaces/currency.interface';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
+import { ISnapshot } from '../../interfaces/snapshot.interface';
+import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
+import { pricingService } from '../../services/pricing.service';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { IExternalPrice } from '../../interfaces/external-price.interface';
-import { of } from 'rxjs';
-import { ISnapshot } from '../../interfaces/snapshot.interface';
-import { pricingService } from '../../services/pricing.service';
-import { NotificationType } from '../../enums/notification-type.enum';
-import { ICurrency } from '../../interfaces/currency.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -117,7 +115,7 @@ export class Profile {
   @action snapshotSuccess() {
     stores.notificationStore.createNotification(
       'snapshot',
-      NotificationType.Success
+      'success'
     );
     this.setIsSnapshotting(false);
   }
@@ -125,7 +123,7 @@ export class Profile {
   @action snapshotFail() {
     stores.notificationStore.createNotification(
       'snapshot',
-      NotificationType.Error
+      'error'
     );
     this.setIsSnapshotting(false);
   }
@@ -174,7 +172,7 @@ export class Profile {
   @action getItemsSuccess(stashTabsWithItems: IStashTabSnapshot[]) {
     stores.notificationStore.createNotification(
       'get_items',
-      NotificationType.Success
+      'success'
     );
     this.priceItemsForStashTabs(stashTabsWithItems);
   }
@@ -182,7 +180,8 @@ export class Profile {
   @action getItemsFail(e: Error) {
     stores.notificationStore.createNotification(
       'get_items',
-      NotificationType.Error,
+      'error',
+      true,
       e && e.message
     );
     this.snapshotFail();
@@ -227,7 +226,7 @@ export class Profile {
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
     stores.notificationStore.createNotification(
       'price_items_for_stash_tabs',
-      NotificationType.Success
+      'success'
     );
     this.saveSnapshot(pricedStashTabs);
   }
@@ -236,7 +235,8 @@ export class Profile {
   priceItemsForStashTabsFail(e?: Error) {
     stores.notificationStore.createNotification(
       'price_items_for_stash_tabs',
-      NotificationType.Error,
+      'error',
+      true,
       e && e.message
     );
     this.snapshotFail();

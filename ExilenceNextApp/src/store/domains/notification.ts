@@ -1,18 +1,21 @@
 import { observable } from 'mobx';
 import moment, { Moment } from 'moment';
 import uuid from 'uuid';
-import { NotificationType } from '../../enums/notification-type.enum';
-import { INotification } from './../../interfaces/notification.interface';
+import {
+  INotification,
+  NotificationType
+} from './../../interfaces/notification.interface';
 
 export class Notification implements INotification {
-    uuid: string = uuid.v4();
-    title: string = '';
-    timestamp: Moment = moment();
-    description: string = '';
-    @observable read: boolean = false;
-    type: NotificationType = 1;
+  uuid: string = uuid.v4();
+  displayAlert?: boolean | undefined;
+  title: string = '';
+  timestamp: Moment = moment();
+  description: string = '';
+  @observable read: boolean = false;
+  type: NotificationType = 'info';
 
-    constructor(obj?: INotification) {
-        Object.assign(this, obj);
-    }
+  constructor(obj?: INotification) {
+    Object.assign(this, obj);
   }
+}

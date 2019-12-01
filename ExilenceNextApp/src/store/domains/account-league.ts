@@ -1,16 +1,14 @@
+import { AxiosResponse } from 'axios';
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { ICharacter } from '../../interfaces/character.interface';
-import { Character } from './character';
-import { Profile } from './profile';
-import { IStashTab, IStash } from '../../interfaces/stash.interface';
 import { fromStream } from 'mobx-utils';
-import { externalService } from '../../services/external.service';
-import { map, catchError } from 'rxjs/operators';
-import { AxiosResponse } from 'axios';
-import { stores } from './../../index';
 import { of } from 'rxjs';
-import { NotificationType } from '../../enums/notification-type.enum';
+import { catchError, map } from 'rxjs/operators';
+import { ICharacter } from '../../interfaces/character.interface';
+import { IStash, IStashTab } from '../../interfaces/stash.interface';
+import { externalService } from '../../services/external.service';
+import { stores } from './../../index';
+import { Character } from './character';
 
 export class AccountLeague {
   @persist uuid: string = '';
@@ -59,14 +57,15 @@ export class AccountLeague {
   @action getStashTabsSuccess() {
     stores.notificationStore.createNotification(
       'get_stash_tabs',
-      NotificationType.Success
+      'success'
     );
   }
 
   @action getStashTabsFail(e: Error) {
     stores.notificationStore.createNotification(
       'get_stash_tabs',
-      NotificationType.Error
+      'error',
+      true
     );
   }
 }
