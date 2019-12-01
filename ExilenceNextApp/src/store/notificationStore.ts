@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { Notification } from './domains/notification';
 import { UiStateStore } from './uiStateStore';
 import { NotificationType } from '../interfaces/notification.interface';
@@ -6,9 +6,21 @@ import { NotificationType } from '../interfaces/notification.interface';
 export class NotificationStore {
   uiStateStore: UiStateStore;
   @observable notifications: Notification[] = [];
-
+  @observable displayed: string[] = [];
+  
   constructor(uiStateStore: UiStateStore) {
     this.uiStateStore = uiStateStore;
+  }
+
+  @computed
+  get alertNotifications() {
+    const alerts = this.notifications.filter(n => n.displayAlert);
+    return alerts;
+  }
+
+  @action
+  addDisplayed(uuid: string) {
+    this.displayed = [...this.displayed, uuid];
   }
 
   @action
@@ -21,12 +33,8 @@ export class NotificationStore {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
     const description = `${prefix}.description.${desc ? desc : key}`;
-    const notification = new Notification({ title, description, type });
+    const notification = new Notification({ title, description, type, displayAlert });
 
-    if (displayAlert) {
-      this.uiStateStore.openAlert(notification);
-    }
-  
     this.notifications.push(notification);
 
     return notification;

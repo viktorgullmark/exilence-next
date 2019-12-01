@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
@@ -49,7 +49,7 @@ export class AccountLeague {
               this.getStashTabsSuccess();
             });
           }),
-          catchError((e: Error) => of(this.getStashTabsFail(e)))
+          catchError((e: AxiosError) => of(this.getStashTabsFail(e)))
         ),   
     );
   }
@@ -61,7 +61,7 @@ export class AccountLeague {
     );
   }
 
-  @action getStashTabsFail(e: Error) {
+  @action getStashTabsFail(error: AxiosError) {
     stores.notificationStore.createNotification(
       'get_stash_tabs',
       'error',

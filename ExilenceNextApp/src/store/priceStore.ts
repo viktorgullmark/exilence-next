@@ -11,6 +11,7 @@ import { PriceSource } from './domains/price-source';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
+import { AxiosError } from 'axios';
 
 
 export class PriceStore {
@@ -113,7 +114,7 @@ export class PriceStore {
         switchMap(() => {
           return of(this.getPricesforLeaguesSuccess());
         }),
-        catchError((e: Error) => of(this.getPricesforLeaguesFail(e)))
+        catchError((e: AxiosError) => of(this.getPricesforLeaguesFail(e)))
       )
     );
   }
@@ -128,13 +129,11 @@ export class PriceStore {
   }
 
   @action
-  getPricesforLeaguesFail(error: Error | string) {
+  getPricesforLeaguesFail(error: AxiosError | string) {
     this.isUpdatingPrices = false;
     this.notificationStore.createNotification(
       'get_prices_for_leagues',
       'error'
     );
-
-    console.error(error);
   }
 }

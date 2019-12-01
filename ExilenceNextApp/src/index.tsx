@@ -10,8 +10,8 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import exilenceTheme from './assets/themes/exilence-theme';
-import AlertMessage from './components/alert-message/AlertMessage';
 import HeaderContainer from './components/header/HeaderContainer';
+import Notifier from './components/notifier/Notifier';
 import SideNavContainer from './components/sidenav/SideNavContainer';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import GlobalStyles from './core/global-styles/GlobalStyles';
@@ -24,6 +24,7 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
+import { SnackbarProvider } from 'notistack';
 
 enableLogging();
 configureI18n();
@@ -46,39 +47,53 @@ const uiStateStore = new UiStateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
-const accountStore = new AccountStore(uiStateStore, notificationStore, leagueStore, priceStore);
+const accountStore = new AccountStore(
+  uiStateStore,
+  notificationStore,
+  leagueStore,
+  priceStore
+);
 const signalrStore = new SignalrStore();
 
-export const stores = { accountStore, uiStateStore, notificationStore, leagueStore, priceStore, signalrStore };
+export const stores = {
+  accountStore,
+  uiStateStore,
+  notificationStore,
+  leagueStore,
+  priceStore,
+  signalrStore
+};
 
 const app = (
   <>
     <ThemeProvider theme={theme}>
       <Provider {...stores}>
-        <Suspense fallback={null}>
-          <Router>
-            <CssBaseline />
-            <GlobalStyles />
-            <HeaderContainer />
-            <SideNavContainer>
-              <ToolbarContainer />
-              <Route path="/net-worth" component={NetWorth} />
-              <Route path="/login" component={Login} />
-              <Route
-                exact
-                path="/"
-                render={() =>
-                  accountStore.getSelectedAccount.name !== '' ? (
-                    <Redirect to="/net-worth" />
-                  ) : (
-                    <Redirect to="/login" />
-                  )
-                }
-              />
-            </SideNavContainer>
-            <AlertMessage />
-          </Router>
-        </Suspense>
+        <SnackbarProvider>
+          <Suspense fallback={null}>
+            <Router>
+              <CssBaseline />
+              <GlobalStyles />
+              <HeaderContainer />
+              <SideNavContainer>
+                <ToolbarContainer />
+                <Route path="/net-worth" component={NetWorth} />
+                <Route path="/login" component={Login} />
+                <Route
+                  exact
+                  path="/"
+                  render={() =>
+                    accountStore.getSelectedAccount.name !== '' ? (
+                      <Redirect to="/net-worth" />
+                    ) : (
+                      <Redirect to="/login" />
+                    )
+                  }
+                />
+              </SideNavContainer>
+              <Notifier />
+            </Router>
+          </Suspense>
+        </SnackbarProvider>
       </Provider>
     </ThemeProvider>
   </>

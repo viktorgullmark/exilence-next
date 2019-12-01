@@ -10,6 +10,7 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
+import { AxiosError } from 'axios';
 
 export class AccountStore {
   constructor(
@@ -101,7 +102,7 @@ export class AccountStore {
             ? this.uiStateStore.setSessIdCookie(account.sessionId)
             : of(this.initSessionSuccess());
         }),
-        catchError((e: Error) => {
+        catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
         })
       )
@@ -115,7 +116,7 @@ export class AccountStore {
   }
 
   @action
-  initSessionFail(error: Error | string) {
+  initSessionFail(error: AxiosError | string) {
     this.notificationStore.createNotification('init_session', 'error');
     this.uiStateStore.setSubmitting(false);
   }
@@ -138,7 +139,7 @@ export class AccountStore {
           map(() => {
             this.validateSessionSuccess();
           }),
-          catchError((e: Error) => of(this.validateSessionFail(e)))
+          catchError((e: AxiosError) => of(this.validateSessionFail(e)))
         )
     );
   }
@@ -154,7 +155,7 @@ export class AccountStore {
   }
 
   @action
-  validateSessionFail(error: Error | string) {
+  validateSessionFail(error: AxiosError | string) {
     this.notificationStore.createNotification(
       'validate_session',
       'error'

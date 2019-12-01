@@ -14,6 +14,7 @@ import { pricingService } from '../../services/pricing.service';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
+import { AxiosError } from 'axios';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -164,7 +165,7 @@ export class Profile {
           mergeMap(stashTabsWithItems =>
             of(this.getItemsSuccess(stashTabsWithItems))
           ),
-          catchError((e: Error) => of(this.getItemsFail(e)))
+          catchError((e: AxiosError) => of(this.getItemsFail(e)))
         )
     );
   }
@@ -177,7 +178,7 @@ export class Profile {
     this.priceItemsForStashTabs(stashTabsWithItems);
   }
 
-  @action getItemsFail(e: Error) {
+  @action getItemsFail(e: AxiosError | Error) {
     stores.notificationStore.createNotification(
       'get_items',
       'error',
@@ -232,7 +233,7 @@ export class Profile {
   }
 
   @action
-  priceItemsForStashTabsFail(e?: Error) {
+  priceItemsForStashTabsFail(e?: AxiosError | Error) {
     stores.notificationStore.createNotification(
       'price_items_for_stash_tabs',
       'error',
