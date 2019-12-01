@@ -24,6 +24,7 @@ import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import { PriceStore } from './store/priceStore';
 import { LeagueStore } from './store/leagueStore';
 import { SignalrStore } from './store/signalrStore';
+import Settings from './routes/settings/Settings';
 
 enableLogging();
 configureI18n();
@@ -64,6 +65,7 @@ const app = (
               <ToolbarContainer />
               <Route path="/net-worth" component={NetWorth} />
               <Route path="/login" component={Login} />
+              <Route path="/settings" component={Settings} />
               <Route
                 exact
                 path="/"
