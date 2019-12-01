@@ -96,7 +96,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           )}
           MenuProps={MenuProps}
         >
-          {stashTabs.map((stashTab: IStashTab) => (
+          {stashTabs.length != 0 ? stashTabs.map((stashTab: IStashTab) => (
             <MenuItem
               key={stashTab.id}
               value={stashTab.id}
@@ -104,7 +104,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             >
               {stashTab.n}
             </MenuItem>
-          ))}
+          )) : <h2>{t('label.stash_tab_dropdown_placeholder')}</h2>}
         </Select>
       </FormControl>
     </>

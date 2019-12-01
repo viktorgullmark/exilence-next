@@ -49,7 +49,7 @@ interface ItemTableProps {
 
 const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: ItemTableProps) => {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['tables']);
   const theme = useTheme();
 
   const columns: IColumn[] = [
@@ -83,6 +83,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: I
 
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
+
   const handleChangePage = (event: unknown, newPage: number) => {
     changePage(newPage);
   };
@@ -90,9 +91,9 @@ const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: I
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    handleChangePage(event, 1);
     setRowsPerPage(+event.target.value);
   };
-
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
@@ -111,13 +112,13 @@ const ItemTable: React.FC<ItemTableProps> = ({ items, pageIndex, changePage }: I
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(pageIndex * rowsPerPage, pageIndex * rowsPerPage + rowsPerPage)
-              .map(row => {
-                return (
-                  <ItemTableRow key={uuid.v4()} columns={columns} row={row} />
-                );
-              })}
+            {rows.length !== 0 ? rows
+    .slice(pageIndex * rowsPerPage, pageIndex * rowsPerPage + rowsPerPage)
+    .map(row => {
+      return (
+        <ItemTableRow key={uuid.v4()} columns={columns} row={row} />
+      );
+    }) : <h2 style={{textAlign: 'center'}}>{t('label.stash_tab_placeholder')}</h2>}
           </TableBody>
         </Table>
       </div>

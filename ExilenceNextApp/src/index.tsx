@@ -25,6 +25,7 @@ import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
 import { SnackbarProvider } from 'notistack';
+import Settings from './routes/settings/Settings';
 
 enableLogging();
 configureI18n();
@@ -78,6 +79,7 @@ const app = (
                 <ToolbarContainer />
                 <Route path="/net-worth" component={NetWorth} />
                 <Route path="/login" component={Login} />
+                <Route path="/settings" component={Settings} />
                 <Route
                   exact
                   path="/"
