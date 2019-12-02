@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -45,30 +46,9 @@ namespace API.Controllers
                 account = await _accountService.AddAccount(accountModel);
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, account.Name),
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+            var token = AuthHelper.GenerateToken(_secret, account);
 
-            if (account.Role == Role.Admin)
-            {
-                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
-            }
-            else if (account.Role == Role.Premium)
-            {
-                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "Premium"));
-            }
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var serializedToken = tokenHandler.WriteToken(token);
-            return Ok(serializedToken);
+            return Ok(token);
         }
     }
 }
