@@ -16,6 +16,7 @@ namespace Shared.Entities
         public int Index { get; set; }
         public string Color { get; set; }
         public virtual ICollection<PricedItem> PricedItems { get; set; }
+        public virtual Snapshot Snapshot { get; set; }
 
     }
 }

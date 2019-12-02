@@ -1,9 +1,8 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { NotificationType } from '../enums/notification-type.enum';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
@@ -11,6 +10,7 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
+import { AxiosError } from 'axios';
 
 export class AccountStore {
   constructor(
@@ -102,7 +102,7 @@ export class AccountStore {
             ? this.uiStateStore.setSessIdCookie(account.sessionId)
             : of(this.initSessionSuccess());
         }),
-        catchError((e: Error) => {
+        catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
         })
       )
@@ -111,19 +111,13 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.notificationStore.createNotification(
-      'init_session',
-      NotificationType.Success
-    );
+    this.notificationStore.createNotification('init_session', 'success');
     this.validateSession();
   }
 
   @action
-  initSessionFail(error: Error | string) {
-    this.notificationStore.createNotification(
-      'init_session',
-      NotificationType.Error
-    );
+  initSessionFail(error: AxiosError | string) {
+    this.notificationStore.createNotification('init_session', 'error');
     this.uiStateStore.setSubmitting(false);
   }
 
@@ -145,7 +139,7 @@ export class AccountStore {
           map(() => {
             this.validateSessionSuccess();
           }),
-          catchError((e: Error) => of(this.validateSessionFail(e)))
+          catchError((e: AxiosError) => of(this.validateSessionFail(e)))
         )
     );
   }
@@ -154,17 +148,17 @@ export class AccountStore {
   validateSessionSuccess() {
     this.notificationStore.createNotification(
       'validate_session',
-      NotificationType.Success
+      'success'
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
   }
 
   @action
-  validateSessionFail(error: Error | string) {
+  validateSessionFail(error: AxiosError | string) {
     this.notificationStore.createNotification(
       'validate_session',
-      NotificationType.Error
+      'error'
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);

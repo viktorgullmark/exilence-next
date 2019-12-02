@@ -45,7 +45,7 @@ namespace API
 
             //Services
             services.AddScoped<ISnapshotService, SnapshotService>();
-            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();

@@ -11,8 +11,8 @@ namespace Shared.Interfaces
     public interface ISnapshotRepository
     {
         Task<bool> SnapshotExists(string clientId);
-        IQueryable<Snapshot> GetSnapshots(Expression<Func<Group, bool>> predicate);
-        IQueryable<Stashtab> GetStashtabs(Expression<Func<Group, bool>> predicate);
+        IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate);
+        IQueryable<Stashtab> GetStashtabs(Expression<Func<Stashtab, bool>> predicate);
         Task SaveChangesAsync();
 
 

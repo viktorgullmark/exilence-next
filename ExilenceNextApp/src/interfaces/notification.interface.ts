@@ -1,5 +1,6 @@
-import { NotificationType } from '../enums/notification-type.enum';
 import { Moment } from 'moment';
+
+export type NotificationType = 'success' | 'info' | 'error' | 'warning';
 
 export interface INotification {
   title: string;
@@ -7,4 +8,5 @@ export interface INotification {
   description?: string;
   read?: boolean;
   type: NotificationType;
+  displayAlert?: boolean;
 }

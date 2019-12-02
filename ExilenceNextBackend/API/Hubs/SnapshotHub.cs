@@ -20,43 +20,49 @@ namespace API.Hubs
          * 
          */
 
-        public async Task AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
-            var exists = await _snapshotRepository.SnapshotExists(snapshotModel.ClientId);
+            var snapshotModel = await _snapshotService.GetSnapshot(AccountName, snapshotClientId);
+            return snapshotModel;
+        }
 
-            if (exists)
-                throw new Exception("Snapshot already exists");
-
-            snapshotModel = await _snapshotService.AddSnapshot(profileClientId, snapshotModel);
-
+        public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        {
+            snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
             await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} to database.");
-            
+            return snapshotModel;
+        }
+
+        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        {
+            snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
+            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} to database.");
+            return snapshotModel;
         }
 
         public async Task AddStashtabs(string stashtabClientId, IAsyncEnumerable<StashtabModel> stashtabModels)
         {
             await foreach (var stashtabModel in stashtabModels)
             {
-                await _snapshotService.AddStashtab(stashtabClientId, stashtabModel);
+                await _snapshotService.AddStashtab(AccountName, stashtabClientId, stashtabModel);
             }
         }
 
-        public async IAsyncEnumerable<int> RetriveSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            //Can be something else then ints
-            var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
+            var snapshots = _snapshotService.GetStashtabs(AccountName, snapshotClientId);
             
-            foreach (var snapshot in listOfSnapshots)
+            foreach (var snapshot in snapshots)
             {
                 // Check the cancellation token regularly so that the server will stop
                 // producing items if the client disconnects.
                 cancellationToken.ThrowIfCancellationRequested();
 
-                yield return snapshot;
+                yield return _mapper.Map<SnapshotModel>(snapshot);
 
                 // Use the cancellationToken in other APIs that accept cancellation
                 // tokens so the cancellation can flow down to them.
-                await Task.Delay(delay, cancellationToken);
+                await Task.Delay(100, cancellationToken);
             }
         }
     }
