@@ -7,7 +7,7 @@ import { IStashTab, IStash } from '../../interfaces/stash.interface';
 import { fromStream } from 'mobx-utils';
 import { externalService } from '../../services/external.service';
 import { map, catchError } from 'rxjs/operators';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import { stores } from './../../index';
 import { of } from 'rxjs';
 import { NotificationType } from '../../enums/notification-type.enum';
@@ -36,24 +36,22 @@ export class AccountLeague {
 
   @action
   getStashTabs() {
-    fromStream(
-      externalService
-        .getStashTabs(
-          stores.accountStore.getSelectedAccount.name,
-          this.leagueId
-        )
-        .pipe(
-          map((response: AxiosResponse<IStash>) => {
-            runInAction(() => {
-              if (response.data.tabs.length > 0) {
-                this.stashtabs = response.data.tabs;
-              }
-              this.getStashTabsSuccess();
-            });
-          }),
-          catchError((e: Error) => of(this.getStashTabsFail(e)))
-        ),   
-    );
+    return externalService
+      .getStashTabs(stores.accountStore.getSelectedAccount.name, this.leagueId)
+      .pipe(
+        map((response: AxiosResponse<IStash>) => {
+          runInAction(() => {
+            if (response.data.tabs.length > 0) {
+              this.stashtabs = response.data.tabs;
+            }
+            this.getStashTabsSuccess();
+          });
+        }),
+        catchError((e: AxiosError) => {
+          of(this.getStashTabsFail(e));
+          throw e;
+        })
+      );
   }
 
   @action getStashTabsSuccess() {
@@ -63,7 +61,7 @@ export class AccountLeague {
     );
   }
 
-  @action getStashTabsFail(e: Error) {
+  @action getStashTabsFail(e: AxiosError) {
     stores.notificationStore.createNotification(
       'get_stash_tabs',
       NotificationType.Error

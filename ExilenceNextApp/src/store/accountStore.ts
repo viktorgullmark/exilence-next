@@ -1,8 +1,9 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { AxiosError } from 'axios';
+import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { NotificationType } from '../enums/notification-type.enum';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
@@ -93,16 +94,18 @@ export class AccountStore {
           }
 
           this.leagueStore.updateLeagues(retrievedLeagues);
-          this.priceStore.getPricesForLeagues();
           this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
           this.getSelectedAccount.checkDefaultProfile();
+
+          // todo: should return observable
+          this.priceStore.getPricesForLeagues();
         }),
         switchMap(() => {
           return newAccount
             ? this.uiStateStore.setSessIdCookie(account.sessionId)
             : of(this.initSessionSuccess());
         }),
-        catchError((e: Error) => {
+        catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
         })
       )
@@ -119,7 +122,7 @@ export class AccountStore {
   }
 
   @action
-  initSessionFail(error: Error | string) {
+  initSessionFail(e: AxiosError | Error | string) {
     this.notificationStore.createNotification(
       'init_session',
       NotificationType.Error
@@ -133,20 +136,17 @@ export class AccountStore {
     const acc = this.getSelectedAccount;
 
     fromStream(
-      of(acc.accountLeagues)
-        .pipe(
-          map(leagues => {
-            leagues.map(league => {
-              league.getStashTabs();
-            });
+      forkJoin(
+        of(acc.accountLeagues).pipe(
+          concatMap(leagues => leagues),
+          concatMap(league => {
+            return league.getStashTabs();
           })
         )
-        .pipe(
-          map(() => {
-            this.validateSessionSuccess();
-          }),
-          catchError((e: Error) => of(this.validateSessionFail(e)))
-        )
+      ).pipe(
+        switchMap(() => of(this.validateSessionSuccess())),
+        catchError((e: AxiosError) => of(this.validateSessionFail(e)))
+      )
     );
   }
 
@@ -161,7 +161,7 @@ export class AccountStore {
   }
 
   @action
-  validateSessionFail(error: Error | string) {
+  validateSessionFail(e: AxiosError | string) {
     this.notificationStore.createNotification(
       'validate_session',
       NotificationType.Error
