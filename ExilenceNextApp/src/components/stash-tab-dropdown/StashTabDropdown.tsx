@@ -60,7 +60,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 }: StashTabDropdownProps) => {
 
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['tables']);
   const classes = useStyles();
 
   const getStashTabName = (id: string) => {
