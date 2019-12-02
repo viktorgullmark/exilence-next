@@ -3,7 +3,7 @@ Exilence Next
 ===
 Complete rewrite of Exilence, with performance and user experience in focus
 
-![Preview image](https://i.imgur.com/cdTLGQf.png)
+![Preview image](https://i.imgur.com/OcejiMz.png)
 
 ## Contents
 
