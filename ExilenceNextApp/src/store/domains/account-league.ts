@@ -1,7 +1,6 @@
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ICharacter } from '../../interfaces/character.interface';
@@ -34,24 +33,22 @@ export class AccountLeague {
 
   @action
   getStashTabs() {
-    fromStream(
-      externalService
-        .getStashTabs(
-          stores.accountStore.getSelectedAccount.name,
-          this.leagueId
-        )
-        .pipe(
-          map((response: AxiosResponse<IStash>) => {
-            runInAction(() => {
-              if (response.data.tabs.length > 0) {
-                this.stashtabs = response.data.tabs;
-              }
-              this.getStashTabsSuccess();
-            });
-          }),
-          catchError((e: AxiosError) => of(this.getStashTabsFail(e)))
-        ),   
-    );
+    return externalService
+      .getStashTabs(stores.accountStore.getSelectedAccount.name, this.leagueId)
+      .pipe(
+        map((response: AxiosResponse<IStash>) => {
+          runInAction(() => {
+            if (response.data.tabs.length > 0) {
+              this.stashtabs = response.data.tabs;
+            }
+            this.getStashTabsSuccess();
+          });
+        }),
+        catchError((e: AxiosError) => {
+          of(this.getStashTabsFail(e));
+          throw e;
+        })
+      );
   }
 
   @action getStashTabsSuccess() {
