@@ -3,6 +3,8 @@ Exilence Next
 ===
 Complete rewrite of Exilence, with performance and user experience in focus
 
+![Preview image](https://i.imgur.com/cdTLGQf.png)
+
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exilence-next/blob/master/CHANGELOG.md)
