@@ -33,6 +33,7 @@
     "graphs": "Graphs",
     "total_value": "Net worth",
     "total_items": "Items",
-    "total_snapshots": "Snapshots"
+    "total_snapshots": "Snapshots",
+    "session_id_link": "How to find your session id"
   }
 }
