@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { action, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, of } from 'rxjs';
@@ -11,7 +12,6 @@ import { PriceSource } from './domains/price-source';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
-import { AxiosError } from 'axios';
 
 
 export class PriceStore {
@@ -129,7 +129,7 @@ export class PriceStore {
   }
 
   @action
-  getPricesforLeaguesFail(error: AxiosError | string) {
+  getPricesforLeaguesFail(e: AxiosError | string) {
     this.isUpdatingPrices = false;
     this.notificationStore.createNotification(
       'get_prices_for_leagues',

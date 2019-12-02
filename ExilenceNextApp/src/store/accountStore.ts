@@ -1,8 +1,9 @@
+import { AxiosError } from 'axios';
 import { action, computed, observable, reaction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
 import { Account } from './domains/account';
@@ -10,7 +11,6 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
-import { AxiosError } from 'axios';
 
 export class AccountStore {
   constructor(
@@ -93,9 +93,11 @@ export class AccountStore {
           }
 
           this.leagueStore.updateLeagues(retrievedLeagues);
-          this.priceStore.getPricesForLeagues();
           this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
           this.getSelectedAccount.checkDefaultProfile();
+
+          // todo: should return observable
+          this.priceStore.getPricesForLeagues();
         }),
         switchMap(() => {
           return newAccount
@@ -116,7 +118,7 @@ export class AccountStore {
   }
 
   @action
-  initSessionFail(error: AxiosError | string) {
+  initSessionFail(e: AxiosError | string) {
     this.notificationStore.createNotification('init_session', 'error');
     this.uiStateStore.setSubmitting(false);
   }
@@ -127,20 +129,17 @@ export class AccountStore {
     const acc = this.getSelectedAccount;
 
     fromStream(
-      of(acc.accountLeagues)
-        .pipe(
-          map(leagues => {
-            leagues.map(league => {
-              league.getStashTabs();
-            });
+      forkJoin(
+        of(acc.accountLeagues).pipe(
+          concatMap(leagues => leagues),
+          concatMap(league => {
+            return league.getStashTabs();
           })
         )
-        .pipe(
-          map(() => {
-            this.validateSessionSuccess();
-          }),
-          catchError((e: AxiosError) => of(this.validateSessionFail(e)))
-        )
+      ).pipe(
+        switchMap(() => of(this.validateSessionSuccess())),
+        catchError((e: AxiosError) => of(this.validateSessionFail(e)))
+      )
     );
   }
 
