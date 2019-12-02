@@ -43,6 +43,7 @@ namespace API.Services
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
             _accountRepository.RemoveAccount(account);
+            await _accountRepository.SaveChangesAsync();
             return _mapper.Map<AccountModel>(account);
         }
 
