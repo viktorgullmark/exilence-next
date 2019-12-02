@@ -19,7 +19,7 @@ const installExtensions = async () => {
 let mainWindow;
 
 require('update-electron-app')({
-  repo: 'kitze/react-electron-example',
+  repo: 'viktorgullmark/exilence-next',
   updateInterval: '1 hour'
 });
 
