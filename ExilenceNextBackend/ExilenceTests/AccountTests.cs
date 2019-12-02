@@ -45,6 +45,7 @@ namespace ExilenceTests
                 cfg.AddProfile(new LeagueProfileMapper());
                 cfg.AddProfile(new PricedItemProfileMapper());
                 cfg.AddProfile(new SnapshotProfileMapper());
+                cfg.AddProfile(new SnapshotProfileProfileMapper());
                 cfg.AddProfile(new StashtabProfileMapper());
             });
             var mapper = mockMapper.CreateMapper();
@@ -89,7 +90,7 @@ namespace ExilenceTests
 
             createdAccountModel = await _accountService.AddAccount(createdAccountModel);
             var retrivedAccountModel = await _accountService.GetAccount(createdAccountModel.Name);
-            Assert.Equal(createdAccountModel.Id, retrivedAccountModel.Id);
+            Assert.Equal(createdAccountModel.ClientId, retrivedAccountModel.ClientId);
             Assert.Equal(Role.Admin, createdAccountModel.Role);
         }
 
@@ -111,6 +112,41 @@ namespace ExilenceTests
             var retrivedAccountModel = await _accountService.GetAccount(createdAccountModel.Name);
 
             Assert.Null(retrivedAccountModel);
+        }
+
+        [Fact]
+        public async Task CreateReciveAndDeleteProfile()
+        {
+            var account = new AccountModel()
+            {
+                ClientId = TestHelper.GenerateUUID(),
+                Name = TestHelper.GetRandomString(),
+                Role = Role.Admin,
+                Characters = new List<CharacterModel>(),
+                Verified = true
+            };
+            account.Token = AuthHelper.GenerateToken(_secret, account);
+
+            account = await _accountService.AddAccount(account);
+
+            var newProfile = new SnapshotProfileModel()
+            {
+                ActiveLeagueId = TestHelper.GenerateUUID(),
+                ActivePriceLeagueId = TestHelper.GenerateUUID(),
+                ActiveStashTabIds = new List<string>() { },
+                ClientId = TestHelper.GenerateUUID(),
+                Name = TestHelper.GetRandomString(),
+                Snapshots = new List<SnapshotModel>() { }
+            };
+
+            newProfile = await _accountService.AddProfile(account.Name, newProfile);            
+            var addedProfile = await _accountService.GetProfile(account.Name, newProfile.ClientId);
+            await _accountService.RemoveProfile(account.Name, newProfile.ClientId);
+            var removedProfile = await _accountService.GetProfile(account.Name, newProfile.ClientId);
+
+            Assert.NotNull(newProfile.Id);
+            Assert.Equal(newProfile.ClientId, addedProfile.ClientId);
+            Assert.Null(removedProfile);
         }
 
     }
