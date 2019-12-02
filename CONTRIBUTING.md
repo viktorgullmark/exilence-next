@@ -3,10 +3,11 @@
 We appreciate any help in the project we can get. Before doing so, however, we have some guidelines we'd like for you to follow:
 
  - [Submission Guidelines](#submit)
+ - [Coding Guidelines](#coding)
 
 ## Submission Guidelines
 
-efore you submit your Pull Request (PR) consider the following guidelines:
+Before you submit your Pull Request (PR) consider the following guidelines:
 
 1. Search [GitHub](https://github.com/viktorgullmark/exilence-next/pulls) for an open or closed PR
   that relates to your submission before creating a new one.
@@ -33,4 +34,13 @@ efore you submit your Pull Request (PR) consider the following guidelines:
 
 1. In GitHub, send a pull request to `exilence-next:master`.
 
+## Coding Guidelines
 
+1. In general, we follow [AirBnbs styleguides](https://github.com/airbnb/javascript/tree/master/react) whenever applicable. 
+
+2. Always use Material UI components whenever possible.
+
+3. Type everything (no exceptions). We will not accept pull requests with an object declared as `any`.
+
+4. Translate everything. We use react-i18next for translating, keys should be added in suiting namespace in 
+[/public/i18n](https://github.com/viktorgullmark/exilence-next/tree/master/ExilenceNextApp/public/i18n/en). If a suiting namespace does not exist, feel free to create one (needs to be included in the [config](https://github.com/viktorgullmark/exilence-next/blob/master/ExilenceNextApp/src/i18n/index.ts)).
