@@ -16,10 +16,12 @@ namespace ExilenceTests
         public SnapshotService SnapshotService { get; private set; }
         public AccountService AccountService { get; private set; }
         public string Secret { get; private set; }
+        public string InstanceName { get; private set; }
 
         public DatabaseFixture()
         {
             Secret = "KeGPyghP5CSoSwPpzkBvKG2k";
+            InstanceName = "Hawkeye";
 
             DbContextOptions<ExilenceContext> options;
             var builder = new DbContextOptionsBuilder<ExilenceContext>();
