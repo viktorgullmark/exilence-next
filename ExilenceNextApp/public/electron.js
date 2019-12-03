@@ -7,9 +7,11 @@ const url = require('url');
 const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 
-sentry.init({
-  dsn: 'https://e69c936836334a2c9e4b553f20d1d51c@sentry.io/1843156'
-});
+if (!isDev) {
+  sentry.init({
+    dsn: 'https://e69c936836334a2c9e4b553f20d1d51c@sentry.io/1843156'
+  });
+}
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -29,7 +31,6 @@ require('update-electron-app')({
 });
 
 function createWindow() {
-
   const size = electron.screen.getPrimaryDisplay().workAreaSize;
 
   mainWindow = new BrowserWindow({
