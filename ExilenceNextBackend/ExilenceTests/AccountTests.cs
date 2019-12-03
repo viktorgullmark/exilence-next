@@ -120,6 +120,5 @@ namespace ExilenceTests
             Assert.Equal(newProfile.ClientId, addedProfile.ClientId);
             Assert.Null(removedProfile);
         }
-
     }
 }

@@ -20,6 +20,7 @@ namespace API.Hubs
 
         readonly ISnapshotService _snapshotService;
         readonly IAccountService _accountService;
+        readonly IGroupService _groupService;
 
         readonly IGroupRepository _groupRepository;
 
@@ -33,6 +34,7 @@ namespace API.Hubs
             IMapper mapper, 
             IConfiguration configuration, 
             IGroupRepository groupRepository, 
+            IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
             )
@@ -44,6 +46,7 @@ namespace API.Hubs
 
             _snapshotService = snapshotService;
             _accountService = accountService;
+            _groupService = groupService;
         }
 
         [Authorize]
@@ -51,7 +54,7 @@ namespace API.Hubs
         {
             await Log($"ConnectionId: {ConnectionId} connected");
             var connection = new Connection(ConnectionId, _instanceName);
-            await _groupRepository.AddConnection(connection);
+            _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
             
             await base.OnConnectedAsync();

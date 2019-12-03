@@ -1,5 +1,7 @@
 ﻿using API.Interfaces;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Shared.Entities;
 using Shared.Interfaces;
 using Shared.Models;
 using System;
@@ -19,21 +21,63 @@ namespace API.Services
             _groupRepository = groupRepository;
             _mapper = mapper;
         }
+
+        public async Task<ConnectionModel> AddConnection(ConnectionModel connectionModel)
+        {
+            var connection = _mapper.Map<Connection>(connectionModel);
+            connection = _groupRepository.AddConnection(connection);
+            await _groupRepository.SaveChangesAsync();
+            return _mapper.Map<ConnectionModel>(connection);
+        }
+
+        public async Task<ConnectionModel> GetConnection(string connectionId)
+        {
+            var connection = await _groupRepository.GetConnection(connectionId);
+            return _mapper.Map<ConnectionModel>(connection);
+        }
+        public async Task<ConnectionModel> RemoveConnection(string connectionId)
+        {
+            var connection = await _groupRepository.RemoveConnection(connectionId);
+            await _groupRepository.SaveChangesAsync();
+            return _mapper.Map<ConnectionModel>(connection);
+        }
+
         public async Task<GroupModel> GetGroup(string groupName)
         {
             var group = await _groupRepository.GetGroup(groupName);
-
             return _mapper.Map<GroupModel>(group);
         }
 
-        public Task<GroupModel> JoinGroup(string connectionId, string groupName)
+        public async Task<GroupModel> JoinGroup(ConnectionModel connectionModel, string groupName)
         {
-            throw new NotImplementedException();
+            var connection = _mapper.Map<Connection>(connectionModel);
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            if (group == null)
+            {
+                group = new Group()
+                {
+                    Name = groupName,
+                    ClientId = Guid.NewGuid().ToString(),
+                    Connections = new List<Connection>() { connection }
+                };
+                _groupRepository.AddGroup(group);
+            }
+            else
+            {
+                group.Connections.Add(connection);
+            }
+
+            await _groupRepository.SaveChangesAsync();
+            return _mapper.Map<GroupModel>(group);
         }
 
-        public Task<GroupModel> LeaveGroup(string connectionId, string groupName)
+        public async Task<GroupModel> LeaveGroup(ConnectionModel connectionModel, string groupName)
         {
-            throw new NotImplementedException();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            var connection = _mapper.Map<Connection>(connectionModel);
+            group.Connections.Remove(connection);
+            await _groupRepository.SaveChangesAsync();
+            return _mapper.Map<GroupModel>(group);
         }
     }
 }
