@@ -1,13 +1,30 @@
 {
   "success": {
     "title": {
-      "init_session": "Init session success"
+      "init_session": "Initialize session succeeded",
+      "validate_session": "Validate session succeeded",
+      "get_stash_tabs": "Received stash tabs for {{league}}",
+      "get_items": "Received items",
+      "price_stash_items": "Items were successfully priced",
+      "get_prices_for_leagues": "Received prices for leagues",
+      "snapshot": "Snapshot created successfully"
     },
     "description": {
-      "init_session": "Session was successfully initiated"
+      "init_session": "Session was successfully initiated",
+      "validate_session": "Session was successfully validated",
+      "get_stash_tabs": "Stash tabs successfully received for league"
     }
   },
-  "error": {},
+  "error": {
+    "title": {
+      "init_session": "Initialize session failed",
+      "validate_session": "Validate session failed"
+    },
+    "description": {
+      "init_session": "Session could not be initiated",
+      "validate_session": "Session could not be validated"
+    }
+  },
   "warning": {},
   "info": {}
 }
