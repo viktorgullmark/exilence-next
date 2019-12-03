@@ -122,8 +122,8 @@ export class Profile {
     this.setIsSnapshotting(false);
   }
 
-  @action snapshotFail() {
-    stores.notificationStore.createNotification('snapshot', 'error');
+  @action snapshotFail(e?: AxiosError | Error) {
+    stores.notificationStore.createNotification('snapshot', 'error', true, e);
     this.setIsSnapshotting(false);
   }
 
@@ -175,12 +175,7 @@ export class Profile {
   }
 
   @action getItemsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
-      'get_items',
-      'error',
-      true,
-      e && e.message
-    );
+    stores.notificationStore.createNotification('get_items', 'error', true, e);
     this.snapshotFail();
   }
 
@@ -228,12 +223,12 @@ export class Profile {
   }
 
   @action
-  priceItemsForStashTabsFail(e?: AxiosError | Error) {
+  priceItemsForStashTabsFail(e: AxiosError | Error) {
     stores.notificationStore.createNotification(
       'price_stash_items',
       'error',
       true,
-      e && e.message
+      e
     );
     this.snapshotFail();
   }

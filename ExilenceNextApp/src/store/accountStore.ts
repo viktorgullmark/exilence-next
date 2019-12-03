@@ -118,8 +118,8 @@ export class AccountStore {
   }
 
   @action
-  initSessionFail(e: AxiosError | string) {
-    this.notificationStore.createNotification('init_session', 'error');
+  initSessionFail(e: AxiosError | Error) {
+    this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setSubmitting(false);
   }
 
@@ -145,19 +145,18 @@ export class AccountStore {
 
   @action
   validateSessionSuccess() {
-    this.notificationStore.createNotification(
-      'validate_session',
-      'success'
-    );
+    this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
   }
 
   @action
-  validateSessionFail(error: AxiosError | string) {
+  validateSessionFail(e: AxiosError | Error) {
     this.notificationStore.createNotification(
       'validate_session',
-      'error'
+      'error',
+      true,
+      e
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);

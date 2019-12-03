@@ -9,4 +9,5 @@ export interface INotification {
   read?: boolean;
   type: NotificationType;
   displayAlert?: boolean;
+  stackTrace?: string;
 }

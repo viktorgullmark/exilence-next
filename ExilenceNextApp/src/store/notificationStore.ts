@@ -1,13 +1,14 @@
-import { observable, action, computed } from 'mobx';
+import { AxiosError } from 'axios';
+import { action, computed, observable } from 'mobx';
+import { NotificationType } from '../interfaces/notification.interface';
 import { Notification } from './domains/notification';
 import { UiStateStore } from './uiStateStore';
-import { NotificationType } from '../interfaces/notification.interface';
 
 export class NotificationStore {
   uiStateStore: UiStateStore;
   @observable notifications: Notification[] = [];
   @observable displayed: string[] = [];
-  
+
   constructor(uiStateStore: UiStateStore) {
     this.uiStateStore = uiStateStore;
   }
@@ -28,12 +29,18 @@ export class NotificationStore {
     key: string,
     type: NotificationType,
     displayAlert?: boolean,
-    desc?: string
+    error?: AxiosError | Error
   ) {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
-    const description = `${prefix}.description.${desc ? desc : key}`;
-    const notification = new Notification({ title, description, type, displayAlert });
+    const description = `${prefix}.description.${key}`;
+    const notification = new Notification({
+      title,
+      description,
+      type,
+      displayAlert,
+      stackTrace: error ? error.message : undefined
+    });
 
     this.notifications.push(notification);
 
