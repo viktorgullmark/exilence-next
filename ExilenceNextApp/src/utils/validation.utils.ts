@@ -1,9 +1,9 @@
-import { Character } from './../store/domains/character';
+import { Character } from '../store/domains/character';
 
-class ValidationHelper {
+class ValidationUtils {
   public static noCharacters(chars: Character[]) {
     return chars.length === 0 ? 'error:no_characters_in_league' : '';
   }
 }
 
-export default ValidationHelper;
+export default ValidationUtils;

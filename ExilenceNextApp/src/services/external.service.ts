@@ -4,7 +4,7 @@ import axios from 'axios-observable';
 import { forkJoin, Observable, throwError } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-import { ItemHelper } from '../helpers/item.helper';
+import { ItemUtils } from '../utils/item.utils';
 import { ICharacter } from '../interfaces/character.interface';
 import { IItem } from '../interfaces/item.interface';
 import { ILeague } from '../interfaces/league.interface';
@@ -51,7 +51,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                 items: stash.data.items.map((item: IItem) => {
                     return {
                         id: item.id,
-                        name: ItemHelper.getItemName(item.typeLine, item.name),
+                        name: ItemUtils.getItemName(item.typeLine, item.name),
                         typeLine: item.typeLine,
                         frameType: item.frameType,
                         calculated: 0,
@@ -59,15 +59,15 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                         shaper: item.shaper,
                         icon: item.icon,
                         ilvl: item.ilvl,
-                        tier: item.properties !== null && item.properties !== undefined ? ItemHelper.getMapTier(item.properties) : 0,
+                        tier: item.properties !== null && item.properties !== undefined ? ItemUtils.getMapTier(item.properties) : 0,
                         corrupted: item.corrupted || false,
-                        links: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getLinks(item.sockets.map(t => t.group)) : 0,
+                        links: item.sockets !== undefined && item.sockets !== null ? ItemUtils.getLinks(item.sockets.map(t => t.group)) : 0,
                         sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
-                        quality: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
-                        level: item.properties !== null && item.properties !== undefined ? ItemHelper.getQuality(item.properties) : 0,
+                        quality: item.properties !== null && item.properties !== undefined ? ItemUtils.getQuality(item.properties) : 0,
+                        level: item.properties !== null && item.properties !== undefined ? ItemUtils.getQuality(item.properties) : 0,
                         stackSize: item.stackSize || 1,
                         totalStacksize: item.maxStackSize || 1,
-                        variant: item.sockets !== undefined && item.sockets !== null ? ItemHelper.getItemVariant(item.sockets, item.explicitMods, ItemHelper.getItemName(item.typeLine, item.name)) : ''
+                        variant: item.sockets !== undefined && item.sockets !== null ? ItemUtils.getItemVariant(item.sockets, item.explicitMods, ItemUtils.getItemName(item.typeLine, item.name)) : ''
                     } as IPricedItem;
                 })
             };

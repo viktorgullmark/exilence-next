@@ -1,4 +1,4 @@
 export interface ICurrency {
-    name: string;
-    short: string;
+  name: string;
+  short: string;
 }

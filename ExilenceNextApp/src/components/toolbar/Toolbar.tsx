@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useLocation } from 'react-router';
-import Dd from '../../helpers/dropdown.helper';
+import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';

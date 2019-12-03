@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState, ChangeEvent } from 'react';
-import Dd from '../../helpers/dropdown.helper';
+import Dd from '../../utils/dropdown.utils';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';

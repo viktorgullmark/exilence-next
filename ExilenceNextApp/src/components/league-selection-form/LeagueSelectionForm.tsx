@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
-import error from '../../helpers/validation.helper';
+import error from '../../utils/validation.utils';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 

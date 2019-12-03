@@ -1,5 +1,4 @@
-  export interface IPoeNinjaItemOverviewLineExplicitModifier {
-        text: string;
-        optional: boolean;
-    }
-    
+export interface IPoeNinjaItemOverviewLineExplicitModifier {
+  text: string;
+  optional: boolean;
+}

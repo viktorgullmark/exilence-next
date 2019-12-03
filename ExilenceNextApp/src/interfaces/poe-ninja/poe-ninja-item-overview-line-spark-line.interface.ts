@@ -1,4 +1,4 @@
 export interface IPoeNinjaItemOverviewLineSparkline {
-    data: number[];
-    totalChange: number;
+  data: number[];
+  totalChange: number;
 }
