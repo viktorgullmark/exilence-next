@@ -29,7 +29,8 @@ export class NotificationStore {
     key: string,
     type: NotificationType,
     displayAlert?: boolean,
-    error?: AxiosError | Error
+    error?: AxiosError | Error,
+    translateParam?: string
   ) {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
@@ -39,7 +40,8 @@ export class NotificationStore {
       description,
       type,
       displayAlert,
-      stackTrace: error ? error.message : undefined
+      stackTrace: error ? error.message : undefined,
+      translateParam
     });
 
     this.notifications.push(notification);
