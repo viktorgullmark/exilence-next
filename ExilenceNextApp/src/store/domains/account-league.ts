@@ -52,7 +52,14 @@ export class AccountLeague {
   }
 
   @action getStashTabsSuccess() {
-    stores.notificationStore.createNotification('get_stash_tabs', 'success');
+    // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
+    stores.notificationStore.createNotification(
+      'get_stash_tabs',
+      'success',
+      undefined,
+      undefined,
+      this.leagueId
+    );
   }
 
   @action getStashTabsFail(e: AxiosError | Error) {
@@ -60,7 +67,8 @@ export class AccountLeague {
       'get_stash_tabs',
       'error',
       true,
-      e
+      e,
+      this.leagueId
     );
   }
 }

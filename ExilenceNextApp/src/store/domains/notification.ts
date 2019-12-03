@@ -15,6 +15,7 @@ export class Notification implements INotification {
   type: NotificationType = 'info';
   displayAlert?: boolean;
   stackTrace?: string;
+  translateParam?: string;
 
   constructor(obj?: INotification) {
     Object.assign(this, obj);
