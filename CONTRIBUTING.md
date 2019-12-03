@@ -4,6 +4,7 @@ We appreciate any help in the project we can get. Before doing so, however, we h
 
  - [Submission Guidelines](#submit)
  - [Coding Guidelines](#coding)
+ - [Required extensions](#extensions)
 
 ## Submission Guidelines
 
