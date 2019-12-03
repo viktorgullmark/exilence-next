@@ -8,6 +8,8 @@
     "@material-ui/styles": "^4.5.2",
     "@microsoft/signalr": "^3.0.1",
     "@microsoft/signalr-protocol-msgpack": "^3.0.0",
+    "@sentry/browser": "^5.9.1",
+    "@sentry/electron": "^1.0.0",
     "axios": "^0.19.0",
     "axios-observable": "^1.1.2",
     "clsx": "^1.0.4",
@@ -40,7 +42,7 @@
     "uuid": "^3.3.3",
     "yup": "^0.27.0"
   },
-  "main": "public/electron.js",
+  "main": "public/electron.ts",
   "homepage": "./",
   "scripts": {
     "react-start": "react-scripts start",
