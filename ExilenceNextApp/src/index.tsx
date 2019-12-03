@@ -26,7 +26,9 @@ import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
 import { SnackbarProvider } from 'notistack';
 import Settings from './routes/settings/Settings';
+import initSentry from './config/sentry';
 
+initSentry();
 enableLogging();
 configureI18n();
 
