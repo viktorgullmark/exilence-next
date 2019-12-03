@@ -48,9 +48,9 @@ namespace API.Services
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> JoinGroup(ConnectionModel connectionModel, string groupName)
+        public async Task<GroupModel> JoinGroup(string connectionId, string groupName)
         {
-            var connection = _mapper.Map<Connection>(connectionModel);
+            var connection = await _groupRepository.GetConnection(connectionId);
             var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
             if (group == null)
             {
@@ -71,11 +71,17 @@ namespace API.Services
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> LeaveGroup(ConnectionModel connectionModel, string groupName)
+        public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
         {
             var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
-            var connection = _mapper.Map<Connection>(connectionModel);
+            var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
+
+            if (group.Connections.Count == 0)
+            {
+                await _groupRepository.RemoveGroup(group.Name);
+            }
+
             await _groupRepository.SaveChangesAsync();
             return _mapper.Map<GroupModel>(group);
         }
