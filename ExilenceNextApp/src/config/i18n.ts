@@ -1,7 +1,7 @@
 import { initReactI18next } from "react-i18next";
 import Backend from 'i18next-xhr-backend';
 import i18n from 'i18next'
-import AppConfig from './../config/app.config';
+import AppConfig from './app.config';
 
 function configureI18n() {
     i18n.use(Backend)

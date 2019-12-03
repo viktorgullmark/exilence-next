@@ -4,6 +4,7 @@ We appreciate any help in the project we can get. Before doing so, however, we h
 
  - [Submission Guidelines](#submit)
  - [Coding Guidelines](#coding)
+ - [Required extensions](#extensions)
 
 ## Submission Guidelines
 
@@ -44,3 +45,11 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 
 4. Translate everything. We use react-i18next for translating, keys should be added in suiting namespace in 
 [/public/i18n](https://github.com/viktorgullmark/exilence-next/tree/master/ExilenceNextApp/public/i18n/en). If a suiting namespace does not exist, feel free to create one (needs to be included in the [config](https://github.com/viktorgullmark/exilence-next/blob/master/ExilenceNextApp/src/i18n/index.ts)).
+
+## Required extensions
+
+For contributions to the client, you should have the following extensions installed in VS code:
+
+1. [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) 
+
+2. [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)

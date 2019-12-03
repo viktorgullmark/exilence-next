@@ -7,7 +7,7 @@ import uuid from 'uuid';
 import clsx from 'clsx';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import { rarityColors } from '../../../assets/themes/exilence-theme';
-import { ItemHelper } from '../../../helpers/item.helper';
+import { ItemUtils } from '../../../utils/item.utils';
 import ImageIcon from '@material-ui/icons/Image';
 import { CircularProgress } from '@material-ui/core';
 
@@ -50,7 +50,7 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
       {columns.map(column => {
         const value = row[column.id];
         const rarityColor =
-          rarityColors[ItemHelper.getRarity(row['frameType'])];
+          rarityColors[ItemUtils.getRarity(row['frameType'])];
         return (
           <TableCell
             className={classes.tableCell}

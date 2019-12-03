@@ -5,7 +5,7 @@ import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-c
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import axios, { AxiosResponse } from 'axios';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
-import { PriceHelper } from '../helpers/price.helper';
+import { PriceUtils } from '../utils/price.utils';
 
 const rateLimiter = new RateLimiter(1, 1);
 const apiUrl = 'https://poe.ninja/api/data';
@@ -73,7 +73,7 @@ function getItemPrices(league: string) {
       return getItemCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
           return response.data.lines.map(lines => {
-            return PriceHelper.getExternalPriceFromNinjaItem(
+            return PriceUtils.getExternalPriceFromNinjaItem(
               lines
             ) as IExternalPrice;
           });
@@ -92,7 +92,7 @@ function getCurrencyPrices(league: string) {
             const currencyDetail = response.data.currencyDetails.find(
               detail => detail.name === lines.currencyTypeName
             );
-            return PriceHelper.getExternalPriceFromNinjaCurrencyItem(
+            return PriceUtils.getExternalPriceFromNinjaCurrencyItem(
               lines,
               currencyDetail
             ) as IExternalPrice;

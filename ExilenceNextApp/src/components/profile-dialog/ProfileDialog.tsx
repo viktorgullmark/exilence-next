@@ -8,7 +8,7 @@ import { Formik, FormikActions } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import error from '../../helpers/validation.helper';
+import error from '../../utils/validation.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';

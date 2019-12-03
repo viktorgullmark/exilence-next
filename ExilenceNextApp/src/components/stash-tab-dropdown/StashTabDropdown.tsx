@@ -3,7 +3,7 @@ import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ColourHelper } from '../../helpers/colour.helper';
+import { ColourUtils } from '../../utils/colour.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 
 interface StashTabDropdownProps {
@@ -70,7 +70,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find(st => st.id === id);
-    return foundTab ? ColourHelper.rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
+    return foundTab ? ColourUtils.rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
   }
 
   return (

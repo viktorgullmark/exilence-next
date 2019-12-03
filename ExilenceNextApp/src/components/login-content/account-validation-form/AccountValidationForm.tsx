@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   sessionIdLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.light,
     textDecoration: 'none'
   }
 }));

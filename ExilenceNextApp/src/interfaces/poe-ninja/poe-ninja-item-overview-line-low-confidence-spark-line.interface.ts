@@ -1,4 +1,4 @@
 export interface IPoeNinjaItemOverviewLineLowConfidenceSparkline {
-    data: number[];
-    totalChange: number;
+  data: number[];
+  totalChange: number;
 }

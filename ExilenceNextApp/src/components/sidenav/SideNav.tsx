@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: drawerWidth,
     flexShrink: 0
   },
-  listItem: {
-    textTransform: 'capitalize'
-  },
   drawerPaper: {
     top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
     width: drawerWidth
@@ -103,19 +100,19 @@ const SideNav: React.FC<SideNavProps> = ({
               <ListItemIcon>
                 <AttachMoneyIcon />
               </ListItemIcon>
-              <ListItemText className={classes.listItem} primary={t('net-worth')} />
+              <ListItemText primary={t('title.net_worth')} />
             </ListItem>
             <ListItem button key="login" component={Link} to="/login">
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
-              <ListItemText className={classes.listItem}  primary={t('login')} />
+              <ListItemText primary={t('title.login')} />
             </ListItem>
             <ListItem button key="settings" component={Link} to="/settings">
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
-              <ListItemText className={classes.listItem}  primary={t('settings')} />
+              <ListItemText primary={t('title.settings')} />
             </ListItem>
           </List>
         </Drawer>

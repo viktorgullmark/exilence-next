@@ -1,4 +1,4 @@
 export interface IPoeNinjaCurrencyOverviewLineSparkLine {
-    data: any[];
-    totalChange: number;
+  data: any[];
+  totalChange: number;
 }

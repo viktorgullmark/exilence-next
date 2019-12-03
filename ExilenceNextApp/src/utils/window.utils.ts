@@ -1,6 +1,6 @@
 import { electronService } from '../services/electron.service';
 
-export class WindowHelper {
+export class WindowUtils {
     public static maximize() {
         electronService.remote.getCurrentWindow().maximize();
     }

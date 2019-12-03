@@ -1,4 +1,4 @@
-class DropdownHelper {
+class DropdownUtils {
   public static getDropdownSelection<T extends { id: string }>(
     items: T[],
     activeId?: string
@@ -24,4 +24,4 @@ class DropdownHelper {
   }
 }
 
-export default DropdownHelper;
+export default DropdownUtils;
