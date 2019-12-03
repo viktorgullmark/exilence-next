@@ -13,7 +13,6 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
 
-
 export class PriceStore {
   @observable priceSources: PriceSource[] = [
     new PriceSource({
@@ -129,12 +128,13 @@ export class PriceStore {
   }
 
   @action
-  getPricesforLeaguesFail(e: AxiosError | string) {
+  getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
     this.notificationStore.createNotification(
       'get_prices_for_leagues',
       'error',
-      true
+      true,
+      e
     );
   }
 }
