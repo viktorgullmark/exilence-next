@@ -1,6 +1,6 @@
-import { ICookie } from './../interfaces/cookie.interface';
+import { ICookie } from '../interfaces/cookie.interface';
 
-export class CookieHelper {
+export class CookieUtils {
   public static constructCookie(sessionId: string): ICookie {
     const cookie: ICookie = {
       url: 'https://www.pathofexile.com',

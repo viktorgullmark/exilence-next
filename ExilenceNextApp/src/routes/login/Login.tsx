@@ -4,20 +4,19 @@ import LoginContentContainer from '../../components/login-content/LoginContentCo
 import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
-    loginWrapper: {
-        display: "flex",
-        height: "100%"
-    }
+  loginWrapper: {
+    display: 'flex',
+    height: '100%'
+  }
 }));
 
 const Login: React.FC = () => {
-    const classes = useStyles();
-    return (
-        <div className={classes.loginWrapper}>
-            <LoginContentContainer />
-        </div>
-    );
-}
+  const classes = useStyles();
+  return (
+    <div className={classes.loginWrapper}>
+      <LoginContentContainer />
+    </div>
+  );
+};
 
 export default observer(Login);
-

@@ -1,15 +1,14 @@
+import { Rarity } from '../assets/themes/exilence-theme';
+import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IProperty } from '../interfaces/property.interface';
 import { ISocket } from '../interfaces/socket.interface';
-import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
-import { toJS } from 'mobx';
-import { Rarity } from '../assets/themes/exilence-theme';
 
 export interface IMergedItem extends IPricedItem {
   total: number;
 }
 
-export class ItemHelper {
+export class ItemUtils {
   public static mergeItemStacks(items: IPricedItem[]) {
     const mergedItems: IPricedItem[] = [];
 

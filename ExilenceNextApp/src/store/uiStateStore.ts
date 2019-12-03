@@ -1,7 +1,7 @@
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
-import { CookieHelper } from './../helpers/cookie.helper';
+import { CookieUtils } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 
@@ -14,7 +14,7 @@ export class UiStateStore {
 
   @action
   setSessIdCookie(sessionId: string) {
-    const cookie = CookieHelper.constructCookie(sessionId);
+    const cookie = CookieUtils.constructCookie(sessionId);
     return authService.setAuthCookie(cookie).pipe(
       map(() => {
         return runInAction(() => {

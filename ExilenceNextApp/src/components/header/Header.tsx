@@ -9,7 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import clsx from 'clsx';
 import React from 'react';
-import { WindowHelper } from './../../helpers/window.helper';
+import { WindowUtils } from '../../utils/window.utils';
 import { observer } from 'mobx-react';
 import { drawerWidth } from './../sidenav/SideNav';
 import { useLocation } from 'react-router';
@@ -92,13 +92,13 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
           <Grid item className={clsx(classes.noDrag)}>
             <MinimizeIcon
               className={classes.windowIcon}
-              onClick={() => WindowHelper.minimize()}
+              onClick={() => WindowUtils.minimize()}
             />
             {!props.maximized ? (
               <CheckBoxOutlineBlankIcon
                 className={classes.windowIcon}
                 onClick={() => {
-                  WindowHelper.maximize();
+                  WindowUtils.maximize();
                   props.setMaximized(true);
                 }}
               />
@@ -106,14 +106,14 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               <FilterNone
                 className={classes.windowIcon}
                 onClick={() => {
-                  WindowHelper.unmaximize();
+                  WindowUtils.unmaximize();
                   props.setMaximized(false);
                 }}
               />
             )}
             <CloseIcon
               className={classes.windowIcon}
-              onClick={() => WindowHelper.close()}
+              onClick={() => WindowUtils.close()}
             />
           </Grid>
         </Grid>

@@ -1,6 +1,6 @@
-export class ColourHelper {
+export class ColourUtils {
     public static rgbToHex(r: number, g: number, b: number) {
-        return '#' + ColourHelper.componentToHex(r) + ColourHelper.componentToHex(g) + ColourHelper.componentToHex(b);
+        return '#' + ColourUtils.componentToHex(r) + ColourUtils.componentToHex(g) + ColourUtils.componentToHex(b);
     }
 
     public static componentToHex(c: number) {

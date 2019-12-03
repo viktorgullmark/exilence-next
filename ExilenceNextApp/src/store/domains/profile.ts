@@ -4,7 +4,7 @@ import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import uuid from 'uuid';
-import { ItemHelper } from '../../helpers/item.helper';
+import { ItemUtils } from '../../utils/item.utils';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
@@ -54,7 +54,7 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemHelper.mergeItemStacks(
+    return ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
       )
@@ -156,7 +156,7 @@ export class Profile {
         .pipe(
           map(stashTabsWithItems => {
             return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.items = ItemHelper.mergeItemStacks(
+              stashTabWithItems.items = ItemUtils.mergeItemStacks(
                 stashTabWithItems.items
               );
               return stashTabWithItems;
