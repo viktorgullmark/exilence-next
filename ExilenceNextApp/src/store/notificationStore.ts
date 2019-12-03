@@ -28,12 +28,12 @@ export class NotificationStore {
     key: string,
     type: NotificationType,
     displayAlert?: boolean,
-    desc?: string
+    stackTrace?: string
   ) {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
-    const description = `${prefix}.description.${desc ? desc : key}`;
-    const notification = new Notification({ title, description, type, displayAlert });
+    const description = `${prefix}.description.${key}`;
+    const notification = new Notification({ title, description, type, displayAlert, stackTrace });
 
     this.notifications.push(notification);
 

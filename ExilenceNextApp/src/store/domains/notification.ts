@@ -8,12 +8,13 @@ import {
 
 export class Notification implements INotification {
   uuid: string = uuid.v4();
-  displayAlert?: boolean | undefined;
   title: string = '';
   timestamp: Moment = moment();
   description: string = '';
   @observable read: boolean = false;
   type: NotificationType = 'info';
+  displayAlert?: boolean;
+  stackTrace?: string;
 
   constructor(obj?: INotification) {
     Object.assign(this, obj);

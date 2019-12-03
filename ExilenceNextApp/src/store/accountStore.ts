@@ -119,7 +119,7 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | string) {
-    this.notificationStore.createNotification('init_session', 'error');
+    this.notificationStore.createNotification('init_session', 'error', true);
     this.uiStateStore.setSubmitting(false);
   }
 
@@ -157,7 +157,8 @@ export class AccountStore {
   validateSessionFail(error: AxiosError | string) {
     this.notificationStore.createNotification(
       'validate_session',
-      'error'
+      'error',
+      true
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);

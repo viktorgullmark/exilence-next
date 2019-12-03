@@ -124,7 +124,8 @@ export class Profile {
   @action snapshotFail() {
     stores.notificationStore.createNotification(
       'snapshot',
-      'error'
+      'error',
+      true
     );
     this.setIsSnapshotting(false);
   }
