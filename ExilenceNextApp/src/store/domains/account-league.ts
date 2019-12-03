@@ -52,17 +52,15 @@ export class AccountLeague {
   }
 
   @action getStashTabsSuccess() {
-    stores.notificationStore.createNotification(
-      'get_stash_tabs',
-      'success'
-    );
+    stores.notificationStore.createNotification('get_stash_tabs', 'success');
   }
 
-  @action getStashTabsFail(error: AxiosError) {
+  @action getStashTabsFail(e: AxiosError | Error) {
     stores.notificationStore.createNotification(
       'get_stash_tabs',
       'error',
-      true
+      true,
+      e
     );
   }
 }
