@@ -15,6 +15,7 @@ namespace ExilenceTests
     {
         public SnapshotService SnapshotService { get; private set; }
         public AccountService AccountService { get; private set; }
+        public GroupService GroupService { get; private set; }
         public string Secret { get; private set; }
         public string InstanceName { get; private set; }
 
@@ -46,9 +47,11 @@ namespace ExilenceTests
 
             var accountRepository = new AccountRepository(context);
             var snapshotRepository = new SnapshotRepository(context);
+            var groupRepository = new GroupRepository(context);
 
             AccountService = new AccountService(snapshotRepository, accountRepository, mapper);
             SnapshotService = new SnapshotService(snapshotRepository, accountRepository, mapper);
+            GroupService = new GroupService(groupRepository, mapper);
         }
 
         public void Dispose()
