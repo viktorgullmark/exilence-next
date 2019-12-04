@@ -137,7 +137,10 @@ export class Profile {
     );
 
     if (!accountLeague || !league) {
-      return this.getItemsFail(new Error('no_matching_league'));
+      return this.getItemsFail(
+        new Error('no_matching_league'),
+        this.activeLeagueId
+      );
     }
 
     const selectedStashTabs = accountLeague.stashtabs.filter(
@@ -161,20 +164,36 @@ export class Profile {
             });
           }),
           mergeMap(stashTabsWithItems =>
-            of(this.getItemsSuccess(stashTabsWithItems))
+            of(this.getItemsSuccess(stashTabsWithItems, league.id))
           ),
-          catchError((e: AxiosError) => of(this.getItemsFail(e)))
+          catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
         )
     );
   }
 
-  @action getItemsSuccess(stashTabsWithItems: IStashTabSnapshot[]) {
-    stores.notificationStore.createNotification('get_items', 'success');
+  @action getItemsSuccess(
+    stashTabsWithItems: IStashTabSnapshot[],
+    leagueId: string
+  ) {
+    // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
+    stores.notificationStore.createNotification(
+      'get_items',
+      'success',
+      undefined,
+      undefined,
+      leagueId
+    );
     this.priceItemsForStashTabs(stashTabsWithItems);
   }
 
-  @action getItemsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification('get_items', 'error', true, e);
+  @action getItemsFail(e: AxiosError | Error, leagueId: string) {
+    stores.notificationStore.createNotification(
+      'get_items',
+      'error',
+      true,
+      e,
+      leagueId
+    );
     this.snapshotFail();
   }
 
@@ -217,17 +236,14 @@ export class Profile {
 
   @action
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
-    stores.notificationStore.createNotification(
-      'price_items_for_stash_tabs',
-      'success'
-    );
+    stores.notificationStore.createNotification('price_stash_items', 'success');
     this.saveSnapshot(pricedStashTabs);
   }
 
   @action
   priceItemsForStashTabsFail(e: AxiosError | Error) {
     stores.notificationStore.createNotification(
-      'price_items_for_stash_tabs',
+      'price_stash_items',
       'error',
       true,
       e

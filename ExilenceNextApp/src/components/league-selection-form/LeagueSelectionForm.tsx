@@ -1,22 +1,15 @@
-import {
-  Button,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select
-} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
 import error from '../../utils/validation.utils';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
+
 
 interface LeagueSelectionFormProps {
   handleLeagueSubmit: () => void;

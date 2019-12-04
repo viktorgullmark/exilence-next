@@ -10,4 +10,5 @@ export interface INotification {
   type: NotificationType;
   displayAlert?: boolean;
   stackTrace?: string;
+  translateParam?: string;
 }
