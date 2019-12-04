@@ -8,6 +8,7 @@ import { rarityColors } from '../../../assets/themes/exilence-theme';
 import { IColumn } from '../../../interfaces/column.interface';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import { ItemUtils } from '../../../utils/item.utils';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles(theme => ({
   tableCell: {
@@ -41,6 +42,7 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
   const classes = useStyles();
   const theme = useTheme();
   const [iconLoaded, setIconLoaded] = useState(false);
+  const { t } = useTranslation();
 
   const handleImageLoad = () => {
     setIconLoaded(true);
@@ -105,7 +107,7 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
                       {column.format && typeof value === 'number'
                         ? column.format(value)
                         : typeof value === 'boolean'
-                        ? value.toString()
+                        ? t(`tables:value.${value.toString()}`)
                         : value}
                     </>
                   );
