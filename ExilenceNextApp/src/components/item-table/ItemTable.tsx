@@ -77,17 +77,32 @@ const ItemTable: React.FC<ItemTableProps> = ({
   const [order, setOrder] = useState<Order>('asc');
 
   const columns: IColumn[] = [
-    { id: 'icon', label: t('tables:header.icon'), minWidth: 100 },
+    {
+      id: 'icon',
+      label: t('tables:header.icon'),
+      minWidth: 100,
+      maxWidth: 140
+    },
     { id: 'name', label: t('tables:header.name'), minWidth: 50, maxWidth: 220 },
-    { id: 'links', label: t('tables:header.links'), minWidth: 60 },
-    { id: 'quality', label: t('tables:header.quality'), minWidth: 60 },
+    { id: 'corrupted', label: t('tables:header.corrupted'), minWidth: 60 },
+    {
+      id: 'links',
+      label: t('tables:header.links'),
+      minWidth: 60,
+      numeric: true
+    },
+    {
+      id: 'quality',
+      label: t('tables:header.quality'),
+      minWidth: 60,
+      numeric: true
+    },
     {
       id: 'level',
       label: t('tables:header.level'),
       minWidth: 60,
       numeric: true
     },
-    { id: 'corrupted', label: t('tables:header.corrupted'), minWidth: 60 },
     {
       id: 'stackSize',
       label: t('tables:header.stacksize'),
