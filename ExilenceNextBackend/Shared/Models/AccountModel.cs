@@ -17,5 +17,6 @@ namespace Shared.Models
         public bool Verified { get; set; }
         public Role Role { get; set; }
         public List<CharacterModel> Characters { get; set; }
+        public List<SnapshotProfileModel> Profiles { get; set; }
     }
 }

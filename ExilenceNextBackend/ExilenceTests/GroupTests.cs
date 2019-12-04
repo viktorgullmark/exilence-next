@@ -38,7 +38,6 @@ namespace ExilenceTests
         public async Task JoinGroup()
         {
             var groupName = TestHelper.GetRandomString();
-
             var connection = new ConnectionModel()
             {   
                 Id = 1,
@@ -46,15 +45,17 @@ namespace ExilenceTests
                 InstanceName = _fixture.InstanceName,
                 Created = DateTime.UtcNow
             };
+            connection = await _fixture.GroupService.AddConnection(connection);
 
             var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 
-            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);
-
-            var leftGroup = await _fixture.GroupService.GetGroup(groupName);
-
             Assert.NotNull(group.Id);
             Assert.Single(group.Connections);
+
+            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);
+            group = await _fixture.GroupService.GetGroup(groupName);
+
+            Assert.Null(group);
         }
 
     }

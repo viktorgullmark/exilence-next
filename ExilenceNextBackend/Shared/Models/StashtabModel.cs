@@ -15,5 +15,6 @@ namespace Shared.Models
         public int Index { get; set; }
         public string Color { get; set; }
         public virtual List<PricedItemModel> PricedItems { get; set; }
+        public SnapshotModel Snapshot { get; set; }
     }
 }
