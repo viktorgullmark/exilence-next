@@ -39,7 +39,7 @@ namespace Shared.Repositories
         public async Task<Group> RemoveGroup(string name)
         {
             var group = await GetGroup(name);
-            _exilenceContext.Remove(group);
+            _exilenceContext.Groups.Remove(group);
             return group;
         }
 
@@ -52,7 +52,7 @@ namespace Shared.Repositories
         public async Task<Connection> RemoveConnection(string connectionId)
         {
             var connection = await GetConnection(connectionId);
-            _exilenceContext.Remove(connection);
+            _exilenceContext.Connections.Remove(connection);
             return connection;
         }
 
@@ -66,6 +66,5 @@ namespace Shared.Repositories
         {
             await _exilenceContext.SaveChangesAsync();
         }
-
     }
 }

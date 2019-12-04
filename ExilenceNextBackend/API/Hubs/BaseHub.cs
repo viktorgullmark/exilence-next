@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using Shared.Entities;
 using Shared.Interfaces;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,6 @@ namespace API.Hubs
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
-        readonly IGroupRepository _groupRepository;
 
 
         private bool IsPremium => Context.User.IsInRole("Premium");
@@ -33,16 +32,13 @@ namespace API.Hubs
         public BaseHub(
             IMapper mapper, 
             IConfiguration configuration, 
-            IGroupRepository groupRepository, 
             IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
             )
         {
             _mapper = mapper;
-            _instanceName = configuration.GetSection("Settings")["InstanceName"];            
-
-            _groupRepository = groupRepository;
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];   
 
             _snapshotService = snapshotService;
             _accountService = accountService;
@@ -52,20 +48,17 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"ConnectionId: {ConnectionId} connected");
-            var connection = new Connection(ConnectionId, _instanceName);
-            _groupRepository.AddConnection(connection);
-            await _groupRepository.SaveChangesAsync();
-            
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
+            var connection = new ConnectionModel();
+            connection = await _groupService.AddConnection(connection);            
             await base.OnConnectedAsync();
         }
 
         [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"ConnectionId: {ConnectionId} disconnected");
-            await _groupRepository.RemoveConnection(ConnectionId);
-            await _groupRepository.SaveChangesAsync();
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
+            await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
