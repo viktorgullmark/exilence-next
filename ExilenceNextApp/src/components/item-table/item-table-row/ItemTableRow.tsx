@@ -1,19 +1,20 @@
+import { Box, CircularProgress, TableCell, TableRow } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
-import { TableRow, TableCell, Box } from '@material-ui/core';
-import { IColumn } from '../../../interfaces/column.interface';
 import uuid from 'uuid';
-import clsx from 'clsx';
-import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import { rarityColors } from '../../../assets/themes/exilence-theme';
+import { IColumn } from '../../../interfaces/column.interface';
+import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import { ItemUtils } from '../../../utils/item.utils';
-import ImageIcon from '@material-ui/icons/Image';
-import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   tableCell: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(2),
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
   iconCell: {
     display: 'flex',
@@ -25,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 35,
     maxHeight: 35,
     maxWidth: 120
-  },
+  }
 }));
 
 interface ItemTableRowProps<T> extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,13 +50,12 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
     <TableRow hover role="checkbox" tabIndex={-1} key={uuid.v4()}>
       {columns.map(column => {
         const value = row[column.id];
-        const rarityColor =
-          rarityColors[ItemUtils.getRarity(row['frameType'])];
+        const rarityColor = rarityColors[ItemUtils.getRarity(row['frameType'])];
         return (
           <TableCell
             className={classes.tableCell}
             key={column.id}
-            align={column.align}
+            align={column.numeric ? 'right' : 'left'}
           >
             {(() => {
               switch (column.id) {
@@ -70,10 +70,14 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
                         [classes.iconCell]: column.id === 'icon'
                       })}
                     >
-                      <Box position="relative" alignItems="center" justifyContent="center" display="flex" className={classes.iconImg}>
-                        {!iconLoaded && (
-                          <CircularProgress size={20} />
-                        )}
+                      <Box
+                        position="relative"
+                        alignItems="center"
+                        justifyContent="center"
+                        display="flex"
+                        className={classes.iconImg}
+                      >
+                        {!iconLoaded && <CircularProgress size={20} />}
                         <img
                           className={classes.iconImg}
                           alt={row['name']}
@@ -100,6 +104,8 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
                     <>
                       {column.format && typeof value === 'number'
                         ? column.format(value)
+                        : typeof value === 'boolean'
+                        ? value.toString()
                         : value}
                     </>
                   );
@@ -112,4 +118,4 @@ const ItemTableRow: React.FC<ItemTableRowProps<IPricedItem>> = ({
   );
 };
 
-export default observer(ItemTableRow);
+export default ItemTableRow;
