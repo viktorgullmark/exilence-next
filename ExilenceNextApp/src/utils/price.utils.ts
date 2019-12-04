@@ -62,11 +62,11 @@ export class PriceUtils {
     public static mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
         if (price !== undefined) {
             item.calculated = price.calculated ? price.calculated : 0;
-            item.max = price.max;
-            item.mean = price.mean;
-            item.mode = price.mode;
-            item.min = price.min;
-            item.median = price.median;
+            item.max = price.max || 0;
+            item.mean = price.mean || 0;
+            item.mode = price.mode || 0;
+            item.min = price.min || 0;
+            item.median = price.median || 0;
         }
         return item;
     }

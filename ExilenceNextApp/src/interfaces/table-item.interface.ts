@@ -1,16 +1,19 @@
-import { ICompactTab } from './stash.interface';
 
-export interface ITableItem {
-  tabs: ICompactTab[];
+export interface IPricedItem {
+  id: string;
   name: string;
+  typeLine: string;
   frameType: number;
-  calculated: number;
   total: number;
-  max: number;
-  mean: number;
-  median: number;
-  min: number;
-  mode: number;
+  calculated: number;
+  max?: number;
+  elder: boolean;
+  shaper: boolean;
+  mean?: number;
+  median?: number;
+  min?: number;
+  mode?: number;
+  ilvl: number;
   stackSize: number;
   totalStacksize: number;
   links: number;
@@ -19,4 +22,6 @@ export interface ITableItem {
   corrupted: boolean;
   icon: string;
   sockets: number;
+  variant: string;
+  tier: number;
 }
