@@ -29,14 +29,14 @@ namespace API.Hubs
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
-            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} to database.");
+            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId)
         {
-            snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
-            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} to database.");
+            var snapshotModel = await _snapshotService.RemoveSnapshot(AccountName, profileClientId, snapshotClientId);
+            await Log($"Removed snapshot with id {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
             return snapshotModel;
         }
 

@@ -47,16 +47,14 @@ namespace ExilenceTests
                 Created = DateTime.UtcNow
             };
 
-            var group = await _fixture.GroupService.JoinGroup(connection, groupName);
+            var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 
-            await _fixture.GroupService.LeaveGroup(connection, groupName);
+            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);
 
             var leftGroup = await _fixture.GroupService.GetGroup(groupName);
 
             Assert.NotNull(group.Id);
             Assert.Single(group.Connections);
-
-
         }
 
     }
