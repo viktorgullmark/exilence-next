@@ -10,7 +10,9 @@ export interface IColumn {
     | 'calculated'
     | 'total';
   label: string;
+  numeric?: boolean;
   minWidth?: number;
+  maxWidth?: number;
   align?: 'right';
   format?: (value: number) => string;
 }

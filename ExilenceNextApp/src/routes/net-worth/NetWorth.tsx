@@ -5,7 +5,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { itemColors } from '../../assets/themes/exilence-theme';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import NetWorthTabGroup from '../../components/net-worth-tab-group/NetWorthTabGroup';
@@ -25,9 +25,12 @@ const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   uiStateStore
 }: NetWorthProps) => {
-  if (!uiStateStore!.validated) {
-    accountStore!.initSession();
-  }
+
+  useEffect(() => {
+    if (!uiStateStore!.validated) {
+      accountStore!.initSession();
+    }
+  })
 
   const theme = useTheme();
 
