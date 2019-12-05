@@ -259,6 +259,8 @@ export class Profile {
 
     this.snapshots.unshift(new Snapshot(snapshot));
 
+    this.snapshots = this.snapshots.slice(0,100);
+
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {
       this.snapshots[1].stashTabSnapshots.forEach(stss => {

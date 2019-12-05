@@ -44,7 +44,9 @@ export class NotificationStore {
       translateParam
     });
 
-    this.notifications.push(notification);
+    this.notifications.unshift(notification);
+
+    this.notifications = this.notifications.slice(0,20);
 
     return notification;
   }
