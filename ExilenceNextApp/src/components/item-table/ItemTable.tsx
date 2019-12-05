@@ -20,11 +20,12 @@ import { netWorthGridSpacing } from '../../routes/net-worth/NetWorth';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { cardHeight } from '../widget/Widget';
-import ItemTableRow from './item-table-row/ItemTableRow';
+import ItemTableRow from './item-table-cell/ItemTableCell';
 import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
 import { tabPanelSpacing } from '../tab-panel/TabPanel';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { IColumn } from '../../interfaces/column.interface';
+import ItemTableCell from './item-table-cell/ItemTableCell';
 
 export const tableFooterHeight = 52;
 
@@ -84,7 +85,12 @@ const ItemTable: React.FC<ItemTableProps> = ({
       maxWidth: 140
     },
     { id: 'name', label: t('tables:header.name'), minWidth: 50, maxWidth: 220 },
-    { id: 'corrupted', label: t('tables:header.corrupted'), minWidth: 60 },
+    {
+      id: 'corrupted',
+      label: t('tables:header.corrupted'),
+      minWidth: 60,
+      maxWidth: 100
+    },
     {
       id: 'links',
       label: t('tables:header.links'),
@@ -182,8 +188,8 @@ const ItemTable: React.FC<ItemTableProps> = ({
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    handleChangePage(event, 1);
     setRowsPerPage(+event.target.value);
+    handleChangePage(event, 0);
   };
   return (
     <Paper className={classes.root}>
@@ -205,7 +211,23 @@ const ItemTable: React.FC<ItemTableProps> = ({
                 )
                 .map(row => {
                   return (
-                    <ItemTableRow key={uuid.v4()} columns={columns} row={row} />
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={uuid.v4()}
+                    >
+                      {columns.map(column => {
+                        return (
+                          <ItemTableCell
+                            key={uuid.v4()}
+                            column={column}
+                            value={row[column.id]}
+                            frameType={row['frameType']}
+                          />
+                        );
+                      })}
+                    </TableRow>
                   );
                 })
             ) : (
@@ -218,7 +240,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
       </div>
       <TablePagination
         className={classes.pagination}
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[10, 25, 50]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
