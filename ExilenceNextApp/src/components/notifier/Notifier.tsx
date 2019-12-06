@@ -1,11 +1,12 @@
+import { makeStyles, Theme } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { NotificationStore } from '../../store/notificationStore';
-import { UiStateStore } from './../../store/uiStateStore';
-import { makeStyles, Theme } from '@material-ui/core';
 import { statusColors } from '../../assets/themes/exilence-theme';
+import { NotificationStore } from '../../store/notificationStore';
+import ToastContent from '../toast-content/ToastContent';
+import { UiStateStore } from './../../store/uiStateStore';
 
 interface NotifierProps {
   uiStateStore?: UiStateStore;
@@ -47,8 +48,17 @@ const Notifier: React.FC<NotifierProps> = ({
       if (notificationStore!.displayed.find(d => d === n.uuid) !== undefined)
         return;
       toast(
-        t(n.title, n.translateParam ? { param: n.translateParam } : undefined),
-        { type: n.type, className: classes[n.type] }
+        () => (
+          <ToastContent
+            message={t(
+              n.title,
+              n.translateParam ? { param: n.translateParam } : undefined
+            )}
+            description={t(n.description)}
+            stackTrace={n.stackTrace}
+          />
+        ),
+        { type: n.type, className: classes[n.type], autoClose: false }
       );
       storeDisplayed(n.uuid);
     });

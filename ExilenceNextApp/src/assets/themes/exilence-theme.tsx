@@ -29,9 +29,9 @@ export const itemColors = {
 
 export const statusColors = {
   success: green[800],
-  warning: orange[500],
+  warning: orange[700],
   info: grey[900],
-  error: red[800]
+  error: red[900]
 }
 
 export type Rarity = typeof rarityColors;

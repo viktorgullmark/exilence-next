@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       toolbarHeight +
       resizeHandleContainerHeight +
       innerToolbarHeight +
-      theme.spacing(2)
+      theme.spacing(2),
+    width: 350
   }
 }));
 

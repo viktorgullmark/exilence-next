@@ -41,7 +41,7 @@ function getStashTabs(account: string, league: string): Observable<AxiosResponse
 
 function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
     if(tabs.length === 0) {
-        return throwError('error:no_stash_tabs_selected_for_profile');
+        return throwError(new Error('no_stash_tabs_selected_for_profile'));
     }
     // todo: reset fetched tabs count
     return forkJoin(((tabs).map((tab: IStashTab) => {
