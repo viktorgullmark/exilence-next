@@ -20,6 +20,12 @@ export class NotificationStore {
     return alerts;
   }
 
+  @computed
+  get unreadNotifications() {
+    const alerts = this.notifications.filter(n => !n.read);
+    return alerts;
+  }
+
   @action
   addDisplayed(uuid: string) {
     this.displayed = [...this.displayed, uuid];
@@ -50,7 +56,7 @@ export class NotificationStore {
 
     this.notifications.unshift(notification);
 
-    this.notifications = this.notifications.slice(0,20);
+    this.notifications = this.notifications.slice(0, 10);
 
     return notification;
   }
@@ -60,5 +66,13 @@ export class NotificationStore {
     const notification = this.notifications.find(n => n.uuid === uuid);
     notification!.read = true;
     return notification;
+  }
+
+  @action
+  markAllAsRead() {
+    this.notifications = this.notifications.map(n => {
+      n.read = true;
+      return n;
+    });
   }
 }

@@ -5,18 +5,19 @@ import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
 import { PriceStore } from '../../store/priceStore';
+import { NotificationStore } from '../../store/notificationStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
-  priceStore?: PriceStore;
   leagueStore?: LeagueStore;
+  notificationStore?: NotificationStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   uiStateStore,
   accountStore,
-  priceStore
+  notificationStore
 }: ToolbarContainerProps) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -44,12 +45,15 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       profiles={accountStore!.getSelectedAccount.profiles}
       activeProfile={accountStore!.getSelectedAccount.activeProfile}
       toggleSidenav={() => uiStateStore!.toggleSidenav()}
+      markAllNotificationsRead={() => notificationStore!.markAllAsRead()}
       handleProfileChange={handleProfileChange}
       handleSnapshot={handleSnapshot}
       isEditing={isEditing}
       profileOpen={profileOpen}
       handleProfileOpen={handleOpen}
       handleProfileClose={handleClose}
+      notifications={notificationStore!.notifications}
+      unreadNotifications={notificationStore!.unreadNotifications}
     />
   );
 };
@@ -57,5 +61,5 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 export default inject(
   'uiStateStore',
   'accountStore',
-  'priceStore'
+  'notificationStore'
 )(observer(ToolbarContainer));
