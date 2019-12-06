@@ -80,6 +80,7 @@ const app = (
             <SideNavContainer>
               <ToolbarContainer />
               <Route path="/net-worth" component={NetWorth} />
+              <Route path="/login" component={Login} />
               <Route path="/settings" component={Settings} />
               <Route
                 exact
