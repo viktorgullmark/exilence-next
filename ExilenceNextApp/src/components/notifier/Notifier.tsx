@@ -1,22 +1,40 @@
-import { autorun } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { NotificationStore } from '../../store/notificationStore';
 import { UiStateStore } from './../../store/uiStateStore';
-import { useSnackbar } from 'notistack';
-import { useTranslation } from 'react-i18next';
+import { makeStyles, Theme } from '@material-ui/core';
+import { statusColors } from '../../assets/themes/exilence-theme';
 
 interface NotifierProps {
   uiStateStore?: UiStateStore;
   notificationStore?: NotificationStore;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  error: {
+    background: statusColors.error
+  },
+  warning: {
+    background: statusColors.warning
+  },
+  info: {
+    background: statusColors.info
+  },
+  success: {
+    background: statusColors.success
+  },
+  default: {
+    background: theme.palette.background.default
+  }
+}));
+
 const Notifier: React.FC<NotifierProps> = ({
-  uiStateStore,
   notificationStore
 }: NotifierProps) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { t } = useTranslation();
+  const classes = useStyles();
 
   const storeDisplayed = (uuid: string) => {
     notificationStore!.addDisplayed(uuid);
@@ -28,9 +46,9 @@ const Notifier: React.FC<NotifierProps> = ({
     alerts.forEach(n => {
       if (notificationStore!.displayed.find(d => d === n.uuid) !== undefined)
         return;
-      enqueueSnackbar(
+      toast(
         t(n.title, n.translateParam ? { param: n.translateParam } : undefined),
-        { variant: n.type, preventDuplicate: true }
+        { type: n.type, className: classes[n.type] }
       );
       storeDisplayed(n.uuid);
     });
@@ -39,4 +57,4 @@ const Notifier: React.FC<NotifierProps> = ({
   return null;
 };
 
-export default inject('uiStateStore', 'notificationStore')(observer(Notifier));
+export default inject('notificationStore')(observer(Notifier));

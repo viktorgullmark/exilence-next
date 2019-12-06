@@ -1,9 +1,14 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import orange from '@material-ui/core/colors/orange';
+import { grey, green, red } from '@material-ui/core/colors';
+
+
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' }});
 
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
+
 export const primaryDarker = '#4a091f';
 export const cardColor = '#15313e';
 
@@ -22,8 +27,16 @@ export const itemColors = {
   chaosOrb: '#d6b600'
 }
 
+export const statusColors = {
+  success: green[800],
+  warning: orange[500],
+  info: grey[900],
+  error: red[800]
+}
+
 export type Rarity = typeof rarityColors;
-export type ItemColors = typeof itemColors;
+export type ItemColor = typeof itemColors;
+export type StatusColor = typeof statusColors;
 
 export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
 
