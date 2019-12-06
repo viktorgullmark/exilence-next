@@ -37,6 +37,9 @@
       "price_stash_items": "Items in the selected stash tabs could not be priced",
       "get_prices_for_leagues": "Failed in retrieving prices for leagues",
       "snapshot": "The snapshot could not be created"
+    },
+    "custom_description" :{
+      "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile"
     }
   },
   "warning": {},
