@@ -102,12 +102,6 @@ const SideNav: React.FC<SideNavProps> = ({
               </ListItemIcon>
               <ListItemText primary={t('title.net_worth')} />
             </ListItem>
-            <ListItem button key="login" component={Link} to="/login">
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('title.login')} />
-            </ListItem>
             <ListItem button key="settings" component={Link} to="/settings">
               <ListItemIcon>
                 <SettingsIcon />
