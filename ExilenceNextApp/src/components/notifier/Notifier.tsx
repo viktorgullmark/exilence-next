@@ -58,7 +58,7 @@ const Notifier: React.FC<NotifierProps> = ({
             stackTrace={n.stackTrace}
           />
         ),
-        { type: n.type, className: classes[n.type], autoClose: false }
+        { type: n.type, className: classes[n.type] }
       );
       storeDisplayed(n.uuid);
     });
