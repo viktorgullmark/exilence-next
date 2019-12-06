@@ -1,17 +1,4 @@
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  FormControl,
-  Grid,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Select,
-  Typography
-} from '@material-ui/core';
+import { AppBar, Avatar, Badge, FormControl, Grid, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Select, Typography } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
@@ -30,10 +17,7 @@ import moment from 'moment';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router';
-import {
-  primaryGradient,
-  unreadColor
-} from '../../assets/themes/exilence-theme';
+import { primaryGradient } from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
 import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
