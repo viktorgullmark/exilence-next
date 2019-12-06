@@ -1,31 +1,25 @@
 import Paper from '@material-ui/core/Paper';
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  useTheme
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
+import { IColumn } from '../../interfaces/column.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { netWorthGridSpacing } from '../../routes/net-worth/NetWorth';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
-import { cardHeight } from '../widget/Widget';
-import ItemTableRow from './item-table-cell/ItemTableCell';
 import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
 import { tabPanelSpacing } from '../tab-panel/TabPanel';
-import ItemTableHeader from './item-table-header/ItemTableHeader';
-import { IColumn } from '../../interfaces/column.interface';
+import { innerToolbarHeight } from '../toolbar/Toolbar';
+import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
+import ItemTableHeader from './item-table-header/ItemTableHeader';
+import { Typography, Box } from '@material-ui/core';
 
 export const tableFooterHeight = 52;
 
@@ -40,6 +34,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     tableWrapper: {
       overflow: 'auto',
       height: `calc(100% - ${tableFooterHeight}px)`
+    },
+    noItems: {
+      height: 'auto'
     },
     pagination: {
       height: tableFooterHeight,
@@ -192,19 +189,26 @@ const ItemTable: React.FC<ItemTableProps> = ({
     handleChangePage(event, 0);
   };
   return (
-    <Paper className={classes.root}>
-      <div className={classes.tableWrapper}>
-        <Table stickyHeader aria-label="sticky table">
-          <ItemTableHeader
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            columns={columns}
-          />
-          <TableBody>
-            {rows.length !== 0 ? (
-              stableSort<IPricedItem>(rows, getSorting(order, orderBy))
+    <>
+      {rows.length === 0 && (
+        <Box mb={2}>
+          <Typography color="error">{t('label.item_table_placeholder')}</Typography>
+        </Box>
+      )}
+      <Paper
+        className={clsx(classes.root, { [classes.noItems]: rows.length === 0 })}
+      >
+        <div className={classes.tableWrapper}>
+          <Table stickyHeader aria-label="sticky table">
+            <ItemTableHeader
+              classes={classes}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              columns={columns}
+            />
+            <TableBody>
+              {stableSort<IPricedItem>(rows, getSorting(order, orderBy))
                 .slice(
                   pageIndex * rowsPerPage,
                   pageIndex * rowsPerPage + rowsPerPage
@@ -229,32 +233,28 @@ const ItemTable: React.FC<ItemTableProps> = ({
                       })}
                     </TableRow>
                   );
-                })
-            ) : (
-              <h2 style={{ textAlign: 'center' }}>
-                {t('label.stash_tab_placeholder')}
-              </h2>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <TablePagination
-        className={classes.pagination}
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={pageIndex}
-        backIconButtonProps={{
-          'aria-label': 'previous page'
-        }}
-        nextIconButtonProps={{
-          'aria-label': 'next page'
-        }}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </Paper>
+                })}
+            </TableBody>
+          </Table>
+        </div>
+        <TablePagination
+          className={classes.pagination}
+          rowsPerPageOptions={[10, 25, 50]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={pageIndex}
+          backIconButtonProps={{
+            'aria-label': 'previous page'
+          }}
+          nextIconButtonProps={{
+            'aria-label': 'next page'
+          }}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </>
   );
 };
 
