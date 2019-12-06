@@ -1,15 +1,15 @@
 import {
   AppBar,
+  Avatar,
+  Badge,
   FormControl,
   Grid,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Menu,
   MenuItem,
   Select,
-  Badge,
-  Menu,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
   Typography
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,27 +17,30 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AddIcon from '@material-ui/icons/Add';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
 import MenuIcon from '@material-ui/icons/Menu';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import WarningIcon from '@material-ui/icons/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
-import { useLocation, useHistory } from 'react-router';
-import { primaryGradient } from '../../assets/themes/exilence-theme';
+import moment from 'moment';
+import React, { ChangeEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router';
+import {
+  primaryGradient,
+  unreadColor
+} from '../../assets/themes/exilence-theme';
+import { Notification } from '../../store/domains/notification';
 import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
-import { useTranslation } from 'react-i18next';
-import { Notification } from '../../store/domains/notification';
-import InfoIcon from '@material-ui/icons/Info';
-import ErrorIcon from '@material-ui/icons/Error';
-import WarningIcon from '@material-ui/icons/Warning';
-import moment from 'moment';
 
 export const innerToolbarHeight = 50;
 
@@ -133,6 +136,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  const [menuNotifications, setMenuNotifications] = useState<Notification[]>(
+    []
+  );
+
   const [accountEl, setAccountEl] = React.useState<null | HTMLElement>(null);
   const [notifEl, setNotifEl] = React.useState<null | HTMLElement>(null);
   const accountMenuOpen = Boolean(accountEl);
@@ -157,6 +164,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   const handleNotificationsMenuOpen = (
     event: React.MouseEvent<HTMLElement>
   ) => {
+    setMenuNotifications([...props.notifications]);
     props.markAllNotificationsRead();
     setNotifEl(event.currentTarget);
   };
@@ -200,7 +208,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
       open={notificationsMenuOpen}
       onClose={handleNotifMenuClose}
     >
-      {props.notifications.map(n => {
+      {menuNotifications.map(n => {
         return (
           <ListItem key={n.uuid} className={classes.notification}>
             <ListItemAvatar>
@@ -214,11 +222,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     component="span"
                     variant="body2"
                     className={classes.notificationTimestamp}
-                    color="textPrimary"
                   >
                     {moment(n.timestamp).format('MM-DD, LT')}
                   </Typography>
-                  {` — ${t(n.description)}`}
+                  {/* temporary disabled {` — ${t(n.description, { param: n.translateParam })}`} */}
                 </>
               }
             />
