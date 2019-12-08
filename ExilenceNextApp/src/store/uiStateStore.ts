@@ -12,6 +12,7 @@ export class UiStateStore {
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
   @observable initated: boolean = false;
+  @observable itemTableFilterText: string = '';
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -38,6 +39,11 @@ export class UiStateStore {
   @action
   setValidated(validated: boolean) {
     this.validated = validated;
+  }
+
+  @action
+  setItemTableFilterText(text: string) {
+    this.itemTableFilterText = text;
   }
   
   @action
