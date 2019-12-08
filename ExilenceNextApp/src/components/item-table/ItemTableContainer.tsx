@@ -33,9 +33,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
 
   useEffect(() => {
     handleFilter(undefined, filterText);
-  }, [
-    accountStore!.getSelectedAccount.activeProfile.snapshots.length
-  ]);
+  }, [accountStore!.getSelectedAccount.activeProfile.snapshots.length]);
 
   let timer: NodeJS.Timeout | undefined = undefined;
 
@@ -46,24 +44,26 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     if (timer) {
       clearTimeout(timer);
     }
-    timer = setTimeout(() => {
-      let text = '';
+    timer = setTimeout(
+      () => {
+        let text = '';
 
-      if (event) {
-        text = event.target.value.toLowerCase();
-      }
+        if (event) {
+          text = event.target.value.toLowerCase();
+        }
 
-      if (searchText) {
-        text = searchText;
-      }
+        if (searchText) {
+          text = searchText;
+        }
 
-      setFilterText(text);
-
-      const filteredItems = tableItems.filter(ti =>
-        ti.name.toLowerCase().includes(text)
-      );
-      setFilteredItems(filteredItems);
-    }, 500);
+        setFilterText(text);
+        const filteredItems = tableItems.filter(ti =>
+          ti.name.toLowerCase().includes(text)
+        );
+        setFilteredItems(filteredItems);
+      },
+      event ? 500 : 0
+    );
   };
 
   return (

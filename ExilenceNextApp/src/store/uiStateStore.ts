@@ -11,6 +11,7 @@ export class UiStateStore {
   @observable validated: boolean = false;
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
+  @observable initated: boolean = false;
 
   @action
   setSessIdCookie(sessionId: string) {
@@ -37,6 +38,11 @@ export class UiStateStore {
   @action
   setValidated(validated: boolean) {
     this.validated = validated;
+  }
+  
+  @action
+  setInitiated(init: boolean) {
+    this.initated = init;
   }
 
   @action
