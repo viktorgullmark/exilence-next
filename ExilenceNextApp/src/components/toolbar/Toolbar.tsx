@@ -75,9 +75,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectMenu: {
     fontSize: '0.9rem'
   },
-  iconButtonContainer: {
-    margin: `0 ${theme.spacing(0.5)}px 0 ${theme.spacing(0.5)}px`
-  },
   iconButton: {
     padding: theme.spacing(0.5)
   },
@@ -86,13 +83,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: innerToolbarHeight
   },
   profileArea: {
-    marginRight: theme.spacing(1)
+    padding: `0 ${theme.spacing(1)}px`
   },
-  endArea: {
-    paddingLeft: theme.spacing(1)
+  snapshotArea: {
+    padding: `0 ${theme.spacing(1)}px`
+  },
+  miscArea: {
+    padding: `0 ${theme.spacing(1)}px`
   },
   endAreaIcon: {
     marginLeft: theme.spacing(0.5)
+  },
+  formControl: {
+    padding: `0 ${theme.spacing(0.5)}px`
   },
   divider: {
     height: innerToolbarHeight,
@@ -265,8 +268,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 justify="flex-end"
                 className={classes.toolbarGrid}
               >
-                <Grid item>
-                  <FormControl>
+                <Grid item className={classes.profileArea}>
+                  <FormControl className={classes.formControl}>
                     <Select
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
@@ -288,56 +291,52 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       })}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid item className={classes.profileArea}>
-                  <div className={classes.iconButtonContainer}>
-                    <IconButton
-                      aria-label="edit"
-                      className={classes.iconButton}
-                      onClick={() => props.handleProfileOpen(true)}
-                      title={t('label.edit_profile_icon_title')}
-                    >
-                      <SettingsIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => props.handleProfileOpen()}
-                      aria-label="create"
-                      className={classes.iconButton}
-                      title={t('label.create_profile_icon_title')}
-                    >
-                      <AddIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      disabled={!props.activeProfile.readyToSnapshot}
-                      onClick={() => props.handleSnapshot()}
-                      aria-label="snapshot"
-                      className={classes.iconButton}
-                      title={t('label.fetch_snapshot_icon_title')}
-                    >
-                      {!props.isSnapshotting ? (
-                        <UpdateIcon fontSize="small" />
-                      ) : (
-                        <CircularProgress
-                          className={classes.spinner}
-                          size={20}
-                        />
-                      )}
-                    </IconButton>
-                    {props.activeProfile.snapshots.length > 0 && (
-                      <IconButton
-                        disabled={props.activeProfile.isSnapshotting}
-                        onClick={() => props.handleClearSnapshots()}
-                        aria-label="clear snapshots"
-                        className={classes.iconButton}
-                        title={t('label.remove_snapshot_icon_title')}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </div>
+                  <IconButton
+                    aria-label="edit"
+                    className={classes.iconButton}
+                    onClick={() => props.handleProfileOpen(true)}
+                    title={t('label.edit_profile_icon_title')}
+                  >
+                    <SettingsIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => props.handleProfileOpen()}
+                    aria-label="create"
+                    className={classes.iconButton}
+                    title={t('label.create_profile_icon_title')}
+                  >
+                    <AddIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.endArea}>
+                <Grid item className={classes.snapshotArea}>
+                  <IconButton
+                    disabled={!props.activeProfile.readyToSnapshot}
+                    onClick={() => props.handleSnapshot()}
+                    aria-label="snapshot"
+                    className={classes.iconButton}
+                    title={t('label.fetch_snapshot_icon_title')}
+                  >
+                    {!props.isSnapshotting ? (
+                      <UpdateIcon fontSize="small" />
+                    ) : (
+                      <CircularProgress className={classes.spinner} size={20} />
+                    )}
+                  </IconButton>
+                  {props.activeProfile.snapshots.length > 0 && (
+                    <IconButton
+                      disabled={props.activeProfile.isSnapshotting}
+                      onClick={() => props.handleClearSnapshots()}
+                      aria-label="clear snapshots"
+                      className={classes.iconButton}
+                      title={t('label.remove_snapshot_icon_title')}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                </Grid>
+                <Grid item className={classes.divider}></Grid>
+                <Grid item className={classes.miscArea}>
                   <IconButton
                     onClick={handleNotificationsMenuOpen}
                     aria-label="show new notifications"
