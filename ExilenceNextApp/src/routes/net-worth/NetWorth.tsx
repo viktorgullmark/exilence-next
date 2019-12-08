@@ -27,12 +27,10 @@ const NetWorth: React.FC<NetWorthProps> = ({
 }: NetWorthProps) => {
 
   useEffect(() => {
-    if (!uiStateStore!.validated) {
+    if (!uiStateStore!.validated && !uiStateStore!.initated) {
       accountStore!.initSession();
     }
   })
-
-  const theme = useTheme();
 
   return (
     <FeatureWrapper>

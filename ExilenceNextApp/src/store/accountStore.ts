@@ -51,6 +51,8 @@ export class AccountStore {
 
   @action
   initSession(newAccount?: IAccount) {
+    this.uiStateStore.setInitiated(true);
+
     let account: IAccount;
 
     if (!newAccount) {

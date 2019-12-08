@@ -1,44 +1,29 @@
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  FormControl,
-  Grid,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Select,
-  Typography
-} from '@material-ui/core';
+import { AppBar, Badge, FormControl, Grid, Menu, MenuItem, Select } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AddIcon from '@material-ui/icons/Add';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
+import DeleteIcon from '@material-ui/icons/Delete';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
-import WarningIcon from '@material-ui/icons/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import moment from 'moment';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router';
 import { primaryGradient } from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
 import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
+import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
-import NotificationListContainer from '../notification-list/NotificationListContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -75,9 +60,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectMenu: {
     fontSize: '0.9rem'
   },
-  iconButtonContainer: {
-    margin: `0 ${theme.spacing(0.5)}px 0 ${theme.spacing(0.5)}px`
-  },
   iconButton: {
     padding: theme.spacing(0.5)
   },
@@ -86,17 +68,36 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: innerToolbarHeight
   },
   profileArea: {
-    marginRight: theme.spacing(1)
+    padding: `0 ${theme.spacing(1)}px`
   },
-  endArea: {
-    paddingLeft: theme.spacing(1)
+  snapshotArea: {
+    padding: `0 ${theme.spacing(1)}px`
+  },
+  miscArea: {
+    padding: `0 ${theme.spacing(1)}px`
   },
   endAreaIcon: {
     marginLeft: theme.spacing(0.5)
   },
+  formControl: {
+    padding: `0 ${theme.spacing(0.5)}px`
+  },
   divider: {
     height: innerToolbarHeight,
     borderLeft: `1px solid ${theme.palette.primary.dark}`
+  },
+  notification: {
+    paddingTop: 0,
+    paddingBottom: theme.spacing(0.25),
+    '&:focus': {
+      outline: 'none'
+    }
+  },
+  notificationTimestamp: {
+    display: 'inline'
+  },
+  spinner: {
+    color: theme.palette.primary.contrastText
   }
 }));
 
@@ -108,6 +109,7 @@ interface Props {
   isEditing: boolean;
   notifications: Notification[];
   unreadNotifications: Notification[];
+  isSnapshotting: boolean;
   toggleSidenav: () => void;
   markAllNotificationsRead: () => void;
   handleProfileOpen: (edit?: boolean) => void;
@@ -117,6 +119,7 @@ interface Props {
   ) => void;
   handleSnapshot: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  handleClearSnapshots: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -185,8 +188,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 justify="flex-end"
                 className={classes.toolbarGrid}
               >
-                <Grid item>
-                  <FormControl>
+                <Grid item className={classes.profileArea}>
+                  <FormControl className={classes.formControl}>
                     <Select
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
@@ -208,40 +211,58 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       })}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid item className={classes.profileArea}>
-                  <div className={classes.iconButtonContainer}>
-                    <IconButton
-                      aria-label="edit"
-                      className={classes.iconButton}
-                      onClick={() => props.handleProfileOpen(true)}
-                    >
-                      <SettingsIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => props.handleProfileOpen()}
-                      aria-label="create"
-                      className={classes.iconButton}
-                    >
-                      <AddIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      disabled={!props.activeProfile.readyToSnapshot}
-                      onClick={() => props.handleSnapshot()}
-                      aria-label="snapshot"
-                      className={classes.iconButton}
-                    >
-                      <UpdateIcon fontSize="small" />
-                    </IconButton>
-                  </div>
+                  <IconButton
+                    aria-label="edit"
+                    className={classes.iconButton}
+                    onClick={() => props.handleProfileOpen(true)}
+                    title={t('label.edit_profile_icon_title')}
+                  >
+                    <SettingsIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => props.handleProfileOpen()}
+                    aria-label="create"
+                    className={classes.iconButton}
+                    title={t('label.create_profile_icon_title')}
+                  >
+                    <AddIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.endArea}>
+                <Grid item className={classes.snapshotArea}>
+                  <IconButton
+                    disabled={!props.activeProfile.readyToSnapshot}
+                    onClick={() => props.handleSnapshot()}
+                    aria-label="snapshot"
+                    className={classes.iconButton}
+                    title={t('label.fetch_snapshot_icon_title')}
+                  >
+                    {!props.isSnapshotting ? (
+                      <UpdateIcon fontSize="small" />
+                    ) : (
+                      <CircularProgress className={classes.spinner} size={20} />
+                    )}
+                  </IconButton>
+                  {props.activeProfile.snapshots.length > 0 && (
+                    <IconButton
+                      disabled={props.activeProfile.isSnapshotting}
+                      onClick={() => props.handleClearSnapshots()}
+                      aria-label="clear snapshots"
+                      className={classes.iconButton}
+                      title={t('label.remove_snapshot_icon_title')}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                </Grid>
+                <Grid item className={classes.divider}></Grid>
+                <Grid item className={classes.miscArea}>
                   <IconButton
                     onClick={(e) => props.handleNotificationsOpen(e)}
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    title={t('label.notification_icon_title')}
                   >
                     <Badge
                       max={9}
@@ -260,6 +281,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     aria-label="account"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    title={t('label.account_icon_title')}
                   >
                     <AccountCircle />
                   </IconButton>

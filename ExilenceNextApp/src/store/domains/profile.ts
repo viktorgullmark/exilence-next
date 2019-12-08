@@ -65,6 +65,24 @@ export class Profile {
   }
 
   @computed
+  get filteredItems() {
+    if (this.snapshots.length === 0) {
+      return [];
+    }
+    return ItemUtils.mergeItemStacks(
+      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
+        sts.items.filter(
+          i =>
+            i.calculated > 0 &&
+            i.name
+              .toLowerCase()
+              .includes(stores.uiStateStore.itemTableFilterText.toLowerCase())
+        )
+      )
+    );
+  }
+
+  @computed
   get latestSnapshotValue() {
     if (this.snapshots.length === 0) {
       return 0;
@@ -90,6 +108,11 @@ export class Profile {
   @action
   setActiveLeague(id: string) {
     this.activeLeagueId = id;
+  }
+
+  @action
+  clearSnapshots() {
+    this.snapshots = [];
   }
 
   @action
@@ -259,7 +282,7 @@ export class Profile {
 
     this.snapshots.unshift(new Snapshot(snapshot));
 
-    this.snapshots = this.snapshots.slice(0,100);
+    this.snapshots = this.snapshots.slice(0, 100);
 
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {

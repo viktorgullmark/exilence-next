@@ -33,6 +33,10 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     setProfileOpen(false);
   };
 
+  const handleClearSnapshots = () => {
+    accountStore!.getSelectedAccount.activeProfile.clearSnapshots();
+  };
+
   const handleSnapshot = () => {
     accountStore!.getSelectedAccount.activeProfile.snapshot();
   };
@@ -63,6 +67,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       notifications={notificationStore!.notifications}
       unreadNotifications={notificationStore!.unreadNotifications}
       handleNotificationsOpen={handleNotificationsOpen}
+      handleClearSnapshots={handleClearSnapshots}
+      isSnapshotting={accountStore!.getSelectedAccount.activeProfile.isSnapshotting}
     />
   );
 };
