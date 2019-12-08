@@ -91,9 +91,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   miscArea: {
     padding: `0 ${theme.spacing(1)}px`
   },
-  endAreaIcon: {
-    marginLeft: theme.spacing(0.5)
-  },
   formControl: {
     padding: `0 ${theme.spacing(0.5)}px`
   },
@@ -341,7 +338,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     onClick={handleNotificationsMenuOpen}
                     aria-label="show new notifications"
                     color="inherit"
-                    className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    className={clsx(classes.iconButton)}
                     title={t('label.notification_icon_title')}
                   >
                     <Badge
@@ -353,17 +350,17 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       }
                       color="secondary"
                     >
-                      <NotificationsIcon />
+                      <NotificationsIcon fontSize="small" />
                     </Badge>
                   </IconButton>
                   <IconButton
                     onClick={handleAccountMenuOpen}
                     aria-label="account"
                     aria-haspopup="true"
-                    className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    className={clsx(classes.iconButton)}
                     title={t('label.account_icon_title')}
                   >
-                    <AccountCircle />
+                    <AccountCircle fontSize="small" />
                   </IconButton>
                 </Grid>
               </Grid>
