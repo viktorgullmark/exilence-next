@@ -52,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '-webkit-app-region': 'no-drag'
   },
   windowHandlers: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center'
   },
   windowIcon: {
     fontSize: 14,
@@ -104,7 +105,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={clsx(classes.noDrag, classes.windowHandlers)} alignItems="center">
+          <Grid item className={clsx(classes.noDrag, classes.windowHandlers)}>
             <MinimizeIcon
               className={classes.windowIcon}
               onClick={() => WindowUtils.minimize()}
