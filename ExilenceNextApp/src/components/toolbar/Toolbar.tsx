@@ -1,4 +1,17 @@
-import { AppBar, Avatar, Badge, FormControl, Grid, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Select, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  FormControl,
+  Grid,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Select,
+  Typography
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
@@ -25,6 +38,7 @@ import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import NotificationListContainer from '../notification-list/NotificationListContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -83,16 +97,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     height: innerToolbarHeight,
     borderLeft: `1px solid ${theme.palette.primary.dark}`
-  },
-  notification: {
-    paddingTop: 0,
-    paddingBottom: theme.spacing(0.25),
-    '&:focus': {
-      outline: 'none'
-    }
-  },
-  notificationTimestamp: {
-    display: 'inline'
   }
 }));
 
@@ -112,6 +116,7 @@ interface Props {
     event: ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => void;
   handleSnapshot: () => void;
+  handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -120,21 +125,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const { t } = useTranslation();
 
-  const [menuNotifications, setMenuNotifications] = useState<Notification[]>(
-    []
-  );
-
   const [accountEl, setAccountEl] = React.useState<null | HTMLElement>(null);
-  const [notifEl, setNotifEl] = React.useState<null | HTMLElement>(null);
   const accountMenuOpen = Boolean(accountEl);
-  const notificationsMenuOpen = Boolean(notifEl);
 
   const handleAccountMenuClose = () => {
     setAccountEl(null);
-  };
-
-  const handleNotifMenuClose = () => {
-    setNotifEl(null);
   };
 
   const atLoginRoute = () => {
@@ -143,14 +138,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
 
   const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAccountEl(event.currentTarget);
-  };
-
-  const handleNotificationsMenuOpen = (
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    setMenuNotifications([...props.notifications]);
-    props.markAllNotificationsRead();
-    setNotifEl(event.currentTarget);
   };
 
   const handleSignOut = () => {
@@ -168,54 +155,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
       onClose={handleAccountMenuClose}
     >
       <MenuItem onClick={handleSignOut}>{t('label.sign_out')}</MenuItem>
-    </Menu>
-  );
-
-  const notificationIcon = (type: string) => {
-    switch (type) {
-      case 'error':
-        return <ErrorIcon />;
-      case 'warning':
-        return <WarningIcon />;
-      default:
-        return <InfoIcon />;
-    }
-  };
-
-  const renderNotifications = (
-    <Menu
-      anchorEl={notifEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id="notifications-menu"
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={notificationsMenuOpen}
-      onClose={handleNotifMenuClose}
-    >
-      {menuNotifications.map(n => {
-        return (
-          <ListItem key={n.uuid} className={classes.notification}>
-            <ListItemAvatar>
-              <Avatar>{notificationIcon(n.type)}</Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={t(n.title, { param: n.translateParam })}
-              secondary={
-                <>
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    className={classes.notificationTimestamp}
-                  >
-                    {moment(n.timestamp).format('MM-DD, LT')}
-                  </Typography>
-                  {/* temporary disabled {` — ${t(n.description, { param: n.translateParam })}`} */}
-                </>
-              }
-            />
-          </ListItem>
-        );
-      })}
     </Menu>
   );
 
@@ -299,7 +238,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.endArea}>
                   <IconButton
-                    onClick={handleNotificationsMenuOpen}
+                    onClick={(e) => props.handleNotificationsOpen(e)}
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
@@ -329,7 +268,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </MuiToolbar>
           </AppBar>
           {renderMenu}
-          {renderNotifications}
+          <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}
             isOpen={props.profileOpen}
