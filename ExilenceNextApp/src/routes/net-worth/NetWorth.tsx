@@ -6,7 +6,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import { itemColors } from '../../assets/themes/exilence-theme';
+import { itemColors, cardColors } from '../../assets/themes/exilence-theme';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import NetWorthTabGroup from '../../components/net-worth-tab-group/NetWorthTabGroup';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
@@ -26,6 +26,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
   uiStateStore
 }: NetWorthProps) => {
 
+  const theme = useTheme();
+
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initated) {
       accountStore!.initSession();
@@ -36,7 +38,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={4} lg={3}>
-          <Widget backgroundColor={blueGrey[900]}>
+          <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={
                 accountStore!.getSelectedAccount.activeProfile
@@ -54,24 +56,26 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={6} md={4} lg={3}>
-          <Widget backgroundColor={blueGrey[900]}>
+          <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
               value={
                 accountStore!.getSelectedAccount.activeProfile
                   .latestSnapshotItemCount
               }
               title="label.total_items"
+              valueColor={theme.palette.text.primary}
               icon={<GavelIcon fontSize="large" />}
             />
           </Widget>
         </Grid>
         <Grid item xs={6} md={4} lg={3}>
-          <Widget backgroundColor={blueGrey[900]}>
+          <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
               value={
                 accountStore!.getSelectedAccount.activeProfile.snapshots.length
               }
               title="label.total_snapshots"
+              valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
           </Widget>
