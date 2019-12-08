@@ -1,11 +1,12 @@
 import { inject, observer } from 'mobx-react';
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { UiStateStore } from '../../store/uiStateStore';
 import ItemTable from './ItemTable';
 import { AccountStore } from '../../store/accountStore';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { Grid, Box, makeStyles, Theme } from '@material-ui/core';
+import { reaction } from 'mobx';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -28,18 +29,39 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   const { tableItems } = accountStore!.getSelectedAccount.activeProfile;
   const classes = useStyles();
   const [filteredItems, setFilteredItems] = useState<IPricedItem[]>(tableItems);
+  const [filterText, setFilterText] = useState<string>('');
+
+  useEffect(() => {
+    console.log('USEEFFECT')
+    handleFilter(undefined, filterText);
+  }, [
+    accountStore!.getSelectedAccount.activeProfile.snapshots.length
+  ]);
 
   let timer: NodeJS.Timeout | undefined = undefined;
 
   const handleFilter = (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    searchText?: string
   ) => {
     if (timer) {
       clearTimeout(timer);
     }
     timer = setTimeout(() => {
+      let text = '';
+
+      if (event) {
+        text = event.target.value.toLowerCase();
+      }
+
+      if (searchText) {
+        text = searchText;
+      }
+
+      setFilterText(text);
+
       const filteredItems = tableItems.filter(ti =>
-        ti.name.toLowerCase().includes(event.target.value.toLowerCase())
+        ti.name.toLowerCase().includes(text)
       );
       setFilteredItems(filteredItems);
     }, 500);

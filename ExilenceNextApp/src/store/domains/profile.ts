@@ -93,6 +93,11 @@ export class Profile {
   }
 
   @action
+  clearSnapshots() {
+    this.snapshots = [];
+  }
+
+  @action
   setActivePriceLeague(id: string) {
     this.activePriceLeagueId = id;
   }
