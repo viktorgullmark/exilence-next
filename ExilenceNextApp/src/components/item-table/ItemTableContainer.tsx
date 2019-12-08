@@ -32,7 +32,6 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   const [filterText, setFilterText] = useState<string>('');
 
   useEffect(() => {
-    console.log('USEEFFECT')
     handleFilter(undefined, filterText);
   }, [
     accountStore!.getSelectedAccount.activeProfile.snapshots.length
