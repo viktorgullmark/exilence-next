@@ -26,14 +26,9 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   accountStore,
   uiStateStore
 }: ItemTableContainerProps) => {
-  const { tableItems } = accountStore!.getSelectedAccount.activeProfile;
-  const classes = useStyles();
-  const [filteredItems, setFilteredItems] = useState<IPricedItem[]>(tableItems);
-  const [filterText, setFilterText] = useState<string>('');
+  const { filteredItems } = accountStore!.getSelectedAccount.activeProfile;
 
-  useEffect(() => {
-    handleFilter(undefined, filterText);
-  }, [accountStore!.getSelectedAccount.activeProfile.snapshots.length]);
+  const classes = useStyles();
 
   let timer: NodeJS.Timeout | undefined = undefined;
 
@@ -56,11 +51,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           text = searchText;
         }
 
-        setFilterText(text);
-        const filteredItems = tableItems.filter(ti =>
-          ti.name.toLowerCase().includes(text)
-        );
-        setFilteredItems(filteredItems);
+        uiStateStore!.setItemTableFilterText(text);
       },
       event ? 500 : 0
     );
