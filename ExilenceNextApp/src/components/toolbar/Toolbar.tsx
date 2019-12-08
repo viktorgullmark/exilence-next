@@ -1,4 +1,17 @@
-import { AppBar, Avatar, Badge, FormControl, Grid, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Select, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  FormControl,
+  Grid,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Select,
+  Typography
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
@@ -25,6 +38,7 @@ import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export const innerToolbarHeight = 50;
 
@@ -104,6 +118,7 @@ interface Props {
   isEditing: boolean;
   notifications: Notification[];
   unreadNotifications: Notification[];
+  isSnapshotting: boolean;
   toggleSidenav: () => void;
   markAllNotificationsRead: () => void;
   handleProfileOpen: (edit?: boolean) => void;
@@ -112,6 +127,7 @@ interface Props {
     event: ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => void;
   handleSnapshot: () => void;
+  handleClearSnapshots: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -294,6 +310,16 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     >
                       <UpdateIcon fontSize="small" />
                     </IconButton>
+                    {props.activeProfile.snapshots.length > 0 && (
+                      <IconButton
+                        disabled={props.activeProfile.isSnapshotting}
+                        onClick={() => props.handleClearSnapshots()}
+                        aria-label="clear snapshots"
+                        className={classes.iconButton}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    )}
                   </div>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
