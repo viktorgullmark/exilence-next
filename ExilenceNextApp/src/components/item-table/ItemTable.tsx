@@ -20,6 +20,8 @@ import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { Typography, Box } from '@material-ui/core';
+import { itemTableFilterHeight } from './ItemTableContainer';
+import { itemTableFilterSpacing } from './ItemTableContainer';
 
 export const tableFooterHeight = 52;
 
@@ -27,8 +29,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${theme.spacing(
-        netWorthGridSpacing * 3 + tabPanelSpacing * 2
+      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
+        netWorthGridSpacing * 3 + tabPanelSpacing * 2 + itemTableFilterSpacing
       )}px - ${netWorthTabGroupHeight}px)`
     },
     tableWrapper: {
@@ -192,7 +194,9 @@ const ItemTable: React.FC<ItemTableProps> = ({
     <>
       {rows.length === 0 && (
         <Box mb={2}>
-          <Typography color="error">{t('label.item_table_placeholder')}</Typography>
+          <Typography color="error">
+            {t('label.item_table_placeholder')}
+          </Typography>
         </Box>
       )}
       <Paper
