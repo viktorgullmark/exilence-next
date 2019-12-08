@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   noDrag: {
     '-webkit-app-region': 'no-drag'
   },
+  windowHandlers: {
+    display: 'flex'
+  },
   windowIcon: {
     fontSize: 14,
     marginRight: theme.spacing(1),
@@ -70,10 +73,6 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
   const location = useLocation();
   const version = pkg['version'];
-
-  const atLoginRoute = () => {
-    return location.pathname === '/login';
-  };
 
   return (
     <AppBar position="fixed" color="secondary" className={classes.header}>
@@ -105,7 +104,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={clsx(classes.noDrag)}>
+          <Grid item className={clsx(classes.noDrag, classes.windowHandlers)} alignItems="center">
             <MinimizeIcon
               className={classes.windowIcon}
               onClick={() => WindowUtils.minimize()}
