@@ -39,7 +39,7 @@ import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 export const innerToolbarHeight = 50;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,6 +107,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   notificationTimestamp: {
     display: 'inline'
+  },
+  spinner: {
+    color: theme.palette.primary.contrastText
   }
 }));
 
@@ -292,6 +295,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       aria-label="edit"
                       className={classes.iconButton}
                       onClick={() => props.handleProfileOpen(true)}
+                      title={t('label.edit_profile_icon_title')}
                     >
                       <SettingsIcon fontSize="small" />
                     </IconButton>
@@ -299,6 +303,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       onClick={() => props.handleProfileOpen()}
                       aria-label="create"
                       className={classes.iconButton}
+                      title={t('label.create_profile_icon_title')}
                     >
                       <AddIcon fontSize="small" />
                     </IconButton>
@@ -307,8 +312,16 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       onClick={() => props.handleSnapshot()}
                       aria-label="snapshot"
                       className={classes.iconButton}
+                      title={t('label.fetch_snapshot_icon_title')}
                     >
-                      <UpdateIcon fontSize="small" />
+                      {!props.isSnapshotting ? (
+                        <UpdateIcon fontSize="small" />
+                      ) : (
+                        <CircularProgress
+                          className={classes.spinner}
+                          size={20}
+                        />
+                      )}
                     </IconButton>
                     {props.activeProfile.snapshots.length > 0 && (
                       <IconButton
@@ -316,6 +329,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                         onClick={() => props.handleClearSnapshots()}
                         aria-label="clear snapshots"
                         className={classes.iconButton}
+                        title={t('label.remove_snapshot_icon_title')}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -329,6 +343,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    title={t('label.notification_icon_title')}
                   >
                     <Badge
                       max={9}
@@ -347,6 +362,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     aria-label="account"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
+                    title={t('label.account_icon_title')}
                   >
                     <AccountCircle />
                   </IconButton>
