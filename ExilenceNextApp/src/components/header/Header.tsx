@@ -14,6 +14,7 @@ import { observer } from 'mobx-react';
 import { drawerWidth } from './../sidenav/SideNav';
 import { useLocation } from 'react-router';
 import Typography from '@material-ui/core/Typography';
+import * as pkg from '../../../package.json';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -30,14 +31,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.light,
     fontWeight: 700
   },
+  version: {
+    flexGrow: 1,
+    color: theme.palette.text.hint
+  },
   toolbar: {
     minHeight: toolbarHeight,
     maxHeight: toolbarHeight,
     '-webkit-app-region': 'drag',
     paddingBottom: resizeHandleContainerHeight
   },
-  menuButton: {
-  },
+  menuButton: {},
   hide: {
     display: 'none'
   },
@@ -65,17 +69,14 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
   const location = useLocation();
+  const version = pkg['version'];
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
   };
 
   return (
-    <AppBar
-      position="fixed"
-      color="secondary"
-      className={classes.header}
-    >
+    <AppBar position="fixed" color="secondary" className={classes.header}>
       <div
         className={clsx(classes.noDrag, classes.resizeHandleContainer)}
       ></div>
@@ -83,12 +84,27 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
         <Grid
           container
           direction="row"
-          justify="flex-end"
-          alignItems="flex-end"
+          justify="space-between"
+          alignItems="center"
         >
-          <Typography variant="h6" noWrap className={classes.title}>
-            Exilence Next
-          </Typography>
+          <Grid item>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <Typography variant="h6" noWrap className={classes.title}>
+                  Exilence Next
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="subtitle2"
+                  noWrap
+                  className={classes.version}
+                >
+                  v.{version}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
           <Grid item className={clsx(classes.noDrag)}>
             <MinimizeIcon
               className={classes.windowIcon}
