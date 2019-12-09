@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using Shared.Entities;
 using Shared.Interfaces;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,56 +19,46 @@ namespace API.Hubs
         readonly string _instanceName;
 
         readonly ISnapshotService _snapshotService;
-        readonly IProfileService _profileService;
+        readonly IAccountService _accountService;
+        readonly IGroupService _groupService;
 
-        readonly IGroupRepository _groupRepository;
-        readonly IAccountRepository _accountRepository;
-        readonly ISnapshotRepository _snapshotRepository;
 
 
         private bool IsPremium => Context.User.IsInRole("Premium");
         private bool IsAdmin => Context.User.IsInRole("Admin");
-        private string Account => Context.User.Identity.Name;
+        private string AccountName => Context.User.Identity.Name;
         private string ConnectionId => Context.ConnectionId;
 
         public BaseHub(
             IMapper mapper, 
             IConfiguration configuration, 
-            IAccountRepository accountRepository, 
-            IGroupRepository groupRepository, 
-            ISnapshotRepository snapshotRepository,
+            IGroupService groupService,
             ISnapshotService snapshotService,
-            IProfileService profileService
+            IAccountService accountService
             )
         {
             _mapper = mapper;
-            _instanceName = configuration.GetSection("Settings")["InstanceName"];            
-
-            _groupRepository = groupRepository;
-            _accountRepository = accountRepository;
-            _snapshotRepository = snapshotRepository;
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];   
 
             _snapshotService = snapshotService;
-            _profileService = profileService;
+            _accountService = accountService;
+            _groupService = groupService;
         }
 
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"ConnectionId: {ConnectionId} connected");
-            var connection = new Connection(ConnectionId, _instanceName);
-            await _groupRepository.AddConnection(connection);
-            await _groupRepository.SaveChangesAsync();
-            
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
+            var connection = new ConnectionModel();
+            connection = await _groupService.AddConnection(connection);            
             await base.OnConnectedAsync();
         }
 
         [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"ConnectionId: {ConnectionId} disconnected");
-            await _groupRepository.RemoveConnection(ConnectionId);
-            await _groupRepository.SaveChangesAsync();
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
+            await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 

@@ -5,11 +5,24 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const sentry = require('@sentry/electron');
+const log = require('electron-log');
+const { autoUpdater } = require('electron-updater');
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
+
+if (!isDev) {
+  sentry.init({
+    dsn: 'https://e69c936836334a2c9e4b553f20d1d51c@sentry.io/1843156'
+  });
+}
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = isDev;
-  const extensions = ['REACT_DEVELOPER_TOOLS']; 
+  const extensions = ['REACT_DEVELOPER_TOOLS'];
 
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
@@ -18,9 +31,37 @@ const installExtensions = async () => {
 
 let mainWindow;
 
-require('update-electron-app')({
-  repo: 'kitze/react-electron-example',
-  updateInterval: '1 hour'
+function sendStatusToWindow(text) {
+  log.info(text);
+  mainWindow.webContents.send('message', text);
+}
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+});
+autoUpdater.on('update-available', info => {
+  sendStatusToWindow('Update available.');
+});
+autoUpdater.on('update-not-available', info => {
+  sendStatusToWindow('Update not available.');
+});
+autoUpdater.on('error', err => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', progressObj => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message =
+    log_message +
+    ' (' +
+    progressObj.transferred +
+    '/' +
+    progressObj.total +
+    ')';
+  sendStatusToWindow(log_message);
+});
+autoUpdater.on('update-downloaded', info => {
+  sendStatusToWindow('Update downloaded');
 });
 
 function createWindow() {
@@ -51,6 +92,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
   createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {

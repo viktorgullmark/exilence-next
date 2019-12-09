@@ -1,21 +1,20 @@
-import { action, observable, reaction, computed } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { map, catchError, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import uuid from 'uuid';
-import { ItemHelper } from '../../helpers/item.helper';
+import { ItemUtils } from '../../utils/item.utils';
+import { ICurrency } from '../../interfaces/currency.interface';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
+import { ISnapshot } from '../../interfaces/snapshot.interface';
+import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
+import { pricingService } from '../../services/pricing.service';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { IExternalPrice } from '../../interfaces/external-price.interface';
-import { of } from 'rxjs';
-import { ISnapshot } from '../../interfaces/snapshot.interface';
-import { pricingService } from '../../services/pricing.service';
-import { NotificationType } from '../../enums/notification-type.enum';
-import { ICurrency } from '../../interfaces/currency.interface';
+import { AxiosError } from 'axios';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -23,7 +22,10 @@ export class Profile {
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
-  @persist('object') @observable activeCurrency: ICurrency = { name: 'chaos', short: 'c' };
+  @persist('object') @observable activeCurrency: ICurrency = {
+    name: 'chaos',
+    short: 'c'
+  };
 
   @persist('list') @observable activeStashTabIds: string[] = [];
 
@@ -55,9 +57,27 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemHelper.mergeItemStacks(
+    return ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
+      )
+    );
+  }
+
+  @computed
+  get filteredItems() {
+    if (this.snapshots.length === 0) {
+      return [];
+    }
+    return ItemUtils.mergeItemStacks(
+      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
+        sts.items.filter(
+          i =>
+            i.calculated > 0 &&
+            i.name
+              .toLowerCase()
+              .includes(stores.uiStateStore.itemTableFilterText.toLowerCase())
+        )
       )
     );
   }
@@ -67,9 +87,10 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-   
+
     const values = this.snapshots[0].stashTabSnapshots
-      .flatMap(sts => sts.value).reduce((a, b) => a + b, 0);
+      .flatMap(sts => sts.value)
+      .reduce((a, b) => a + b, 0);
 
     return +values.toFixed(2);
   }
@@ -87,6 +108,11 @@ export class Profile {
   @action
   setActiveLeague(id: string) {
     this.activeLeagueId = id;
+  }
+
+  @action
+  clearSnapshots() {
+    this.snapshots = [];
   }
 
   @action
@@ -115,18 +141,12 @@ export class Profile {
   }
 
   @action snapshotSuccess() {
-    stores.notificationStore.createNotification(
-      'snapshot',
-      NotificationType.Success
-    );
+    stores.notificationStore.createNotification('snapshot', 'success');
     this.setIsSnapshotting(false);
   }
 
-  @action snapshotFail() {
-    stores.notificationStore.createNotification(
-      'snapshot',
-      NotificationType.Error
-    );
+  @action snapshotFail(e?: AxiosError | Error) {
+    stores.notificationStore.createNotification('snapshot', 'error', true, e);
     this.setIsSnapshotting(false);
   }
 
@@ -140,7 +160,10 @@ export class Profile {
     );
 
     if (!accountLeague || !league) {
-      return this.getItemsFail(new Error('no_matching_league'))
+      return this.getItemsFail(
+        new Error('no_matching_league'),
+        this.activeLeagueId
+      );
     }
 
     const selectedStashTabs = accountLeague.stashtabs.filter(
@@ -157,33 +180,42 @@ export class Profile {
         .pipe(
           map(stashTabsWithItems => {
             return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.items = ItemHelper.mergeItemStacks(
+              stashTabWithItems.items = ItemUtils.mergeItemStacks(
                 stashTabWithItems.items
               );
               return stashTabWithItems;
             });
           }),
           mergeMap(stashTabsWithItems =>
-            of(this.getItemsSuccess(stashTabsWithItems))
+            of(this.getItemsSuccess(stashTabsWithItems, league.id))
           ),
-          catchError((e: Error) => of(this.getItemsFail(e)))
+          catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
         )
     );
   }
 
-  @action getItemsSuccess(stashTabsWithItems: IStashTabSnapshot[]) {
+  @action getItemsSuccess(
+    stashTabsWithItems: IStashTabSnapshot[],
+    leagueId: string
+  ) {
+    // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
     stores.notificationStore.createNotification(
       'get_items',
-      NotificationType.Success
+      'success',
+      undefined,
+      undefined,
+      leagueId
     );
     this.priceItemsForStashTabs(stashTabsWithItems);
   }
 
-  @action getItemsFail(e: Error) {
+  @action getItemsFail(e: AxiosError | Error, leagueId: string) {
     stores.notificationStore.createNotification(
       'get_items',
-      NotificationType.Error,
-      e && e.message
+      'error',
+      true,
+      e,
+      leagueId
     );
     this.snapshotFail();
   }
@@ -197,7 +229,9 @@ export class Profile {
     );
 
     if (!activePriceDetails) {
-      return this.priceItemsForStashTabsFail(new Error('no_prices_received_for_league'));
+      return this.priceItemsForStashTabsFail(
+        new Error('no_prices_received_for_league')
+      );
     }
 
     const pricedStashTabs = stashTabsWithItems.map(
@@ -225,19 +259,17 @@ export class Profile {
 
   @action
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
-    stores.notificationStore.createNotification(
-      'price_items_for_stash_tabs',
-      NotificationType.Success
-    );
+    stores.notificationStore.createNotification('price_stash_items', 'success');
     this.saveSnapshot(pricedStashTabs);
   }
 
   @action
-  priceItemsForStashTabsFail(e?: Error) {
+  priceItemsForStashTabsFail(e: AxiosError | Error) {
     stores.notificationStore.createNotification(
-      'price_items_for_stash_tabs',
-      NotificationType.Error,
-      e && e.message
+      'price_stash_items',
+      'error',
+      true,
+      e
     );
     this.snapshotFail();
   }
@@ -249,6 +281,8 @@ export class Profile {
     };
 
     this.snapshots.unshift(new Snapshot(snapshot));
+
+    this.snapshots = this.snapshots.slice(0, 100);
 
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {

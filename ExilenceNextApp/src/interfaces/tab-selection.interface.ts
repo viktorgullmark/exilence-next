@@ -1,4 +1,4 @@
 export interface ITabSelection {
-    tabId: string;
-    league: string;
+  tabId: string;
+  league: string;
 }

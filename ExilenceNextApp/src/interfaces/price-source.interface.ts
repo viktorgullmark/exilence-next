@@ -1,4 +1,4 @@
 export interface IPriceSource {
-    name: string;
-    url: string;
+  name: string;
+  url: string;
 }

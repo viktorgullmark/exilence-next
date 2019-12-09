@@ -13,7 +13,8 @@ namespace Shared.Models
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
         public decimal TotalValue { get; set; }
-        public virtual ICollection<StashtabModel> StashTabs { get; set; }
+        public List<StashtabModel> StashTabs { get; set; }
+        public SnapshotProfileModel Profile { get; set; }
         public DateTime Datestamp { get; set; }
     }
 }

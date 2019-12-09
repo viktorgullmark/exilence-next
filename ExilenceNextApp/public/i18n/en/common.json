@@ -12,6 +12,8 @@
   },
   "title": {
     "login": "Login",
+    "net_worth": "Net worth",
+    "settings": "Settings",
     "save_profile": "Edit profile",
     "create_profile": "Create new profile",
     "enter_acc_info": "Enter account information",
@@ -32,6 +34,14 @@
     "graphs": "Graphs",
     "total_value": "Net worth",
     "total_items": "Items",
-    "total_snapshots": "Snapshots"
+    "total_snapshots": "Snapshots",
+    "session_id_link": "How to find your session id",
+    "sign_out": "Sign out",
+    "edit_profile_icon_title": "Edit profile",
+    "create_profile_icon_title": "Create profile",
+    "fetch_snapshot_icon_title": "Fetch snapshot",
+    "remove_snapshot_icon_title": "Remove snapshots",
+    "notification_icon_title": "Notifications",
+    "account_icon_title": "My account"
   }
 }

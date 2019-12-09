@@ -1,5 +1,5 @@
 export interface IPoeWatchCategoryGroup {
-    id: number;
-    name: string;
-    display: string;
+  id: number;
+  name: string;
+  display: string;
 }

@@ -9,5 +9,15 @@
     "stacksize": "Stacksize",
     "calculated": "Price",
     "total": "Total"
+  },
+  "label": {
+    "item_table_placeholder": "No items found for the selected profile",
+    "select_stash_tabs": "No stash items found",
+    "stash_tab_dropdown_placeholder": "No stash tabs found",
+    "search_text": "Search items"
+  },
+  "value": {
+    "true": "Yes",
+    "false": "No"
   }
 }

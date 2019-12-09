@@ -9,11 +9,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import clsx from 'clsx';
 import React from 'react';
-import { WindowHelper } from './../../helpers/window.helper';
+import { WindowUtils } from '../../utils/window.utils';
 import { observer } from 'mobx-react';
 import { drawerWidth } from './../sidenav/SideNav';
 import { useLocation } from 'react-router';
 import Typography from '@material-ui/core/Typography';
+import * as pkg from '../../../package.json';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -30,14 +31,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.light,
     fontWeight: 700
   },
+  version: {
+    flexGrow: 1,
+    color: theme.palette.text.hint
+  },
   toolbar: {
     minHeight: toolbarHeight,
     maxHeight: toolbarHeight,
     '-webkit-app-region': 'drag',
     paddingBottom: resizeHandleContainerHeight
   },
-  menuButton: {
-  },
+  menuButton: {},
   hide: {
     display: 'none'
   },
@@ -46,6 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noDrag: {
     '-webkit-app-region': 'no-drag'
+  },
+  windowHandlers: {
+    display: 'flex',
+    alignItems: 'center'
   },
   windowIcon: {
     fontSize: 14,
@@ -65,17 +73,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
   const location = useLocation();
-
-  const atLoginRoute = () => {
-    return location.pathname === '/login';
-  };
+  const version = pkg['version'];
 
   return (
-    <AppBar
-      position="fixed"
-      color="secondary"
-      className={classes.header}
-    >
+    <AppBar position="fixed" color="secondary" className={classes.header}>
       <div
         className={clsx(classes.noDrag, classes.resizeHandleContainer)}
       ></div>
@@ -83,22 +84,37 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
         <Grid
           container
           direction="row"
-          justify="flex-end"
-          alignItems="flex-end"
+          justify="space-between"
+          alignItems="center"
         >
-          <Typography variant="h6" noWrap className={classes.title}>
-            Exilence Next
-          </Typography>
-          <Grid item className={clsx(classes.noDrag)}>
+          <Grid item>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item>
+                <Typography variant="h6" noWrap className={classes.title}>
+                  Exilence Next
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="subtitle2"
+                  noWrap
+                  className={classes.version}
+                >
+                  v.{version}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item className={clsx(classes.noDrag, classes.windowHandlers)}>
             <MinimizeIcon
               className={classes.windowIcon}
-              onClick={() => WindowHelper.minimize()}
+              onClick={() => WindowUtils.minimize()}
             />
             {!props.maximized ? (
               <CheckBoxOutlineBlankIcon
                 className={classes.windowIcon}
                 onClick={() => {
-                  WindowHelper.maximize();
+                  WindowUtils.maximize();
                   props.setMaximized(true);
                 }}
               />
@@ -106,14 +122,14 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               <FilterNone
                 className={classes.windowIcon}
                 onClick={() => {
-                  WindowHelper.unmaximize();
+                  WindowUtils.unmaximize();
                   props.setMaximized(false);
                 }}
               />
             )}
             <CloseIcon
               className={classes.windowIcon}
-              onClick={() => WindowHelper.close()}
+              onClick={() => WindowUtils.close()}
             />
           </Grid>
         </Grid>

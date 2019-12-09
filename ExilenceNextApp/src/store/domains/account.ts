@@ -131,11 +131,4 @@ export class Account implements IAccount {
 
     this.setActiveProfile(created.uuid);
   }
-
-  @action
-  getAllStashTabs() {
-    this.accountLeagues.forEach(l => {
-      l.getStashTabs();
-    });
-  }
 }

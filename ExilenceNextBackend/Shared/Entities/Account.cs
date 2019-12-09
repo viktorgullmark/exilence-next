@@ -23,7 +23,8 @@ namespace Shared.Entities
 
         public Account()
         {
-
+            Characters = new List<Character>();
+            Profiles = new List<SnapshotProfile>();
         }
     }
 }

@@ -1,4 +1,4 @@
 export interface ILeague {
-    id: string;
-    realm: string;
+  id: string;
+  realm: string;
 }

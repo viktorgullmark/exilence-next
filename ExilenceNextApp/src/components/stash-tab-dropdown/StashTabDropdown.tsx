@@ -3,7 +3,7 @@ import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ColourHelper } from '../../helpers/colour.helper';
+import { ColourUtils } from '../../utils/colour.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 
 interface StashTabDropdownProps {
@@ -60,7 +60,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 }: StashTabDropdownProps) => {
 
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['tables']);
   const classes = useStyles();
 
   const getStashTabName = (id: string) => {
@@ -70,7 +70,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find(st => st.id === id);
-    return foundTab ? ColourHelper.rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
+    return foundTab ? ColourUtils.rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
   }
 
   return (
@@ -96,7 +96,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           )}
           MenuProps={MenuProps}
         >
-          {stashTabs.map((stashTab: IStashTab) => (
+          {stashTabs.length != 0 ? stashTabs.map((stashTab: IStashTab) => (
             <MenuItem
               key={stashTab.id}
               value={stashTab.id}
@@ -104,7 +104,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             >
               {stashTab.n}
             </MenuItem>
-          ))}
+          )) : <h2>{t('label.stash_tab_dropdown_placeholder')}</h2>}
         </Select>
       </FormControl>
     </>

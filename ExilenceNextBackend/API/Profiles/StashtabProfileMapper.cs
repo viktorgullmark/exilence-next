@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Shared.Entities;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,8 @@ namespace API.Profiles
     {
         public StashtabProfileMapper()
         {
-
+            CreateMap<Stashtab, StashtabModel>();
+            CreateMap<StashtabModel, Stashtab>();
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Shared.Repositories
             _exilenceContext = context;
         }
 
-        public async Task<Group> AddGroup(Group group)
+        public Group AddGroup(Group group)
         {
-            await _exilenceContext.Groups.AddAsync(group);
+            _exilenceContext.Groups.Add(group);
             return group;
         }
 
@@ -39,7 +39,7 @@ namespace Shared.Repositories
         public async Task<Group> RemoveGroup(string name)
         {
             var group = await GetGroup(name);
-            _exilenceContext.Remove(group);
+            _exilenceContext.Groups.Remove(group);
             return group;
         }
 
@@ -52,13 +52,13 @@ namespace Shared.Repositories
         public async Task<Connection> RemoveConnection(string connectionId)
         {
             var connection = await GetConnection(connectionId);
-            _exilenceContext.Remove(connection);
+            _exilenceContext.Connections.Remove(connection);
             return connection;
         }
 
-        public async Task<Connection> AddConnection(Connection connection)
+        public Connection AddConnection(Connection connection)
         {
-            await _exilenceContext.Connections.AddAsync(connection);
+            _exilenceContext.Connections.Add(connection);
             return connection;
         }
 
@@ -66,6 +66,5 @@ namespace Shared.Repositories
         {
             await _exilenceContext.SaveChangesAsync();
         }
-
     }
 }

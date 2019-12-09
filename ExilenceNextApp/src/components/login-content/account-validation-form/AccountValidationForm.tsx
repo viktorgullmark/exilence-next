@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     width: '100%'
   },
+  sessionIdLink: {
+    color: theme.palette.primary.light,
+    textDecoration: 'none'
+  }
 }));
 
 const AccountValidationForm: React.FC<AccountValidationFormProps> = (
@@ -112,6 +116,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 margin="normal"
                 fullWidth
               />
+              <a className={classes.sessionIdLink} href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki" target="blank">{t('label.session_id_link')}</a>
             </div>
             <div className={props.styles.loginFooter}>
               <div className={classes.wrapper}>

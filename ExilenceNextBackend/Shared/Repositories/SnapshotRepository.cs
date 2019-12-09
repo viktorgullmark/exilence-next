@@ -22,21 +22,16 @@ namespace Shared.Repositories
         {
             var count = await _exilenceContext.Snapshots.Where(s => s.ClientId == clientId).CountAsync();
             return count > 0;
-        }
-        
-        public IQueryable<Snapshot> RetriveSnapshots(Expression<Func<Snapshot, bool>> predicate)
+        }            
+
+        public IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate)
         {
             return _exilenceContext.Snapshots.Where(predicate);
-        }      
-
-        public IQueryable<Snapshot> GetSnapshots(Expression<Func<Group, bool>> predicate)
-        {
-            throw new NotImplementedException();
         }
 
-        public IQueryable<Stashtab> GetStashtabs(Expression<Func<Group, bool>> predicate)
+        public IQueryable<Stashtab> GetStashtabs(Expression<Func<Stashtab, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _exilenceContext.StashTabs.Where(predicate);
         }
         public async Task SaveChangesAsync()
         {
