@@ -2,15 +2,19 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import orange from '@material-ui/core/colors/orange';
 import { grey, green, red } from '@material-ui/core/colors';
 
-
-const defaultTheme = createMuiTheme({ palette: { type: 'dark' }});
+const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
 
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
 
 export const primaryDarker = '#4a091f';
-export const cardColor = '#15313e';
+
+export const cardColors = {
+  primary: '#263238',
+  secondary: '#1c3533',
+  third: '#14394c'
+};
 
 export const rarityColors = {
   normal: '#c0c0c0',
@@ -25,14 +29,14 @@ export const rarityColors = {
 
 export const itemColors = {
   chaosOrb: '#d6b600'
-}
+};
 
 export const statusColors = {
   success: green[800],
   warning: orange[700],
   info: grey[900],
   error: red[900]
-}
+};
 
 export type Rarity = typeof rarityColors;
 export type ItemColor = typeof itemColors;
@@ -53,7 +57,7 @@ export default function exilenceTheme() {
       },
       MuiTableRow: {
         root: {
-          "&$hover:hover": {
+          '&$hover:hover': {
             backgroundColor: defaultTheme.palette.background.default
           }
         }
@@ -62,7 +66,7 @@ export default function exilenceTheme() {
         root: {
           fontSize: '0.75rem'
         }
-      },
+      }
     },
     palette: {
       primary: {
