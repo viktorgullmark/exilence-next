@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { CookieUtils } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
+import { Notification } from './domains/notification';
 
 export class UiStateStore {
   @observable sessIdCookie: ICookie | undefined = undefined;
@@ -11,8 +12,26 @@ export class UiStateStore {
   @observable validated: boolean = false;
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
+  @observable notificationListAnchor: null | HTMLElement = null;
+  @observable accountMenuAnchor: null | HTMLElement = null;
+  @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
+
+  @action
+  setNotificationList(list: Notification[]) {
+    this.notificationList = list;
+  }
+
+  @action
+  setNotificationListAnchor(el: HTMLElement | null) {
+    this.notificationListAnchor = el;
+  }
+
+  @action
+  setAccountMenuAnchor(el: HTMLElement | null) {
+    this.accountMenuAnchor = el;
+  }
 
   @action
   setSessIdCookie(sessionId: string) {

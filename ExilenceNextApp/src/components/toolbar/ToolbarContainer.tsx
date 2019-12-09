@@ -22,6 +22,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  const { notifications, markAllAsRead  } = notificationStore!;  
+
   const handleOpen = (edit: boolean = false) => {
     setIsEditing(edit);
     setProfileOpen(true);
@@ -43,6 +45,16 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 
+  const handleNotificationsOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setNotificationList([...notifications]);
+    notificationStore!.markAllAsRead();
+    uiStateStore!.setNotificationListAnchor(event.currentTarget);
+  };
+
+  const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setAccountMenuAnchor(event.currentTarget);
+  }
+ 
   return (
     <Toolbar
       sidenavOpened={uiStateStore!.sidenavOpen}
@@ -58,6 +70,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       handleProfileClose={handleClose}
       notifications={notificationStore!.notifications}
       unreadNotifications={notificationStore!.unreadNotifications}
+      handleNotificationsOpen={handleNotificationsOpen}
+      handleAccountMenuOpen={handleAccountMenuOpen}
       handleClearSnapshots={handleClearSnapshots}
       isSnapshotting={accountStore!.getSelectedAccount.activeProfile.isSnapshotting}
     />
