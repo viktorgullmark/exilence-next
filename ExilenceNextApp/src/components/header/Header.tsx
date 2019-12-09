@@ -53,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   windowHandlerButton: {
+    display: 'flex',
+    alignItems: 'center',
     '&:hover': {
       backgroundColor: theme.palette.primary.dark
     }
