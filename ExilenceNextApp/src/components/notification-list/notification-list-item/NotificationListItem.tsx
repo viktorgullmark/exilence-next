@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode, forwardRef } from 'react';
 import { Notification } from '../../../store/domains/notification';
 import {
   ListItem,
@@ -17,6 +17,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
+  children?: ReactNode;
   notification: Notification;
 }
 
@@ -33,7 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const NotificationListItem: React.FC<Props> = ({ notification }: Props) => {
+const NotificationListItem = forwardRef((props: Props, ref) => {
+  const { notification } = props;
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -49,7 +51,7 @@ const NotificationListItem: React.FC<Props> = ({ notification }: Props) => {
   };
 
   return (
-    <ListItem key={notification.uuid} className={classes.notification}>
+    <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
       <ListItemAvatar>
         <Avatar>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
@@ -70,6 +72,8 @@ const NotificationListItem: React.FC<Props> = ({ notification }: Props) => {
       />
     </ListItem>
   );
-};
+});
+
+NotificationListItem.displayName = 'NotificationListItem';
 
 export default NotificationListItem;

@@ -2,7 +2,7 @@ import { Menu } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Notification } from '../../store/domains/notification';
-import NotificationListItem from './notification-list-item/NotificationList';
+import NotificationListItem from './notification-list-item/NotificationListItem';
 
 interface Props {
   notificationList: Notification[];
