@@ -49,7 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: resizeHandleContainerHeight
   },
   noDrag: {
-    '-webkit-app-region': 'no-drag'
+    '-webkit-app-region': 'no-drag',
+    cursor: 'pointer'
+  },
+  windowHandlerButton: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark
+    }
   },
   windowHandlers: {
     display: 'flex',
@@ -105,32 +111,44 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={clsx(classes.noDrag, classes.windowHandlers)}>
-            <MinimizeIcon
-              className={classes.windowIcon}
-              onClick={() => WindowUtils.minimize()}
-            />
-            {!props.maximized ? (
-              <CheckBoxOutlineBlankIcon
-                className={classes.windowIcon}
-                onClick={() => {
-                  WindowUtils.maximize();
-                  props.setMaximized(true);
-                }}
-              />
-            ) : (
-              <FilterNone
-                className={classes.windowIcon}
-                onClick={() => {
-                  WindowUtils.unmaximize();
-                  props.setMaximized(false);
-                }}
-              />
-            )}
-            <CloseIcon
-              className={classes.windowIcon}
-              onClick={() => WindowUtils.close()}
-            />
+          <Grid item>
+            <Grid container spacing={1} alignItems="center">
+              <Grid
+                item
+                className={clsx(classes.noDrag, classes.windowHandlerButton)}
+                onClick={() => WindowUtils.minimize()}
+              >
+                <MinimizeIcon className={classes.windowIcon} />
+              </Grid>
+              <Grid
+                item
+                className={clsx(classes.noDrag, classes.windowHandlerButton)}
+                onClick={
+                  !props.maximized
+                    ? () => {
+                        WindowUtils.maximize();
+                        props.setMaximized(true);
+                      }
+                    : () => {
+                        WindowUtils.unmaximize();
+                        props.setMaximized(false);
+                      }
+                }
+              >
+                {!props.maximized ? (
+                  <CheckBoxOutlineBlankIcon className={classes.windowIcon} />
+                ) : (
+                  <FilterNone className={classes.windowIcon} />
+                )}
+              </Grid>
+              <Grid
+                item
+                className={clsx(classes.noDrag, classes.windowHandlerButton)}
+                onClick={() => WindowUtils.close()}
+              >
+                <CloseIcon className={classes.windowIcon} />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Toolbar>
