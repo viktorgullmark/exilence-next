@@ -13,6 +13,7 @@ export class UiStateStore {
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
+  @observable accountMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
@@ -25,6 +26,11 @@ export class UiStateStore {
   @action
   setNotificationListAnchor(el: HTMLElement | null) {
     this.notificationListAnchor = el;
+  }
+
+  @action
+  setAccountMenuAnchor(el: HTMLElement | null) {
+    this.accountMenuAnchor = el;
   }
 
   @action

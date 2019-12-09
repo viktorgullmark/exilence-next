@@ -51,6 +51,10 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     uiStateStore!.setNotificationListAnchor(event.currentTarget);
   };
 
+  const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setAccountMenuAnchor(event.currentTarget);
+  }
+ 
   return (
     <Toolbar
       sidenavOpened={uiStateStore!.sidenavOpen}
@@ -67,6 +71,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       notifications={notificationStore!.notifications}
       unreadNotifications={notificationStore!.unreadNotifications}
       handleNotificationsOpen={handleNotificationsOpen}
+      handleAccountMenuOpen={handleAccountMenuOpen}
       handleClearSnapshots={handleClearSnapshots}
       isSnapshotting={accountStore!.getSelectedAccount.activeProfile.isSnapshotting}
     />

@@ -24,6 +24,7 @@ import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -86,16 +87,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: innerToolbarHeight,
     borderLeft: `1px solid ${theme.palette.primary.dark}`
   },
-  notification: {
-    paddingTop: 0,
-    paddingBottom: theme.spacing(0.25),
-    '&:focus': {
-      outline: 'none'
-    }
-  },
-  notificationTimestamp: {
-    display: 'inline'
-  },
   spinner: {
     color: theme.palette.primary.contrastText
   }
@@ -119,47 +110,18 @@ interface Props {
   ) => void;
   handleSnapshot: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const location = useLocation();
-  const history = useHistory();
   const { t } = useTranslation();
-
-  const [accountEl, setAccountEl] = React.useState<null | HTMLElement>(null);
-  const accountMenuOpen = Boolean(accountEl);
-
-  const handleAccountMenuClose = () => {
-    setAccountEl(null);
-  };
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
   };
-
-  const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAccountEl(event.currentTarget);
-  };
-
-  const handleSignOut = () => {
-    history.push('/login');
-  };
-
-  const renderMenu = (
-    <Menu
-      anchorEl={accountEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id="account-menu"
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={accountMenuOpen}
-      onClose={handleAccountMenuClose}
-    >
-      <MenuItem onClick={handleSignOut}>{t('label.sign_out')}</MenuItem>
-    </Menu>
-  );
 
   return (
     <>
@@ -277,7 +239,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     </Badge>
                   </IconButton>
                   <IconButton
-                    onClick={handleAccountMenuOpen}
+                    onClick={(e) => props.handleAccountMenuOpen(e)}
                     aria-label="account"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton, classes.endAreaIcon)}
@@ -289,7 +251,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               </Grid>
             </MuiToolbar>
           </AppBar>
-          {renderMenu}
+          <AccountMenuContainer />
           <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}
