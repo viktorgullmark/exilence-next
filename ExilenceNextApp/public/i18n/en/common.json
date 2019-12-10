@@ -44,7 +44,8 @@
     "fetch_snapshot_icon_title": "Fetch snapshot",
     "remove_snapshot_icon_title": "Remove snapshots",
     "notification_icon_title": "Notifications",
-    "account_icon_title": "My account"
+    "account_icon_title": "My account",
+    "net_worth_export": "Export data"
   },
   "body": {
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?"
