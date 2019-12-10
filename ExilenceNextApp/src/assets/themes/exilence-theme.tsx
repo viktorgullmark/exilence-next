@@ -1,6 +1,5 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import orange from '@material-ui/core/colors/orange';
-import { grey, green, red } from '@material-ui/core/colors';
+import { grey, green, red, amber } from '@material-ui/core/colors';
 
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
 
@@ -33,7 +32,7 @@ export const itemColors = {
 
 export const statusColors = {
   success: green[800],
-  warning: orange[700],
+  warning: amber[300],
   info: grey[900],
   error: red[900]
 };
