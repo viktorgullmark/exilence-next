@@ -79,7 +79,8 @@ export class Account implements IAccount {
         new Profile({
           name: 'profile 1',
           activeLeagueId: this.accountLeagues[0].leagueId,
-          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id
+          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id,
+          shouldSetStashTabs: true
         })
       );
       this.setActiveProfile(this.profiles[0].uuid);

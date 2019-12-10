@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of } from 'rxjs';
@@ -150,6 +150,23 @@ export class AccountStore {
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
+
+    const profile = this.getSelectedAccount.activeProfile;
+
+    if (profile.shouldSetStashTabs) {
+      const league = this.getSelectedAccount.accountLeagues.find(
+        al => al.leagueId === profile.activeLeagueId
+      );
+
+      if (league && profile.shouldSetStashTabs) {
+        profile.setActiveStashTabs(
+          league.stashtabs.slice(0, 6).map(lst => lst.id)
+        );
+        runInAction(() => {
+          profile.shouldSetStashTabs = false;
+        });
+      }
+    }
   }
 
   @action
