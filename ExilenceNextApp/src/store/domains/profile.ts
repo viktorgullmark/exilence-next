@@ -33,6 +33,8 @@ export class Profile {
 
   @observable isSnapshotting: boolean = false;
 
+  @observable shouldSetStashTabs: boolean = false;
+
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
   }
