@@ -95,7 +95,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             />
           </Grid>
           <Grid container item xs={8} className={classes.placeholder} direction="column" justify="space-between" >
-            {filteredItems.length === 0 && (
+            {filteredItems.length === 0 && uiStateStore!.itemTableFilterText === '' && (
               <Typography className={classes.warning} align="center">
                 {t('tables:label.item_table_placeholder')}
               </Typography>
