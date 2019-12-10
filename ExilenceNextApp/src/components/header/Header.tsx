@@ -55,8 +55,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   windowHandlerButton: {
     display: 'flex',
     alignItems: 'center',
+    width: 40,
+    justifyContent: 'center',
+    height: resizeHandleContainerHeight + toolbarHeight,
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark
+      backgroundColor: theme.palette.background.paper
+    }
+  },
+  exit: {
+    '&:hover': {
+      backgroundColor: theme.palette.error.dark
     }
   },
   windowHandlers: {
@@ -114,7 +122,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Grid container spacing={1} alignItems="center">
+            <Grid container alignItems="center">
               <Grid
                 item
                 className={clsx(classes.noDrag, classes.windowHandlerButton)}
@@ -145,7 +153,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               </Grid>
               <Grid
                 item
-                className={clsx(classes.noDrag, classes.windowHandlerButton)}
+                className={clsx(classes.noDrag, classes.windowHandlerButton, classes.exit)}
                 onClick={() => WindowUtils.close()}
               >
                 <CloseIcon className={classes.windowIcon} />
