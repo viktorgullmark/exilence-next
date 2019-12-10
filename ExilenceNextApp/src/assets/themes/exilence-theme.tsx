@@ -51,7 +51,7 @@ export default function exilenceTheme() {
         gutters: {
           [defaultTheme.breakpoints.up('xs')]: {
             paddingLeft: '8px',
-            paddingRight: '8px'
+            paddingRight: 0
           }
         }
       },
