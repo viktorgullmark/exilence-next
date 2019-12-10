@@ -126,9 +126,11 @@ const SideNav: React.FC<SideNavProps> = ({
               <ListItemText primary={t('title.settings')} />
             </ListItem>
           </List>
-          <Box display="flex" justifyContent="center">
-            <img className={classes.discordLogo} src={DiscordLogo} />
-          </Box>
+          <a href="https://discord.gg/yxuBrPY" target="blank">
+            <Box display="flex" justifyContent="center">
+              <img className={classes.discordLogo} src={DiscordLogo} />
+            </Box>
+          </a>
         </Drawer>
       )}
       <main
