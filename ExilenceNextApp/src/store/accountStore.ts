@@ -127,7 +127,6 @@ export class AccountStore {
 
   @action
   validateSession() {
-    this.uiStateStore.setValidated(false);
     const acc = this.getSelectedAccount;
 
     fromStream(
