@@ -94,7 +94,8 @@
   "build": {
     "appId": "com.exilence.exilence-next-app",
     "files": [
-      "build/**/*"
+      "build/**/*",
+      "public/icon.*"
     ],
     "extraFiles": [
       "public/i18n/**/*"
@@ -106,6 +107,9 @@
       "provider": "github",
       "repo": "exilence-next",
       "owner": "viktorgullmark"
+    },
+    "win": {
+      "icon": "build/icon.ico"
     }
   }
 }
