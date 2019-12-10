@@ -43,6 +43,7 @@
     "create_profile_icon_title": "Create profile",
     "fetch_snapshot_icon_title": "Fetch snapshot",
     "remove_snapshot_icon_title": "Remove snapshots",
+    "remove_profile_icon_title": "Remove profile",
     "notification_icon_title": "Notifications",
     "account_icon_title": "My account",
     "net_worth_export": "Export data"
