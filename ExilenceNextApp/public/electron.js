@@ -15,7 +15,7 @@ log.info('App starting...');
 
 if (!isDev) {
   sentry.init({
-    dsn: 'https://e69c936836334a2c9e4b553f20d1d51c@sentry.io/1843156'
+    dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797'
   });
 }
 
