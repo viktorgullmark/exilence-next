@@ -76,7 +76,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   return (
     <>
       <FormControl className={classes.formControl} fullWidth margin="normal">
-        <InputLabel id="mutiple-chip-label">{t('label.select_stash_tabs')}</InputLabel>
+        <InputLabel id="mutiple-chip-label">{t('common:label.select_stash_tabs')}</InputLabel>
         <Select
           labelId="mutiple-chip-label"
           id="mutiple-chip"
