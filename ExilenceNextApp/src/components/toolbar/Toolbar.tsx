@@ -1,4 +1,12 @@
-import { AppBar, Badge, FormControl, Grid, Menu, MenuItem, Select } from '@material-ui/core';
+import {
+  AppBar,
+  Badge,
+  FormControl,
+  Grid,
+  Menu,
+  MenuItem,
+  Select
+} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -109,6 +117,7 @@ interface Props {
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
+  handleRemoveProfile: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -148,6 +157,17 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 className={classes.toolbarGrid}
               >
                 <Grid item className={classes.profileArea}>
+                  {props.profiles.length > 1 && (
+                    <IconButton
+                      disabled={props.activeProfile.isSnapshotting}
+                      onClick={() => props.handleRemoveProfile()}
+                      aria-label="remove profile"
+                      className={classes.iconButton}
+                      title={t('label.remove_profile_icon_title')}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  )}
                   <FormControl className={classes.formControl}>
                     <Select
                       disabled={props.isSnapshotting}
@@ -220,7 +240,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.miscArea}>
                   <IconButton
-                    onClick={(e) => props.handleNotificationsOpen(e)}
+                    onClick={e => props.handleNotificationsOpen(e)}
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton)}
@@ -239,7 +259,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     </Badge>
                   </IconButton>
                   <IconButton
-                    onClick={(e) => props.handleAccountMenuOpen(e)}
+                    onClick={e => props.handleAccountMenuOpen(e)}
                     aria-label="account"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}

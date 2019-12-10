@@ -3,6 +3,7 @@
     "title": {
       "init_session": "Initialize session succeeded",
       "validate_session": "Validate session succeeded",
+      "remove_profile": "Remove profile succeeded",
       "get_stash_tabs": "Retrieved stash tabs for {{param}}",
       "get_items": "Retrieved items for {{param}}",
       "price_stash_items": "Items were successfully priced",
@@ -12,6 +13,7 @@
     "description": {
       "init_session": "A new session was successfully initiated",
       "validate_session": "The session was successfully validated",
+      "remove_profile": "The profile was successfully removed",
       "get_stash_tabs": "Stash tabs for {{param}} were successfully retrieved",
       "get_items": "Items for {{param}} were successfully retrieved",
       "price_stash_items": "Items in the selected stash tabs were successfully priced",
@@ -23,6 +25,7 @@
     "title": {
       "init_session": "Initialize session failed",
       "validate_session": "Validate session failed",
+      "remove_profile": "Remove profile failed",
       "get_stash_tabs": "Failed retrieving stash tabs for {{param}}",
       "get_items": "Failed retrieving items for {{param}}",
       "price_stash_items": "Failed pricing items",
@@ -39,7 +42,8 @@
       "snapshot": "The snapshot could not be created"
     },
     "custom_description" :{
-      "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile"
+      "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",
+      "no_profile_found": "No profile was found"
     }
   },
   "warning": {},

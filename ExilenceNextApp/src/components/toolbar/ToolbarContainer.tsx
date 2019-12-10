@@ -1,13 +1,12 @@
 import { inject, observer } from 'mobx-react';
-import React, { useState, ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AccountStore } from '../../store/accountStore';
+import { NotificationStore } from '../../store/notificationStore';
+import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
-import { PriceStore } from '../../store/priceStore';
-import { NotificationStore } from '../../store/notificationStore';
-import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
-import { useTranslation } from 'react-i18next';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -28,7 +27,11 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     showConfirmClearSnapshotsDialog,
     setShowConfirmClearSnapshotsDialog
   ] = useState(false);
-  const { notifications, markAllAsRead } = notificationStore!;
+  const [
+    showConfirmRemoveProfileDialog,
+    setShowConfirmRemoveProfileDialog
+  ] = useState(false);
+  const { notifications } = notificationStore!;
 
   const handleOpen = (edit: boolean = false) => {
     setIsEditing(edit);
@@ -42,6 +45,11 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   const handleClearSnapshots = () => {
     accountStore!.getSelectedAccount.activeProfile.clearSnapshots();
     setShowConfirmClearSnapshotsDialog(false);
+  };
+
+  const handleRemoveProfile = () => {
+    accountStore!.getSelectedAccount.removeActiveProfile();
+    setShowConfirmRemoveProfileDialog(false);
   };
 
   const handleSnapshot = () => {
@@ -77,6 +85,15 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         acceptButtonText={t('action.confirm')}
         cancelButtonText={t('action.cancel')}
       />
+      <ConfirmationDialog
+        show={showConfirmRemoveProfileDialog}
+        onClose={() => setShowConfirmRemoveProfileDialog(false)}
+        onConfirm={handleRemoveProfile}
+        title={t('title.confirm_remove_profile')}
+        body={t('body.remove_profile')}
+        acceptButtonText={t('action.confirm')}
+        cancelButtonText={t('action.cancel')}
+      />
       <Toolbar
         sidenavOpened={uiStateStore!.sidenavOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
@@ -94,6 +111,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
         handleClearSnapshots={() => setShowConfirmClearSnapshotsDialog(true)}
+        handleRemoveProfile={() => setShowConfirmRemoveProfileDialog(true)}
         isSnapshotting={
           accountStore!.getSelectedAccount.activeProfile.isSnapshotting
         }
