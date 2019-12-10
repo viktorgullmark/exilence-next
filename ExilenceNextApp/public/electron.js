@@ -8,6 +8,7 @@ const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
+const windowStateKeeper = require('electron-window-state');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
@@ -67,14 +68,23 @@ autoUpdater.on('update-downloaded', info => {
 function createWindow() {
   const size = electron.screen.getPrimaryDisplay().workAreaSize;
 
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: size.width,
+    defaultHeight: size.height
+  });
+
   mainWindow = new BrowserWindow({
-    width: size.width,
-    height: size.height,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     minWidth: 900,
     minHeight: 800,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     frame: false
   });
+
+  mainWindowState.manage(mainWindow);
 
   mainWindow.loadURL(
     isDev
