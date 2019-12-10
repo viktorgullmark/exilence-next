@@ -11,7 +11,7 @@
     "total": "Total"
   },
   "label": {
-    "item_table_placeholder": "No items found for the selected profile",
+    "item_table_placeholder": "No items found for the selected profile, take a snapshot to begin",
     "stash_tab_dropdown_placeholder": "No stash tabs found",
     "search_text": "Search items"
   },

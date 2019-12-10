@@ -22,6 +22,7 @@ import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { Typography, Box } from '@material-ui/core';
 import { itemTableFilterHeight } from './ItemTableContainer';
 import { itemTableFilterSpacing } from './ItemTableContainer';
+import { statusColors } from '../../assets/themes/exilence-theme';
 
 export const tableFooterHeight = 52;
 
@@ -192,13 +193,6 @@ const ItemTable: React.FC<ItemTableProps> = ({
   };
   return (
     <>
-      {rows.length === 0 && (
-        <Box mb={2}>
-          <Typography color="error">
-            {t('label.item_table_placeholder')}
-          </Typography>
-        </Box>
-      )}
       <Paper
         className={clsx(classes.root, { [classes.noItems]: rows.length === 0 })}
       >

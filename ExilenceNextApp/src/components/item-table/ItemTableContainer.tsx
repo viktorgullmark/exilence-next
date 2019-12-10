@@ -5,10 +5,18 @@ import ItemTable from './ItemTable';
 import { AccountStore } from '../../store/accountStore';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { Grid, Box, makeStyles, Theme, Button } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  makeStyles,
+  Theme,
+  Button,
+  Typography
+} from '@material-ui/core';
 import { reaction } from 'mobx';
 import { ExportUtils } from '../../utils/export.utils';
 import { useTranslation } from 'react-i18next';
+import { statusColors } from '../../assets/themes/exilence-theme';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -24,7 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionArea: {
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end'
+  },
+  placeholder: {
+    display: 'flex',
+    alignSelf: 'flex-end'
+  },
+  warning: {
+    color: statusColors.warning
   }
 }));
 
@@ -66,14 +82,26 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
-          <Grid item xs={3}>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={2}>
             <ItemTableFilter
               array={filteredItems}
               handleFilter={handleFilter}
             />
           </Grid>
-          <Grid item xs={3} className={classes.actionArea}>
+          <Grid container item xs={8} className={classes.placeholder} direction="column" justify="space-between" >
+            {filteredItems.length === 0 && (
+              <Typography className={classes.warning} align="center">
+                {t('tables:label.item_table_placeholder')}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={2} className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"
