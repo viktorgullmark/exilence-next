@@ -18,7 +18,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       mean: 1,
       calculated: 1,
       name: item.name,
-      icon: item.icon
+      icon: item.icon,
+      count: 0
     };
   } else {
     switch (item.frameType) {
