@@ -3,7 +3,9 @@ import {
   CircularProgress,
   TextField,
   makeStyles,
-  Theme
+  Theme,
+  Box,
+  IconButton
 } from '@material-ui/core';
 import { Formik, FormikActions } from 'formik';
 import { observer } from 'mobx-react';
@@ -13,6 +15,7 @@ import * as Yup from 'yup';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
+import HelpIcon from '@material-ui/icons/Help';
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
@@ -38,9 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     width: '100%'
   },
-  sessionIdLink: {
+  helperIcon: {
     color: theme.palette.primary.light,
-    textDecoration: 'none'
+    marginRight: theme.spacing(-0.5)
   }
 }));
 
@@ -80,7 +83,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           handleBlur,
           handleSubmit,
           isValid,
-          isInitialValid,
+          isInitialValid
         } = formProps;
         return (
           <form onSubmit={handleSubmit}>
@@ -115,8 +118,21 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 error={touched.sessionId && errors.sessionId !== undefined}
                 margin="normal"
                 fullWidth
-              />
-              <a className={classes.sessionIdLink} href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki" target="blank">{t('label.session_id_link')}</a>
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      aria-label="help"
+                      title={t('label.session_id_icon_title')}
+                      className={classes.helperIcon}
+                      edge="start"
+                      size="small"
+                      href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
+                    >
+                      <HelpIcon />
+                    </IconButton>
+                  )
+                }}
+              ></TextField>
             </div>
             <div className={props.styles.loginFooter}>
               <div className={classes.wrapper}>
@@ -130,12 +146,12 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 >
                   {t('action.authorize')}
                 </Button>
-                { props.isSubmitting &&
+                {props.isSubmitting && (
                   <CircularProgress
                     className={classes.buttonProgress}
                     size={26}
                   />
-                }
+                )}
               </div>
             </div>
           </form>
