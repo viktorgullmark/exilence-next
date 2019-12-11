@@ -5,8 +5,18 @@ import ItemTable from './ItemTable';
 import { AccountStore } from '../../store/accountStore';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { Grid, Box, makeStyles, Theme } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  makeStyles,
+  Theme,
+  Button,
+  Typography
+} from '@material-ui/core';
 import { reaction } from 'mobx';
+import { ExportUtils } from '../../utils/export.utils';
+import { useTranslation } from 'react-i18next';
+import { statusColors } from '../../assets/themes/exilence-theme';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -19,6 +29,18 @@ export const itemTableFilterSpacing = 2;
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {
     height: itemTableFilterHeight
+  },
+  actionArea: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end'
+  },
+  placeholder: {
+    display: 'flex',
+    alignSelf: 'flex-end'
+  },
+  warning: {
+    color: statusColors.warning
   }
 }));
 
@@ -27,7 +49,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   uiStateStore
 }: ItemTableContainerProps) => {
   const { filteredItems } = accountStore!.getSelectedAccount.activeProfile;
-
+  const { t } = useTranslation();
   const classes = useStyles();
 
   let timer: NodeJS.Timeout | undefined = undefined;
@@ -60,12 +82,33 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={2}>
             <ItemTableFilter
               array={filteredItems}
               handleFilter={handleFilter}
             />
+          </Grid>
+          <Grid container item xs={8} className={classes.placeholder} direction="column" justify="space-between" >
+            {filteredItems.length === 0 && uiStateStore!.itemTableFilterText === '' && (
+              <Typography className={classes.warning} align="center">
+                {t('tables:label.item_table_placeholder')}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={2} className={classes.actionArea}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => ExportUtils.exportData(filteredItems)}
+            >
+              {t('label.net_worth_export')}
+            </Button>
           </Grid>
         </Grid>
       </Box>

@@ -1,4 +1,13 @@
-import { Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Box
+} from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -13,6 +22,8 @@ import { Link } from 'react-router-dom';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from './../toolbar/Toolbar';
 import SettingsIcon from '@material-ui/icons/Settings';
+import DiscordLogo from '../../assets/img/discord-logo-white.svg';
+
 export const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexShrink: 0
   },
   drawerPaper: {
+    height: `calc(100% - ${toolbarHeight}px)`,
     top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
     width: drawerWidth
   },
@@ -32,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end'
   },
   content: {
-    height: '100%',
+    height: `calc(100% - ${toolbarHeight}px)`,
     padding: `calc(${toolbarHeight}px + ${innerToolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
       2
     )}px) 
@@ -50,6 +62,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: drawerWidth
+  },
+  discordLogo: {
+    height: 60,
+    position: 'absolute',
+    bottom: theme.spacing(2)
   }
 }));
 
@@ -70,7 +87,7 @@ const SideNav: React.FC<SideNavProps> = ({
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
-  }
+  };
 
   return (
     <>
@@ -96,7 +113,7 @@ const SideNav: React.FC<SideNavProps> = ({
           </div>
           <Divider />
           <List>
-            <ListItem button key="net-worth" component={Link} to="/net-worth" >
+            <ListItem button key="net-worth" component={Link} to="/net-worth">
               <ListItemIcon>
                 <AttachMoneyIcon />
               </ListItemIcon>
@@ -109,6 +126,11 @@ const SideNav: React.FC<SideNavProps> = ({
               <ListItemText primary={t('title.settings')} />
             </ListItem>
           </List>
+          <a href="https://discord.gg/yxuBrPY" target="blank">
+            <Box display="flex" justifyContent="center">
+              <img className={classes.discordLogo} src={DiscordLogo} />
+            </Box>
+          </a>
         </Drawer>
       )}
       <main

@@ -3,4 +3,5 @@ export interface IProfile {
   activeLeagueId?: string;
   activePriceLeagueId?: string;
   activeStashTabIds?: string[];
+  shouldSetStashTabs?: boolean;
 }

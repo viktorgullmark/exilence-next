@@ -16,9 +16,11 @@
     "electron-is-dev": "^1.1.0",
     "electron-log": "^3.0.9",
     "electron-updater": "^4.2.0",
+    "electron-window-state": "^5.0.3",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react": "^7.15.0",
+    "export-to-csv": "^0.2.1",
     "formik": "^1.5.8",
     "i18next": "^17.2.0",
     "i18next-xhr-backend": "^3.2.0",
@@ -93,7 +95,8 @@
   "build": {
     "appId": "com.exilence.exilence-next-app",
     "files": [
-      "build/**/*"
+      "build/**/*",
+      "public/icon.*"
     ],
     "extraFiles": [
       "public/i18n/**/*"
@@ -105,6 +108,9 @@
       "provider": "github",
       "repo": "exilence-next",
       "owner": "viktorgullmark"
+    },
+    "win": {
+      "icon": "build/icon.ico"
     }
   }
 }

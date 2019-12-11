@@ -28,6 +28,7 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
+import ReactionContainer from './components/reaction-container/ReactionContainer';
 
 initSentry();
 enableLogging();
@@ -96,6 +97,7 @@ const app = (
               <ToastWrapper />
             </SideNavContainer>
             <Notifier />
+            <ReactionContainer />
           </Router>
         </Suspense>
       </Provider>

@@ -110,11 +110,45 @@ export class Account implements IAccount {
         new Profile({
           name: 'profile 1',
           activeLeagueId: this.accountLeagues[0].leagueId,
-          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id
+          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id,
+          shouldSetStashTabs: true
         })
       );
       this.setActiveProfile(this.profiles[0].uuid);
     }
+  }
+
+  @action
+  removeActiveProfile() {
+    const profileIndex = this.profiles.findIndex(
+      p => p.uuid === this.activeProfileUuid
+    );
+    if (profileIndex === -1) {
+      this.removeActiveProfileFail(new Error('profile_not_found'));
+    } else {
+      const newActiveProfile = this.profiles.find(p => p.uuid !== this.activeProfileUuid);
+      this.setActiveProfile(newActiveProfile!.uuid);
+      this.profiles.splice(profileIndex, 1);
+    }
+  }
+
+  @action
+  removeActiveProfileSuccess() {
+    stores.notificationStore.createNotification(
+      'remove_profile',
+      'success',
+      true
+    );
+  }
+
+  @action
+  removeActiveProfileFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'remove_profile',
+      'error',
+      true,
+      e
+    );
   }
 
   @action
