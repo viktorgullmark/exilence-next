@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
+import { WindowUtils } from '../../../utils/window.utils';
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
@@ -80,7 +81,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           handleBlur,
           handleSubmit,
           isValid,
-          isInitialValid,
+          isInitialValid
         } = formProps;
         return (
           <form onSubmit={handleSubmit}>
@@ -116,7 +117,13 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 margin="normal"
                 fullWidth
               />
-              <a className={classes.sessionIdLink} href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki" target="blank">{t('label.session_id_link')}</a>
+              <a
+                className={classes.sessionIdLink}
+                href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
+                onClick={e => WindowUtils.openLink(e)}
+              >
+                {t('label.session_id_link')}
+              </a>
             </div>
             <div className={props.styles.loginFooter}>
               <div className={classes.wrapper}>
@@ -130,12 +137,12 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                 >
                   {t('action.authorize')}
                 </Button>
-                { props.isSubmitting &&
+                {props.isSubmitting && (
                   <CircularProgress
                     className={classes.buttonProgress}
                     size={26}
                   />
-                }
+                )}
               </div>
             </div>
           </form>

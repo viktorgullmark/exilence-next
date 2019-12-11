@@ -23,6 +23,7 @@ import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from './../toolbar/Toolbar';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DiscordLogo from '../../assets/img/discord-logo-white.svg';
+import { WindowUtils } from '../../utils/window.utils';
 
 export const drawerWidth = 240;
 
@@ -126,7 +127,7 @@ const SideNav: React.FC<SideNavProps> = ({
               <ListItemText primary={t('title.settings')} />
             </ListItem>
           </List>
-          <a href="https://discord.gg/yxuBrPY" target="blank">
+          <a href="https://discord.gg/yxuBrPY" onClick={e => WindowUtils.openLink(e)}>
             <Box display="flex" justifyContent="center">
               <img className={classes.discordLogo} src={DiscordLogo} />
             </Box>
