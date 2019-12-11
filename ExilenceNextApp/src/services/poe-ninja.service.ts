@@ -26,7 +26,9 @@ function getCurrencyCategories() {
 
 function getItemCategories() {
   const categories = [
+    'Oil',
     'Incubator',
+    'Scarab',
     'Fossil',
     'Resonator',
     'Essence',
