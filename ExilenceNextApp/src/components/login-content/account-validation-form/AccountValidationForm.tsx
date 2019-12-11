@@ -83,7 +83,6 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           handleBlur,
           handleSubmit,
           isValid,
-          isInitialValid
         } = formProps;
         return (
           <form onSubmit={handleSubmit}>
@@ -141,7 +140,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                   color="primary"
                   fullWidth
                   type="submit"
-                  disabled={props.isSubmitting || (dirty && !isValid)}
+                  disabled={!touched || (props.isSubmitting || (dirty && !isValid))}
                   endIcon={<ExitToApp />}
                 >
                   {t('action.authorize')}
