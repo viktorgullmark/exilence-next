@@ -16,6 +16,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
 import HelpIcon from '@material-ui/icons/Help';
+import { WindowUtils } from '../../../utils/window.utils';
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
@@ -82,7 +83,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           handleChange,
           handleBlur,
           handleSubmit,
-          isValid,
+          isValid
         } = formProps;
         return (
           <form onSubmit={handleSubmit}>
@@ -125,6 +126,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                       className={classes.helperIcon}
                       edge="start"
                       size="small"
+                      onClick={e => WindowUtils.openLink(e)}
                       href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
                     >
                       <HelpIcon />
