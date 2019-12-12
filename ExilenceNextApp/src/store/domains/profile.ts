@@ -12,7 +12,6 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { ItemUtils } from '../../utils/item.utils';
-import { PriceUtils } from '../../utils/price.utils';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
@@ -99,8 +98,14 @@ export class Profile {
   }
 
   @computed
-  get latestSnapshotItemCount(): number {
-    return this.filteredItems.length;
+  get latestSnapshotItemCount() {
+    if (this.snapshots.length === 0) {
+      return 0;
+    }
+    return ItemUtils.mergeItemStacks(
+      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
+        sts.items.filter(i => i.calculated > 0)
+      )).length;
   }
 
   @action
@@ -232,9 +237,6 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
-    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
-
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
         stashTabWithItems.items = stashTabWithItems.items.map(
@@ -242,7 +244,7 @@ export class Profile {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              filteredPrices
+              activePriceDetails.leaguePriceSources[0].prices
             );
           }
         );
