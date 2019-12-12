@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, timer } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
@@ -107,7 +107,7 @@ export class AccountStore {
             : of(this.initSessionSuccess());
         }),
         catchError((e: AxiosError) => {
-          return of(this.initSessionFail(e));
+          return of(this.initSessionFail(e, newAccount));
         })
       )
     );
@@ -120,7 +120,12 @@ export class AccountStore {
   }
 
   @action
-  initSessionFail(e: AxiosError | Error) {
+  initSessionFail(e: AxiosError | Error, newAccount?: IAccount) {
+    // retry init session if it fails
+    fromStream(
+      timer(30 * 1000).pipe(switchMap(() => of(this.initSession(newAccount))))
+    );
+
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setSubmitting(false);
   }
