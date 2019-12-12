@@ -17,6 +17,11 @@ namespace API.Hubs
             var profileModel = await _accountService.GetProfile(AccountName, profileClientId);
             return profileModel;
         }
+        public async Task<SnapshotProfileModel> ProfileExists(SnapshotProfileModel profileModel)
+        {
+            profileModel = await _accountService.ProfileExists(AccountName, profileModel);
+            return profileModel;
+        }
         public async Task<SnapshotProfileModel> AddProfile(SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
