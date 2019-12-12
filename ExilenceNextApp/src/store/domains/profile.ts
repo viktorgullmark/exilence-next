@@ -100,16 +100,7 @@ export class Profile {
 
   @computed
   get latestSnapshotItemCount(): number {
-
-    if (this.snapshots.length === 0) {
-      return 0;
-    }
-
-    var items = this.snapshots.flatMap(s =>
-      s.stashTabSnapshots.flatMap(sts => sts.items)
-    ).filter(i => i.calculated != 0).map(i => i.name);
-
-    return [...new Set(items)].length;
+    return this.filteredItems.length;
   }
 
   @action
