@@ -26,7 +26,8 @@ export class PriceUtils {
             corrupted: item.gemIsCorrupted,
             calculated: 0,
             totalStacksize: item.stackSize,
-            tier: item.tier
+            tier: item.tier,
+            quality: item.gemQuality
         } as IExternalPrice;
     }
 
@@ -45,7 +46,9 @@ export class PriceUtils {
             ilvl: item.levelRequired,
             corrupted: item.corrupted,
             totalStacksize: item.stackSize,
-            tier: item.mapTier
+            tier: item.mapTier,
+            count: item.count,
+            quality: item.gemQuality
         } as IExternalPrice;
     }
 
@@ -55,7 +58,8 @@ export class PriceUtils {
         return {
             name: item.currencyTypeName,
             calculated: item.chaosEquivalent,
-            icon: details !== undefined ? details.icon : undefined
+            icon: details !== undefined ? details.icon : undefined,
+            count: item.receive ? item.receive.count : 0
         } as IExternalPrice;
     }
 
@@ -69,5 +73,10 @@ export class PriceUtils {
             item.median = price.median || 0;
         }
         return item;
+    }
+
+    public static excludeLegacyMaps(prices: IExternalPrice[]) {
+        const legacyMapVariants = ['Pre 2.0', 'Atlas2', 'Atlas2-3.4'];
+        return prices.filter(p => !p.variant || !legacyMapVariants.includes(p.variant))
     }
 }

@@ -45,6 +45,7 @@
     "remove_snapshot_icon_title": "Remove snapshots",
     "remove_profile_icon_title": "Remove profile",
     "notification_icon_title": "Notifications",
+    "session_id_icon_title": "Help finding session ID",
     "account_icon_title": "My account",
     "net_worth_export": "Export data"
   },

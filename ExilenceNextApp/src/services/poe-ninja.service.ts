@@ -26,7 +26,9 @@ function getCurrencyCategories() {
 
 function getItemCategories() {
   const categories = [
+    'Oil',
     'Incubator',
+    'Scarab',
     'Fossil',
     'Resonator',
     'Essence',
@@ -72,15 +74,19 @@ function getItemPrices(league: string) {
     getItemCategories().map(type => {
       return getItemCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
-          return response.data.lines.map(lines => {
-            return PriceUtils.getExternalPriceFromNinjaItem(
-              lines
-            ) as IExternalPrice;
-          });
+          if (response.data) {
+            return response.data.lines.map(lines => {
+              return PriceUtils.getExternalPriceFromNinjaItem(
+                lines
+              ) as IExternalPrice;
+            });
+          } else {
+            return []; // no prices found on ninja
+          }
         })
       );
     })
-  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
+  ).pipe(map(arrays => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }
 
 function getCurrencyPrices(league: string) {
@@ -88,17 +94,21 @@ function getCurrencyPrices(league: string) {
     getCurrencyCategories().map(type => {
       return getCurrencyCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaCurrencyOverview>) => {
-          return response.data.lines.map(lines => {
-            const currencyDetail = response.data.currencyDetails.find(
-              detail => detail.name === lines.currencyTypeName
-            );
-            return PriceUtils.getExternalPriceFromNinjaCurrencyItem(
-              lines,
-              currencyDetail
-            ) as IExternalPrice;
-          });
+          if (response.data) {
+            return response.data.lines.map(lines => {
+              const currencyDetail = response.data.currencyDetails.find(
+                detail => detail.name === lines.currencyTypeName
+              );
+              return PriceUtils.getExternalPriceFromNinjaCurrencyItem(
+                lines,
+                currencyDetail
+              ) as IExternalPrice;
+            });
+          } else {
+            return []; // no prices found on ninja
+          }
         })
       );
     })
-  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
+  ).pipe(map(arrays => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }
