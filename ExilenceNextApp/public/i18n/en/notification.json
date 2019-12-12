@@ -34,7 +34,7 @@
     },
     "description": {
       "init_session": "A new session could not be initiated",
-      "validate_session": "The session could not be validated",
+      "validate_session": "Retrying in 30 seconds",
       "get_stash_tabs": "Failed in retrieving stash tabs for {{param}}",
       "get_items": "Failed in retrieving items for {{param}}",
       "price_stash_items": "Items in the selected stash tabs could not be priced",
