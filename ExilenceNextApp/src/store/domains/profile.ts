@@ -12,10 +12,10 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { ItemUtils } from '../../utils/item.utils';
+import { PriceUtils } from '../../utils/price.utils';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { PriceUtils } from '../../utils/price.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
