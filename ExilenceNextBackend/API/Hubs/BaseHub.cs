@@ -20,11 +20,11 @@ namespace API.Hubs
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
-        readonly string _instanceName;
-        private string _connectionId => Context.ConnectionId;
-        private string _accountName => Context.User.Identity.Name;
-        private bool _isAdmin => Context.User.IsInRole("Admin");
-        private bool _isPremium => Context.User.IsInRole("Premium");
+        private readonly string _instanceName;
+        private string ConnectionId => Context.ConnectionId;
+        private string AccountName => Context.User.Identity.Name;
+        private bool IsAdmin => Context.User.IsInRole("Admin");
+        private bool IsPremium => Context.User.IsInRole("Premium");
 
         public BaseHub(
             IMapper mapper, 
@@ -45,9 +45,9 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"Account {_accountName} with connectionId: {_connectionId} connected");
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
             var connection = new ConnectionModel() {
-                ConnectionId = _connectionId,
+                ConnectionId = ConnectionId,
                 InstanceName = _instanceName,
                 Created = DateTime.UtcNow
             };
@@ -58,8 +58,8 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"Account {_accountName} with connectionId: {_connectionId} disconnected");
-            await _groupService.RemoveConnection(_connectionId);
+            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
+            await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
