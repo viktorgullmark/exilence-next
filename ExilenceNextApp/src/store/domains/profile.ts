@@ -238,6 +238,9 @@ export class Profile {
       );
     }
 
+    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
+    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
+
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
         stashTabWithItems.items = stashTabWithItems.items.map(
