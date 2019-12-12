@@ -3,6 +3,7 @@ import { persist } from 'mobx-persist';
 import { ILeague } from '../interfaces/league.interface';
 import { League } from './domains/league';
 import { UiStateStore } from './uiStateStore';
+import { stores } from '..';
 
 export class LeagueStore {
   uiStateStore: UiStateStore;
@@ -14,6 +15,7 @@ export class LeagueStore {
 
   @computed
   get priceLeagues() {
+    // todo: don't include leagues with no prices
     return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
   }
 

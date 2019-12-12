@@ -64,7 +64,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                         links: item.sockets !== undefined && item.sockets !== null ? ItemUtils.getLinks(item.sockets.map(t => t.group)) : 0,
                         sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
                         quality: item.properties !== null && item.properties !== undefined ? ItemUtils.getQuality(item.properties) : 0,
-                        level: item.properties !== null && item.properties !== undefined ? ItemUtils.getQuality(item.properties) : 0,
+                        level: item.properties !== null && item.properties !== undefined ? ItemUtils.getLevel(item.properties) : 0,
                         stackSize: item.stackSize || 1,
                         totalStacksize: item.maxStackSize || 1,
                         variant: item.sockets !== undefined && item.sockets !== null ? ItemUtils.getItemVariant(item.sockets, item.explicitMods, ItemUtils.getItemName(item.typeLine, item.name)) : ''
