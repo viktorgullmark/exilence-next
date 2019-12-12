@@ -18,7 +18,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       mean: 1,
       calculated: 1,
       name: item.name,
-      icon: item.icon
+      icon: item.icon,
+      count: 0
     };
   } else {
     switch (item.frameType) {
@@ -50,7 +51,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(
           p =>
             item.name.startsWith(p.name) &&
-            p.links === item.links &&
+            (item.links < 5 || p.links === item.links) &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
             (p.variant === item.variant ||

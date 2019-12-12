@@ -71,13 +71,6 @@ export class ItemUtils {
     return greatestFreq;
   }
 
-  public static getQuality(props: IProperty[]) {
-    const quality = props.find(t => t.name === 'Quality')
-      ? props.find(t => t.name === 'Quality')!.values[0][0]
-      : '0';
-    return parseInt(quality, 10);
-  }
-
   public static getRarity(identifier: number) {
     let rarity: keyof Rarity = 'normal';
     switch (identifier) {
@@ -112,9 +105,21 @@ export class ItemUtils {
     return rarity;
   }
 
+  public static getQuality(props: IProperty[]) {
+    const quality = props.find(t => t.name === 'Quality')
+      ? props.find(t => t.name === 'Quality')!.values[0][0]
+      : '0';
+    return parseInt(quality, 10);
+  }
+
   public static getLevel(props: IProperty[]) {
-    const levelStr = props.find(p => p.name === 'Level')!.values[0][0];
-    return parseInt(levelStr, 10);
+    const levelProp = props.find(p => p.name === 'Level');
+    if (!levelProp) {
+      return 0;
+    } else {
+      const levelStr = levelProp.values[0][0];
+      return parseInt(levelStr, 10);
+    }
   }
 
   public static getMapTier(properties: IProperty[]) {

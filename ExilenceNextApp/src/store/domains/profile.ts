@@ -15,6 +15,7 @@ import { ItemUtils } from '../../utils/item.utils';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
+import { PriceUtils } from '../../utils/price.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -240,6 +241,9 @@ export class Profile {
       );
     }
 
+    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
+    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
+
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
         stashTabWithItems.items = stashTabWithItems.items.map(
@@ -247,7 +251,7 @@ export class Profile {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              activePriceDetails.leaguePriceSources[0].prices
+              filteredPrices
             );
           }
         );

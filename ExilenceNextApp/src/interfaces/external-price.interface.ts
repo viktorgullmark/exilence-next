@@ -19,4 +19,5 @@ export interface IExternalPrice {
   totalStacksize?: number;
   icon: string;
   tier?: number;
+  count: number;
 }
