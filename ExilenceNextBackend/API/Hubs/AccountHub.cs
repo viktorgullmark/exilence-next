@@ -22,6 +22,13 @@ namespace API.Hubs
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
             return profileModel;
         }
+
+        public async Task<SnapshotProfileModel> EditProfile(SnapshotProfileModel profileModel)
+        {
+            profileModel = await _accountService.EditProfile(AccountName, profileModel);
+            return profileModel;
+        }
+
         public async Task<SnapshotProfileModel> RemoveProfile(string profileClientId)
         {
             var profile = await _accountService.RemoveProfile(AccountName, profileClientId);
