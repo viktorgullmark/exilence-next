@@ -248,7 +248,7 @@ export class Profile {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              activePriceDetails.leaguePriceSources[0].prices
+              filteredPrices
             );
           }
         );
