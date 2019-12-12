@@ -266,7 +266,7 @@ namespace Shared.Migrations
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SnapshotProfileId")
+                    b.Property<int?>("ProfileId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalValue")
@@ -274,7 +274,7 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SnapshotProfileId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Snapshots");
                 });
@@ -375,21 +375,21 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
-                    b.HasOne("Shared.Entities.SnapshotProfile", null)
+                    b.HasOne("Shared.Entities.SnapshotProfile", "Profile")
                         .WithMany("Snapshots")
-                        .HasForeignKey("SnapshotProfileId");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Profiles")
                         .HasForeignKey("AccountId");
                 });
 
             modelBuilder.Entity("Shared.Entities.Stashtab", b =>
                 {
-                    b.HasOne("Shared.Entities.Snapshot", null)
+                    b.HasOne("Shared.Entities.Snapshot", "Snapshot")
                         .WithMany("StashTabs")
                         .HasForeignKey("SnapshotId");
                 });

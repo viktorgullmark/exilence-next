@@ -10,7 +10,7 @@ namespace Shared.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<Account> AddAccount(Account account);
+        Account AddAccount(Account account);
         Account RemoveAccount(Account account);
         IQueryable<Account> GetAccounts(Expression<Func<Account, bool>> predicate);
         IQueryable<SnapshotProfile> GetProfiles(Expression<Func<SnapshotProfile, bool>> predicate);

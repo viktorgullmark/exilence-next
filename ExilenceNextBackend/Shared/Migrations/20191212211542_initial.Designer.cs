@@ -10,8 +10,8 @@ using Shared;
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    [Migration("20191125070646_AccountRole")]
-    partial class AccountRole
+    [Migration("20191212211542_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,9 @@ namespace Shared.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -40,8 +43,8 @@ namespace Shared.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Verified")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -265,7 +268,7 @@ namespace Shared.Migrations
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SnapshotProfileId")
+                    b.Property<int?>("ProfileId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalValue")
@@ -273,7 +276,7 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SnapshotProfileId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Snapshots");
                 });
@@ -374,21 +377,21 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
-                    b.HasOne("Shared.Entities.SnapshotProfile", null)
+                    b.HasOne("Shared.Entities.SnapshotProfile", "Profile")
                         .WithMany("Snapshots")
-                        .HasForeignKey("SnapshotProfileId");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Profiles")
                         .HasForeignKey("AccountId");
                 });
 
             modelBuilder.Entity("Shared.Entities.Stashtab", b =>
                 {
-                    b.HasOne("Shared.Entities.Snapshot", null)
+                    b.HasOne("Shared.Entities.Snapshot", "Snapshot")
                         .WithMany("StashTabs")
                         .HasForeignKey("SnapshotId");
                 });

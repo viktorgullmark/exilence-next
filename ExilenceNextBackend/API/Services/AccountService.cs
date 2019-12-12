@@ -33,7 +33,7 @@ namespace API.Services
         public async Task<AccountModel> AddAccount(AccountModel accountModel)
         {
             var account = _mapper.Map<Account>(accountModel);
-            account = await _accountRepository.AddAccount(account);
+            account = _accountRepository.AddAccount(account);
             await _accountRepository.SaveChangesAsync();
             accountModel = _mapper.Map<AccountModel>(account);
             return accountModel;

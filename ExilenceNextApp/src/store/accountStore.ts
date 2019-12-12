@@ -173,8 +173,6 @@ export class AccountStore {
         });
       }
     }
-
-    this.getSelectedAccount.authorize();
   }
 
   @action
