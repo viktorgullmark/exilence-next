@@ -1,21 +1,21 @@
+import { AxiosError } from 'axios';
 import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import uuid from 'uuid';
-import { ItemUtils } from '../../utils/item.utils';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
+import { ItemUtils } from '../../utils/item.utils';
+import { PriceUtils } from '../../utils/price.utils';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { AxiosError } from 'axios';
-import { PriceUtils } from '../../utils/price.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -95,7 +95,7 @@ export class Profile {
       .flatMap(sts => sts.value)
       .reduce((a, b) => a + b, 0);
 
-    return values.toFixed(2).toLocaleString();
+    return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 
   @computed
