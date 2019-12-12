@@ -20,7 +20,8 @@
     "enter_acc_info": "Enter account information",
     "select_leagues": "Select your leagues",
     "select_characters": "Select your characters",
-    "confirm_clear_snapshots": "Clear snapshots for profile"
+    "confirm_clear_snapshots": "Clear snapshots for profile",
+    "confirm_remove_profile": "Remove profile"
   },
   "label": {
     "account_name": "Account name",
@@ -50,6 +51,7 @@
     "net_worth_export": "Export data"
   },
   "body": {
-    "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?"
+    "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",
+    "remove_profile": "Are you sure you want to remove your profile?"
   }
 }

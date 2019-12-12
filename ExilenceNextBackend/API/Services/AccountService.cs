@@ -66,6 +66,24 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task<SnapshotProfileModel> EditProfile(string accountName, SnapshotProfileModel profileModel)
+        {
+            var account = await _accountRepository.GetAccounts(a => a.Name == accountName).FirstOrDefaultAsync();
+
+            if (account == null)
+                throw new Exception("Can't find account");
+
+            var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+
+            if (profile == null)
+                throw new Exception("Can't find profile");
+
+            profile = _mapper.Map<SnapshotProfile>(profileModel);
+
+            await _accountRepository.SaveChangesAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
         public async Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileClientId)
         {
             var account = await _accountRepository.GetAccounts(a => a.Name == accountName).FirstOrDefaultAsync();
