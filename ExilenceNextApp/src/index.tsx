@@ -14,6 +14,7 @@ import exilenceTheme from './assets/themes/exilence-theme';
 import GlobalStyles from './components/global-styles/GlobalStyles';
 import HeaderContainer from './components/header/HeaderContainer';
 import Notifier from './components/notifier/Notifier';
+import ReactionContainer from './components/reaction-container/ReactionContainer';
 import SideNavContainer from './components/sidenav/SideNavContainer';
 import ToastWrapper from './components/toast-wrapper/ToastWrapper';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
@@ -28,7 +29,6 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
-import ReactionContainer from './components/reaction-container/ReactionContainer';
 
 initSentry();
 enableLogging();
@@ -90,8 +90,8 @@ const app = (
                   accountStore.getSelectedAccount.name !== '' ? (
                     <Redirect to="/net-worth" />
                   ) : (
-                    <Redirect to="/login" />
-                  )
+                      <Redirect to="/login" />
+                    )
                 }
               />
               <ToastWrapper />
