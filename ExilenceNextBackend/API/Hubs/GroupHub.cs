@@ -19,17 +19,17 @@ namespace API.Hubs
         [Authorize]
         public async Task<GroupModel> JoinGroup(string groupName)
         {
-            var groupModel = await _groupService.JoinGroup(ConnectionId, groupName);
-            await Groups.AddToGroupAsync(ConnectionId, groupName);
-            await Log($"{ConnectionId}´joined group {groupName}");
+            var groupModel = await _groupService.JoinGroup(_connectionId, groupName);
+            await Groups.AddToGroupAsync(_connectionId, groupName);
+            await Log($"{_connectionId}´joined group {groupName}");
             return groupModel;
         }
 
         public async Task<GroupModel> LeaveGroup(string groupName)
         {
-            var groupModel = await _groupService.LeaveGroup(ConnectionId, groupName);
-            await Groups.RemoveFromGroupAsync(ConnectionId, groupName);
-            await Log($"{ConnectionId}´left group {groupName}");
+            var groupModel = await _groupService.LeaveGroup(_connectionId, groupName);
+            await Groups.RemoveFromGroupAsync(_connectionId, groupName);
+            await Log($"{_connectionId}´left group {groupName}");
             return groupModel;
         }
     }

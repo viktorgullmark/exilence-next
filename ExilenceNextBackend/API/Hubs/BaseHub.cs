@@ -16,18 +16,15 @@ namespace API.Hubs
     public partial class BaseHub : Hub
     {
         readonly IMapper _mapper;
-        readonly string _instanceName;
-
         readonly ISnapshotService _snapshotService;
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
-
-
-        private bool IsPremium => Context.User.IsInRole("Premium");
-        private bool IsAdmin => Context.User.IsInRole("Admin");
-        private string AccountName => Context.User.Identity.Name;
-        private string ConnectionId => Context.ConnectionId;
+        readonly string _instanceName;
+        private string _connectionId => Context.ConnectionId;
+        private string _accountName => Context.User.Identity.Name;
+        private bool _isAdmin => Context.User.IsInRole("Admin");
+        private bool _isPremium => Context.User.IsInRole("Premium");
 
         public BaseHub(
             IMapper mapper, 
@@ -48,9 +45,9 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
+            await Log($"Account {_accountName} with connectionId: {_connectionId} connected");
             var connection = new ConnectionModel() {
-                ConnectionId = ConnectionId,
+                ConnectionId = _connectionId,
                 InstanceName = _instanceName,
                 Created = DateTime.UtcNow
             };
@@ -61,8 +58,8 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
-            await _groupService.RemoveConnection(ConnectionId);
+            await Log($"Account {_accountName} with connectionId: {_connectionId} disconnected");
+            await _groupService.RemoveConnection(_connectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
