@@ -107,6 +107,32 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                   {value}
                 </span>
               );
+            case 'corrupted':
+              return (
+                <span
+                  style={{
+                    color: itemColors.corrupted
+                  }}
+                >
+                  {value ? (
+                    <span
+                      style={{
+                        color: itemColors.corrupted
+                      }}
+                    >
+                      {t(`tables:value.${value.toString()}`)}
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        color: theme.palette.primary.contrastText
+                      }}
+                    >
+                      {t(`tables:value.${value.toString()}`)}
+                    </span>
+                  )}
+                </span>
+              );
             case 'total':
               return (
                 <span
