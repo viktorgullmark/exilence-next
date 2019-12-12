@@ -51,7 +51,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(
           p =>
             item.name.startsWith(p.name) &&
-            p.links === item.links &&
+            (item.links < 5 || p.links === item.links) &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
             (p.variant === item.variant ||
@@ -61,6 +61,12 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         );
         break;
       case 4: // gem
+        console.log('GEM itemName', item.name);
+        console.log('GEM item', item);
+        console.log(
+          'GEM prices',
+          prices.filter(p => p.name === 'Discipline')
+        );
         price = prices.find(
           p =>
             p.name === item.name &&

@@ -26,7 +26,8 @@ export class PriceUtils {
             corrupted: item.gemIsCorrupted,
             calculated: 0,
             totalStacksize: item.stackSize,
-            tier: item.tier
+            tier: item.tier,
+            quality: item.gemQuality
         } as IExternalPrice;
     }
 
@@ -46,7 +47,8 @@ export class PriceUtils {
             corrupted: item.corrupted,
             totalStacksize: item.stackSize,
             tier: item.mapTier,
-            count: item.count
+            count: item.count,
+            quality: item.gemQuality
         } as IExternalPrice;
     }
 
