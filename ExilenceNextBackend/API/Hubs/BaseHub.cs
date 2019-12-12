@@ -49,7 +49,11 @@ namespace API.Hubs
         public override async Task OnConnectedAsync()
         {
             await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
-            var connection = new ConnectionModel();
+            var connection = new ConnectionModel() {
+                ConnectionId = ConnectionId,
+                InstanceName = _instanceName,
+                Created = DateTime.UtcNow
+            };
             connection = await _groupService.AddConnection(connection);            
             await base.OnConnectedAsync();
         }
