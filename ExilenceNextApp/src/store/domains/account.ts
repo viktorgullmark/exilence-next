@@ -47,10 +47,15 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize() {
+  authorize(profile?: Profile) {
     fromStream(
       authService
-        .getToken({ uuid: this.uuid, name: this.name, token: this.token })
+        .getToken({
+          uuid: this.uuid,
+          name: this.name,
+          token: this.token,
+          profiles: profile ? [profile] : []
+        })
         .pipe(
           mergeMap(token => {
             this.authorizeSuccess();
@@ -126,7 +131,9 @@ export class Account implements IAccount {
     if (profileIndex === -1) {
       this.removeActiveProfileFail(new Error('profile_not_found'));
     } else {
-      const newActiveProfile = this.profiles.find(p => p.uuid !== this.activeProfileUuid);
+      const newActiveProfile = this.profiles.find(
+        p => p.uuid !== this.activeProfileUuid
+      );
       this.setActiveProfile(newActiveProfile!.uuid);
       this.profiles.splice(profileIndex, 1);
     }
@@ -160,7 +167,7 @@ export class Account implements IAccount {
   createProfile(profile: IProfile) {
     const created = new Profile(profile);
     this.profiles.push(created);
-    
+
     stores.signalrStore.updateProfile(created);
 
     this.setActiveProfile(created.uuid);
