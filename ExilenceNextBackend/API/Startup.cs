@@ -44,6 +44,7 @@ namespace API
             );
 
             //Services
+            services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<ISnapshotService, SnapshotService>();
             services.AddScoped<IAccountService, AccountService>();
 
