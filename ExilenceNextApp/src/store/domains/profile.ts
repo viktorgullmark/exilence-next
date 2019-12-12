@@ -103,9 +103,10 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return this.snapshots.flatMap(s =>
-      s.stashTabSnapshots.flatMap(sts => sts.items)
-    ).length;
+    return ItemUtils.mergeItemStacks(
+      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
+        sts.items.filter(i => i.calculated > 0)
+      )).length;
   }
 
   @action
@@ -237,9 +238,6 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
-    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
-
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
         stashTabWithItems.items = stashTabWithItems.items.map(
@@ -247,7 +245,7 @@ export class Profile {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              filteredPrices
+              activePriceDetails.leaguePriceSources[0].prices
             );
           }
         );
