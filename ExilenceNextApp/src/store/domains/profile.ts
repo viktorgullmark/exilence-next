@@ -95,7 +95,7 @@ export class Profile {
       .flatMap(sts => sts.value)
       .reduce((a, b) => a + b, 0);
 
-    return values.toLocaleString();
+    return values.toFixed(2).toLocaleString();
   }
 
   @computed
