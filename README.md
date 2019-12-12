@@ -20,7 +20,7 @@ Currently runs with:
 
 - Electron 6.0.1
 - React 16.10.1
-- .NET Core 3.0 (preview)
+- .NET Core 3.0
 
 ## Contributing with development
 
