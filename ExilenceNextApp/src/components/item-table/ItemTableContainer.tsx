@@ -109,18 +109,20 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
                 </Typography>
               )}
           </Grid>
-          {accountStore!.getSelectedAccount.activeProfile.snapshots.length !=
-            0 && (
-            <Grid item xs={2} className={classes.actionArea}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => ExportUtils.exportData(filteredItems)}
-              >
-                {t('label.net_worth_export')}
-              </Button>
-            </Grid>
-          )}
+
+          <Grid item xs={2} className={classes.actionArea}>
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={
+                accountStore!.getSelectedAccount.activeProfile.filteredItems
+                  .length === 0
+              }
+              onClick={() => ExportUtils.exportData(filteredItems)}
+            >
+              {t('label.net_worth_export')}
+            </Button>
+          </Grid>
         </Grid>
       </Box>
       <ItemTable
