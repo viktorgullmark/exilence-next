@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface OverviewWidgetContentProps {
-  value: number;
+  value: number | string;
   title: string;
   icon: JSX.Element;
   valueColor?: string;

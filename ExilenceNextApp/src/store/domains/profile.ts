@@ -12,6 +12,7 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { ItemUtils } from '../../utils/item.utils';
+import { PriceUtils } from '../../utils/price.utils';
 import { stores } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
@@ -94,7 +95,7 @@ export class Profile {
       .flatMap(sts => sts.value)
       .reduce((a, b) => a + b, 0);
 
-    return +values.toFixed(2);
+    return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 
   @computed
