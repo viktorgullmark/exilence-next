@@ -26,7 +26,7 @@ export class PriceStore {
   leaguePriceDetails: LeaguePriceDetails[] = [];
   @observable activePriceSourceUuid: string = '';
   @observable isUpdatingPrices: boolean = false;
-  @observable pollingInterval: number = 60 * 1000 * 7;
+  @observable pollingInterval: number = 60 * 1000 * 20;
 
   constructor(
     private leagueStore: LeagueStore,
