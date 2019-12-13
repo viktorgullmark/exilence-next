@@ -91,7 +91,7 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
-    visitor.event('Profile', 'Remove profile').send()
+    visitor!.event('Profile', 'Remove profile').send()
   
     const profileIndex = this.profiles.findIndex(
       p => p.uuid === this.activeProfileUuid

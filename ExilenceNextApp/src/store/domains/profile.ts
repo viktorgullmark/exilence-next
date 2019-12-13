@@ -131,7 +131,7 @@ export class Profile {
 
   @action
   editProfile(profile: IProfile) {
-    visitor.event('Profile', 'Edit profile').send()
+    visitor!.event('Profile', 'Edit profile').send()
 
     Object.assign(this, profile);
   }
@@ -142,7 +142,7 @@ export class Profile {
   }
 
   @action snapshot() {
-    visitor.event('Profile', 'Triggered snapshot').send()
+    visitor!.event('Profile', 'Triggered snapshot').send()
 
     this.setIsSnapshotting();
     this.getItems();

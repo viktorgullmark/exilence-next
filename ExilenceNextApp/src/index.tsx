@@ -33,7 +33,7 @@ import AppConfig from './config/app.config';
 import ua, { Visitor } from 'universal-analytics';
 
 export const appName = 'Exilence Next';
-export const visitor: Visitor = ua(AppConfig.trackingId);
+export let visitor: Visitor | undefined = undefined;
 
 initSentry();
 enableLogging();
@@ -115,5 +115,6 @@ Promise.all([
   hydrate('uiState', uiStateStore),
   hydrate('league', leagueStore)
 ]).then(() => {
+  visitor = ua(AppConfig.trackingId, uiStateStore.userId);
   ReactDOM.render(app, document.getElementById('root'));
 });

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 
 const Login: React.FC = () => {
   useEffect(() => {
-    visitor.pageview('Login screen', appName).send();
+    visitor!.pageview('/login', appName).send();
   })
 
   const classes = useStyles();

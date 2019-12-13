@@ -34,7 +34,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
       accountStore!.initSession();
     }
 
-    visitor.pageview('Net worth screen', appName).send();
+    visitor!.pageview('/net-worth', appName).send();
   })
 
   return (

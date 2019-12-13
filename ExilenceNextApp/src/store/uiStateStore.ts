@@ -5,8 +5,10 @@ import { CookieUtils } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
+import uuid from 'uuid';
 
 export class UiStateStore {
+  @observable @persist userId: string = uuid.v4();
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = false;
   @observable validated: boolean = false;
