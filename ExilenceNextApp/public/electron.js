@@ -1,5 +1,5 @@
 const electron = require('electron');
-
+const ipcMain = require('electron').ipcMain;
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
@@ -36,6 +36,14 @@ function sendStatusToWindow(text) {
   log.info(text);
   mainWindow.webContents.send('message', text);
 }
+
+ipcMain.on('quitAndInstall', (event, window) => {
+  autoUpdater.quitAndInstall();
+});
+
+ipcMain.on('notify', function (event) {
+  mainWindow.flashFrame(true);
+});
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
