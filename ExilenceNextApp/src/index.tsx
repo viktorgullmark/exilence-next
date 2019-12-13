@@ -29,7 +29,12 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
+import AppConfig from './config/app.config';
+import ua, { Visitor } from 'universal-analytics';
 import { UpdateStore } from './store/updateStore';
+
+export const appName = 'Exilence Next';
+export let visitor: Visitor | undefined = undefined;
 
 initSentry();
 enableLogging();
@@ -114,5 +119,6 @@ Promise.all([
   hydrate('uiState', uiStateStore),
   hydrate('league', leagueStore)
 ]).then(() => {
+  visitor = ua(AppConfig.trackingId, uiStateStore.userId);
   ReactDOM.render(app, document.getElementById('root'));
 });
