@@ -51,7 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(-0.5)
   },
   inlineLink: {
-    color: theme.palette.primary.light
+    color: theme.palette.primary.light,
+    verticalAlign: 'baseline'
   }
 }));
 
