@@ -30,7 +30,6 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
         searchText: ''
       }}
       onSubmit={(values: { searchText: string }) => {
-        console.log(values);
       }}
       validationSchema={Yup.object().shape({
         searchText: Yup.string().max(20)
