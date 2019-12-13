@@ -13,7 +13,7 @@ import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface
 import { pricingService } from '../../services/pricing.service';
 import { ItemUtils } from '../../utils/item.utils';
 import { PriceUtils } from '../../utils/price.utils';
-import { stores } from './../../index';
+import { stores, visitor } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 
@@ -131,6 +131,8 @@ export class Profile {
 
   @action
   editProfile(profile: IProfile) {
+    visitor!.event('Profile', 'Edit profile').send()
+
     Object.assign(this, profile);
   }
 
@@ -140,6 +142,8 @@ export class Profile {
   }
 
   @action snapshot() {
+    visitor!.event('Profile', 'Triggered snapshot').send()
+
     this.setIsSnapshotting();
     this.getItems();
   }

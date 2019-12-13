@@ -3,16 +3,21 @@ Exilence Next
 ===
 Complete rewrite of Exilence, with performance and user experience in focus
 
-![Preview image](https://i.imgur.com/OcejiMz.png)
+![Preview image](https://i.imgur.com/JGRgxyH.png)
 
 ## Contents
 
+- [Download](#download)
 - [Changelog](https://github.com/viktorgullmark/exilence-next/blob/master/CHANGELOG.md)
 - [Platform](#platform)
 - [Contributing with development](#contributing-with-development)
 - [Contact us](#contact-us)
 - [Supporting us](#supporting-us)
 - [Acknowledgements](#acknowledgements)
+
+## Download
+
+Download the latest release at https://github.com/viktorgullmark/exilence-next/releases/latest
 
 ## Platform
 

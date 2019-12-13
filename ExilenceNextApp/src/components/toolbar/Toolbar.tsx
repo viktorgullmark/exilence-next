@@ -157,17 +157,15 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 className={classes.toolbarGrid}
               >
                 <Grid item className={classes.profileArea}>
-                  {props.profiles.length > 1 && (
-                    <IconButton
-                      disabled={props.activeProfile.isSnapshotting}
-                      onClick={() => props.handleRemoveProfile()}
-                      aria-label="remove profile"
-                      className={classes.iconButton}
-                      title={t('label.remove_profile_icon_title')}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    disabled={props.isSnapshotting}
+                    aria-label="edit"
+                    className={classes.iconButton}
+                    onClick={() => props.handleProfileOpen(true)}
+                    title={t('label.edit_profile_icon_title')}
+                  >
+                    <SettingsIcon fontSize="small" />
+                  </IconButton>
                   <FormControl className={classes.formControl}>
                     <Select
                       disabled={props.isSnapshotting}
@@ -191,15 +189,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       })}
                     </Select>
                   </FormControl>
-                  <IconButton
-                    disabled={props.isSnapshotting}
-                    aria-label="edit"
-                    className={classes.iconButton}
-                    onClick={() => props.handleProfileOpen(true)}
-                    title={t('label.edit_profile_icon_title')}
-                  >
-                    <SettingsIcon fontSize="small" />
-                  </IconButton>
+
                   <IconButton
                     disabled={props.isSnapshotting}
                     onClick={() => props.handleProfileOpen()}
@@ -209,6 +199,15 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   >
                     <AddIcon fontSize="small" />
                   </IconButton>
+                    <IconButton
+                      disabled={props.activeProfile.isSnapshotting || props.profiles.length < 2}
+                      onClick={() => props.handleRemoveProfile()}
+                      aria-label="remove profile"
+                      className={classes.iconButton}
+                      title={t('label.remove_profile_icon_title')}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.snapshotArea}>

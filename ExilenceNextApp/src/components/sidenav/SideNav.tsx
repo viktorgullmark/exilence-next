@@ -114,20 +114,29 @@ const SideNav: React.FC<SideNavProps> = ({
           </div>
           <Divider />
           <List>
-            <ListItem button key="net-worth" component={Link} to="/net-worth">
+            <ListItem
+              button
+              key="net-worth"
+              component={Link}
+              to="/net-worth"
+              selected={location.pathname === '/net-worth'}
+            >
               <ListItemIcon>
                 <AttachMoneyIcon />
               </ListItemIcon>
               <ListItemText primary={t('title.net_worth')} />
             </ListItem>
-            <ListItem button key="settings" component={Link} to="/settings">
+            <ListItem disabled button key="settings" component={Link} to="/settings">
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary={t('title.settings')} />
-            </ListItem>
+            </ListItem>{' '}
           </List>
-          <a href="https://discord.gg/yxuBrPY" onClick={e => WindowUtils.openLink(e)}>
+          <a
+            href="https://discord.gg/yxuBrPY"
+            onClick={e => WindowUtils.openLink(e)}
+          >
             <Box display="flex" justifyContent="center">
               <img className={classes.discordLogo} src={DiscordLogo} />
             </Box>
