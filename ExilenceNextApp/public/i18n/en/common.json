@@ -61,7 +61,7 @@
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",
     "remove_profile": "Are you sure you want to remove your profile?",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
-    "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and therefor can't identify you as a user.",
+    "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
     "ga_consent_short_text": "By proceeding below, you agree to "
   }
 }
