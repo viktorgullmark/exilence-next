@@ -1,5 +1,5 @@
 const electron = require('electron');
-
+const ipcMain = require('electron').ipcMain;
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
@@ -13,6 +13,8 @@ const windowStateKeeper = require('electron-window-state');
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
+
+let shouldNotify = true;
 
 if (!isDev) {
   sentry.init({
@@ -36,6 +38,18 @@ function sendStatusToWindow(text) {
   log.info(text);
   mainWindow.webContents.send('message', text);
 }
+
+ipcMain.on('checkForUpdates', function(event) {
+  if (shouldNotify) {
+    autoUpdater.checkForUpdatesAndNotify();
+  } else {
+    autoUpdater.checkForUpdates();
+  }
+});
+
+ipcMain.on('notify', function(event) {
+  mainWindow.flashFrame(true);
+});
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
@@ -61,8 +75,10 @@ autoUpdater.on('download-progress', progressObj => {
     ')';
   sendStatusToWindow(log_message);
 });
-autoUpdater.on('update-downloaded', info => {
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   sendStatusToWindow('Update downloaded');
+  shouldNotify = false;
 });
 
 function createWindow() {

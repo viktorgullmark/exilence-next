@@ -29,6 +29,7 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
+import { UpdateStore } from './store/updateStore';
 
 initSentry();
 enableLogging();
@@ -49,8 +50,10 @@ const hydrate = create({
 });
 
 const uiStateStore = new UiStateStore();
+const signalrStore = new SignalrStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
+const updateStore = new UpdateStore();
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
@@ -58,15 +61,16 @@ const accountStore = new AccountStore(
   leagueStore,
   priceStore
 );
-const signalrStore = new SignalrStore();
 
+// make stores globally available for domain objects
 export const stores = {
   accountStore,
   uiStateStore,
   notificationStore,
   leagueStore,
   priceStore,
-  signalrStore
+  signalrStore,
+  updateStore
 };
 
 const app = (
@@ -90,8 +94,8 @@ const app = (
                   accountStore.getSelectedAccount.name !== '' ? (
                     <Redirect to="/net-worth" />
                   ) : (
-                      <Redirect to="/login" />
-                    )
+                    <Redirect to="/login" />
+                  )
                 }
               />
               <ToastWrapper />
