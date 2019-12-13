@@ -51,7 +51,11 @@
     "session_id_icon_title": "Help finding session ID",
     "account_icon_title": "My account",
     "net_worth_export": "Export data",
-    "these_terms_inline": "these terms"
+    "these_terms_inline": "these terms",
+    "update_available": "Version {{version}} available"
+  },
+  "link": {
+    "restart_now": "Restart now"
   },
   "body": {
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",

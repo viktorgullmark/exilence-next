@@ -31,6 +31,7 @@ import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
 import AppConfig from './config/app.config';
 import ua, { Visitor } from 'universal-analytics';
+import { UpdateStore } from './store/updateStore';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -54,8 +55,10 @@ const hydrate = create({
 });
 
 const uiStateStore = new UiStateStore();
+const signalrStore = new SignalrStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
+const updateStore = new UpdateStore();
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
@@ -63,15 +66,16 @@ const accountStore = new AccountStore(
   leagueStore,
   priceStore
 );
-const signalrStore = new SignalrStore();
 
+// make stores globally available for domain objects
 export const stores = {
   accountStore,
   uiStateStore,
   notificationStore,
   leagueStore,
   priceStore,
-  signalrStore
+  signalrStore,
+  updateStore
 };
 
 const app = (
