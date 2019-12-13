@@ -3,7 +3,7 @@ import { persist } from 'mobx-persist';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
 import { ICharacter } from '../../interfaces/character.interface';
-import { stores } from './../../index';
+import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { League } from './league';
@@ -91,6 +91,8 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
+    visitor.event('Profile', 'Remove profile').send()
+  
     const profileIndex = this.profiles.findIndex(
       p => p.uuid === this.activeProfileUuid
     );

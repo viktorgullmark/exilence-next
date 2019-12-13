@@ -29,6 +29,11 @@ import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
+import AppConfig from './config/app.config';
+import ua, { Visitor } from 'universal-analytics';
+
+export const appName = 'Exilence Next';
+export const visitor: Visitor = ua(AppConfig.trackingId);
 
 initSentry();
 enableLogging();
@@ -90,8 +95,8 @@ const app = (
                   accountStore.getSelectedAccount.name !== '' ? (
                     <Redirect to="/net-worth" />
                   ) : (
-                      <Redirect to="/login" />
-                    )
+                    <Redirect to="/login" />
+                  )
                 }
               />
               <ToastWrapper />

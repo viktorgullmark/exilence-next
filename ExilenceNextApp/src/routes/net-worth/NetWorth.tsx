@@ -13,6 +13,7 @@ import OverviewWidgetContent from '../../components/overview-widget-content/Over
 import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
+import { visitor, appName } from '../..';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -32,6 +33,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
     if (!uiStateStore!.validated && !uiStateStore!.initated) {
       accountStore!.initSession();
     }
+
+    visitor.pageview('Net worth screen', appName).send();
   })
 
   return (
