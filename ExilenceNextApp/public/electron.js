@@ -14,6 +14,8 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
+let shouldNotify = true;
+
 if (!isDev) {
   sentry.init({
     dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797'
@@ -37,11 +39,15 @@ function sendStatusToWindow(text) {
   mainWindow.webContents.send('message', text);
 }
 
-ipcMain.on('quitAndInstall', (event, window) => {
-  autoUpdater.quitAndInstall();
+ipcMain.on('checkForUpdates', function(event) {
+  if (shouldNotify) {
+    autoUpdater.checkForUpdatesAndNotify();
+  } else {
+    autoUpdater.checkForUpdates();
+  }
 });
 
-ipcMain.on('notify', function (event) {
+ipcMain.on('notify', function(event) {
   mainWindow.flashFrame(true);
 });
 
@@ -69,8 +75,10 @@ autoUpdater.on('download-progress', progressObj => {
     ')';
   sendStatusToWindow(log_message);
 });
-autoUpdater.on('update-downloaded', info => {
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   sendStatusToWindow('Update downloaded');
+  shouldNotify = false;
 });
 
 function createWindow() {

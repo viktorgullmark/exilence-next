@@ -20,4 +20,5 @@ export interface IGithubRelease {
   published_at: Date;
   author: IGithubAuthor;
   assets: IGithubAsset[];
+  notified?: boolean;
 }

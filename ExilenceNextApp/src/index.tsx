@@ -53,7 +53,7 @@ const uiStateStore = new UiStateStore();
 const signalrStore = new SignalrStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const updateStore = new UpdateStore(notificationStore);
+const updateStore = new UpdateStore();
 const priceStore = new PriceStore(uiStateStore, leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,

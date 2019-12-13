@@ -1,20 +1,17 @@
 import { AppBar, Toolbar } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CloseIcon from '@material-ui/icons/Close';
 import FilterNone from '@material-ui/icons/FilterNone';
-import MenuIcon from '@material-ui/icons/Menu';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import clsx from 'clsx';
-import React from 'react';
-import { WindowUtils } from '../../utils/window.utils';
 import { observer } from 'mobx-react';
-import { drawerWidth } from './../sidenav/SideNav';
-import { useLocation } from 'react-router';
-import Typography from '@material-ui/core/Typography';
-import * as pkg from '../../../package.json';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { IGithubRelease } from '../../interfaces/github/github-release.interface';
+import { WindowUtils } from '../../utils/window.utils';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -84,12 +81,12 @@ interface HeaderProps {
   sidenavOpened: boolean;
   setMaximized: (maximized: boolean) => void;
   toggleSidenav: () => void;
+  currentVersion: string;
 }
 
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const classes = useStyles();
-  const location = useLocation();
-  const version = pkg['version'];
+  const { t } = useTranslation();
 
   return (
     <AppBar position="fixed" color="secondary" className={classes.header}>
@@ -116,7 +113,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                   noWrap
                   className={classes.version}
                 >
-                  v.{version}
+                  v.{props.currentVersion}
                 </Typography>
               </Grid>
             </Grid>
@@ -153,7 +150,11 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
               </Grid>
               <Grid
                 item
-                className={clsx(classes.noDrag, classes.windowHandlerButton, classes.exit)}
+                className={clsx(
+                  classes.noDrag,
+                  classes.windowHandlerButton,
+                  classes.exit
+                )}
                 onClick={() => WindowUtils.close()}
               >
                 <CloseIcon className={classes.windowIcon} />
