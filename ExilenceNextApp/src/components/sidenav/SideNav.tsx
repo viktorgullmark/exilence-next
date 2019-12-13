@@ -126,12 +126,12 @@ const SideNav: React.FC<SideNavProps> = ({
               </ListItemIcon>
               <ListItemText primary={t('title.net_worth')} />
             </ListItem>
-            <ListItem disabled button key="settings" component={Link} to="/settings">
+            <ListItem button key="settings" component={Link} to="/settings">
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary={t('title.settings')} />
-            </ListItem>{' '}
+            </ListItem>
           </List>
           <a
             href="https://discord.gg/yxuBrPY"

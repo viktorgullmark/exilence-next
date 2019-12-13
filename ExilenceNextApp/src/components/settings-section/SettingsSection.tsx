@@ -21,7 +21,7 @@ const SettingsSection: React.FC<Props> = ({ children, title }: Props) => {
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="h6" className={classes.title}>
+      <Typography variant="overline" className={classes.title}>
         {title}
       </Typography>
       {children}
