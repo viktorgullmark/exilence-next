@@ -1,11 +1,14 @@
+import { Box, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import React from 'react';
-import TabPanel from './../tab-panel/TabPanel';
 import { useTranslation } from 'react-i18next';
+import { primaryLighter } from '../../assets/themes/exilence-theme';
+import { WindowUtils } from '../../utils/window.utils';
 import ItemTableContainer from '../item-table/ItemTableContainer';
+import TabPanel from './../tab-panel/TabPanel';
 
 function a11yProps(index: any) {
   return {
@@ -20,6 +23,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabHeader: {
     height: netWorthTabGroupHeight,
     background: theme.palette.primary.dark
+  },
+  poeNinjaCredit: {
+    height: netWorthTabGroupHeight,
+    right: theme.spacing(2),
+    color: theme.palette.text.primary
+  },
+  creditText: {
+    fontSize: '0.85rem'
+  },
+  inlineLink: {
+    color: primaryLighter,
+    verticalAlign: 'baseline',
+    textDecoration: 'none'
   }
 }));
 
@@ -35,13 +51,28 @@ const NetWorthTabGroup: React.FC = () => {
   return (
     <>
       <AppBar position="static" className={classes.tabHeader}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-        >
+        <Tabs value={value} onChange={handleChange}>
           <Tab label={t('label.item_table')} {...a11yProps(0)} />
           <Tab disabled label={t('label.graphs')} {...a11yProps(1)} />
         </Tabs>
+        <Box
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          className={classes.poeNinjaCredit}
+        >
+          <Typography className={classes.creditText}>
+            {t('label.prices_fetched_from')}
+            <a
+              className={classes.inlineLink}
+              href="https://poe.ninja"
+              onClick={e => WindowUtils.openLink(e)}
+            >
+              https://poe.ninja
+            </a>
+          </Typography>
+        </Box>
       </AppBar>
       <TabPanel value={value} index={0}>
         <ItemTableContainer />

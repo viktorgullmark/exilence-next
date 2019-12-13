@@ -52,7 +52,8 @@
     "account_icon_title": "My account",
     "net_worth_export": "Export data",
     "these_terms_inline": "these terms",
-    "update_available": "Version {{version}} available"
+    "update_available": "Version {{version}} available",
+    "prices_fetched_from": "Prices fetched from "
   },
   "link": {
     "restart_now": "Restart now"
