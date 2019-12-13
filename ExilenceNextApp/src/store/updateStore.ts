@@ -7,7 +7,8 @@ import { electronService } from '../services/electron.service';
 
 export class UpdateStore {
   @observable currentVersion: string = pkg['version'];
-  @observable pollingInterval: number = 30 * 1000;
+  @observable pollingInterval: number = 60 * 1000 * 5;
+
   constructor() {
     fromStream(
       interval(this.pollingInterval).pipe(
