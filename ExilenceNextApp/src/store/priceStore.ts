@@ -1,8 +1,10 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { action, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, from, of } from 'rxjs';
+import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+
+import { stores } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
@@ -11,7 +13,6 @@ import { LeaguePriceSource } from './domains/league-price-source';
 import { PriceSource } from './domains/price-source';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
-import { UiStateStore } from './uiStateStore';
 
 export class PriceStore {
   @observable priceSources: PriceSource[] = [
@@ -25,12 +26,26 @@ export class PriceStore {
   leaguePriceDetails: LeaguePriceDetails[] = [];
   @observable activePriceSourceUuid: string = '';
   @observable isUpdatingPrices: boolean = false;
+  @observable pollingInterval: number = 60 * 1000 * 7;
 
   constructor(
-    private uiStateStore: UiStateStore,
     private leagueStore: LeagueStore,
     private notificationStore: NotificationStore
-  ) {}
+  ) {
+    fromStream(
+      interval(this.pollingInterval).pipe(
+        switchMap(() => {
+          if (
+            !stores.accountStore.getSelectedAccount.activeProfile.isSnapshotting
+          ) {
+            return of(this.getPricesForLeagues());
+          } else {
+            return of(null);
+          }
+        })
+      )
+    );
+  }
 
   @action
   setActivePriceSource(uuid: string) {
