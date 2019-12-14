@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Shared.Entities;
 using Shared.Models;
 using System;
@@ -26,21 +27,21 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        public async Task<SnapshotModel> AddSnapshot([FromBody]SnapshotModel snapshotModel, string profileClientId)
         {
             snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
-            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
+            await Log($"Added snapshot with id: {snapshotModel.Id} for account {AccountName}.");
             return snapshotModel;
         }
 
         public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId)
         {
             var snapshotModel = await _snapshotService.RemoveSnapshot(AccountName, profileClientId, snapshotClientId);
-            await Log($"Removed snapshot with id {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
+            await Log($"Removed snapshot with id {snapshotModel.Id} for account {AccountName}.");
             return snapshotModel;
         }
 
-        public async Task AddStashtabs(string stashtabClientId, IAsyncEnumerable<StashtabModel> stashtabModels)
+        public async Task AddStashtabs(IAsyncEnumerable<StashtabModel> stashtabModels, string stashtabClientId)
         {
             await foreach (var stashtabModel in stashtabModels)
             {

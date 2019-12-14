@@ -15,6 +15,8 @@ namespace Shared.Entities
         public string Name { get; set; }
         public int Index { get; set; }
         public string Color { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Value { get; set; }
         public virtual ICollection<PricedItem> PricedItems { get; set; }
         public virtual Snapshot Snapshot { get; set; }
 

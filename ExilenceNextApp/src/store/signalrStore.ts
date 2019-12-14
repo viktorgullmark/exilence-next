@@ -4,6 +4,8 @@ import { Group } from './domains/group';
 import { IGroup } from '../interfaces/group.interface';
 import { Profile } from './domains/profile';
 import { stores } from '..';
+import { Snapshot } from './domains/snapshot';
+import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -52,6 +54,13 @@ export class SignalrStore {
   @action
   removeProfile(uuid: string) {
     this.signalrHub.sendEvent<string>('RemoveProfile', uuid);
+  }
+  /* #endregion */
+
+  /* #region Snapshot */
+  @action
+  createSnapshot(snapshot: IApiSnapshot, profileId: string) {
+    this.signalrHub.sendEvent<IApiSnapshot>('AddSnapshot', snapshot, profileId)
   }
   /* #endregion */
 }

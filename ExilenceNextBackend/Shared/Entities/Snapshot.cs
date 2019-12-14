@@ -12,8 +12,6 @@ namespace Shared.Entities
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string ClientId { get; set; }
-        [Column(TypeName = "decimal")]
-        public decimal TotalValue { get; set; }
         public virtual SnapshotProfile Profile { get; set; }
         public virtual ICollection<Stashtab> StashTabs { get; set; }
         public DateTime Datestamp { get; set; }

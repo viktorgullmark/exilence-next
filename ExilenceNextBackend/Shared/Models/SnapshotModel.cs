@@ -12,8 +12,7 @@ namespace Shared.Models
         public int? Id { get; set; }
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
-        public decimal TotalValue { get; set; }
-        public SnapshotProfileModel Profile { get; set; }
+        public SnapshotProfileModel? Profile { get; set; }
         public List<StashtabModel> StashTabs { get; set; }
         public DateTime Datestamp { get; set; }
     }

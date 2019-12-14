@@ -16,6 +16,7 @@ import { PriceUtils } from '../../utils/price.utils';
 import { stores, visitor } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
+import { SnapshotUtils } from '../../utils/snapshot.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -106,7 +107,8 @@ export class Profile {
     return ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
-      )).length;
+      )
+    ).length;
   }
 
   @action
@@ -131,7 +133,7 @@ export class Profile {
 
   @action
   editProfile(profile: IProfile) {
-    visitor!.event('Profile', 'Edit profile').send()
+    visitor!.event('Profile', 'Edit profile').send();
 
     Object.assign(this, profile);
     stores.signalrStore.updateProfile(this);
@@ -143,7 +145,7 @@ export class Profile {
   }
 
   @action snapshot() {
-    visitor!.event('Profile', 'Triggered snapshot').send()
+    visitor!.event('Profile', 'Triggered snapshot').send();
 
     this.setIsSnapshotting();
     this.getItems();
@@ -243,7 +245,9 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
+    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(
+      p => p.count > 10
+    );
     filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
 
     const pricedStashTabs = stashTabsWithItems.map(
@@ -292,9 +296,18 @@ export class Profile {
       stashTabSnapshots: pricedStashTabs
     };
 
-    this.snapshots.unshift(new Snapshot(snapshot));
-
+    const snapshotToAdd = new Snapshot(snapshot);
+    this.snapshots.unshift(snapshotToAdd);
     this.snapshots = this.snapshots.slice(0, 100);
+
+    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+      al => al.leagueId === this.activeLeagueId
+    );
+
+    if (activeAccountLeague) {
+      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabs);
+      stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
+    }
 
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {
