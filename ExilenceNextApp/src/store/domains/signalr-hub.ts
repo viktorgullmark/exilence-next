@@ -1,22 +1,18 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import { persist } from 'mobx-persist';
-import { authService } from '../../services/auth.service';
+import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
-
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:5001/hub')
+    .withUrl(`${AppConfig.baseUrl}/hub`)
     .build();
 
-  constructor() {
-  }
+  constructor() {}
 
   @action
   startConnection(token: string) {
-
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => token })
+      .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
       .build();
 
     this.connection.start().catch((err: string) => document.write(err));
@@ -28,12 +24,9 @@ export class SignalrHub {
   }
 
   @action
-  sendEvent<T>(event: string, params: T) {
-    this.connection.send(event, params);
-  }
-
-  @action
-  sendEventWithId<T>(event: string, params: T, id: string) {
-    this.connection.send(event, id, params);
+  sendEvent<T>(event: string, params: T, id?: string) {
+    id
+      ? this.connection.send(event, params, id)
+      : this.connection.send(event, params);
   }
 }

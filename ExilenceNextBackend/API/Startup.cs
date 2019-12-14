@@ -53,7 +53,7 @@ namespace API
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
-            services.AddSignalR().AddMessagePackProtocol();
+            //services.AddSignalR().AddMessagePackProtocol();
 
             services.AddAuthentication(x =>
             {

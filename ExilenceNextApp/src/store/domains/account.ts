@@ -17,7 +17,7 @@ export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist token: string = uuid.v4();
+  @persist @observable token: string = uuid.v4();
 
   @persist('list', AccountLeague)
   @observable
@@ -125,7 +125,7 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
-    visitor!.event('Profile', 'Remove profile').send()
+    visitor!.event('Profile', 'Remove profile').send();
 
     const profileIndex = this.profiles.findIndex(
       p => p.uuid === this.activeProfileUuid
@@ -137,7 +137,8 @@ export class Account implements IAccount {
         p => p.uuid !== this.activeProfileUuid
       );
       this.setActiveProfile(newActiveProfile!.uuid);
-      this.profiles.splice(profileIndex, 1);
+      const removedProfile = this.profiles.splice(profileIndex, 1);
+      stores.signalrStore.removeProfile(removedProfile[0].uuid);
     }
   }
 
@@ -170,7 +171,7 @@ export class Account implements IAccount {
     const created = new Profile(profile);
     this.profiles.push(created);
 
-    stores.signalrStore.updateProfile(created);
+    stores.signalrStore.createProfile(created);
 
     this.setActiveProfile(created.uuid);
   }

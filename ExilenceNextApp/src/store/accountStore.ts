@@ -11,13 +11,15 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
+import { SignalrStore } from './signalrStore';
 
 export class AccountStore {
   constructor(
     private uiStateStore: UiStateStore,
     private notificationStore: NotificationStore,
     private leagueStore: LeagueStore,
-    private priceStore: PriceStore
+    private priceStore: PriceStore,
+    private signalrStore: SignalrStore
   ) { }
 
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -168,6 +170,9 @@ export class AccountStore {
         profile.setActiveStashTabs(
           league.stashtabs.slice(0, 6).map(lst => lst.id)
         );
+        
+        this.signalrStore.updateProfile(profile);
+
         runInAction(() => {
           profile.shouldSetStashTabs = false;
         });

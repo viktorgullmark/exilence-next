@@ -64,7 +64,8 @@ const accountStore = new AccountStore(
   uiStateStore,
   notificationStore,
   leagueStore,
-  priceStore
+  priceStore,
+  signalrStore
 );
 
 // make stores globally available for domain objects

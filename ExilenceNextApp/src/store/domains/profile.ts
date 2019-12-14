@@ -134,6 +134,7 @@ export class Profile {
     visitor!.event('Profile', 'Edit profile').send()
 
     Object.assign(this, profile);
+    stores.signalrStore.updateProfile(this);
   }
 
   @action

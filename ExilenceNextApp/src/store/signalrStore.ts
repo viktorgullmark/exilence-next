@@ -26,18 +26,32 @@ export class SignalrStore {
     );
   }
 
+  /* #region Group */
   @action
   joinGroup(groupName: string) {
     this.signalrHub.sendEvent<string>('JoinGroup', groupName);
   }
 
   @action
-  updateProfile(profile: Profile) {
-    this.signalrHub.sendEventWithId<Profile>('UpdateProfile', profile, stores.accountStore.getSelectedAccount.uuid);
-  }
-
-  @action
   private onJoinGroup(group: IGroup) {
     this.activeGroup = new Group(group);
   }
+  /* #endregion */
+
+  /* #region Profile */
+  @action
+  createProfile(profile: Profile) {
+    this.signalrHub.sendEvent<Profile>('AddProfile', profile);
+  }
+
+  @action
+  updateProfile(profile: Profile) {
+    this.signalrHub.sendEvent<Profile>('EditProfile', profile);
+  }
+
+  @action
+  removeProfile(uuid: string) {
+    this.signalrHub.sendEvent<string>('RemoveProfile', uuid);
+  }
+  /* #endregion */
 }

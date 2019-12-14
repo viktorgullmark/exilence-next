@@ -92,7 +92,7 @@ namespace API.Services
             if (profile == null)
                 throw new Exception("Can't find profile");
 
-            profile = _mapper.Map<SnapshotProfile>(profileModel);
+            _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
 
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
