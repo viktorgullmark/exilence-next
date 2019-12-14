@@ -11,18 +11,26 @@ import { ILeague } from '../interfaces/league.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStash, IStashTab } from '../interfaces/stash.interface';
 import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
+import { IGithubRelease } from '../interfaces/github/github-release.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
 const apiUrl = 'https://api.pathofexile.com';
 
 export const externalService = {
+    getLatestRelease,
     getStashTab,
     getStashTabs,
     getItemsForTabs,
     getLeagues,
     getCharacters
 };
+
+/* #region github.com */
+function getLatestRelease() {
+   return axios.get<IGithubRelease>('https://api.github.com/repos/viktorgullmark/exilence-next/releases/latest'); 
+}
+/* #endregion */
 
 /* #region pathofexile.com */
 function getStashTab(account: string, league: string, index: number): Observable<AxiosResponse<IStash>> {

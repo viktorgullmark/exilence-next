@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import Header from './Header';
 import { observer, inject } from 'mobx-react';
 import { UiStateStore } from './../../store/uiStateStore';
+import { UpdateStore } from '../../store/updateStore';
 
 interface HeaderContainerProps {
   uiStateStore?: UiStateStore;
+  updateStore?: UpdateStore;
 }
 
 const HeaderContainer: React.FC<HeaderContainerProps> = ({
-  uiStateStore
+  uiStateStore,
+  updateStore
 }: HeaderContainerProps) => {
   const [maximized, setMaximized] = useState(false);
   return (
@@ -17,8 +20,9 @@ const HeaderContainer: React.FC<HeaderContainerProps> = ({
       setMaximized={setMaximized}
       sidenavOpened={uiStateStore!.sidenavOpen}
       toggleSidenav={() => uiStateStore!.toggleSidenav()}
+      currentVersion={updateStore!.currentVersion}
     ></Header>
   );
 };
 
-export default inject('uiStateStore')(observer(HeaderContainer));
+export default inject('uiStateStore', 'updateStore')(observer(HeaderContainer));

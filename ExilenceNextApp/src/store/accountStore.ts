@@ -177,6 +177,11 @@ export class AccountStore {
 
   @action
   validateSessionFail(e: AxiosError | Error) {
+    // retry validate session if it fails
+    fromStream(
+      timer(30 * 1000).pipe(switchMap(() => of(this.validateSession())))
+    );
+
     this.notificationStore.createNotification(
       'validate_session',
       'error',
