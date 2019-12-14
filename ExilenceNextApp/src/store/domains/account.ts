@@ -59,7 +59,7 @@ export class Account implements IAccount {
         .pipe(
           mergeMap(token => {
             this.authorizeSuccess();
-            return of(stores.signalrStore.signalrHub.startConnection());
+            return of(stores.signalrStore.signalrHub.startConnection(token.data));
           }),
           catchError(e => of(this.authorizeFail(e)))
         )
@@ -126,7 +126,7 @@ export class Account implements IAccount {
   @action
   removeActiveProfile() {
     visitor!.event('Profile', 'Remove profile').send()
-  
+
     const profileIndex = this.profiles.findIndex(
       p => p.uuid === this.activeProfileUuid
     );

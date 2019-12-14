@@ -1,20 +1,24 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
 import { persist } from 'mobx-persist';
-import uuid from 'uuid';
 import { authService } from '../../services/auth.service';
 
 export class SignalrHub {
-  @persist uuid: string = uuid.v4();
+
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => uuid.v4() })
+    .withUrl('https://localhost:5001/hub')
     .build();
 
   constructor() {
   }
 
   @action
-  startConnection() {
+  startConnection(token: string) {
+
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => token })
+      .build();
+
     this.connection.start().catch((err: string) => document.write(err));
   }
 
