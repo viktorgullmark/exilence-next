@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: drawerWidth
   },
   drawerHeader: {
-    background: theme.palette.secondary.dark,
+    background: theme.palette.secondary.main,
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),

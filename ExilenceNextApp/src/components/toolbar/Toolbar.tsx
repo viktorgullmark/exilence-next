@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   spinner: {
     color: theme.palette.primary.contrastText
+  },
+  badge: {
+    backgroundColor: theme.palette.secondary.dark
   }
 }));
 
@@ -135,7 +138,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
         <>
           <AppBar
             position="fixed"
-            color="secondary"
             className={clsx(classes.appBar, {
               [classes.appBarShift]: props.sidenavOpened
             })}
@@ -199,15 +201,18 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   >
                     <AddIcon fontSize="small" />
                   </IconButton>
-                    <IconButton
-                      disabled={props.activeProfile.isSnapshotting || props.profiles.length < 2}
-                      onClick={() => props.handleRemoveProfile()}
-                      aria-label="remove profile"
-                      className={classes.iconButton}
-                      title={t('label.remove_profile_icon_title')}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                  <IconButton
+                    disabled={
+                      props.activeProfile.isSnapshotting ||
+                      props.profiles.length < 2
+                    }
+                    onClick={() => props.handleRemoveProfile()}
+                    aria-label="remove profile"
+                    className={classes.iconButton}
+                    title={t('label.remove_profile_icon_title')}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.snapshotArea}>
@@ -252,7 +257,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                           ? props.unreadNotifications.length
                           : undefined
                       }
-                      color="secondary"
+                      classes={{ badge: classes.badge }}
                     >
                       <NotificationsIcon fontSize="small" />
                     </Badge>

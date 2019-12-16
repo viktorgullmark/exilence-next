@@ -19,10 +19,7 @@ import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
-import { Typography, Box } from '@material-ui/core';
-import { itemTableFilterHeight } from './ItemTableContainer';
-import { itemTableFilterSpacing } from './ItemTableContainer';
-import { statusColors } from '../../assets/themes/exilence-theme';
+import { itemTableFilterHeight, itemTableFilterSpacing } from './ItemTableContainer';
 
 export const tableFooterHeight = 52;
 
@@ -43,7 +40,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     pagination: {
       height: tableFooterHeight,
-      backgroundColor: theme.palette.secondary.dark
+      backgroundColor: theme.palette.secondary.main
     },
     visuallyHidden: {
       border: 0,

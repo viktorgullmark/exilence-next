@@ -22,7 +22,7 @@ export const netWorthTabGroupHeight = 48;
 const useStyles = makeStyles((theme: Theme) => ({
   tabHeader: {
     height: netWorthTabGroupHeight,
-    background: theme.palette.primary.dark
+    background: theme.palette.secondary.main
   },
   poeNinjaCredit: {
     height: netWorthTabGroupHeight,
@@ -36,6 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: primaryLighter,
     verticalAlign: 'baseline',
     textDecoration: 'none'
+  },
+  indicator: {
+    backgroundColor: theme.palette.primary.light
+  },
+  tab: {
+    // color: theme.palette.primary.light
   }
 }));
 
@@ -51,9 +57,9 @@ const NetWorthTabGroup: React.FC = () => {
   return (
     <>
       <AppBar position="static" className={classes.tabHeader}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label={t('label.item_table')} {...a11yProps(0)} />
-          <Tab disabled label={t('label.graphs')} {...a11yProps(1)} />
+        <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.indicator }}>
+          <Tab label={t('label.item_table')} className={classes.tab} {...a11yProps(0)} />
+          <Tab disabled label={t('label.graphs')} className={classes.tab} {...a11yProps(1)} />
         </Tabs>
         <Box
           position="absolute"
