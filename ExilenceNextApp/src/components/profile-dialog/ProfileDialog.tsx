@@ -122,6 +122,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                       touched.profileName && errors.profileName !== undefined
                     }
                     margin="none"
+                    required
                     fullWidth
                   />
                   <LeagueDropdown
@@ -157,7 +158,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                       variant="contained"
                       type="submit"
                       color="primary"
-                      disabled={noCharacters.length > 0 || (dirty && !isValid)}
+                      disabled={noCharacters.length > 0 || props.stashTabIds.length === 0 || (dirty && !isValid)}
                     >
                       {props.isEditing
                         ? t('action.save_profile')

@@ -1,7 +1,7 @@
 import { Chip, createStyles, FormControl, Input, InputLabel, makeStyles, MenuItem, Select, Theme, useTheme } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ColourUtils } from '../../utils/colour.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -63,6 +63,8 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   const { t } = useTranslation(['tables']);
   const classes = useStyles();
 
+  const [touched, setTouched] = useState(false);
+
   const getStashTabName = (id: string) => {
     const foundTab = stashTabs.find(st => st.id === id);
     return foundTab ? foundTab.n : '';
@@ -75,16 +77,18 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 
   return (
     <>
-      <FormControl className={classes.formControl} fullWidth margin="normal">
+      <FormControl className={classes.formControl} fullWidth required margin="normal" error={touched && stashTabIds.length === 0}>
         <InputLabel id="mutiple-chip-label">{t('common:label.select_stash_tabs')}</InputLabel>
         <Select
           labelId="mutiple-chip-label"
           id="mutiple-chip"
           multiple
+          required
           value={stashTabIds}
           onChange={e => {
             handleChange(e);
             handleStashTabChange(e);
+            setTouched(true);
           }}
           input={<Input id="select-multiple-chip" />}
           renderValue={selected => (
