@@ -53,7 +53,8 @@
     "net_worth_export": "Export data",
     "these_terms_inline": "these terms",
     "update_available": "Version {{version}} available",
-    "prices_fetched_from": "Prices fetched from "
+    "prices_fetched_from": "Prices fetched from ",
+    "not_available": "N/A"
   },
   "link": {
     "restart_now": "Restart now"

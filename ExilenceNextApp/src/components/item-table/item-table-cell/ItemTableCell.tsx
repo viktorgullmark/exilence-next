@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
     minHeight: 35,
     maxHeight: 35,
     maxWidth: 120
+  },
+  noLinks: {
+    color: theme.palette.text.hint
   }
 }));
 
@@ -55,6 +58,10 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
       ? column.format(value)
       : value;
   };
+
+  const noLinks = (value: number) => {
+    return !value || value === 0;
+  }
 
   const rarityColor = rarityColors[ItemUtils.getRarity(frameType)];
 
@@ -106,6 +113,20 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                 >
                   {value}
                 </span>
+              );
+            case 'links':
+              return (
+                <>
+                  {typeof value === 'number' && (
+                    <span
+                      className={clsx({
+                        [classes.noLinks]: noLinks(value)
+                      })}
+                    >
+                      {noLinks(value) ? t('label.not_available') : value}
+                    </span>
+                  )}
+                </>
               );
             case 'corrupted':
               return (
