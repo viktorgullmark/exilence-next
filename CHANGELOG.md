@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added automatic retry for validate session at 30 second intervals if it fails
 ### Changed
+- Now displays "N/A" in the links column if the item has no links
+### Fixed
 - Fixed a bug where some uniques were incorrectly priced as 6-links
 
 ## [0.1.0] - 2019-12-13
