@@ -77,8 +77,8 @@ export default function exilenceTheme() {
       },
       secondary: {
         light: '#696969',
-        main: '#000',
-        dark: '#333333'
+        main: '#282828',
+        dark: '#000'
       },
       background: {
         default: '#191919',

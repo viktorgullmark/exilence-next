@@ -43,7 +43,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
             sortDirection={orderBy === headCell.id ? order : false}
             style={{
               minWidth: headCell.minWidth,
-              backgroundColor: theme.palette.secondary.dark,
+              backgroundColor: theme.palette.secondary.main,
               maxWidth: headCell.maxWidth,
               width: headCell.maxWidth
             }}
