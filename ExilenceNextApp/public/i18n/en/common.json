@@ -23,7 +23,9 @@
     "select_characters": "Select your characters",
     "confirm_clear_snapshots": "Clear snapshots for profile",
     "confirm_remove_profile": "Remove profile",
-    "ga_consent_dialog_title": "Terms and conditions"
+    "ga_consent_dialog_title": "Terms and conditions",
+    "net_worth_settings": "Net worth",
+    "misc_settings": "Misc"
   },
   "label": {
     "account_name": "Account name",

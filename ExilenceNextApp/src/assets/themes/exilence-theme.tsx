@@ -7,8 +7,9 @@ const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
 export const primaryLighter = '#ff2e75';
-
 export const primaryDarker = '#4a091f';
+
+export const gridSpacing = 3;
 
 export const cardColors = {
   primary: '#263238',
