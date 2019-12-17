@@ -1,27 +1,9 @@
-import { createStyles, Grid, makeStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { ISelectOption } from '../../../interfaces/select-option.interface';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
 import SelectSetting from '../select-setting/SelectSetting';
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2)
-    },
-    label: {
-      '& + .MuiInput-formControl': {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1)
-      }
-    }
-  })
-);
 
 interface Props {
   lowConfidencePricing: boolean;
@@ -45,6 +27,7 @@ const NetWorthSettings: React.FC<Props> = ({
           value={lowConfidencePricing}
           handleChange={setLowConfidencePricing}
           translationKey="low_confidence_pricing"
+          requiresSnapshot
         />
       </Grid>
       <Grid item xs={12} sm={4}>

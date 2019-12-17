@@ -16,6 +16,7 @@ interface Props {
   value: boolean;
   handleChange: (value: boolean) => void;
   translationKey: string;
+  requiresSnapshot?: boolean;
 }
 
 const useStyles = makeStyles(theme =>
@@ -32,13 +33,14 @@ const useStyles = makeStyles(theme =>
 const CheckboxSetting: React.FC<Props> = ({
   value,
   handleChange,
-  translationKey
+  translationKey,
+  requiresSnapshot
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">{t(`label.${translationKey}`)}</FormLabel>
+      <FormLabel component="legend">{t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}</FormLabel>
       <FormGroup className={classes.checkBox}>
         <FormControlLabel
           control={

@@ -17,6 +17,7 @@ interface Props {
   options: ISelectOption[];
   handleChange: (value: number) => void;
   translationKey: string;
+  requiresSnapshot?: boolean;
 }
 
 const useStyles = makeStyles(theme =>
@@ -34,7 +35,8 @@ const SelectSetting: React.FC<Props> = ({
   value,
   options,
   handleChange,
-  translationKey
+  translationKey,
+  requiresSnapshot
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -42,7 +44,7 @@ const SelectSetting: React.FC<Props> = ({
     <FormControl component="fieldset">
       <FormGroup>
         <FormLabel id={`${translationKey}-label`} className={classes.label}>
-          {t(`label.${translationKey}`)}
+          {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
         </FormLabel>
         <Select
           labelId="price-treshold-label"

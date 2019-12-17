@@ -59,7 +59,8 @@
     "prices_fetched_from": "Prices fetched from ",
     "not_available": "N/A",
     "low_confidence_pricing": "Activate low confidence pricing",
-    "price_treshold": "Select price treshold"
+    "price_treshold": "Select price treshold",
+    "requires_snapshot_info": "* = requires a new snapshot to take effect"
   },
   "value": {
     "none": "None",
