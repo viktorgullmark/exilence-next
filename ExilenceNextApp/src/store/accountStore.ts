@@ -117,7 +117,6 @@ export class AccountStore {
   initSessionSuccess() {
     this.notificationStore.createNotification('init_session', 'success');
     this.validateSession();
-    this.uiStateStore.setIsInitiating(false);
   }
 
   @action

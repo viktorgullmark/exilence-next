@@ -19,7 +19,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
-  @observable isInitiating: boolean = true;
+  @observable isInitiating: boolean = false;
 
   @action
   setNotificationList(list: Notification[]) {
