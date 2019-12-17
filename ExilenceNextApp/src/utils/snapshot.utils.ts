@@ -20,9 +20,13 @@ export class SnapshotUtils {
         .map(st => {
           return <IApiStashTabSnapshot>{
             uuid: st.id,
-            pricedItems: [], //snapshot.stashTabSnapshots.find(sts => sts.stashTabId === st.id)!.items,
+            pricedItems: snapshot.stashTabSnapshots.find(
+              sts => sts.stashTabId === st.id
+            )!.items,
             index: st.i,
-            value: snapshot.stashTabSnapshots.find(sts => sts.stashTabId === st.id)!.value,
+            value: +snapshot.stashTabSnapshots
+              .find(sts => sts.stashTabId === st.id)!
+              .value.toFixed(4),
             color: ColourUtils.rgbToHex(st.colour.r, st.colour.g, st.colour.b),
             name: st.n
           };

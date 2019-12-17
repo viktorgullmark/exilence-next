@@ -15,19 +15,19 @@ namespace Shared.Entities
         public string Name { get; set; }
         public string TypeLine { get; set; }
         public string FrameType { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Calculated { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Max { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Min { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Mean { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Median { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public decimal? Mode { get; set; }
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "decimal(13,4)")]
         public int Ilvl { get; set; }
         public bool Elder { get; set; }
         public bool Shaper { get; set; }
