@@ -41,11 +41,11 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task AddStashtabs(IAsyncEnumerable<StashtabModel> stashtabModels, string stashtabClientId)
+        public async Task AddStashtabs(IAsyncEnumerable<StashtabModel> stashtabModels, string snapshotClientId)
         {
             await foreach (var stashtabModel in stashtabModels)
             {
-                await _snapshotService.AddStashtab(AccountName, stashtabClientId, stashtabModel);
+                await _snapshotService.AddStashtab(AccountName, snapshotClientId, stashtabModel);
             }
         }
 
