@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shared;
 
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    partial class ExilenceContextModelSnapshot : ModelSnapshot
+    [Migration("20191217160723_UpdatedPricedItemID")]
+    partial class UpdatedPricedItemID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,10 +172,7 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BaseType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Calculated")
+                    b.Property<decimal?>("Calculated")
                         .HasColumnType("decimal(13,4)");
 
                     b.Property<string>("ClientId")
@@ -184,20 +183,17 @@ namespace Shared.Migrations
                     b.Property<bool>("Corrupted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Elder")
                         .HasColumnType("bit");
 
-                    b.Property<int>("FrameType")
-                        .HasColumnType("int");
+                    b.Property<string>("FrameType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Ilvl")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Ilvl")
+                        .HasColumnType("decimal(13,4)");
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
@@ -205,19 +201,19 @@ namespace Shared.Migrations
                     b.Property<int>("Links")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Max")
+                    b.Property<decimal?>("Max")
                         .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal>("Mean")
+                    b.Property<decimal?>("Mean")
                         .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal>("Median")
+                    b.Property<decimal?>("Median")
                         .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal>("Min")
+                    b.Property<decimal?>("Min")
                         .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal>("Mode")
+                    b.Property<decimal?>("Mode")
                         .HasColumnType("decimal(13,4)");
 
                     b.Property<string>("Name")
@@ -241,10 +237,7 @@ namespace Shared.Migrations
                     b.Property<int>("Tier")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<int>("TotalStacksize")
+                    b.Property<int>("TotalStackSize")
                         .HasColumnType("int");
 
                     b.Property<string>("TypeLine")

@@ -67,7 +67,9 @@ export class Profile {
       )
     );
 
-    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
+    return mergedItems.filter(
+      mi => mi.total >= stores.settingStore.priceTreshold
+    );
   }
 
   @computed
@@ -87,7 +89,9 @@ export class Profile {
       )
     );
 
-    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
+    return mergedItems.filter(
+      mi => mi.total >= stores.settingStore.priceTreshold
+    );
   }
 
   @computed
@@ -311,7 +315,10 @@ export class Profile {
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabs);
+      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+        snapshotToAdd,
+        activeAccountLeague.stashtabs
+      );
       stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
     }
 

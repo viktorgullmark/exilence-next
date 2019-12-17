@@ -55,6 +55,11 @@ namespace API
 
             //services.AddSignalR().AddMessagePackProtocol();
 
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

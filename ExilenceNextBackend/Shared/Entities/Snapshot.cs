@@ -10,7 +10,7 @@ namespace Shared.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required, StringLength(50)]
+        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
         public string ClientId { get; set; }
         public virtual SnapshotProfile Profile { get; set; }
         public virtual ICollection<Stashtab> StashTabs { get; set; }
