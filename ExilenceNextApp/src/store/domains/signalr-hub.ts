@@ -2,10 +2,9 @@ import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
 import AppConfig from './../../config/app.config';
 import { from } from 'rxjs';
-import { HubConnection } from '../../typings';
 
 export class SignalrHub {
-  connection: HubConnection = new signalR.HubConnectionBuilder()
+  connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
     .withUrl(`${AppConfig.baseUrl}/hub`)
     .build();
 
