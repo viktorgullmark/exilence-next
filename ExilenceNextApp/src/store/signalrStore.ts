@@ -9,6 +9,7 @@ import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
 import { fromStream } from 'mobx-utils';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -101,6 +102,11 @@ export class SignalrStore {
           catchError((e: Error) => of(console.log(e)))
         )
     );
+  }
+
+  @action
+  streamItems(stashTabs: IApiStashTabSnapshot[]) {
+    this.signalrHub.streamItems(stashTabs).next();
   }
   /* #endregion */
 }
