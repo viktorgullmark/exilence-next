@@ -6,6 +6,9 @@ import { Profile } from './domains/profile';
 import { stores } from '..';
 import { Snapshot } from './domains/snapshot';
 import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
+import { fromStream } from 'mobx-utils';
+import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -31,7 +34,14 @@ export class SignalrStore {
   /* #region Group */
   @action
   joinGroup(groupName: string) {
-    this.signalrHub.sendEvent<string>('JoinGroup', groupName);
+    fromStream(
+      this.signalrHub.sendEvent<string>('JoinGroup', groupName).pipe(
+        map((res: IGroup) => {
+          console.log('Joined group', res);
+        }),
+        catchError((e: Error) => of(console.log(e)))
+      )
+    );
   }
 
   @action
@@ -43,24 +53,54 @@ export class SignalrStore {
   /* #region Profile */
   @action
   createProfile(profile: Profile) {
-    this.signalrHub.sendEvent<Profile>('AddProfile', profile);
+    fromStream(
+      this.signalrHub.sendEvent<Profile>('AddProfile', profile).pipe(
+        map((res: Profile) => {
+          console.log('Added profile', res);
+        }),
+        catchError((e: Error) => of(console.log(e)))
+      )
+    );
   }
 
   @action
   updateProfile(profile: Profile) {
-    this.signalrHub.sendEvent<Profile>('EditProfile', profile);
+    fromStream(
+      this.signalrHub.sendEvent<Profile>('EditProfile', profile).pipe(
+        map((res: Profile) => {
+          console.log('Edited profile', res);
+        }),
+        catchError((e: Error) => of(console.log(e)))
+      )
+    );
   }
 
   @action
   removeProfile(uuid: string) {
-    this.signalrHub.sendEvent<string>('RemoveProfile', uuid);
+    fromStream(
+      this.signalrHub.sendEvent<string>('RemoveProfile', uuid).pipe(
+        map((res: Profile) => {
+          console.log('Removed profile', res);
+        }),
+        catchError((e: Error) => of(console.log(e)))
+      )
+    );
   }
   /* #endregion */
 
   /* #region Snapshot */
   @action
   createSnapshot(snapshot: IApiSnapshot, profileId: string) {
-    this.signalrHub.sendEvent<IApiSnapshot>('AddSnapshot', snapshot, profileId)
+    fromStream(
+      this.signalrHub
+        .sendEvent<IApiSnapshot>('AddSnapshot', snapshot, profileId)
+        .pipe(
+          map((res: IApiSnapshot) => {
+            console.log('Added snapshot', res);
+          }),
+          catchError((e: Error) => of(console.log(e)))
+        )
+    );
   }
   /* #endregion */
 }

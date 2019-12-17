@@ -1,9 +1,11 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
 import AppConfig from './../../config/app.config';
+import { from } from 'rxjs';
+import { HubConnection } from '../../typings';
 
 export class SignalrHub {
-  connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
+  connection: HubConnection = new signalR.HubConnectionBuilder()
     .withUrl(`${AppConfig.baseUrl}/hub`)
     .build();
 
@@ -25,8 +27,10 @@ export class SignalrHub {
 
   @action
   sendEvent<T>(event: string, params: T, id?: string) {
-    id
-      ? this.connection.send(event, params, id)
-      : this.connection.send(event, params);
+    return from(
+      id
+        ? this.connection.send(event, params, id)
+        : this.connection.send(event, params)
+    );
   }
 }
