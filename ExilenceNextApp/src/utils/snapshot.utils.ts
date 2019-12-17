@@ -4,6 +4,8 @@ import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
 import { ColourUtils } from './colour.utils';
+import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
+import uuid from 'uuid';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
@@ -20,9 +22,11 @@ export class SnapshotUtils {
         .map(st => {
           return <IApiStashTabSnapshot>{
             uuid: st.id,
-            pricedItems: snapshot.stashTabSnapshots.find(
-              sts => sts.stashTabId === st.id
-            )!.items,
+            pricedItems: snapshot.stashTabSnapshots
+              .find(sts => sts.stashTabId === st.id)!
+              .items.map(i => {
+                return <IApiPricedItem>{ ...i, uuid: i.id };
+              }),
             index: st.i,
             value: +snapshot.stashTabSnapshots
               .find(sts => sts.stashTabId === st.id)!
