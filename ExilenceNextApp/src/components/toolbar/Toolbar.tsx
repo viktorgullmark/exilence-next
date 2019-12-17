@@ -145,7 +145,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           >
             <MuiToolbar className={classes.toolbar}>
               {props.isInitiating && (
-                <CircularProgress className={classes.spinner} size={20} />
+                <CircularProgress title={t('label.initiating_session_spinner_title')}  className={classes.spinner} size={20} />
               )}
               <IconButton
                 color="inherit"
@@ -230,7 +230,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     {!props.isSnapshotting ? (
                       <UpdateIcon fontSize="small" />
                     ) : (
-                      <CircularProgress className={classes.spinner} size={20} />
+                      <CircularProgress title={t('label.fetch_snapshot_spinner_title')} className={classes.spinner} size={20} />
                     )}
                   </IconButton>
                   {props.activeProfile.snapshots.length > 0 && (
