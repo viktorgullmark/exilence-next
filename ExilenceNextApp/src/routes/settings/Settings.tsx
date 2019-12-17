@@ -1,12 +1,17 @@
 import { Grid } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import SettingsTabs from '../../components/settings-tabs/SettingsTabs';
+import { SettingStore } from '../../store/settingStore';
 
-const Settings: React.FC = () => {
+interface Props {
+  settingStore?: SettingStore;
+}
+
+const Settings: React.FC<Props> = (props: Props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -24,4 +29,5 @@ const Settings: React.FC = () => {
   );
 };
 
-export default observer(Settings);
+export default inject('settingStore')(observer(Settings));
+

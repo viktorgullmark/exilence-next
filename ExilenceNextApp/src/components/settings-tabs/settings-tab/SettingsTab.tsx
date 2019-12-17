@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@material-ui/core';
+import { observer } from 'mobx-react';
 
 interface Props {
   children?: React.ReactNode;
@@ -14,6 +15,7 @@ function SettingsTab(props: Props) {
     <Typography
       component="div"
       role="tabpanel"
+      style={{ width: '100%' }}
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
@@ -24,4 +26,4 @@ function SettingsTab(props: Props) {
   );
 }
 
-export default SettingsTab;
+export default observer(SettingsTab);

@@ -1,11 +1,14 @@
+import { Box, Grid, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { gridSpacing } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
+import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 
 function a11yProps(index: any) {
@@ -25,14 +28,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     )}px)`
   },
   tabs: {
+    minWidth: 160,
     borderRight: `1px solid ${theme.palette.divider}`
+  },
+  tab: {
+    minWidth: 'auto'
   },
   indicator: {
     backgroundColor: theme.palette.primary.light
-  }
+  },
+  subSection: {}
 }));
 
-export default function SettingsTabs() {
+const SettingsTabs: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);
@@ -53,15 +61,20 @@ export default function SettingsTabs() {
           indicator: classes.indicator
         }}
       >
-        <Tab label={t('title.net_worth_settings')} {...a11yProps(0)} />
-        <Tab label={t('title.misc_settings')} {...a11yProps(1)} />
+        <Tab label={t('title.net_worth_settings')} className={classes.tab} {...a11yProps(0)} />
       </Tabs>
       <SettingsTab value={value} index={0}>
-        net worth
-      </SettingsTab>
-      <SettingsTab value={value} index={1}>
-        misc
+        <Box className={classes.subSection}>
+          <Typography variant="overline">
+            {t('title.pricing_settings')}
+          </Typography>
+          <Box my={2}>
+            <NetWorthSettingsContainer />
+          </Box>
+        </Box>
       </SettingsTab>
     </div>
   );
-}
+};
+
+export default observer(SettingsTabs);
