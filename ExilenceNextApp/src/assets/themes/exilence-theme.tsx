@@ -6,9 +6,17 @@ const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
-export const primaryLighter = '#ff2e75';
 
+export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
+
+export const secondary = {
+  light: '#696969',
+  main: '#282828',
+  dark: '#000'
+}
+
+export const gridSpacing = 3;
 
 export const cardColors = {
   primary: '#263238',
@@ -67,6 +75,11 @@ export default function exilenceTheme() {
         root: {
           fontSize: '0.75rem'
         }
+      },
+      MuiFormControlLabel: {
+        root: {
+          color: secondary.light
+        }
       }
     },
     palette: {
@@ -75,11 +88,7 @@ export default function exilenceTheme() {
         main: primaryMain,
         dark: primaryDark
       },
-      secondary: {
-        light: '#696969',
-        main: '#282828',
-        dark: '#000'
-      },
+      secondary: secondary,
       background: {
         default: '#191919',
         paper: '#232323'

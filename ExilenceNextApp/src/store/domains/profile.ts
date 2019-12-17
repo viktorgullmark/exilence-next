@@ -60,11 +60,13 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemUtils.mergeItemStacks(
+    const mergedItems = ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
       )
     );
+
+    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
   }
 
   @computed
@@ -72,7 +74,7 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemUtils.mergeItemStacks(
+    const mergedItems = ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(
           i =>
@@ -83,6 +85,8 @@ export class Profile {
         )
       )
     );
+
+    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
   }
 
   @computed
@@ -92,7 +96,9 @@ export class Profile {
     }
 
     const values = this.snapshots[0].stashTabSnapshots
-      .flatMap(sts => sts.value)
+      .flatMap(sts => sts.items)
+      .flatMap(item => item.total)
+      .filter(value => value >= stores.settingStore.priceTreshold)
       .reduce((a, b) => a + b, 0);
 
     return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -106,7 +112,8 @@ export class Profile {
     return ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
-      )).length;
+      )
+    ).length;
   }
 
   @action
@@ -131,7 +138,7 @@ export class Profile {
 
   @action
   editProfile(profile: IProfile) {
-    visitor!.event('Profile', 'Edit profile').send()
+    visitor!.event('Profile', 'Edit profile').send();
 
     Object.assign(this, profile);
   }
@@ -142,7 +149,7 @@ export class Profile {
   }
 
   @action snapshot() {
-    visitor!.event('Profile', 'Triggered snapshot').send()
+    visitor!.event('Profile', 'Triggered snapshot').send();
 
     this.setIsSnapshotting();
     this.getItems();
@@ -242,7 +249,14 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(p => p.count > 10);
+    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices
+
+    if (!stores.settingStore.lowConfidencePricing) {
+      filteredPrices = filteredPrices.filter(
+        p => p.count > 10
+      );
+    }
+
     filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
 
     const pricedStashTabs = stashTabsWithItems.map(
