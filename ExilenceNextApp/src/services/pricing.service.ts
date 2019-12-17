@@ -51,7 +51,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(
           p =>
             item.name.startsWith(p.name) &&
-            (item.links < 5 || p.links === item.links) &&
+            ((item.links < 5 && p.links && p.links < 5) ||
+              p.links === item.links) &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
             (p.variant === item.variant ||
