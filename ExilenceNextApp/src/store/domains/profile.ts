@@ -61,11 +61,13 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemUtils.mergeItemStacks(
+    const mergedItems = ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(i => i.calculated > 0)
       )
     );
+
+    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
   }
 
   @computed
@@ -73,7 +75,7 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return ItemUtils.mergeItemStacks(
+    const mergedItems = ItemUtils.mergeItemStacks(
       this.snapshots[0].stashTabSnapshots.flatMap(sts =>
         sts.items.filter(
           i =>
@@ -84,6 +86,8 @@ export class Profile {
         )
       )
     );
+
+    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
   }
 
   @computed
@@ -93,7 +97,9 @@ export class Profile {
     }
 
     const values = this.snapshots[0].stashTabSnapshots
-      .flatMap(sts => sts.value)
+      .flatMap(sts => sts.items)
+      .flatMap(item => item.total)
+      .filter(value => value >= stores.settingStore.priceTreshold)
       .reduce((a, b) => a + b, 0);
 
     return values.toLocaleString(undefined, { maximumFractionDigits: 2 });

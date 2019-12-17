@@ -32,6 +32,7 @@ import { UiStateStore } from './store/uiStateStore';
 import AppConfig from './config/app.config';
 import ua, { Visitor } from 'universal-analytics';
 import { UpdateStore } from './store/updateStore';
+import { SettingStore } from './store/settingStore';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -54,11 +55,12 @@ const hydrate = create({
   jsonify: true
 });
 
+const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
 const signalrStore = new SignalrStore();
+const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const updateStore = new UpdateStore();
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
@@ -76,7 +78,8 @@ export const stores = {
   leagueStore,
   priceStore,
   signalrStore,
-  updateStore
+  updateStore,
+  settingStore
 };
 
 const app = (
@@ -118,7 +121,8 @@ const app = (
 Promise.all([
   hydrate('account', accountStore),
   hydrate('uiState', uiStateStore),
-  hydrate('league', leagueStore)
+  hydrate('league', leagueStore),
+  hydrate('setting', settingStore)
 ]).then(() => {
   visitor = ua(AppConfig.trackingId, uiStateStore.userId);
   ReactDOM.render(app, document.getElementById('root'));

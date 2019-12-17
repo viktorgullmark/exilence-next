@@ -23,7 +23,10 @@
     "select_characters": "Select your characters",
     "confirm_clear_snapshots": "Clear snapshots for profile",
     "confirm_remove_profile": "Remove profile",
-    "ga_consent_dialog_title": "Terms and conditions"
+    "ga_consent_dialog_title": "Terms and conditions",
+    "net_worth_settings": "Net worth",
+    "misc_settings": "Misc",
+    "pricing_settings": "Pricing settings"
   },
   "label": {
     "account_name": "Account name",
@@ -54,7 +57,19 @@
     "these_terms_inline": "these terms",
     "update_available": "Version {{version}} available",
     "prices_fetched_from": "Prices fetched from ",
-    "not_available": "N/A"
+    "not_available": "N/A",
+    "low_confidence_pricing": "Activate low confidence pricing",
+    "price_treshold": "Select price treshold",
+    "requires_snapshot_info": "* = requires a new snapshot to take effect"
+  },
+  "value": {
+    "none": "None",
+    "low_confidence_pricing": "Low confidence",
+    "price_treshold": "Price treshold"
+  },
+  "helper_text": {
+    "low_confidence_pricing": "Includes prices with less than 10 listings",
+    "price_treshold": "Sets the cutoff for including items"
   },
   "link": {
     "restart_now": "Restart now"
