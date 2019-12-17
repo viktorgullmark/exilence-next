@@ -115,6 +115,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         isSnapshotting={
           accountStore!.getSelectedAccount.activeProfile.isSnapshotting
         }
+        isInitiating={uiStateStore!.isInitiating}
       />
     </>
   );
