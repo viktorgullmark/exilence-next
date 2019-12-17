@@ -7,12 +7,13 @@ namespace API.Interfaces
 {
     public interface ISnapshotService
     {
-        Task<SnapshotModel> GetSnapshot(string accountName, string snapshotClientId);
-        Task<SnapshotModel> AddSnapshot(string accountName, string profileClientId, SnapshotModel snapshotModel);
-        Task<SnapshotModel> RemoveSnapshot(string accountName, string profileClientId, string snapshotClientId);
-        Task<StashtabModel> GetStashtab(string accountName, string stashtabClientId);
-        Task<StashtabModel> AddStashtab(string accountName, string snapshotClientId, StashtabModel stashtabModel);
-        Task<StashtabModel> RemoveStashtab(string accountName, string snapshotClientId, string stashtabClientId);
-        IQueryable<Stashtab> GetStashtabs(string accountName, string snapshotClientId);
+        Task<SnapshotModel> GetSnapshot(string snapshotClientId);
+        Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel);
+        Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId);
+        Task<StashtabModel> GetStashtab(string stashtabClientId);
+        Task<StashtabModel> AddStashtab(string snapshotClientId, StashtabModel stashtabModel);
+        Task<PricedItemModel> AddPricedItem(string stashtabClientId, PricedItemModel stashtabModel);
+        Task<StashtabModel> RemoveStashtab(string snapshotClientId, string stashtabClientId);
+        IQueryable<Stashtab> GetStashtabs(string snapshotClientId);
     }
 }

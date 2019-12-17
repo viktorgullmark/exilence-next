@@ -18,6 +18,5 @@ namespace Shared.Models
         [Column(TypeName = "decimal(18,4)")]
         public decimal Value { get; set; }
         public virtual List<PricedItemModel> PricedItems { get; set; }
-        public SnapshotModel Snapshot { get; set; }
     }
 }
