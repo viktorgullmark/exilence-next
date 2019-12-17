@@ -29,8 +29,8 @@ export class SignalrHub {
   sendEvent<T>(event: string, params: T, id?: string) {
     return from(
       id
-        ? this.connection.send(event, params, id)
-        : this.connection.send(event, params)
+        ? this.connection.invoke(event, params, id)
+        : this.connection.invoke(event, params)
     );
   }
 }
