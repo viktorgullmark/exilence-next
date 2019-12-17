@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   warning: {
     color: statusColors.warning
+  },
+  noItemPlaceholder: {
+    color: theme.palette.primary.light
   }
 }));
 
@@ -104,7 +107,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           >
             {filteredItems.length === 0 &&
               uiStateStore!.itemTableFilterText === '' && (
-                <Typography className={classes.warning} align="center">
+                <Typography
+                  className={classes.noItemPlaceholder}
+                  align="center"
+                >
                   {t('tables:label.item_table_placeholder')}
                 </Typography>
               )}

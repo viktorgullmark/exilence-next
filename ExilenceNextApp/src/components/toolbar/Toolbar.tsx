@@ -106,6 +106,7 @@ interface Props {
   profiles: Profile[];
   profileOpen: boolean;
   isEditing: boolean;
+  isInitiating: boolean;
   notifications: Notification[];
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
@@ -143,6 +144,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             })}
           >
             <MuiToolbar className={classes.toolbar}>
+              {props.isInitiating && (
+                <CircularProgress className={classes.spinner} size={20} />
+              )}
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
