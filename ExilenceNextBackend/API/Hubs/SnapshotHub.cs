@@ -49,12 +49,11 @@ namespace API.Hubs
             }
         }
 
-        public async Task AddPricedItems(IAsyncEnumerable<string> pricedItems)
+        public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems)
         {
             await foreach (var pricedItem in pricedItems)
             {
-                var test = true;
-                //await _snapshotService.AddPricedItem(stashtabClientId, pricedItem);
+                await _snapshotService.AddPricedItem(stashtabClientId, pricedItem);
             }
         }
 
