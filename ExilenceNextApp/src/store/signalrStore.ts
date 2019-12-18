@@ -13,6 +13,7 @@ import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.inter
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
 import { NotificationStore } from './notificationStore';
+import { SnapshotUtils } from '../utils/snapshot.utils';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -47,7 +48,12 @@ export class SignalrStore {
 
   @action
   joinGroupFail(e: Error) {
-    this.notificationStore.createNotification('api_join_group', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_join_group',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -71,7 +77,12 @@ export class SignalrStore {
 
   @action
   createProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_create_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_create_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -81,8 +92,6 @@ export class SignalrStore {
 
   @action
   updateProfile(profile: Profile) {
-    const profileToSend = <Profile>Object.assign(profile);
-    profileToSend.snapshots = [];
     fromStream(
       this.signalrHub.sendEvent<Profile>('EditProfile', profile).pipe(
         map((res: Profile) => {
@@ -95,7 +104,12 @@ export class SignalrStore {
 
   @action
   updateProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_update_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_update_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -117,7 +131,12 @@ export class SignalrStore {
 
   @action
   removeProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_remove_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_remove_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -143,7 +162,12 @@ export class SignalrStore {
 
   @action
   createSnapshotFail(e: Error) {
-    this.notificationStore.createNotification('api_create_snapshot', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_create_snapshot',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -165,7 +189,12 @@ export class SignalrStore {
 
   @action
   uploadItemsFail(e: Error) {
-    this.notificationStore.createNotification('api_upload_items', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_upload_items',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
