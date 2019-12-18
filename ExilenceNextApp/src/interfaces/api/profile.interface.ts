@@ -1,4 +1,5 @@
 import { ICurrency } from '../currency.interface';
+import { IApiSnapshot } from './snapshot.interface';
 
 export interface IApiProfile {
     uuid: string;
@@ -7,4 +8,5 @@ export interface IApiProfile {
     activePriceLeagueId: string;
     activeCurrency: ICurrency;
     activeStashTabIds: string[];
+    snapshots: IApiSnapshot[];
 }

@@ -9,7 +9,8 @@ export class ProfileUtils {
       activeLeagueId: p.activeLeagueId,
       activePriceLeagueId: p.activePriceLeagueId,
       activeCurrency: p.activeCurrency,
-      activeStashTabIds: p.activeStashTabIds
+      activeStashTabIds: p.activeStashTabIds,
+      snapshots: []
     }
   }
 }
