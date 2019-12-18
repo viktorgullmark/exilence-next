@@ -319,8 +319,15 @@ export class Profile {
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
+      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+        snapshotToAdd,
+        activeAccountLeague.stashtabs
+      );
+      console.log(apiItems);
       stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
-      stores.signalrStore.streamItems(apiSnapshot.stashTabs)
+      setTimeout(() => {
+        stores.signalrStore.streamItems(apiItems);
+      }, 2000);
     }
 
     // clear items from previous snapshot

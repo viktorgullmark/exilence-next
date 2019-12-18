@@ -53,7 +53,7 @@ namespace ExilenceTests
                 StashTabs = new List<StashtabModel>()
             };
 
-            snapshot = await _fixture.SnapshotService.AddSnapshot(account.Name, profile.ClientId, snapshot);
+            snapshot = await _fixture.SnapshotService.AddSnapshot(profile.ClientId, snapshot);
 
             var stashtabs = new List<StashtabModel>()
             {
@@ -77,7 +77,7 @@ namespace ExilenceTests
 
             foreach (var stashtab in stashtabs)
             {
-                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(account.Name, snapshot.ClientId, stashtab);
+                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.ClientId, stashtab);
                 Assert.NotNull(returnedStashtab.Id);
             }
             

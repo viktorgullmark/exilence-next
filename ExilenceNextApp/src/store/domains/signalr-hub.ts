@@ -5,6 +5,8 @@ import { from } from 'rxjs';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { IApiStashTabSnapshot } from '../../interfaces/api/stash-tab-snapshot.interface';
+import { IApiPricedItem } from '../../interfaces/api/priceditem.interface';
+import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem.interface';
 
 export class SignalrHub {
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
@@ -37,17 +39,19 @@ export class SignalrHub {
   }
 
   @action
-  async *streamItems(stashTabs: IApiStashTabSnapshot[]) {
+  async *streamItems(stashtabs: IApiStashTabPricedItem[]) {
     const subject = new signalR.Subject();
-    yield this.connection.send('AddStashtabs', subject);
-    var iteration = 0;
-    const intervalHandle = setInterval(() => {
-      iteration++;
-      subject.next(stashTabs[iteration]);
-      if (iteration === stashTabs.length - 1) {
-        clearInterval(intervalHandle);
-        subject.complete();
-      }
-    }, 500);
+    stashtabs.forEach(tab => {
+      var iteration = 0;
+      this.connection.send('AddPricedItems', subject, tab.stashTabId);
+      const intervalHandle = setInterval(() => {
+        iteration++;
+        subject.next(tab.pricedItems[iteration]);
+        if (iteration === tab.pricedItems.length - 1) {
+          clearInterval(intervalHandle);
+          subject.complete();
+        }
+      }, 250);
+    });
   }
 }

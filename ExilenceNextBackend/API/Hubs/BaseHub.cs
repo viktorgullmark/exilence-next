@@ -86,7 +86,6 @@ namespace API.Hubs
         //    }
         //}
 
-
         // EXAMPLE OF HOW TO SEND A STREAM
         //public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
         //{

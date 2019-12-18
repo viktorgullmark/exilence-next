@@ -41,14 +41,6 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task AddStashtabs(IAsyncEnumerable<StashtabModel> stashtabModels, string snapshotClientId)
-        {
-            await foreach (var stashtabModel in stashtabModels)
-            {
-                await _snapshotService.AddStashtab(snapshotClientId, stashtabModel);
-            }
-        }
-
         public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)
         {
             await foreach (var pricedItem in pricedItems)
@@ -74,5 +66,6 @@ namespace API.Hubs
                 await Task.Delay(100, cancellationToken);
             }
         }
+
     }
 }

@@ -10,6 +10,8 @@ import { fromStream } from 'mobx-utils';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
+import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
+import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -105,8 +107,9 @@ export class SignalrStore {
   }
 
   @action
-  streamItems(stashTabs: IApiStashTabSnapshot[]) {
-    this.signalrHub.streamItems(stashTabs).next();
+  streamItems(stashtabs: IApiStashTabPricedItem[]) {
+    this.signalrHub.streamItems(stashtabs).next();
   }
+
   /* #endregion */
 }

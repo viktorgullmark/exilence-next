@@ -6,6 +6,7 @@ import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.inter
 import { ColourUtils } from './colour.utils';
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import uuid from 'uuid';
+import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
@@ -32,5 +33,25 @@ export class SnapshotUtils {
           };
         })
     };
+  }
+
+  public static mapSnapshotsToStashTabPricedItems(
+    snapshot: Snapshot,
+    stashTabs: IStashTab[]
+  ) {
+    return stashTabs
+      .filter(st =>
+        snapshot.stashTabSnapshots.map(sts => sts.stashTabId).includes(st.id)
+      )
+      .map(st => {
+        return <IApiStashTabPricedItem>{
+          stashTabId: st.id,
+          pricedItems: snapshot.stashTabSnapshots
+            .find(sts => sts.stashTabId === st.id)!
+            .items.map(i => {
+              return <IApiPricedItem>{ ...i, uuid: i.id, id: null };
+            })
+        };
+      });
   }
 }
