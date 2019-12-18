@@ -326,7 +326,7 @@ export class Profile {
       console.log(apiItems);
       stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
       setTimeout(() => {
-        stores.signalrStore.streamItems(apiItems);
+        stores.signalrStore.uploadItems(apiItems);
       }, 2000);
     }
 

@@ -9,7 +9,13 @@
       "price_stash_items": "Items were successfully priced",
       "get_prices_for_leagues": "Retrieved prices for all leagues",
       "snapshot": "Snapshot created successfully",
-      "new_update_found": "New release was found"
+      "new_update_found": "New release was found",
+      "api_join_group": "Successfully joined group",
+      "api_create_profile": "Uploaded profile to server",
+      "api_update_profile": "Uploaded changes to profile to server",
+      "api_remove_profile": "Uploaded removal of profile to server",
+      "api_create_snapshot": "Uploaded snapshot to server",
+      "api_upload_items": "Uploaded items to server"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -20,7 +26,13 @@
       "price_stash_items": "Items in the selected stash tabs were successfully priced",
       "get_prices_for_leagues": "Successfully retrieved prices for all leagues",
       "snapshot": "A new snapshot was successfully created and saved",
-      "new_update_found": "A new release was found on GitHub"
+      "new_update_found": "A new release was found on GitHub",
+      "api_join_group": "Joined a new group on the server",
+      "api_create_profile": "New data was uploaded to the server",
+      "api_update_profile": "New data was uploaded to the server",
+      "api_remove_profile": "New data was uploaded to the server",
+      "api_create_snapshot": "New data was uploaded to the server",
+      "api_upload_items": "New data was uploaded to the server"
     }
   },
   "error": {
@@ -33,7 +45,13 @@
       "price_stash_items": "Failed pricing items",
       "get_prices_for_leagues": "Failed retrieving prices for leagues",
       "snapshot": "Failed creating snapshot",
-      "check_for_update": "Could not check for update"
+      "check_for_update": "Could not check for update",
+      "api_join_group": "Could not join group",
+      "api_create_profile": "Could not upload profile",
+      "api_update_profile": "Could not upload profile changes",
+      "api_remove_profile": "Could not upload profile changes",
+      "api_create_snapshot": "Could not upload snapshot",
+      "api_upload_items": "Could not upload items"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -43,7 +61,13 @@
       "price_stash_items": "Items in the selected stash tabs could not be priced",
       "get_prices_for_leagues": "Failed in retrieving prices for leagues",
       "snapshot": "The snapshot could not be created",
-      "check_for_update": "Something went wrong when checking for update"
+      "check_for_update": "Something went wrong when checking for update",
+      "api_join_group": "Failed when trying to join new group on the server",
+      "api_create_profile": "Failed when trying to upload new profile to server",
+      "api_update_profile": "Failed when trying to upload changes to server",
+      "api_remove_profile": "Failed when trying to upload changes to server",
+      "api_create_snapshot": "Failed when trying to upload snapshot to server",
+      "api_upload_items": "Failed when trying to upload items to server"
     },
     "custom_description" :{
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",

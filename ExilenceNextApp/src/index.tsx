@@ -57,10 +57,10 @@ const hydrate = create({
 
 const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
-const signalrStore = new SignalrStore();
 const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
+const signalrStore = new SignalrStore(notificationStore);
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
