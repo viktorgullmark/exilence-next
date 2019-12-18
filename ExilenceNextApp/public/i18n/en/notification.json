@@ -16,6 +16,7 @@
       "api_remove_profile": "Uploaded removal of profile to server",
       "api_create_snapshot": "Uploaded snapshot to server",
       "api_upload_items": "Uploaded items to server",
+      "api_remove_snapshot": "Uploaded removal of snapshot to server",
       "reconnected": "Successfully reconnected to the server"
     },
     "description": {
@@ -34,6 +35,7 @@
       "api_remove_profile": "New data was uploaded to the server",
       "api_create_snapshot": "New data was uploaded to the server",
       "api_upload_items": "New data was uploaded to the server",
+      "api_remove_snapshot": "New data was uploaded to the server",
       "reconnected": "The connection to the server was reestablished"
     }
   },
@@ -54,6 +56,7 @@
       "api_remove_profile": "Could not upload profile changes",
       "api_create_snapshot": "Could not upload snapshot",
       "api_upload_items": "Could not upload items",
+      "api_remove_snapshot": "Could not upload snapshot changes",
       "connection_lost": "Connection to server was lost"
     },
     "description": {
@@ -71,6 +74,7 @@
       "api_remove_profile": "Failed when trying to upload changes to server",
       "api_create_snapshot": "Failed when trying to upload snapshot to server",
       "api_upload_items": "Failed when trying to upload items to server",
+      "api_remove_snapshot": "Failed when trying to upload changes to server",
       "connection_lost": "We could not establish a connection to the server"
     },
     "custom_description" :{

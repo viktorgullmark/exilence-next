@@ -176,6 +176,33 @@ export class SignalrStore {
   }
 
   @action
+  removeSnapshot(uuid: string) {
+    fromStream(
+      this.signalrHub.sendEvent<string>('RemoveSnapshot', uuid).pipe(
+        map((p: IApiSnapshot) => {
+          this.removeSnapshotSuccess();
+        }),
+        catchError((e: Error) => of(this.removeSnapshotFail(e)))
+      )
+    );
+  }
+
+  @action
+  removeSnapshotFail(e: Error) {
+    this.notificationStore.createNotification(
+      'api_remove_snapshot',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  removeSnapshotSuccess() {
+    this.notificationStore.createNotification('api_remove_snapshot', 'success');
+  }
+
+  @action
   uploadItems(stashtabs: IApiStashTabPricedItem[]) {
     fromStream(
       from(this.signalrHub.streamItems(stashtabs)).pipe(

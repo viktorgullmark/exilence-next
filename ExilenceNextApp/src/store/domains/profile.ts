@@ -129,7 +129,12 @@ export class Profile {
 
   @action
   clearSnapshots() {
+    const snapshotsToRemove = [...this.snapshots];
     this.snapshots = [];
+
+    snapshotsToRemove.forEach(s => {
+      stores.signalrStore.removeSnapshot(s.uuid);
+    })
   }
 
   @action
