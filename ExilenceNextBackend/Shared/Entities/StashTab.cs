@@ -18,6 +18,7 @@ namespace Shared.Entities
         [Column(TypeName = "decimal(13,4)")]
         public decimal Value { get; set; }
         public virtual ICollection<PricedItem> PricedItems { get; set; }
+        [Required]
         public virtual Snapshot Snapshot { get; set; }
 
     }

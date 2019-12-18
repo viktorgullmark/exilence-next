@@ -18,6 +18,8 @@ namespace Shared.Entities
         public Class Class { get; set; }
         public Ascendancy Ascendancy{ get; set; }
         public int Level { get; set; }
+        [Required]
+        public virtual Account Account { get; set; }
 
         public Character()
         {

@@ -44,5 +44,8 @@ namespace Shared.Entities
         public decimal Median { get; set; }
         public string BaseType { get; set; }
         public int Count { get; set; }
+
+        [Required]
+        public virtual Stashtab Stashtab { get; set; }
     }
 }
