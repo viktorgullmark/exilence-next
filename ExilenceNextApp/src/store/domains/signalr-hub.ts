@@ -1,12 +1,9 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import AppConfig from './../../config/app.config';
 import { from } from 'rxjs';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { IStashTab } from '../../interfaces/stash.interface';
-import { IApiStashTabSnapshot } from '../../interfaces/api/stash-tab-snapshot.interface';
-import { IApiPricedItem } from '../../interfaces/api/priceditem.interface';
+import { stores } from '../..';
 import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem.interface';
+import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
   connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
@@ -19,9 +16,25 @@ export class SignalrHub {
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: () => {
+          return 5000;
+        }
+      })
       .build();
 
-    this.connection.start().catch((err: string) => document.write(err));
+    this.connection
+      .start()
+      .then(() => {
+        this.connection.onreconnected(() => {
+          stores.notificationStore.createNotification('reconnected', 'success');
+        });
+
+        this.connection.onreconnecting(e => {
+          this.connectionLost(e);
+        });
+      })
+      .catch((err: string) => document.write(err));
   }
 
   @action
@@ -53,5 +66,15 @@ export class SignalrHub {
         }
       }, 250);
     });
+  }
+
+  @action
+  connectionLost(e?: Error) {
+    stores.notificationStore.createNotification(
+      'connection_lost',
+      'error',
+      false,
+      e
+    );
   }
 }

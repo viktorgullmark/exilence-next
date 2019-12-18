@@ -12,6 +12,7 @@ import { of, from } from 'rxjs';
 import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
+import { NotificationStore } from './notificationStore';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -19,11 +20,7 @@ export class SignalrStore {
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
-  constructor() {
-    this.signalrHub.onEvent<IGroup>('JoinGroup', group => {
-      this.onJoinGroup(group);
-    });
-
+  constructor(private notificationStore: NotificationStore) {
     reaction(
       () => this.activeGroup,
       _data => {
@@ -39,17 +36,23 @@ export class SignalrStore {
   joinGroup(groupName: string) {
     fromStream(
       this.signalrHub.sendEvent<string>('JoinGroup', groupName).pipe(
-        map((res: IGroup) => {
-          console.log('Joined group', res);
+        map((g: IGroup) => {
+          this.activeGroup = new Group(g);
+          this.joinGroupSuccess();
         }),
-        catchError((e: Error) => of(console.log(e)))
+        catchError((e: Error) => of(this.joinGroupFail(e)))
       )
     );
   }
 
   @action
-  private onJoinGroup(group: IGroup) {
-    this.activeGroup = new Group(group);
+  joinGroupFail(e: Error) {
+    this.notificationStore.createNotification('api_join_group', 'error', false, e);
+  }
+
+  @action
+  joinGroupSuccess() {
+    this.notificationStore.createNotification('api_join_group', 'success');
   }
   /* #endregion */
 
@@ -58,12 +61,22 @@ export class SignalrStore {
   createProfile(profile: Profile) {
     fromStream(
       this.signalrHub.sendEvent<Profile>('AddProfile', profile).pipe(
-        map((res: Profile) => {
-          console.log('Added profile', res);
+        map((p: Profile) => {
+          this.createProfileSuccess();
         }),
-        catchError((e: Error) => of(console.log(e)))
+        catchError((e: Error) => of(this.createProfileFail(e)))
       )
     );
+  }
+
+  @action
+  createProfileFail(e: Error) {
+    this.notificationStore.createNotification('api_create_profile', 'error', false, e);
+  }
+
+  @action
+  createProfileSuccess() {
+    this.notificationStore.createNotification('api_create_profile', 'success');
   }
 
   @action
@@ -73,23 +86,43 @@ export class SignalrStore {
     fromStream(
       this.signalrHub.sendEvent<Profile>('EditProfile', profile).pipe(
         map((res: Profile) => {
-          console.log('Edited profile', res);
+          this.updateProfileSuccess();
         }),
-        catchError((e: Error) => of(console.log(e)))
+        catchError((e: Error) => of(this.updateProfileFail(e)))
       )
     );
+  }
+
+  @action
+  updateProfileFail(e: Error) {
+    this.notificationStore.createNotification('api_update_profile', 'error', false, e);
+  }
+
+  @action
+  updateProfileSuccess() {
+    this.notificationStore.createNotification('api_update_profile', 'success');
   }
 
   @action
   removeProfile(uuid: string) {
     fromStream(
       this.signalrHub.sendEvent<string>('RemoveProfile', uuid).pipe(
-        map((res: Profile) => {
-          console.log('Removed profile', res);
+        map((p: Profile) => {
+          this.removeProfileSuccess();
         }),
-        catchError((e: Error) => of(console.log(e)))
+        catchError((e: Error) => of(this.removeProfileFail(e)))
       )
     );
+  }
+
+  @action
+  removeProfileFail(e: Error) {
+    this.notificationStore.createNotification('api_remove_profile', 'error', false, e);
+  }
+
+  @action
+  removeProfileSuccess() {
+    this.notificationStore.createNotification('api_remove_profile', 'success');
   }
   /* #endregion */
 
@@ -100,24 +133,44 @@ export class SignalrStore {
       this.signalrHub
         .sendEvent<IApiSnapshot>('AddSnapshot', snapshot, profileId)
         .pipe(
-          map((res: IApiSnapshot) => {
-            console.log('Added snapshot', res);
+          map((s: IApiSnapshot) => {
+            this.createSnapshotSuccess();
           }),
-          catchError((e: Error) => of(console.log(e)))
+          catchError((e: Error) => of(this.createSnapshotFail(e)))
         )
     );
   }
 
   @action
-  streamItems(stashtabs: IApiStashTabPricedItem[]) {
+  createSnapshotFail(e: Error) {
+    this.notificationStore.createNotification('api_create_snapshot', 'error', false, e);
+  }
+
+  @action
+  createSnapshotSuccess() {
+    this.notificationStore.createNotification('api_create_snapshot', 'success');
+  }
+
+  @action
+  uploadItems(stashtabs: IApiStashTabPricedItem[]) {
     fromStream(
       from(this.signalrHub.streamItems(stashtabs)).pipe(
         map(() => {
-          console.log('Successful');
+          this.uploadItemsSuccess();
         }),
-        catchError((e: Error) => of(console.log(e)))
+        catchError((e: Error) => of(this.uploadItemsFail(e)))
       )
     );
+  }
+
+  @action
+  uploadItemsFail(e: Error) {
+    this.notificationStore.createNotification('api_upload_items', 'error', false, e);
+  }
+
+  @action
+  uploadItemsSuccess() {
+    this.notificationStore.createNotification('api_upload_items', 'success');
   }
 
   /* #endregion */
