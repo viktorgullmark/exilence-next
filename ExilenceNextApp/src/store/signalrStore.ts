@@ -48,7 +48,12 @@ export class SignalrStore {
 
   @action
   joinGroupFail(e: Error) {
-    this.notificationStore.createNotification('api_join_group', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_join_group',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -72,7 +77,12 @@ export class SignalrStore {
 
   @action
   createProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_create_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_create_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -94,7 +104,12 @@ export class SignalrStore {
 
   @action
   updateProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_update_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_update_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -116,7 +131,12 @@ export class SignalrStore {
 
   @action
   removeProfileFail(e: Error) {
-    this.notificationStore.createNotification('api_remove_profile', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_remove_profile',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -142,7 +162,12 @@ export class SignalrStore {
 
   @action
   createSnapshotFail(e: Error) {
-    this.notificationStore.createNotification('api_create_snapshot', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_create_snapshot',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
@@ -164,7 +189,12 @@ export class SignalrStore {
 
   @action
   uploadItemsFail(e: Error) {
-    this.notificationStore.createNotification('api_upload_items', 'error', false, e);
+    this.notificationStore.createNotification(
+      'api_upload_items',
+      'error',
+      false,
+      e
+    );
   }
 
   @action
