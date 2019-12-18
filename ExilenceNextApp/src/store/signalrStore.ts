@@ -13,7 +13,7 @@ import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.inter
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
 import { NotificationStore } from './notificationStore';
-import { SnapshotUtils } from '../utils/snapshot.utils';
+import { IApiProfile } from '../interfaces/api/profile.interface';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -64,10 +64,10 @@ export class SignalrStore {
 
   /* #region Profile */
   @action
-  createProfile(profile: Profile) {
+  createProfile(profile: IApiProfile) {
     fromStream(
-      this.signalrHub.sendEvent<Profile>('AddProfile', profile).pipe(
-        map((p: Profile) => {
+      this.signalrHub.sendEvent<IApiProfile>('AddProfile', profile).pipe(
+        map((p: IApiProfile) => {
           this.createProfileSuccess();
         }),
         catchError((e: Error) => of(this.createProfileFail(e)))
@@ -91,10 +91,10 @@ export class SignalrStore {
   }
 
   @action
-  updateProfile(profile: Profile) {
+  updateProfile(profile: IApiProfile) {
     fromStream(
-      this.signalrHub.sendEvent<Profile>('EditProfile', profile).pipe(
-        map((res: Profile) => {
+      this.signalrHub.sendEvent<IApiProfile>('EditProfile', profile).pipe(
+        map((res: IApiProfile) => {
           this.updateProfileSuccess();
         }),
         catchError((e: Error) => of(this.updateProfileFail(e)))

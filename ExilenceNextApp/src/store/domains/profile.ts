@@ -17,6 +17,7 @@ import { stores, visitor } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { SnapshotUtils } from '../../utils/snapshot.utils';
+import { ProfileUtils } from '../../utils/profile.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -146,7 +147,9 @@ export class Profile {
     visitor!.event('Profile', 'Edit profile').send();
 
     Object.assign(this, profile);
-    stores.signalrStore.updateProfile(this);
+    stores.signalrStore.updateProfile(
+      ProfileUtils.mapProfileToApiProfile(this)
+    );
   }
 
   @action
