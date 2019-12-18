@@ -17,5 +17,7 @@ namespace Shared.Entities
         public string ActivePriceLeagueId { get; set; }
         public ICollection<string> ActiveStashTabIds { get; set; }
         public virtual ICollection<Snapshot> Snapshots { get; set; }
+        [Required]
+        public virtual Account Account { get; set; }
     }
 }
