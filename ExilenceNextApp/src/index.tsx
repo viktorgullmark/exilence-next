@@ -33,6 +33,7 @@ import AppConfig from './config/app.config';
 import ua, { Visitor } from 'universal-analytics';
 import { UpdateStore } from './store/updateStore';
 import { SettingStore } from './store/settingStore';
+import { RequestQueueStore } from './store/requestQueueStore';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -58,6 +59,7 @@ const hydrate = create({
 const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
 const updateStore = new UpdateStore();
+const requestQueueStore = new RequestQueueStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
 const signalrStore = new SignalrStore(notificationStore);
