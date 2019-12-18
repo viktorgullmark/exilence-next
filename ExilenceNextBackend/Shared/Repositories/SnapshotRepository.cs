@@ -37,5 +37,17 @@ namespace Shared.Repositories
         {
             await _exilenceContext.SaveChangesAsync();
         }
+
+        public Snapshot RemoveSnapshot(Snapshot snapshot)
+        {
+            _exilenceContext.Snapshots.Remove(snapshot);
+            return snapshot;
+        }
+
+        public Stashtab RemoveStashtab(Stashtab stashtab)
+        {
+            _exilenceContext.StashTabs.Remove(stashtab);
+            return stashtab;
+        }
     }
 }

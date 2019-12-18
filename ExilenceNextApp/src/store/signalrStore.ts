@@ -81,6 +81,8 @@ export class SignalrStore {
 
   @action
   updateProfile(profile: Profile) {
+    const profileToSend = <Profile>Object.assign(profile);
+    profileToSend.snapshots = [];
     fromStream(
       this.signalrHub.sendEvent<Profile>('EditProfile', profile).pipe(
         map((res: Profile) => {
