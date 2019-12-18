@@ -93,7 +93,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `1px solid ${theme.palette.primary.dark}`
   },
   spinner: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
+  },
+  initiationSpinner: {
+    marginLeft: '5px',
+    color: theme.palette.primary.contrastText,
   },
   badge: {
     backgroundColor: theme.palette.secondary.dark
@@ -106,6 +110,7 @@ interface Props {
   profiles: Profile[];
   profileOpen: boolean;
   isEditing: boolean;
+  isInitiating: boolean;
   notifications: Notification[];
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
@@ -143,6 +148,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             })}
           >
             <MuiToolbar className={classes.toolbar}>
+            
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -152,6 +158,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               >
                 <MenuIcon />
               </IconButton>
+              {props.isInitiating && (
+                <CircularProgress title={t('label.initiating_session_spinner_title')}  className={classes.initiationSpinner} size={20} />
+              )}
               <Grid
                 container
                 alignItems="center"
@@ -226,7 +235,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     {!props.isSnapshotting ? (
                       <UpdateIcon fontSize="small" />
                     ) : (
-                      <CircularProgress className={classes.spinner} size={20} />
+                      <CircularProgress title={t('label.fetch_snapshot_spinner_title')} className={classes.spinner} size={20} />
                     )}
                   </IconButton>
                   {props.activeProfile.snapshots.length > 0 && (
