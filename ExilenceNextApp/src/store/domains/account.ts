@@ -12,6 +12,7 @@ import { fromStream } from 'mobx-utils';
 import { authService } from '../../services/auth.service';
 import { switchMap, catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ProfileUtils } from '../../utils/profile.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -171,7 +172,7 @@ export class Account implements IAccount {
     const created = new Profile(profile);
     this.profiles.push(created);
 
-    stores.signalrStore.createProfile(created);
+    stores.signalrStore.createProfile(ProfileUtils.mapProfileToApiProfile(created));
 
     this.setActiveProfile(created.uuid);
   }
