@@ -8,7 +8,7 @@ import { Snapshot } from './domains/snapshot';
 import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
 import { fromStream } from 'mobx-utils';
 import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, from } from 'rxjs';
 import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
@@ -108,7 +108,14 @@ export class SignalrStore {
 
   @action
   streamItems(stashtabs: IApiStashTabPricedItem[]) {
-    this.signalrHub.streamItems(stashtabs).next();
+    fromStream(
+      from(this.signalrHub.streamItems(stashtabs)).pipe(
+        map(() => {
+          console.log('Successful');
+        }),
+        catchError((e: Error) => of(console.log(e)))
+      )
+    );
   }
 
   /* #endregion */

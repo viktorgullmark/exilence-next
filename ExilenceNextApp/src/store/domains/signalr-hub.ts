@@ -39,11 +39,11 @@ export class SignalrHub {
   }
 
   @action
-  async *streamItems(stashtabs: IApiStashTabPricedItem[]) {
+  async streamItems(stashtabs: IApiStashTabPricedItem[]) {
     const subject = new signalR.Subject();
-    stashtabs.forEach(tab => {
+    stashtabs.forEach(async tab => {
       var iteration = 0;
-      this.connection.send('AddPricedItems', subject, tab.stashTabId);
+      await this.connection.send('AddPricedItems', subject, tab.stashTabId);
       const intervalHandle = setInterval(() => {
         iteration++;
         subject.next(tab.pricedItems[iteration]);
