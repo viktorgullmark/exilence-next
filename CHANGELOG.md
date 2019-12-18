@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.1.2] - 2019-12-18
+##### Added
+- Added a spinner for when a session is being initiated
+##### Changed
+- Changed color of a placeholder text in the item table
 ##### Fixed
 - Fixed a bug where the error "No characters in league" would be displayed even though you had characters in the league
 
