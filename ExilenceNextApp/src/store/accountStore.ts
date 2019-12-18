@@ -12,6 +12,7 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { UiStateStore } from './uiStateStore';
 import { SignalrStore } from './signalrStore';
+import { ProfileUtils } from '../utils/profile.utils';
 
 export class AccountStore {
   constructor(
@@ -171,7 +172,7 @@ export class AccountStore {
           league.stashtabs.slice(0, 6).map(lst => lst.id)
         );
         
-        this.signalrStore.updateProfile(profile);
+        this.signalrStore.updateProfile(ProfileUtils.mapProfileToApiProfile(profile));
 
         runInAction(() => {
           profile.shouldSetStashTabs = false;
