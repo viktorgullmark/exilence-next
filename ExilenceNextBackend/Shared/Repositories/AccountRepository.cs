@@ -40,6 +40,12 @@ namespace Shared.Repositories
             return _exilenceContext.SnapshotProfiles.Where(predicate);
         }
 
+        public SnapshotProfile RemoveProfile(SnapshotProfile profile)
+        {
+            _exilenceContext.SnapshotProfiles.Remove(profile);
+            return profile;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _exilenceContext.SaveChangesAsync();
