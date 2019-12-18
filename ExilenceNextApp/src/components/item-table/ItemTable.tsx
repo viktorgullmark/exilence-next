@@ -19,7 +19,10 @@ import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
-import { itemTableFilterHeight, itemTableFilterSpacing } from './ItemTableContainer';
+import {
+  itemTableFilterHeight,
+  itemTableFilterSpacing
+} from './ItemTableContainer';
 
 export const tableFooterHeight = 52;
 
@@ -139,6 +142,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
 
   const handleChangePage = (event: unknown, newPage: number) => {
     changePage(newPage);
+    pageIndex = 1;
   };
 
   function desc<T>(a: T, b: T, orderBy: keyof T) {
