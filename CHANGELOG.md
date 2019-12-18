@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2019-12-18
+##### Fixed
+- Fixed a bug where the error "No characters in league" would be displayed even though you had characters in the league
+
 ## [0.1.1] - 2019-12-17
 ##### Added
 - Added settings page
