@@ -57,13 +57,17 @@ export class Account implements IAccount {
   @action
   updateAccountLeagues(characters: ICharacter[]) {
     stores.leagueStore.leagues.forEach(l => {
-      const accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
+      let accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
       const leagueCharacters = characters.filter(c => c.league === l.id);
 
+      if (accLeague) {
+        accLeague.updateCharacters(leagueCharacters);
+      }
+
       if (!accLeague && leagueCharacters) {
-        const newLeague = new AccountLeague(l.id);
-        newLeague.updateCharacters(leagueCharacters);
-        this.accountLeagues.push(newLeague);
+        accLeague = new AccountLeague(l.id);
+        accLeague.updateCharacters(leagueCharacters);
+        this.accountLeagues.push(accLeague);
       }
     });
   }
@@ -91,15 +95,17 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
-    visitor!.event('Profile', 'Remove profile').send()
-  
+    visitor!.event('Profile', 'Remove profile').send();
+
     const profileIndex = this.profiles.findIndex(
       p => p.uuid === this.activeProfileUuid
     );
     if (profileIndex === -1) {
       this.removeActiveProfileFail(new Error('profile_not_found'));
     } else {
-      const newActiveProfile = this.profiles.find(p => p.uuid !== this.activeProfileUuid);
+      const newActiveProfile = this.profiles.find(
+        p => p.uuid !== this.activeProfileUuid
+      );
       this.setActiveProfile(newActiveProfile!.uuid);
       this.profiles.splice(profileIndex, 1);
     }
