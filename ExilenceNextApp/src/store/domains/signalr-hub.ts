@@ -16,7 +16,11 @@ export class SignalrHub {
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
-      .withAutomaticReconnect()
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: () => {
+          return 5000;
+        }
+      })
       .build();
 
     this.connection
