@@ -28,6 +28,10 @@ export class SignalrHub {
       .then(() => {
         this.connection.onreconnected(() => {
           stores.notificationStore.createNotification('reconnected', 'success');
+
+          if (stores.requestQueueStore.failedEventsStack.length > 0) {
+            stores.requestQueueStore.retryFailedEvents();
+          }
         });
 
         this.connection.onreconnecting(e => {

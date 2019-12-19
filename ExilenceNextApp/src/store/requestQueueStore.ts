@@ -1,9 +1,9 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { from, Observable, of } from 'rxjs';
-import { flatMap, mergeMap, map, catchError, retry, delay } from 'rxjs/operators';
-import { ISignalrEvent } from './signalrStore';
+import { from } from 'rxjs';
+import { delay, flatMap, map, mergeMap, retry } from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
+import { ISignalrEvent } from './signalrStore';
 
 export class RequestQueueStore {
   @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
