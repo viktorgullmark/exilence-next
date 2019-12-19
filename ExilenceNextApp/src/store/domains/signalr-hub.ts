@@ -10,8 +10,6 @@ export class SignalrHub {
     .withUrl(`${AppConfig.baseUrl}/hub`)
     .build();
 
-  online: boolean = false;
-  
   constructor() {}
 
   @action

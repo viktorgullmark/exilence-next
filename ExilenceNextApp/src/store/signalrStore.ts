@@ -37,7 +37,7 @@ export class SignalrStore {
     successCallback: () => void,
     failCallback: (e: Error) => void
   ) {
-    this.signalrHub.online
+    this.online
       ? fromStream(
           request.pipe(
             map(() => {
