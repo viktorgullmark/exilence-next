@@ -51,6 +51,6 @@ export class RequestQueueStore {
   runEventFromQueue<T>(event: ISignalrEvent<T>) {
     return event.stream
       ? this.signalrHub.stream<T>(event.method, event.stream, event.id)
-      : this.signalrHub.sendEvent<T>(event.method, event.object, event.id);
+      : this.signalrHub.sendEvent<T>(event.method, event.object!, event.id);
   }
 }

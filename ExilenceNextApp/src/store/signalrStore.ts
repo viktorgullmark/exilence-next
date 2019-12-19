@@ -11,10 +11,12 @@ import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
+import { IPricedItem } from '../interfaces/priced-item.interface';
+import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
-  object: T;
+  object?: T;
   stream?: T[];
   id?: string;
 }
@@ -45,8 +47,9 @@ export class SignalrStore {
     successCallback: () => void,
     failCallback: (e: Error) => void
   ) {
-    this.online
-      ? fromStream(
+    if (this.online) {
+      if (!event.stream) {
+        return fromStream(
           this.signalrHub.sendEvent(event.method, event.object, event.id).pipe(
             map(() => {
               return successCallback();
@@ -56,8 +59,23 @@ export class SignalrStore {
               return of(failCallback(e));
             })
           )
-        )
-      : this.requestQueueStore.queueFailedEvent(event);
+        );
+      } else {
+        return fromStream(
+          this.signalrHub.stream(event.method, event.stream, event.id).pipe(
+            map(() => {
+              return successCallback();
+            }),
+            catchError((e: Error) => {
+              this.requestQueueStore.queueFailedEvent(event);
+              return of(failCallback(e));
+            })
+          )
+        );
+      }
+    } else {
+      return this.requestQueueStore.queueFailedEvent(event);
+    }
   }
 
   @action
@@ -267,19 +285,19 @@ export class SignalrStore {
 
   @action
   uploadItems(stashtabs: IApiStashTabPricedItem[]) {
-    fromStream(
-      from(stashtabs).pipe(
-        concatMap(tab => {
-          return this.signalrHub.stream(
-            'AddPricedItems',
-            tab.pricedItems,
-            tab.stashTabId
-          );
-        }),
-        switchMap(() => of(this.uploadItemsSuccess())),
-        catchError((e: Error) => of(this.uploadItemsFail(e)))
-      )
-    );
+    stashtabs.forEach(tab => {
+      const request: ISignalrEvent<IApiPricedItem> = {
+        method: 'AddPricedItems',
+        id: tab.stashTabId,
+        stream: tab.pricedItems
+      };
+
+      this.handleRequest(
+        request,
+        this.uploadItemsSuccess,
+        this.uploadItemsFail
+      );
+    });
   }
 
   @action

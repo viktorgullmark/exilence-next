@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { stores } from '../..';
 import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem.interface';
 import AppConfig from './../../config/app.config';
@@ -65,10 +65,10 @@ export class SignalrHub {
   }
 
   @action
-  async stream<T>(event: string, objects: T[], id?: string) {
+  stream<T>(event: string, objects: T[], id?: string) {
     const subject = new signalR.Subject();
     var iteration = 0;
-    await this.connection!.send(event, subject, id);
+    var promise = this.connection!.invoke(event, subject, id);
     const intervalHandle = setInterval(() => {
       subject.next(objects[iteration]);
       if (iteration === objects.length - 1) {
@@ -77,6 +77,7 @@ export class SignalrHub {
       }
       iteration++;
     }, 250);
+    return from(promise);
   }
 
   @action
