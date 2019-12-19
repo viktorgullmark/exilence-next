@@ -1,9 +1,18 @@
-import { action, observable } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { from } from 'rxjs';
-import { delay, flatMap, map, mergeMap, retry } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import {
+  delay,
+  flatMap,
+  map,
+  mergeMap,
+  retry,
+  concatMap,
+  switchMap
+} from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
 import { ISignalrEvent } from './signalrStore';
+import { fromStream } from 'mobx-utils';
 
 export class RequestQueueStore {
   @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
@@ -19,19 +28,21 @@ export class RequestQueueStore {
 
   @action
   retryFailedEvents() {
-    from(this.failedEventsStack).pipe(
-      mergeMap(event => {
-        return flatMap(() =>
-          this.runEventFromQueue(event).pipe(
+    fromStream(
+      from(this.failedEventsStack).pipe(
+        concatMap(event => {
+          return this.runEventFromQueue(event).pipe(
             map(() => {
-              this.failedEventsStack.shift();
+              runInAction(() => {
+                this.failedEventsStack.shift();
+              });
               console.log('event removed, queue now:', this.failedEventsStack);
             }),
             delay(3000),
             retry(5)
-          )
-        );
-      })
+          );
+        })
+      )
     );
   }
 
