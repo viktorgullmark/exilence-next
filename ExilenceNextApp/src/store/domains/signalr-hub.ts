@@ -36,7 +36,7 @@ export class SignalrHub {
           this.connectionLost(e);
         });
 
-        this.online = true;
+        stores.signalrStore.setOnline(true);
 
         if(stores.requestQueueStore.failedRequests.length > 0) {
           stores.requestQueueStore.retryFailedRequests();
@@ -78,7 +78,7 @@ export class SignalrHub {
 
   @action
   connectionLost(e?: Error) {
-    this.online = false;
+    stores.signalrStore.setOnline(false);
     stores.notificationStore.createNotification(
       'connection_lost',
       'error',

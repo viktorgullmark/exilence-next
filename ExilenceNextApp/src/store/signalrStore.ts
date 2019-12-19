@@ -13,7 +13,7 @@ import { RequestQueueStore } from './requestQueueStore';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
-
+  @observable online: boolean = false;
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
@@ -50,6 +50,11 @@ export class SignalrStore {
           )
         )
       : this.requestQueueStore.queueFailedRequest(request);
+  }
+
+  @action
+  setOnline(online: boolean) {
+    this.online = online;
   }
 
   /* #region Group */
