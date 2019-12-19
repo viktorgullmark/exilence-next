@@ -36,8 +36,8 @@ export class SignalrHub {
 
         stores.signalrStore.setOnline(true);
 
-        if(stores.requestQueueStore.failedRequests.length > 0) {
-          stores.requestQueueStore.retryFailedRequests();
+        if(stores.requestQueueStore.failedEvents.length > 0) {
+          stores.requestQueueStore.retryFailedEvents();
         }
       })
       .catch((err: string) => document.write(err));

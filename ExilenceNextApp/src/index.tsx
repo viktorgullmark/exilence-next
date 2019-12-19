@@ -34,6 +34,7 @@ import ua, { Visitor } from 'universal-analytics';
 import { UpdateStore } from './store/updateStore';
 import { SettingStore } from './store/settingStore';
 import { RequestQueueStore } from './store/requestQueueStore';
+import { SignalrHub } from './store/domains/signalr-hub';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -56,13 +57,15 @@ const hydrate = create({
   jsonify: true
 });
 
+const signalrHub: SignalrHub = new SignalrHub();
+
 const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
 const updateStore = new UpdateStore();
-const requestQueueStore = new RequestQueueStore();
+const requestQueueStore = new RequestQueueStore(signalrHub);
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const signalrStore = new SignalrStore(notificationStore, requestQueueStore);
+const signalrStore = new SignalrStore(notificationStore, requestQueueStore, signalrHub);
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,

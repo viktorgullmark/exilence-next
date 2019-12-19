@@ -2,28 +2,31 @@ import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { from, Observable, of } from 'rxjs';
 import { flatMap, mergeMap } from 'rxjs/operators';
+import { ISignalrEvent } from './signalrStore';
+import { SignalrHub } from './domains/signalr-hub';
 
 export class RequestQueueStore {
-  @observable @persist('list') failedRequests: Observable<any>[] = [];
+  @observable @persist('list') failedEvents: ISignalrEvent<any>[] = [];
 
-  constructor() {}
+  constructor(private signalrHub: SignalrHub) {}
 
   @action
-  queueFailedRequest(request: Observable<any>) {
-    this.failedRequests.push(request);
+  queueFailedEvent<T>(event: ISignalrEvent<T>) {
+    this.failedEvents.push(event);
   }
 
   @action
-  retryFailedRequests() {
-    from(this.failedRequests).pipe(
-      mergeMap(request => {
-        return flatMap(() => of(this.removeRequestFromQueue(request)));
+  retryFailedEvents() {
+    from(this.failedEvents).pipe(
+      mergeMap(event => {
+        // todo: trigger send event for event
+        return flatMap(() => of(this.removeEventFromQueue(event)));
       })
     );
   }
 
   @action
-  removeRequestFromQueue(request: Observable<any>) {
+  removeEventFromQueue<T>(event: ISignalrEvent<T>) {
     // todo: remove request from queue since it finished
   }
 }

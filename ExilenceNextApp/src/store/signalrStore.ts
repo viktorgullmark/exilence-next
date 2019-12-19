@@ -11,15 +11,21 @@ import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 
+export interface ISignalrEvent<T> {
+  method: string;
+  object: T;
+  id?: string;
+}
+
 export class SignalrStore {
-  signalrHub: SignalrHub = new SignalrHub();
   @observable online: boolean = false;
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
   constructor(
     private notificationStore: NotificationStore,
-    private requestQueueStore: RequestQueueStore
+    private requestQueueStore: RequestQueueStore,
+    public signalrHub: SignalrHub
   ) {
     reaction(
       () => this.activeGroup,
@@ -33,23 +39,23 @@ export class SignalrStore {
 
   @action
   handleRequest<T>(
-    request: Observable<T>,
+    event: ISignalrEvent<T>,
     successCallback: () => void,
     failCallback: (e: Error) => void
   ) {
     this.online
       ? fromStream(
-          request.pipe(
+          this.signalrHub.sendEvent(event.method, event.object, event.id).pipe(
             map(() => {
               successCallback();
             }),
             catchError((e: Error) => {
-              this.requestQueueStore.queueFailedRequest(request)
+              this.requestQueueStore.queueFailedEvent(event)
               return of(failCallback(e));
             })
           )
         )
-      : this.requestQueueStore.queueFailedRequest(request);
+      : this.requestQueueStore.queueFailedEvent(event);
   }
 
   @action
@@ -96,10 +102,7 @@ export class SignalrStore {
   /* #region Profile */
   @action
   createProfile(profile: IApiProfile) {
-    const request = this.signalrHub.sendEvent<IApiProfile>(
-      'AddProfile',
-      profile
-    );
+    const request: ISignalrEvent<IApiProfile> = { method: 'AddProfile', object: profile };
 
     this.handleRequest(
       request,
