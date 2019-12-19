@@ -10,8 +10,8 @@ import { League } from './league';
 import { Profile } from './profile';
 import { fromStream } from 'mobx-utils';
 import { authService } from '../../services/auth.service';
-import { switchMap, catchError, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { switchMap, catchError, mergeMap, retry, delay, take, retryWhen, concatMap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 import { ProfileUtils } from '../../utils/profile.utils';
 
 export class Account implements IAccount {
@@ -60,8 +60,11 @@ export class Account implements IAccount {
         .pipe(
           mergeMap(token => {
             this.authorizeSuccess();
-            return of(stores.signalrStore.signalrHub.startConnection(token.data));
+            return of(
+              stores.signalrStore.signalrHub.startConnection(token.data)
+            );
           }),
+          retryWhen(errors => errors.pipe(delay(3000), take(20))),
           catchError(e => of(this.authorizeFail(e)))
         )
     );
@@ -172,7 +175,9 @@ export class Account implements IAccount {
     const created = new Profile(profile);
     this.profiles.push(created);
 
-    stores.signalrStore.createProfile(ProfileUtils.mapProfileToApiProfile(created));
+    stores.signalrStore.createProfile(
+      ProfileUtils.mapProfileToApiProfile(created)
+    );
 
     this.setActiveProfile(created.uuid);
   }

@@ -9,7 +9,7 @@ export class SignalrHub {
   connection: signalR.HubConnection | undefined = undefined;
 
   constructor() {
-    console.log('created hub')
+    console.log('created hub');
   }
 
   @action
@@ -29,6 +29,8 @@ export class SignalrHub {
       .then(() => {
         this.connection!.onreconnected(() => {
           stores.notificationStore.createNotification('reconnected', 'success');
+
+          stores.signalrStore.setOnline(true);
 
           if (stores.requestQueueStore.failedEventsStack.length > 0) {
             stores.requestQueueStore.retryFailedEvents();
@@ -63,20 +65,18 @@ export class SignalrHub {
   }
 
   @action
-  async streamItems(stashtabs: IApiStashTabPricedItem[]) {
+  async stream<T>(event: string, objects: T[], id?: string) {
     const subject = new signalR.Subject();
-    stashtabs.forEach(async tab => {
-      var iteration = 0;
-      await this.connection!.send('AddPricedItems', subject, tab.stashTabId);
-      const intervalHandle = setInterval(() => {
-        iteration++;
-        subject.next(tab.pricedItems[iteration]);
-        if (iteration === tab.pricedItems.length - 1) {
-          clearInterval(intervalHandle);
-          subject.complete();
-        }
-      }, 250);
-    });
+    var iteration = 0;
+    await this.connection!.send(event, subject, id);
+    const intervalHandle = setInterval(() => {
+      subject.next(objects[iteration]);
+      if (iteration === objects.length - 1) {
+        clearInterval(intervalHandle);
+        subject.complete();
+      }
+      iteration++;
+    }, 250);
   }
 
   @action

@@ -8,7 +8,9 @@ import {
   mergeMap,
   retry,
   concatMap,
-  switchMap
+  switchMap,
+  take,
+  retryWhen
 } from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
 import { ISignalrEvent } from './signalrStore';
@@ -38,8 +40,7 @@ export class RequestQueueStore {
               });
               console.log('event removed, queue now:', this.failedEventsStack);
             }),
-            delay(3000),
-            retry(5)
+            retryWhen(errors => errors.pipe(delay(3000), take(5)))
           );
         })
       )
@@ -48,6 +49,8 @@ export class RequestQueueStore {
 
   @action
   runEventFromQueue<T>(event: ISignalrEvent<T>) {
-    return this.signalrHub.sendEvent<T>(event.method, event.object, event.id);
+    return event.stream
+      ? this.signalrHub.stream<T>(event.method, event.stream, event.id)
+      : this.signalrHub.sendEvent<T>(event.method, event.object, event.id);
   }
 }
