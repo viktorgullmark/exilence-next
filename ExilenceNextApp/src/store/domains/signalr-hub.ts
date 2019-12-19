@@ -6,11 +6,11 @@ import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem
 import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
-  connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`${AppConfig.baseUrl}/hub`)
-    .build();
+  connection: signalR.HubConnection | undefined = undefined;
 
-  constructor() {}
+  constructor() {
+    console.log('created hub')
+  }
 
   @action
   startConnection(token: string) {
@@ -18,15 +18,16 @@ export class SignalrHub {
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => {
-          return 30 * 1000;
+          return 10 * 1000;
         }
       })
+      .configureLogging(signalR.LogLevel.Information)
       .build();
 
     this.connection
       .start()
       .then(() => {
-        this.connection.onreconnected(() => {
+        this.connection!.onreconnected(() => {
           stores.notificationStore.createNotification('reconnected', 'success');
 
           if (stores.requestQueueStore.failedEventsStack.length > 0) {
@@ -34,7 +35,7 @@ export class SignalrHub {
           }
         });
 
-        this.connection.onreconnecting(e => {
+        this.connection!.onreconnecting(e => {
           this.connectionLost(e);
         });
 
@@ -49,15 +50,15 @@ export class SignalrHub {
 
   @action
   onEvent<T>(event: string, callback: (response: T) => void) {
-    this.connection.on(event, callback);
+    this.connection!.on(event, callback);
   }
 
   @action
   sendEvent<T>(event: string, params: T, id?: string) {
     return from(
       id
-        ? this.connection.invoke<T>(event, params, id)
-        : this.connection.invoke<T>(event, params)
+        ? this.connection!.invoke<T>(event, params, id)
+        : this.connection!.invoke<T>(event, params)
     );
   }
 
@@ -66,7 +67,7 @@ export class SignalrHub {
     const subject = new signalR.Subject();
     stashtabs.forEach(async tab => {
       var iteration = 0;
-      await this.connection.send('AddPricedItems', subject, tab.stashTabId);
+      await this.connection!.send('AddPricedItems', subject, tab.stashTabId);
       const intervalHandle = setInterval(() => {
         iteration++;
         subject.next(tab.pricedItems[iteration]);

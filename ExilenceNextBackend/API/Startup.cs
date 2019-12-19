@@ -37,7 +37,6 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR();
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<ExilenceContext>(
                 options => options.UseLazyLoadingProxies(false).UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
@@ -58,6 +57,7 @@ namespace API
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
+                o.HandshakeTimeout = TimeSpan.FromSeconds(40);
             });
 
             services.AddAuthentication(x =>
