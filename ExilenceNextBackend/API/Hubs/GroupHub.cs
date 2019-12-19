@@ -25,12 +25,12 @@ namespace API.Hubs
             return groupModel;
         }
 
-        public async Task<GroupModel> LeaveGroup(string groupName)
+        public async Task<string> LeaveGroup(string groupName)
         {
-            var groupModel = await _groupService.LeaveGroup(ConnectionId, groupName);
+            await _groupService.LeaveGroup(ConnectionId, groupName);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupName);
             await Log($"{ConnectionId}´left group {groupName}");
-            return groupModel;
+            return groupName;
         }
     }
 }

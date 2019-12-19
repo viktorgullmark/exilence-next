@@ -62,7 +62,7 @@ const updateStore = new UpdateStore();
 const requestQueueStore = new RequestQueueStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const signalrStore = new SignalrStore(notificationStore);
+const signalrStore = new SignalrStore(notificationStore, requestQueueStore);
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
@@ -79,6 +79,7 @@ export const stores = {
   notificationStore,
   leagueStore,
   priceStore,
+  requestQueueStore,
   signalrStore,
   updateStore,
   settingStore

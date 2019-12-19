@@ -10,6 +10,8 @@ export class SignalrHub {
     .withUrl(`${AppConfig.baseUrl}/hub`)
     .build();
 
+  online: boolean = false;
+  
   constructor() {}
 
   @action
@@ -33,6 +35,12 @@ export class SignalrHub {
         this.connection.onreconnecting(e => {
           this.connectionLost(e);
         });
+
+        this.online = true;
+
+        if(stores.requestQueueStore.failedRequests.length > 0) {
+          stores.requestQueueStore.retryFailedRequests();
+        }
       })
       .catch((err: string) => document.write(err));
   }
@@ -46,8 +54,8 @@ export class SignalrHub {
   sendEvent<T>(event: string, params: T, id?: string) {
     return from(
       id
-        ? this.connection.invoke(event, params, id)
-        : this.connection.invoke(event, params)
+        ? this.connection.invoke<T>(event, params, id)
+        : this.connection.invoke<T>(event, params)
     );
   }
 
@@ -70,6 +78,7 @@ export class SignalrHub {
 
   @action
   connectionLost(e?: Error) {
+    this.online = false;
     stores.notificationStore.createNotification(
       'connection_lost',
       'error',

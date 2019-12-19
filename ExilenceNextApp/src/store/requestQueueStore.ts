@@ -1,8 +1,7 @@
 import { action, observable } from 'mobx';
-import { fromStream } from 'mobx-utils';
 import { persist } from 'mobx-persist';
-import { Observable, from, of } from 'rxjs';
-import { map, concatMap, switchMap } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { flatMap, mergeMap } from 'rxjs/operators';
 
 export class RequestQueueStore {
   @observable @persist('list') failedRequests: Observable<any>[] = [];
@@ -17,9 +16,14 @@ export class RequestQueueStore {
   @action
   retryFailedRequests() {
     from(this.failedRequests).pipe(
-      concatMap(request => {
-        return switchMap(() => request);
+      mergeMap(request => {
+        return flatMap(() => of(this.removeRequestFromQueue(request)));
       })
     );
+  }
+
+  @action
+  removeRequestFromQueue(request: Observable<any>) {
+    // todo: remove request from queue since it finished
   }
 }

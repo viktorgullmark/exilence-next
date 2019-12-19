@@ -35,10 +35,10 @@ namespace API.Hubs
             return profileModel;
         }
 
-        public async Task<SnapshotProfileModel> RemoveProfile(string profileClientId)
+        public async Task<string> RemoveProfile(string profileClientId)
         {
-            var profile = await _accountService.RemoveProfile(AccountName, profileClientId);
-            return profile;
+            await _accountService.RemoveProfile(AccountName, profileClientId);
+            return profileClientId;
         }
 
     }

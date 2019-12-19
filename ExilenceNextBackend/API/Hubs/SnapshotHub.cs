@@ -34,11 +34,11 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId)
+        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotClientId)
         {
             var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotClientId);
             await Log($"Removed snapshot with id {snapshotModel.Id} for account {AccountName}.");
-            return snapshotModel;
+            return snapshotClientId;
         }
 
         public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)

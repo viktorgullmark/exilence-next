@@ -1,19 +1,15 @@
-import { SignalrHub } from './domains/signalr-hub';
-import { action, observable, reaction, runInAction } from 'mobx';
-import { Group } from './domains/group';
-import { IGroup } from '../interfaces/group.interface';
-import { Profile } from './domains/profile';
-import { stores } from '..';
-import { Snapshot } from './domains/snapshot';
-import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
+import { action, observable, reaction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { map, catchError } from 'rxjs/operators';
-import { of, from } from 'rxjs';
-import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
-import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
-import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
-import { NotificationStore } from './notificationStore';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { IApiProfile } from '../interfaces/api/profile.interface';
+import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
+import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
+import { IGroup } from '../interfaces/group.interface';
+import { Group } from './domains/group';
+import { SignalrHub } from './domains/signalr-hub';
+import { NotificationStore } from './notificationStore';
+import { RequestQueueStore } from './requestQueueStore';
 
 export class SignalrStore {
   signalrHub: SignalrHub = new SignalrHub();
@@ -21,7 +17,10 @@ export class SignalrStore {
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
-  constructor(private notificationStore: NotificationStore) {
+  constructor(
+    private notificationStore: NotificationStore,
+    private requestQueueStore: RequestQueueStore
+  ) {
     reaction(
       () => this.activeGroup,
       _data => {
@@ -32,17 +31,44 @@ export class SignalrStore {
     );
   }
 
+  @action
+  handleRequest<T>(
+    request: Observable<T>,
+    successCallback: () => void,
+    failCallback: (e: Error) => void
+  ) {
+    this.signalrHub.online
+      ? fromStream(
+          request.pipe(
+            map(() => {
+              successCallback();
+            }),
+            catchError((e: Error) => {
+              this.requestQueueStore.queueFailedRequest(request)
+              return of(failCallback(e));
+            })
+          )
+        )
+      : this.requestQueueStore.queueFailedRequest(request);
+  }
+
   /* #region Group */
   @action
   joinGroup(groupName: string) {
     fromStream(
-      this.signalrHub.sendEvent<string>('JoinGroup', groupName).pipe(
-        map((g: IGroup) => {
-          this.activeGroup = new Group(g);
-          this.joinGroupSuccess();
-        }),
-        catchError((e: Error) => of(this.joinGroupFail(e)))
-      )
+      this.signalrHub
+        .sendEvent<IGroup>('JoinGroup', <IGroup>{
+          name: groupName,
+          created: new Date(),
+          connections: []
+        })
+        .pipe(
+          map((g: IGroup) => {
+            this.activeGroup = new Group(g);
+            this.joinGroupSuccess();
+          }),
+          catchError((e: Error) => of(this.joinGroupFail(e)))
+        )
     );
   }
 
@@ -65,13 +91,15 @@ export class SignalrStore {
   /* #region Profile */
   @action
   createProfile(profile: IApiProfile) {
-    fromStream(
-      this.signalrHub.sendEvent<IApiProfile>('AddProfile', profile).pipe(
-        map((p: IApiProfile) => {
-          this.createProfileSuccess();
-        }),
-        catchError((e: Error) => of(this.createProfileFail(e)))
-      )
+    const request = this.signalrHub.sendEvent<IApiProfile>(
+      'AddProfile',
+      profile
+    );
+
+    this.handleRequest(
+      request,
+      this.createProfileSuccess,
+      this.createProfileFail
     );
   }
 
@@ -94,7 +122,7 @@ export class SignalrStore {
   updateProfile(profile: IApiProfile) {
     fromStream(
       this.signalrHub.sendEvent<IApiProfile>('EditProfile', profile).pipe(
-        map((res: IApiProfile) => {
+        map(() => {
           this.updateProfileSuccess();
         }),
         catchError((e: Error) => of(this.updateProfileFail(e)))
@@ -121,7 +149,7 @@ export class SignalrStore {
   removeProfile(uuid: string) {
     fromStream(
       this.signalrHub.sendEvent<string>('RemoveProfile', uuid).pipe(
-        map((p: Profile) => {
+        map(() => {
           this.removeProfileSuccess();
         }),
         catchError((e: Error) => of(this.removeProfileFail(e)))
@@ -152,7 +180,7 @@ export class SignalrStore {
       this.signalrHub
         .sendEvent<IApiSnapshot>('AddSnapshot', snapshot, profileId)
         .pipe(
-          map((s: IApiSnapshot) => {
+          map(() => {
             this.createSnapshotSuccess();
           }),
           catchError((e: Error) => of(this.createSnapshotFail(e)))
@@ -179,7 +207,7 @@ export class SignalrStore {
   removeSnapshot(uuid: string) {
     fromStream(
       this.signalrHub.sendEvent<string>('RemoveSnapshot', uuid).pipe(
-        map((p: IApiSnapshot) => {
+        map(() => {
           this.removeSnapshotSuccess();
         }),
         catchError((e: Error) => of(this.removeSnapshotFail(e)))
