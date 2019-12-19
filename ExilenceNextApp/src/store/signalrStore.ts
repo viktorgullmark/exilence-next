@@ -10,8 +10,10 @@ import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
+import uuid from 'uuid';
 
 export interface ISignalrEvent<T> {
+  uuid: string;
   method: string;
   object: T;
   id?: string;
@@ -102,7 +104,7 @@ export class SignalrStore {
   /* #region Profile */
   @action
   createProfile(profile: IApiProfile) {
-    const request: ISignalrEvent<IApiProfile> = { method: 'AddProfile', object: profile };
+    const request: ISignalrEvent<IApiProfile> = { uuid: uuid.v4(), method: 'AddProfile', object: profile };
 
     this.handleRequest(
       request,
