@@ -86,6 +86,20 @@
       "no_profile_found": "No profile was found"
     }
   },
-  "warning": {},
-  "info": {}
+  "warning": {
+    "title": {
+      "data_will_be_cleared": "Remote data will be cleared soon"
+    },
+    "description": {
+      "data_will_be_cleared": "We will stop storing data for you on the server unless your connection is reestablished soon"
+    }
+  },
+  "info": {
+    "title": {
+      "data_was_cleared": "Remote snapshots were removed"
+    },
+    "description": {
+      "data_was_cleared": "We stopped trying to upload snapshot data to our server"
+    }
+  }
 }

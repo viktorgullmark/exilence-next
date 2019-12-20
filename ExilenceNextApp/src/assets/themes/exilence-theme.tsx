@@ -42,7 +42,7 @@ export const itemColors = {
 
 export const statusColors = {
   success: green[800],
-  warning: amber[300],
+  warning: amber[900],
   info: grey[900],
   error: red[900]
 };

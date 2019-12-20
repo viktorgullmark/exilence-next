@@ -15,15 +15,35 @@ import {
 import { SignalrHub } from './domains/signalr-hub';
 import { ISignalrEvent } from './signalrStore';
 import { fromStream } from 'mobx-utils';
+import { NotificationStore } from './notificationStore';
 
 export class RequestQueueStore {
   @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
 
-  constructor(private signalrHub: SignalrHub) {}
+  constructor(
+    private signalrHub: SignalrHub,
+    private notificationStore: NotificationStore
+  ) {}
 
   @action
   queueFailedEvent<T>(event: ISignalrEvent<T>) {
     this.failedEventsStack.push(event);
+
+    if (this.failedEventsStack.length % 25 === 0) {
+      this.notificationStore.createNotification(
+        'data_will_be_cleared',
+        'warning',
+        true
+      );
+    }
+
+    // clear failed events related to snapshots
+    if (this.failedEventsStack.length > 50) {
+      this.failedEventsStack = this.failedEventsStack.filter(
+        fe => fe.method !== 'AddPricedItems' && fe.method !== 'AddSnapshot'
+      );
+      this.notificationStore.createNotification('data_was_cleared', 'info');
+    }
   }
 
   @action
