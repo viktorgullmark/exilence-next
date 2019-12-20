@@ -41,7 +41,7 @@ namespace API.Services
 
         public async Task<AccountModel> EditAccount(AccountModel accountModel)
         {
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).FirstOrDefaultAsync();
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).Include(account => account.Profiles).FirstOrDefaultAsync();
 
             if (account == null)
                 throw new Exception("Can't find account");
