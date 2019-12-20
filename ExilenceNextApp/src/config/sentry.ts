@@ -15,7 +15,8 @@ function initSentry() {
         'net::ERR_NETWORK_CHANGED',
         'net::ERR_NAME_NOT_RESOLVED',
         'net::ERR_CONNECTION_RESET',
-        'net::ERR_TIMED_OUT'
+        'net::ERR_TIMED_OUT',
+        'net::ERR_CONNECTION_REFUSED'
       ]
     });
   }
