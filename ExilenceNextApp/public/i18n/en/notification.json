@@ -18,7 +18,8 @@
       "api_upload_items": "Uploaded items to server",
       "api_remove_snapshot": "Uploaded removal of snapshot to server",
       "reconnected": "Successfully reconnected to the server",
-      "authorize": "Authorization successful"
+      "authorize": "Authorization successful",
+      "run_event_from_queue": "Successfully ran queued event"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -38,7 +39,8 @@
       "api_upload_items": "New data was uploaded to the server",
       "api_remove_snapshot": "New data was uploaded to the server",
       "reconnected": "The connection to the server was reestablished",
-      "authorize": "A token was successfully retrieved from server"
+      "authorize": "A token was successfully retrieved from server",
+      "run_event_from_queue": "A previously failed event was now successfully sent"
     }
   },
   "error": {
@@ -60,7 +62,8 @@
       "api_upload_items": "Could not upload items",
       "api_remove_snapshot": "Could not upload snapshot changes",
       "connection_lost": "Connection to server was lost",
-      "authorize": "Authorization failed"
+      "authorize": "Authorization failed",
+      "run_event_from_queue": "Failed to run queued event"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -79,7 +82,8 @@
       "api_upload_items": "Failed when trying to upload items to server",
       "api_remove_snapshot": "Failed when trying to upload changes to server",
       "connection_lost": "We could not establish a connection to the server",
-      "authorize": "Could not retrieve a token from the server"
+      "authorize": "Could not retrieve a token from the server",
+      "run_event_from_queue": "Failed when retrying a previously failed event"
     },
     "custom_description" :{
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",

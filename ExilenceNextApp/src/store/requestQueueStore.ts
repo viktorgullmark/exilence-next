@@ -1,21 +1,18 @@
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
 import {
-  delay,
-  flatMap,
-  map,
-  mergeMap,
-  retry,
   concatMap,
-  switchMap,
+  delay,
+  map,
+  retryWhen,
   take,
-  retryWhen
+  catchError
 } from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
-import { ISignalrEvent } from './signalrStore';
-import { fromStream } from 'mobx-utils';
 import { NotificationStore } from './notificationStore';
+import { ISignalrEvent } from './signalrStore';
 
 export class RequestQueueStore {
   @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
@@ -52,12 +49,9 @@ export class RequestQueueStore {
       from(this.failedEventsStack).pipe(
         concatMap(event => {
           return this.runEventFromQueue(event).pipe(
-            map(() => {
-              runInAction(() => {
-                this.failedEventsStack.shift();
-              });
-            }),
-            retryWhen(errors => errors.pipe(delay(3000), take(5)))
+            map(() => this.runEventFromQueueSuccess()),
+            retryWhen(errors => errors.pipe(delay(5000), take(5))),
+            catchError((e: Error) => of(this.runEventFromQueueFail))
           );
         })
       )
@@ -69,5 +63,23 @@ export class RequestQueueStore {
     return event.stream
       ? this.signalrHub.stream<T>(event.method, event.stream, event.id)
       : this.signalrHub.sendEvent<T>(event.method, event.object!, event.id);
+  }
+
+  @action
+  runEventFromQueueSuccess() {
+    this.failedEventsStack.shift();
+
+    this.notificationStore.createNotification(
+      'run_event_from_queue',
+      'success'
+    );
+  }
+
+  @action
+  runEventFromQueueFail() {
+    this.notificationStore.createNotification(
+      'run_event_from_queue',
+      'error'
+    );
   }
 }
