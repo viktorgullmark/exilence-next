@@ -51,7 +51,7 @@ namespace ExilenceTests
 
             AccountService = new AccountService(snapshotRepository, accountRepository, mapper);
             SnapshotService = new SnapshotService(snapshotRepository, accountRepository, mapper);
-            GroupService = new GroupService(groupRepository, mapper);
+            GroupService = new GroupService(groupRepository, accountRepository, mapper);
         }
 
         public void Dispose()

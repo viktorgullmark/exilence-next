@@ -37,13 +37,13 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR();
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<ExilenceContext>(
-                options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
+                options => options.UseLazyLoadingProxies(false).UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
             );
 
             //Services
+            services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<ISnapshotService, SnapshotService>();
             services.AddScoped<IAccountService, AccountService>();
 
@@ -52,7 +52,13 @@ namespace API
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
-            services.AddSignalR().AddMessagePackProtocol();
+            //services.AddSignalR().AddMessagePackProtocol();
+
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+                o.HandshakeTimeout = TimeSpan.FromSeconds(40);
+            });
 
             services.AddAuthentication(x =>
             {
@@ -109,6 +115,7 @@ namespace API
             });
 
             var instanceName = configuration.GetSection("Settings")["InstanceName"];
+            exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT GroupId FROM Connections WHERE InstanceName = '{instanceName}')");
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
         }
     }

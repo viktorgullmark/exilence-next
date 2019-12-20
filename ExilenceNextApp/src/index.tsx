@@ -33,6 +33,8 @@ import AppConfig from './config/app.config';
 import ua, { Visitor } from 'universal-analytics';
 import { UpdateStore } from './store/updateStore';
 import { SettingStore } from './store/settingStore';
+import { RequestQueueStore } from './store/requestQueueStore';
+import { SignalrHub } from './store/domains/signalr-hub';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -55,18 +57,22 @@ const hydrate = create({
   jsonify: true
 });
 
+const signalrHub: SignalrHub = new SignalrHub();
+
 const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
-const signalrStore = new SignalrStore();
 const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
+const requestQueueStore = new RequestQueueStore(signalrHub, notificationStore);
+const signalrStore = new SignalrStore(notificationStore, requestQueueStore, signalrHub);
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
   notificationStore,
   leagueStore,
-  priceStore
+  priceStore,
+  signalrStore
 );
 
 // make stores globally available for domain objects
@@ -76,6 +82,7 @@ export const stores = {
   notificationStore,
   leagueStore,
   priceStore,
+  requestQueueStore,
   signalrStore,
   updateStore,
   settingStore
@@ -121,7 +128,8 @@ Promise.all([
   hydrate('account', accountStore),
   hydrate('uiState', uiStateStore),
   hydrate('league', leagueStore),
-  hydrate('setting', settingStore)
+  hydrate('setting', settingStore),
+  hydrate('requestQueue', requestQueueStore)
 ]).then(() => {
   visitor = ua(AppConfig.trackingId, uiStateStore.userId);
   ReactDOM.render(app, document.getElementById('root'));

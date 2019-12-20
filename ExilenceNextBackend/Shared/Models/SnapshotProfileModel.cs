@@ -15,6 +15,5 @@ namespace Shared.Models
         public string ActivePriceLeagueId { get; set; }
         public List<string> ActiveStashTabIds { get; set; }
         public List<SnapshotModel> Snapshots { get; set; }
-        public AccountModel Account { get; set; }
     }
 }

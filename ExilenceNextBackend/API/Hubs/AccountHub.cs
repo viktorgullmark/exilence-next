@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Profiles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Hubs
 {
@@ -14,18 +15,30 @@ namespace API.Hubs
     {
         public async Task<SnapshotProfileModel> GetProfile(string profileClientId)
         {
-            var profileModel = await _accountService.GetProfile(AccountName, profileClientId);
+            var profileModel = await _accountService.GetProfile(profileClientId);
             return profileModel;
         }
-        public async Task<SnapshotProfileModel> AddProfile(SnapshotProfileModel profileModel)
+        public async Task<SnapshotProfileModel> ProfileExists([FromBody]SnapshotProfileModel profileModel)
+        {
+            profileModel = await _accountService.ProfileExists(AccountName, profileModel);
+            return profileModel;
+        }
+        public async Task<SnapshotProfileModel> AddProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
             return profileModel;
         }
-        public async Task<SnapshotProfileModel> RemoveProfile(string profileClientId)
+
+        public async Task<SnapshotProfileModel> EditProfile([FromBody]SnapshotProfileModel profileModel)
         {
-            var profile = await _accountService.RemoveProfile(AccountName, profileClientId);
-            return profile;
+            profileModel = await _accountService.EditProfile(AccountName, profileModel);
+            return profileModel;
+        }
+
+        public async Task<string> RemoveProfile(string profileClientId)
+        {
+            await _accountService.RemoveProfile(AccountName, profileClientId);
+            return profileClientId;
         }
 
     }
