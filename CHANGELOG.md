@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - XXXX-XX-XX
+##### Added
+- Added integration with our servers
+    - Added synchronization of profiles
+    - Added synchronization of snapshots with items
+    - Added new notifications related to the server integration
+    - Integrated with signalR, with automatic reconnect
+
 ## [0.1.2] - 2019-12-18
 ##### Added
 - Added a spinner for when a session is being initiated
