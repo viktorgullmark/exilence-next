@@ -17,7 +17,8 @@
       "api_create_snapshot": "Uploaded snapshot to server",
       "api_upload_items": "Uploaded items to server",
       "api_remove_snapshot": "Uploaded removal of snapshot to server",
-      "reconnected": "Successfully reconnected to the server"
+      "reconnected": "Successfully reconnected to the server",
+      "authorize": "Authorization successful"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -36,7 +37,8 @@
       "api_create_snapshot": "New data was uploaded to the server",
       "api_upload_items": "New data was uploaded to the server",
       "api_remove_snapshot": "New data was uploaded to the server",
-      "reconnected": "The connection to the server was reestablished"
+      "reconnected": "The connection to the server was reestablished",
+      "authorize": "A token was successfully retrieved from server"
     }
   },
   "error": {
@@ -57,7 +59,8 @@
       "api_create_snapshot": "Could not upload snapshot",
       "api_upload_items": "Could not upload items",
       "api_remove_snapshot": "Could not upload snapshot changes",
-      "connection_lost": "Connection to server was lost"
+      "connection_lost": "Connection to server was lost",
+      "authorize": "Authorization failed"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -75,7 +78,8 @@
       "api_create_snapshot": "Failed when trying to upload snapshot to server",
       "api_upload_items": "Failed when trying to upload items to server",
       "api_remove_snapshot": "Failed when trying to upload changes to server",
-      "connection_lost": "We could not establish a connection to the server"
+      "connection_lost": "We could not establish a connection to the server",
+      "authorize": "Could not retrieve a token from the server"
     },
     "custom_description" :{
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",

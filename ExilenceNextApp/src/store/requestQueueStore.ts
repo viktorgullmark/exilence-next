@@ -23,9 +23,7 @@ export class RequestQueueStore {
 
   @action
   queueFailedEvent<T>(event: ISignalrEvent<T>) {
-    console.log('queueFailedEvent: ', event);
     this.failedEventsStack.push(event);
-    console.log('failedEvents: ', this.failedEventsStack);
   }
 
   @action
@@ -38,7 +36,6 @@ export class RequestQueueStore {
               runInAction(() => {
                 this.failedEventsStack.shift();
               });
-              console.log('event removed, queue now:', this.failedEventsStack);
             }),
             retryWhen(errors => errors.pipe(delay(3000), take(5)))
           );

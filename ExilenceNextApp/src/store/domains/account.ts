@@ -1,18 +1,17 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { fromStream } from 'mobx-utils';
+import { of } from 'rxjs';
+import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
 import { ICharacter } from '../../interfaces/character.interface';
+import { authService } from '../../services/auth.service';
+import { ProfileUtils } from '../../utils/profile.utils';
 import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
-import { League } from './league';
 import { Profile } from './profile';
-import { fromStream } from 'mobx-utils';
-import { authService } from '../../services/auth.service';
-import { switchMap, catchError, mergeMap, retry, delay, take, retryWhen, concatMap } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
-import { ProfileUtils } from '../../utils/profile.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -64,7 +63,7 @@ export class Account implements IAccount {
               stores.signalrStore.signalrHub.startConnection(token.data)
             );
           }),
-          retryWhen(errors => errors.pipe(delay(3000), take(20))),
+          retryWhen(errors => errors.pipe(delay(5000), take(10))),
           catchError(e => of(this.authorizeFail(e)))
         )
     );
@@ -72,12 +71,12 @@ export class Account implements IAccount {
 
   @action
   authorizeSuccess() {
-    console.log('auth success');
+    stores.notificationStore.createNotification('authorize', 'success');
   }
 
   @action
   authorizeFail(e: Error) {
-    console.log('auth fail');
+    stores.notificationStore.createNotification('authorize', 'error', true, e);
   }
 
   @computed
@@ -148,11 +147,7 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfileSuccess() {
-    stores.notificationStore.createNotification(
-      'remove_profile',
-      'success',
-      true
-    );
+    stores.notificationStore.createNotification('remove_profile', 'success');
   }
 
   @action

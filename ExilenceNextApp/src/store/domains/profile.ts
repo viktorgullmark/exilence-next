@@ -331,7 +331,6 @@ export class Profile {
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
-      console.log(apiItems);
       stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
       setTimeout(() => {
         stores.signalrStore.uploadItems(apiItems);

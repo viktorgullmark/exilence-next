@@ -9,7 +9,6 @@ export class SignalrHub {
   connection: signalR.HubConnection | undefined = undefined;
 
   constructor() {
-    console.log('created hub');
   }
 
   @action
@@ -67,8 +66,8 @@ export class SignalrHub {
   @action
   stream<T>(event: string, objects: T[], id?: string) {
     const subject = new signalR.Subject();
-    var iteration = 0;
-    var promise = this.connection!.invoke(event, subject, id);
+    let iteration = 0;
+    const promise = this.connection!.invoke(event, subject, id);
     const intervalHandle = setInterval(() => {
       subject.next(objects[iteration]);
       if (iteration === objects.length - 1) {
