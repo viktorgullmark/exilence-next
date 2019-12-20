@@ -39,6 +39,19 @@ namespace API.Services
             return accountModel;
         }
 
+        public async Task<AccountModel> EditAccount(AccountModel accountModel)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).Include(account => account.Profiles).FirstOrDefaultAsync();
+
+            if (account == null)
+                throw new Exception("Can't find account");
+
+            _mapper.Map<AccountModel, Account>(accountModel, account);
+
+            await _accountRepository.SaveChangesAsync();
+            return _mapper.Map<AccountModel>(account);
+        }
+
         public async Task<AccountModel> RemoveAccount(string accountName)
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
