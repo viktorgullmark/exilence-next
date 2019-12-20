@@ -58,6 +58,10 @@ namespace API
             {
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
+            }).AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
+            {
+                options.Configuration.ChannelPrefix = "ExilenceSignalR";
+                options.Configuration.ConnectTimeout = 10000;
             });
 
             services.AddAuthentication(x =>
