@@ -5,14 +5,10 @@ import GroupMenu from './GroupMenu';
 
 interface Props {
   uiStateStore?: UiStateStore;
-  handleJoinGroupOpen: () => void;
-  handleCreateGroupOpen: () => void;
 }
 
 const GroupMenuContainer: React.FC<Props> = ({
-  uiStateStore,
-  handleJoinGroupOpen,
-  handleCreateGroupOpen
+  uiStateStore
 }: Props) => {
   const open = Boolean(uiStateStore!.groupMenuAnchor);
 
@@ -25,8 +21,8 @@ const GroupMenuContainer: React.FC<Props> = ({
       open={open}
       anchorEl={uiStateStore!.groupMenuAnchor}
       handleMenuClose={handleMenuClose}
-      handleJoinGroupOpen={handleJoinGroupOpen}
-      handleCreateGroupOpen={handleCreateGroupOpen}
+      handleJoinGroupOpen={() => uiStateStore!.setJoinGroupDialogOpen(true)}
+      handleCreateGroupOpen={() => uiStateStore!.setCreateGroupDialogOpen(true)}
     />
   );
 };

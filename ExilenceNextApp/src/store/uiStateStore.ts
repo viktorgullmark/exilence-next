@@ -21,6 +21,8 @@ export class UiStateStore {
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
   @observable isInitiating: boolean = false;
+  @observable createGroupDialogOpen: boolean = false;
+  @observable joinGroupDialogOpen: boolean = false;
 
   @action
   setNotificationList(list: Notification[]) {
@@ -40,6 +42,16 @@ export class UiStateStore {
   @action
   setGroupMenuAnchor(el: HTMLElement | null) {
     this.groupMenuAnchor = el;
+  }
+
+  @action
+  setCreateGroupDialogOpen(open: boolean) {
+    this.createGroupDialogOpen = open;
+  }
+
+  @action
+  setJoinGroupDialogOpen(open: boolean) {
+    this.createGroupDialogOpen = open;
   }
 
   @action

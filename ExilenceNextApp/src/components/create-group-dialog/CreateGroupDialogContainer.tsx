@@ -1,21 +1,25 @@
 import React from 'react';
 import CreateGroupDialog from './CreateGroupDialog';
+import { inject, observer } from 'mobx-react';
+import { UiStateStore } from '../../store/uiStateStore';
 
 interface Props {
-  show: boolean;
-  onClose: () => void;
+  uiStateStore?: UiStateStore;
 }
 
 const CreateGroupDialogContainer: React.FC<Props> = ({
-  show,
-  onClose
+  uiStateStore
 }: Props) => {
   const onCreate = () => {
     console.log('should create grp');
   };
   return (
-    <CreateGroupDialog show={show} onClose={onClose} onCreate={onCreate} />
+    <CreateGroupDialog
+      show={uiStateStore!.createGroupDialogOpen}
+      onClose={() => uiStateStore!.setCreateGroupDialogOpen(false)}
+      onCreate={onCreate}
+    />
   );
 };
 
-export default CreateGroupDialogContainer;
+export default inject('uiStateStore')(observer(CreateGroupDialogContainer));

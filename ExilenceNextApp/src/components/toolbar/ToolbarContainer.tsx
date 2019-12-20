@@ -22,7 +22,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [createGroupOpen, setCreateGroupOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [
     showConfirmClearSnapshotsDialog,
@@ -79,16 +78,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     uiStateStore!.setGroupMenuAnchor(event.currentTarget);
   };
 
-  const handleJoinGroupOpen = () => {
-    // todo: join group
-    console.log('should join');
-  };
-
-  const handleCreateGroupOpen = () => {
-    // todo: join group
-    setCreateGroupOpen(true);
-  };
-
   return (
     <>
       <ConfirmationDialog
@@ -110,8 +99,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         cancelButtonText={t('action.cancel')}
       />
       <Toolbar
-        createGroupOpen={createGroupOpen}
-        handleCreateGroupClose={() => setCreateGroupOpen(false)}
         sidenavOpened={uiStateStore!.sidenavOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
@@ -121,8 +108,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
         profileOpen={profileOpen}
-        handleCreateGroupOpen={handleCreateGroupOpen}
-        handleJoinGroupOpen={handleJoinGroupOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
         notifications={notificationStore!.notifications}

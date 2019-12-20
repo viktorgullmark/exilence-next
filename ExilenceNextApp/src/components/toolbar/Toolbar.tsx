@@ -112,7 +112,6 @@ interface Props {
   activeProfile: Profile;
   profiles: Profile[];
   profileOpen: boolean;
-  createGroupOpen: boolean;
   isEditing: boolean;
   isInitiating: boolean;
   notifications: Notification[];
@@ -120,7 +119,6 @@ interface Props {
   isSnapshotting: boolean;
   toggleSidenav: () => void;
   markAllNotificationsRead: () => void;
-  handleCreateGroupClose: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
   handleProfileChange: (
@@ -132,8 +130,6 @@ interface Props {
   handleGroupMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
-  handleCreateGroupOpen: () => void;
-  handleJoinGroupOpen: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -309,10 +305,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </MuiToolbar>
           </AppBar>
           <AccountMenuContainer />
-          <GroupMenuContainer
-            handleCreateGroupOpen={props.handleCreateGroupOpen}
-            handleJoinGroupOpen={props.handleJoinGroupOpen}
-          />
+          <GroupMenuContainer />
           <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}
@@ -321,10 +314,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             handleClickClose={props.handleProfileClose}
             handleClickOpen={props.handleProfileOpen}
           />
-          <CreateGroupDialogContainer
-            show={props.createGroupOpen}
-            onClose={props.handleCreateGroupClose}
-          />
+          <CreateGroupDialogContainer />
         </>
       )}
     </>
