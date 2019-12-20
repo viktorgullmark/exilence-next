@@ -94,13 +94,17 @@ export class Account implements IAccount {
   @action
   updateAccountLeagues(characters: ICharacter[]) {
     stores.leagueStore.leagues.forEach(l => {
-      const accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
+      let accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
       const leagueCharacters = characters.filter(c => c.league === l.id);
 
+      if (accLeague) {
+        accLeague.updateCharacters(leagueCharacters);
+      }
+
       if (!accLeague && leagueCharacters) {
-        const newLeague = new AccountLeague(l.id);
-        newLeague.updateCharacters(leagueCharacters);
-        this.accountLeagues.push(newLeague);
+        accLeague = new AccountLeague(l.id);
+        accLeague.updateCharacters(leagueCharacters);
+        this.accountLeagues.push(accLeague);
       }
     });
   }

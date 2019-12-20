@@ -19,6 +19,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
+  @observable isInitiating: boolean = false;
 
   @action
   setNotificationList(list: Notification[]) {
@@ -66,7 +67,7 @@ export class UiStateStore {
   setItemTableFilterText(text: string) {
     this.itemTableFilterText = text;
   }
-  
+
   @action
   setInitiated(init: boolean) {
     this.initated = init;
@@ -75,5 +76,10 @@ export class UiStateStore {
   @action
   setSubmitting(submitting: boolean) {
     this.isSubmitting = submitting;
+  }
+
+  @action
+  setIsInitiating(initiating: boolean) {
+    this.isInitiating = initiating;
   }
 }

@@ -55,7 +55,7 @@ export class AccountStore {
   @action
   initSession(newAccount?: IAccount) {
     this.uiStateStore.setInitiated(true);
-
+    this.uiStateStore.setIsInitiating(true);
     let account: IAccount;
 
     if (!newAccount) {
@@ -133,12 +133,13 @@ export class AccountStore {
 
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setSubmitting(false);
+    this.uiStateStore.setIsInitiating(false);
   }
 
   @action
   validateSession() {
     const acc = this.getSelectedAccount;
-
+    this.uiStateStore.setIsInitiating(true);
     fromStream(
       forkJoin(
         of(acc.accountLeagues).pipe(
@@ -159,7 +160,7 @@ export class AccountStore {
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
-
+    this.uiStateStore.setIsInitiating(false);
     const profile = this.getSelectedAccount.activeProfile;
 
     if (profile.shouldSetStashTabs) {
@@ -196,5 +197,6 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
+    this.uiStateStore.setIsInitiating(false);
   }
 }
