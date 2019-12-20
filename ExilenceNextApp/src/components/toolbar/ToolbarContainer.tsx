@@ -74,6 +74,10 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     uiStateStore!.setAccountMenuAnchor(event.currentTarget);
   };
 
+  const handleGroupMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setGroupMenuAnchor(event.currentTarget);
+  };
+
   return (
     <>
       <ConfirmationDialog
@@ -110,6 +114,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
+        handleGroupMenuOpen={handleGroupMenuOpen}
         handleClearSnapshots={() => setShowConfirmClearSnapshotsDialog(true)}
         handleRemoveProfile={() => setShowConfirmRemoveProfileDialog(true)}
         isSnapshotting={

@@ -18,6 +18,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
+import GroupIcon from '@material-ui/icons/Group';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
@@ -33,6 +34,7 @@ import { drawerWidth } from '../sidenav/SideNav';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
+import GroupMenuContainer from '../group-menu/GroupMenuContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -93,11 +95,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `1px solid ${theme.palette.primary.dark}`
   },
   spinner: {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   },
   initiationSpinner: {
     marginLeft: '5px',
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   },
   badge: {
     backgroundColor: theme.palette.secondary.dark
@@ -124,6 +126,7 @@ interface Props {
   handleSnapshot: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
+  handleGroupMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
 }
@@ -148,7 +151,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             })}
           >
             <MuiToolbar className={classes.toolbar}>
-            
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -159,7 +161,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <MenuIcon />
               </IconButton>
               {props.isInitiating && (
-                <CircularProgress title={t('label.initiating_session_spinner_title')}  className={classes.initiationSpinner} size={20} />
+                <CircularProgress
+                  title={t('label.initiating_session_spinner_title')}
+                  className={classes.initiationSpinner}
+                  size={20}
+                />
               )}
               <Grid
                 container
@@ -235,7 +241,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     {!props.isSnapshotting ? (
                       <UpdateIcon fontSize="small" />
                     ) : (
-                      <CircularProgress title={t('label.fetch_snapshot_spinner_title')} className={classes.spinner} size={20} />
+                      <CircularProgress
+                        title={t('label.fetch_snapshot_spinner_title')}
+                        className={classes.spinner}
+                        size={20}
+                      />
                     )}
                   </IconButton>
                   {props.activeProfile.snapshots.length > 0 && (
@@ -280,11 +290,21 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   >
                     <AccountCircle fontSize="small" />
                   </IconButton>
+                  <IconButton
+                    onClick={e => props.handleGroupMenuOpen(e)}
+                    aria-label="group"
+                    aria-haspopup="true"
+                    className={clsx(classes.iconButton)}
+                    title={t('label.group_icon_title')}
+                  >
+                    <GroupIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
               </Grid>
             </MuiToolbar>
           </AppBar>
           <AccountMenuContainer />
+          <GroupMenuContainer />
           <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}

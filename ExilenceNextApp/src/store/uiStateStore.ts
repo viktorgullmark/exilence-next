@@ -16,6 +16,7 @@ export class UiStateStore {
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
   @observable accountMenuAnchor: null | HTMLElement = null;
+  @observable groupMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
@@ -34,6 +35,11 @@ export class UiStateStore {
   @action
   setAccountMenuAnchor(el: HTMLElement | null) {
     this.accountMenuAnchor = el;
+  }
+
+  @action
+  setGroupMenuAnchor(el: HTMLElement | null) {
+    this.groupMenuAnchor = el;
   }
 
   @action
