@@ -23,7 +23,7 @@ export class SnapshotUtils {
         .map(st => {
           return <IApiStashTabSnapshot>{
             uuid: st.id,
-            pricedItems: [], //snapshot.stashTabSnapshots.find(sts => sts.stashTabId === st.id)!.items.map(i => {return <IApiPricedItem>{ ...i, uuid: i.id, id: null };}),
+            pricedItems: [],
             index: st.i,
             value: +snapshot.stashTabSnapshots
               .find(sts => sts.stashTabId === st.id)!
