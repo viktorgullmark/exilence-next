@@ -10,7 +10,8 @@
     "save_profile": "Save profile",
     "create_profile": "Create profile",
     "new_profile": "New profile",
-    "close": "Close"
+    "close": "Close",
+    "create_group": "Create"
   },
   "title": {
     "login": "Login",
@@ -26,7 +27,8 @@
     "ga_consent_dialog_title": "Terms and conditions",
     "net_worth_settings": "Net worth",
     "misc_settings": "Misc",
-    "pricing_settings": "Pricing settings"
+    "pricing_settings": "Pricing settings",
+    "create_group_dialog_title": "Create new group"
   },
   "label": {
     "account_name": "Account name",

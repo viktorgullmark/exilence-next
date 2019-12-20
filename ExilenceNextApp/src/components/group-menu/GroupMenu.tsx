@@ -6,16 +6,16 @@ interface Props {
   open: boolean;
   anchorEl: HTMLElement | null;
   handleMenuClose: () => void;
-  handleJoinGroup: () => void;
-  handleCreateGroup: () => void;
+  handleJoinGroupOpen: () => void;
+  handleCreateGroupOpen: () => void;
 }
 
 const GroupMenu: React.FC<Props> = ({
   anchorEl,
   open,
   handleMenuClose,
-  handleJoinGroup,
-  handleCreateGroup
+  handleJoinGroupOpen,
+  handleCreateGroupOpen
 }: Props) => {
   const { t } = useTranslation();
   return (
@@ -28,8 +28,8 @@ const GroupMenu: React.FC<Props> = ({
       open={open}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleJoinGroup}>{t('label.join_group')}</MenuItem>
-      <MenuItem onClick={handleCreateGroup}>{t('label.create_group')}</MenuItem>
+      <MenuItem onClick={handleJoinGroupOpen}>{t('label.join_group')}</MenuItem>
+      <MenuItem onClick={handleCreateGroupOpen}>{t('label.create_group')}</MenuItem>
     </Menu>
   );
 };

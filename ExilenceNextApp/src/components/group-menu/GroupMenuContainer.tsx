@@ -5,23 +5,19 @@ import GroupMenu from './GroupMenu';
 
 interface Props {
   uiStateStore?: UiStateStore;
+  handleJoinGroupOpen: () => void;
+  handleCreateGroupOpen: () => void;
 }
 
-const GroupMenuContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
+const GroupMenuContainer: React.FC<Props> = ({
+  uiStateStore,
+  handleJoinGroupOpen,
+  handleCreateGroupOpen
+}: Props) => {
   const open = Boolean(uiStateStore!.groupMenuAnchor);
 
   const handleMenuClose = () => {
     uiStateStore!.setGroupMenuAnchor(null);
-  };
-
-  const handleJoinGroup = () => {
-    // todo: join group
-    console.log('should join');
-  };
-
-  const handleCreateGroup = () => {
-    // todo: join group
-    console.log('should create');
   };
 
   return (
@@ -29,8 +25,8 @@ const GroupMenuContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
       open={open}
       anchorEl={uiStateStore!.groupMenuAnchor}
       handleMenuClose={handleMenuClose}
-      handleJoinGroup={handleJoinGroup}
-      handleCreateGroup={handleCreateGroup}
+      handleJoinGroupOpen={handleJoinGroupOpen}
+      handleCreateGroupOpen={handleCreateGroupOpen}
     />
   );
 };

@@ -35,6 +35,7 @@ import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import GroupMenuContainer from '../group-menu/GroupMenuContainer';
+import CreateGroupDialogContainer from '../create-group-dialog/CreateGroupDialogContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -111,6 +112,7 @@ interface Props {
   activeProfile: Profile;
   profiles: Profile[];
   profileOpen: boolean;
+  createGroupOpen: boolean;
   isEditing: boolean;
   isInitiating: boolean;
   notifications: Notification[];
@@ -118,6 +120,7 @@ interface Props {
   isSnapshotting: boolean;
   toggleSidenav: () => void;
   markAllNotificationsRead: () => void;
+  handleCreateGroupClose: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
   handleProfileChange: (
@@ -129,6 +132,8 @@ interface Props {
   handleGroupMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
+  handleCreateGroupOpen: () => void;
+  handleJoinGroupOpen: () => void;
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
@@ -304,7 +309,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </MuiToolbar>
           </AppBar>
           <AccountMenuContainer />
-          <GroupMenuContainer />
+          <GroupMenuContainer
+            handleCreateGroupOpen={props.handleCreateGroupOpen}
+            handleJoinGroupOpen={props.handleJoinGroupOpen}
+          />
           <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}
@@ -312,6 +320,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             isEditing={props.isEditing}
             handleClickClose={props.handleProfileClose}
             handleClickOpen={props.handleProfileOpen}
+          />
+          <CreateGroupDialogContainer
+            show={props.createGroupOpen}
+            onClose={props.handleCreateGroupClose}
           />
         </>
       )}
