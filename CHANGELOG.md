@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
     - Added synchronization of snapshots with items
     - Added new notifications related to the server integration
     - Integrated with signalR, with automatic reconnect
+##### Fixed
+- Fixed a bug where the client would loop the validation if it failed on the login page
 
 ## [0.1.2] - 2019-12-18
 ##### Added

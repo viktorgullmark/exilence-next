@@ -14,6 +14,7 @@ import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { visitor, appName } from '../..';
+import { useLocation } from 'react-router';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -26,12 +27,12 @@ const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   uiStateStore
 }: NetWorthProps) => {
-
+  const location = useLocation();
   const theme = useTheme();
 
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initated) {
-      accountStore!.initSession();
+      accountStore!.initSession(location.pathname);
     }
 
     visitor!.pageview('/net-worth', appName).send();

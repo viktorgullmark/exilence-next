@@ -21,7 +21,7 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) { }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -53,7 +53,7 @@ export class AccountStore {
   }
 
   @action
-  initSession(newAccount?: IAccount) {
+  initSession(sender: string, newAccount?: IAccount) {
     this.uiStateStore.setInitiated(true);
     this.uiStateStore.setIsInitiating(true);
     let account: IAccount;
@@ -68,7 +68,7 @@ export class AccountStore {
       reaction(
         () => this.uiStateStore.sessIdCookie,
         (_cookie, reaction) => {
-          this.initSessionSuccess();
+          this.initSessionSuccess(sender);
           reaction.dispose();
         }
       );
@@ -109,27 +109,35 @@ export class AccountStore {
         switchMap(() => {
           return newAccount
             ? this.uiStateStore.setSessIdCookie(account.sessionId)
-            : of(this.initSessionSuccess());
+            : of(this.initSessionSuccess(sender));
         }),
         catchError((e: AxiosError) => {
-          return of(this.initSessionFail(e, newAccount));
+          return of(this.initSessionFail(e, sender, newAccount));
         })
       )
     );
   }
 
   @action
-  initSessionSuccess() {
+  initSessionSuccess(sender: string) {
     this.notificationStore.createNotification('init_session', 'success');
-    this.validateSession();
+    this.validateSession(sender);
   }
 
   @action
-  initSessionFail(e: AxiosError | Error, newAccount?: IAccount) {
+  initSessionFail(
+    e: AxiosError | Error,
+    sender: string,
+    newAccount?: IAccount
+  ) {
     // retry init session if it fails
-    fromStream(
-      timer(30 * 1000).pipe(switchMap(() => of(this.initSession(newAccount))))
-    );
+    if (sender !== '/login') {
+      fromStream(
+        timer(30 * 1000).pipe(
+          switchMap(() => of(this.initSession(sender, newAccount)))
+        )
+      );
+    }
 
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setSubmitting(false);
@@ -137,7 +145,7 @@ export class AccountStore {
   }
 
   @action
-  validateSession() {
+  validateSession(sender: string) {
     const acc = this.getSelectedAccount;
     this.uiStateStore.setIsInitiating(true);
     fromStream(
@@ -150,7 +158,7 @@ export class AccountStore {
         )
       ).pipe(
         switchMap(() => of(this.validateSessionSuccess())),
-        catchError((e: AxiosError) => of(this.validateSessionFail(e)))
+        catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
       )
     );
   }
@@ -172,8 +180,10 @@ export class AccountStore {
         profile.setActiveStashTabs(
           league.stashtabs.slice(0, 6).map(lst => lst.id)
         );
-        
-        this.signalrStore.updateProfile(ProfileUtils.mapProfileToApiProfile(profile));
+
+        this.signalrStore.updateProfile(
+          ProfileUtils.mapProfileToApiProfile(profile)
+        );
 
         runInAction(() => {
           profile.shouldSetStashTabs = false;
@@ -183,11 +193,13 @@ export class AccountStore {
   }
 
   @action
-  validateSessionFail(e: AxiosError | Error) {
+  validateSessionFail(e: AxiosError | Error, sender: string) {
     // retry validate session if it fails
-    fromStream(
-      timer(30 * 1000).pipe(switchMap(() => of(this.validateSession())))
-    );
+    if (sender !== '/login') {
+      fromStream(
+        timer(30 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
+      );
+    }
 
     this.notificationStore.createNotification(
       'validate_session',

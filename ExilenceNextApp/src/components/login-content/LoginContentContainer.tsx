@@ -1,7 +1,7 @@
 import { reaction } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
@@ -20,11 +20,12 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   leagueStore
 }: LoginContentProps) => {
   const history = useHistory();
+  const location = useLocation();
 
   uiStateStore!.setValidated(false);
 
   const handleValidate = (details: IAccount) => {
-    accountStore!.initSession({
+    accountStore!.initSession(location.pathname, {
       name: details.name,
       sessionId: details.sessionId
     });

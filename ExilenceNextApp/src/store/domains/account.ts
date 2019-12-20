@@ -64,7 +64,7 @@ export class Account implements IAccount {
               stores.signalrStore.signalrHub.startConnection(token.data)
             );
           }),
-          retryWhen(errors => errors.pipe(delay(5000), take(10))),
+          retryWhen(errors => errors.pipe(delay(5000), take(5))),
           catchError(e => of(this.authorizeFail(e)))
         )
     );
