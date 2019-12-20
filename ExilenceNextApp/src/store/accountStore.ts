@@ -104,7 +104,7 @@ export class AccountStore {
           // todo: should return observable
           this.priceStore.getPricesForLeagues();
 
-          this.getSelectedAccount.authorize(newAccount ? this.getSelectedAccount.profiles[0] : undefined);
+          this.getSelectedAccount.authorize(this.getSelectedAccount.profiles);
         }),
         switchMap(() => {
           return newAccount

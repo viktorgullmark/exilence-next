@@ -47,18 +47,19 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize(profile?: Profile) {
+  authorize(profiles?: Profile[]) {
     fromStream(
       authService
         .getToken({
           uuid: this.uuid,
           name: this.name,
           token: this.token,
-          profiles: profile ? [profile] : []
+          profiles: profiles ? profiles : []
         })
         .pipe(
           mergeMap(token => {
             this.authorizeSuccess();
+            stores.requestQueueStore.filterEvents('AddProfile');
             return of(
               stores.signalrStore.signalrHub.startConnection(token.data)
             );

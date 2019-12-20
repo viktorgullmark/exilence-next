@@ -44,6 +44,11 @@ export class RequestQueueStore {
   }
 
   @action
+  filterEvents(event: string) {
+    this.failedEventsStack = this.failedEventsStack.filter(fe => fe.method !== event);
+  }
+
+  @action
   retryFailedEvents() {
     fromStream(
       from(this.failedEventsStack).pipe(
