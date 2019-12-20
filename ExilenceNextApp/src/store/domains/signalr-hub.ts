@@ -17,7 +17,7 @@ export class SignalrHub {
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => {
-          return 10 * 1000;
+          return 30 * 1000;
         }
       })
       .configureLogging(signalR.LogLevel.Information)
