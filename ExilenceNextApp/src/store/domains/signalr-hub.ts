@@ -20,7 +20,6 @@ export class SignalrHub {
           return 30 * 1000;
         }
       })
-      .configureLogging(signalR.LogLevel.Information)
       .build();
 
     this.connection
