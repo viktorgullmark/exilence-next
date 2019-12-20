@@ -112,9 +112,9 @@ namespace ExilenceTests
             };
 
             newProfile = await _fixture.AccountService.AddProfile(account.Name, newProfile);            
-            var addedProfile = await _fixture.AccountService.GetProfile(account.Name, newProfile.ClientId);
+            var addedProfile = await _fixture.AccountService.GetProfile( newProfile.ClientId);
             await _fixture.AccountService.RemoveProfile(account.Name, newProfile.ClientId);
-            var removedProfile = await _fixture.AccountService.GetProfile(account.Name, newProfile.ClientId);
+            var removedProfile = await _fixture.AccountService.GetProfile(newProfile.ClientId);
 
             Assert.NotNull(newProfile.Id);
             Assert.Equal(newProfile.ClientId, addedProfile.ClientId);

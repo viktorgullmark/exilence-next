@@ -1,34 +1,91 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import { persist } from 'mobx-persist';
-import uuid from 'uuid';
+import { from, of } from 'rxjs';
+import { stores } from '../..';
+import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem.interface';
+import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
-  @persist uuid: string = uuid.v4();
-  connection: signalR.HubConnection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:5001/hub', { accessTokenFactory: () => "" })
-    .build();
+  connection: signalR.HubConnection | undefined = undefined;
 
   constructor() {
-    //this.connection.start().catch((err: string) => document.write(err));
+  }
 
-    // setTimeout(() => {
+  @action
+  startConnection(token: string) {
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: () => {
+          return 30 * 1000;
+        }
+      })
+      .build();
 
-    //   this.sendEvent('JoinGroup', "ABC123")
+    this.connection
+      .start()
+      .then(() => {
+        this.connection!.onreconnected(() => {
+          stores.notificationStore.createNotification('reconnected', 'success');
 
-    // }, 5000);
+          stores.signalrStore.setOnline(true);
 
+          if (stores.requestQueueStore.failedEventsStack.length > 0) {
+            stores.requestQueueStore.retryFailedEvents();
+          }
+        });
 
-    // this.connection.start().catch(err => document.write(err));
+        this.connection!.onreconnecting(e => {
+          this.connectionLost(e);
+        });
+
+        stores.signalrStore.setOnline(true);
+
+        if (stores.requestQueueStore.failedEventsStack.length > 0) {
+          stores.requestQueueStore.retryFailedEvents();
+        }
+      })
+      .catch((err: string) => document.write(err));
   }
 
   @action
   onEvent<T>(event: string, callback: (response: T) => void) {
-    this.connection.on(event, callback);
+    this.connection!.on(event, callback);
   }
 
   @action
-  sendEvent<T>(event: string, params: T) {
-    this.connection.send(event, params);
+  sendEvent<T>(event: string, params: T, id?: string) {
+    return from(
+      id
+        ? this.connection!.invoke<T>(event, params, id)
+        : this.connection!.invoke<T>(event, params)
+    );
+  }
+
+  @action
+  stream<T>(event: string, objects: T[], id?: string) {
+    const subject = new signalR.Subject();
+    let iteration = 0;
+    const promise = this.connection!.invoke(event, subject, id);
+    const intervalHandle = setInterval(() => {
+      subject.next(objects[iteration]);
+      if (iteration === objects.length - 1) {
+        clearInterval(intervalHandle);
+        subject.complete();
+      }
+      iteration++;
+    }, 250);
+    return from(promise);
+  }
+
+  @action
+  connectionLost(e?: Error) {
+    stores.signalrStore.setOnline(false);
+    stores.notificationStore.createNotification(
+      'connection_lost',
+      'error',
+      false,
+      e
+    );
   }
 }

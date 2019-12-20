@@ -15,16 +15,23 @@ namespace API.Services
     {
         private readonly IMapper _mapper;
         private readonly IGroupRepository _groupRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public GroupService(IGroupRepository groupRepository, IMapper mapper)
+        public GroupService(IGroupRepository groupRepository, IAccountRepository accountRepository, IMapper mapper)
         {
             _groupRepository = groupRepository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
-        public async Task<ConnectionModel> AddConnection(ConnectionModel connectionModel)
+        public async Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName)
         {
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
+
             var connection = _mapper.Map<Connection>(connectionModel);
+
+            connection.Account = account;
+
             connection = _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
             return _mapper.Map<ConnectionModel>(connection);
@@ -51,7 +58,7 @@ namespace API.Services
         public async Task<GroupModel> JoinGroup(string connectionId, string groupName)
         {
             var connection = await _groupRepository.GetConnection(connectionId);
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
             if (group == null)
             {
                 group = new Group()
@@ -73,7 +80,7 @@ namespace API.Services
 
         public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
         {
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
             var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 

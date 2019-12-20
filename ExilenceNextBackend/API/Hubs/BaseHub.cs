@@ -16,18 +16,15 @@ namespace API.Hubs
     public partial class BaseHub : Hub
     {
         readonly IMapper _mapper;
-        readonly string _instanceName;
-
         readonly ISnapshotService _snapshotService;
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
-
-
-        private bool IsPremium => Context.User.IsInRole("Premium");
-        private bool IsAdmin => Context.User.IsInRole("Admin");
-        private string AccountName => Context.User.Identity.Name;
+        private readonly string _instanceName;
         private string ConnectionId => Context.ConnectionId;
+        private string AccountName => Context.User.Identity.Name;
+        private bool IsAdmin => Context.User.IsInRole("Admin");
+        private bool IsPremium => Context.User.IsInRole("Premium");
 
         public BaseHub(
             IMapper mapper, 
@@ -49,8 +46,13 @@ namespace API.Hubs
         public override async Task OnConnectedAsync()
         {
             await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
-            var connection = new ConnectionModel();
-            connection = await _groupService.AddConnection(connection);            
+
+            var connection = new ConnectionModel() {
+                ConnectionId = ConnectionId,
+                InstanceName = _instanceName,
+                Created = DateTime.UtcNow
+            };
+            await _groupService.AddConnection(connection, AccountName);            
             await base.OnConnectedAsync();
         }
 
@@ -83,7 +85,6 @@ namespace API.Hubs
         //        Console.WriteLine(item);
         //    }
         //}
-
 
         // EXAMPLE OF HOW TO SEND A STREAM
         //public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)

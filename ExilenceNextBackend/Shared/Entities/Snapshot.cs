@@ -10,13 +10,12 @@ namespace Shared.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required, StringLength(50)]
+        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
         public string ClientId { get; set; }
-        [Column(TypeName = "decimal")]
-        public decimal TotalValue { get; set; }
-        public virtual SnapshotProfile Profile { get; set; }
-        public virtual ICollection<Stashtab> StashTabs { get; set; }
         public DateTime Datestamp { get; set; }
+        public virtual ICollection<Stashtab> StashTabs { get; set; }
+        [Required]
+        public virtual SnapshotProfile Profile { get; set; }
 
     }
 }

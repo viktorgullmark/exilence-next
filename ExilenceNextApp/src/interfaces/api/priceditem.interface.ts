@@ -1,18 +1,19 @@
+import { IPricedItem } from '../priced-item.interface';
 
-export interface IPricedItem {
-  id: string;
+export interface IApiPricedItem {
+  uuid: string;
   name: string;
   typeLine: string;
   frameType: number;
   total: number;
   calculated: number;
-  max?: number;
+  max: number;
   elder: boolean;
   shaper: boolean;
-  mean?: number;
-  median?: number;
-  min?: number;
-  mode?: number;
+  mean: number;
+  median: number;
+  min: number;
+  mode: number;
   ilvl: number;
   stackSize: number;
   totalStacksize: number;

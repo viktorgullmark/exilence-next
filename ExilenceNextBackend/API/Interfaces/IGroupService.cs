@@ -13,7 +13,7 @@ namespace API.Interfaces
         Task<GroupModel> LeaveGroup(string connectionId, string groupName);
 
         Task<ConnectionModel> GetConnection(string connectionId);
-        Task<ConnectionModel> AddConnection(ConnectionModel connectionMode);
+        Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName);
         Task<ConnectionModel> RemoveConnection(string connectionId);
     }
 }

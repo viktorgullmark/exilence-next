@@ -28,7 +28,7 @@ namespace ExilenceTests
                 Created = DateTime.UtcNow
             };
 
-            connection = await _fixture.GroupService.AddConnection(connection);
+            connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
             Assert.NotNull(connection.Id);
         }
@@ -45,7 +45,7 @@ namespace ExilenceTests
                 InstanceName = _fixture.InstanceName,
                 Created = DateTime.UtcNow
             };
-            connection = await _fixture.GroupService.AddConnection(connection);
+            connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
             var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 

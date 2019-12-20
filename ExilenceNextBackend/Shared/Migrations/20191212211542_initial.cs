@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shared.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,10 @@ namespace Shared.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(maxLength: 50, nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(nullable: false),
+                    Verified = table.Column<bool>(nullable: false),
+                    Role = table.Column<int>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,15 +144,15 @@ namespace Shared.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     TotalValue = table.Column<decimal>(type: "decimal", nullable: false),
-                    Datestamp = table.Column<DateTime>(nullable: false),
-                    SnapshotProfileId = table.Column<int>(nullable: true)
+                    ProfileId = table.Column<int>(nullable: true),
+                    Datestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Snapshots", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Snapshots_SnapshotProfiles_SnapshotProfileId",
-                        column: x => x.SnapshotProfileId,
+                        name: "FK_Snapshots_SnapshotProfiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "SnapshotProfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -251,9 +254,9 @@ namespace Shared.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Snapshots_SnapshotProfileId",
+                name: "IX_Snapshots_ProfileId",
                 table: "Snapshots",
-                column: "SnapshotProfileId");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StashTabs_SnapshotId",

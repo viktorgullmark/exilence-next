@@ -56,7 +56,7 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<int>("Ascendancy")
@@ -170,28 +170,34 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal?>("Calculated")
-                        .HasColumnType("decimal");
+                    b.Property<string>("BaseType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Calculated")
+                        .HasColumnType("decimal(13,4)");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("Corrupted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Elder")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FrameType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("FrameType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Ilvl")
-                        .HasColumnType("decimal");
+                    b.Property<int>("Ilvl")
+                        .HasColumnType("int");
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
@@ -199,20 +205,20 @@ namespace Shared.Migrations
                     b.Property<int>("Links")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Max")
-                        .HasColumnType("decimal");
+                    b.Property<decimal>("Max")
+                        .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal?>("Mean")
-                        .HasColumnType("decimal");
+                    b.Property<decimal>("Mean")
+                        .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal?>("Median")
-                        .HasColumnType("decimal");
+                    b.Property<decimal>("Median")
+                        .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal?>("Min")
-                        .HasColumnType("decimal");
+                    b.Property<decimal>("Min")
+                        .HasColumnType("decimal(13,4)");
 
-                    b.Property<decimal?>("Mode")
-                        .HasColumnType("decimal");
+                    b.Property<decimal>("Mode")
+                        .HasColumnType("decimal(13,4)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -229,13 +235,16 @@ namespace Shared.Migrations
                     b.Property<int>("StackSize")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StashtabId")
+                    b.Property<int>("StashtabId")
                         .HasColumnType("int");
 
                     b.Property<int>("Tier")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalStackSize")
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(13,4)");
+
+                    b.Property<int>("TotalStacksize")
                         .HasColumnType("int");
 
                     b.Property<string>("TypeLine")
@@ -260,21 +269,18 @@ namespace Shared.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SnapshotProfileId")
+                    b.Property<int>("ProfileId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalValue")
-                        .HasColumnType("decimal");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SnapshotProfileId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Snapshots");
                 });
@@ -286,7 +292,7 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ActiveLeagueId")
@@ -322,8 +328,8 @@ namespace Shared.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
@@ -334,8 +340,11 @@ namespace Shared.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SnapshotId")
+                    b.Property<int>("SnapshotId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(13,4)");
 
                     b.HasKey("Id");
 
@@ -346,9 +355,11 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Character", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Characters")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Shared.Entities.League", "League")
                         .WithMany()
@@ -368,30 +379,38 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.HasOne("Shared.Entities.Stashtab", null)
+                    b.HasOne("Shared.Entities.Stashtab", "Stashtab")
                         .WithMany("PricedItems")
-                        .HasForeignKey("StashtabId");
+                        .HasForeignKey("StashtabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
-                    b.HasOne("Shared.Entities.SnapshotProfile", null)
+                    b.HasOne("Shared.Entities.SnapshotProfile", "Profile")
                         .WithMany("Snapshots")
-                        .HasForeignKey("SnapshotProfileId");
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Profiles")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.Stashtab", b =>
                 {
-                    b.HasOne("Shared.Entities.Snapshot", null)
+                    b.HasOne("Shared.Entities.Snapshot", "Snapshot")
                         .WithMany("StashTabs")
-                        .HasForeignKey("SnapshotId");
+                        .HasForeignKey("SnapshotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

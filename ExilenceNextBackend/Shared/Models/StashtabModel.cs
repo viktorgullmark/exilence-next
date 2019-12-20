@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -14,7 +15,8 @@ namespace Shared.Models
         public string Name { get; set; }
         public int Index { get; set; }
         public string Color { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Value { get; set; }
         public virtual List<PricedItemModel> PricedItems { get; set; }
-        public SnapshotModel Snapshot { get; set; }
     }
 }

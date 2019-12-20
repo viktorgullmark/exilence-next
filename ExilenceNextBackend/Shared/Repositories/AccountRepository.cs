@@ -18,9 +18,10 @@ namespace Shared.Repositories
             _exilenceContext = context;
         }
 
-        public async Task<Account> AddAccount(Account account)
+        public Account AddAccount(Account account)
         {
-            await _exilenceContext.Accounts.AddAsync(account);
+            account.Created = DateTime.UtcNow;
+            _exilenceContext.Accounts.Add(account);
             return account;
         }
         public Account RemoveAccount(Account account)
@@ -37,6 +38,12 @@ namespace Shared.Repositories
         public IQueryable<SnapshotProfile> GetProfiles(Expression<Func<SnapshotProfile, bool>> predicate)
         {
             return _exilenceContext.SnapshotProfiles.Where(predicate);
+        }
+
+        public SnapshotProfile RemoveProfile(SnapshotProfile profile)
+        {
+            _exilenceContext.SnapshotProfiles.Remove(profile);
+            return profile;
         }
 
         public async Task SaveChangesAsync()

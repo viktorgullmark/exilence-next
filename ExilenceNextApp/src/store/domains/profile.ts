@@ -16,6 +16,8 @@ import { PriceUtils } from '../../utils/price.utils';
 import { stores, visitor } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
+import { SnapshotUtils } from '../../utils/snapshot.utils';
+import { ProfileUtils } from '../../utils/profile.utils';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -66,7 +68,9 @@ export class Profile {
       )
     );
 
-    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
+    return mergedItems.filter(
+      mi => mi.total >= stores.settingStore.priceTreshold
+    );
   }
 
   @computed
@@ -86,7 +90,9 @@ export class Profile {
       )
     );
 
-    return mergedItems.filter(mi => mi.total >= stores.settingStore.priceTreshold);
+    return mergedItems.filter(
+      mi => mi.total >= stores.settingStore.priceTreshold
+    );
   }
 
   @computed
@@ -123,7 +129,12 @@ export class Profile {
 
   @action
   clearSnapshots() {
+    const snapshotsToRemove = [...this.snapshots];
     this.snapshots = [];
+
+    snapshotsToRemove.forEach(s => {
+      stores.signalrStore.removeSnapshot(s.uuid);
+    })
   }
 
   @action
@@ -141,6 +152,9 @@ export class Profile {
     visitor!.event('Profile', 'Edit profile').send();
 
     Object.assign(this, profile);
+    stores.signalrStore.updateProfile(
+      ProfileUtils.mapProfileToApiProfile(this)
+    );
   }
 
   @action
@@ -249,14 +263,9 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices
-
-    if (!stores.settingStore.lowConfidencePricing) {
-      filteredPrices = filteredPrices.filter(
-        p => p.count > 10
-      );
-    }
-
+    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(
+      p => p.count > 10
+    );
     filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
 
     const pricedStashTabs = stashTabsWithItems.map(
@@ -305,9 +314,28 @@ export class Profile {
       stashTabSnapshots: pricedStashTabs
     };
 
-    this.snapshots.unshift(new Snapshot(snapshot));
-
+    const snapshotToAdd = new Snapshot(snapshot);
+    this.snapshots.unshift(snapshotToAdd);
     this.snapshots = this.snapshots.slice(0, 100);
+
+    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+      al => al.leagueId === this.activeLeagueId
+    );
+
+    if (activeAccountLeague) {
+      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+        snapshotToAdd,
+        activeAccountLeague.stashtabs
+      );
+      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+        snapshotToAdd,
+        activeAccountLeague.stashtabs
+      );
+      stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
+      setTimeout(() => {
+        stores.signalrStore.uploadItems(apiItems);
+      }, 2000);
+    }
 
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {

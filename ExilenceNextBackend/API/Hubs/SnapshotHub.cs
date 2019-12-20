@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Shared.Entities;
 using Shared.Models;
 using System;
@@ -22,35 +23,35 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
-            var snapshotModel = await _snapshotService.GetSnapshot(AccountName, snapshotClientId);
+            var snapshotModel = await _snapshotService.GetSnapshot( snapshotClientId);
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        public async Task<SnapshotModel> AddSnapshot([FromBody]SnapshotModel snapshotModel, string profileClientId)
         {
-            snapshotModel = await _snapshotService.AddSnapshot(AccountName, profileClientId, snapshotModel);
-            await Log($"Added snapshot with id: {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
+            snapshotModel = await _snapshotService.AddSnapshot(profileClientId, snapshotModel);
+            await Log($"Added snapshot with id: {snapshotModel.Id} for account {AccountName}.");
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId)
+        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotClientId)
         {
-            var snapshotModel = await _snapshotService.RemoveSnapshot(AccountName, profileClientId, snapshotClientId);
-            await Log($"Removed snapshot with id {snapshotModel.Id} and value: {snapshotModel.TotalValue} for account {AccountName}.");
-            return snapshotModel;
+            var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotClientId);
+            await Log($"Removed snapshot with id {snapshotModel.Id} for account {AccountName}.");
+            return snapshotClientId;
         }
 
-        public async Task AddStashtabs(string stashtabClientId, IAsyncEnumerable<StashtabModel> stashtabModels)
+        public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)
         {
-            await foreach (var stashtabModel in stashtabModels)
+            await foreach (var pricedItem in pricedItems)
             {
-                await _snapshotService.AddStashtab(AccountName, stashtabClientId, stashtabModel);
+                await _snapshotService.AddPricedItem(stashtabClientId, pricedItem);
             }
         }
 
         public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var snapshots = _snapshotService.GetStashtabs(AccountName, snapshotClientId);
+            var snapshots = _snapshotService.GetStashtabs(snapshotClientId);
             
             foreach (var snapshot in snapshots)
             {
@@ -65,5 +66,6 @@ namespace API.Hubs
                 await Task.Delay(100, cancellationToken);
             }
         }
+
     }
 }

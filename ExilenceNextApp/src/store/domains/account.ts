@@ -1,19 +1,23 @@
 import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { fromStream } from 'mobx-utils';
+import { of } from 'rxjs';
+import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
 import { ICharacter } from '../../interfaces/character.interface';
+import { authService } from '../../services/auth.service';
+import { ProfileUtils } from '../../utils/profile.utils';
 import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
-import { League } from './league';
 import { Profile } from './profile';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
   @persist name: string = '';
   @persist @observable sessionId: string = '';
-  @persist token: string = uuid.v4();
+  @persist @observable token: string = uuid.v4();
 
   @persist('list', AccountLeague)
   @observable
@@ -40,6 +44,40 @@ export class Account implements IAccount {
       l => l.id === this.activeProfile.activePriceLeagueId
     );
     return league!;
+  }
+
+  @action
+  authorize(profiles?: Profile[]) {
+    fromStream(
+      authService
+        .getToken({
+          uuid: this.uuid,
+          name: this.name,
+          token: this.token,
+          profiles: profiles ? profiles : []
+        })
+        .pipe(
+          mergeMap(token => {
+            this.authorizeSuccess();
+            stores.requestQueueStore.filterEvents('AddProfile');
+            return of(
+              stores.signalrStore.signalrHub.startConnection(token.data)
+            );
+          }),
+          retryWhen(errors => errors.pipe(delay(5000), take(10))),
+          catchError(e => of(this.authorizeFail(e)))
+        )
+    );
+  }
+
+  @action
+  authorizeSuccess() {
+    stores.notificationStore.createNotification('authorize', 'success');
+  }
+
+  @action
+  authorizeFail(e: Error) {
+    stores.notificationStore.createNotification('authorize', 'error', true, e);
   }
 
   @computed
@@ -107,17 +145,14 @@ export class Account implements IAccount {
         p => p.uuid !== this.activeProfileUuid
       );
       this.setActiveProfile(newActiveProfile!.uuid);
-      this.profiles.splice(profileIndex, 1);
+      const removedProfile = this.profiles.splice(profileIndex, 1);
+      stores.signalrStore.removeProfile(removedProfile[0].uuid);
     }
   }
 
   @action
   removeActiveProfileSuccess() {
-    stores.notificationStore.createNotification(
-      'remove_profile',
-      'success',
-      true
-    );
+    stores.notificationStore.createNotification('remove_profile', 'success');
   }
 
   @action
@@ -139,6 +174,11 @@ export class Account implements IAccount {
   createProfile(profile: IProfile) {
     const created = new Profile(profile);
     this.profiles.push(created);
+
+    stores.signalrStore.createProfile(
+      ProfileUtils.mapProfileToApiProfile(created)
+    );
+
     this.setActiveProfile(created.uuid);
   }
 }
