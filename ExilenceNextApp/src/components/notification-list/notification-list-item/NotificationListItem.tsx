@@ -30,7 +30,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   timestamp: {
-    display: 'inline'
+    display: 'inline',
+    fontSize: '12px'
+  },
+  notificationItem: {
+    fontSize: '14px'
   }
 }));
 
@@ -51,11 +55,16 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
   };
 
   return (
-    <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
+    <ListItem
+      key={notification.uuid}
+      className={classes.notification}
+      innerRef={ref}
+    >
       <ListItemAvatar>
         <Avatar>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
+        classes={{ primary: classes.notificationItem }}
         primary={t(notification.title, { param: notification.translateParam })}
         secondary={
           <>
@@ -64,7 +73,9 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
               variant="body2"
               className={classes.timestamp}
             >
-              {moment(notification.timestamp).format('MM-DD, LT')}
+              {moment(notification.timestamp)
+                .startOf('hour')
+                .fromNow()}
             </Typography>
             {/* temporary disabled {` — ${t(notification.description, { param: notification.translateParam })}`} */}
           </>
