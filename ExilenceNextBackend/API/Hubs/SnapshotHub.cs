@@ -46,14 +46,6 @@ namespace API.Hubs
             await _snapshotService.AddPricedItems(stashtabClientId, pricedItems);
         }
 
-        public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)
-        {
-            await foreach (var pricedItem in pricedItems)
-            {
-                await _snapshotService.AddPricedItem(stashtabClientId, pricedItem);
-            }
-        }
-
         public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var snapshots = _snapshotService.GetStashtabs(snapshotClientId);
