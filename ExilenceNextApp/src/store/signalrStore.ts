@@ -49,19 +49,18 @@ export class SignalrStore {
   ) {
     return this.online
       ? fromStream(
-          event.stream
+          (event.stream
             ? this.signalrHub.stream(event.method, event.stream, event.id)
-            : this.signalrHub
-                .sendEvent(event.method, event.object, event.id)
-                .pipe(
-                  map(() => {
-                    return successCallback();
-                  }),
-                  catchError((e: Error) => {
-                    this.requestQueueStore.queueFailedEvent(event);
-                    return of(failCallback(e));
-                  })
-                )
+            : this.signalrHub.sendEvent(event.method, event.object, event.id)
+          ).pipe(
+            map(() => {
+              return successCallback();
+            }),
+            catchError((e: Error) => {
+              this.requestQueueStore.queueFailedEvent(event);
+              return of(failCallback(e));
+            })
+          )
         )
       : this.requestQueueStore.queueFailedEvent(event);
   }
