@@ -23,7 +23,7 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
-            var snapshotModel = await _snapshotService.GetSnapshot( snapshotClientId);
+            var snapshotModel = await _snapshotService.GetSnapshot(snapshotClientId);
             return snapshotModel;
         }
 
@@ -41,6 +41,11 @@ namespace API.Hubs
             return snapshotClientId;
         }
 
+        public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabClientId)
+        {
+            await _snapshotService.AddPricedItems(stashtabClientId, pricedItems);
+        }
+
         public async Task AddPricedItems(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)
         {
             await foreach (var pricedItem in pricedItems)
@@ -52,7 +57,7 @@ namespace API.Hubs
         public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var snapshots = _snapshotService.GetStashtabs(snapshotClientId);
-            
+
             foreach (var snapshot in snapshots)
             {
                 // Check the cancellation token regularly so that the server will stop

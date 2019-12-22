@@ -85,6 +85,15 @@ namespace API.Services
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<PricedItemModel>(pricedItem);
         }
+
+        public async Task<StashtabModel> AddPricedItems(string stashtabClientId, List<PricedItemModel> pricedItemModels)
+        {
+            var pricedItems = _mapper.Map<List<PricedItem>>(pricedItemModels);
+            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabClientId).Include(stashtab => stashtab.PricedItems).FirstAsync();
+            pricedItems.ForEach(pricedItem => stashtab.PricedItems.Add(pricedItem));
+            await _snapshotRepository.SaveChangesAsync();
+            return _mapper.Map<StashtabModel>(stashtab);
+        }
         #endregion
     }
 }
