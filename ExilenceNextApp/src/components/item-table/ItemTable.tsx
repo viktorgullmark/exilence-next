@@ -19,7 +19,10 @@ import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
-import { itemTableFilterHeight, itemTableFilterSpacing } from './ItemTableContainer';
+import {
+  itemTableFilterHeight,
+  itemTableFilterSpacing
+} from './ItemTableContainer';
 
 export const tableFooterHeight = 52;
 
@@ -165,9 +168,9 @@ const ItemTable: React.FC<ItemTableProps> = ({
     order: Order,
     orderBy: K
   ): (
-    a: { [key in K]: number | string | boolean },
-    b: { [key in K]: number | string | boolean }
-  ) => number {
+      a: { [key in K]: number | string | boolean },
+      b: { [key in K]: number | string | boolean }
+    ) => number {
     return order === 'desc'
       ? (a, b) => desc(a, b, orderBy)
       : (a, b) => -desc(a, b, orderBy);
@@ -180,6 +183,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
     setOrderBy(property);
+    handleChangePage(event, 0);
   };
 
   const handleChangeRowsPerPage = (

@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
+import { IApiProfile } from '../../interfaces/api/profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { ProfileUtils } from '../../utils/profile.utils';
@@ -12,6 +13,7 @@ import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
+import { genericRetryStrategy } from '../../utils/rxjs.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -47,27 +49,31 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize(profiles?: Profile[]) {
-    fromStream(
-      authService
-        .getToken({
-          uuid: this.uuid,
-          name: this.name,
-          token: this.token,
-          profiles: profiles ? profiles : []
-        })
-        .pipe(
-          mergeMap(token => {
-            this.authorizeSuccess();
-            stores.requestQueueStore.filterEvents('AddProfile');
-            return of(
-              stores.signalrStore.signalrHub.startConnection(token.data)
-            );
-          }),
-          retryWhen(errors => errors.pipe(delay(5000), take(5))),
-          catchError(e => of(this.authorizeFail(e)))
-        )
-    );
+  authorize(profiles?: IApiProfile[]) {
+    return authService
+      .getToken({
+        uuid: this.uuid,
+        name: this.name,
+        token: this.token,
+        profiles: profiles
+          ? profiles.map(p => {
+              return { ...p, snapshots: [] };
+            })
+          : []
+      })
+      .pipe(
+        mergeMap(token => {
+          this.authorizeSuccess();
+          return of(stores.signalrStore.signalrHub.startConnection(token.data));
+        }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 3,
+            scalingDuration: 3000
+          })
+        ),
+        catchError(e => of(this.authorizeFail(e)))
+      );
   }
 
   @action

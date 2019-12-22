@@ -61,6 +61,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     searchText?: string
   ) => {
+    uiStateStore!.changeItemTablePage(0);
     if (timer) {
       clearTimeout(timer);
     }

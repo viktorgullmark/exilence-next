@@ -30,6 +30,28 @@ namespace Shared
             .HasConversion(
                 v => string.Join(',', v),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<Character>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<Connection>()
+                .HasIndex(x => x.ConnectionId);
+            modelBuilder.Entity<Group>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<League>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<PricedItem>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<Snapshot>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<SnapshotProfile>()
+                .HasIndex(x => x.ClientId);
+            modelBuilder.Entity<Stashtab>()
+                .HasIndex(x => x.ClientId);
+
+
+
         }
     }
 }

@@ -78,16 +78,16 @@ namespace ExilenceTests
             foreach (var stashtab in stashtabs)
             {
                 var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.ClientId, stashtab);
-                Assert.NotNull(returnedStashtab.Id);
+                Assert.NotNull(returnedStashtab.ClientId);
             }
             
             var retrivedAccount = await _fixture.AccountService.GetAccount(account.Name);
 
-            Assert.NotNull(retrivedAccount.Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[1].Id);
+            Assert.NotNull(retrivedAccount.ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[1].ClientId);
         }
 
 

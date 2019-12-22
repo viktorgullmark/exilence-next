@@ -15,7 +15,7 @@ namespace Shared.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -31,7 +31,7 @@ namespace Shared.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -45,6 +45,8 @@ namespace Shared.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Accounts");
                 });
@@ -83,6 +85,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Characters");
@@ -103,7 +107,7 @@ namespace Shared.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2")
                         .HasMaxLength(20);
 
@@ -118,6 +122,8 @@ namespace Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("ConnectionId");
 
                     b.HasIndex("GroupId");
 
@@ -145,6 +151,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Groups");
                 });
 
@@ -155,19 +163,24 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Leagues");
                 });
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("decimal(19)")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseType")
@@ -255,6 +268,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("StashtabId");
 
                     b.ToTable("PricedItems");
@@ -269,8 +284,8 @@ namespace Shared.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
@@ -279,6 +294,8 @@ namespace Shared.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ProfileId");
 
@@ -316,6 +333,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("SnapshotProfiles");
                 });
 
@@ -347,6 +366,8 @@ namespace Shared.Migrations
                         .HasColumnType("decimal(13,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("SnapshotId");
 
