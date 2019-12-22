@@ -47,7 +47,7 @@ export class SignalrStore {
     failCallback: (e: Error) => void
   ) {
     if (this.online) {
-      (event.stream
+      return (event.stream
         ? this.signalrHub.stream(event.method, event.stream, event.id)
         : this.signalrHub.invokeEvent(event.method, event.object, event.id)
       ).pipe(
@@ -59,9 +59,10 @@ export class SignalrStore {
           return of(failCallback(e));
         })
       );
+    } else {
+      this.requestQueueStore.queueFailedEvent(event);
+      return of(failCallback(new Error('error:not_connected')));
     }
-    this.requestQueueStore.queueFailedEvent(event);
-    return of(failCallback(new Error('error:not_connected')));
   }
 
   @action
@@ -218,12 +219,10 @@ export class SignalrStore {
       id: profileId
     };
 
-    fromStream(
-      this.handleRequest(
-        request,
-        this.createSnapshotSuccess,
-        this.createSnapshotFail
-      )
+    return this.handleRequest(
+      request,
+      this.createSnapshotSuccess,
+      this.createSnapshotFail
     );
   }
 
