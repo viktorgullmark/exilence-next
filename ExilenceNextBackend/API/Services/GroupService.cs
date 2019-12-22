@@ -64,7 +64,7 @@ namespace API.Services
                 group = new Group()
                 {
                     Name = groupName,
-                    Id = Guid.NewGuid().ToString(),
+                    ClientId = Guid.NewGuid().ToString(),
                     Connections = new List<Connection>() { connection }
                 };
                 _groupRepository.AddGroup(group);
@@ -81,7 +81,7 @@ namespace API.Services
         public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
         {
             var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
-            var connection = group.Connections.First(connection => connection.Id == connectionId);
+            var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 
             if (group.Connections.Count == 0)

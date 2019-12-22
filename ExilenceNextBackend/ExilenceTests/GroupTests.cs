@@ -23,14 +23,14 @@ namespace ExilenceTests
 
             var connection = new ConnectionModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ConnectionId = TestHelper.GenerateUUID(),
                 InstanceName = _fixture.InstanceName,
                 Created = DateTime.UtcNow
             };
 
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
-            Assert.NotNull(connection);
+            Assert.NotNull(connection.ConnectionId);
         }
 
 
@@ -40,18 +40,18 @@ namespace ExilenceTests
             var groupName = TestHelper.GetRandomString();
             var connection = new ConnectionModel()
             {   
-                Id = TestHelper.GenerateUUID(),
+                ConnectionId = TestHelper.GenerateUUID(),
                 InstanceName = _fixture.InstanceName,
                 Created = DateTime.UtcNow
             };
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
-            var group = await _fixture.GroupService.JoinGroup(connection.Id, groupName);
+            var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 
-            Assert.NotNull(group.Id);
+            Assert.NotNull(group.ClientId);
             Assert.Single(group.Connections);
 
-            await _fixture.GroupService.LeaveGroup(connection.Id, groupName);
+            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);
             group = await _fixture.GroupService.GetGroup(groupName);
 
             Assert.Null(group);

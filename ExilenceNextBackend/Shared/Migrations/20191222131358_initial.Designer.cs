@@ -10,8 +10,8 @@ using Shared;
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    [Migration("20191222012126_Initial")]
-    partial class Initial
+    [Migration("20191222131358_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,11 +23,17 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Account", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -47,19 +53,24 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Character", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Ascendancy")
                         .HasColumnType("int");
 
                     b.Property<int>("Class")
                         .HasColumnType("int");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("LeagueId")
                         .HasColumnType("int");
@@ -81,19 +92,25 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Connection", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("AccountId")
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2")
                         .HasMaxLength(20);
 
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("InstanceName")
                         .IsRequired()
@@ -111,7 +128,13 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Group", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -134,6 +157,9 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -144,15 +170,21 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(19)")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Calculated")
                         .HasColumnType("decimal(13,4)");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("Corrupted")
                         .HasColumnType("bit");
@@ -208,9 +240,8 @@ namespace Shared.Migrations
                     b.Property<int>("StackSize")
                         .HasColumnType("int");
 
-                    b.Property<string>("StashtabId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("StashtabId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Tier")
                         .HasColumnType("int");
@@ -236,16 +267,21 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProfileId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -256,13 +292,13 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ActiveLeagueId")
                         .HasColumnType("nvarchar(max)");
@@ -272,6 +308,11 @@ namespace Shared.Migrations
 
                     b.Property<string>("ActiveStashTabIds")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -285,7 +326,13 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Stashtab", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
@@ -298,9 +345,8 @@ namespace Shared.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SnapshotId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("SnapshotId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(13,4)");

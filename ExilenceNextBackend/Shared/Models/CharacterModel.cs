@@ -9,8 +9,9 @@ namespace Shared.Models
 {
     public class CharacterModel
     {
+        public int? Id { get; set; }
         [JsonPropertyName("uuid")]
-        public string Id { get; set; }
+        public string ClientId { get; set; }
         public string Name { get; set; }
         public virtual LeagueModel League { get; set; }
         public Class Class { get; set; }

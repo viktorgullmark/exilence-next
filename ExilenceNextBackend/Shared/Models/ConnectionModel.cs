@@ -6,7 +6,8 @@ namespace Shared.Models
 {
     public class ConnectionModel
     {
-        public string Id { get; set; }
+        public int? Id { get; set; }
+        public string ConnectionId { get; set; }
         public string InstanceName { get; set; }
         public DateTime Created { get; set; }
 

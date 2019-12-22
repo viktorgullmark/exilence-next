@@ -9,8 +9,9 @@ namespace Shared.Models
 {
     public class SnapshotModel
     {
+        public int? Id { get; set; }
         [JsonPropertyName("uuid")]
-        public string Id { get; set; }
+        public string ClientId { get; set; }
         public List<StashtabModel> StashTabs { get; set; }
         public DateTime Datestamp { get; set; }
     }

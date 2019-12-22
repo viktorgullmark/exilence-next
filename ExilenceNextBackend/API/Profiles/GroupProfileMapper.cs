@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public GroupProfileMapper()
         {
-            CreateMap<Group, GroupModel>();
             CreateMap<GroupModel, Group>();
+            CreateMap<Group, GroupModel>();
         }
     }
 }

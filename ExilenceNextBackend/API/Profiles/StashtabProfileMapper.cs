@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public StashtabProfileMapper()
         {
-            CreateMap<Stashtab, StashtabModel>();
             CreateMap<StashtabModel, Stashtab>();
+            CreateMap<Stashtab, StashtabModel>();
         }
     }
 }

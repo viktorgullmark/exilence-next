@@ -67,7 +67,7 @@ namespace API.Services
             if (account == null)
                 throw new Exception("Can't find account");
 
-            var profile = account.Profiles.FirstOrDefault(profile => profile.Id == profileModel.Id);
+            var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
 
             if (profile == null)
                 throw new Exception("Can't find profile");
@@ -76,7 +76,7 @@ namespace API.Services
         }
         public async Task<SnapshotProfileModel> GetProfile(string profileId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.Id == profileId).FirstOrDefaultAsync();
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId).FirstOrDefaultAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
@@ -100,7 +100,7 @@ namespace API.Services
             if (account == null)
                 throw new Exception("Can't find account");
 
-            var profile = account.Profiles.FirstOrDefault(profile => profile.Id == profileModel.Id);
+            var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
 
             if (profile == null)
                 throw new Exception("Can't find profile");
@@ -114,7 +114,7 @@ namespace API.Services
         public async Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileId)
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
-            var profile = account.Profiles.First(p => p.Id == profileId);
+            var profile = account.Profiles.First(p => p.ClientId == profileId);
             _accountRepository.RemoveProfile(profile);
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);

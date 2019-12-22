@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public ConnectionProfileMapper()
         {
-            CreateMap<Connection, ConnectionModel>();
             CreateMap<ConnectionModel, Connection>();
+            CreateMap<Connection, ConnectionModel>();
         }
     }
 }
