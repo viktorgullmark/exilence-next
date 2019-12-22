@@ -177,7 +177,7 @@ export class SignalrStore {
   @action
   removeProfile(uuid: string) {
     const request: ISignalrEvent<string> = {
-      method: 'AddProfile',
+      method: 'RemoveProfile',
       object: uuid
     };
 
