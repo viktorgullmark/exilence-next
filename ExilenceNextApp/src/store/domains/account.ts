@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
+import { IApiProfile } from '../../interfaces/api/profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { ProfileUtils } from '../../utils/profile.utils';
@@ -47,14 +48,16 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize(profiles?: Profile[]) {
+  authorize(profiles?: IApiProfile[]) {
     fromStream(
       authService
         .getToken({
           uuid: this.uuid,
           name: this.name,
           token: this.token,
-          profiles: profiles ? profiles : []
+          profiles: profiles ? profiles.map(p => {
+            return { ...p, snapshots: [] }
+          }) : []
         })
         .pipe(
           mergeMap(token => {
