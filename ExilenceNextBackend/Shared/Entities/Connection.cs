@@ -17,11 +17,8 @@ namespace Shared.Entities
         public DateTime Created { get; set; }
         public virtual Account Account { get; set; }
 
-        public Connection(string id, string instanceName)
+        public Connection()
         {
-            Id = id;
-            InstanceName = instanceName;
-            Created = DateTime.UtcNow;
         }
     }
 }
