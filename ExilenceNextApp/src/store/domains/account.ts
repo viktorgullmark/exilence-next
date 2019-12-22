@@ -64,7 +64,6 @@ export class Account implements IAccount {
       .pipe(
         mergeMap(token => {
           this.authorizeSuccess();
-          stores.requestQueueStore.filterEvents('AddProfile');
           return of(stores.signalrStore.signalrHub.startConnection(token.data));
         }),
         retryWhen(
