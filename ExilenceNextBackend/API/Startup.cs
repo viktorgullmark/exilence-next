@@ -58,6 +58,7 @@ namespace API
             {
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
+                o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
             });
 
             services.AddAuthentication(x =>

@@ -128,8 +128,7 @@ Promise.all([
   hydrate('account', accountStore),
   hydrate('uiState', uiStateStore),
   hydrate('league', leagueStore),
-  hydrate('setting', settingStore),
-  hydrate('requestQueue', requestQueueStore)
+  hydrate('setting', settingStore)
 ]).then(() => {
   visitor = ua(AppConfig.trackingId, uiStateStore.userId);
   ReactDOM.render(app, document.getElementById('root'));

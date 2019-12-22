@@ -17,7 +17,7 @@ namespace Shared.Migrations
                     Name = table.Column<string>(nullable: false),
                     Verified = table.Column<bool>(nullable: false),
                     Role = table.Column<int>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false)
+                    Datestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,6 +45,7 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -63,7 +64,7 @@ namespace Shared.Migrations
                     ActiveLeagueId = table.Column<string>(nullable: true),
                     ActivePriceLeagueId = table.Column<string>(nullable: true),
                     ActiveStashTabIds = table.Column<string>(nullable: true),
-                    AccountId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +74,7 @@ namespace Shared.Migrations
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,7 +85,7 @@ namespace Shared.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ConnectionId = table.Column<string>(maxLength: 100, nullable: false),
                     InstanceName = table.Column<string>(maxLength: 20, nullable: false),
-                    Created = table.Column<DateTime>(maxLength: 20, nullable: false),
+                    Datestamp = table.Column<DateTime>(maxLength: 20, nullable: false),
                     AccountId = table.Column<int>(nullable: true),
                     GroupId = table.Column<int>(nullable: true)
                 },
@@ -117,7 +118,7 @@ namespace Shared.Migrations
                     Class = table.Column<int>(nullable: false),
                     Ascendancy = table.Column<int>(nullable: false),
                     Level = table.Column<int>(nullable: false),
-                    AccountId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,7 +128,7 @@ namespace Shared.Migrations
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Characters_Leagues_LeagueId",
                         column: x => x.LeagueId,
@@ -143,9 +144,8 @@ namespace Shared.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(maxLength: 50, nullable: false),
-                    TotalValue = table.Column<decimal>(type: "decimal", nullable: false),
-                    ProfileId = table.Column<int>(nullable: true),
-                    Datestamp = table.Column<DateTime>(nullable: false)
+                    Datestamp = table.Column<DateTime>(nullable: false),
+                    ProfileId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -155,7 +155,7 @@ namespace Shared.Migrations
                         column: x => x.ProfileId,
                         principalTable: "SnapshotProfiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,11 +164,12 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
+                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Index = table.Column<int>(nullable: false),
                     Color = table.Column<string>(nullable: true),
-                    SnapshotId = table.Column<int>(nullable: true)
+                    Value = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    SnapshotId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,39 +179,42 @@ namespace Shared.Migrations
                         column: x => x.SnapshotId,
                         principalTable: "Snapshots",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PricedItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<decimal>(type: "decimal(19)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
+                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     TypeLine = table.Column<string>(nullable: true),
-                    FrameType = table.Column<string>(nullable: true),
-                    Calculated = table.Column<decimal>(type: "decimal", nullable: true),
-                    Max = table.Column<decimal>(type: "decimal", nullable: true),
-                    Min = table.Column<decimal>(type: "decimal", nullable: true),
-                    Mean = table.Column<decimal>(type: "decimal", nullable: true),
-                    Median = table.Column<decimal>(type: "decimal", nullable: true),
-                    Mode = table.Column<decimal>(type: "decimal", nullable: true),
-                    Ilvl = table.Column<decimal>(type: "decimal", nullable: false),
+                    FrameType = table.Column<int>(nullable: false),
+                    Calculated = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
                     Elder = table.Column<bool>(nullable: false),
                     Shaper = table.Column<bool>(nullable: false),
-                    StackSize = table.Column<int>(nullable: false),
-                    TotalStackSize = table.Column<int>(nullable: false),
-                    Sockets = table.Column<int>(nullable: false),
-                    Links = table.Column<int>(nullable: false),
-                    Corrupted = table.Column<bool>(nullable: false),
-                    Tier = table.Column<int>(nullable: false),
-                    Level = table.Column<int>(nullable: false),
-                    Quality = table.Column<int>(nullable: false),
                     Icon = table.Column<string>(nullable: true),
+                    Ilvl = table.Column<int>(nullable: false),
+                    Tier = table.Column<int>(nullable: false),
+                    Corrupted = table.Column<bool>(nullable: false),
+                    Links = table.Column<int>(nullable: false),
+                    Sockets = table.Column<int>(nullable: false),
+                    Quality = table.Column<int>(nullable: false),
+                    Level = table.Column<int>(nullable: false),
+                    StackSize = table.Column<int>(nullable: false),
+                    TotalStacksize = table.Column<int>(nullable: false),
                     Variant = table.Column<string>(nullable: true),
-                    StashtabId = table.Column<int>(nullable: true)
+                    Total = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    Max = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    Mean = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    Mode = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    Min = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    Median = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
+                    BaseType = table.Column<string>(nullable: true),
+                    Count = table.Column<int>(nullable: false),
+                    StashtabId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,7 +224,7 @@ namespace Shared.Migrations
                         column: x => x.StashtabId,
                         principalTable: "StashTabs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

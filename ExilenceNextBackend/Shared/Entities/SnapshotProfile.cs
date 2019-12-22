@@ -8,7 +8,7 @@ namespace Shared.Entities
 {
     public class SnapshotProfile
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string ClientId { get; set; }
@@ -17,6 +17,8 @@ namespace Shared.Entities
         public string ActivePriceLeagueId { get; set; }
         public ICollection<string> ActiveStashTabIds { get; set; }
         public virtual ICollection<Snapshot> Snapshots { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+
         [Required]
         public virtual Account Account { get; set; }
     }

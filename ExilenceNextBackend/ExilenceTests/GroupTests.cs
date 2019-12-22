@@ -30,7 +30,7 @@ namespace ExilenceTests
 
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
-            Assert.NotNull(connection.Id);
+            Assert.NotNull(connection.ConnectionId);
         }
 
 
@@ -40,7 +40,6 @@ namespace ExilenceTests
             var groupName = TestHelper.GetRandomString();
             var connection = new ConnectionModel()
             {   
-                Id = 1,
                 ConnectionId = TestHelper.GenerateUUID(),
                 InstanceName = _fixture.InstanceName,
                 Created = DateTime.UtcNow
@@ -49,7 +48,7 @@ namespace ExilenceTests
 
             var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 
-            Assert.NotNull(group.Id);
+            Assert.NotNull(group.ClientId);
             Assert.Single(group.Connections);
 
             await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);

@@ -8,14 +8,16 @@ import {
   map,
   retryWhen,
   take,
-  catchError
+  catchError,
+  mergeMap
 } from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { ISignalrEvent } from './signalrStore';
+import { genericRetryStrategy } from '../utils/rxjs.utils';
 
 export class RequestQueueStore {
-  @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
+  @observable failedEventsStack: ISignalrEvent<any>[] = [];
 
   constructor(
     private signalrHub: SignalrHub,
@@ -29,8 +31,7 @@ export class RequestQueueStore {
     if (this.failedEventsStack.length % 25 === 0) {
       this.notificationStore.createNotification(
         'data_will_be_cleared',
-        'warning',
-        true
+        'warning'
       );
     }
 
@@ -45,7 +46,9 @@ export class RequestQueueStore {
 
   @action
   filterEvents(event: string) {
-    this.failedEventsStack = this.failedEventsStack.filter(fe => fe.method !== event);
+    this.failedEventsStack = this.failedEventsStack.filter(
+      fe => fe.method !== event
+    );
   }
 
   @action
@@ -54,9 +57,14 @@ export class RequestQueueStore {
       from(this.failedEventsStack).pipe(
         concatMap(event => {
           return this.runEventFromQueue(event).pipe(
-            map(() => this.runEventFromQueueSuccess()),
-            retryWhen(errors => errors.pipe(delay(5000), take(5))),
-            catchError((e: Error) => of(this.runEventFromQueueFail))
+            mergeMap(() => of(this.runEventFromQueueSuccess())),
+            retryWhen(
+              genericRetryStrategy({
+                maxRetryAttempts: 5,
+                scalingDuration: 2000
+              })
+            ),
+            catchError(e => of(this.runEventFromQueueFail(e)))
           );
         })
       )
@@ -67,7 +75,7 @@ export class RequestQueueStore {
   runEventFromQueue<T>(event: ISignalrEvent<T>) {
     return event.stream
       ? this.signalrHub.stream<T>(event.method, event.stream, event.id)
-      : this.signalrHub.sendEvent<T>(event.method, event.object!, event.id);
+      : this.signalrHub.invokeEvent<T>(event.method, event.object!, event.id);
   }
 
   @action
@@ -81,10 +89,7 @@ export class RequestQueueStore {
   }
 
   @action
-  runEventFromQueueFail() {
-    this.notificationStore.createNotification(
-      'run_event_from_queue',
-      'error'
-    );
+  runEventFromQueueFail(e: Error) {
+    this.notificationStore.createNotification('run_event_from_queue', 'error');
   }
 }

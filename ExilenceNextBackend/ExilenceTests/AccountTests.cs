@@ -44,7 +44,7 @@ namespace ExilenceTests
             accountModel.Token = AuthHelper.GenerateToken(_fixture.Secret, accountModel);
 
             accountModel = await _fixture.AccountService.AddAccount(accountModel);
-            Assert.NotNull(accountModel.Id);
+            Assert.NotNull(accountModel.ClientId);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace ExilenceTests
             await _fixture.AccountService.RemoveProfile(account.Name, newProfile.ClientId);
             var removedProfile = await _fixture.AccountService.GetProfile(newProfile.ClientId);
 
-            Assert.NotNull(newProfile.Id);
+            Assert.NotNull(newProfile.ClientId);
             Assert.Equal(newProfile.ClientId, addedProfile.ClientId);
             Assert.Null(removedProfile);
         }

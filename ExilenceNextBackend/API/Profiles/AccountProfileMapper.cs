@@ -11,9 +11,10 @@ namespace API.Profiles
     {
         public AccountProfileMapper()
         {
-            CreateMap<Account, AccountModel>();
             CreateMap<AccountModel, Account>()
-                .ForMember(x => x.Id, opt => opt.Ignore()); ;
+                .ForMember(o => o.Id, opt => opt.Ignore())
+                .ForMember(o => o.Profiles, opt => opt.Ignore());
+            CreateMap<Account, AccountModel>();
         }
     }
 }

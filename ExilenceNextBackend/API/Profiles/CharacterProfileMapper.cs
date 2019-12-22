@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public CharacterProfileMapper()
         {
-            CreateMap<Character, CharacterModel>();
             CreateMap<CharacterModel, Character>();
+            CreateMap<Character, CharacterModel>();
         }
     }
 }
