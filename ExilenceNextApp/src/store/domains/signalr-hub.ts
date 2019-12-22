@@ -1,8 +1,7 @@
 import * as signalR from '@microsoft/signalr';
 import { action } from 'mobx';
-import { from, of } from 'rxjs';
+import { from } from 'rxjs';
 import { stores } from '../..';
-import { IApiStashTabPricedItem } from '../../interfaces/api/stashtab-priceditem.interface';
 import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
@@ -11,7 +10,6 @@ export class SignalrHub {
   constructor() {
   }
 
-  @action
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
@@ -48,12 +46,10 @@ export class SignalrHub {
       .catch((err: string) => document.write(err));
   }
 
-  @action
   onEvent<T>(event: string, callback: (response: T) => void) {
     this.connection!.on(event, callback);
   }
 
-  @action
   invokeEvent<T>(event: string, params: T | T[], id?: string) {
     return from(
       id
@@ -62,7 +58,6 @@ export class SignalrHub {
     );
   }
 
-  @action
   sendEvent<T>(event: string, params: T | T[], id?: string) {
     return from(
       id
@@ -71,7 +66,6 @@ export class SignalrHub {
     );
   }
 
-  @action
   stream<T>(event: string, objects: T[], id?: string) {
     const subject = new signalR.Subject();
     let iteration = 0;
@@ -87,7 +81,6 @@ export class SignalrHub {
     return from(promise);
   }
 
-  @action
   connectionLost(e?: Error) {
     stores.signalrStore.setOnline(false);
     stores.notificationStore.createNotification(
