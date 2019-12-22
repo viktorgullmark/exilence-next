@@ -48,7 +48,7 @@ namespace API.Hubs
             await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
 
             var connection = new ConnectionModel() {
-                Id = ConnectionId,
+                ConnectionId = ConnectionId,
                 InstanceName = _instanceName,
                 Created = DateTime.UtcNow
             };

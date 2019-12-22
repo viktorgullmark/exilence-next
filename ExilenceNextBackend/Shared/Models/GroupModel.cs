@@ -7,8 +7,9 @@ namespace Shared.Models
 {
     public class GroupModel
     {
+        public int? Id { get; set; }
         [JsonPropertyName("uuid")]
-        public string Id { get; set; }
+        public string ClientId { get; set; }
         public string Name { get; set; }
         public List<ConnectionModel> Connections { get; set; }
         public DateTime Created { get; set; }

@@ -20,7 +20,7 @@ namespace Shared.Repositories
 
         public Account AddAccount(Account account)
         {
-            account.Created = DateTime.UtcNow;
+            account.Datestamp = DateTime.UtcNow;
             _exilenceContext.Accounts.Add(account);
             return account;
         }

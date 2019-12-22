@@ -35,7 +35,7 @@ namespace ExilenceTests
         {
             var accountModel = new AccountModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -44,7 +44,7 @@ namespace ExilenceTests
             accountModel.Token = AuthHelper.GenerateToken(_fixture.Secret, accountModel);
 
             accountModel = await _fixture.AccountService.AddAccount(accountModel);
-            Assert.NotNull(accountModel.Id);
+            Assert.NotNull(accountModel.ClientId);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace ExilenceTests
         {
             var createdAccountModel = new AccountModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -62,7 +62,7 @@ namespace ExilenceTests
 
             createdAccountModel = await _fixture.AccountService.AddAccount(createdAccountModel);
             var retrivedAccountModel = await _fixture.AccountService.GetAccount(createdAccountModel.Name);
-            Assert.Equal(createdAccountModel.Id, retrivedAccountModel.Id);
+            Assert.Equal(createdAccountModel.ClientId, retrivedAccountModel.ClientId);
             Assert.Equal(Role.Admin, createdAccountModel.Role);
         }
 
@@ -71,7 +71,7 @@ namespace ExilenceTests
         {
             var createdAccountModel = new AccountModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -91,7 +91,7 @@ namespace ExilenceTests
         {
             var account = new AccountModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -106,18 +106,18 @@ namespace ExilenceTests
                 ActiveLeagueId = TestHelper.GenerateUUID(),
                 ActivePriceLeagueId = TestHelper.GenerateUUID(),
                 ActiveStashTabIds = new List<string>() { },
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Snapshots = new List<SnapshotModel>() { }
             };
 
             newProfile = await _fixture.AccountService.AddProfile(account.Name, newProfile);            
-            var addedProfile = await _fixture.AccountService.GetProfile( newProfile.Id);
-            await _fixture.AccountService.RemoveProfile(account.Name, newProfile.Id);
-            var removedProfile = await _fixture.AccountService.GetProfile(newProfile.Id);
+            var addedProfile = await _fixture.AccountService.GetProfile( newProfile.ClientId);
+            await _fixture.AccountService.RemoveProfile(account.Name, newProfile.ClientId);
+            var removedProfile = await _fixture.AccountService.GetProfile(newProfile.ClientId);
 
-            Assert.NotNull(newProfile.Id);
-            Assert.Equal(newProfile.Id, addedProfile.Id);
+            Assert.NotNull(newProfile.ClientId);
+            Assert.Equal(newProfile.ClientId, addedProfile.ClientId);
             Assert.Null(removedProfile);
         }
     }

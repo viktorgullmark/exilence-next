@@ -9,9 +9,10 @@ namespace Shared.Entities
 {
     public class Character
     {
- 
-        [Key, Required, StringLength(50)]
-        public string Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required, StringLength(50)]
+        public string ClientId { get; set; }
         public string Name { get; set; }
         public  virtual League League { get; set; }
         public Class Class { get; set; }

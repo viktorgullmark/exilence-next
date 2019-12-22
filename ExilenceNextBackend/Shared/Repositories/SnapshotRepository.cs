@@ -20,7 +20,7 @@ namespace Shared.Repositories
 
         public async Task<bool> SnapshotExists(string clientId)
         {
-            var count = await _exilenceContext.Snapshots.Where(s => s.Id == clientId).CountAsync();
+            var count = await _exilenceContext.Snapshots.Where(s => s.ClientId == clientId).CountAsync();
             return count > 0;
         }            
 

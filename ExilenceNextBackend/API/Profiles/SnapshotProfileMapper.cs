@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public SnapshotProfileMapper()
         {
-            CreateMap<Snapshot, SnapshotModel>();
             CreateMap<SnapshotModel, Snapshot>();
+            CreateMap<Snapshot, SnapshotModel>();
         }
     }
 }

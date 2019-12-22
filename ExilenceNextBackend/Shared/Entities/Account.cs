@@ -9,16 +9,17 @@ namespace Shared.Entities
 {
     public class Account
     {
-
-        [Key, Required, StringLength(50)]
-        public string Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required, StringLength(50)]
+        public string ClientId { get; set; }
         [Required]
         public string Name { get; set; }
         public bool Verified { get; set; }
         public Role Role { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Datestamp { get; set; }
 
         public Account()
         {

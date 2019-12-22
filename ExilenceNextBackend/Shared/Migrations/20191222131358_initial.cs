@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shared.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,11 +11,13 @@ namespace Shared.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 50, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Verified = table.Column<bool>(nullable: false),
                     Role = table.Column<int>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false)
+                    Datestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,7 +28,9 @@ namespace Shared.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 50, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                 },
@@ -41,6 +45,7 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -52,12 +57,14 @@ namespace Shared.Migrations
                 name: "SnapshotProfiles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 50, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     ActiveLeagueId = table.Column<string>(nullable: true),
                     ActivePriceLeagueId = table.Column<string>(nullable: true),
                     ActiveStashTabIds = table.Column<string>(nullable: true),
-                    AccountId = table.Column<string>(nullable: false)
+                    AccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,11 +81,13 @@ namespace Shared.Migrations
                 name: "Connections",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 100, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConnectionId = table.Column<string>(maxLength: 100, nullable: false),
                     InstanceName = table.Column<string>(maxLength: 20, nullable: false),
-                    Created = table.Column<DateTime>(maxLength: 20, nullable: false),
-                    AccountId = table.Column<string>(nullable: true),
-                    GroupId = table.Column<string>(nullable: true)
+                    Datestamp = table.Column<DateTime>(maxLength: 20, nullable: false),
+                    AccountId = table.Column<int>(nullable: true),
+                    GroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,13 +110,15 @@ namespace Shared.Migrations
                 name: "Characters",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 50, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     LeagueId = table.Column<int>(nullable: true),
                     Class = table.Column<int>(nullable: false),
                     Ascendancy = table.Column<int>(nullable: false),
                     Level = table.Column<int>(nullable: false),
-                    AccountId = table.Column<string>(nullable: false)
+                    AccountId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,9 +141,11 @@ namespace Shared.Migrations
                 name: "Snapshots",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 100, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Datestamp = table.Column<DateTime>(nullable: false),
-                    ProfileId = table.Column<string>(nullable: false)
+                    ProfileId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,12 +162,14 @@ namespace Shared.Migrations
                 name: "StashTabs",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 100, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Index = table.Column<int>(nullable: false),
                     Color = table.Column<string>(nullable: true),
                     Value = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
-                    SnapshotId = table.Column<string>(nullable: false)
+                    SnapshotId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,7 +186,9 @@ namespace Shared.Migrations
                 name: "PricedItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 100, nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(19)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     TypeLine = table.Column<string>(nullable: true),
                     FrameType = table.Column<int>(nullable: false),
@@ -197,7 +214,7 @@ namespace Shared.Migrations
                     Median = table.Column<decimal>(type: "decimal(13,4)", nullable: false),
                     BaseType = table.Column<string>(nullable: true),
                     Count = table.Column<int>(nullable: false),
-                    StashtabId = table.Column<string>(nullable: false)
+                    StashtabId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

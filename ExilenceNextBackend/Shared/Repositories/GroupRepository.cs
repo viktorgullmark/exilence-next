@@ -45,7 +45,7 @@ namespace Shared.Repositories
 
         public async Task<Connection> GetConnection(string connectionId)
         {
-            var connection = await _exilenceContext.Connections.FirstOrDefaultAsync(c => c.Id == connectionId);
+            var connection = await _exilenceContext.Connections.FirstOrDefaultAsync(c => c.ConnectionId == connectionId);
             return connection;
         }
 

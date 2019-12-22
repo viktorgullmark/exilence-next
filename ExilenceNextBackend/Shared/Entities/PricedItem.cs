@@ -8,8 +8,11 @@ namespace Shared.Entities
 {
     public class PricedItem
     {
-        [Key, Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
-        public string Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(TypeName = "decimal(19)")]
+        public decimal Id { get; set; }
+        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
+        public string ClientId { get; set; }
         public string Name { get; set; }
         public string TypeLine { get; set; }
         public int FrameType { get; set; }

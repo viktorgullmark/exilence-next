@@ -26,7 +26,7 @@ namespace ExilenceTests
         {
             var account = new AccountModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -37,7 +37,7 @@ namespace ExilenceTests
 
             var profile = new SnapshotProfileModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 ActiveLeagueId = TestHelper.GenerateUUID(),
                 ActiveStashTabIds = new List<string>() { },
                 ActivePriceLeagueId = TestHelper.GenerateUUID(),
@@ -49,17 +49,17 @@ namespace ExilenceTests
 
             var snapshot = new SnapshotModel()
             {
-                Id = TestHelper.GenerateUUID(),
+                ClientId = TestHelper.GenerateUUID(),
                 StashTabs = new List<StashtabModel>()
             };
 
-            snapshot = await _fixture.SnapshotService.AddSnapshot(profile.Id, snapshot);
+            snapshot = await _fixture.SnapshotService.AddSnapshot(profile.ClientId, snapshot);
 
             var stashtabs = new List<StashtabModel>()
             {
                 new StashtabModel()
                 {
-                    Id = TestHelper.GenerateUUID(),
+                    ClientId = TestHelper.GenerateUUID(),
                     Color = TestHelper.GetRandomString(),
                     Index = 0,
                     Name = TestHelper.GetRandomString(),
@@ -67,7 +67,7 @@ namespace ExilenceTests
                 },
                 new StashtabModel()
                 {
-                    Id = TestHelper.GenerateUUID(),
+                    ClientId = TestHelper.GenerateUUID(),
                     Color = TestHelper.GetRandomString(),
                     Index = 1,
                     Name = TestHelper.GetRandomString(),
@@ -77,17 +77,17 @@ namespace ExilenceTests
 
             foreach (var stashtab in stashtabs)
             {
-                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.Id, stashtab);
-                Assert.NotNull(returnedStashtab.Id);
+                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.ClientId, stashtab);
+                Assert.NotNull(returnedStashtab.ClientId);
             }
             
             var retrivedAccount = await _fixture.AccountService.GetAccount(account.Name);
 
-            Assert.NotNull(retrivedAccount.Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[0].Id);
-            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[1].Id);
+            Assert.NotNull(retrivedAccount.ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[0].ClientId);
+            Assert.NotNull(retrivedAccount.Profiles[0].Snapshots[0].StashTabs[1].ClientId);
         }
 
 
