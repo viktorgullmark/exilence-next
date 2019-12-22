@@ -60,8 +60,8 @@ export class RequestQueueStore {
             mergeMap(() => of(this.runEventFromQueueSuccess())),
             retryWhen(
               genericRetryStrategy({
-                maxRetryAttempts: 5,
-                scalingDuration: 2000
+                maxRetryAttempts: 3,
+                scalingDuration: 3000
               })
             ),
             catchError(e => of(this.runEventFromQueueFail(e)))

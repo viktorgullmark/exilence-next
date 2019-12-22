@@ -21,7 +21,7 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) { }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -81,7 +81,7 @@ export class AccountStore {
         externalService.getLeagues(),
         externalService.getCharacters(account.name)
       ).pipe(
-        map(requests => {
+        concatMap(requests => {
           const retrievedLeagues = requests[0].data;
           const retrievedCharacters = requests[1].data;
 
@@ -104,7 +104,11 @@ export class AccountStore {
           // todo: should return observable
           this.priceStore.getPricesForLeagues();
 
-          this.getSelectedAccount.authorize(this.getSelectedAccount.profiles.map(p => ProfileUtils.mapProfileToApiProfile(p)));
+          return this.getSelectedAccount.authorize(
+            this.getSelectedAccount.profiles.map(p =>
+              ProfileUtils.mapProfileToApiProfile(p)
+            )
+          );
         }),
         switchMap(() => {
           return newAccount
