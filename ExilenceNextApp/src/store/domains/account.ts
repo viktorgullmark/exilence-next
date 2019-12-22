@@ -13,6 +13,7 @@ import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
+import { genericRetryStrategy } from '../../utils/rxjs.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -55,9 +56,11 @@ export class Account implements IAccount {
           uuid: this.uuid,
           name: this.name,
           token: this.token,
-          profiles: profiles ? profiles.map(p => {
-            return { ...p, snapshots: [] }
-          }) : []
+          profiles: profiles
+            ? profiles.map(p => {
+                return { ...p, snapshots: [] };
+              })
+            : []
         })
         .pipe(
           mergeMap(token => {
@@ -67,7 +70,12 @@ export class Account implements IAccount {
               stores.signalrStore.signalrHub.startConnection(token.data)
             );
           }),
-          retryWhen(errors => errors.pipe(delay(5000), take(5))),
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 2000
+            })
+          ),
           catchError(e => of(this.authorizeFail(e)))
         )
     );

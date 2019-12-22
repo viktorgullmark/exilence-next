@@ -14,6 +14,7 @@ import {
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { ISignalrEvent } from './signalrStore';
+import { genericRetryStrategy } from '../utils/rxjs.utils';
 
 export class RequestQueueStore {
   @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
@@ -45,7 +46,9 @@ export class RequestQueueStore {
 
   @action
   filterEvents(event: string) {
-    this.failedEventsStack = this.failedEventsStack.filter(fe => fe.method !== event);
+    this.failedEventsStack = this.failedEventsStack.filter(
+      fe => fe.method !== event
+    );
   }
 
   @action
@@ -55,10 +58,14 @@ export class RequestQueueStore {
         concatMap(event => {
           return this.runEventFromQueue(event).pipe(
             mergeMap(() => of(this.runEventFromQueueSuccess())),
-            retryWhen(errors => errors.pipe(delay(5000), take(5))),
-            catchError((e: Error) => of(this.runEventFromQueueFail(e)))
+            retryWhen(
+              genericRetryStrategy({
+                maxRetryAttempts: 5,
+                scalingDuration: 2000
+              })
+            ),
+            catchError(e => of(this.runEventFromQueueFail(e)))
           );
-          // todo: test pipe catchError here?
         })
       )
     );
@@ -83,9 +90,6 @@ export class RequestQueueStore {
 
   @action
   runEventFromQueueFail(e: Error) {
-    this.notificationStore.createNotification(
-      'run_event_from_queue',
-      'error'
-    );
+    this.notificationStore.createNotification('run_event_from_queue', 'error');
   }
 }
