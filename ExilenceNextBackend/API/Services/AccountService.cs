@@ -48,6 +48,22 @@ namespace API.Services
 
             _mapper.Map<AccountModel, Account>(accountModel, account);
 
+            foreach (var profileModel in accountModel.Profiles)
+            {
+                var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+                if (profile != null)
+                {
+                    _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
+                }
+                else
+                {
+                    var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
+                    account.Profiles.Add(newProfile);
+                }
+            }
+
+            //TODO: Remove profiles removed on client
+
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<AccountModel>(account);
         }
