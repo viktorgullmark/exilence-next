@@ -38,10 +38,6 @@ export class SignalrHub {
         });
 
         stores.signalrStore.setOnline(true);
-
-        if (stores.requestQueueStore.failedEventsStack.length > 0) {
-          stores.requestQueueStore.retryFailedEvents();
-        }
       })
       .catch((err: string) => document.write(err));
   }

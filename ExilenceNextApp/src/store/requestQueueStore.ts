@@ -17,7 +17,7 @@ import { ISignalrEvent } from './signalrStore';
 import { genericRetryStrategy } from '../utils/rxjs.utils';
 
 export class RequestQueueStore {
-  @observable @persist('list') failedEventsStack: ISignalrEvent<any>[] = [];
+  @observable failedEventsStack: ISignalrEvent<any>[] = [];
 
   constructor(
     private signalrHub: SignalrHub,
