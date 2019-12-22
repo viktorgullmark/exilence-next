@@ -8,7 +8,8 @@ import {
   map,
   retryWhen,
   take,
-  catchError
+  catchError,
+  mergeMap
 } from 'rxjs/operators';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
@@ -53,10 +54,11 @@ export class RequestQueueStore {
       from(this.failedEventsStack).pipe(
         concatMap(event => {
           return this.runEventFromQueue(event).pipe(
-            map(() => this.runEventFromQueueSuccess()),
+            mergeMap(() => of(this.runEventFromQueueSuccess())),
             retryWhen(errors => errors.pipe(delay(5000), take(5))),
-            catchError((e: Error) => of(this.runEventFromQueueFail))
+            catchError((e: Error) => of(this.runEventFromQueueFail(e)))
           );
+          // todo: test pipe catchError here?
         })
       )
     );
@@ -80,7 +82,7 @@ export class RequestQueueStore {
   }
 
   @action
-  runEventFromQueueFail() {
+  runEventFromQueueFail(e: Error) {
     this.notificationStore.createNotification(
       'run_event_from_queue',
       'error'
