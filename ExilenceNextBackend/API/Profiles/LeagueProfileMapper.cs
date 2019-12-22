@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public LeagueProfileMapper()
         {
-            CreateMap<League, LeagueModel>();
             CreateMap<LeagueModel, League>();
+            CreateMap<League, LeagueModel>();
         }
     }
 }

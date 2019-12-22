@@ -13,9 +13,9 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        public async Task<SnapshotProfileModel> GetProfile(string profileClientId)
+        public async Task<SnapshotProfileModel> GetProfile(string profileId)
         {
-            var profileModel = await _accountService.GetProfile(profileClientId);
+            var profileModel = await _accountService.GetProfile(profileId);
             return profileModel;
         }
         public async Task<SnapshotProfileModel> ProfileExists([FromBody]SnapshotProfileModel profileModel)
@@ -35,10 +35,10 @@ namespace API.Hubs
             return profileModel;
         }
 
-        public async Task<string> RemoveProfile(string profileClientId)
+        public async Task<string> RemoveProfile(string profileId)
         {
-            await _accountService.RemoveProfile(AccountName, profileClientId);
-            return profileClientId;
+            await _accountService.RemoveProfile(AccountName, profileId);
+            return profileId;
         }
 
     }

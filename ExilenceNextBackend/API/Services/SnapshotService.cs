@@ -50,40 +50,49 @@ namespace API.Services
         #endregion
 
         #region Stashtab
-        public async Task<StashtabModel> GetStashtab(string stashtabClientId)
+        public async Task<StashtabModel> GetStashtab(string stashtabId)
         {
-            var stashtab = await _snapshotRepository.GetStashtabs(stashtab => stashtab.ClientId == stashtabClientId).FirstAsync();
+            var stashtab = await _snapshotRepository.GetStashtabs(stashtab => stashtab.ClientId == stashtabId).FirstAsync();
             return _mapper.Map<StashtabModel>(stashtab);
         }
-        public IQueryable<Stashtab> GetStashtabs(string snapshotClientId)
+        public IQueryable<Stashtab> GetStashtabs(string snapshotId)
         {
-            var stashtabs = _snapshotRepository.GetStashtabs(stashtab => stashtab.Snapshot.ClientId == snapshotClientId);
+            var stashtabs = _snapshotRepository.GetStashtabs(stashtab => stashtab.Snapshot.ClientId == snapshotId);
             return stashtabs;
         }
-        public async Task<StashtabModel> AddStashtab(string snapshotClientId, StashtabModel stashtabModel)
+        public async Task<StashtabModel> AddStashtab(string snapshotId, StashtabModel stashtabModel)
         {
             var stashtab = _mapper.Map<Stashtab>(stashtabModel);
-            var snapshot = await _snapshotRepository.GetSnapshots(tab => tab.ClientId == snapshotClientId).FirstAsync();
+            var snapshot = await _snapshotRepository.GetSnapshots(tab => tab.ClientId == snapshotId).FirstAsync();
             snapshot.StashTabs.Add(stashtab);
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<StashtabModel>(stashtab);
         }
-        public async Task<StashtabModel> RemoveStashtab(string snapshotClientId, string stashtabClientId)
+        public async Task<StashtabModel> RemoveStashtab(string snapshotId, string stashtabId)
         {
-            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).Include(snapshot => snapshot.StashTabs).FirstAsync();
-            var stashtasb = snapshot.StashTabs.FirstOrDefault(snapshot => snapshot.ClientId == snapshotClientId);
+            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotId).Include(snapshot => snapshot.StashTabs).FirstAsync();
+            var stashtasb = snapshot.StashTabs.FirstOrDefault(snapshot => snapshot.ClientId == snapshotId);
             _snapshotRepository.RemoveStashtab(stashtasb);
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<StashtabModel>(snapshot);
         }
 
-        public async Task<PricedItemModel> AddPricedItem(string stashtabClientId, PricedItemModel pricedItemModel)
+        public async Task<PricedItemModel> AddPricedItem(string stashtabId, PricedItemModel pricedItemModel)
         {
             var pricedItem = _mapper.Map<PricedItem>(pricedItemModel);
-            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabClientId).Include(stashtab => stashtab.PricedItems).FirstAsync();
+            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId).Include(stashtab => stashtab.PricedItems).FirstAsync();
             stashtab.PricedItems.Add(pricedItem);
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<PricedItemModel>(pricedItem);
+        }
+
+        public async Task<StashtabModel> AddPricedItems(string stashtabId, List<PricedItemModel> pricedItemModels)
+        {
+            var pricedItems = _mapper.Map<List<PricedItem>>(pricedItemModels);
+            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId).Include(stashtab => stashtab.PricedItems).FirstAsync();
+            pricedItems.ForEach(pricedItem => stashtab.PricedItems.Add(pricedItem));
+            await _snapshotRepository.SaveChangesAsync();
+            return _mapper.Map<StashtabModel>(stashtab);
         }
         #endregion
     }

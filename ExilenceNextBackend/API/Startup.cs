@@ -58,6 +58,7 @@ namespace API
             {
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
+                o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
             }).AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
             {
                 options.Configuration.ChannelPrefix = "ExilenceSignalR";

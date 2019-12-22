@@ -1,8 +1,9 @@
 import { action, observable, reaction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { from, of } from 'rxjs';
-import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
+import { of, from } from 'rxjs';
+import { catchError, map, concatMap, delay, retryWhen } from 'rxjs/operators';
 import { stores } from '..';
+import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiProfile } from '../interfaces/api/profile.interface';
 import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
@@ -11,12 +12,10 @@ import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
-import { IPricedItem } from '../interfaces/priced-item.interface';
-import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
-  object?: T;
+  object?: T | T[];
   stream?: T[];
   id?: string;
 }
@@ -47,23 +46,23 @@ export class SignalrStore {
     successCallback: () => void,
     failCallback: (e: Error) => void
   ) {
-    return this.online
-      ? fromStream(
-          event.stream
-            ? this.signalrHub.stream(event.method, event.stream, event.id)
-            : this.signalrHub
-                .sendEvent(event.method, event.object, event.id)
-                .pipe(
-                  map(() => {
-                    return successCallback();
-                  }),
-                  catchError((e: Error) => {
-                    this.requestQueueStore.queueFailedEvent(event);
-                    return of(failCallback(e));
-                  })
-                )
-        )
-      : this.requestQueueStore.queueFailedEvent(event);
+    if (this.online) {
+      return (event.stream
+        ? this.signalrHub.stream(event.method, event.stream, event.id)
+        : this.signalrHub.invokeEvent(event.method, event.object, event.id)
+      ).pipe(
+        map(() => {
+          return successCallback();
+        }),
+        catchError((e: Error) => {
+          this.requestQueueStore.queueFailedEvent(event);
+          return of(failCallback(e));
+        })
+      );
+    } else {
+      this.requestQueueStore.queueFailedEvent(event);
+      return of(failCallback(new Error('error:not_connected')));
+    }
   }
 
   @action
@@ -76,7 +75,7 @@ export class SignalrStore {
   joinGroup(groupName: string) {
     fromStream(
       this.signalrHub
-        .sendEvent<IGroup>('JoinGroup', <IGroup>{
+        .invokeEvent<IGroup>('JoinGroup', <IGroup>{
           name: groupName,
           created: new Date(),
           connections: []
@@ -115,10 +114,12 @@ export class SignalrStore {
       object: profile
     };
 
-    this.handleRequest(
-      request,
-      this.createProfileSuccess,
-      this.createProfileFail
+    fromStream(
+      this.handleRequest(
+        request,
+        this.createProfileSuccess,
+        this.createProfileFail
+      )
     );
   }
 
@@ -147,10 +148,12 @@ export class SignalrStore {
       object: profile
     };
 
-    this.handleRequest(
-      request,
-      this.updateProfileSuccess,
-      this.updateProfileFail
+    fromStream(
+      this.handleRequest(
+        request,
+        this.updateProfileSuccess,
+        this.updateProfileFail
+      )
     );
   }
 
@@ -175,14 +178,16 @@ export class SignalrStore {
   @action
   removeProfile(uuid: string) {
     const request: ISignalrEvent<string> = {
-      method: 'AddProfile',
+      method: 'RemoveProfile',
       object: uuid
     };
 
-    this.handleRequest(
-      request,
-      this.removeProfileSuccess,
-      this.removeProfileFail
+    fromStream(
+      this.handleRequest(
+        request,
+        this.removeProfileSuccess,
+        this.removeProfileFail
+      )
     );
   }
 
@@ -214,7 +219,7 @@ export class SignalrStore {
       id: profileId
     };
 
-    this.handleRequest(
+    return this.handleRequest(
       request,
       this.createSnapshotSuccess,
       this.createSnapshotFail
@@ -246,10 +251,12 @@ export class SignalrStore {
       object: uuid
     };
 
-    this.handleRequest(
-      request,
-      this.removeSnapshotSuccess,
-      this.removeSnapshotFail
+    fromStream(
+      this.handleRequest(
+        request,
+        this.removeSnapshotSuccess,
+        this.removeSnapshotFail
+      )
     );
   }
 
@@ -273,19 +280,25 @@ export class SignalrStore {
 
   @action
   uploadItems(stashtabs: IApiStashTabPricedItem[]) {
-    stashtabs.forEach(tab => {
-      const request: ISignalrEvent<IApiPricedItem> = {
-        method: 'AddPricedItems',
-        id: tab.stashTabId,
-        stream: tab.pricedItems
-      };
-
-      this.handleRequest(
-        request,
-        this.uploadItemsSuccess,
-        this.uploadItemsFail
-      );
-    });
+    fromStream(
+      from(stashtabs).pipe(
+        concatMap(st => {
+          const request: ISignalrEvent<IApiPricedItem> = {
+            method: 'AddPricedItems',
+            id: st.stashTabId,
+            object: st.pricedItems
+          };
+          return this.handleRequest(
+            request,
+            this.uploadItemsSuccess,
+            this.uploadItemsFail
+          ).pipe(
+            map(() => this.uploadItemsSuccess),
+            catchError((e: Error) => of(this.uploadItemsFail(e)))
+          );
+        })
+      )
+    );
   }
 
   @action

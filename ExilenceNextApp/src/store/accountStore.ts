@@ -6,13 +6,13 @@ import { forkJoin, of, timer } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { IAccount } from '../interfaces/account.interface';
 import { externalService } from '../services/external.service';
+import { ProfileUtils } from '../utils/profile.utils';
 import { Account } from './domains/account';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
-import { UiStateStore } from './uiStateStore';
 import { SignalrStore } from './signalrStore';
-import { ProfileUtils } from '../utils/profile.utils';
+import { UiStateStore } from './uiStateStore';
 
 export class AccountStore {
   constructor(
@@ -81,7 +81,7 @@ export class AccountStore {
         externalService.getLeagues(),
         externalService.getCharacters(account.name)
       ).pipe(
-        map(requests => {
+        concatMap(requests => {
           const retrievedLeagues = requests[0].data;
           const retrievedCharacters = requests[1].data;
 
@@ -104,7 +104,11 @@ export class AccountStore {
           // todo: should return observable
           this.priceStore.getPricesForLeagues();
 
-          this.getSelectedAccount.authorize(this.getSelectedAccount.profiles);
+          return this.getSelectedAccount.authorize(
+            this.getSelectedAccount.profiles.map(p =>
+              ProfileUtils.mapProfileToApiProfile(p)
+            )
+          );
         }),
         switchMap(() => {
           return newAccount

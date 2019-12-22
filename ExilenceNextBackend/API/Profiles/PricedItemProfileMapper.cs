@@ -12,8 +12,8 @@ namespace API.Profiles
     {
         public PricedItemProfileMapper()
         {
-            CreateMap<PricedItem, PricedItemModel>();
             CreateMap<PricedItemModel, PricedItem>();
+            CreateMap<PricedItem, PricedItemModel>();
         }
     }
 }

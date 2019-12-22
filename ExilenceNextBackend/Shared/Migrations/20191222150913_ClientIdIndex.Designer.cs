@@ -10,14 +10,14 @@ using Shared;
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    [Migration("20191218112039_PricedItemClientId")]
-    partial class PricedItemClientId
+    [Migration("20191222150913_ClientIdIndex")]
+    partial class ClientIdIndex
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -33,7 +33,7 @@ namespace Shared.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -48,6 +48,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Accounts");
                 });
 
@@ -58,7 +60,7 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<int>("Ascendancy")
@@ -85,6 +87,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Characters");
@@ -105,7 +109,7 @@ namespace Shared.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2")
                         .HasMaxLength(20);
 
@@ -120,6 +124,8 @@ namespace Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("ConnectionId");
 
                     b.HasIndex("GroupId");
 
@@ -147,6 +153,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Groups");
                 });
 
@@ -157,19 +165,24 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Leagues");
                 });
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("decimal(19)")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseType")
@@ -237,7 +250,7 @@ namespace Shared.Migrations
                     b.Property<int>("StackSize")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StashtabId")
+                    b.Property<int>("StashtabId")
                         .HasColumnType("int");
 
                     b.Property<int>("Tier")
@@ -257,6 +270,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("StashtabId");
 
                     b.ToTable("PricedItems");
@@ -271,16 +286,18 @@ namespace Shared.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("Datestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProfileId")
+                    b.Property<int>("ProfileId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("ProfileId");
 
@@ -294,7 +311,7 @@ namespace Shared.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ActiveLeagueId")
@@ -317,6 +334,8 @@ namespace Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("SnapshotProfiles");
                 });
@@ -342,13 +361,15 @@ namespace Shared.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SnapshotId")
+                    b.Property<int>("SnapshotId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(13,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("SnapshotId");
 
@@ -357,9 +378,11 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.Character", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Characters")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Shared.Entities.League", "League")
                         .WithMany()
@@ -379,30 +402,38 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.HasOne("Shared.Entities.Stashtab", null)
+                    b.HasOne("Shared.Entities.Stashtab", "Stashtab")
                         .WithMany("PricedItems")
-                        .HasForeignKey("StashtabId");
+                        .HasForeignKey("StashtabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.Snapshot", b =>
                 {
                     b.HasOne("Shared.Entities.SnapshotProfile", "Profile")
                         .WithMany("Snapshots")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
-                    b.HasOne("Shared.Entities.Account", null)
+                    b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Profiles")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Entities.Stashtab", b =>
                 {
                     b.HasOne("Shared.Entities.Snapshot", "Snapshot")
                         .WithMany("StashTabs")
-                        .HasForeignKey("SnapshotId");
+                        .HasForeignKey("SnapshotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
