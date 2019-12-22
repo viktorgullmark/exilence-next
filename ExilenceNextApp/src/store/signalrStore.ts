@@ -51,7 +51,7 @@ export class SignalrStore {
       ? fromStream(
           (event.stream
             ? this.signalrHub.stream(event.method, event.stream, event.id)
-            : this.signalrHub.sendEvent(event.method, event.object, event.id)
+            : this.signalrHub.invokeEvent(event.method, event.object, event.id)
           ).pipe(
             map(() => {
               return successCallback();
@@ -75,7 +75,7 @@ export class SignalrStore {
   joinGroup(groupName: string) {
     fromStream(
       this.signalrHub
-        .sendEvent<IGroup>('JoinGroup', <IGroup>{
+        .invokeEvent<IGroup>('JoinGroup', <IGroup>{
           name: groupName,
           created: new Date(),
           connections: []

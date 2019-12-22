@@ -29,8 +29,7 @@ export class RequestQueueStore {
     if (this.failedEventsStack.length % 25 === 0) {
       this.notificationStore.createNotification(
         'data_will_be_cleared',
-        'warning',
-        true
+        'warning'
       );
     }
 
@@ -67,7 +66,7 @@ export class RequestQueueStore {
   runEventFromQueue<T>(event: ISignalrEvent<T>) {
     return event.stream
       ? this.signalrHub.stream<T>(event.method, event.stream, event.id)
-      : this.signalrHub.sendEvent<T>(event.method, event.object!, event.id);
+      : this.signalrHub.invokeEvent<T>(event.method, event.object!, event.id);
   }
 
   @action
