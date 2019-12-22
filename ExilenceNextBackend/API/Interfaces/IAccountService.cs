@@ -12,10 +12,10 @@ namespace API.Interfaces
         Task<AccountModel> AddAccount(AccountModel accountModel);
         Task<AccountModel> EditAccount(AccountModel accountModel);
         Task<AccountModel> RemoveAccount(string accountName);
-        Task<SnapshotProfileModel> GetProfile(string profileClientId);
+        Task<SnapshotProfileModel> GetProfile(string profileId);
         Task<SnapshotProfileModel> ProfileExists(string accountName, SnapshotProfileModel profileModel);
         Task<SnapshotProfileModel> AddProfile(string accountName, SnapshotProfileModel profileModel);
         Task<SnapshotProfileModel> EditProfile(string accountName, SnapshotProfileModel profileModel);
-        Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileClientIt);
+        Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileId);
     }
 }

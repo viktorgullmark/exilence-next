@@ -67,16 +67,16 @@ namespace API.Services
             if (account == null)
                 throw new Exception("Can't find account");
 
-            var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+            var profile = account.Profiles.FirstOrDefault(profile => profile.Id == profileModel.Id);
 
             if (profile == null)
                 throw new Exception("Can't find profile");
 
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
-        public async Task<SnapshotProfileModel> GetProfile(string profileClientId)
+        public async Task<SnapshotProfileModel> GetProfile(string profileId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).FirstOrDefaultAsync();
+            var profile = await _accountRepository.GetProfiles(profile => profile.Id == profileId).FirstOrDefaultAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
@@ -100,7 +100,7 @@ namespace API.Services
             if (account == null)
                 throw new Exception("Can't find account");
 
-            var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+            var profile = account.Profiles.FirstOrDefault(profile => profile.Id == profileModel.Id);
 
             if (profile == null)
                 throw new Exception("Can't find profile");
@@ -111,10 +111,10 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
-        public async Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileClientId)
+        public async Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileId)
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
-            var profile = account.Profiles.First(p => p.ClientId == profileClientId);
+            var profile = account.Profiles.First(p => p.Id == profileId);
             _accountRepository.RemoveProfile(profile);
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);

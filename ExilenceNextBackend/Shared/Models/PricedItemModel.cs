@@ -4,9 +4,8 @@ namespace Shared.Models
 {
     public class PricedItemModel
     {
-        public int? Id { get; set; }
         [JsonPropertyName("uuid")]
-        public string ClientId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string TypeLine { get; set; }
         public int FrameType { get; set; }

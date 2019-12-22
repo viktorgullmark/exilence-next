@@ -7,9 +7,8 @@ namespace Shared.Models
 {
     public class SnapshotProfileModel
     {
-        public int? Id { get; set; }
         [JsonPropertyName("uuid")]
-        public string ClientId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string ActiveLeagueId { get; set; }
         public string ActivePriceLeagueId { get; set; }

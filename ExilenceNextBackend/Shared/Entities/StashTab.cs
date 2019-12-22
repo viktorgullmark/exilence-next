@@ -8,10 +8,8 @@ namespace Shared.Entities
 {
     public class Stashtab
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
-        public string ClientId { get; set; }
+        [Key, Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
+        public string Id { get; set; }
         public string Name { get; set; }
         public int Index { get; set; }
         public string Color { get; set; }

@@ -8,10 +8,9 @@ namespace Shared.Entities
 {
     public class Group
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [Required, StringLength(50)]
-        public string ClientId { get; set; }
+
+        [Key, Required, StringLength(50)]
+        public string Id { get; set; }
         [Required]
         public string Name { get; set; }
         public virtual ICollection<Connection> Connections { get; set; }
@@ -22,7 +21,7 @@ namespace Shared.Entities
         public Group(string code, ICollection<Connection> connections)
         {
             Name = code;
-            ClientId = new Guid().ToString();
+            Id = new Guid().ToString();
             Connections = connections;
             Created = DateTime.UtcNow;
         }

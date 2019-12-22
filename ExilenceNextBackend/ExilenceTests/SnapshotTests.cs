@@ -26,7 +26,7 @@ namespace ExilenceTests
         {
             var account = new AccountModel()
             {
-                ClientId = TestHelper.GenerateUUID(),
+                Id = TestHelper.GenerateUUID(),
                 Name = TestHelper.GetRandomString(),
                 Role = Role.Admin,
                 Characters = new List<CharacterModel>(),
@@ -37,7 +37,7 @@ namespace ExilenceTests
 
             var profile = new SnapshotProfileModel()
             {
-                ClientId = TestHelper.GenerateUUID(),
+                Id = TestHelper.GenerateUUID(),
                 ActiveLeagueId = TestHelper.GenerateUUID(),
                 ActiveStashTabIds = new List<string>() { },
                 ActivePriceLeagueId = TestHelper.GenerateUUID(),
@@ -49,17 +49,17 @@ namespace ExilenceTests
 
             var snapshot = new SnapshotModel()
             {
-                ClientId = TestHelper.GenerateUUID(),
+                Id = TestHelper.GenerateUUID(),
                 StashTabs = new List<StashtabModel>()
             };
 
-            snapshot = await _fixture.SnapshotService.AddSnapshot(profile.ClientId, snapshot);
+            snapshot = await _fixture.SnapshotService.AddSnapshot(profile.Id, snapshot);
 
             var stashtabs = new List<StashtabModel>()
             {
                 new StashtabModel()
                 {
-                    ClientId = TestHelper.GenerateUUID(),
+                    Id = TestHelper.GenerateUUID(),
                     Color = TestHelper.GetRandomString(),
                     Index = 0,
                     Name = TestHelper.GetRandomString(),
@@ -67,7 +67,7 @@ namespace ExilenceTests
                 },
                 new StashtabModel()
                 {
-                    ClientId = TestHelper.GenerateUUID(),
+                    Id = TestHelper.GenerateUUID(),
                     Color = TestHelper.GetRandomString(),
                     Index = 1,
                     Name = TestHelper.GetRandomString(),
@@ -77,7 +77,7 @@ namespace ExilenceTests
 
             foreach (var stashtab in stashtabs)
             {
-                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.ClientId, stashtab);
+                var returnedStashtab = await _fixture.SnapshotService.AddStashtab(snapshot.Id, stashtab);
                 Assert.NotNull(returnedStashtab.Id);
             }
             

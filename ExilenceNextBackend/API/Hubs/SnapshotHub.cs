@@ -21,42 +21,42 @@ namespace API.Hubs
          * 
          */
 
-        public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
+        public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
-            var snapshotModel = await _snapshotService.GetSnapshot(snapshotClientId);
+            var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> AddSnapshot([FromBody]SnapshotModel snapshotModel, string profileClientId)
+        public async Task<SnapshotModel> AddSnapshot([FromBody]SnapshotModel snapshotModel, string profileId)
         {
-            snapshotModel = await _snapshotService.AddSnapshot(profileClientId, snapshotModel);
+            snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
             await Log($"Added snapshot with id: {snapshotModel.Id} for account {AccountName}.");
             return snapshotModel;
         }
 
-        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotClientId)
+        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
         {
-            var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotClientId);
+            var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotId);
             await Log($"Removed snapshot with id {snapshotModel.Id} for account {AccountName}.");
-            return snapshotClientId;
+            return snapshotId;
         }
 
-        public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabClientId)
+        public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
         {
-            await _snapshotService.AddPricedItems(stashtabClientId, pricedItems);
+            await _snapshotService.AddPricedItems(stashtabId, pricedItems);
         }
 
-        public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabClientId)
+        public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
         {
             await foreach (var pricedItem in pricedItems)
             {
-                await _snapshotService.AddPricedItem(stashtabClientId, pricedItem);
+                await _snapshotService.AddPricedItem(stashtabId, pricedItem);
             }
         }
 
-        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotClientId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var snapshots = _snapshotService.GetStashtabs(snapshotClientId);
+            var snapshots = _snapshotService.GetStashtabs(snapshotId);
 
             foreach (var snapshot in snapshots)
             {
