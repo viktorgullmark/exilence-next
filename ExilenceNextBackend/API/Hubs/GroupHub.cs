@@ -25,6 +25,7 @@ namespace API.Hubs
             return groupModel;
         }
 
+        [Authorize]
         public async Task<string> LeaveGroup(string groupName)
         {
             await _groupService.LeaveGroup(ConnectionId, groupName);
@@ -32,5 +33,16 @@ namespace API.Hubs
             await Log($"Left group: {groupName}");
             return groupName;
         }
+
+        public async Task<GroupModel> AddLogger(string password)
+        {
+            var groupName = "Logger";
+            var groupModel = await _groupService.JoinGroup(ConnectionId, "logger");
+            await Groups.AddToGroupAsync(ConnectionId, groupName);
+            await Log($"Joined logger group.");
+            return groupModel;
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BackgroundProcessor.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Models;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -26,7 +27,7 @@ namespace BackgroundProcessor
                  options =>
                  {
                      options.AccessTokenProvider = () => Task.FromResult(response.Token);
-                 }).AddMessagePackProtocol().Build();
+                 }).Build();
 
             _connection.Closed += async (error) =>
             {
@@ -36,9 +37,8 @@ namespace BackgroundProcessor
 
             _connection.On<string>("Log", (message) =>
             {
-                Console.WriteLine($"{DateTime.Now.ToShortTimeString()} Server: {message}");
+                Console.WriteLine($"{message}");
             });
-
 
             Console.CancelKeyPress += async delegate (object sender, ConsoleCancelEventArgs e)
             {
@@ -46,40 +46,25 @@ namespace BackgroundProcessor
                 _keepRunning = false;
                 await _connection.DisposeAsync();
             };
-
-            var commandHandler = new CommandHandler();
-            StartupMessage();
-            while (_keepRunning)
-            {
-                try
-                {
-                    var commandLine = Console.ReadLine();
-                    await commandHandler.RouteCommand(commandLine);
-
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-            }
         }
 
         private static async Task<TokenModel> GetAccessToken()
         {
             using (var httpClient = new HttpClient())
             {
-                var data = "{\"name\": \"Umaycry\", \"sessionId\": \"Umaycry\"}";
+                var accountModel = new AccountModel()
+                {
+                    ClientId = Guid.NewGuid().ToString(),
+                    Name = "Loggger"
+
+                };
+                var data = JsonSerializer.Serialize(accountModel);
                 var result = await httpClient.PostAsync("https://localhost:5001/api/authentication", new StringContent(data, Encoding.UTF8, "application/json"));
                 string token = await result.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<TokenModel>(token);
             }
         }
 
-        public static void StartupMessage()
-        {
-            Console.WriteLine("Welcome to Exilence ");
-            Console.WriteLine("Available commands are: connect, and then join XXX or leave XXX");
-        }   
 
     }
 }

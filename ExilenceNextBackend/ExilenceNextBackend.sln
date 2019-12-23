@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{CECAA008-D3A2-46F7-8069-BAE7DD93216D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundProcessor", "BackgroundProcessor\BackgroundProcessor.csproj", "{B95DEA96-A058-4718-83EA-A60CE19C7AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "BackgroundProcessor\Logger.csproj", "{B95DEA96-A058-4718-83EA-A60CE19C7AA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExilenceTests", "ExilenceTests\ExilenceTests.csproj", "{520233CD-593A-42F8-9B63-670BF2502925}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExilenceTests", "ExilenceTests\ExilenceTests.csproj", "{520233CD-593A-42F8-9B63-670BF2502925}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

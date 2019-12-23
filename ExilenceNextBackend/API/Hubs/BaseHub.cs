@@ -60,6 +60,11 @@ namespace API.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await Log($"ConnectionId: {ConnectionId} disconnected");
+            var groupModel = await _groupService.GetGroupForConnection(ConnectionId);
+            if (groupModel != null)
+            {
+                await _groupService.LeaveGroup(ConnectionId, groupModel.Name);
+            }
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
