@@ -24,6 +24,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
             var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
+            await Log($"Retrived snapshot with id: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
             return snapshotModel;
         }
 
