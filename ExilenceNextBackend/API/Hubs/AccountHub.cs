@@ -18,27 +18,26 @@ namespace API.Hubs
             var profileModel = await _accountService.GetProfile(profileId);
             return profileModel;
         }
-        public async Task<SnapshotProfileModel> ProfileExists([FromBody]SnapshotProfileModel profileModel)
-        {
-            profileModel = await _accountService.ProfileExists(AccountName, profileModel);
-            return profileModel;
-        }
+
         public async Task<SnapshotProfileModel> AddProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
+            await Log($"Added profile with name: {profileModel.Name} and id: {profileModel.Id}");
             return profileModel;
         }
 
         public async Task<SnapshotProfileModel> EditProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.EditProfile(AccountName, profileModel);
+            await Log($"Updated profile with name: {profileModel.Name} and id: {profileModel.Id}");
             return profileModel;
         }
 
-        public async Task<string> RemoveProfile(string profileId)
+        public async Task<SnapshotProfileModel> RemoveProfile(string profileId)
         {
-            await _accountService.RemoveProfile(AccountName, profileId);
-            return profileId;
+            var profileModel = await _accountService.RemoveProfile(AccountName, profileId);
+            await Log($"Removed profile with name: {profileModel.Name} and id: {profileModel.Id}");
+            return profileModel;
         }
 
     }

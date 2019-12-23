@@ -45,7 +45,7 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
+            await Log($"ConnectionId: {ConnectionId} connected");
 
             var connection = new ConnectionModel() {
                 ConnectionId = ConnectionId,
@@ -59,7 +59,7 @@ namespace API.Hubs
         [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
+            await Log($"ConnectionId: {ConnectionId} disconnected");
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
@@ -73,7 +73,8 @@ namespace API.Hubs
         [Authorize]
         private async Task Log (string message)
         {
-            await Clients.All.SendAsync("Log", message);
+            var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
+            await Clients.Group("Logging").SendAsync("Log", $"[{time}] [Account: {AccountName}] - {message}");
         }
 
 
