@@ -1,4 +1,4 @@
-﻿using BackgroundProcessor.Models;
+﻿
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Models;
@@ -21,12 +21,12 @@ namespace BackgroundProcessor
 
             await Task.Delay(4000);
 
-            var response = await GetAccessToken();
+            var token = await GetAccessToken();
 
             _connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/hub",
                  options =>
                  {
-                     options.AccessTokenProvider = () => Task.FromResult(response.Token);
+                     options.AccessTokenProvider = () => Task.FromResult(token);
                  }).Build();
 
             _connection.Closed += async (error) =>
@@ -46,9 +46,15 @@ namespace BackgroundProcessor
                 _keepRunning = false;
                 await _connection.DisposeAsync();
             };
+
+
+            await _connection.StartAsync();
+            await _connection.InvokeAsync("AddLogger", "password");
+
+            Console.ReadLine();
         }
 
-        private static async Task<TokenModel> GetAccessToken()
+        private static async Task<string> GetAccessToken()
         {
             using (var httpClient = new HttpClient())
             {
@@ -61,7 +67,7 @@ namespace BackgroundProcessor
                 var data = JsonSerializer.Serialize(accountModel);
                 var result = await httpClient.PostAsync("https://localhost:5001/api/authentication", new StringContent(data, Encoding.UTF8, "application/json"));
                 string token = await result.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<TokenModel>(token);
+                return token;
             }
         }
 

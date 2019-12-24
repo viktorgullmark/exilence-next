@@ -116,8 +116,8 @@ namespace API
             });
 
             var instanceName = configuration.GetSection("Settings")["InstanceName"];
-            exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT GroupId FROM Connections WHERE InstanceName = '{instanceName}')");
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
+            exilenceContext.Database.ExecuteSqlRaw($"delete from Groups where Id in (select g.Id from Groups g where (select count(*) from Connections where GroupId = g.Id) = 0)");
         }
     }
 }

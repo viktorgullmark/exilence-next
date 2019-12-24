@@ -79,7 +79,7 @@ namespace API.Hubs
         private async Task Log (string message)
         {
             var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
-            await Clients.Group("Logging").SendAsync("Log", $"[{time}] [Account: {AccountName}] - {message}");
+            await Clients.Group("logger").SendAsync("Log", $"[{time}] [Account: {AccountName}] - {message}");
         }
 
 

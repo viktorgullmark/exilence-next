@@ -36,11 +36,15 @@ namespace API.Hubs
 
         public async Task<GroupModel> AddLogger(string password)
         {
-            var groupName = "Logger";
-            var groupModel = await _groupService.JoinGroup(ConnectionId, "logger");
-            await Groups.AddToGroupAsync(ConnectionId, groupName);
-            await Log($"Joined logger group.");
-            return groupModel;
+            if (password == "password")
+            {
+                var groupName = "logger";
+                var groupModel = await _groupService.JoinGroup(ConnectionId, groupName);
+                await Groups.AddToGroupAsync(ConnectionId, groupName);
+                await Log($"Joined logger group.");
+                return groupModel;
+            }
+            return null;
         }
 
 
