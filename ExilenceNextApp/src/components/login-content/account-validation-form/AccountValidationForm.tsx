@@ -10,7 +10,7 @@ import {
   Link,
   Grid
 } from '@material-ui/core';
-import { Formik, FormikActions } from 'formik';
+import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -71,10 +71,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           accountName: props.account.name,
           sessionId: props.account.sessionId
         }}
-        onSubmit={(
-          values: AccountFormValues,
-          { setSubmitting }: FormikActions<AccountFormValues>
-        ) => {
+        onSubmit={(values: AccountFormValues) => {
           props.handleValidate({
             name: values.accountName,
             sessionId: values.sessionId
@@ -85,7 +82,8 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           sessionId: Yup.string().required('Required')
         })}
       >
-        {formProps => {
+        {/* todo: refactor and use new formik */}
+        {(formProps: any) => {
           const {
             values,
             touched,
