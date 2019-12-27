@@ -16,8 +16,7 @@ import {
   resizeHandleContainerHeight,
   toolbarHeight
 } from '../../header/Header';
-
-export const drawerWidth = 240;
+import { drawerWidth } from '../DrawerWrapper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {

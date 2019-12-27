@@ -13,8 +13,8 @@ import { WindowUtils } from '../../../utils/window.utils';
 import DiscordLogo from '../../../assets/img/discord-wordmark-white.svg';
 import PatreonLogo from '../../../assets/img/patreon-white.png';
 import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
+import { drawerWidth } from '../DrawerWrapper';
 
-export const drawerWidth = 240;
 const discordLogoHeight = 25;
 const patreonLogoHeight = 50;
 const useStyles = makeStyles((theme: Theme) => ({
