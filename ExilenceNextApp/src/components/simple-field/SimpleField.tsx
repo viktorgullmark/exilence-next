@@ -1,6 +1,7 @@
-import { TextField } from '@material-ui/core';
+import { TextField, makeStyles, Theme } from '@material-ui/core';
 import { useField } from 'formik';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   name: string;
@@ -11,6 +12,12 @@ interface Props {
   placeholder?: string;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(2)
+  }
+}));
+
 const SimpleField: React.FC<Props> = ({
   name,
   label,
@@ -19,11 +26,14 @@ const SimpleField: React.FC<Props> = ({
   required,
   autoFocus
 }) => {
+  const { t } = useTranslation();
+  const classes = useStyles();
   const [field, meta] = useField(name);
 
   return (
     <TextField
       id={name}
+      margin="normal"
       type={type}
       label={label}
       variant="outlined"
@@ -32,6 +42,7 @@ const SimpleField: React.FC<Props> = ({
       error={meta.touched && !!meta.error}
       helperText={meta.touched && meta.error}
       required={required}
+      className={classes.root}
       fullWidth
       {...field}
     />

@@ -9,6 +9,7 @@ import { useField } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useLabelWidth from '../../hooks/use-label-width';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   name: string;
@@ -37,6 +38,7 @@ const PasswordField: React.FC<Props> = ({
   autoFocus,
   helperText
 }) => {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [field, meta] = useField(name);
   const [visible, setVisible] = useState(false);
@@ -54,7 +56,7 @@ const PasswordField: React.FC<Props> = ({
       fullWidth
     >
       <InputLabel ref={ref} htmlFor={name}>
-        {label}
+        {label} {!required && (`(${t('label.optional').toLowerCase()})`)}
       </InputLabel>
       <OutlinedInput
         id={name}

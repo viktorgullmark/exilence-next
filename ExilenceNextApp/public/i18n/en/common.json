@@ -31,6 +31,8 @@
     "create_group_dialog_title": "Create new group"
   },
   "label": {
+    "required": "Required",
+    "optional": "Optional",
     "account_name": "Account name",
     "session_id": "Session Id",
     "profile_name": "Profile name",
@@ -40,6 +42,11 @@
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
     "profile_placeholder": "Select a profile",
+    "group_name": "Group name",
+    "group_name_placeholder": "Enter a group name",
+    "password": "Password",
+    "password_placeholder": "Enter password here",
+    "password_helper_text": "Must be at least 6 characters in length",
     "item_table": "Items",
     "graphs": "Graphs",
     "total_value": "Net worth",
