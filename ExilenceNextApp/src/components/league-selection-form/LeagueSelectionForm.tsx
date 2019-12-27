@@ -1,5 +1,5 @@
 import { Button } from '@material-ui/core';
-import { Formik, FormikActions } from 'formik';
+import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,10 +10,9 @@ import error from '../../utils/validation.utils';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 
-
 interface LeagueSelectionFormProps {
   handleLeagueSubmit: () => void;
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   styles: Record<string, string>;
   selectedLeague?: string;
   selectedPriceLeague?: string;
@@ -38,10 +37,7 @@ const LeagueSelectionForm: React.FC<LeagueSelectionFormProps> = (
         league: props.selectedLeague,
         priceLeague: props.selectedPriceLeague
       }}
-      onSubmit={(
-        values: LeagueFormValues,
-        { setSubmitting }: FormikActions<LeagueFormValues>
-      ) => {
+      onSubmit={() => {
         props.handleLeagueSubmit();
       }}
       validationSchema={Yup.object().shape({
@@ -49,7 +45,8 @@ const LeagueSelectionForm: React.FC<LeagueSelectionFormProps> = (
         priceLeague: Yup.string().required('Required')
       })}
     >
-      {formProps => {
+      {/* todo: refactor and use new formik */}
+      {(formProps: any) => {
         const {
           values,
           touched,

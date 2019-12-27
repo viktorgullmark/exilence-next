@@ -35,7 +35,8 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
         searchText: Yup.string().max(20)
       })}
     >
-      {formProps => {
+      {/* todo: refactor and use new formik */}
+      {(formProps: any) => {
         const { values, handleChange } = formProps;
 
         return (

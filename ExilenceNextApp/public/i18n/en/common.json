@@ -58,6 +58,7 @@
     "session_id_icon_title": "Help finding session ID",
     "account_icon_title": "My account",
     "group_icon_title": "Groups",
+    "toggle_visibility_icon_title": "Show/hide",
     "net_worth_export": "Export data",
     "these_terms_inline": "these terms",
     "update_available": "Version {{version}} available",
