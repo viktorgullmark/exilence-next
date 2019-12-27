@@ -7,7 +7,8 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
-  Typography
+  Typography,
+  Box
 } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -31,10 +32,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   timestamp: {
     display: 'inline',
-    fontSize: '12px'
+    fontSize: '12px',
+    color: theme.palette.primary.light
+  },
+  description: {
+    fontSize: '0.75rem'
   },
   notificationItem: {
     fontSize: '14px'
+  },
+  secondary: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: 400,
+    textOverflow: 'ellipsis'
   }
 }));
 
@@ -67,7 +78,7 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         classes={{ primary: classes.notificationItem }}
         primary={t(notification.title, { param: notification.translateParam })}
         secondary={
-          <>
+          <Box className={classes.secondary}>
             <Typography
               component="span"
               variant="body2"
@@ -77,8 +88,12 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
                 .startOf('hour')
                 .fromNow()}
             </Typography>
-            {/* temporary disabled {` — ${t(notification.description, { param: notification.translateParam })}`} */}
-          </>
+            <Typography component="span" variant="body2" className={classes.description}>
+              {` — ${t(notification.description, {
+                param: notification.translateParam
+              })}`}
+            </Typography>
+          </Box>
         }
       />
     </ListItem>
