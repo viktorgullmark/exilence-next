@@ -7,6 +7,8 @@ import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import uuid from 'uuid';
 
+export type GroupDialogType = 'create' | 'join' | undefined;
+
 export class UiStateStore {
   @observable @persist userId: string = uuid.v4();
   @observable sessIdCookie: ICookie | undefined = undefined;
@@ -16,13 +18,12 @@ export class UiStateStore {
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
   @observable accountMenuAnchor: null | HTMLElement = null;
-  @observable groupMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
   @observable initated: boolean = false;
   @observable itemTableFilterText: string = '';
   @observable isInitiating: boolean = false;
-  @observable createGroupDialogOpen: boolean = false;
-  @observable joinGroupDialogOpen: boolean = false;
+  @observable groupDialogOpen: boolean = false;
+  @observable groupDialogType: 'create' | 'join' | undefined = undefined;
   @observable groupOverviewOpen: boolean = false;
 
   @action
@@ -41,18 +42,9 @@ export class UiStateStore {
   }
 
   @action
-  setGroupMenuAnchor(el: HTMLElement | null) {
-    this.groupMenuAnchor = el;
-  }
-
-  @action
-  setCreateGroupDialogOpen(open: boolean) {
-    this.createGroupDialogOpen = open;
-  }
-
-  @action
-  setJoinGroupDialogOpen(open: boolean) {
-    this.createGroupDialogOpen = open;
+  setGroupDialogOpen(open: boolean, type?: GroupDialogType) {
+    this.groupDialogType = type;
+    this.groupDialogOpen = open;
   }
 
   @action

@@ -15,6 +15,8 @@ const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
     <GroupOverview
       open={uiStateStore!.groupOverviewOpen}
       toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
+      handleCreateGroup={() => uiStateStore!.setGroupDialogOpen(true, 'create')}
+      handleJoinGroup={() => uiStateStore!.setGroupDialogOpen(true, 'join')}
     >
       {children}
     </GroupOverview>

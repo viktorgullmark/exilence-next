@@ -34,8 +34,7 @@ import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
-import GroupMenuContainer from '../group-menu/GroupMenuContainer';
-import CreateGroupDialogContainer from '../create-group-dialog/CreateGroupDialogContainer';
+import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -124,6 +123,7 @@ interface Props {
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
   toggleSidenav: () => void;
+  toggleGroupOverview: () => void;
   markAllNotificationsRead: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
@@ -133,7 +133,6 @@ interface Props {
   handleSnapshot: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
-  handleGroupMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
 }
@@ -300,7 +299,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <AccountCircle fontSize="small" />
                   </IconButton>
                   <IconButton
-                    onClick={e => props.handleGroupMenuOpen(e)}
+                    onClick={() => props.toggleGroupOverview()}
                     aria-label="group"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
@@ -313,7 +312,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </MuiToolbar>
           </AppBar>
           <AccountMenuContainer />
-          <GroupMenuContainer />
           <NotificationListContainer />
           <ProfileDialogContainer
             profile={props.activeProfile}

@@ -1,11 +1,21 @@
-import { Divider, Drawer, IconButton } from '@material-ui/core';
+import {
+  Divider,
+  Drawer,
+  IconButton,
+  Grid,
+  Button,
+  Box
+} from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
+import {
+  resizeHandleContainerHeight,
+  toolbarHeight
+} from '../../header/Header';
 
 export const drawerWidth = 240;
 
@@ -24,18 +34,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-start'
   }
 }));
 
 interface GroupOverviewProps {
   open: boolean;
   toggleGroupOverview: () => void;
+  handleJoinGroup: (event: React.MouseEvent<HTMLElement>) => void;
+  handleCreateGroup: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const GroupOverview: React.FC<GroupOverviewProps> = ({
   open,
-  toggleGroupOverview
+  toggleGroupOverview,
+  handleJoinGroup,
+  handleCreateGroup
 }: GroupOverviewProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -54,7 +68,7 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
     >
       <div className={classes.drawerHeader}>
         <IconButton onClick={() => toggleGroupOverview()}>
-          {theme.direction === 'ltr' ? (
+          {theme.direction !== 'ltr' ? (
             <ChevronLeftIcon />
           ) : (
             <ChevronRightIcon />
@@ -62,7 +76,20 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
         </IconButton>
       </div>
       <Divider />
-      content-here
+      <Box p={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" fullWidth onClick={handleCreateGroup}>
+              {t('action.create_group')}
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" fullWidth onClick={handleJoinGroup}>
+              {t('action.join_group')}
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
     </Drawer>
   );
 };

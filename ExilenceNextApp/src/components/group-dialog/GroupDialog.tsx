@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
-import { ICreateGroupForm } from './CreateGroupDialogContainer';
+import { IGroupForm } from './GroupDialogContainer';
 import * as Yup from 'yup';
 import SimpleField from '../simple-field/SimpleField';
 import PasswordField from '../password-field/PasswordField';
@@ -29,21 +29,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   show: boolean;
-  initialValues: ICreateGroupForm;
+  initialValues: IGroupForm;
   onClose: () => void;
-  onCreate: () => void;
+  onSubmit: (group: IGroupForm) => void;
 }
 
-const CreateGroupDialog: React.FC<Props> = ({
+const GroupDialog: React.FC<Props> = ({
   show,
   initialValues,
   onClose,
-  onCreate
+  onSubmit
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const validationSchema = Yup.object<ICreateGroupForm>().shape({
+  const validationSchema = Yup.object<IGroupForm>().shape({
     name: Yup.string().required(t('label.required')),
     password: Yup.string().min(6)
   });
@@ -52,11 +52,11 @@ const CreateGroupDialog: React.FC<Props> = ({
     <Dialog open={show} onClose={onClose}>
       <Formik
         initialValues={initialValues}
-        onSubmit={onCreate}
+        onSubmit={(values) => onSubmit(values)}
         validationSchema={validationSchema}
       >
-        {({ isValid, dirty }) => (
-          <form>
+        {({ isValid, dirty, handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
             <DialogTitle>{t('title.create_group_dialog_title')}</DialogTitle>
             <DialogContent>
               <SimpleField // todo: add translations
@@ -92,4 +92,4 @@ const CreateGroupDialog: React.FC<Props> = ({
   );
 };
 
-export default CreateGroupDialog;
+export default GroupDialog;

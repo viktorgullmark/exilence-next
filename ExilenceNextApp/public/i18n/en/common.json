@@ -11,7 +11,8 @@
     "create_profile": "Create profile",
     "new_profile": "New profile",
     "close": "Close",
-    "create_group": "Create"
+    "create_group": "Create group",
+    "join_group": "Join group"
   },
   "title": {
     "login": "Login",

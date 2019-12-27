@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateGroupDialog from './CreateGroupDialog';
+import GroupDialog from './GroupDialog';
 import { inject, observer } from 'mobx-react';
 import { UiStateStore } from '../../store/uiStateStore';
 
@@ -7,7 +7,7 @@ interface Props {
   uiStateStore?: UiStateStore;
 }
 
-export interface ICreateGroupForm {
+export interface IGroupForm {
   name: string;
   password: string;
 }
@@ -15,20 +15,22 @@ export interface ICreateGroupForm {
 const CreateGroupDialogContainer: React.FC<Props> = ({
   uiStateStore
 }: Props) => {
-  const initialValues: ICreateGroupForm = {
+  const initialValues: IGroupForm = {
     name: '',
     password: ''
   };
 
-  const onCreate = () => {
-    console.log('should create grp');
+  const onSubmit = (group: IGroupForm) => {
+    console.log('group', group);
+    console.log('create', uiStateStore!.groupDialogType)
   };
+
   return (
-    <CreateGroupDialog
-      show={uiStateStore!.createGroupDialogOpen}
+    <GroupDialog
+      show={uiStateStore!.groupDialogOpen}
       initialValues={initialValues}
-      onClose={() => uiStateStore!.setCreateGroupDialogOpen(false)}
-      onCreate={onCreate}
+      onClose={() => uiStateStore!.setGroupDialogOpen(false)}
+      onSubmit={(group: IGroupForm) => onSubmit(group)}
     />
   );
 };
