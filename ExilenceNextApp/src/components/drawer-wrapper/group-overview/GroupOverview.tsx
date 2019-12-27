@@ -17,6 +17,7 @@ import {
   toolbarHeight
 } from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
+import PlayerListContainer from '../../player-list/PlayerListContainer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -26,10 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerPaper: {
     height: `calc(100% - ${toolbarHeight}px)`,
     top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
-    width: drawerWidth
+    width: drawerWidth,
+    background: theme.palette.background.default
   },
   drawerHeader: {
-    background: theme.palette.secondary.main,
+    background: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -78,16 +80,29 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
       <Box p={2}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary" fullWidth onClick={handleCreateGroup}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleCreateGroup}
+            >
               {t('action.create_group')}
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary" fullWidth onClick={handleJoinGroup}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleJoinGroup}
+            >
               {t('action.join_group')}
             </Button>
           </Grid>
         </Grid>
+      </Box>
+      <Box p={2}>
+        <PlayerListContainer />
       </Box>
     </Drawer>
   );
