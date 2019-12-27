@@ -15,7 +15,7 @@ import GlobalStyles from './components/global-styles/GlobalStyles';
 import HeaderContainer from './components/header/HeaderContainer';
 import Notifier from './components/notifier/Notifier';
 import ReactionContainer from './components/reaction-container/ReactionContainer';
-import SideNavContainer from './components/sidenav/SideNavContainer';
+import SideNavContainer from './components/drawer-wrapper/navigation-menu/NavigationMenuContainer';
 import ToastWrapper from './components/toast-wrapper/ToastWrapper';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import configureI18n from './config/i18n';
@@ -35,6 +35,8 @@ import { UpdateStore } from './store/updateStore';
 import { SettingStore } from './store/settingStore';
 import { RequestQueueStore } from './store/requestQueueStore';
 import { SignalrHub } from './store/domains/signalr-hub';
+import DrawerWrapper from './components/drawer-wrapper/DrawerWrapper';
+import DrawerWrapperContainer from './components/drawer-wrapper/DrawerWrapperContainer';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -65,7 +67,11 @@ const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
 const requestQueueStore = new RequestQueueStore(signalrHub, notificationStore);
-const signalrStore = new SignalrStore(notificationStore, requestQueueStore, signalrHub);
+const signalrStore = new SignalrStore(
+  notificationStore,
+  requestQueueStore,
+  signalrHub
+);
 const priceStore = new PriceStore(leagueStore, notificationStore);
 const accountStore = new AccountStore(
   uiStateStore,
@@ -97,7 +103,7 @@ const app = (
             <CssBaseline />
             <GlobalStyles />
             <HeaderContainer />
-            <SideNavContainer>
+            <DrawerWrapperContainer>
               <ToolbarContainer />
               <Route path="/net-worth" component={NetWorth} />
               <Route path="/login" component={Login} />
@@ -114,7 +120,7 @@ const app = (
                 }
               />
               <ToastWrapper />
-            </SideNavContainer>
+            </DrawerWrapperContainer>
             <Notifier />
             <ReactionContainer />
           </Router>

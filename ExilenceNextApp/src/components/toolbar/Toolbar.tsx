@@ -30,7 +30,7 @@ import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
-import { drawerWidth } from '../sidenav/SideNav';
+import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
@@ -50,11 +50,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
+  },
+  fromLeft: {
+    marginLeft: drawerWidth
+  },
+  fromRight: {
+    marginRight: drawerWidth
   },
   toolbar: {
     maxHeight: innerToolbarHeight,
@@ -109,6 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   sidenavOpened: boolean;
+  groupOverviewOpened: boolean;
   activeProfile: Profile;
   profiles: Profile[];
   profileOpen: boolean;
@@ -148,7 +154,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           <AppBar
             position="fixed"
             className={clsx(classes.appBar, {
-              [classes.appBarShift]: props.sidenavOpened
+              [classes.appBarShift]: props.sidenavOpened || props.groupOverviewOpened,
+              [classes.fromLeft]: props.sidenavOpened,
+              [classes.fromRight]: props.groupOverviewOpened
             })}
           >
             <MuiToolbar className={classes.toolbar}>

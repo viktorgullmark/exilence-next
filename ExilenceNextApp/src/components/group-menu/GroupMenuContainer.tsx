@@ -23,6 +23,7 @@ const GroupMenuContainer: React.FC<Props> = ({
       handleMenuClose={handleMenuClose}
       handleJoinGroupOpen={() => uiStateStore!.setJoinGroupDialogOpen(true)}
       handleCreateGroupOpen={() => uiStateStore!.setCreateGroupDialogOpen(true)}
+      handleShowGroup={() => uiStateStore!.toggleGroupOverview()}
     />
   );
 };

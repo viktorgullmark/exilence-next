@@ -23,6 +23,7 @@ export class UiStateStore {
   @observable isInitiating: boolean = false;
   @observable createGroupDialogOpen: boolean = false;
   @observable joinGroupDialogOpen: boolean = false;
+  @observable groupOverviewOpen: boolean = false;
 
   @action
   setNotificationList(list: Notification[]) {
@@ -73,7 +74,14 @@ export class UiStateStore {
 
   @action
   toggleSidenav(open?: boolean) {
+    this.groupOverviewOpen = false;
     this.sidenavOpen = open || !this.sidenavOpen;
+  }
+
+  @action
+  toggleGroupOverview(open?: boolean) {
+    this.sidenavOpen = false;
+    this.groupOverviewOpen = open || !this.groupOverviewOpen;
   }
 
   @action

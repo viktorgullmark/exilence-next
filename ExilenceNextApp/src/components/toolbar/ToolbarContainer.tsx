@@ -100,6 +100,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       />
       <Toolbar
         sidenavOpened={uiStateStore!.sidenavOpen}
+        groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
         toggleSidenav={() => uiStateStore!.toggleSidenav()}
