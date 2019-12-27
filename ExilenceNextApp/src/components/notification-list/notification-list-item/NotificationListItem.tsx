@@ -87,9 +87,7 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
               variant="body2"
               className={classes.timestamp}
             >
-              {moment(notification.timestamp)
-                .startOf('hour')
-                .fromNow()}
+              {moment(notification.timestamp).fromNow()}
             </Typography>
             <Typography
               component="span"
