@@ -75,10 +75,13 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         <Avatar>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
-        classes={{ primary: classes.notificationItem }}
+        classes={{
+          primary: classes.notificationItem,
+          secondary: classes.secondary
+        }}
         primary={t(notification.title, { param: notification.translateParam })}
         secondary={
-          <Box className={classes.secondary}>
+          <>
             <Typography
               component="span"
               variant="body2"
@@ -88,12 +91,16 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
                 .startOf('hour')
                 .fromNow()}
             </Typography>
-            <Typography component="span" variant="body2" className={classes.description}>
+            <Typography
+              component="span"
+              variant="body2"
+              className={classes.description}
+            >
               {` — ${t(notification.description, {
                 param: notification.translateParam
               })}`}
             </Typography>
-          </Box>
+          </>
         }
       />
     </ListItem>
