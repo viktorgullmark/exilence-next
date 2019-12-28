@@ -2,6 +2,7 @@ import React from 'react';
 import GroupDialog from './GroupDialog';
 import { inject, observer } from 'mobx-react';
 import { UiStateStore } from '../../store/uiStateStore';
+import { generateGroupName } from '../../utils/group.utils';
 
 interface Props {
   uiStateStore?: UiStateStore;
@@ -16,7 +17,7 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
   uiStateStore
 }: Props) => {
   const initialValues: IGroupForm = {
-    name: '',
+    name: generateGroupName(),
     password: ''
   };
 
