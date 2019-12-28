@@ -8,7 +8,7 @@ import { innerToolbarHeight } from '../toolbar/Toolbar';
 import GroupOverviewContainer from './group-overview/GroupOverviewContainer';
 import NavigationMenuContainer from './navigation-menu/NavigationMenuContainer';
 
-export const drawerWidth = 280;
+export const drawerWidth = 300;
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
