@@ -5,15 +5,18 @@ import {
   DialogContent,
   DialogTitle,
   makeStyles,
-  Theme
+  Theme,
+  IconButton
 } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import { IGroupForm } from './GroupDialogContainer';
 import * as Yup from 'yup';
 import SimpleField from '../simple-field/SimpleField';
+import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import PasswordField from '../password-field/PasswordField';
+import { generateGroupName } from '../../utils/group.utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogActions: {
@@ -24,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formField: {
     marginBottom: theme.spacing(2)
+  },
+  helperIcon: {
   }
 }));
 
@@ -36,9 +41,9 @@ interface Props {
 
 const GroupDialog: React.FC<Props> = ({
   show,
-  initialValues,
   onClose,
-  onSubmit
+  onSubmit,
+  initialValues
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -52,10 +57,10 @@ const GroupDialog: React.FC<Props> = ({
     <Dialog open={show} onClose={onClose}>
       <Formik
         initialValues={initialValues}
-        onSubmit={(values) => onSubmit(values)}
+        onSubmit={values => onSubmit(values)}
         validationSchema={validationSchema}
       >
-        {({ isValid, dirty, handleSubmit }) => (
+        {({ isValid, dirty, handleSubmit, setFieldValue }) => (
           <form onSubmit={handleSubmit}>
             <DialogTitle>{t('title.create_group_dialog_title')}</DialogTitle>
             <DialogContent>
@@ -64,6 +69,18 @@ const GroupDialog: React.FC<Props> = ({
                 type="text"
                 label={t('label.group_name')}
                 placeholder={t('label.group_name_placeholder')}
+                endIcon={
+                  <IconButton
+                    aria-label="generate"
+                    title={t('label.generate_name_icon_title')}
+                    className={classes.helperIcon}
+                    edge="start"
+                    size="small"
+                    onClick={() => setFieldValue('name', generateGroupName())}
+                  >
+                    <CasinoIcon />
+                  </IconButton>
+                }
                 required
                 autoFocus
               />
@@ -78,7 +95,7 @@ const GroupDialog: React.FC<Props> = ({
               <Button onClick={onClose}>{t('action.close')}</Button>
               <Button
                 type="submit"
-                disabled={!isValid || !dirty}
+                disabled={!isValid}
                 color="primary"
                 variant="contained"
               >

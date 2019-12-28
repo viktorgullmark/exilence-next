@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GroupDialog from './GroupDialog';
 import { inject, observer } from 'mobx-react';
 import { UiStateStore } from '../../store/uiStateStore';
@@ -23,7 +23,7 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
 
   const onSubmit = (group: IGroupForm) => {
     console.log('group', group);
-    console.log('create', uiStateStore!.groupDialogType)
+    console.log('create', uiStateStore!.groupDialogType);
   };
 
   return (

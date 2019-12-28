@@ -10,6 +10,7 @@ interface Props {
   autoFocus?: boolean;
   type?: 'text' | 'number';
   placeholder?: string;
+  endIcon?: JSX.Element;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,7 +25,8 @@ const SimpleField: React.FC<Props> = ({
   placeholder,
   type,
   required,
-  autoFocus
+  autoFocus,
+  endIcon
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -43,6 +45,7 @@ const SimpleField: React.FC<Props> = ({
       helperText={meta.touched && meta.error}
       required={required}
       className={classes.root}
+      InputProps={{ endAdornment: endIcon }}
       fullWidth
       {...field}
     />
