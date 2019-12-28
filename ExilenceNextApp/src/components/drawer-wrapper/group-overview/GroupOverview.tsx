@@ -101,7 +101,7 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
           </Grid>
         </Grid>
       </Box>
-      <Box p={2}>
+      <Box>
         <PlayerListContainer />
       </Box>
     </Drawer>

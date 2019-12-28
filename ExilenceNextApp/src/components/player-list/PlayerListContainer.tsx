@@ -8,7 +8,7 @@ interface Props {
 }
 
 const PlayerListContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
-  return <PlayerList playerList={[{ uuid: '319873j3ni', name: 'Test' }]} />;
+  return <PlayerList playerList={[{ uuid: '319873j3ni', name: 'cojl' }, { uuid: '3413133s', name: 'umocrajen' }]} />;
 };
 
 export default inject(
