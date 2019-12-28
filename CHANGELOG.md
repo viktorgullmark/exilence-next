@@ -1,15 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.1.3] - XXXX-XX-XX
+## [0.2.0] - XXXX-XX-XX
 ##### Added
 - Added integration with our servers
     - Added synchronization of profiles
     - Added synchronization of snapshots with items
     - Added new notifications related to the server integration
     - Integrated with signalR, with automatic reconnect
+- Added description to notifications
+- Added link to Patreon page
 ##### Fixed
 - Fixed a bug where the client would loop the validation if it failed on the login page
+- Fixed a bug where the relative time on notifications was not displayed correctly
 
 ## [0.1.2] - 2019-12-18
 ##### Added
