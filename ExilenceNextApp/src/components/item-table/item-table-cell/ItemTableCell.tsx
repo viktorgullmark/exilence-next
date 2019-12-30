@@ -12,7 +12,7 @@ import { ItemUtils } from '../../../utils/item.utils';
 
 const useStyles = makeStyles(theme => ({
   tableCell: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'

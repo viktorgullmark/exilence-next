@@ -59,7 +59,7 @@ const NetWorthTabGroup: React.FC = () => {
       <AppBar position="static" className={classes.tabHeader}>
         <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.indicator }}>
           <Tab label={t('label.item_table')} className={classes.tab} {...a11yProps(0)} />
-          <Tab disabled label={t('label.graphs')} className={classes.tab} {...a11yProps(1)} />
+          <Tab label={t('label.graphs')} className={classes.tab} {...a11yProps(1)} />
         </Tabs>
         <Box
           position="absolute"

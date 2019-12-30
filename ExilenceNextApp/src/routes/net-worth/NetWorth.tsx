@@ -1,4 +1,4 @@
-import { Grid, useTheme } from '@material-ui/core';
+import { Grid, useTheme, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import GavelIcon from '@material-ui/icons/Gavel';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
@@ -15,6 +15,7 @@ import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { visitor, appName } from '../..';
 import { useLocation } from 'react-router';
+import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -22,6 +23,8 @@ interface NetWorthProps {
 }
 
 export const netWorthGridSpacing = 3;
+export const cardHeight = 100;
+export const chartHeight = 200;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
@@ -36,7 +39,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
     }
 
     visitor!.pageview('/net-worth', appName).send();
-  })
+  });
 
   return (
     <FeatureWrapper>
@@ -82,6 +85,11 @@ const NetWorth: React.FC<NetWorthProps> = ({
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
+          </Widget>
+        </Grid>
+        <Grid item xs={12}>
+          <Widget height={chartHeight} backgroundColor={theme.palette.background.default}>
+            <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>
         <Grid item xs={12}>

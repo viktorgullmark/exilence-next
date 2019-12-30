@@ -11,12 +11,11 @@ import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { netWorthGridSpacing } from '../../routes/net-worth/NetWorth';
+import { netWorthGridSpacing, cardHeight, chartHeight } from '../../routes/net-worth/NetWorth';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
 import { tabPanelSpacing } from '../tab-panel/TabPanel';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
-import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import {
@@ -30,8 +29,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
-        netWorthGridSpacing * 3 + tabPanelSpacing * 2 + itemTableFilterSpacing
+      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${chartHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
+        netWorthGridSpacing * 4 + tabPanelSpacing * 2 + itemTableFilterSpacing
       )}px - ${netWorthTabGroupHeight}px)`
     },
     tableWrapper: {

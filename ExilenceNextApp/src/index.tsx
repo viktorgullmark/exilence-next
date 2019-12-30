@@ -1,3 +1,5 @@
+/// <reference path="./react-vis.d.ts"/> 
+
 import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';

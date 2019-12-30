@@ -38,10 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerPaper: {
     height: `calc(100% - ${toolbarHeight}px)`,
     top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
-    width: drawerWidth
+    width: drawerWidth,
+    background: theme.palette.background.default
   },
   drawerHeader: {
-    background: theme.palette.secondary.main,
+    background: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
