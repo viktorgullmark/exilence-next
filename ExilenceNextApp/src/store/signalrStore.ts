@@ -112,6 +112,7 @@ export class SignalrStore {
   @action
   joinGroupSuccess() {
     this.notificationStore.createNotification('api_join_group', 'success');
+    this.uiStateStore.setGroupDialogOpen(false);
   }
 
   @action

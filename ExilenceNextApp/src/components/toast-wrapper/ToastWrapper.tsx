@@ -6,9 +6,11 @@ import { toolbarHeight, resizeHandleContainerHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { useLocation } from 'react-router';
 import clsx from 'clsx';
+import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    right: drawerWidth + theme.spacing(2),
     top: toolbarHeight + resizeHandleContainerHeight + theme.spacing(2),
     width: 350
   },
