@@ -9,8 +9,10 @@ namespace API.Interfaces
     public interface IGroupService
     {
         Task<GroupModel> GetGroup(string groupName);
-        Task<GroupModel> JoinGroup(string connectionId, string groupName);
-        Task<GroupModel> LeaveGroup(string connectionId, string groupName);
+        Task<GroupModel> GetGroupForConnection(string connectionId);
+        Task<bool> GroupExists(string groupName);
+        Task<GroupModel> JoinGroup(string connectionId, GroupModel groupModel);
+        Task<GroupModel> LeaveGroup(string connectionId, GroupModel groupModel);
 
         Task<ConnectionModel> GetConnection(string connectionId);
         Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName);

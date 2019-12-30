@@ -14,6 +14,11 @@ namespace Shared.Entities
         public string ClientId { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Hash { get; set; }
+        [Required]
+        public string Salt { get; set; }
+
         public virtual ICollection<Connection> Connections { get; set; }
         public DateTime Created { get; set; }
 

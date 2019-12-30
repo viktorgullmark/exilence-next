@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
+using Shared.Helpers;
 using Shared.Interfaces;
 using Shared.Models;
 using System;
@@ -49,38 +50,68 @@ namespace API.Services
             return _mapper.Map<ConnectionModel>(connection);
         }
 
+        public async Task<bool> GroupExists(string groupName)
+        {
+            var group = await GetGroup(groupName);
+            if (group != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<GroupModel> GetGroup(string groupName)
         {
-            var group = await _groupRepository.GetGroup(groupName);
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> JoinGroup(string connectionId, string groupName)
+        public async Task<GroupModel> GetGroupForConnection(string connectionId)
+        {
+            var group = await _groupRepository.GetGroupForConnection(connectionId);
+            return _mapper.Map<GroupModel>(group);
+        }
+
+        public async Task<GroupModel> JoinGroup(string connectionId, GroupModel groupModel)
         {
             var connection = await _groupRepository.GetConnection(connectionId);
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name).Include(group => group.Connections).FirstOrDefaultAsync();
+
             if (group == null)
             {
+                var salt = Password.Salt();
+
                 group = new Group()
                 {
-                    Name = groupName,
+                    Name = groupModel.Name,
                     ClientId = Guid.NewGuid().ToString(),
-                    Connections = new List<Connection>() { connection }
+                    Connections = new List<Connection>() { connection },
+                    Created = DateTime.UtcNow,
+                    Salt = salt,
+                    Hash = Password.Hash(salt, groupModel.Password)
                 };
                 _groupRepository.AddGroup(group);
             }
             else
             {
-                group.Connections.Add(connection);
+                bool verified = Password.Verify(groupModel.Password, group.Salt, group.Hash);
+                if (verified)
+                {
+                    group.Connections.Add(connection);
+                }
+                else
+                {
+                    throw new Exception("Wrong password for group.");
+                }
             }
 
             await _groupRepository.SaveChangesAsync();
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
+        public async Task<GroupModel> LeaveGroup(string connectionId, GroupModel groupModel)
         {
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name).Include(group => group.Connections).FirstOrDefaultAsync();
             var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 
