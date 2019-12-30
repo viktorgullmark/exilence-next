@@ -4,7 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Formik, FormikActions } from 'formik';
+import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -29,9 +29,9 @@ interface ProfileDialogProps {
   stashTabIds: string[];
   characters: Character[];
   handleClickClose: () => void;
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown; }>) => void;
+  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
 }
 
 export interface ProfileFormValues {
@@ -80,10 +80,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
               priceLeague: props.priceLeagueUuid,
               stashTabIds: props.stashTabIds
             }}
-            onSubmit={(
-              values: ProfileFormValues,
-              { setSubmitting }: FormikActions<ProfileFormValues>
-            ) => {
+            onSubmit={(values: ProfileFormValues) => {
               props.handleSubmit(values);
             }}
             validationSchema={Yup.object().shape({
@@ -92,7 +89,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
               priceLeague: Yup.string().required('Required')
             })}
           >
-            {formProps => {
+            {/* todo: refactor and use new formik */}
+            {(formProps: any) => {
               const {
                 values,
                 touched,
@@ -158,7 +156,11 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                       variant="contained"
                       type="submit"
                       color="primary"
-                      disabled={noCharacters.length > 0 || props.stashTabIds.length === 0 || (dirty && !isValid)}
+                      disabled={
+                        noCharacters.length > 0 ||
+                        props.stashTabIds.length === 0 ||
+                        (dirty && !isValid)
+                      }
                     >
                       {props.isEditing
                         ? t('action.save_profile')

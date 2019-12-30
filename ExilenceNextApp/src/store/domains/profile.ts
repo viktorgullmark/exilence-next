@@ -3,7 +3,7 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
@@ -134,7 +134,7 @@ export class Profile {
 
     snapshotsToRemove.forEach(s => {
       stores.signalrStore.removeSnapshot(s.uuid);
-    })
+    });
   }
 
   @action
@@ -331,10 +331,14 @@ export class Profile {
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
-      stores.signalrStore.createSnapshot(apiSnapshot, this.uuid);
-      setTimeout(() => {
-        stores.signalrStore.uploadItems(apiItems);
-      }, 2000);
+
+      fromStream(
+        stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
+          switchMap(() => {
+            return of(stores.signalrStore.uploadItems(apiItems));
+          })
+        )
+      );
     }
 
     // clear items from previous snapshot

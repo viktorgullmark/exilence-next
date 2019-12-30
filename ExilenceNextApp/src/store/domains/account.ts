@@ -50,35 +50,30 @@ export class Account implements IAccount {
 
   @action
   authorize(profiles?: IApiProfile[]) {
-    fromStream(
-      authService
-        .getToken({
-          uuid: this.uuid,
-          name: this.name,
-          token: this.token,
-          profiles: profiles
-            ? profiles.map(p => {
-                return { ...p, snapshots: [] };
-              })
-            : []
-        })
-        .pipe(
-          mergeMap(token => {
-            this.authorizeSuccess();
-            stores.requestQueueStore.filterEvents('AddProfile');
-            return of(
-              stores.signalrStore.signalrHub.startConnection(token.data)
-            );
-          }),
-          retryWhen(
-            genericRetryStrategy({
-              maxRetryAttempts: 5,
-              scalingDuration: 2000
+    return authService
+      .getToken({
+        uuid: this.uuid,
+        name: this.name,
+        token: this.token,
+        profiles: profiles
+          ? profiles.map(p => {
+              return { ...p, snapshots: [] };
             })
-          ),
-          catchError(e => of(this.authorizeFail(e)))
-        )
-    );
+          : []
+      })
+      .pipe(
+        mergeMap(token => {
+          this.authorizeSuccess();
+          return of(stores.signalrStore.signalrHub.startConnection(token.data));
+        }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 3,
+            scalingDuration: 3000
+          })
+        ),
+        catchError(e => of(this.authorizeFail(e)))
+      );
   }
 
   @action
