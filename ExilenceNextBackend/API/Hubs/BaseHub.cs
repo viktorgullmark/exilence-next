@@ -1,13 +1,11 @@
 ﻿using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using Shared.Interfaces;
+using Microsoft.Extensions.Logging;
 using Shared.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,26 +18,34 @@ namespace API.Hubs
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
+        private readonly ILogger<BaseHub> _logger;
+
         private readonly string _instanceName;
         private string ConnectionId => Context.ConnectionId;
         private string AccountName => Context.User.Identity.Name;
         private bool IsAdmin => Context.User.IsInRole("Admin");
         private bool IsPremium => Context.User.IsInRole("Premium");
 
+        
         public BaseHub(
             IMapper mapper, 
+            ILogger<BaseHub> logger,
             IConfiguration configuration, 
             IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
             )
         {
+            _logger = logger;
             _mapper = mapper;
             _instanceName = configuration.GetSection("Settings")["InstanceName"];   
 
             _snapshotService = snapshotService;
             _accountService = accountService;
             _groupService = groupService;
+
+
+
         }
 
         [Authorize]
@@ -79,7 +85,9 @@ namespace API.Hubs
         private async Task Log (string message)
         {
             var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
-            await Clients.Group("logger").SendAsync("Log", $"[{time}] [Account: {AccountName}] - {message}");
+            message = $"[Account: {AccountName}] -  " + message; // Add account name
+            await Clients.Group("logger").SendAsync("Debug", $"[{time}] {message}");
+            _logger.LogDebug(message);
         }
 
 

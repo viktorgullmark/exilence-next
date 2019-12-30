@@ -14,12 +14,13 @@ namespace BackgroundProcessor
     class Program
     {
         public static HubConnection _connection;
-        private static bool _keepRunning = true;
 
         public static async Task Main(string[] args)
         {
 
-            await Task.Delay(4000);
+            Console.WriteLine($"Waiting for backend to start, will connect in 5000 ms");
+            await Task.Delay(5000);
+            Console.WriteLine($"Connecting...");
 
             var token = await GetAccessToken();
 
@@ -31,22 +32,16 @@ namespace BackgroundProcessor
 
             _connection.Closed += async (error) =>
             {
+                Console.WriteLine($"Disconnected, trying to reconnect in 5000 ms");
                 await Task.Delay(5000);
                 await _connection.StartAsync();
+                await _connection.InvokeAsync("AddLogger", "password");
             };
 
-            _connection.On<string>("Log", (message) =>
+            _connection.On<string>("Debug", (message) =>
             {
                 Console.WriteLine($"{message}");
             });
-
-            Console.CancelKeyPress += async delegate (object sender, ConsoleCancelEventArgs e)
-            {
-                e.Cancel = true;
-                _keepRunning = false;
-                await _connection.DisposeAsync();
-            };
-
 
             await _connection.StartAsync();
             await _connection.InvokeAsync("AddLogger", "password");
@@ -61,7 +56,7 @@ namespace BackgroundProcessor
                 var accountModel = new AccountModel()
                 {
                     ClientId = Guid.NewGuid().ToString(),
-                    Name = "Loggger"
+                    Name = "Logger"
 
                 };
                 var data = JsonSerializer.Serialize(accountModel);
