@@ -100,7 +100,11 @@ const GroupDialog: React.FC<Props> = ({
                       className={classes.helperIcon}
                       edge="start"
                       size="small"
-                      onClick={() => setFieldValue('name', generateGroupName())}
+                      onClick={() => {
+                        const name = generateGroupName();
+                        setFieldValue('name', name);
+                        handleGroupExists(name);
+                      }}
                     >
                       <CasinoIcon />
                     </IconButton>
