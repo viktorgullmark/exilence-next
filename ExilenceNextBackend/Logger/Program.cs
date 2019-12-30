@@ -18,9 +18,10 @@ namespace BackgroundProcessor
         public static async Task Main(string[] args)
         {
 
-            Console.WriteLine($"Waiting for backend to start, will connect in 5000 ms");
-            await Task.Delay(5000);
+            Console.Write($"Type password for logger: ");
+            var password = Console.ReadLine();
             Console.WriteLine($"Connecting...");
+            await Task.Delay(2000);
 
             var token = await GetAccessToken();
 
@@ -44,7 +45,7 @@ namespace BackgroundProcessor
             });
 
             await _connection.StartAsync();
-            await _connection.InvokeAsync("AddLogger", "password");
+            await _connection.InvokeAsync("AddLogger", password);
 
             Console.ReadLine();
         }

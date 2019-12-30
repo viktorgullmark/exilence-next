@@ -21,6 +21,7 @@ namespace API.Hubs
         private readonly ILogger<BaseHub> _logger;
 
         private readonly string _instanceName;
+        private readonly string _loggerPassword;
         private string ConnectionId => Context.ConnectionId;
         private string AccountName => Context.User.Identity.Name;
         private bool IsAdmin => Context.User.IsInRole("Admin");
@@ -38,7 +39,8 @@ namespace API.Hubs
         {
             _logger = logger;
             _mapper = mapper;
-            _instanceName = configuration.GetSection("Settings")["InstanceName"];   
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];
+            _loggerPassword = configuration.GetSection("Logger")["Password"];
 
             _snapshotService = snapshotService;
             _accountService = accountService;
