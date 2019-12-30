@@ -28,22 +28,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   formField: {
     marginBottom: theme.spacing(2)
   },
-  helperIcon: {
-  }
+  helperIcon: {}
 }));
 
 interface Props {
   show: boolean;
   initialValues: IGroupForm;
+  dialogType: 'create' | 'join' | undefined;
   onClose: () => void;
   onSubmit: (group: IGroupForm) => void;
+  groupExists?: boolean;
 }
 
 const GroupDialog: React.FC<Props> = ({
   show,
   onClose,
   onSubmit,
-  initialValues
+  initialValues,
+  groupExists,
+  dialogType
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -52,6 +55,21 @@ const GroupDialog: React.FC<Props> = ({
     name: Yup.string().required(t('label.required')),
     password: Yup.string().min(6)
   });
+
+  const getGroupExistsError = () => {
+    switch (dialogType) {
+      case 'create':
+        return groupExists !== undefined && groupExists
+          ? t('error:group_already_exists')
+          : undefined;
+      case 'join':
+        return groupExists !== undefined && !groupExists
+          ? t('error:group_not_found')
+          : undefined;
+      default:
+        return undefined;
+    }
+  };
 
   return (
     <Dialog open={show} onClose={onClose}>
@@ -62,9 +80,9 @@ const GroupDialog: React.FC<Props> = ({
       >
         {({ isValid, dirty, handleSubmit, setFieldValue }) => (
           <form onSubmit={handleSubmit}>
-            <DialogTitle>{t('title.create_group_dialog_title')}</DialogTitle>
+            <DialogTitle>{t(`title.${dialogType}_group_dialog_title`)}</DialogTitle>
             <DialogContent>
-              <SimpleField // todo: add translations
+              <SimpleField
                 name="name"
                 type="text"
                 label={t('label.group_name')}
@@ -81,6 +99,7 @@ const GroupDialog: React.FC<Props> = ({
                     <CasinoIcon />
                   </IconButton>
                 }
+                customError={getGroupExistsError()}
                 required
                 autoFocus
               />
@@ -95,11 +114,11 @@ const GroupDialog: React.FC<Props> = ({
               <Button onClick={onClose}>{t('action.close')}</Button>
               <Button
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || groupExists === undefined}
                 color="primary"
                 variant="contained"
               >
-                {t('action.create_group')}
+                {t(`action.${dialogType}_group`)}
               </Button>
             </DialogActions>
           </form>

@@ -25,6 +25,12 @@ export class UiStateStore {
   @observable groupDialogOpen: boolean = false;
   @observable groupDialogType: 'create' | 'join' | undefined = undefined;
   @observable groupOverviewOpen: boolean = false;
+  @observable groupExists: boolean | undefined = undefined;
+
+  @action
+  setGroupExists(exists: boolean) {
+    this.groupExists = exists;
+  }
 
   @action
   setNotificationList(list: Notification[]) {
