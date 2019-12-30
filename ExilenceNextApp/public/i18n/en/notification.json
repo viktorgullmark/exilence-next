@@ -63,7 +63,8 @@
       "api_remove_snapshot": "Could not upload snapshot changes",
       "connection_lost": "Connection to server was lost",
       "authorize": "Authorization failed",
-      "run_event_from_queue": "Failed to run queued event"
+      "run_event_from_queue": "Failed to run queued event",
+      "api_group_exists": "Group already exists"
     },
     "description": {
       "init_session": "A new session could not be initiated",
