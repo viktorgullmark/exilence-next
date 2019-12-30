@@ -28,6 +28,8 @@ namespace API.Hubs
         {
             groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
             await Groups.AddToGroupAsync(ConnectionId, groupModel.Name);
+
+            await Clients.OthersInGroup(groupModel.Name).SendAsync("OnJoinGroup", groupModel);
             await Log($"Joined group: {groupModel.Name}");
             return groupModel;
         }
