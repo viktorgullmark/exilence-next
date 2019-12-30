@@ -71,7 +71,7 @@ namespace API.Hubs
             var groupModel = await _groupService.GetGroupForConnection(ConnectionId);
             if (groupModel != null)
             {
-                await LeaveGroup(groupModel.Name);
+                await LeaveGroup(groupModel);
             }
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
