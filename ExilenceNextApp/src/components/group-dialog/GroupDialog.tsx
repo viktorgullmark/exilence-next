@@ -17,6 +17,7 @@ import SimpleField from '../simple-field/SimpleField';
 import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import PasswordField from '../password-field/PasswordField';
 import { generateGroupName } from '../../utils/group.utils';
+import { observer } from 'mobx-react';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogActions: {
@@ -37,6 +38,7 @@ interface Props {
   dialogType: 'create' | 'join' | undefined;
   onClose: () => void;
   onSubmit: (group: IGroupForm) => void;
+  handleGroupExists: (groupName: string) => void;
   groupExists?: boolean;
 }
 
@@ -46,7 +48,8 @@ const GroupDialog: React.FC<Props> = ({
   onSubmit,
   initialValues,
   groupExists,
-  dialogType
+  dialogType,
+  handleGroupExists
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -80,7 +83,9 @@ const GroupDialog: React.FC<Props> = ({
       >
         {({ isValid, dirty, handleSubmit, setFieldValue }) => (
           <form onSubmit={handleSubmit}>
-            <DialogTitle>{t(`title.${dialogType}_group_dialog_title`)}</DialogTitle>
+            <DialogTitle>
+              {t(`title.${dialogType}_group_dialog_title`)}
+            </DialogTitle>
             <DialogContent>
               <SimpleField
                 name="name"
@@ -88,18 +93,23 @@ const GroupDialog: React.FC<Props> = ({
                 label={t('label.group_name')}
                 placeholder={t('label.group_name_placeholder')}
                 endIcon={
-                  <IconButton
-                    aria-label="generate"
-                    title={t('label.generate_name_icon_title')}
-                    className={classes.helperIcon}
-                    edge="start"
-                    size="small"
-                    onClick={() => setFieldValue('name', generateGroupName())}
-                  >
-                    <CasinoIcon />
-                  </IconButton>
+                  dialogType === 'create' ? (
+                    <IconButton
+                      aria-label="generate"
+                      title={t('label.generate_name_icon_title')}
+                      className={classes.helperIcon}
+                      edge="start"
+                      size="small"
+                      onClick={() => setFieldValue('name', generateGroupName())}
+                    >
+                      <CasinoIcon />
+                    </IconButton>
+                  ) : (
+                    undefined
+                  )
                 }
                 customError={getGroupExistsError()}
+                handleBlur={handleGroupExists}
                 required
                 autoFocus
               />
@@ -114,7 +124,7 @@ const GroupDialog: React.FC<Props> = ({
               <Button onClick={onClose}>{t('action.close')}</Button>
               <Button
                 type="submit"
-                disabled={!isValid || groupExists === undefined}
+                disabled={!isValid || getGroupExistsError() !== undefined}
                 color="primary"
                 variant="contained"
               >
@@ -128,4 +138,4 @@ const GroupDialog: React.FC<Props> = ({
   );
 };
 
-export default GroupDialog;
+export default observer(GroupDialog);

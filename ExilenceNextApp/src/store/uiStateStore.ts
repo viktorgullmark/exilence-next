@@ -49,7 +49,9 @@ export class UiStateStore {
 
   @action
   setGroupDialogOpen(open: boolean, type?: GroupDialogType) {
-    this.groupDialogType = type;
+    if (open) {
+      this.groupDialogType = type;
+    }
     this.groupDialogOpen = open;
   }
 

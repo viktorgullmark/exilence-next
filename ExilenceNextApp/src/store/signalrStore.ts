@@ -1,7 +1,7 @@
-import { action, observable, reaction, runInAction } from 'mobx';
+import { action, observable, reaction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { of, from, throwError } from 'rxjs';
-import { catchError, map, concatMap, delay, retryWhen } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { catchError, concatMap, map } from 'rxjs/operators';
 import { stores } from '..';
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
 import { IApiProfile } from '../interfaces/api/profile.interface';
@@ -13,6 +13,7 @@ import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
+import uuid from 'uuid';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -74,22 +75,28 @@ export class SignalrStore {
 
   /* #region Group */
   @action
-  joinGroup(groupName: string) {
-    fromStream(
-      this.signalrHub
-        .invokeEvent<IGroup>('JoinGroup', <IGroup>{
-          name: groupName,
-          created: new Date(),
-          connections: []
-        })
-        .pipe(
-          map((g: IGroup) => {
-            this.activeGroup = new Group(g);
-            this.joinGroupSuccess();
-          }),
-          catchError((e: Error) => of(this.joinGroupFail(e)))
-        )
-    );
+  joinGroup(groupName: string, password: string) {
+    if (this.online) {
+      fromStream(
+        this.signalrHub
+          .invokeEvent<IGroup>('JoinGroup', <IGroup>{
+            uuid: uuid.v4(),
+            name: groupName,
+            password: password,
+            created: new Date(),
+            connections: []
+          })
+          .pipe(
+            map((g: IGroup) => {
+              this.activeGroup = new Group(g);
+              this.joinGroupSuccess();
+            }),
+            catchError((e: Error) => of(this.joinGroupFail(e)))
+          )
+      );
+    } else {
+      this.joinGroupFail(new Error('error:not_connected'));
+    }
   }
 
   @action
@@ -109,19 +116,23 @@ export class SignalrStore {
 
   @action
   groupExists(groupName: string) {
-    fromStream(
-      this.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
-        map((name: string) => {
-          if (name) {
-            this.uiStateStore.setGroupExists(true);
-          } else {
-            this.uiStateStore.setGroupExists(false);
-          }
-          return this.groupExistsSuccess();
-        }),
-        catchError((e: Error) => of(this.groupExistsFail(e)))
-      )
-    );
+    if (this.online) {
+      fromStream(
+        this.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
+          map((name: string) => {
+            if (name) {
+              this.uiStateStore.setGroupExists(true);
+            } else {
+              this.uiStateStore.setGroupExists(false);
+            }
+            return this.groupExistsSuccess();
+          }),
+          catchError((e: Error) => of(this.groupExistsFail(e)))
+        )
+      );
+    } else {
+      this.groupExistsFail(new Error('error:not_connected'));
+    }
   }
 
   @action

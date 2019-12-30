@@ -20,12 +20,12 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
   signalrStore
 }: Props) => {
   const initialValues: IGroupForm = {
-    name: generateGroupName(),
+    name: uiStateStore!.groupDialogType === 'create' ? generateGroupName() : '',
     password: ''
   };
 
   const onSubmit = (group: IGroupForm) => {
-    signalrStore!.joinGroup(group.name);
+    signalrStore!.joinGroup(group.name, group.password);
   };
 
   return (
@@ -33,6 +33,7 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
       show={uiStateStore!.groupDialogOpen}
       groupExists={uiStateStore!.groupExists}
       dialogType={uiStateStore!.groupDialogType}
+      handleGroupExists={(groupName: string) => signalrStore!.groupExists(groupName)}
       initialValues={initialValues}
       onClose={() => uiStateStore!.setGroupDialogOpen(false)}
       onSubmit={(group: IGroupForm) => onSubmit(group)}

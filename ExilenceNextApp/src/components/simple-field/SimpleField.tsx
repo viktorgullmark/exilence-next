@@ -12,6 +12,7 @@ interface Props {
   placeholder?: string;
   endIcon?: JSX.Element;
   customError?: string;
+  handleBlur?: (value: string) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +29,8 @@ const SimpleField: React.FC<Props> = ({
   required,
   autoFocus,
   endIcon,
-  customError
+  customError,
+  handleBlur
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -36,6 +38,7 @@ const SimpleField: React.FC<Props> = ({
 
   return (
     <TextField
+      {...field}
       id={name}
       margin="normal"
       type={type}
@@ -49,7 +52,12 @@ const SimpleField: React.FC<Props> = ({
       className={classes.root}
       InputProps={{ endAdornment: endIcon }}
       fullWidth
-      {...field}
+      onBlur={e => {
+        field.onBlur(e);
+        if (handleBlur) {
+          handleBlur(field.value);
+        }
+      }}
     />
   );
 };
