@@ -10,7 +10,7 @@ namespace Shared.Helpers
     {
         public static string Hash(string salt, string password)
         {
-            var saltArray = Encoding.UTF8.GetBytes(salt);
+            var saltArray = Convert.FromBase64String(salt);
             // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: password,
@@ -30,7 +30,7 @@ namespace Shared.Helpers
             {
                 rng.GetBytes(salt);
             }
-            return Encoding.UTF8.GetString(salt, 0, salt.Length);
+            return Convert.ToBase64String(salt, 0, salt.Length);
         }
 
         public static bool Verify(string password, string salt, string hash)
