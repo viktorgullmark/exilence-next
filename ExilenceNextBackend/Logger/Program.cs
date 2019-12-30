@@ -44,8 +44,14 @@ namespace BackgroundProcessor
                 Console.WriteLine($"{message}");
             });
 
+            var groupModel = new GroupModel()
+            {
+                Name = "Logger",
+                Password = password
+            };
+
             await _connection.StartAsync();
-            await _connection.InvokeAsync("AddLogger", password);
+            await _connection.InvokeAsync("AddLogger", groupModel);
 
             Console.ReadLine();
         }
