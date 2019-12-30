@@ -21,16 +21,32 @@ namespace API.Hubs
         {
             var groupModel = await _groupService.JoinGroup(ConnectionId, groupName);
             await Groups.AddToGroupAsync(ConnectionId, groupName);
-            await Log($"{ConnectionId}´joined group {groupName}");
+            await Log($"Joined group: {groupName}");
             return groupModel;
         }
 
+        [Authorize]
         public async Task<string> LeaveGroup(string groupName)
         {
             await _groupService.LeaveGroup(ConnectionId, groupName);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupName);
-            await Log($"{ConnectionId}´left group {groupName}");
+            await Log($"Left group: {groupName}");
             return groupName;
         }
+
+        public async Task<GroupModel> AddLogger(string password)
+        {
+            if (password == _loggerPassword)
+            {
+                var groupName = "logger";
+                var groupModel = await _groupService.JoinGroup(ConnectionId, groupName);
+                await Groups.AddToGroupAsync(ConnectionId, groupName);
+                await Log($"Joined logger group.");
+                return groupModel;
+            }
+            return null;
+        }
+
+
     }
 }

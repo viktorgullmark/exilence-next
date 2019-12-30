@@ -48,17 +48,20 @@ namespace API.Services
 
             _mapper.Map<AccountModel, Account>(accountModel, account);
 
-            foreach (var profileModel in accountModel.Profiles)
+            if (accountModel.Profiles != null) //Logger account dosen't have any profiles
             {
-                var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
-                if (profile != null)
+                foreach (var profileModel in accountModel.Profiles)
                 {
-                    _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
-                }
-                else
-                {
-                    var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
-                    account.Profiles.Add(newProfile);
+                    var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+                    if (profile != null)
+                    {
+                        _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
+                    }
+                    else
+                    {
+                        var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
+                        account.Profiles.Add(newProfile);
+                    }
                 }
             }
 

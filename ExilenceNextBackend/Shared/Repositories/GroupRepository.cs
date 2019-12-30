@@ -30,15 +30,15 @@ namespace Shared.Repositories
             return group;
         }
 
-        public async Task<Group> GetGroup(string name)
+        public async Task<Group> GetGroupForConnection(string connectionId)
         {
-            var group = await _exilenceContext.Groups.FirstOrDefaultAsync(g => g.Name == name);
+            var group = await _exilenceContext.Groups.FirstOrDefaultAsync(g => g.Connections.Any(t => t.ConnectionId == connectionId));
             return group;
         }
 
-        public async Task<Group> RemoveGroup(string name)
+        public async Task<Group> RemoveGroup(string groupName)
         {
-            var group = await GetGroup(name);
+            var group = await GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
             _exilenceContext.Groups.Remove(group);
             return group;
         }
