@@ -1,6 +1,6 @@
-import { action, observable, reaction } from 'mobx';
+import { action, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { of, from } from 'rxjs';
+import { of, from, throwError } from 'rxjs';
 import { catchError, map, concatMap, delay, retryWhen } from 'rxjs/operators';
 import { stores } from '..';
 import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
@@ -12,6 +12,7 @@ import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
+import { UiStateStore } from './uiStateStore';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -26,6 +27,7 @@ export class SignalrStore {
   @observable activeGroup?: Group = undefined;
 
   constructor(
+    private uiStateStore: UiStateStore,
     private notificationStore: NotificationStore,
     private requestQueueStore: RequestQueueStore,
     public signalrHub: SignalrHub
@@ -104,6 +106,37 @@ export class SignalrStore {
   joinGroupSuccess() {
     this.notificationStore.createNotification('api_join_group', 'success');
   }
+
+  @action
+  groupExists(groupName: string) {
+    fromStream(
+      this.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
+        map((name: string) => {
+          if (name) {
+            this.uiStateStore.setGroupExists(true);
+          } else {
+            this.uiStateStore.setGroupExists(false);
+          }
+          return this.groupExistsSuccess();
+        }),
+        catchError((e: Error) => of(this.groupExistsFail(e)))
+      )
+    );
+  }
+
+  @action
+  groupExistsSuccess() {}
+
+  @action
+  groupExistsFail(e: Error) {
+    this.notificationStore.createNotification(
+      'api_group_exists',
+      'error',
+      false,
+      e
+    );
+  }
+
   /* #endregion */
 
   /* #region Profile */

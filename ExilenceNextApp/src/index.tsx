@@ -68,6 +68,7 @@ const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
 const requestQueueStore = new RequestQueueStore(signalrHub, notificationStore);
 const signalrStore = new SignalrStore(
+  uiStateStore,
   notificationStore,
   requestQueueStore,
   signalrHub
