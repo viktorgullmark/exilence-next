@@ -46,7 +46,7 @@ namespace BackgroundProcessor
 
             var groupModel = new GroupModel()
             {
-                Name = "Logger",
+                Name = $"Logger",
                 Password = password
             };
 
@@ -63,7 +63,7 @@ namespace BackgroundProcessor
                 var accountModel = new AccountModel()
                 {
                     ClientId = Guid.NewGuid().ToString(),
-                    Name = "Logger"
+                    Name = $"{Environment.MachineName} Logger"
 
                 };
                 var data = JsonSerializer.Serialize(accountModel);

@@ -18,19 +18,8 @@ namespace Shared.Entities
         public string Hash { get; set; }
         [Required]
         public string Salt { get; set; }
-
-        public virtual ICollection<Connection> Connections { get; set; }
         public DateTime Created { get; set; }
-
-        public Group(){}
-
-        public Group(string code, ICollection<Connection> connections)
-        {
-            Name = code;
-            ClientId = new Guid().ToString();
-            Connections = connections;
-            Created = DateTime.UtcNow;
-        }
+        public virtual ICollection<Connection> Connections { get; set; }
 
     }
 }

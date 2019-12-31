@@ -107,17 +107,7 @@ namespace API.Services
                 }
             }
 
-            await _groupRepository.SaveChangesAsync();
-
-            group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
-            .Include(group => group.Connections)
-            .ThenInclude(connection => connection.Account)
-            .ThenInclude(account => account.Profiles)
-            .ThenInclude(profiles => profiles.Snapshots)
-            .ThenInclude(snapshots => snapshots.StashTabs)
-            .ThenInclude(stashtabs => stashtabs.PricedItems)
-            .FirstOrDefaultAsync();
-
+            await _groupRepository.SaveChangesAsync();            
             return _mapper.Map<GroupModel>(group);
         }
 

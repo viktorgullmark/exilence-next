@@ -58,7 +58,7 @@ namespace API.Hubs
             var connection = new ConnectionModel() {
                 ConnectionId = ConnectionId,
                 InstanceName = _instanceName,
-                Created = DateTime.UtcNow
+                Datestamp = DateTime.UtcNow
             };
             await _groupService.AddConnection(connection, AccountName);            
             await base.OnConnectedAsync();

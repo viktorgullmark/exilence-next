@@ -43,6 +43,7 @@ namespace API.Hubs
         }
         public async Task ForwardSnapshot(string connectionId, SnapshotModel snapshotModel)
         {
+            await Log($"Forwarded snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
             await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, snapshotModel);
         }
 
@@ -64,6 +65,7 @@ namespace API.Hubs
         public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
         {
             await _snapshotService.AddPricedItems(stashtabId, pricedItems);
+            await Log($"Added {pricedItems.Count} pricedItems to StashTabId: {stashtabId}");
         }
 
         public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)

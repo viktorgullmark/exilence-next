@@ -18,6 +18,7 @@ namespace Shared.Entities
         [Required, StringLength(20)]
         public DateTime Datestamp { get; set; }
         public virtual Account Account { get; set; }
+        public virtual Group Group { get; set; }
 
         public Connection()
         {
