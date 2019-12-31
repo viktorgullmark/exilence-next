@@ -32,15 +32,34 @@ namespace API.Hubs
         {
             snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
             await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, snapshotModel);
+            }
+
             return snapshotModel;
+        }
+        public async Task ForwardSnapshot(string connectionId, SnapshotModel snapshotModel)
+        {
+            await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, snapshotModel);
         }
 
         public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
         {
             var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotId);
-            await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await Log($"Removed snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotModel);
+            }
+
             return snapshotId;
         }
+
 
         public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
         {

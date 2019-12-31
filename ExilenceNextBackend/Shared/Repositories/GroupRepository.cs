@@ -38,7 +38,7 @@ namespace Shared.Repositories
 
         public async Task<Group> RemoveGroup(string groupName)
         {
-            var group = await GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            var group = await GetGroups(g => g.Name == groupName).FirstOrDefaultAsync();
             _exilenceContext.Groups.Remove(group);
             return group;
         }
