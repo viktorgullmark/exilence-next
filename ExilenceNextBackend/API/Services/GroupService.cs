@@ -68,7 +68,11 @@ namespace API.Services
 
         public async Task<GroupModel> GetGroupForConnection(string connectionId)
         {
-            var group = await _groupRepository.GetGroupForConnection(connectionId);
+            var group = await _groupRepository.GetGroups(group => group.Connections.Any(connection => connection.ConnectionId == connectionId))
+                .Include(grp => grp.Connections)
+                .ThenInclude(connection => connection.Account)
+                .FirstOrDefaultAsync();
+
             return _mapper.Map<GroupModel>(group);
         }
 
@@ -77,6 +81,7 @@ namespace API.Services
             var connection = await _groupRepository.GetConnection(connectionId);
             var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
                 .Include(group => group.Connections)
+                .ThenInclude(connection => connection.Account)
                 .FirstOrDefaultAsync();
 
             if (group == null)
@@ -113,7 +118,10 @@ namespace API.Services
 
         public async Task<GroupModel> LeaveGroup(string connectionId, GroupModel groupModel)
         {
-            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name).Include(group => group.Connections).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
+                .Include(group => group.Connections)
+                .ThenInclude(connection => connection.Account)
+                .FirstOrDefaultAsync();
             var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 
