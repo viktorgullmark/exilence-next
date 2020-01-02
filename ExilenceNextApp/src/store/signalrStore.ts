@@ -39,9 +39,7 @@ export class SignalrStore {
       (_conn, reaction) => {
         if (_conn) {
           signalrHub.onEvent<string, string, IApiSnapshot>('OnAddSnapshot', (connectionId, profileId, snapshot) => {
-            console.log(connectionId);
-            console.log(profileId);
-            console.log('added snapshot', snapshot);
+            // todo: add to connection in active grp
           });
         }
         reaction.dispose();
