@@ -108,7 +108,7 @@ namespace API.Services
                 }
                 else
                 {
-                    throw new Exception("Wrong password for group.");
+                    throw new Exception("The password is incorrect");
                 }
             }
 

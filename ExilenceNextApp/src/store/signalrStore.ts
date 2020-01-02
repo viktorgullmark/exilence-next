@@ -14,6 +14,7 @@ import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
 import uuid from 'uuid';
+import { AxiosError } from 'axios';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -100,13 +101,14 @@ export class SignalrStore {
   }
 
   @action
-  joinGroupFail(e: Error) {
+  joinGroupFail(e: Error | AxiosError) {
     this.notificationStore.createNotification(
       'api_join_group',
       'error',
       false,
       e
     );
+    this.uiStateStore.groupError = e;
   }
 
   @action
@@ -135,7 +137,7 @@ export class SignalrStore {
               this.setActiveGroup(undefined);
               this.leaveGroupSuccess();
             }),
-            catchError((e: Error) => of(this.leaveGroupFail(e)))
+            catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
           )
       );
     } else {
@@ -144,7 +146,7 @@ export class SignalrStore {
   }
 
   @action
-  leaveGroupFail(e: Error) {
+  leaveGroupFail(e: AxiosError | Error) {
     this.notificationStore.createNotification(
       'api_leave_group',
       'error',
@@ -171,7 +173,7 @@ export class SignalrStore {
             }
             return this.groupExistsSuccess();
           }),
-          catchError((e: Error) => of(this.groupExistsFail(e)))
+          catchError((e: AxiosError) => of(this.groupExistsFail(e)))
         )
       );
     } else {
@@ -183,7 +185,7 @@ export class SignalrStore {
   groupExistsSuccess() {}
 
   @action
-  groupExistsFail(e: Error) {
+  groupExistsFail(e: AxiosError | Error) {
     this.notificationStore.createNotification(
       'api_group_exists',
       'error',

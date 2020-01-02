@@ -14,10 +14,12 @@ import { useTranslation } from 'react-i18next';
 interface Props {
   name: string;
   label: string;
+  handleOnChange: (e: React.FormEvent<HTMLDivElement>) => void;
   placeholder?: string;
   required?: boolean;
   autoFocus?: boolean;
   helperText?: string;
+  customError?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +38,9 @@ const PasswordField: React.FC<Props> = ({
   placeholder,
   required,
   autoFocus,
-  helperText
+  helperText,
+  customError,
+  handleOnChange
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -52,7 +56,11 @@ const PasswordField: React.FC<Props> = ({
     <FormControl
       variant="outlined"
       className={classes.root}
-      error={meta.touched && !!meta.error}
+      error={meta.touched && (!!meta.error || !!customError)}
+      onChange={e => {
+        field.onChange(e);
+        handleOnChange(e);
+      }}
       fullWidth
     >
       <InputLabel ref={ref} htmlFor={name}>
@@ -75,9 +83,9 @@ const PasswordField: React.FC<Props> = ({
         }
         {...field}
       />
-      {((meta.touched && meta.error) || helperText) && (
+      {((meta.touched && (meta.error || customError)) || helperText) && (
         <FormHelperText className={classes.helperText}>
-          {helperText || meta.error}
+          {customError || helperText || meta.error}
         </FormHelperText>
       )}
     </FormControl>

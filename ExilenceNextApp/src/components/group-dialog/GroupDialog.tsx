@@ -18,6 +18,7 @@ import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import PasswordField from '../password-field/PasswordField';
 import { generateGroupName } from '../../utils/group.utils';
 import { observer } from 'mobx-react';
+import { AxiosError } from 'axios';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogActions: {
@@ -39,6 +40,8 @@ interface Props {
   onClose: () => void;
   onSubmit: (group: IGroupForm) => void;
   handleGroupExists: (groupName: string) => void;
+  handleClearError: () => void;
+  groupError?:  AxiosError | Error;
   groupExists?: boolean;
 }
 
@@ -47,9 +50,11 @@ const GroupDialog: React.FC<Props> = ({
   onClose,
   onSubmit,
   initialValues,
+  groupError,
   groupExists,
   dialogType,
-  handleGroupExists
+  handleGroupExists,
+  handleClearError
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -120,6 +125,8 @@ const GroupDialog: React.FC<Props> = ({
               <PasswordField
                 name="password"
                 label={t('label.password')}
+                handleOnChange={() => handleClearError()}
+                customError={groupError ? t(groupError.message) : undefined}
                 placeholder={t('label.password_placeholder')}
                 helperText={t('label.password_helper_text')}
               />

@@ -32,7 +32,9 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
     <GroupDialog
       show={uiStateStore!.groupDialogOpen}
       groupExists={uiStateStore!.groupExists}
+      groupError={uiStateStore!.groupError}
       dialogType={uiStateStore!.groupDialogType}
+      handleClearError={() => uiStateStore!.setGroupError(undefined)}
       handleGroupExists={(groupName: string) => signalrStore!.groupExists(groupName)}
       initialValues={initialValues}
       onClose={() => uiStateStore!.setGroupDialogOpen(false)}

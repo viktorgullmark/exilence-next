@@ -6,6 +6,7 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import uuid from 'uuid';
+import { AxiosError } from 'axios';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -26,6 +27,7 @@ export class UiStateStore {
   @observable groupDialogType: 'create' | 'join' | undefined = undefined;
   @observable groupOverviewOpen: boolean = false;
   @observable groupExists: boolean | undefined = undefined;
+  @observable groupError: AxiosError | Error | undefined = undefined;
 
   @action
   setGroupExists(exists: boolean) {
@@ -107,5 +109,10 @@ export class UiStateStore {
   @action
   setIsInitiating(initiating: boolean) {
     this.isInitiating = initiating;
+  }
+
+  @action
+  setGroupError(error: AxiosError | Error | undefined) {
+    this.groupError = error;
   }
 }
