@@ -36,11 +36,25 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
             return snapshotModel;
         }
+
+        public async Task<SnapshotModel> AddPricedItemsFinished(string snapshotId, string profileId)
+        {
+            var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItemsFinished", ConnectionId, profileId, snapshotModel);
+            }
+
+            return snapshotModel;
+        }
+
         public async Task ForwardSnapshot(string connectionId, string profileId, SnapshotModel snapshotModel)
         {
             await Log($"Forwarded snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
@@ -55,7 +69,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, profileClientId, snapshotModel);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, profileClientId, snapshotModel);
             }
 
             return snapshotId;
