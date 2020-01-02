@@ -32,7 +32,8 @@ export class SignalrStore {
     private notificationStore: NotificationStore,
     private requestQueueStore: RequestQueueStore,
     public signalrHub: SignalrHub
-  ) {}
+  ) {
+  }
 
   @action
   handleRequest<T>(
@@ -62,6 +63,9 @@ export class SignalrStore {
   @action
   setOnline(online: boolean) {
     this.online = online;
+    if(!online) {
+      this.uiStateStore.toggleGroupOverview(false);
+    }
   }
 
   /* #region Group */

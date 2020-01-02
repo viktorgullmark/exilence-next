@@ -112,6 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  signalrOnline: boolean;
   sidenavOpened: boolean;
   groupOverviewOpened: boolean;
   activeProfile: Profile;
@@ -299,6 +300,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <AccountCircle fontSize="small" />
                   </IconButton>
                   <IconButton
+                    disabled={!props.signalrOnline}
                     onClick={() => props.toggleGroupOverview()}
                     aria-label="group"
                     aria-haspopup="true"

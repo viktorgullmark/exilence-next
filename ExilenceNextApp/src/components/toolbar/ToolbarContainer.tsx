@@ -7,17 +7,20 @@ import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
+import { SignalrStore } from '../../store/signalrStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
   notificationStore?: NotificationStore;
+  signalrStore?: SignalrStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   uiStateStore,
   accountStore,
+  signalrStore,
   notificationStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
@@ -95,6 +98,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         cancelButtonText={t('action.cancel')}
       />
       <Toolbar
+        signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
@@ -126,5 +130,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 export default inject(
   'uiStateStore',
   'accountStore',
-  'notificationStore'
+  'notificationStore',
+  'signalrStore'
 )(observer(ToolbarContainer));
