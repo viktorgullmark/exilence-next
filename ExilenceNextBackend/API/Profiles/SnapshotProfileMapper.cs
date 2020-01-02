@@ -13,7 +13,7 @@ namespace API.Profiles
         public SnapshotProfileMapper()
         {
             CreateMap<SnapshotModel, Snapshot>();
-            CreateMap<Snapshot, SnapshotModel>();
+            CreateMap<Snapshot, SnapshotModel>().ForMember(o => o.Id, opt => opt.Ignore());
         }
     }
 }
