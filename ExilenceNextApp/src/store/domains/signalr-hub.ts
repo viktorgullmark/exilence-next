@@ -1,15 +1,16 @@
 import * as signalR from '@microsoft/signalr';
-import { action } from 'mobx';
+import { action, observable } from 'mobx';
 import { from } from 'rxjs';
 import { stores } from '../..';
 import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
-  connection: signalR.HubConnection | undefined = undefined;
+  @observable connection: signalR.HubConnection | undefined = undefined;
 
   constructor() {
   }
 
+  @action
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
@@ -34,15 +35,16 @@ export class SignalrHub {
         });
 
         this.connection!.onreconnecting(e => {
+          stores.signalrStore.setActiveGroup(undefined);
           this.connectionLost(e);
         });
 
         stores.signalrStore.setOnline(true);
       })
-      .catch((err: string) => document.write(err));
+      .catch((err: string) => console.log(err));
   }
 
-  onEvent<T>(event: string, callback: (response: T) => void) {
+  onEvent<T, T2, T3>(event: string, callback: (arg1: T, arg2: T2, arg3: T3) => void) {
     this.connection!.on(event, callback);
   }
 

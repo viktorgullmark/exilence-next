@@ -34,6 +34,19 @@ export class SignalrStore {
     private requestQueueStore: RequestQueueStore,
     public signalrHub: SignalrHub
   ) {
+    reaction(
+      () => signalrHub!.connection,
+      (_conn, reaction) => {
+        if (_conn) {
+          signalrHub.onEvent<string, string, IApiSnapshot>('OnAddSnapshot', (connectionId, profileId, snapshot) => {
+            console.log(connectionId);
+            console.log(profileId);
+            console.log('added snapshot', snapshot);
+          });
+        }
+        reaction.dispose();
+      }
+    );
   }
 
   @action

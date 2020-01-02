@@ -36,15 +36,15 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, snapshotModel);
+                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
             return snapshotModel;
         }
-        public async Task ForwardSnapshot(string connectionId, SnapshotModel snapshotModel)
+        public async Task ForwardSnapshot(string connectionId, string profileId, SnapshotModel snapshotModel)
         {
             await Log($"Forwarded snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
-            await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, snapshotModel);
+            await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
         }
 
         public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
@@ -55,7 +55,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotModel);
+                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, profileClientId, snapshotModel);
             }
 
             return snapshotId;
