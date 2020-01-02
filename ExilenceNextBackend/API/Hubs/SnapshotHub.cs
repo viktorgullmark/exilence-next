@@ -13,13 +13,6 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        /* STUFF TODO
-         * Add Snapshots
-         * Add Stashtabs to Snapshot
-         * Retrive Snapshot
-         * Retrive Stashtabs for Snapshot
-         * 
-         */
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
@@ -74,7 +67,6 @@ namespace API.Hubs
 
             return snapshotId;
         }
-
 
         public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
         {
