@@ -1,14 +1,14 @@
 import uuid from 'uuid';
-import { IGroup } from '../../interfaces/group.interface';
-import { IConnection } from '../../interfaces/connection.interface';
+import { IApiGroup } from '../../interfaces/api/api-group.interface';
+import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 
-export class Group implements IGroup {
+export class Group implements IApiGroup {
     uuid: string = uuid.v4();
     name: string = '';
     created: Date = new Date();
-    connections: IConnection[] = [];
+    connections: IApiConnection[] = [];
 
-    constructor(obj?: IGroup) {
+    constructor(obj?: IApiGroup) {
         Object.assign(this, obj);
     }
   }

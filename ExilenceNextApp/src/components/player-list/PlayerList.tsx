@@ -1,9 +1,10 @@
 import React from 'react';
 import PlayerListItem from './player-list-item/PlayerListItem';
 import { List, makeStyles, Theme } from '@material-ui/core';
+import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 
 interface Props {
-  playerList: any[];
+  connections: IApiConnection[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -12,12 +13,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const PlayerList: React.FC<Props> = ({ playerList }: Props) => {
+const PlayerList: React.FC<Props> = ({ connections }: Props) => {
   const classes = useStyles();
   return (
     <List dense className={classes.root}>
-      {playerList.map(p => {
-        return <PlayerListItem key={p.uuid} player={p} />;
+      {connections.map(c => {
+        return <PlayerListItem key={c.account.uuid} account={c.account} />;
       })}
     </List>
   );

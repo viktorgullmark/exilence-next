@@ -2,15 +2,27 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { UiStateStore } from '../../store/uiStateStore';
 import PlayerList from './PlayerList';
+import { SignalrStore } from '../../store/signalrStore';
 
 interface Props {
   uiStateStore?: UiStateStore;
+  signalrStore?: SignalrStore;
 }
 
-const PlayerListContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
-  return <PlayerList playerList={[{ uuid: '319873j3ni', name: 'cojl' }, { uuid: '3413133s', name: 'umocrajen' }]} />;
+const PlayerListContainer: React.FC<Props> = ({
+  uiStateStore,
+  signalrStore
+}: Props) => {
+  return (
+    <>
+      {signalrStore!.activeGroup && (
+        <PlayerList connections={signalrStore!.activeGroup.connections} />
+      )}
+    </>
+  );
 };
 
 export default inject(
-  'uiStateStore'
+  'uiStateStore',
+  'signalrStore'
 )(observer(PlayerListContainer));

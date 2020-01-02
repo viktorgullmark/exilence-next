@@ -3,11 +3,11 @@ import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
 import { stores } from '..';
-import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
-import { IApiProfile } from '../interfaces/api/profile.interface';
-import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
-import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
-import { IGroup } from '../interfaces/group.interface';
+import { IApiPricedItem } from '../interfaces/api/api-priced-item.interface';
+import { IApiProfile } from '../interfaces/api/api-profile.interface';
+import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
+import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
+import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
@@ -32,16 +32,7 @@ export class SignalrStore {
     private notificationStore: NotificationStore,
     private requestQueueStore: RequestQueueStore,
     public signalrHub: SignalrHub
-  ) {
-    reaction(
-      () => this.activeGroup,
-      _data => {
-        if (this.activeGroup) {
-          alert(`joined group ${this.activeGroup.name}`);
-        }
-      }
-    );
-  }
+  ) {}
 
   @action
   handleRequest<T>(
@@ -79,7 +70,7 @@ export class SignalrStore {
     if (this.online) {
       fromStream(
         this.signalrHub
-          .invokeEvent<IGroup>('JoinGroup', <IGroup>{
+          .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
             uuid: uuid.v4(),
             name: groupName,
             password: password,
@@ -87,8 +78,8 @@ export class SignalrStore {
             connections: []
           })
           .pipe(
-            map((g: IGroup) => {
-              this.activeGroup = new Group(g);
+            map((g: IApiGroup) => {
+              this.setActiveGroup(new Group(g));
               this.joinGroupSuccess();
             }),
             catchError((e: Error) => of(this.joinGroupFail(e)))
@@ -97,6 +88,11 @@ export class SignalrStore {
     } else {
       this.joinGroupFail(new Error('error:not_connected'));
     }
+  }
+
+  @action
+  setActiveGroup(g: Group | undefined) {
+    this.activeGroup = g;
   }
 
   @action
@@ -113,6 +109,49 @@ export class SignalrStore {
   joinGroupSuccess() {
     this.notificationStore.createNotification('api_join_group', 'success');
     this.uiStateStore.setGroupDialogOpen(false);
+  }
+
+  @action
+  leaveGroup() {
+    if (!this.activeGroup) {
+      this.leaveGroupFail(new Error('error:not_in_group'));
+      return;
+    }
+    if (this.online) {
+      fromStream(
+        this.signalrHub
+          .invokeEvent<IApiGroup>('LeaveGroup', <IApiGroup>{
+            uuid: uuid.v4(),
+            name: this.activeGroup.name,
+            created: new Date(),
+            connections: []
+          })
+          .pipe(
+            map((g: IApiGroup) => {
+              this.setActiveGroup(undefined);
+              this.leaveGroupSuccess();
+            }),
+            catchError((e: Error) => of(this.leaveGroupFail(e)))
+          )
+      );
+    } else {
+      this.leaveGroupFail(new Error('error:not_connected'));
+    }
+  }
+
+  @action
+  leaveGroupFail(e: Error) {
+    this.notificationStore.createNotification(
+      'api_leave_group',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  leaveGroupSuccess() {
+    this.notificationStore.createNotification('api_leave_group', 'success');
   }
 
   @action

@@ -1,4 +1,4 @@
-import { IApiProfile } from '../interfaces/api/profile.interface';
+import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { Profile } from '../store/domains/profile';
 
 export class ProfileUtils {

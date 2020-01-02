@@ -1,5 +1,5 @@
 import { IPricedItem } from '../priced-item.interface';
-import { IApiPricedItem } from './priceditem.interface';
+import { IApiPricedItem } from './api-priced-item.interface';
 
 export interface IApiStashTabSnapshot {
   uuid: string;

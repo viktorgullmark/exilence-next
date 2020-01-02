@@ -12,9 +12,10 @@ import {
 } from '@material-ui/core';
 import React, { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 
 interface Props {
-  player: any;
+  account: IApiAccount;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,13 +26,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const PlayerListItem = forwardRef((props: Props, ref) => {
-  const { player } = props;
+  const { account } = props;
   const classes = useStyles();
   const { t } = useTranslation();
 
   // todo: refactor to use within store instead
-  const [checked, setChecked] = React.useState([1]);
-  const handleToggle = (value: number) => () => {
+  const [checked, setChecked] = React.useState<string[]>([]);
+  const handleToggle = (value: string) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -46,23 +47,23 @@ const PlayerListItem = forwardRef((props: Props, ref) => {
 
   return (
     <ListItem
-      key={player.uuid}
+      key={account.uuid}
       innerRef={ref}
       className={classes.root}
       button
-      onClick={handleToggle(player.uuid)}
+      onClick={handleToggle(account.uuid)}
     >
       <ListItemAvatar>
-        <Avatar>{player.name[0]}</Avatar>
+        <Avatar>{account.name[0]}</Avatar>
       </ListItemAvatar>
-      <ListItemText id={player.uuid} primary={`${player.name}`} />
+      <ListItemText id={account.uuid} primary={`${account.name}`} />
       <ListItemSecondaryAction>
         <Checkbox
           edge="end"
           color="primary"
-          onChange={handleToggle(player.uuid)}
-          checked={checked.indexOf(player.uuid) !== -1}
-          inputProps={{ 'aria-labelledby': player.uuid }}
+          onChange={handleToggle(account.uuid)}
+          checked={checked.indexOf(account.uuid) !== -1}
+          inputProps={{ 'aria-labelledby': account.uuid }}
         />
       </ListItemSecondaryAction>
     </ListItem>

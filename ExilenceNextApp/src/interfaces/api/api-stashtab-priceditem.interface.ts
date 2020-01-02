@@ -1,4 +1,4 @@
-import { IApiPricedItem } from './priceditem.interface';
+import { IApiPricedItem } from './api-priced-item.interface';
 
 export interface IApiStashTabPricedItem {
   stashTabId: string;

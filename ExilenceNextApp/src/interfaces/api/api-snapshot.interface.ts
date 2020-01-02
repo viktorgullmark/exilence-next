@@ -1,4 +1,4 @@
-import { IApiStashTabSnapshot } from './stash-tab-snapshot.interface';
+import { IApiStashTabSnapshot } from './api-stash-tab-snapshot.interface';
 import { Moment } from 'moment';
 
 export interface IApiSnapshot {

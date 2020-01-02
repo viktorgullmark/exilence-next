@@ -18,6 +18,7 @@ import {
 } from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
+import { Group } from '../../../store/domains/group';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -44,13 +45,17 @@ interface GroupOverviewProps {
   toggleGroupOverview: () => void;
   handleJoinGroup: (event: React.MouseEvent<HTMLElement>) => void;
   handleCreateGroup: (event: React.MouseEvent<HTMLElement>) => void;
+  handleLeaveGroup: (event: React.MouseEvent<HTMLElement>) => void;
+  activeGroup?: Group;
 }
 
 const GroupOverview: React.FC<GroupOverviewProps> = ({
   open,
   toggleGroupOverview,
   handleJoinGroup,
-  handleCreateGroup
+  handleCreateGroup,
+  handleLeaveGroup,
+  activeGroup
 }: GroupOverviewProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -79,26 +84,41 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
       <Divider />
       <Box p={2}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleCreateGroup}
-            >
-              {t('action.create_group')}
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleJoinGroup}
-            >
-              {t('action.join_group')}
-            </Button>
-          </Grid>
+          {activeGroup ? (
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleLeaveGroup}
+              >
+                {t('action.leave_group')}
+              </Button>
+            </Grid>
+          ) : (
+            <>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleCreateGroup}
+                >
+                  {t('action.create_group')}
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleJoinGroup}
+                >
+                  {t('action.join_group')}
+                </Button>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
       <Box>

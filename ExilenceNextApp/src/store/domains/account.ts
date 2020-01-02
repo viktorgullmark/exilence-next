@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
-import { IApiProfile } from '../../interfaces/api/profile.interface';
+import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { ProfileUtils } from '../../utils/profile.utils';

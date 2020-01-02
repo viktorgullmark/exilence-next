@@ -1,12 +1,12 @@
 import { Snapshot } from '../store/domains/snapshot';
 import { StashTab } from '../store/domains/stash-tab';
-import { IApiSnapshot } from '../interfaces/api/snapshot.interface';
+import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IStashTab } from '../interfaces/stash.interface';
-import { IApiStashTabSnapshot } from '../interfaces/api/stash-tab-snapshot.interface';
+import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { ColourUtils } from './colour.utils';
-import { IApiPricedItem } from '../interfaces/api/priceditem.interface';
+import { IApiPricedItem } from '../interfaces/api/api-priced-item.interface';
 import uuid from 'uuid';
-import { IApiStashTabPricedItem } from '../interfaces/api/stashtab-priceditem.interface';
+import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
