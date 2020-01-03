@@ -18,6 +18,7 @@ import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { SnapshotUtils } from '../../utils/snapshot.utils';
 import { ProfileUtils } from '../../utils/profile.utils';
+import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -311,7 +312,7 @@ export class Profile {
   @action
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
     const snapshot: ISnapshot = {
-      stashTabSnapshots: pricedStashTabs
+      stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
     };
 
     const snapshotToAdd = new Snapshot(snapshot);
