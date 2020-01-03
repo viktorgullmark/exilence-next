@@ -1,4 +1,4 @@
-import { action, observable, reaction } from 'mobx';
+import { action, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
@@ -38,9 +38,15 @@ export class SignalrStore {
       () => signalrHub!.connection,
       (_conn, reaction) => {
         if (_conn) {
-          signalrHub.onEvent<string, string, IApiSnapshot>('OnAddSnapshot', (connectionId, profileId, snapshot) => {
-            // todo: add to connection in active grp
-          });
+          signalrHub.onEvent<string, string, IApiSnapshot>(
+            'OnAddSnapshot',
+            (connectionId, profileId, snapshot) => {
+              if (this.activeGroup) {
+                console.log('before', this.activeGroup);
+                this.addSnapshotToConnection(snapshot, connectionId, profileId);
+              }
+            }
+          );
         }
         reaction.dispose();
       }
@@ -72,10 +78,56 @@ export class SignalrStore {
     }
   }
 
+  // todo: test this thoroughly
+  @action
+  addSnapshotToConnection(
+    snapshot: IApiSnapshot,
+    connectionId: string,
+    profileId: string
+  ) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === connectionId
+    );
+
+    if (connection) {
+      const connIndex = this.activeGroup!.connections.indexOf(connection);
+      const profile = connection.account.profiles.find(
+        p => p.uuid === profileId
+      );
+      if (profile) {
+        runInAction(() => {
+          profile.snapshots.unshift(snapshot);
+          this.activeGroup!.connections[connIndex] = connection;
+        });
+        console.log('after', this.activeGroup);
+        this.addSnapshotToConnectionSuccess();
+      } else {
+        this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
+      }
+    } else {
+      this.addSnapshotToConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  @action
+  addSnapshotToConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'retrieve_snapshot',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  addSnapshotToConnectionSuccess() {
+    this.notificationStore.createNotification('retrieve_snapshot', 'success');
+  }
+
   @action
   setOnline(online: boolean) {
     this.online = online;
-    if(!online) {
+    if (!online) {
       this.uiStateStore.toggleGroupOverview(false);
     }
   }
