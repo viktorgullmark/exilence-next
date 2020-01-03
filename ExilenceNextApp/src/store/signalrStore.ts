@@ -15,6 +15,8 @@ import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
 import uuid from 'uuid';
 import { AxiosError } from 'axios';
+import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
+import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -41,9 +43,18 @@ export class SignalrStore {
           signalrHub.onEvent<string, string, IApiSnapshot>(
             'OnAddSnapshot',
             (connectionId, profileId, snapshot) => {
-              if (this.activeGroup) {
+              if (this.activeGroup && snapshot && profileId) {
                 console.log('before', this.activeGroup);
                 this.addSnapshotToConnection(snapshot, connectionId, profileId);
+              }
+            }
+          );
+          signalrHub.onEvent<IApiPricedItemsUpdate>(
+            'OnAddPricedItems',
+            pricedItemsUpdate => {
+              if (this.activeGroup) {
+                console.log('before', this.activeGroup);
+                this.addPricedItemsToStashTab(pricedItemsUpdate);
               }
             }
           );
@@ -99,6 +110,42 @@ export class SignalrStore {
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
+        console.log('after', this.activeGroup);
+        this.addSnapshotToConnectionSuccess();
+      } else {
+        this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
+      }
+    } else {
+      this.addSnapshotToConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  // todo: test this thoroughly
+  @action
+  addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === pricedItemsUpdate.connectionId
+    );
+
+    if (connection) {
+      const connIndex = this.activeGroup!.connections.indexOf(connection);
+      const profile = connection.account.profiles.find(
+        p => p.uuid === pricedItemsUpdate.profileId
+      );
+      if (profile) {
+        const snapshot = profile.snapshots.find(
+          ss => ss.uuid === pricedItemsUpdate.snapshotId
+        );
+        const stashTab = snapshot!.stashTabs.find(
+          st => st.uuid === pricedItemsUpdate.stashTabId
+        );
+
+        stashTab!.pricedItems = stashTab!.pricedItems.concat(
+          pricedItemsUpdate.pricedItems
+        );
+
+        this.activeGroup!.connections[connIndex] = connection;
+
         console.log('after', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {

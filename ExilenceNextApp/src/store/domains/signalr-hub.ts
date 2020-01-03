@@ -44,7 +44,7 @@ export class SignalrHub {
       .catch((err: string) => console.log(err));
   }
 
-  onEvent<T, T2, T3>(event: string, callback: (arg1: T, arg2: T2, arg3: T3) => void) {
+  onEvent<T, T2 = {}, T3 = {}>(event: string, callback: (arg1: T, arg2?: T2, arg3?: T3) => void) {
     this.connection!.on(event, callback);
   }
 
