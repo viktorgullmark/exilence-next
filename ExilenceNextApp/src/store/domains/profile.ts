@@ -335,7 +335,7 @@ export class Profile {
       fromStream(
         stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
           switchMap(() => {
-            return of(stores.signalrStore.uploadItems(apiItems));
+            return of(stores.signalrStore.uploadItems(apiItems, apiSnapshot.uuid));
           })
         )
       );

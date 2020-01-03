@@ -479,14 +479,18 @@ export class SignalrStore {
   }
 
   @action
-  uploadItems(stashtabs: IApiStashTabPricedItem[]) {
+  uploadItems(stashtabs: IApiStashTabPricedItem[], snapshotId: string) {
     fromStream(
       from(stashtabs).pipe(
         concatMap(st => {
-          const request: ISignalrEvent<IApiPricedItem> = {
+          const request: ISignalrEvent<IApiPricedItemsUpdate> = {
             method: 'AddPricedItems',
             id: st.stashTabId,
-            object: st.pricedItems
+            object: {
+              stashTabId: st.stashTabId,
+              snapshotId: snapshotId,
+              pricedItems: st.pricedItems
+            } as IApiPricedItemsUpdate
           };
           return this.handleRequest(
             request,
