@@ -89,7 +89,11 @@ namespace API.Services
         public async Task<StashtabModel> AddPricedItems(string stashtabId, List<PricedItemModel> pricedItemModels)
         {
             var pricedItems = _mapper.Map<List<PricedItem>>(pricedItemModels);
-            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId).Include(stashtab => stashtab.PricedItems).FirstAsync();
+            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId)
+                //.Include(stashtab => stashtab.Snapshot)
+                //.ThenInclude(snapshot => snapshot.Profile)
+                .Include(stashtab => stashtab.PricedItems)
+                .FirstAsync();
             pricedItems.ForEach(pricedItem => stashtab.PricedItems.Add(pricedItem));
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<StashtabModel>(stashtab);

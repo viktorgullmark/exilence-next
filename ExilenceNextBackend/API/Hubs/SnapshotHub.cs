@@ -35,25 +35,6 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> AddPricedItemsFinished(string snapshotId, string profileId)
-        {
-            var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
-            var group = await _groupService.GetGroupForConnection(ConnectionId);
-
-            if (group != null)
-            {
-                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItemsFinished", ConnectionId, profileId, snapshotModel);
-            }
-
-            return snapshotModel;
-        }
-
-        public async Task ForwardSnapshot(string connectionId, string profileId, SnapshotModel snapshotModel)
-        {
-            await Log($"Forwarded snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
-            await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
-        }
-
         public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
         {
             var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotId);
@@ -67,11 +48,31 @@ namespace API.Hubs
 
             return snapshotId;
         }
-
-        public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
+        
+        public async Task ForwardSnapshot(string connectionId, string profileId, SnapshotModel snapshotModel)
         {
-            await _snapshotService.AddPricedItems(stashtabId, pricedItems);
+            await Log($"Forwarded snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await Clients.Client(connectionId).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
+        }
+
+        public async Task ForwardPricedItems(string connectionId, string stashtabId, List<PricedItemModel> pricedItems)
+        {
+            await Log($"Forwarded pricedItems for stashtab with ClientId: {stashtabId}. Items included {pricedItems.Count}");
+            await Clients.Client(connectionId).SendAsync("OnAddPricedItems", ConnectionId, stashtabId, pricedItems);
+        }
+
+        public async Task<StashtabModel> AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
+        {
+            var stashTabModel = await _snapshotService.AddPricedItems(stashtabId, pricedItems);
             await Log($"Added {pricedItems.Count} pricedItems to StashTabId: {stashtabId}");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", ConnectionId, stashtabId, pricedItems);
+            }
+
+            return stashTabModel;
         }
 
         public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
