@@ -51,7 +51,13 @@ namespace API.Services
 
         public async Task<GroupModel> GetGroup(string groupName)
         {
-            var group = await _groupRepository.GetGroup(groupName);
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
+            return _mapper.Map<GroupModel>(group);
+        }
+
+        public async Task<GroupModel> GetGroupForConnection(string connectionId)
+        {
+            var group = await _groupRepository.GetGroupForConnection(connectionId);
             return _mapper.Map<GroupModel>(group);
         }
 

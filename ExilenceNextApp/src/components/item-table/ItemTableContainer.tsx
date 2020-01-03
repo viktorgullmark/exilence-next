@@ -92,7 +92,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item xs={2}>
+          <Grid item xs={4} md={3}>
             <ItemTableFilter
               array={filteredItems}
               handleFilter={handleFilter}
@@ -101,7 +101,8 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           <Grid
             container
             item
-            xs={8}
+            xs={4}
+            md={6}
             className={classes.placeholder}
             direction="column"
             justify="space-between"
@@ -117,7 +118,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
               )}
           </Grid>
 
-          <Grid item xs={2} className={classes.actionArea}>
+          <Grid item xs={4} md={3} className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"
