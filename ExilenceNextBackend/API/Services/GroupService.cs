@@ -82,6 +82,7 @@ namespace API.Services
             var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
                 .Include(group => group.Connections)
                 .ThenInclude(connection => connection.Account)
+                .ThenInclude(account => account.Profiles)
                 .FirstOrDefaultAsync();
 
             if (group == null)
