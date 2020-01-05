@@ -485,9 +485,8 @@ export class SignalrStore {
         concatMap(st => {
           const request: ISignalrEvent<IApiPricedItemsUpdate> = {
             method: 'AddPricedItems',
-            id: st.stashTabId,
             object: {
-              stashTabId: st.stashTabId,
+              stashTabId: st.uuid,
               snapshotId: snapshotId,
               pricedItems: st.pricedItems
             } as IApiPricedItemsUpdate
