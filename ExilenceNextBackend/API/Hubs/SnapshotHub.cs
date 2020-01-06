@@ -88,6 +88,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
+                updateModel.ConnectionId = ConnectionId;
                 await Clients.Group(group.Name).SendAsync("OnAddPricedItems", updateModel);
             }
 
