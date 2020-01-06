@@ -130,6 +130,7 @@ export class SignalrStore {
   // todo: test this thoroughly
   @action
   addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
+    debugger;
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === pricedItemsUpdate.connectionId
     );
@@ -201,6 +202,7 @@ export class SignalrStore {
           })
           .pipe(
             map((g: IApiGroup) => {
+              debugger;
               this.setActiveGroup(new Group(g));
               this.joinGroupSuccess();
             }),
@@ -522,13 +524,14 @@ export class SignalrStore {
 
 
   @action
-  uploadItems(stashtabs: IApiStashTabPricedItem[], snapshotId: string) {
+  uploadItems(stashtabs: IApiStashTabPricedItem[], profileId: string, snapshotId: string) {
     fromStream(
       from(stashtabs).pipe(
         concatMap(st => {
           const request: ISignalrEvent<IApiPricedItemsUpdate> = {
             method: 'AddPricedItems',
             object: {
+              profileId: profileId,
               stashTabId: st.uuid,
               snapshotId: snapshotId,
               pricedItems: st.pricedItems

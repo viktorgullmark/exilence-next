@@ -333,7 +333,7 @@ export class Profile {
         stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
           switchMap(() => {
             return of(
-              stores.signalrStore.uploadItems(apiItems, apiSnapshot.uuid)
+              stores.signalrStore.uploadItems(apiItems, this.uuid, apiSnapshot.uuid)
             );
           })
         )
