@@ -2,7 +2,8 @@ import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import localForage from 'localforage';
-import { configure } from 'mobx';
+import { configure} from 'mobx';
+import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
 import React, { Suspense } from 'react';
@@ -39,7 +40,7 @@ export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
 initSentry();
-// enableLogging();
+enableLogging();
 configureI18n();
 
 configure({ enforceActions: 'observed' });
