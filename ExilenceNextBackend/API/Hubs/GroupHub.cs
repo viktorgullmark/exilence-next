@@ -36,7 +36,7 @@ namespace API.Hubs
         [Authorize]
         public async Task<GroupModel> LeaveGroup(GroupModel groupModel)
         {
-            await _groupService.LeaveGroup(ConnectionId, groupModel);
+            groupModel = await _groupService.LeaveGroup(ConnectionId, groupModel);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupModel.Name);
             await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", groupModel);
             await Log($"Left group: {groupModel.Name}");
