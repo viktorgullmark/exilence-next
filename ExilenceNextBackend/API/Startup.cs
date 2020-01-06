@@ -21,6 +21,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Services;
 using API.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using API.Providers;
 
 namespace API
 {
@@ -53,7 +55,7 @@ namespace API
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
             //services.AddSignalR().AddMessagePackProtocol();
-
+            
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
@@ -74,8 +76,9 @@ namespace API
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Settings")["Secret"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateIssuer = false
+
                 };
                 // https://docs.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-3.0
                 x.Events = new JwtBearerEvents
@@ -93,6 +96,8 @@ namespace API
                     }
                 };
             });
+
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

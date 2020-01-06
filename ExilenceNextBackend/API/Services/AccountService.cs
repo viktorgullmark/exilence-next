@@ -63,9 +63,15 @@ namespace API.Services
                         account.Profiles.Add(newProfile);
                     }
                 }
-            }
 
-            //TODO: Remove profiles removed on client
+                foreach (var profile in account.Profiles)
+                {
+                    if (!accountModel.Profiles.Any(modelProfile => modelProfile.ClientId  == profile.ClientId))
+                    {
+                        account.Profiles.Remove(profile);
+                    }
+                }
+            }
 
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<AccountModel>(account);
