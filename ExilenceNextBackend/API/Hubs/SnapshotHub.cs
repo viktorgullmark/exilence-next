@@ -30,26 +30,38 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
+                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
             return snapshotModel;
         }
 
-        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
+        public async Task<string> RemoveSnapshot(string snapshotId)
         {
-            var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotId);
-            await Log($"Removed snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await _snapshotService.RemoveSnapshot(snapshotId);
+            await Log($"Removed snapshot with ClientId: {snapshotId}.");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, profileClientId, snapshotModel);
+                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
             }
 
             return snapshotId;
         }
-        
+
+        public async Task RemoveAllSnapshots(string profileClientId)
+        {
+            await _snapshotService.RemoveAllSnapshots(profileClientId);
+            await Log($"Removed snapshot for ProfileId: {profileClientId}");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.Group(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
+            }
+        }
+
         public async Task ForwardSnapshot(UpdateSnapshotModel updateModel)
         {
             var reciver = updateModel.ConnectionId;
@@ -76,7 +88,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
+                await Clients.Group(group.Name).SendAsync("OnAddPricedItems", updateModel);
             }
 
             return stashTabModel;

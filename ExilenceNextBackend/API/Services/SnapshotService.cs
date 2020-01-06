@@ -39,13 +39,18 @@ namespace API.Services
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
-        public async Task<SnapshotModel> RemoveSnapshot(string profileClientId, string snapshotClientId)
+        public async Task RemoveSnapshot(string snapshotClientId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
-            var snapshot = profile.Snapshots.FirstOrDefault(snapshot => snapshot.ClientId == snapshotClientId);
+            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
             _snapshotRepository.RemoveSnapshot(snapshot);
             await _snapshotRepository.SaveChangesAsync();
-            return _mapper.Map<SnapshotModel>(snapshot);
+        }
+
+        public async Task RemoveAllSnapshots(string profileClientId)
+        {
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
+            profile.Snapshots.Clear();
+            await _snapshotRepository.SaveChangesAsync();
         }
         #endregion
 
