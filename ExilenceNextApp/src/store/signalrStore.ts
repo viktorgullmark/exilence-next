@@ -1,22 +1,20 @@
+import { AxiosError } from 'axios';
 import { action, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
+import uuid from 'uuid';
 import { stores } from '..';
-import { IApiPricedItem } from '../interfaces/api/api-priced-item.interface';
+import { IApiGroup } from '../interfaces/api/api-group.interface';
+import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
-import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
-import uuid from 'uuid';
-import { AxiosError } from 'axios';
-import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
-import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -44,7 +42,7 @@ export class SignalrStore {
             'OnAddSnapshot',
             (connectionId, profileId, snapshot) => {
               if (this.activeGroup && snapshot && profileId) {
-                console.log('before', this.activeGroup);
+                console.log('Before OnAddSnapshot', this.activeGroup);
                 this.addSnapshotToConnection(snapshot, connectionId, profileId);
               }
             }
@@ -53,7 +51,7 @@ export class SignalrStore {
             'OnAddPricedItems',
             pricedItemsUpdate => {
               if (this.activeGroup) {
-                console.log('before', this.activeGroup);
+                console.log('Before OnAddPricedItems', this.activeGroup);
                 this.addPricedItemsToStashTab(pricedItemsUpdate);
               }
             }
@@ -62,7 +60,7 @@ export class SignalrStore {
             'OnRemoveAllSnapshots',
             (connectionId, profileId) => {
               if (this.activeGroup && profileId) {
-                console.log('before', this.activeGroup);
+                console.log('Before OnRemoveAllSnapshots', this.activeGroup);
                 // todo: should remove all snapshots in group
               }
             }
@@ -119,7 +117,7 @@ export class SignalrStore {
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
-        console.log('after', this.activeGroup);
+        console.log('After AddSnapshot', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
@@ -155,7 +153,7 @@ export class SignalrStore {
 
         this.activeGroup!.connections[connIndex] = connection;
 
-        console.log('after', this.activeGroup);
+        console.log('After AddPricedItems', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
@@ -301,7 +299,7 @@ export class SignalrStore {
   }
 
   @action
-  groupExistsSuccess() {}
+  groupExistsSuccess() { }
 
   @action
   groupExistsFail(e: AxiosError | Error) {
@@ -469,7 +467,7 @@ export class SignalrStore {
     );
   }
 
-  
+
   @action
   removeSnapshotFail(e: Error) {
     stores.notificationStore.createNotification(
@@ -503,7 +501,7 @@ export class SignalrStore {
       )
     );
   }
-  
+
   @action
   removeAllSnapshotFail(e: Error) {
     stores.notificationStore.createNotification(

@@ -14,6 +14,7 @@ namespace Shared.Models
         public string Password { get; set; }
 
         public List<ConnectionModel> Connections { get; set; }
+        public List<SnapshotProfileModel> Profiles { get; set; }
         public DateTime? Created { get; set; }
     }
 }
