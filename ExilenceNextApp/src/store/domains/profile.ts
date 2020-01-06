@@ -130,12 +130,8 @@ export class Profile {
 
   @action
   clearSnapshots() {
-    const snapshotsToRemove = [...this.snapshots];
     this.snapshots = [];
-
-    snapshotsToRemove.forEach(s => {
-      stores.signalrStore.removeSnapshot(s.uuid);
-    });
+    stores.signalrStore.removeAllSnapshots(this.uuid);
   }
 
   @action
@@ -336,7 +332,9 @@ export class Profile {
       fromStream(
         stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
           switchMap(() => {
-            return of(stores.signalrStore.uploadItems(apiItems, apiSnapshot.uuid));
+            return of(
+              stores.signalrStore.uploadItems(apiItems, apiSnapshot.uuid)
+            );
           })
         )
       );
