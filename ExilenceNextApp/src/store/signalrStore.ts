@@ -58,6 +58,15 @@ export class SignalrStore {
               }
             }
           );
+          signalrHub.onEvent<string, string>(
+            'OnRemoveAllSnapshots',
+            (connectionId, profileId) => {
+              if (this.activeGroup && profileId) {
+                console.log('before', this.activeGroup);
+                // todo: should remove all snapshots in group
+              }
+            }
+          );
         }
         reaction.dispose();
       }
@@ -460,10 +469,45 @@ export class SignalrStore {
     );
   }
 
+  
   @action
   removeSnapshotFail(e: Error) {
     stores.notificationStore.createNotification(
       'api_remove_snapshot',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  removeAllSnapshotsSuccess() {
+    stores.notificationStore.createNotification(
+      'api_remove_all_snapshots',
+      'success'
+    );
+  }
+
+  @action
+  removeAllSnapshots(uuid: string) {
+    const request: ISignalrEvent<string> = {
+      method: 'RemoveAllSnapshots',
+      object: uuid
+    };
+
+    fromStream(
+      this.handleRequest(
+        request,
+        this.removeSnapshotSuccess,
+        this.removeSnapshotFail
+      )
+    );
+  }
+  
+  @action
+  removeAllSnapshotFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'api_remove_all_snapshots',
       'error',
       false,
       e
@@ -477,6 +521,7 @@ export class SignalrStore {
       'success'
     );
   }
+
 
   @action
   uploadItems(stashtabs: IApiStashTabPricedItem[], snapshotId: string) {
