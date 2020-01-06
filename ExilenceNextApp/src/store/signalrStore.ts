@@ -38,6 +38,12 @@ export class SignalrStore {
       () => signalrHub!.connection,
       (_conn, reaction) => {
         if (_conn) {
+          signalrHub.onEvent<IApiGroup>('OnJoinGroup', group => {
+            this.setActiveGroup(new Group(group));
+          });
+          signalrHub.onEvent<IApiGroup>('OnLeaveGroup', group => {
+            this.setActiveGroup(new Group(group));
+          });
           signalrHub.onEvent<string, string, IApiSnapshot>(
             'OnAddSnapshot',
             (connectionId, profileId, snapshot) => {
@@ -130,7 +136,6 @@ export class SignalrStore {
   // todo: test this thoroughly
   @action
   addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
-    debugger;
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === pricedItemsUpdate.connectionId
     );
@@ -202,7 +207,6 @@ export class SignalrStore {
           })
           .pipe(
             map((g: IApiGroup) => {
-              debugger;
               this.setActiveGroup(new Group(g));
               this.joinGroupSuccess();
             }),
@@ -301,7 +305,7 @@ export class SignalrStore {
   }
 
   @action
-  groupExistsSuccess() { }
+  groupExistsSuccess() {}
 
   @action
   groupExistsFail(e: AxiosError | Error) {
@@ -469,7 +473,6 @@ export class SignalrStore {
     );
   }
 
-
   @action
   removeSnapshotFail(e: Error) {
     stores.notificationStore.createNotification(
@@ -522,9 +525,12 @@ export class SignalrStore {
     );
   }
 
-
   @action
-  uploadItems(stashtabs: IApiStashTabPricedItem[], profileId: string, snapshotId: string) {
+  uploadItems(
+    stashtabs: IApiStashTabPricedItem[],
+    profileId: string,
+    snapshotId: string
+  ) {
     fromStream(
       from(stashtabs).pipe(
         concatMap(st => {
