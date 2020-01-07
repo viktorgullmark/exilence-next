@@ -13,6 +13,7 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
+import axios from 'axios-observable';
 
 export class AccountStore {
   constructor(
@@ -50,6 +51,19 @@ export class AccountStore {
     acc
       ? acc.setSessionId(details.sessionId)
       : this.accounts.push(new Account(details));
+  }
+
+  @action
+  loginWithOAuth(code: any, options: any) {
+    fromStream(
+      externalService.loginWithOAuth(code, options).pipe(
+        map(res => {
+          // Success - Received Token. 
+          console.log('token', res);
+        }),
+        catchError((e: AxiosError) => of(console.log(e)))
+      )
+    );
   }
 
   @action
