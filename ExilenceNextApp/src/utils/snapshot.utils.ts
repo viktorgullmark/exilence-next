@@ -14,6 +14,7 @@ export class SnapshotUtils {
     return <IApiSnapshot>{
       uuid: snapshot.uuid,
       datestamp: snapshot.datestamp,
+      tabsFetchedCount: 0,
       stashTabs: stashTabs
         .filter(st =>
           snapshot.stashTabSnapshots.map(sts => sts.stashTabId).includes(st.id)

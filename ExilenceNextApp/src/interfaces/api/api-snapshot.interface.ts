@@ -7,4 +7,5 @@ export interface IApiSnapshot {
   datestamp: Moment;
   stashTabs: IApiStashTabSnapshot[];
   profile: IApiProfile;
+  tabsFetchedCount: number;
 }

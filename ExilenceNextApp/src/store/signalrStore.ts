@@ -149,6 +149,9 @@ export class SignalrStore {
         const snapshot = profile.snapshots.find(
           ss => ss.uuid === pricedItemsUpdate.snapshotId
         );
+        
+        snapshot!.tabsFetchedCount++;
+
         const stashTab = snapshot!.stashTabs.find(
           st => st.uuid === pricedItemsUpdate.stashTabId
         );
@@ -158,7 +161,7 @@ export class SignalrStore {
         );
 
         this.activeGroup!.connections[connIndex] = connection;
-
+        
         console.log('After AddPricedItems', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {
