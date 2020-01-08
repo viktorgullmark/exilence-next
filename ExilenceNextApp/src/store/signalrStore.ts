@@ -27,6 +27,7 @@ export class SignalrStore {
   @observable online: boolean = false;
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
+  @observable activeAccounts: string[] = [];
 
   constructor(
     private uiStateStore: UiStateStore,
@@ -75,6 +76,23 @@ export class SignalrStore {
         reaction.dispose();
       }
     );
+  }
+
+  @action
+  selectAccount(uuid: string) {
+    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
+    if (!foundUuid) {
+      this.activeAccounts.push(uuid);
+    }
+  }
+
+  @action
+  deselectAccount(uuid: string) {
+    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
+    if (foundUuid) {
+      const index = this.activeAccounts.indexOf(foundUuid);
+      this.activeAccounts.splice(index, 1);
+    }
   }
 
   @action
@@ -149,7 +167,7 @@ export class SignalrStore {
         const snapshot = profile.snapshots.find(
           ss => ss.uuid === pricedItemsUpdate.snapshotId
         );
-        
+
         snapshot!.tabsFetchedCount++;
 
         const stashTab = snapshot!.stashTabs.find(
@@ -161,7 +179,7 @@ export class SignalrStore {
         );
 
         this.activeGroup!.connections[connIndex] = connection;
-        
+
         console.log('After AddPricedItems', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {

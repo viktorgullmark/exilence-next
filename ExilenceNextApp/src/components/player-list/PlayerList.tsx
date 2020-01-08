@@ -1,7 +1,7 @@
-import React from 'react';
-import PlayerListItem from './player-list-item/PlayerListItem';
 import { List, makeStyles, Theme } from '@material-ui/core';
+import React from 'react';
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
+import PlayerListItemContainer from './player-list-item/PlayerListItemContainer';
 
 interface Props {
   connections: IApiConnection[];
@@ -18,7 +18,7 @@ const PlayerList: React.FC<Props> = ({ connections }: Props) => {
   return (
     <List dense className={classes.root}>
       {connections.map(c => {
-        return <PlayerListItem key={c.account.uuid} account={c.account} />;
+        return <PlayerListItemContainer key={c.account.uuid} account={c.account} />;
       })}
     </List>
   );

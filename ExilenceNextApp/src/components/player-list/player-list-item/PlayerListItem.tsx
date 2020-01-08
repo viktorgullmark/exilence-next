@@ -16,6 +16,8 @@ import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 
 interface Props {
   account: IApiAccount;
+  selected: boolean;
+  handleToggle: (uuid: string) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,28 +32,13 @@ const PlayerListItem = forwardRef((props: Props, ref) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  // todo: refactor to use within store instead
-  const [checked, setChecked] = React.useState<string[]>([]);
-  const handleToggle = (value: string) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
   return (
     <ListItem
       key={account.uuid}
       innerRef={ref}
       className={classes.root}
       button
-      onClick={handleToggle(account.uuid)}
+      onClick={() => props.handleToggle(account.uuid)}
     >
       <ListItemAvatar>
         <Avatar>{account.name[0]}</Avatar>
@@ -61,8 +48,8 @@ const PlayerListItem = forwardRef((props: Props, ref) => {
         <Checkbox
           edge="end"
           color="primary"
-          onChange={handleToggle(account.uuid)}
-          checked={checked.indexOf(account.uuid) !== -1}
+          onChange={() => props.handleToggle(account.uuid)}
+          checked={props.selected}
           inputProps={{ 'aria-labelledby': account.uuid }}
         />
       </ListItemSecondaryAction>

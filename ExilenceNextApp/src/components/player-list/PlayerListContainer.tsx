@@ -13,6 +13,7 @@ const PlayerListContainer: React.FC<Props> = ({
   uiStateStore,
   signalrStore
 }: Props) => {
+  
   return (
     <>
       {signalrStore!.activeGroup && (
