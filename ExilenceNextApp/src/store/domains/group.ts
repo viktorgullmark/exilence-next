@@ -16,20 +16,30 @@ export class Group implements IApiGroup {
     Object.assign(this, obj);
   }
 
-  @computed
-  get groupSnapshots() {
+  snapshotFlattener(onlyLatest?: boolean) {
     return this.connections
       .flatMap(c => c.account)
       .filter(a => this.activeAccounts.includes(a.uuid))
-      .flatMap(a =>
-        a.profiles.flatMap(p =>
+      .flatMap(a => {
+        const filter = a.profiles.flatMap(p =>
           p.snapshots.filter(
             s =>
               s.tabsFetchedCount === p.activeStashTabIds.length ||
               a.uuid === stores.accountStore.getSelectedAccount.uuid
-          )[0]
-        )
-      );
+          )
+        );
+        return onlyLatest ? filter[0] : filter;
+      });
+  }
+
+  @computed
+  get groupSnapshots() {
+    return this.snapshotFlattener();
+  }
+
+  @computed
+  get latestGroupSnapshots() {
+    return this.snapshotFlattener(true);
   }
 
   @computed

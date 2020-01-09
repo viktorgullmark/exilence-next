@@ -60,7 +60,7 @@ export class Profile {
 
   @computed
   get items() {
-    if(this.snapshots.length === 0) {
+    if (this.snapshots.length === 0) {
       return [];
     }
     return SnapshotUtils.filterItems([
@@ -70,7 +70,7 @@ export class Profile {
 
   @computed
   get netWorthValue() {
-    if(this.snapshots.length === 0) {
+    if (this.snapshots.length === 0) {
       return 0;
     }
     return SnapshotUtils.calculateNetWorth([
@@ -80,7 +80,7 @@ export class Profile {
 
   @computed
   get itemCount() {
-    if(this.snapshots.length === 0) {
+    if (this.snapshots.length === 0) {
       return 0;
     }
     return SnapshotUtils.getItemCount([
@@ -314,6 +314,10 @@ export class Profile {
       this.snapshots[1].stashTabSnapshots.forEach(stss => {
         stss.pricedItems = [];
       });
+    }
+
+    if (stores.signalrStore.activeGroup) {
+      stores.signalrStore.addOwnSnapshotToActiveGroup(this.snapshots[0]);
     }
     this.snapshotSuccess();
   }

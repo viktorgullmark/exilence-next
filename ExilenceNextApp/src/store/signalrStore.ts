@@ -17,6 +17,7 @@ import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
+import { Snapshot } from './domains/snapshot';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -267,6 +268,15 @@ export class SignalrStore {
       s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
     );
     return g;
+  }
+
+  @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
+    const activeProfile = this.activeGroup!.connections[0].account.profiles.find(
+      p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
+    );
+    activeProfile!.snapshots.unshift(
+      SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
+    );
   }
 
   @action
