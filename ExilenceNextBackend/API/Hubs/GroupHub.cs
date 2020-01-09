@@ -28,7 +28,10 @@ namespace API.Hubs
         {
             groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
             await Groups.AddToGroupAsync(ConnectionId, groupModel.Name);
-            await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", groupModel);
+
+            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
+
+            await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", connection);
             await Log($"Joined group: {groupModel.Name}");
             return groupModel;
         }
@@ -38,7 +41,10 @@ namespace API.Hubs
         {
             groupModel = await _groupService.LeaveGroup(ConnectionId, groupModel);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupModel.Name);
-            await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", groupModel);
+            
+            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
+
+            await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", connection);
             await Log($"Left group: {groupModel.Name}");
             return groupModel;
         }
