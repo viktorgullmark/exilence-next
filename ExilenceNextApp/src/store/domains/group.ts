@@ -32,6 +32,19 @@ export class Group implements IApiGroup {
       });
   }
 
+  @action
+  addConnection(connection: IApiConnection) {
+    this.connections.push(connection);
+  }
+
+  @action
+  removeConnection(connectionId: string) {
+    const index = this.connections.indexOf(
+      this.connections.find(c => c.connectionId === connectionId)!
+    );
+    this.connections.splice(index, 1);
+  }
+
   @computed
   get groupSnapshots() {
     return this.snapshotFlattener();

@@ -43,10 +43,10 @@ export class SignalrStore {
       (_conn, reaction) => {
         if (_conn) {
           signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
-            this.addConnectionToActiveGroup(connection);
+            this.activeGroup!.addConnection(connection);
           });
           signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
-            this.removeConnectionFromActiveGroup(connection.connectionId);
+            this.activeGroup!.removeConnection(connection.connectionId);
           });
           signalrHub.onEvent<string, string, IApiSnapshot>(
             'OnAddSnapshot',
@@ -303,19 +303,6 @@ export class SignalrStore {
   @action
   setActiveGroup(g: Group | undefined) {
     this.activeGroup = g;
-  }
-
-  @action
-  addConnectionToActiveGroup(connection: IApiConnection) {
-    this.activeGroup!.connections.push(connection);
-  }
-
-  @action
-  removeConnectionFromActiveGroup(connectionId: string) {
-    const index = this.activeGroup!.connections.indexOf(
-      this.activeGroup!.connections.find(c => c.connectionId === connectionId)!
-    );
-    this.activeGroup!.connections.splice(index, 1);
   }
 
   @action
