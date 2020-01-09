@@ -192,7 +192,7 @@ export class SignalrStore {
 
   // todo: test this thoroughly
   @action
-  addPricedItemsToStashTab(pricedItemsUpdate: IPricedItemsUpdate) {
+  addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === pricedItemsUpdate.connectionId
     );
@@ -595,14 +595,14 @@ export class SignalrStore {
     fromStream(
       from(stashtabs).pipe(
         concatMap(st => {
-          const request: ISignalrEvent<IPricedItemsUpdate> = {
+          const request: ISignalrEvent<IApiPricedItemsUpdate> = {
             method: 'AddPricedItems',
             object: {
               profileId: profileId,
               stashTabId: st.uuid,
               snapshotId: snapshotId,
               pricedItems: st.pricedItems
-            } as IPricedItemsUpdate
+            } as IApiPricedItemsUpdate
           };
           return this.handleRequest(
             request,
