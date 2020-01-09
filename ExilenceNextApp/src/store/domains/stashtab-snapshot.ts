@@ -7,7 +7,7 @@ export class StashTabSnapshot implements IStashTabSnapshot {
     @persist uuid: string = uuid.v4();
     @persist stashTabId: string = '';
     @persist value: number = 0;
-    @persist('list') items: IPricedItem[] = [];
+    @persist('list') pricedItems: IPricedItem[] = [];
 
     constructor(obj?: IStashTabSnapshot) {
         Object.assign(this, obj);

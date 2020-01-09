@@ -59,68 +59,33 @@ export class Profile {
   }
 
   @computed
-  get tableItems() {
-    if (this.snapshots.length === 0) {
-      return [];
-    }
-    const mergedItems = ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(i => i.calculated > 0)
-      )
-    );
-
-    return mergedItems.filter(
-      mi => mi.total >= stores.settingStore.priceTreshold
-    );
-  }
-
-  @computed
   get filteredItems() {
-    if (this.snapshots.length === 0) {
+    if(this.snapshots.length === 0) {
       return [];
     }
-    const mergedItems = ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(
-          i =>
-            i.calculated > 0 &&
-            i.name
-              .toLowerCase()
-              .includes(stores.uiStateStore.itemTableFilterText.toLowerCase())
-        )
-      )
-    );
-
-    return mergedItems.filter(
-      mi => mi.total >= stores.settingStore.priceTreshold
-    );
+    return SnapshotUtils.filterItems([
+      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
+    ]);
   }
 
   @computed
   get latestSnapshotValue() {
-    if (this.snapshots.length === 0) {
+    if(this.snapshots.length === 0) {
       return 0;
     }
-
-    const values = this.snapshots[0].stashTabSnapshots
-      .flatMap(sts => sts.items)
-      .flatMap(item => item.total)
-      .filter(value => value >= stores.settingStore.priceTreshold)
-      .reduce((a, b) => a + b, 0);
-
-    return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    return SnapshotUtils.calculateNetWorth([
+      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
+    ]);
   }
 
   @computed
   get latestSnapshotItemCount() {
-    if (this.snapshots.length === 0) {
+    if(this.snapshots.length === 0) {
       return 0;
     }
-    return ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(i => i.calculated > 0)
-      )
-    ).length;
+    return SnapshotUtils.getItemCount([
+      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
+    ]);
   }
 
   @action
@@ -206,8 +171,8 @@ export class Profile {
         .pipe(
           map(stashTabsWithItems => {
             return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.items = ItemUtils.mergeItemStacks(
-                stashTabWithItems.items
+              stashTabWithItems.pricedItems = ItemUtils.mergeItemStacks(
+                stashTabWithItems.pricedItems
               );
               return stashTabWithItems;
             });
@@ -267,7 +232,7 @@ export class Profile {
 
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
-        stashTabWithItems.items = stashTabWithItems.items.map(
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.map(
           (item: IPricedItem) => {
             return pricingService.priceItem(
               item,
@@ -277,7 +242,7 @@ export class Profile {
           }
         );
 
-        stashTabWithItems.value = stashTabWithItems.items
+        stashTabWithItems.value = stashTabWithItems.pricedItems
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
 
@@ -333,7 +298,11 @@ export class Profile {
         stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
           switchMap(() => {
             return of(
-              stores.signalrStore.uploadItems(apiItems, this.uuid, apiSnapshot.uuid)
+              stores.signalrStore.uploadItems(
+                apiItems,
+                this.uuid,
+                apiSnapshot.uuid
+              )
             );
           })
         )
@@ -343,7 +312,7 @@ export class Profile {
     // clear items from previous snapshot
     if (this.snapshots.length > 1) {
       this.snapshots[1].stashTabSnapshots.forEach(stss => {
-        stss.items = [];
+        stss.pricedItems = [];
       });
     }
     this.snapshotSuccess();

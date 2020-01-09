@@ -36,7 +36,7 @@ export class ItemUtils {
     let mergedStashTabs: IPricedItem[] = [];
 
     stashTabSnapshots.forEach(snapshot => {
-      mergedStashTabs = mergedStashTabs.concat(snapshot.items);
+      mergedStashTabs = mergedStashTabs.concat(snapshot.pricedItems);
     });
 
     return this.mergeItemStacks(mergedStashTabs);

@@ -11,4 +11,6 @@ export class Group implements IApiGroup {
     constructor(obj?: IApiGroup) {
         Object.assign(this, obj);
     }
+
+    // todo: create functions for displaying data
   }

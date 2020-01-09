@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
@@ -10,6 +10,8 @@ import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
+import { IPricedItem } from '../interfaces/priced-item.interface';
+import { SnapshotUtils } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
@@ -79,6 +81,11 @@ export class SignalrStore {
   }
 
   @action
+  setActiveAccounts(uuids: string[]) {
+    this.activeAccounts = uuids;
+  }
+
+  @action
   selectAccount(uuid: string) {
     const foundUuid = this.activeAccounts.find(aid => aid === uuid);
     if (!foundUuid) {
@@ -93,6 +100,38 @@ export class SignalrStore {
       const index = this.activeAccounts.indexOf(foundUuid);
       this.activeAccounts.splice(index, 1);
     }
+  }
+
+  @computed
+  get items() {
+    let items: IPricedItem[] = [];
+    if (this.activeGroup) {
+      items = this.activeGroup.connections
+        .flatMap(c => c.account)
+        .flatMap(a => a.profiles)
+        .flatMap(p => {
+          return SnapshotUtils.filterItems(p.snapshots);
+        });
+    } else {
+      items = SnapshotUtils.filterItems([
+        SnapshotUtils.mapSnapshotToApiSnapshot(
+          stores.accountStore.getSelectedAccount.activeProfile.snapshots[0]
+        )
+      ]);
+    }
+    return items;
+  }
+
+  @computed
+  get currentNetWorth() {
+    // todo: if in group, return group data, else local data
+    return 0;
+  }
+
+  @computed
+  get itemsCount() {
+    // todo: if in group, return group data, else local data
+    return 0;
   }
 
   @action
@@ -153,7 +192,7 @@ export class SignalrStore {
 
   // todo: test this thoroughly
   @action
-  addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
+  addPricedItemsToStashTab(pricedItemsUpdate: IPricedItemsUpdate) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === pricedItemsUpdate.connectionId
     );
@@ -228,6 +267,7 @@ export class SignalrStore {
           })
           .pipe(
             map((g: IApiGroup) => {
+              this.setActiveAccounts(g.connections.map(c => c.account.uuid));
               this.setActiveGroup(new Group(g));
               this.joinGroupSuccess();
             }),
@@ -555,14 +595,14 @@ export class SignalrStore {
     fromStream(
       from(stashtabs).pipe(
         concatMap(st => {
-          const request: ISignalrEvent<IApiPricedItemsUpdate> = {
+          const request: ISignalrEvent<IPricedItemsUpdate> = {
             method: 'AddPricedItems',
             object: {
               profileId: profileId,
               stashTabId: st.uuid,
               snapshotId: snapshotId,
               pricedItems: st.pricedItems
-            } as IApiPricedItemsUpdate
+            } as IPricedItemsUpdate
           };
           return this.handleRequest(
             request,
