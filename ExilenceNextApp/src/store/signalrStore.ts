@@ -261,7 +261,9 @@ export class SignalrStore {
   }
 
   @action applyOwnSnapshotsToGroup(g: IApiGroup) {
-    const activeProfile = g.connections[0].account.profiles.find(
+    const activeProfile = this.activeGroup!.connections.find(
+      c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
+    )!.account.profiles.find(
       p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
     );
     activeProfile!.snapshots = stores.accountStore.getSelectedAccount.activeProfile.snapshots.map(
@@ -271,7 +273,9 @@ export class SignalrStore {
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
-    const activeProfile = this.activeGroup!.connections[0].account.profiles.find(
+    const activeProfile = this.activeGroup!.connections.find(
+      c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
+    )!.account.profiles.find(
       p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
     );
     activeProfile!.snapshots.unshift(
