@@ -295,7 +295,7 @@ export class Profile {
       );
 
       fromStream(
-        stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
+        stores.signalrStore.sendSnapshot(apiSnapshot, this.uuid).pipe(
           switchMap(() => {
             return of(
               stores.signalrStore.uploadItems(

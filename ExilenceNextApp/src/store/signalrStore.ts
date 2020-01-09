@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { from, of } from 'rxjs';
-import { catchError, concatMap, map } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
@@ -18,6 +18,7 @@ import { NotificationStore } from './notificationStore';
 import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
 import { Snapshot } from './domains/snapshot';
+import { IApiConnection } from '../interfaces/api/api-connection.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -41,11 +42,11 @@ export class SignalrStore {
       () => signalrHub!.connection,
       (_conn, reaction) => {
         if (_conn) {
-          signalrHub.onEvent<IApiGroup>('OnJoinGroup', group => {
-            this.setActiveGroup(new Group(group));
+          signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
+            this.addConnectionToActiveGroup(connection);
           });
-          signalrHub.onEvent<IApiGroup>('OnLeaveGroup', group => {
-            this.setActiveGroup(new Group(group));
+          signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
+            this.removeConnectionFromActiveGroup(connection.connectionId);
           });
           signalrHub.onEvent<string, string, IApiSnapshot>(
             'OnAddSnapshot',
@@ -253,6 +254,18 @@ export class SignalrStore {
               );
               this.joinGroupSuccess();
             }),
+            switchMap(() => {
+              // sends latest snapshot to group members
+              const profile =
+                stores.accountStore.getSelectedAccount.activeProfile;
+              if (profile.snapshots.length === 0) {
+                return of(null);
+              }
+              return stores.signalrStore.sendSnapshot(
+                SnapshotUtils.mapSnapshotToApiSnapshot(profile.snapshots[0]),
+                profile.uuid
+              );
+            }),
             catchError((e: Error) => of(this.joinGroupFail(e)))
           )
       );
@@ -262,11 +275,14 @@ export class SignalrStore {
   }
 
   @action applyOwnSnapshotsToGroup(g: IApiGroup) {
-    const activeProfile = g.connections.find(
-      c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
-    )!.account.profiles.find(
-      p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
-    );
+    const activeProfile = g.connections
+      .find(
+        c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
+      )!
+      .account.profiles.find(
+        p =>
+          p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
+      );
     activeProfile!.snapshots = stores.accountStore.getSelectedAccount.activeProfile.snapshots.map(
       s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
     );
@@ -287,6 +303,19 @@ export class SignalrStore {
   @action
   setActiveGroup(g: Group | undefined) {
     this.activeGroup = g;
+  }
+
+  @action
+  addConnectionToActiveGroup(connection: IApiConnection) {
+    this.activeGroup!.connections.push(connection);
+  }
+
+  @action
+  removeConnectionFromActiveGroup(connectionId: string) {
+    const index = this.activeGroup!.connections.indexOf(
+      this.activeGroup!.connections.find(c => c.connectionId === connectionId)!
+    );
+    this.activeGroup!.connections.splice(index, 1);
   }
 
   @action
@@ -491,7 +520,7 @@ export class SignalrStore {
 
   /* #region Snapshot */
   @action
-  createSnapshot(snapshot: IApiSnapshot, profileId: string) {
+  sendSnapshot(snapshot: IApiSnapshot, profileId: string) {
     const request: ISignalrEvent<IApiSnapshot> = {
       method: 'AddSnapshot',
       object: snapshot,
@@ -500,15 +529,15 @@ export class SignalrStore {
 
     return this.handleRequest(
       request,
-      this.createSnapshotSuccess,
-      this.createSnapshotFail
+      this.sendSnapshotSuccess,
+      this.sendSnapshotFail
     );
   }
 
   @action
-  createSnapshotFail(e: Error) {
+  sendSnapshotFail(e: Error) {
     stores.notificationStore.createNotification(
-      'api_create_snapshot',
+      'api_send_snapshot',
       'error',
       false,
       e
@@ -516,11 +545,8 @@ export class SignalrStore {
   }
 
   @action
-  createSnapshotSuccess() {
-    stores.notificationStore.createNotification(
-      'api_create_snapshot',
-      'success'
-    );
+  sendSnapshotSuccess() {
+    stores.notificationStore.createNotification('api_send_snapshot', 'success');
   }
 
   @action
