@@ -83,6 +83,9 @@ export class SnapshotUtils {
   }
 
   public static filterItems(snapshots: IApiSnapshot[]) {
+    if (snapshots.length === 0) {
+      return [];
+    }
     const mergedItems = ItemUtils.mergeItemStacks(
       snapshots
         .flatMap(sts => sts.stashTabs)

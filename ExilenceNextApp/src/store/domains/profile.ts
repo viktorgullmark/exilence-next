@@ -59,7 +59,7 @@ export class Profile {
   }
 
   @computed
-  get filteredItems() {
+  get items() {
     if(this.snapshots.length === 0) {
       return [];
     }
@@ -69,7 +69,7 @@ export class Profile {
   }
 
   @computed
-  get latestSnapshotValue() {
+  get netWorthValue() {
     if(this.snapshots.length === 0) {
       return 0;
     }
@@ -79,7 +79,7 @@ export class Profile {
   }
 
   @computed
-  get latestSnapshotItemCount() {
+  get itemCount() {
     if(this.snapshots.length === 0) {
       return 0;
     }

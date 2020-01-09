@@ -29,7 +29,6 @@ export class SignalrStore {
   @observable online: boolean = false;
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
-  @observable activeAccounts: string[] = [];
 
   constructor(
     private uiStateStore: UiStateStore,
@@ -78,28 +77,6 @@ export class SignalrStore {
         reaction.dispose();
       }
     );
-  }
-
-  @action
-  setActiveAccounts(uuids: string[]) {
-    this.activeAccounts = uuids;
-  }
-
-  @action
-  selectAccount(uuid: string) {
-    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
-    if (!foundUuid) {
-      this.activeAccounts.push(uuid);
-    }
-  }
-
-  @action
-  deselectAccount(uuid: string) {
-    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
-    if (foundUuid) {
-      const index = this.activeAccounts.indexOf(foundUuid);
-      this.activeAccounts.splice(index, 1);
-    }
   }
 
   @computed
@@ -267,8 +244,11 @@ export class SignalrStore {
           })
           .pipe(
             map((g: IApiGroup) => {
-              this.setActiveAccounts(g.connections.map(c => c.account.uuid));
+              g = this.applyOwnSnapshotsToGroup(g);
               this.setActiveGroup(new Group(g));
+              this.activeGroup!.setActiveAccounts(
+                g.connections.map(c => c.account.uuid)
+              );
               this.joinGroupSuccess();
             }),
             catchError((e: Error) => of(this.joinGroupFail(e)))
@@ -277,6 +257,16 @@ export class SignalrStore {
     } else {
       this.joinGroupFail(new Error('error:not_connected'));
     }
+  }
+
+  @action applyOwnSnapshotsToGroup(g: IApiGroup) {
+    const activeProfile = g.connections[0].account.profiles.find(
+      p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
+    );
+    activeProfile!.snapshots = stores.accountStore.getSelectedAccount.activeProfile.snapshots.map(
+      s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
+    );
+    return g;
   }
 
   @action

@@ -13,15 +13,15 @@ const PlayerListItemContainer: React.FC<Props> = ({
   signalrStore,
   account
 }: Props) => {
-  const { activeAccounts } = signalrStore!;
+  const { activeAccounts } = signalrStore!.activeGroup!;
 
   const handleToggle = (uuid: string) => {
     const currentIndex = activeAccounts.indexOf(uuid);
 
     if (currentIndex === -1) {
-      signalrStore!.selectAccount(uuid);
+      signalrStore!.activeGroup!.selectAccount(uuid);
     } else {
-      signalrStore!.deselectAccount(uuid);
+      signalrStore!.activeGroup!.deselectAccount(uuid);
     }
   };
 
