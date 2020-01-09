@@ -28,7 +28,7 @@ export class Group implements IApiGroup {
               a.uuid === stores.accountStore.getSelectedAccount.uuid
           )
         );
-        return onlyLatest ? filter[0] : filter;
+        return onlyLatest && filter.length > 0 ? [filter[0]] : filter;
       });
   }
 
@@ -44,26 +44,26 @@ export class Group implements IApiGroup {
 
   @computed
   get items() {
-    if (this.groupSnapshots.length === 0) {
+    if (this.latestGroupSnapshots.length === 0) {
       return [];
     }
-    return SnapshotUtils.filterItems(this.groupSnapshots);
+    return SnapshotUtils.filterItems(this.latestGroupSnapshots);
   }
 
   @computed
   get netWorthValue() {
-    if (this.groupSnapshots.length === 0) {
+    if (this.latestGroupSnapshots.length === 0) {
       return 0;
     }
-    return SnapshotUtils.calculateNetWorth(this.groupSnapshots);
+    return SnapshotUtils.calculateNetWorth(this.latestGroupSnapshots);
   }
 
   @computed
   get itemCount() {
-    if (this.groupSnapshots.length === 0) {
+    if (this.latestGroupSnapshots.length === 0) {
       return 0;
     }
-    return SnapshotUtils.getItemCount(this.groupSnapshots);
+    return SnapshotUtils.getItemCount(this.latestGroupSnapshots);
   }
 
   @action

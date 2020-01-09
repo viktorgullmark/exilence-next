@@ -155,6 +155,7 @@ export class SignalrStore {
       );
       if (profile) {
         runInAction(() => {
+          snapshot.tabsFetchedCount = 0;
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
@@ -273,6 +274,7 @@ export class SignalrStore {
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
+    debugger;
     const activeProfile = this.activeGroup!.connections.find(
       c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
     )!.account.profiles.find(
