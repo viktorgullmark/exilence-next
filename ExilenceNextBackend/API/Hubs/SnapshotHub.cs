@@ -30,7 +30,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
             return snapshotModel;
@@ -44,7 +44,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
             }
 
             return snapshotId;
@@ -58,7 +58,7 @@ namespace API.Hubs
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
-                await Clients.Group(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
             }
         }
 
@@ -89,7 +89,7 @@ namespace API.Hubs
             if (group != null)
             {
                 updateModel.ConnectionId = ConnectionId;
-                await Clients.Group(group.Name).SendAsync("OnAddPricedItems", updateModel);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
             }
 
             return stashTabModel;
