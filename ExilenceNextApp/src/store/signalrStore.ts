@@ -277,27 +277,36 @@ export class SignalrStore {
   @action applyOwnSnapshotsToGroup(g: IApiGroup) {
     const activeProfile = g.connections
       .find(
-        c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
+        c => c.account.name === stores.accountStore.getSelectedAccount.name
       )!
       .account.profiles.find(
         p =>
           p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
       );
-    activeProfile!.snapshots = stores.accountStore.getSelectedAccount.activeProfile.snapshots.map(
-      s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
-    );
+
+    if (!activeProfile) {
+      throw new Error('error:profile_not_found_on_server');
+    } else {
+      activeProfile.snapshots = stores.accountStore.getSelectedAccount.activeProfile.snapshots.map(
+        s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
+      );
+    }
     return g;
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
     const activeProfile = this.activeGroup!.connections.find(
-      c => c.account.uuid === stores.accountStore.getSelectedAccount.uuid
+      c => c.account.name === stores.accountStore.getSelectedAccount.name
     )!.account.profiles.find(
       p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
     );
-    activeProfile!.snapshots.unshift(
-      SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
-    );
+    if (!activeProfile) {
+      throw new Error('error:profile_not_found_on_server');
+    } else {
+      activeProfile.snapshots.unshift(
+        SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
+      );
+    }
   }
 
   @action
