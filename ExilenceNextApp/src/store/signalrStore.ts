@@ -82,6 +82,13 @@ export class SignalrStore {
   }
 
   @computed
+  get ownConnection() {
+    return this.activeGroup!.connections.find(
+      c => c.account.name === stores.accountStore.getSelectedAccount.name
+    )!;
+  }
+
+  @computed
   get items() {
     let items: IPricedItem[] = [];
     if (this.activeGroup) {
@@ -295,9 +302,7 @@ export class SignalrStore {
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
-    const activeProfile = this.activeGroup!.connections.find(
-      c => c.account.name === stores.accountStore.getSelectedAccount.name
-    )!.account.profiles.find(
+    const activeProfile = this.ownConnection.account.profiles.find(
       p => p.uuid === stores.accountStore.getSelectedAccount.activeProfile.uuid
     );
     if (!activeProfile) {
@@ -344,7 +349,7 @@ export class SignalrStore {
             uuid: uuid.v4(),
             name: this.activeGroup.name,
             created: new Date(),
-            connections: []
+            connections: [this.ownConnection]
           })
           .pipe(
             map((g: IApiGroup) => {
