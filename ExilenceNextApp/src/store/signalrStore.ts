@@ -327,7 +327,7 @@ export class SignalrStore {
       false,
       e
     );
-    this.uiStateStore.groupError = e;
+    this.uiStateStore.setGroupError(e);
   }
 
   @action
