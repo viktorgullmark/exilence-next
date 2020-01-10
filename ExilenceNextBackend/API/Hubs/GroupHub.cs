@@ -26,10 +26,10 @@ namespace API.Hubs
         [Authorize]
         public async Task<GroupModel> JoinGroup(GroupModel groupModel)
         {
+            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
+
             groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
             await Groups.AddToGroupAsync(ConnectionId, groupModel.Name);
-
-            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
 
             await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", connection);
             await Log($"Joined group: {groupModel.Name}");
@@ -39,11 +39,11 @@ namespace API.Hubs
         [Authorize]
         public async Task<GroupModel> LeaveGroup(GroupModel groupModel)
         {
+            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
+
             groupModel = await _groupService.LeaveGroup(ConnectionId, groupModel);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupModel.Name);
             
-            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
-
             await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", connection);
             await Log($"Left group: {groupModel.Name}");
             return groupModel;
