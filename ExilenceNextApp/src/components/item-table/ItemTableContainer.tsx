@@ -86,6 +86,11 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
       event ? 500 : 0
     );
   };
+
+  const getItems = () => {
+    return activeGroup ? activeGroup.items : items;
+  };
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -96,10 +101,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           alignItems="center"
         >
           <Grid item xs={4} md={3}>
-            <ItemTableFilter
-              array={activeGroup ? activeGroup.items : items}
-              handleFilter={handleFilter}
-            />
+            <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
           </Grid>
           <Grid
             container
@@ -110,26 +112,24 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             direction="column"
             justify="space-between"
           >
-            {(activeGroup
-              ? activeGroup.items.length
-              : items.length === 0 &&
-                uiStateStore!.itemTableFilterText === '') && (
-              <Typography className={classes.noItemPlaceholder} align="center">
-                {t('tables:label.item_table_placeholder')}
-              </Typography>
-            )}
+            {getItems().length === 0 &&
+              uiStateStore!.itemTableFilterText === '' && (
+                <Typography
+                  className={classes.noItemPlaceholder}
+                  align="center"
+                >
+                  {t('tables:label.item_table_placeholder')}
+                </Typography>
+              )}
           </Grid>
 
           <Grid item xs={4} md={3} className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"
-              disabled={
-                (activeGroup && activeGroup.items.length === 0) ||
-                items.length === 0
-              }
+              disabled={getItems().length === 0}
               onClick={() =>
-                ExportUtils.exportData(activeGroup ? activeGroup.items : items)
+                ExportUtils.exportData(getItems())
               }
             >
               {t('label.net_worth_export')}
@@ -138,7 +138,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={activeGroup ? activeGroup.items : items}
+        items={getItems()}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
       />
