@@ -34,15 +34,14 @@ export class Group implements IApiGroup {
 
   @action
   addConnection(connection: IApiConnection) {
-    this.connections.push(connection);
+    this.connections = this.connections.concat([connection]);
   }
 
   @action
   removeConnection(connectionId: string) {
-    const index = this.connections.indexOf(
-      this.connections.find(c => c.connectionId === connectionId)!
+    this.connections = this.connections.filter(
+      c => c.connectionId !== connectionId
     );
-    this.connections.splice(index, 1);
   }
 
   @computed
