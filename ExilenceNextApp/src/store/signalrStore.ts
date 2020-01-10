@@ -327,7 +327,17 @@ export class SignalrStore {
       false,
       e
     );
-    this.uiStateStore.setGroupError(e);
+
+    if (e.message.includes('password')) {
+      this.uiStateStore.setGroupError(e);
+    } else {
+      this.notificationStore.createNotification(
+        'api_join_group',
+        'error',
+        true,
+        e
+      );
+    }
   }
 
   @action
