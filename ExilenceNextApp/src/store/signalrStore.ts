@@ -242,7 +242,17 @@ export class SignalrStore {
   /* #region Group */
   @action
   joinGroup(groupName: string, password: string) {
-    if (this.online) {
+    const profile = stores.accountStore.getSelectedAccount.activeProfile;
+    const snapshotToSend = profile.snapshots[0];
+    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+      al => al.leagueId === profile.activeLeagueId
+    );
+
+    if (this.online && activeAccountLeague) {
+      const itemsToSend = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+        snapshotToSend,
+        activeAccountLeague.stashtabs
+      );
       fromStream(
         this.signalrHub
           .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
@@ -263,14 +273,21 @@ export class SignalrStore {
             }),
             switchMap(() => {
               // sends latest snapshot to group members
-              const profile =
-                stores.accountStore.getSelectedAccount.activeProfile;
               if (profile.snapshots.length === 0) {
                 return of(null);
               }
               return stores.signalrStore.sendSnapshot(
-                SnapshotUtils.mapSnapshotToApiSnapshot(profile.snapshots[0]),
+                SnapshotUtils.mapSnapshotToApiSnapshot(snapshotToSend),
                 profile.uuid
+              );
+            }),
+            switchMap(() => {
+              return of(
+                stores.signalrStore.uploadItems(
+                  itemsToSend,
+                  profile.uuid,
+                  snapshotToSend.uuid
+                )
               );
             }),
             catchError((e: Error) => of(this.joinGroupFail(e)))
