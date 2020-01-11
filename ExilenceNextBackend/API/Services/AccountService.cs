@@ -50,7 +50,7 @@ namespace API.Services
 
             if (accountModel.Profiles != null) //Logger account dosen't have any profiles
             {
-                foreach (var profileModel in accountModel.Profiles)
+                foreach (var profileModel in accountModel.Profiles.Where(profile => profile.Name != "Profile 1")) //Never add default on edit (fix for multi client use)
                 {
                     var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
                     if (profile != null)
@@ -61,14 +61,6 @@ namespace API.Services
                     {
                         var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
                         account.Profiles.Add(newProfile);
-                    }
-                }
-
-                foreach (var profile in account.Profiles)
-                {
-                    if (!accountModel.Profiles.Any(modelProfile => modelProfile.ClientId  == profile.ClientId))
-                    {
-                        account.Profiles.Remove(profile);
                     }
                 }
             }
