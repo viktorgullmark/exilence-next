@@ -42,7 +42,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
 
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initated) {
-      accountStore!.initSession(location.pathname);
+      accountStore!.validateSession('/net-worth');
     }
 
     visitor!.pageview('/net-worth', appName).send();

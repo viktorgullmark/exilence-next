@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
@@ -13,7 +13,11 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
-import axios from 'axios-observable';
+import { stores } from '..';
+import { electronService } from './../services/electron.service';
+import { IOAuthResponse } from '../interfaces/oauth-response.interface';
+import { IToken } from '../interfaces/token.interface';
+import { IPoeProfile } from '../interfaces/poe-profile.interface';
 
 export class AccountStore {
   constructor(
@@ -26,6 +30,8 @@ export class AccountStore {
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
+  @persist @observable code: string = '';
+  @observable token: IToken | undefined = undefined;
 
   @computed
   get getSelectedAccount(): Account {
@@ -36,180 +42,287 @@ export class AccountStore {
   @action
   selectAccountByName(name: string) {
     this.activeAccount = '';
-    const account = this.findAccountByName(name);
+    const account = this.findAccount({ name: name });
     this.activeAccount = account!.uuid;
   }
 
   @action
-  findAccountByName(name: string) {
-    return this.accounts.find(a => a.name === name);
-  }
-
-  @action
-  addOrUpdateAccount(details: IAccount) {
-    if (details.name) { // todo: use account from profile endpoint
-      let acc = this.findAccountByName(details.name);
-      acc
-        ? acc.setSessionId(details.sessionId)
-        : this.accounts.push(new Account(details));
+  findAccount(details: IAccount) {
+    if (details.name) {
+      return this.accounts.find(a => a.name === details.name);
+    } else if (details.sessionId) {
+      return this.accounts.find(a => a.sessionId === details.sessionId);
     }
   }
 
   @action
-  loginWithOAuth(code: any) {
+  addOrUpdateAccount(details: IAccount) {
+    let foundAccount = this.findAccount(details);
+
+    if (foundAccount) {
+      if (details.name) {
+        foundAccount.name = details.name;
+      }
+      if (details.sessionId) {
+        foundAccount.sessionId = details.sessionId;
+      }
+      return foundAccount;
+    } else {
+      const newAccount = new Account(details);
+      this.accounts.push(newAccount);
+      return newAccount;
+    }
+  }
+
+  @action
+  handleAuthCallback(url: string, window: any) {
+    var raw_code = /code=([^&]*)/.exec(url) || null;
+    var code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+    var error = /\?error=(.+)$/.exec(url);
+
+    if (code || error) {
+      // Close the browser if code found or error
+      window.destroy();
+    }
+
+    // If there is a code, proceed to get token from github
+    if (code) {
+      this.setCode(code);
+      this.loginWithOAuth(code);
+    } else if (error) {
+      alert(
+        "Oops! Something went wrong and we couldn't" +
+          'log you in using Github. Please try again.'
+      );
+    }
+  }
+
+  @action
+  setCode(code: string) {
+    this.code = code;
+  }
+
+  @action
+  loadAuthWindow() {
+    var options = {
+      clientId: 'exilence',
+      scopes: ['profile'], // Scopes limit access for OAuth tokens.
+      redirectUrl: 'http://localhost',
+      state: 'yourstate',
+      responseType: 'code'
+    };
+
+    var authWindow = new electronService.remote.BrowserWindow({
+      width: 800,
+      height: 600,
+      show: false,
+      'node-integration': false
+    });
+
+    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+
+    authWindow.webContents.on('will-navigate', function(event: any, url: any) {
+      stores.accountStore.handleAuthCallback(url, authWindow);
+    });
+
+    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
+      stores.accountStore.handleAuthCallback(url, authWindow);
+    });
+
+    authWindow.webContents.on('did-get-redirect-request', function(
+      event: any,
+      oldUrl: any,
+      newUrl: any
+    ) {
+      stores.accountStore.handleAuthCallback(newUrl, authWindow);
+    });
+
+    // Reset the authWindow on close
+    authWindow.on(
+      'close',
+      function() {
+        authWindow = null;
+      },
+      false
+    );
+
+    authWindow.loadURL(authUrl);
+    authWindow.show();
+  }
+
+  @action
+  loginWithOAuth(code: string) {
     fromStream(
       externalService.loginWithOAuth(code).pipe(
-        map(res => {
-          // Success - Received Token.
-          console.log('token', res);
+        map((res: AxiosResponse<IOAuthResponse>) => {
+          this.loginWithOAuthSuccess(res.data);
         }),
-        catchError((e: AxiosError) => of(console.log(e)))
+        catchError((e: AxiosError) => of(this.loginWithOAuthFail(e)))
       )
     );
   }
 
   @action
-  initSession(sender: string, newAccount?: IAccount) {
-    this.uiStateStore.setInitiated(true);
-    this.uiStateStore.setIsInitiating(true);
-    let account: IAccount;
+  loginWithOAuthSuccess(response: IOAuthResponse) {
+    this.notificationStore.createNotification('login_with_oauth', 'success');
+    this.setToken(response);
+    this.initSession();
+  }
 
-    if (!newAccount) {
-      account = {
-        name: this.getSelectedAccount.name,
-        sessionId: this.getSelectedAccount.sessionId
-      };
-    } else {
-      account = newAccount;
-      reaction(
-        () => this.uiStateStore.sessIdCookie,
-        (_cookie, reaction) => {
-          this.initSessionSuccess(sender);
-          reaction.dispose();
-        }
-      );
+  @action
+  getPoeProfile() {
+    if (!this.token) {
+      this.getPoeProfileFail(new Error('error:no_token_set'));
     }
 
-    this.uiStateStore.setSubmitting(true);
+    return externalService.getProfile(this.token!.accessToken);
+  }
 
+  @action
+  getPoeProfileSuccess() {
+    this.notificationStore.createNotification('get_poe_profile', 'success');
+  }
+
+  @action
+  getPoeProfileFail(e: AxiosError | Error) {
+    this.notificationStore.createNotification(
+      'get_poe_profile',
+      'error',
+      true,
+      e
+    );
+  }
+
+  @action
+  loginWithOAuthFail(e: AxiosError) {
+    this.notificationStore.createNotification(
+      'login_with_oauth',
+      'error',
+      true,
+      e
+    );
+  }
+
+  @action
+  setToken(response: IOAuthResponse) {
+    this.token = {
+      accessToken: response.access_token,
+      expiresIn: response.expires_in,
+      tokenType: response.token_type,
+      scope: response.scope
+    };
+  }
+
+  @action
+  initSession() {
+    this.uiStateStore.setIsInitiating(true);
     fromStream(
-      forkJoin(
-        externalService.getLeagues(),
-        externalService.getCharacters('') // todo: use account from profile endpoint
-      ).pipe(
-        concatMap(requests => {
-          const retrievedLeagues = requests[0].data;
-          const retrievedCharacters = requests[1].data;
+      this.getPoeProfile().pipe(
+        concatMap((res: AxiosResponse<IPoeProfile>) => {
+          const details: IAccount = { name: res.data.name };
+          const account = this.addOrUpdateAccount(details);
+          this.selectAccountByName(account.name!);
+          return forkJoin(
+            externalService.getLeagues(),
+            externalService.getCharacters()
+          ).pipe(
+            concatMap(requests => {
+              const retrievedLeagues = requests[0].data;
+              const retrievedCharacters = requests[1].data;
 
-          if (retrievedLeagues.length === 0) {
-            throw new Error('error:no_leagues');
-          }
-          if (retrievedCharacters.length === 0) {
-            throw new Error('error:no_characters');
-          }
+              if (retrievedLeagues.length === 0) {
+                throw new Error('error:no_leagues');
+              }
+              if (retrievedCharacters.length === 0) {
+                throw new Error('error:no_characters');
+              }
 
-          if (newAccount) {
-            this.addOrUpdateAccount(account);
-            this.selectAccountByName(''); // todo: use account from profile endpoint
-          }
+              this.leagueStore.updateLeagues(retrievedLeagues);
+              this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
+              this.getSelectedAccount.checkDefaultProfile();
+              this.priceStore.getPricesForLeagues();
 
-          this.leagueStore.updateLeagues(retrievedLeagues);
-          this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
-          this.getSelectedAccount.checkDefaultProfile();
-
-          // todo: should return observable
-          this.priceStore.getPricesForLeagues();
-
-          return this.getSelectedAccount.authorize(
-            this.getSelectedAccount.profiles.map(p =>
-              ProfileUtils.mapProfileToApiProfile(p)
-            )
+              return this.getSelectedAccount
+                .authorize(
+                  this.getSelectedAccount.profiles.map(p =>
+                    ProfileUtils.mapProfileToApiProfile(p)
+                  )
+                )
+                .pipe(switchMap(() => of(this.initSessionSuccess())));
+            }),
+            catchError((e: AxiosError) => {
+              return of(this.initSessionFail(e));
+            })
           );
         }),
+        catchError((e: AxiosError) => of(this.getPoeProfileFail(e)))
+      )
+    );
+  }
+
+  @action
+  initSessionSuccess() {
+    this.notificationStore.createNotification('init_session', 'success');
+  }
+
+  @action
+  initSessionFail(e: AxiosError | Error) {
+    // todo: retry logic
+
+    this.notificationStore.createNotification('init_session', 'error', true, e);
+    this.uiStateStore.setIsInitiating(false);
+  }
+
+  @action
+  validateSession(sender: string, sessionId?: string) {
+    const request = sessionId
+      ? this.uiStateStore.setSessIdCookie(sessionId)
+      : of();
+    fromStream(
+      request.pipe(
         switchMap(() => {
-          return newAccount
-            ? this.uiStateStore.setSessIdCookie(account.sessionId)
-            : of(this.initSessionSuccess(sender));
-        }),
-        catchError((e: AxiosError) => {
-          return of(this.initSessionFail(e, sender, newAccount));
+          return externalService.getCharacters().pipe(
+            switchMap(() => of(this.validateSessionSuccess(sessionId))),
+            catchError((e: AxiosError) =>
+              of(this.validateSessionFail(e, sender))
+            )
+          );
         })
       )
     );
   }
 
   @action
-  initSessionSuccess(sender: string) {
-    this.notificationStore.createNotification('init_session', 'success');
-    this.validateSession(sender);
-  }
+  validateSessionSuccess(sessionId: string | undefined) {
+    this.addOrUpdateAccount({ sessionId: sessionId });
 
-  @action
-  initSessionFail(
-    e: AxiosError | Error,
-    sender: string,
-    newAccount?: IAccount
-  ) {
-    // retry init session if it fails
-    if (sender !== '/login') {
-      fromStream(
-        timer(30 * 1000).pipe(
-          switchMap(() => of(this.initSession(sender, newAccount)))
-        )
-      );
-    }
-
-    this.notificationStore.createNotification('init_session', 'error', true, e);
-    this.uiStateStore.setSubmitting(false);
-    this.uiStateStore.setIsInitiating(false);
-  }
-
-  @action
-  validateSession(sender: string) {
-    const acc = this.getSelectedAccount;
-    this.uiStateStore.setIsInitiating(true);
-    fromStream(
-      forkJoin(
-        of(acc.accountLeagues).pipe(
-          concatMap(leagues => leagues),
-          concatMap(league => {
-            return league.getStashTabs();
-          })
-        )
-      ).pipe(
-        switchMap(() => of(this.validateSessionSuccess())),
-        catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
-      )
-    );
-  }
-
-  @action
-  validateSessionSuccess() {
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(true);
-    this.uiStateStore.setIsInitiating(false);
-    const profile = this.getSelectedAccount.activeProfile;
 
-    if (profile.shouldSetStashTabs) {
-      const league = this.getSelectedAccount.accountLeagues.find(
-        al => al.leagueId === profile.activeLeagueId
-      );
+    this.loadAuthWindow();
 
-      if (league && profile.shouldSetStashTabs) {
-        profile.setActiveStashTabs(
-          league.stashtabs.slice(0, 6).map(lst => lst.id)
-        );
+    // const profile = this.getSelectedAccount.activeProfile;
 
-        this.signalrStore.updateProfile(
-          ProfileUtils.mapProfileToApiProfile(profile)
-        );
+    // if (profile.shouldSetStashTabs) {
+    //   const league = this.getSelectedAccount.accountLeagues.find(
+    //     al => al.leagueId === profile.activeLeagueId
+    //   );
 
-        runInAction(() => {
-          profile.shouldSetStashTabs = false;
-        });
-      }
-    }
+    //   if (league && profile.shouldSetStashTabs) {
+    //     profile.setActiveStashTabs(
+    //       league.stashtabs.slice(0, 6).map(lst => lst.id)
+    //     );
+
+    //     this.signalrStore.updateProfile(
+    //       ProfileUtils.mapProfileToApiProfile(profile)
+    //     );
+
+    //     runInAction(() => {
+    //       profile.shouldSetStashTabs = false;
+    //     });
+    //   }
+    // }
   }
 
   @action
@@ -229,6 +342,6 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
-    this.uiStateStore.setIsInitiating(false);
+    // this.uiStateStore.setIsInitiating(false);
   }
 }

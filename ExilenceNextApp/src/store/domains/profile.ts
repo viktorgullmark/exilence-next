@@ -165,7 +165,7 @@ export class Profile {
       externalService
         .getItemsForTabs(
           selectedStashTabs,
-          stores.accountStore.getSelectedAccount.name,
+          stores.accountStore.getSelectedAccount.name!,
           league.id
         )
         .pipe(

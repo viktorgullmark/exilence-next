@@ -17,10 +17,9 @@ import { genericRetryStrategy } from '../../utils/rxjs.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
-  @persist name: string = '';
+  @persist name: string | undefined = undefined;
   @persist @observable sessionId: string = '';
-  @persist @observable token: string = uuid.v4();
-
+ 
   @persist('list', AccountLeague)
   @observable
   accountLeagues: AccountLeague[] = [];
@@ -53,8 +52,8 @@ export class Account implements IAccount {
     return authService
       .getToken({
         uuid: this.uuid,
-        name: this.name,
-        token: this.token,
+        name: this.name!,
+        accessToken: stores.accountStore.token!.accessToken,
         profiles: profiles
           ? profiles.map(p => {
               return { ...p, snapshots: [] };

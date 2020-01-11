@@ -13,6 +13,7 @@ import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface'
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
 import uuid from 'uuid';
 import AppConfig from './../config/app.config';
+import { IPoeProfile } from '../interfaces/poe-profile.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
@@ -25,6 +26,7 @@ export const externalService = {
   getItemsForTabs,
   getLeagues,
   getCharacters,
+  getProfile,
   loginWithOAuth
 };
 
@@ -110,14 +112,20 @@ function getLeagues(
   );
 }
 
-function getCharacters(
-  account: string
-): Observable<AxiosResponse<ICharacter[]>> {
-  const parameters = `?accountName=${account}`;
+function getCharacters(): Observable<AxiosResponse<ICharacter[]>> {
   return rateLimiter.limit(
     axios.get<ICharacter[]>(
-      poeUrl + '/character-window/get-characters' + parameters
+      poeUrl + '/character-window/get-characters'
     )
+  );
+}
+
+function getProfile(
+  accessToken: string
+): Observable<AxiosResponse<IPoeProfile>> {
+  const parameters = `?access_token=${accessToken}`;
+  return rateLimiter.limit(
+    axios.get<IPoeProfile>(apiUrl + '/profile' + parameters)
   );
 }
 

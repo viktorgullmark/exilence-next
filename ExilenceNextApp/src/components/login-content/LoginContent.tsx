@@ -10,11 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
-import { Button } from '@material-ui/core';
 
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
-  handleOAuth: () => void;
   isSubmitting: boolean;
   account: Account;
 }
@@ -66,11 +64,6 @@ const LoginContent: React.FC<LoginContentProps> = (
                 isSubmitting={props.isSubmitting}
                 account={props.account}
               />
-            </Box>
-            <Box>
-              <Button onClick={props.handleOAuth} color="primary" variant="contained">
-                Login with GitHub
-              </Button>
             </Box>
           </Paper>
         </Grid>
