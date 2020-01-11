@@ -44,6 +44,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Route("token")]
         public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
         {
             var account = await _accountService.GetAccount(accountModel.Name);
@@ -62,10 +63,11 @@ namespace API.Controllers
             return Ok(token);
         }
 
-        [HttpPost]
+        [HttpGet]
+        [Route("oauth2")]
         public async Task<IActionResult> OAuth2(string code)
         {
-            string uri = "https://github.com/login/oauth/access_token";
+            string uri = "https://www.pathofexile.com/oauth/token";
 
             var client = _httpClientFactory.CreateClient();
             var data = new FormUrlEncodedContent(new[]
@@ -73,10 +75,12 @@ namespace API.Controllers
                 new KeyValuePair<string, string>("client_id", _clientId),
                 new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("grant_type", "client_credentials")
             });
             var response = await client.PostAsync(uri, data);
+            var contents = await response.Content.ReadAsStringAsync();
 
-            return Ok(response);
+            return Ok(contents);
         }
     }
 }

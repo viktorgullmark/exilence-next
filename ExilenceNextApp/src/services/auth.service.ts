@@ -14,7 +14,7 @@ export const authService = {
 };
 
 function getToken(account: IAccountAuth): Observable<AxiosResponse<string>> {
-    return axios.post<string>(`${AppConfig.baseUrl}/api/authentication`, account)
+    return axios.post<string>(`${AppConfig.baseUrl}/api/authentication/token`, account)
 }
 
 function setAuthCookie(cookie: ICookie): Observable<any> {

@@ -67,7 +67,7 @@ namespace BackgroundProcessor
 
                 };
                 var data = JsonSerializer.Serialize(accountModel);
-                var result = await httpClient.PostAsync("https://localhost:5001/api/authentication", new StringContent(data, Encoding.UTF8, "application/json"));
+                var result = await httpClient.PostAsync("https://localhost:5001/api/authentication/token", new StringContent(data, Encoding.UTF8, "application/json"));
                 string token = await result.Content.ReadAsStringAsync();
                 return token;
             }

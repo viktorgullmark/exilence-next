@@ -1,7 +1,7 @@
 import { electronService } from '../services/electron.service';
 
 const prodConfig = {
-  baseUrl: 'https://next.exilence.app',
+  baseUrl: 'https://localhost:5001',
   production: true,
   sentryBrowserDsn:
     'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',

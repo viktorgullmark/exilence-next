@@ -36,7 +36,7 @@ function getLatestRelease() {
 }
 
 function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
-  return axios.post(`${AppConfig}/api/authentication/oauth2`, code);
+  return axios.get(`${AppConfig.baseUrl}/api/authentication/oauth2?code=${code}`);
 }
 /* #endregion */
 

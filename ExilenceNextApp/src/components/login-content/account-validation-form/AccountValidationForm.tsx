@@ -30,7 +30,6 @@ interface AccountValidationFormProps {
 }
 
 interface AccountFormValues {
-  accountName: string;
   sessionId: string;
 }
 
@@ -68,17 +67,14 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
     <>
       <Formik
         initialValues={{
-          accountName: props.account.name,
           sessionId: props.account.sessionId
         }}
         onSubmit={(values: AccountFormValues) => {
           props.handleValidate({
-            name: values.accountName,
             sessionId: values.sessionId
           });
         }}
         validationSchema={Yup.object().shape({
-          accountName: Yup.string().required('Required'),
           sessionId: Yup.string().required('Required')
         })}
       >
@@ -97,24 +93,6 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           return (
             <form onSubmit={handleSubmit}>
               <div>
-                <TextField
-                  label={t('label.account_name')}
-                  name="accountName"
-                  value={values.accountName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  variant="outlined"
-                  helperText={
-                    errors.accountName &&
-                    touched.accountName &&
-                    errors.accountName
-                  }
-                  error={
-                    touched.accountName && errors.accountName !== undefined
-                  }
-                  margin="none"
-                  fullWidth
-                />
                 <TextField
                   label={t('label.session_id')}
                   name="sessionId"

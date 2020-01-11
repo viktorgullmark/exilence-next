@@ -28,7 +28,6 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
 
   const handleValidate = (details: IAccount) => {
     accountStore!.initSession(location.pathname, {
-      name: details.name,
       sessionId: details.sessionId
     });
 
@@ -43,7 +42,11 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
 
   const handleOAuth = () => {
     var options = {
-      client_id: 'exilence',
+      clientId: 'exilence',
+      scopes: ['profile'], // Scopes limit access for OAuth tokens.
+      redirectUrl: 'http://localhost',
+      state: 'yourstate',
+      responseType: 'code'
     };
 
     var authWindow = new electronService.remote.BrowserWindow({
@@ -52,11 +55,8 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       show: false,
       'node-integration': false
     });
-    
-    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.client_id}`;
 
-    authWindow.loadURL(authUrl);
-    authWindow.show();
+    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     function handleCallback(url: string) {
       var raw_code = /code=([^&]*)/.exec(url) || null;
@@ -85,6 +85,10 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       handleCallback(url);
     });
 
+    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
+      handleCallback(url);
+    });
+
     authWindow.webContents.on('did-get-redirect-request', function(
       event: any,
       oldUrl: any,
@@ -101,6 +105,9 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       },
       false
     );
+
+    authWindow.loadURL(authUrl);
+    authWindow.show();
   };
 
   return (

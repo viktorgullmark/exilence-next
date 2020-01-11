@@ -47,10 +47,12 @@ export class AccountStore {
 
   @action
   addOrUpdateAccount(details: IAccount) {
-    let acc = this.findAccountByName(details.name);
-    acc
-      ? acc.setSessionId(details.sessionId)
-      : this.accounts.push(new Account(details));
+    if (details.name) { // todo: use account from profile endpoint
+      let acc = this.findAccountByName(details.name);
+      acc
+        ? acc.setSessionId(details.sessionId)
+        : this.accounts.push(new Account(details));
+    }
   }
 
   @action
@@ -58,7 +60,7 @@ export class AccountStore {
     fromStream(
       externalService.loginWithOAuth(code).pipe(
         map(res => {
-          // Success - Received Token. 
+          // Success - Received Token.
           console.log('token', res);
         }),
         catchError((e: AxiosError) => of(console.log(e)))
@@ -93,7 +95,7 @@ export class AccountStore {
     fromStream(
       forkJoin(
         externalService.getLeagues(),
-        externalService.getCharacters(account.name)
+        externalService.getCharacters('') // todo: use account from profile endpoint
       ).pipe(
         concatMap(requests => {
           const retrievedLeagues = requests[0].data;
@@ -108,7 +110,7 @@ export class AccountStore {
 
           if (newAccount) {
             this.addOrUpdateAccount(account);
-            this.selectAccountByName(account.name);
+            this.selectAccountByName(''); // todo: use account from profile endpoint
           }
 
           this.leagueStore.updateLeagues(retrievedLeagues);
