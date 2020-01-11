@@ -27,13 +27,13 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   const handleValidate = (details: IAccount) => {
     accountStore!.validateSession(location.pathname, details.sessionId);
 
-    // reaction(
-    //   () => uiStateStore!.validated,
-    //   (_cookie, reaction) => {
-    //     history.push('/net-worth');
-    //     reaction.dispose();
-    //   }
-    // );
+    reaction(
+      () => uiStateStore!.validated,
+      (_cookie, reaction) => {
+        history.push('/net-worth');
+        reaction.dispose();
+      }
+    );
   };
 
   return (
