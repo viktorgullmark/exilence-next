@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using API.ApiModels;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
@@ -27,15 +29,13 @@ namespace API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private IAccountService _accountService;
-        private IMapper _mapper;
-        private string _secret;
-        private string _clientId;
-        private string _clientSecret;
+        private readonly IAccountService _accountService;
+        private readonly string _secret;
+        private readonly string _clientId;
+        private readonly string _clientSecret;
 
-        public AuthenticationController(IMapper mapper, IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public AuthenticationController(IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
-            _mapper = mapper;
             _accountService = accountRepository;
             _secret = configuration.GetSection("Settings")["Secret"];
             _httpClientFactory = httpClientFactory;
@@ -47,6 +47,12 @@ namespace API.Controllers
         [Route("token")]
         public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
         {
+            var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
+            if(!accountValid)
+            {
+                throw new Exception("Accesstoken not matching Account");
+            }
+
             var account = await _accountService.GetAccount(accountModel.Name);
 
             if (account == null)
@@ -69,18 +75,41 @@ namespace API.Controllers
         {
             string uri = "https://www.pathofexile.com/oauth/token";
 
-            var client = _httpClientFactory.CreateClient();
-            var data = new FormUrlEncodedContent(new[]
+            using (var client = _httpClientFactory.CreateClient())
             {
+                var data = new FormUrlEncodedContent(new[]
+                {
                 new KeyValuePair<string, string>("client_id", _clientId),
                 new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("code", code),
                 new KeyValuePair<string, string>("grant_type", "client_credentials")
-            });
-            var response = await client.PostAsync(uri, data);
-            var contents = await response.Content.ReadAsStringAsync();
+                });
+                var response = await client.PostAsync(uri, data);
+                var content = await response.Content.ReadAsStringAsync();
 
-            return Ok(contents);
+                return Ok(content);
+            }
+        }
+
+        public async Task<bool> ValidateAccount(string accountName, string accessToken)
+        {
+            string uri = $"https://www.pathofexile.com/api/profile?access_token={accessToken}";
+
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                var response = await client.GetAsync(uri);
+                var content = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var model = JsonSerializer.Deserialize<ProfileEndpointModel>(content, options);
+
+                if (model.Name == accountName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
