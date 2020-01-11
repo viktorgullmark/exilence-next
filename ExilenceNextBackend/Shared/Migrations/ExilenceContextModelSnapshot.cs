@@ -186,9 +186,9 @@ namespace Shared.Migrations
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(19)")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseType")
@@ -324,6 +324,9 @@ namespace Shared.Migrations
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ActiveLeagueId")
                         .HasColumnType("nvarchar(max)");

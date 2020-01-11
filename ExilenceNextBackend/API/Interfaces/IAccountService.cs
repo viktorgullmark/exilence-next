@@ -17,5 +17,6 @@ namespace API.Interfaces
         Task<SnapshotProfileModel> AddProfile(string accountName, SnapshotProfileModel profileModel);
         Task<SnapshotProfileModel> EditProfile(string accountName, SnapshotProfileModel profileModel);
         Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileId);
+        Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId);
     }
 }

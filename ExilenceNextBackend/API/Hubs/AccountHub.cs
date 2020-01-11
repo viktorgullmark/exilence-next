@@ -40,5 +40,19 @@ namespace API.Hubs
             return profileModel.ClientId;
         }
 
+        public async Task<string> ChangeProfile(string profileId)
+        {
+            var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
+            await Log($"Set profile with name: {profileModel.Name} and clientId: {profileModel.ClientId} to active");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
+            }
+
+            return profileModel.ClientId;
+        }
+
     }
 }

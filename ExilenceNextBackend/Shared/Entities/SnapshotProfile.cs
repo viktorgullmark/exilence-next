@@ -15,6 +15,7 @@ namespace Shared.Entities
         public string Name { get; set; }
         public string ActiveLeagueId { get; set; }
         public string ActivePriceLeagueId { get; set; }
+        public bool Active { get; set; }
         public ICollection<string> ActiveStashTabIds { get; set; }
         public virtual ICollection<Snapshot> Snapshots { get; set; }
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Computed)]

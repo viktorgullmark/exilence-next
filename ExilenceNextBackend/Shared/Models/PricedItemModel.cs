@@ -5,7 +5,7 @@ namespace Shared.Models
     public class PricedItemModel
     {
         [JsonIgnore]
-        public int? Id { get; set; }
+        public long? Id { get; set; }
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
         public string ItemId { get; set; }

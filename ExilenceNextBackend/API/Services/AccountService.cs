@@ -137,6 +137,22 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
+            var profile = account.Profiles.First(p => p.ClientId == profileId);
+
+            foreach (var accountProfile in account.Profiles)
+            {
+                accountProfile.Active = false;
+            }
+
+            profile.Active = true;
+
+            await _accountRepository.SaveChangesAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
     }
 
 }
