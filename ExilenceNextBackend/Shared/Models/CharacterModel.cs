@@ -1,14 +1,11 @@
-﻿using Newtonsoft.Json;
-using Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Shared.Enums;
 using System.Text.Json.Serialization;
 
 namespace Shared.Models
 {
     public class CharacterModel
     {
+        [JsonIgnore]
         public int? Id { get; set; }
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
