@@ -241,13 +241,11 @@ export class AccountStore {
               this.priceStore.getPricesForLeagues();
 
               return forkJoin(
-                this.getSelectedAccount
-                  .authorize(
-                    this.getSelectedAccount.profiles.map(p =>
-                      ProfileUtils.mapProfileToApiProfile(p)
-                    )
+                this.getSelectedAccount.authorize(
+                  this.getSelectedAccount.profiles.map(p =>
+                    ProfileUtils.mapProfileToApiProfile(p)
                   )
-                  .pipe(switchMap(() => of(this.initSessionSuccess()))),
+                ),
                 forkJoin(
                   of(account.accountLeagues).pipe(
                     concatMap(leagues => leagues),
@@ -256,7 +254,7 @@ export class AccountStore {
                     })
                   )
                 )
-              );
+              ).pipe(switchMap(() => of(this.initSessionSuccess())));
             }),
             catchError((e: AxiosError) => {
               return of(this.initSessionFail(e));
