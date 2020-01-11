@@ -86,7 +86,7 @@
       "authorize": "Could not retrieve a token from the server",
       "run_event_from_queue": "Failed when retrying a previously failed event"
     },
-    "custom_description" :{
+    "custom_description": {
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",
       "no_profile_found": "No profile was found"
     }

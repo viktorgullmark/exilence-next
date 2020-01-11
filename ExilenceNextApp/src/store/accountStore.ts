@@ -90,12 +90,10 @@ export class AccountStore {
       this.setCode(code);
       this.loginWithOAuth(code);
     } else if (error) {
-      alert(
-        "Oops! Something went wrong and we couldn't" +
-        'log you in using Github. Please try again.'
-      );
+      this.loginWithOAuthFail();
     }
   }
+
 
   @action
   setCode(code: string) {
@@ -189,7 +187,7 @@ export class AccountStore {
   }
 
   @action
-  loginWithOAuthFail(e: AxiosError) {
+  loginWithOAuthFail(e?: AxiosError) {
     this.notificationStore.createNotification(
       'login_with_oauth',
       'error',
@@ -278,10 +276,10 @@ export class AccountStore {
     fromStream(
       sessionId
         ? this.uiStateStore.setSessIdCookie(sessionId).pipe(
-            switchMap(() => {
-              return request;
-            })
-          )
+          switchMap(() => {
+            return request;
+          })
+        )
         : request
     );
   }
