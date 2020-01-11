@@ -1,23 +1,23 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { stores } from '..';
 import { IAccount } from '../interfaces/account.interface';
+import { IOAuthResponse } from '../interfaces/oauth-response.interface';
+import { IPoeProfile } from '../interfaces/poe-profile.interface';
+import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
 import { ProfileUtils } from '../utils/profile.utils';
+import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
-import { stores } from '..';
-import { electronService } from './../services/electron.service';
-import { IOAuthResponse } from '../interfaces/oauth-response.interface';
-import { IToken } from '../interfaces/token.interface';
-import { IPoeProfile } from '../interfaces/poe-profile.interface';
 
 export class AccountStore {
   constructor(
@@ -26,7 +26,7 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) {}
+  ) { }
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -92,7 +92,7 @@ export class AccountStore {
     } else if (error) {
       alert(
         "Oops! Something went wrong and we couldn't" +
-          'log you in using Github. Please try again.'
+        'log you in using Github. Please try again.'
       );
     }
   }
@@ -113,34 +113,28 @@ export class AccountStore {
     };
 
     var authWindow = new electronService.remote.BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 500,
+      height: 750,
       show: false,
-      'node-integration': false
+      autoHideMenuBar: true,
+      'node-integration': false,
+      fullscreenable: false,
+      resizable: false,
+      minimizable: false,
+      maximizable: false,
+      alwaysOnTop: true
     });
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-navigate', function(event: any, url: any) {
+    authWindow.webContents.on('will-redirect', function (event: any, url: any) {
       stores.accountStore.handleAuthCallback(url, authWindow);
-    });
-
-    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
-      stores.accountStore.handleAuthCallback(url, authWindow);
-    });
-
-    authWindow.webContents.on('did-get-redirect-request', function(
-      event: any,
-      oldUrl: any,
-      newUrl: any
-    ) {
-      stores.accountStore.handleAuthCallback(newUrl, authWindow);
     });
 
     // Reset the authWindow on close
     authWindow.on(
       'close',
-      function() {
+      function () {
         authWindow = null;
       },
       false
