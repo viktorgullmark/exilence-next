@@ -36,7 +36,7 @@ export class Account implements IAccount {
     const league = stores.leagueStore.leagues.find(
       l => l.id === this.activeProfile.activeLeagueId
     );
-    return league!;
+    return league;
   }
 
   @computed

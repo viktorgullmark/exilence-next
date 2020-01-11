@@ -26,7 +26,7 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) { }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -92,7 +92,7 @@ export class AccountStore {
     } else if (error) {
       alert(
         "Oops! Something went wrong and we couldn't" +
-        'log you in using Github. Please try again.'
+          'log you in using Github. Please try again.'
       );
     }
   }
@@ -127,14 +127,14 @@ export class AccountStore {
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-redirect', function (event: any, url: any) {
+    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
       stores.accountStore.handleAuthCallback(url, authWindow);
     });
 
     // Reset the authWindow on close
     authWindow.on(
       'close',
-      function () {
+      function() {
         authWindow = null;
       },
       false
@@ -186,6 +186,12 @@ export class AccountStore {
       true,
       e
     );
+
+    if (!this.code) {
+      this.uiStateStore.redirect('/login');
+    } else {
+      this.loginWithOAuth(this.code);
+    }
   }
 
   @action
@@ -219,12 +225,20 @@ export class AccountStore {
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
-            externalService.getCharacters()
+            externalService.getCharacters(),
+            forkJoin(
+              of(account.accountLeagues).pipe(
+                concatMap(leagues => leagues),
+                concatMap(league => {
+                  return league.getStashTabs();
+                })
+              )
+            )
           ).pipe(
             concatMap(requests => {
               const retrievedLeagues = requests[0].data;
               const retrievedCharacters = requests[1].data;
-
+              
               if (retrievedLeagues.length === 0) {
                 throw new Error('error:no_leagues');
               }

@@ -28,10 +28,16 @@ export class UiStateStore {
   @observable groupOverviewOpen: boolean = false;
   @observable groupExists: boolean | undefined = undefined;
   @observable groupError: AxiosError | Error | undefined = undefined;
+  @observable redirectedTo: string = '';
 
   @action
   setGroupExists(exists: boolean) {
     this.groupExists = exists;
+  }
+
+  @action
+  redirect(path: string) {
+    this.redirectedTo = path;
   }
 
   @action

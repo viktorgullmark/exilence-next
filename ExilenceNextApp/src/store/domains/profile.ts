@@ -47,7 +47,7 @@ export class Profile {
   get readyToSnapshot() {
     const account = stores.accountStore.getSelectedAccount;
     const league = account.accountLeagues.find(
-      al => al.leagueId === account.activeLeague.id
+      al => account.activeLeague && al.leagueId === account.activeLeague.id
     );
     return (
       league &&

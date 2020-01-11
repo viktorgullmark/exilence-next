@@ -71,7 +71,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(leagues, edit ? activeLeague.id : '');
+    const id = Dd.getDropdownSelection(leagues, edit && activeLeague ? activeLeague.id : '');
 
     // fallback in case league doesnt exist anymore
     const foundLeague = leagues.find(l => l.id === id);
