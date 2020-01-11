@@ -48,7 +48,7 @@ namespace API.Controllers
         public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
         {
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
-            if(!accountValid)
+            if (!accountValid)
             {
                 throw new Exception("Accesstoken not matching Account");
             }
@@ -86,9 +86,14 @@ namespace API.Controllers
                 });
                 var response = await client.PostAsync(uri, data);
                 var content = await response.Content.ReadAsStringAsync();
-
-                return Ok(content);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok(content);
+                }
             }
+
+            return BadRequest();
         }
 
         public async Task<bool> ValidateAccount(string accountName, string accessToken)
