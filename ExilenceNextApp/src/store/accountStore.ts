@@ -94,7 +94,6 @@ export class AccountStore {
     }
   }
 
-
   @action
   setCode(code: string) {
     this.code = code;
@@ -223,15 +222,7 @@ export class AccountStore {
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
-            externalService.getCharacters(),
-            forkJoin(
-              of(account.accountLeagues).pipe(
-                concatMap(leagues => leagues),
-                concatMap(league => {
-                  return league.getStashTabs();
-                })
-              )
-            )
+            externalService.getCharacters()
           ).pipe(
             concatMap(requests => {
               const retrievedLeagues = requests[0].data;
@@ -249,13 +240,23 @@ export class AccountStore {
               this.getSelectedAccount.checkDefaultProfile();
               this.priceStore.getPricesForLeagues();
 
-              return this.getSelectedAccount
-                .authorize(
-                  this.getSelectedAccount.profiles.map(p =>
-                    ProfileUtils.mapProfileToApiProfile(p)
+              return forkJoin(
+                this.getSelectedAccount
+                  .authorize(
+                    this.getSelectedAccount.profiles.map(p =>
+                      ProfileUtils.mapProfileToApiProfile(p)
+                    )
+                  )
+                  .pipe(switchMap(() => of(this.initSessionSuccess()))),
+                forkJoin(
+                  of(account.accountLeagues).pipe(
+                    concatMap(leagues => leagues),
+                    concatMap(league => {
+                      return league.getStashTabs();
+                    })
                   )
                 )
-                .pipe(switchMap(() => of(this.initSessionSuccess())));
+              );
             }),
             catchError((e: AxiosError) => {
               return of(this.initSessionFail(e));
@@ -290,10 +291,10 @@ export class AccountStore {
     fromStream(
       sessionId
         ? this.uiStateStore.setSessIdCookie(sessionId).pipe(
-          switchMap(() => {
-            return request;
-          })
-        )
+            switchMap(() => {
+              return request;
+            })
+          )
         : request
     );
   }
