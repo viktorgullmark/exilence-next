@@ -63,14 +63,6 @@ namespace API.Services
                         account.Profiles.Add(newProfile);
                     }
                 }
-
-                foreach (var profile in account.Profiles)
-                {
-                    if (!accountModel.Profiles.Any(modelProfile => modelProfile.ClientId  == profile.ClientId))
-                    {
-                        account.Profiles.Remove(profile);
-                    }
-                }
             }
 
             await _accountRepository.SaveChangesAsync();
