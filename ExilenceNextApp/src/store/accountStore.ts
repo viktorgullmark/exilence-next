@@ -199,6 +199,7 @@ export class AccountStore {
       true,
       e
     );
+    this.uiStateStore.redirect('/login');
   }
 
   @action
