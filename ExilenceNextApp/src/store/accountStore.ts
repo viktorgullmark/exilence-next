@@ -164,6 +164,7 @@ export class AccountStore {
 
   @action
   loginWithOAuthSuccess(response: IOAuthResponse) {
+    this.uiStateStore.setValidated(true);
     this.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     this.initSession();
@@ -263,6 +264,7 @@ export class AccountStore {
   @action
   initSessionSuccess() {
     this.notificationStore.createNotification('init_session', 'success');
+    this.uiStateStore.setIsInitiating(false);
   }
 
   @action
@@ -275,20 +277,18 @@ export class AccountStore {
 
   @action
   validateSession(sender: string, sessionId?: string) {
-    const request = sessionId
-      ? this.uiStateStore.setSessIdCookie(sessionId)
-      : of();
+    const request = externalService.getCharacters().pipe(
+      switchMap(() => of(this.validateSessionSuccess(sessionId))),
+      catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
+    );
     fromStream(
-      request.pipe(
-        switchMap(() => {
-          return externalService.getCharacters().pipe(
-            switchMap(() => of(this.validateSessionSuccess(sessionId))),
-            catchError((e: AxiosError) =>
-              of(this.validateSessionFail(e, sender))
-            )
-          );
-        })
-      )
+      sessionId
+        ? this.uiStateStore.setSessIdCookie(sessionId).pipe(
+            switchMap(() => {
+              return request;
+            })
+          )
+        : request
     );
   }
 
@@ -298,10 +298,12 @@ export class AccountStore {
 
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
-    this.uiStateStore.setValidated(true);
 
-    this.loadAuthWindow();
-
+    if (!this.code) {
+      this.loadAuthWindow();
+    } else {
+      this.loginWithOAuth(this.code);
+    }
     // const profile = this.getSelectedAccount.activeProfile;
 
     // if (profile.shouldSetStashTabs) {
