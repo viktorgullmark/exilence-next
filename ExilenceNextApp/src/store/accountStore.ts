@@ -26,7 +26,7 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) {}
+  ) { }
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
@@ -120,19 +120,19 @@ export class AccountStore {
       resizable: false,
       minimizable: false,
       maximizable: false,
-      alwaysOnTop: true
+      alwaysOnTop: true,
     });
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
+    authWindow.webContents.on('will-redirect', function (event: any, url: any) {
       stores.accountStore.handleAuthCallback(url, authWindow);
     });
 
     // Reset the authWindow on close
     authWindow.on(
       'close',
-      function() {
+      function () {
         authWindow = null;
       },
       false
@@ -236,7 +236,7 @@ export class AccountStore {
             concatMap(requests => {
               const retrievedLeagues = requests[0].data;
               const retrievedCharacters = requests[1].data;
-              
+
               if (retrievedLeagues.length === 0) {
                 throw new Error('error:no_leagues');
               }
