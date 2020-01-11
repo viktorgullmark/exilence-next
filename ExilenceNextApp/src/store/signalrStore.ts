@@ -243,58 +243,64 @@ export class SignalrStore {
   @action
   joinGroup(groupName: string, password: string) {
     const profile = stores.accountStore.getSelectedAccount.activeProfile;
-    const snapshotToSend = profile.snapshots[0];
+    const snapshotToSend: Snapshot = { ...profile.snapshots[0] };
+
     const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === profile.activeLeagueId
     );
-
-    if (this.online && activeAccountLeague) {
-      const itemsToSend = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+    if (activeAccountLeague) {
+      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
         snapshotToSend,
         activeAccountLeague.stashtabs
       );
-      fromStream(
-        this.signalrHub
-          .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
-            uuid: uuid.v4(),
-            name: groupName,
-            password: password,
-            created: new Date(),
-            connections: []
-          })
-          .pipe(
-            map((g: IApiGroup) => {
-              g = this.applyOwnSnapshotsToGroup(g);
-              this.setActiveGroup(new Group(g));
-              this.activeGroup!.setActiveAccounts(
-                g.connections.map(c => c.account.uuid)
-              );
-              this.joinGroupSuccess();
-            }),
-            switchMap(() => {
-              // sends latest snapshot to group members
-              if (profile.snapshots.length === 0) {
-                return of(null);
-              }
-              return stores.signalrStore.sendSnapshot(
-                SnapshotUtils.mapSnapshotToApiSnapshot(snapshotToSend),
-                profile.uuid
-              );
-            }),
-            switchMap(() => {
-              return of(
-                stores.signalrStore.uploadItems(
-                  itemsToSend,
-                  profile.uuid,
-                  snapshotToSend.uuid
-                )
-              );
-            }),
-            catchError((e: Error) => of(this.joinGroupFail(e)))
-          )
+      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+        snapshotToSend,
+        activeAccountLeague.stashtabs
       );
-    } else {
-      this.joinGroupFail(new Error('error:not_connected'));
+      snapshotToSend.stashTabSnapshots = [];
+      if (this.online && activeAccountLeague) {
+        fromStream(
+          this.signalrHub
+            .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
+              uuid: uuid.v4(),
+              name: groupName,
+              password: password,
+              created: new Date(),
+              connections: []
+            })
+            .pipe(
+              map((g: IApiGroup) => {
+                g = this.applyOwnSnapshotsToGroup(g);
+                this.setActiveGroup(new Group(g));
+                this.activeGroup!.setActiveAccounts(
+                  g.connections.map(c => c.account.uuid)
+                );
+                this.joinGroupSuccess();
+              }),
+              switchMap(() => {
+                // sends latest snapshot to group members
+                if (profile.snapshots.length === 0) {
+                  return of(null);
+                }
+                return this.sendSnapshot(
+                  apiSnapshot,
+                  profile.uuid
+                ).pipe(
+                  switchMap(() => {
+                    return this.uploadItems(
+                      apiItems,
+                      profile.uuid,
+                      snapshotToSend.uuid
+                    );
+                  })
+                );
+              }),
+              catchError((e: Error) => of(this.joinGroupFail(e)))
+            )
+        );
+      } else {
+        this.joinGroupFail(new Error('error:not_connected'));
+      }
     }
   }
 
@@ -651,28 +657,26 @@ export class SignalrStore {
     profileId: string,
     snapshotId: string
   ) {
-    fromStream(
-      from(stashtabs).pipe(
-        concatMap(st => {
-          const request: ISignalrEvent<IApiPricedItemsUpdate> = {
-            method: 'AddPricedItems',
-            object: {
-              profileId: profileId,
-              stashTabId: st.uuid,
-              snapshotId: snapshotId,
-              pricedItems: st.pricedItems
-            } as IApiPricedItemsUpdate
-          };
-          return this.handleRequest(
-            request,
-            this.uploadItemsSuccess,
-            this.uploadItemsFail
-          ).pipe(
-            map(() => this.uploadItemsSuccess),
-            catchError((e: Error) => of(this.uploadItemsFail(e)))
-          );
-        })
-      )
+    return from(stashtabs).pipe(
+      concatMap(st => {
+        const request: ISignalrEvent<IApiPricedItemsUpdate> = {
+          method: 'AddPricedItems',
+          object: {
+            profileId: profileId,
+            stashTabId: st.uuid,
+            snapshotId: snapshotId,
+            pricedItems: st.pricedItems
+          } as IApiPricedItemsUpdate
+        };
+        return this.handleRequest(
+          request,
+          this.uploadItemsSuccess,
+          this.uploadItemsFail
+        ).pipe(
+          map(() => this.uploadItemsSuccess),
+          catchError((e: Error) => of(this.uploadItemsFail(e)))
+        );
+      })
     );
   }
 
