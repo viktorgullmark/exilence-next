@@ -1,4 +1,3 @@
-
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { forkJoin, Observable, throwError } from 'rxjs';
@@ -13,39 +12,54 @@ import { IStash, IStashTab } from '../interfaces/stash.interface';
 import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
 import uuid from 'uuid';
+import AppConfig from './../config/app.config';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
 const apiUrl = 'https://api.pathofexile.com';
 
 export const externalService = {
-    getLatestRelease,
-    getStashTab,
-    getStashTabs,
-    getItemsForTabs,
-    getLeagues,
-    getCharacters
+  getLatestRelease,
+  getStashTab,
+  getStashTabs,
+  getItemsForTabs,
+  getLeagues,
+  getCharacters,
+  loginWithOAuth
 };
 
 /* #region github.com */
 function getLatestRelease() {
-   return axios.get<IGithubRelease>('https://api.github.com/repos/viktorgullmark/exilence-next/releases/latest'); 
+  return axios.get<IGithubRelease>(
+    'https://api.github.com/repos/viktorgullmark/exilence-next/releases/latest'
+  );
+}
+
+function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
+  return axios.post(`${AppConfig}/api/authentication/oauth2`, code);
 }
 /* #endregion */
 
 /* #region pathofexile.com */
-function getStashTab(account: string, league: string, index: number): Observable<AxiosResponse<IStash>> {
-    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-    return rateLimiter.limit(
-        axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
-    );
+function getStashTab(
+  account: string,
+  league: string,
+  index: number
+): Observable<AxiosResponse<IStash>> {
+  const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+  return rateLimiter.limit(
+    axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
+  );
 }
 
-function getStashTabs(account: string, league: string): Observable<AxiosResponse<IStash>> {
-    const parameters = `?league=${league}&accountName=${account}&tabs=1`;
-    return rateLimiter.limit(
-        axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
-    );
+function getStashTabs(
+  account: string,
+  league: string
+): Observable<AxiosResponse<IStash>> {
+  const parameters = `?league=${league}&accountName=${account}&tabs=1`;
+  return rateLimiter.limit(
+    axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
+  );
 }
 
 function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
@@ -86,16 +100,25 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
     })));
 }
 
-function getLeagues(type: string = 'main', compact: number = 1): Observable<AxiosResponse<ILeague[]>> {
-    const parameters = `?type=${type}&compact=${compact}`;
-    return rateLimiter.limit(
-        axios.get<ILeague[]>(apiUrl + '/leagues' + parameters));
+function getLeagues(
+  type: string = 'main',
+  compact: number = 1
+): Observable<AxiosResponse<ILeague[]>> {
+  const parameters = `?type=${type}&compact=${compact}`;
+  return rateLimiter.limit(
+    axios.get<ILeague[]>(apiUrl + '/leagues' + parameters)
+  );
 }
 
-function getCharacters(account: string): Observable<AxiosResponse<ICharacter[]>> {
-    const parameters = `?accountName=${account}`;
-    return rateLimiter.limit(
-        axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters' + parameters));
+function getCharacters(
+  account: string
+): Observable<AxiosResponse<ICharacter[]>> {
+  const parameters = `?accountName=${account}`;
+  return rateLimiter.limit(
+    axios.get<ICharacter[]>(
+      poeUrl + '/character-window/get-characters' + parameters
+    )
+  );
 }
 
 /* #endregion */
