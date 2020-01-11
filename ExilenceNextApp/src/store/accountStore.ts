@@ -54,9 +54,9 @@ export class AccountStore {
   }
 
   @action
-  loginWithOAuth(code: any, options: any) {
+  loginWithOAuth(code: any) {
     fromStream(
-      externalService.loginWithOAuth(code, options).pipe(
+      externalService.loginWithOAuth(code).pipe(
         map(res => {
           // Success - Received Token. 
           console.log('token', res);

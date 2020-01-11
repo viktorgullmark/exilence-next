@@ -8,6 +8,7 @@ import { UiStateStore } from '../../store/uiStateStore';
 import LoginContent from './LoginContent';
 import { LeagueStore } from './../../store/leagueStore';
 import { electronService } from '../../services/electron.service';
+import AppConfig from './../../config/app.config';
 
 interface LoginContentProps {
   accountStore?: AccountStore;
@@ -41,23 +42,19 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   };
 
   const handleOAuth = () => {
-    // Your GitHub Applications Credentials
     var options = {
-      client_id: '05b317108222e1148d73',
-      client_secret: 'a9733991fa5c58eb846055ad5452650823e692af',
-      scopes: ['user:email', 'notifications'] // Scopes limit access for OAuth tokens.
+      client_id: 'exilence',
     };
 
-    // Build the OAuth consent page URL
     var authWindow = new electronService.remote.BrowserWindow({
       width: 800,
       height: 600,
       show: false,
       'node-integration': false
     });
-    var githubUrl = 'https://github.com/login/oauth/authorize?';
-    var authUrl =
-      githubUrl + 'client_id=' + options.client_id + '&scope=' + options.scopes;
+    
+    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.client_id}`;
+
     authWindow.loadURL(authUrl);
     authWindow.show();
 
@@ -73,7 +70,7 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
 
       // If there is a code, proceed to get token from github
       if (code) {
-        accountStore!.loginWithOAuth(options, code);
+        accountStore!.loginWithOAuth(code);
       } else if (error) {
         alert(
           "Oops! Something went wrong and we couldn't" +

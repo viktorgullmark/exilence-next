@@ -30,6 +30,8 @@ namespace API.Controllers
         private IAccountService _accountService;
         private IMapper _mapper;
         private string _secret;
+        private string _clientId;
+        private string _clientSecret;
 
         public AuthenticationController(IMapper mapper, IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
@@ -37,6 +39,8 @@ namespace API.Controllers
             _accountService = accountRepository;
             _secret = configuration.GetSection("Settings")["Secret"];
             _httpClientFactory = httpClientFactory;
+            _clientId = configuration.GetSection("OAuth2")["ClientId"];
+            _clientSecret = configuration.GetSection("OAuth2")["ClientSecret"];
         }
 
         [HttpPost]
@@ -66,8 +70,8 @@ namespace API.Controllers
             var client = _httpClientFactory.CreateClient();
             var data = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("client_id", "05b317108222e1148d73"),
-                new KeyValuePair<string, string>("client_secret", "a9733991fa5c58eb846055ad5452650823e692af"),
+                new KeyValuePair<string, string>("client_id", _clientId),
+                new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("code", code),
             });
             var response = await client.PostAsync(uri, data);

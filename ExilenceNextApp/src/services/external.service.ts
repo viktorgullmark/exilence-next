@@ -11,6 +11,7 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStash, IStashTab } from '../interfaces/stash.interface';
 import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
+import AppConfig from './../config/app.config';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
@@ -33,13 +34,8 @@ function getLatestRelease() {
   );
 }
 
-function loginWithOAuth(options: any, code: any): Observable<AxiosResponse<any>> {
-  let data = new FormData()
-  data.append('client_id', options.client_id)
-  data.append('client_secret', options.client_secret)
-  data.append('code', code)
-  
-  return axios.post('https://github.com/login/oauth/access_token', data);
+function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
+  return axios.post(`${AppConfig}/api/authentication/oauth2`, code);
 }
 /* #endregion */
 
