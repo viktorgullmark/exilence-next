@@ -3,7 +3,13 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  map,
+  switchMap,
+  mergeMap
+} from 'rxjs/operators';
 import { stores } from '..';
 import { IAccount } from '../interfaces/account.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
@@ -18,6 +24,7 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
+import { ICookie } from '../interfaces/cookie.interface';
 
 export class AccountStore {
   constructor(
@@ -26,12 +33,13 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) { }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
   @persist @observable code: string = '';
   @observable token: IToken | undefined = undefined;
+  @observable sessionId: string = '';
 
   @computed
   get getSelectedAccount(): Account {
@@ -42,33 +50,24 @@ export class AccountStore {
   @action
   selectAccountByName(name: string) {
     this.activeAccount = '';
-    const account = this.findAccount({ name: name });
+    const account = this.findAccountByName(name);
     this.activeAccount = account!.uuid;
   }
 
   @action
-  findAccount(details: IAccount) {
-    if (details.name) {
-      return this.accounts.find(a => a.name === details.name);
-    } else if (details.sessionId) {
-      return this.accounts.find(a => a.sessionId === details.sessionId);
-    }
+  findAccountByName(name: string) {
+    return this.accounts.find(a => a.name === name);
   }
 
   @action
-  addOrUpdateAccount(details: IAccount) {
-    let foundAccount = this.findAccount(details);
+  addOrUpdateAccount(name: string, sessionId: string) {
+    let foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
-      if (details.name) {
-        foundAccount.name = details.name;
-      }
-      if (details.sessionId) {
-        foundAccount.sessionId = details.sessionId;
-      }
+      foundAccount.sessionId = sessionId;
       return foundAccount;
     } else {
-      const newAccount = new Account(details);
+      const newAccount = new Account({ name: name, sessionId: sessionId });
       this.accounts.push(newAccount);
       return newAccount;
     }
@@ -119,19 +118,19 @@ export class AccountStore {
       resizable: false,
       minimizable: false,
       maximizable: false,
-      alwaysOnTop: true,
+      alwaysOnTop: true
     });
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-redirect', function (event: any, url: any) {
+    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
       stores.accountStore.handleAuthCallback(url, authWindow);
     });
 
     // Reset the authWindow on close
     authWindow.on(
       'close',
-      function () {
+      function() {
         authWindow = null;
       },
       false
@@ -218,8 +217,10 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: AxiosResponse<IPoeProfile>) => {
-          const details: IAccount = { name: res.data.name };
-          const account = this.addOrUpdateAccount(details);
+          const account = this.addOrUpdateAccount(
+            res.data.name,
+            this.sessionId
+          );
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
@@ -294,18 +295,26 @@ export class AccountStore {
               return request;
             })
           )
-        : request
+        : this.uiStateStore.getSessIdCookie().pipe(
+            mergeMap((cookies: ICookie[]) => {
+              sessionId = cookies[0].value;
+              return request;
+            })
+          )
     );
   }
 
   @action
   validateSessionSuccess(sessionId: string | undefined) {
-    this.addOrUpdateAccount({ sessionId: sessionId });
+    if (sessionId) {
+      this.sessionId = sessionId;
+    }
 
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
 
     if (!this.code) {
+      this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
       this.loginWithOAuth(this.code);

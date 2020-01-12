@@ -76,6 +76,11 @@ export class UiStateStore {
   }
 
   @action
+  getSessIdCookie() {
+    return authService.getAuthCookie();
+  }
+
+  @action
   changeItemTablePage(index: number) {
     this.itemTablePageIndex = index;
   }
