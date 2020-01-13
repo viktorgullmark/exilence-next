@@ -30,7 +30,6 @@ import { SignalrHub } from './store/domains/signalr-hub';
 import { LeagueStore } from './store/leagueStore';
 import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
-import { RequestQueueStore } from './store/requestQueueStore';
 import { SettingStore } from './store/settingStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
@@ -64,11 +63,9 @@ const uiStateStore = new UiStateStore();
 const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const requestQueueStore = new RequestQueueStore(signalrHub, notificationStore);
 const signalrStore = new SignalrStore(
   uiStateStore,
   notificationStore,
-  requestQueueStore,
   signalrHub
 );
 const priceStore = new PriceStore(leagueStore, notificationStore);
@@ -87,8 +84,8 @@ export const stores = {
   notificationStore,
   leagueStore,
   priceStore,
-  requestQueueStore,
   signalrStore,
+  signalrHub,
   updateStore,
   settingStore
 };

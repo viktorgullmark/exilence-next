@@ -71,7 +71,10 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(leagues, edit && activeLeague ? activeLeague.id : '');
+    const id = Dd.getDropdownSelection(
+      leagues,
+      edit && activeLeague ? activeLeague.id : ''
+    );
 
     // fallback in case league doesnt exist anymore
     const foundLeague = leagues.find(l => l.id === id);
@@ -89,7 +92,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: ChangeEvent<{ value: unknown; }>) => {
+  const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
     const id = event.target.value;
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.leagueId === id
@@ -98,7 +101,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     let characters: Character[] = [];
 
     setStashTabIds([]);
-  
+
     if (accountLeague) {
       characters = accountLeague.characters;
       setStashTabs(accountLeague.stashtabs);
@@ -118,11 +121,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
       activeStashTabIds: stashTabIds
     };
     if (isEditing) {
-      accountStore!.getSelectedAccount.activeProfile.editProfile(profile);
+      accountStore!.getSelectedAccount.activeProfile.updateProfile(
+        profile,
+        handleClickClose
+      );
     } else {
-      accountStore!.getSelectedAccount.createProfile(profile);
+      accountStore!.getSelectedAccount.createProfile(profile, handleClickClose);
     }
-    handleClickClose();
   };
   return (
     <ProfileDialog

@@ -27,10 +27,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [
-    showConfirmClearSnapshotsDialog,
-    setShowConfirmClearSnapshotsDialog
-  ] = useState(false);
-  const [
     showConfirmRemoveProfileDialog,
     setShowConfirmRemoveProfileDialog
   ] = useState(false);
@@ -46,13 +42,12 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleClearSnapshots = () => {
-    accountStore!.getSelectedAccount.activeProfile.clearSnapshots();
-    setShowConfirmClearSnapshotsDialog(false);
+    accountStore!.getSelectedAccount.activeProfile.removeAllSnapshots();
+    uiStateStore!.setConfirmClearSnapshotsDialogOpen(false);
   };
 
   const handleRemoveProfile = () => {
     accountStore!.getSelectedAccount.removeActiveProfile();
-    setShowConfirmRemoveProfileDialog(false);
   };
 
   const handleSnapshot = () => {
@@ -80,8 +75,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   return (
     <>
       <ConfirmationDialog
-        show={showConfirmClearSnapshotsDialog}
-        onClose={() => setShowConfirmClearSnapshotsDialog(false)}
+        show={uiStateStore!.confirmClearSnapshotsDialogOpen}
+        onClose={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(false)}
         onConfirm={handleClearSnapshots}
         title={t('title.confirm_clear_snapshots')}
         body={t('body.clear_snapshots')}
@@ -116,7 +111,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() => setShowConfirmClearSnapshotsDialog(true)}
+        handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
         handleRemoveProfile={() => setShowConfirmRemoveProfileDialog(true)}
         isSnapshotting={
           accountStore!.getSelectedAccount.activeProfile.isSnapshotting
