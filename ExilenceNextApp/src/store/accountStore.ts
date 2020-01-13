@@ -314,7 +314,6 @@ export class AccountStore {
     this.uiStateStore.setSubmitting(false);
 
     if (!this.code) {
-      this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
       this.loginWithOAuth(this.code);
