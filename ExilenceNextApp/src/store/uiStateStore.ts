@@ -29,6 +29,12 @@ export class UiStateStore {
   @observable groupExists: boolean | undefined = undefined;
   @observable groupError: AxiosError | Error | undefined = undefined;
   @observable redirectedTo: string = '';
+  @observable confirmClearSnapshotsDialogOpen: boolean = false;
+
+  @action
+  setConfirmClearSnapshotsDialogOpen(open: boolean) {
+    this.confirmClearSnapshotsDialogOpen = open;
+  } 
 
   @action
   setGroupExists(exists: boolean) {
