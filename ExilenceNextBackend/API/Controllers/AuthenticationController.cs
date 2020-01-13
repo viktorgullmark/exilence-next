@@ -59,11 +59,7 @@ namespace API.Controllers
             {
                 account = await _accountService.AddAccount(accountModel);
             }
-            else
-            {
-                account = await _accountService.EditAccount(accountModel);
-            }
-
+            
             var token = AuthHelper.GenerateToken(_secret, account);
 
             return Ok(token);
