@@ -11,6 +11,7 @@ export const authService = {
   getToken,
   setAuthCookie,
   getAuthCookie,
+  removeAuthCookie,
   isLoggedIn
 };
 

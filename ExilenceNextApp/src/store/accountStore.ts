@@ -25,6 +25,7 @@ import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
 import { ICookie } from '../interfaces/cookie.interface';
+import { authService } from '../services/auth.service';
 
 export class AccountStore {
   constructor(
@@ -217,6 +218,7 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: AxiosResponse<IPoeProfile>) => {
+          this.getPoeProfileSuccess();
           const account = this.addOrUpdateAccount(
             res.data.name,
             this.sessionId
@@ -297,7 +299,9 @@ export class AccountStore {
           )
         : this.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
-              sessionId = cookies[0].value;
+              if (cookies && cookies.length > 0) {
+                sessionId = cookies[0].value;
+              }
               return request;
             })
           )
@@ -313,7 +317,7 @@ export class AccountStore {
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
 
-    if (!this.code) {
+    if (!this.code || sessionId) {
       this.loadAuthWindow();
     } else {
       this.loginWithOAuth(this.code);

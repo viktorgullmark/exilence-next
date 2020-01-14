@@ -6,7 +6,7 @@ import { catchError, concatMap } from 'rxjs/operators';
 
 export class MigrationStore {
   @observable @persist current: number = 1;
-  @observable latest: number = 8;
+  @observable latest: number = 2;
 
   constructor() {}
 
