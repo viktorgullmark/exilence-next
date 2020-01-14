@@ -50,7 +50,7 @@ namespace API.Controllers
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
             {
-                throw new Exception("Accesstoken not matching Account");
+                return BadRequest("Accesstoken not matching Account");
             }
 
             var account = await _accountService.GetAccount(accountModel.Name);
