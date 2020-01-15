@@ -96,11 +96,12 @@ const app = (
           <Router>
             <CssBaseline />
             <GlobalStyles />
+            <ToastWrapper />
+            <Route path="/login" component={Login} />
             <HeaderContainer />
             <DrawerWrapperContainer>
               <ToolbarContainer />
               <Route path="/net-worth" component={NetWorth} />
-              <Route path="/login" component={Login} />
               <Route path="/settings" component={Settings} />
               <Route
                 exact
@@ -113,7 +114,6 @@ const app = (
                   )
                 }
               />
-              <ToastWrapper />
             </DrawerWrapperContainer>
             <Notifier />
             <ReactionContainer />

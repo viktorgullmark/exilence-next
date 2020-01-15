@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
-    }),
+    })
   },
   fromRight: {
     marginRight: drawerWidth
@@ -63,15 +63,18 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
           <GroupOverviewContainer />
         </>
       )}
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: navMenuOpen || groupOverviewOpen && !atLoginRoute(),
-          [classes.fromLeft]: navMenuOpen,
-          [classes.fromRight]: groupOverviewOpen
-        })}
-      >
-        {children}
-      </main>
+      {!atLoginRoute() && (
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]:
+              navMenuOpen || (groupOverviewOpen && !atLoginRoute()),
+            [classes.fromLeft]: navMenuOpen,
+            [classes.fromRight]: groupOverviewOpen
+          })}
+        >
+          {children}
+        </main>
+      )}
     </>
   );
 };
