@@ -78,7 +78,7 @@ namespace API.Controllers
                 new KeyValuePair<string, string>("client_id", _clientId),
                 new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>("grant_type", "client_credentials")
+                new KeyValuePair<string, string>("grant_type", "authorization_code")
                 });
                 var response = await client.PostAsync(uri, data);
                 var content = await response.Content.ReadAsStringAsync();
