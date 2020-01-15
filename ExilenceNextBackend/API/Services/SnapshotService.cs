@@ -31,6 +31,16 @@ namespace API.Services
             var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
+
+        public async Task<SnapshotModel> GetLatestSnapshotWithItems(string snapshotClientId)
+        {
+            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId)
+                .Include(snapshot => snapshot.StashTabs)
+                .ThenInclude(stashtab => stashtab.PricedItems)
+                .FirstAsync();
+            return _mapper.Map<SnapshotModel>(snapshot);
+        }
+
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
