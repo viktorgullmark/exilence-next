@@ -142,7 +142,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const location = useLocation();
   const { t } = useTranslation();
-
   const atLoginRoute = () => {
     return location.pathname === '/login';
   };
@@ -227,7 +226,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   <IconButton
                     disabled={
-                      props.activeProfile.isSnapshotting ||
+                      props.isSnapshotting ||
                       props.profiles.length < 2
                     }
                     onClick={() => props.handleRemoveProfile()}
@@ -259,7 +258,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   {props.activeProfile.snapshots.length > 0 && (
                     <IconButton
-                      disabled={props.activeProfile.isSnapshotting}
+                      disabled={props.isSnapshotting}
                       onClick={() => props.handleClearSnapshots()}
                       aria-label="clear snapshots"
                       className={classes.iconButton}

@@ -112,7 +112,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
         handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
         isSnapshotting={
-          accountStore!.getSelectedAccount.activeProfile.isSnapshotting
+          uiStateStore!.isSnapshotting
         }
         isInitiating={uiStateStore!.isInitiating}
       />
