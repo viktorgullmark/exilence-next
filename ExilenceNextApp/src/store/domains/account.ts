@@ -146,6 +146,7 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
+    stores.uiStateStore.setRemovingProfile(true);
     visitor!.event('Profile', 'Remove profile').send();
 
     const profileIndex = this.profiles.findIndex(
@@ -176,11 +177,13 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfileSuccess() {
+    stores.uiStateStore.setRemovingProfile(false);
     stores.notificationStore.createNotification('remove_profile', 'success');
   }
 
   @action
   removeActiveProfileFail(e: Error) {
+    stores.uiStateStore.setRemovingProfile(false);
     stores.notificationStore.createNotification(
       'remove_profile',
       'error',
@@ -196,6 +199,7 @@ export class Account implements IAccount {
 
   @action
   createProfile(profile: IProfile, callback: () => void) {
+    stores.uiStateStore.setSavingProfile(true);
     const newProfile = new Profile(profile);
 
     fromStream(
@@ -206,7 +210,7 @@ export class Account implements IAccount {
         )
         .pipe(
           map((p: IApiProfile) => {
-            this.profiles.push(newProfile);
+            this.addProfile(newProfile);
             this.setActiveProfile(newProfile.uuid);
             callback();
             this.createProfileSuccess();
@@ -219,6 +223,7 @@ export class Account implements IAccount {
 
   @action
   createProfileFail(e: Error) {
+    stores.uiStateStore.setSavingProfile(false);
     stores.notificationStore.createNotification(
       'create_profile',
       'error',
@@ -229,6 +234,12 @@ export class Account implements IAccount {
 
   @action
   createProfileSuccess() {
+    stores.uiStateStore.setSavingProfile(false);
     stores.notificationStore.createNotification('create_profile', 'success');
+  }
+
+  @action
+  addProfile(p: Profile) {
+    this.profiles.push(p);
   }
 }

@@ -3,15 +3,9 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer } from 'rxjs';
-import {
-  catchError,
-  concatMap,
-  map,
-  switchMap,
-  mergeMap
-} from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { stores } from '..';
-import { IAccount } from '../interfaces/account.interface';
+import { ICookie } from '../interfaces/cookie.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
 import { IToken } from '../interfaces/token.interface';
@@ -24,8 +18,6 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
-import { ICookie } from '../interfaces/cookie.interface';
-import { authService } from '../services/auth.service';
 
 export class AccountStore {
   constructor(
@@ -38,8 +30,8 @@ export class AccountStore {
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
-  @persist @observable code: string = '';
-  @observable token: IToken | undefined = undefined;
+  @persist('object') @observable token: IToken | undefined = undefined;
+  @observable code: string = '';
   @observable sessionId: string = '';
 
   @computed
@@ -184,10 +176,9 @@ export class AccountStore {
       e
     );
 
-    if (!this.code) {
+    // todo: check expiry date here
+    if (!this.token) {
       this.uiStateStore.redirect('/login');
-    } else {
-      this.loginWithOAuth(this.code);
     }
   }
 
@@ -274,6 +265,7 @@ export class AccountStore {
   initSessionSuccess() {
     this.notificationStore.createNotification('init_session', 'success');
     this.uiStateStore.setIsInitiating(false);
+    this.uiStateStore.setInitiated(true);
   }
 
   @action
@@ -282,6 +274,7 @@ export class AccountStore {
 
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setIsInitiating(false);
+    this.uiStateStore.setInitiated(true);
   }
 
   @action
@@ -289,7 +282,7 @@ export class AccountStore {
     this.uiStateStore.setSubmitting(true);
 
     const request = externalService.getCharacters().pipe(
-      switchMap(() => of(this.validateSessionSuccess(sessionId))),
+      switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
       catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
     );
     fromStream(
@@ -311,7 +304,7 @@ export class AccountStore {
   }
 
   @action
-  validateSessionSuccess(sessionId: string | undefined) {
+  validateSessionSuccess(sender: string, sessionId: string | undefined) {
     if (sessionId) {
       this.sessionId = sessionId;
     }
@@ -319,11 +312,14 @@ export class AccountStore {
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
 
-    if (!this.code || sessionId) {
+    // todo: check expiry date
+    if (!this.token || sessionId) {
+      this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
-      this.loginWithOAuth(this.code);
+      this.initSession();
     }
+  
     // const profile = this.getSelectedAccount.activeProfile;
 
     // if (profile.shouldSetStashTabs) {

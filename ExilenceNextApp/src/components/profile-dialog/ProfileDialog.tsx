@@ -16,9 +16,11 @@ import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
+import RequestButton from '../request-button/RequestButton';
 
 interface ProfileDialogProps {
   isOpen: boolean;
+  loading: boolean;
   isEditing?: boolean;
   profile: Profile;
   leagueUuid: string;
@@ -152,11 +154,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     <Button onClick={() => props.handleClickClose()}>
                       {t('action.cancel')}
                     </Button>
-                    <Button
+                    <RequestButton
                       variant="contained"
                       type="submit"
                       color="primary"
+                      loading={props.loading}
                       disabled={
+                        props.loading ||
                         noCharacters.length > 0 ||
                         props.stashTabIds.length === 0 ||
                         (dirty && !isValid)
@@ -165,7 +169,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                       {props.isEditing
                         ? t('action.save_profile')
                         : t('action.create_profile')}
-                    </Button>
+                    </RequestButton>
                   </div>
                 </form>
               );

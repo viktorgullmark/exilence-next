@@ -374,6 +374,7 @@ export class Profile {
 
   @action
   removeAllSnapshotsSuccess() {
+    stores.uiStateStore.setClearingSnapshots(false);
     stores.notificationStore.createNotification(
       'remove_all_snapshots',
       'success'
@@ -382,6 +383,7 @@ export class Profile {
 
   @action
   removeAllSnapshots() {
+    stores.uiStateStore.setClearingSnapshots(true);
     fromStream(
       stores.signalrHub.invokeEvent<string>('RemoveAllSnapshots', this.uuid).pipe(
         map(() => {
@@ -395,6 +397,7 @@ export class Profile {
 
   @action
   removeAllSnapshotFail(e: Error) {
+    stores.uiStateStore.setClearingSnapshots(false);
     stores.notificationStore.createNotification(
       'remove_all_snapshots',
       'error',

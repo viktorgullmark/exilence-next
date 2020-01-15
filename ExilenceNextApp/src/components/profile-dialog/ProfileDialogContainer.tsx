@@ -8,10 +8,12 @@ import { Profile } from '../../store/domains/profile';
 import { LeagueStore } from '../../store/leagueStore';
 import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
+import { UiStateStore } from '../../store/uiStateStore';
 
 interface Props {
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
+  uiStateStore?: UiStateStore;
   isOpen: boolean;
   isEditing: boolean;
   profile: Profile;
@@ -22,6 +24,7 @@ interface Props {
 const ProfileDialogContainer: React.FC<Props> = ({
   accountStore,
   leagueStore,
+  uiStateStore,
   profile,
   isOpen,
   isEditing,
@@ -145,11 +148,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
       characters={characters}
+      loading={uiStateStore!.savingProfile}
     />
   );
 };
 
 export default inject(
+  'uiStateStore',
   'accountStore',
   'leagueStore'
 )(observer(ProfileDialogContainer));
