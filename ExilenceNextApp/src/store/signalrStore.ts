@@ -182,22 +182,16 @@ export class SignalrStore {
 
   @action
   joinGroup(groupName: string, password: string) {
+    this.uiStateStore.setJoiningGroup(true);
     const profile = stores.accountStore.getSelectedAccount.activeProfile;
+
+    // todo: error handling if no snapshots
     const snapshotToSend: Snapshot = { ...profile.snapshots[0] };
 
     const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === profile.activeLeagueId
     );
     if (activeAccountLeague) {
-      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-        snapshotToSend,
-        activeAccountLeague.stashtabs
-      );
-      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
-        snapshotToSend,
-        activeAccountLeague.stashtabs
-      );
-      snapshotToSend.stashTabSnapshots = [];
       if (this.online && activeAccountLeague) {
         fromStream(
           this.signalrHub
@@ -220,6 +214,14 @@ export class SignalrStore {
                   if (profile.snapshots.length === 0) {
                     return of(null);
                   }
+                  const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+                    snapshotToSend,
+                    activeAccountLeague.stashtabs
+                  );
+                  const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+                    snapshotToSend,
+                    activeAccountLeague.stashtabs
+                  );
                   return profile
                     .sendSnapshot(
                       apiSnapshot,
@@ -283,22 +285,13 @@ export class SignalrStore {
 
   @action
   joinGroupFail(e: Error | AxiosError) {
-    this.notificationStore.createNotification(
-      'join_group',
-      'error',
-      false,
-      e
-    );
+    this.uiStateStore.setJoiningGroup(false);
+    this.notificationStore.createNotification('join_group', 'error', false, e);
 
     if (e.message.includes('password')) {
       this.uiStateStore.setGroupError(e);
     } else {
-      this.notificationStore.createNotification(
-        'join_group',
-        'error',
-        true,
-        e
-      );
+      this.notificationStore.createNotification('join_group', 'error', true, e);
     }
   }
 
@@ -322,6 +315,7 @@ export class SignalrStore {
 
   @action
   joinGroupSuccess() {
+    this.uiStateStore.setJoiningGroup(false);
     this.notificationStore.createNotification('join_group', 'success');
     this.uiStateStore.setGroupDialogOpen(false);
   }
@@ -356,12 +350,7 @@ export class SignalrStore {
 
   @action
   leaveGroupFail(e: AxiosError | Error) {
-    this.notificationStore.createNotification(
-      'leave_group',
-      'error',
-      false,
-      e
-    );
+    this.notificationStore.createNotification('leave_group', 'error', false, e);
   }
 
   @action
