@@ -30,6 +30,7 @@ export class UiStateStore {
   @observable groupError: AxiosError | Error | undefined = undefined;
   @observable redirectedTo: string = '';
   @observable confirmClearSnapshotsDialogOpen: boolean = false;
+  @observable confirmRemoveProfileDialogOpen: boolean = false;
   
   @observable savingProfile: boolean = false;
   @observable removingProfile: boolean = false;
@@ -72,6 +73,11 @@ export class UiStateStore {
   setConfirmClearSnapshotsDialogOpen(open: boolean) {
     this.confirmClearSnapshotsDialogOpen = open;
   } 
+
+  @action
+  setConfirmRemoveProfileDialogOpen(open: boolean) {
+    this.confirmRemoveProfileDialogOpen = open;
+  }
 
   @action
   setGroupExists(exists: boolean) {

@@ -165,15 +165,20 @@ export class Account implements IAccount {
                 p => p.uuid !== this.activeProfileUuid
               );
               this.setActiveProfile(newActiveProfile!.uuid);
-              this.profiles.splice(profileIndex, 1);
+              this.deleteProfiles(profileIndex, 1);
             }
-            stores.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
+            stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
             return this.removeActiveProfileSuccess();
           }),
           catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
         )
     );
   }
+
+  @action
+  deleteProfiles(index: number, amount: number) {
+    this.profiles.splice(index, amount);
+  } 
 
   @action
   removeActiveProfileSuccess() {
