@@ -35,12 +35,22 @@ const CreateGroupDialogContainer: React.FC<Props> = ({
       groupError={uiStateStore!.groupError}
       dialogType={uiStateStore!.groupDialogType}
       handleClearError={() => uiStateStore!.setGroupError(undefined)}
-      handleGroupExists={(groupName: string) => signalrStore!.groupExists(groupName)}
+      handleGroupExists={(groupName: string) =>
+        signalrStore!.groupExists(groupName)
+      }
       initialValues={initialValues}
       onClose={() => uiStateStore!.setGroupDialogOpen(false)}
       onSubmit={(group: IGroupForm) => onSubmit(group)}
+      loading={
+        uiStateStore!.joiningGroup ||
+        uiStateStore!.leavingGroup ||
+        uiStateStore!.creatingGroup
+      }
     />
   );
 };
 
-export default inject('uiStateStore', 'signalrStore')(observer(CreateGroupDialogContainer));
+export default inject(
+  'uiStateStore',
+  'signalrStore'
+)(observer(CreateGroupDialogContainer));

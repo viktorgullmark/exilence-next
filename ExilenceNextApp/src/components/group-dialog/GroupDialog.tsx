@@ -19,6 +19,7 @@ import PasswordField from '../password-field/PasswordField';
 import { generateGroupName } from '../../utils/group.utils';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
+import RequestButton from '../request-button/RequestButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogActions: {
@@ -41,6 +42,7 @@ interface Props {
   onSubmit: (group: IGroupForm) => void;
   handleGroupExists: (groupName: string) => void;
   handleClearError: () => void;
+  loading: boolean;
   groupError?:  AxiosError | Error;
   groupExists?: boolean;
 }
@@ -54,7 +56,8 @@ const GroupDialog: React.FC<Props> = ({
   groupExists,
   dialogType,
   handleGroupExists,
-  handleClearError
+  handleClearError,
+  loading
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -133,14 +136,15 @@ const GroupDialog: React.FC<Props> = ({
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
               <Button onClick={onClose}>{t('action.close')}</Button>
-              <Button
+              <RequestButton
                 type="submit"
-                disabled={!isValid || getGroupExistsError() !== undefined}
+                disabled={loading || !isValid || getGroupExistsError() !== undefined}
                 color="primary"
                 variant="contained"
+                loading={loading}
               >
                 {t(`action.${dialogType}_group`)}
-              </Button>
+              </RequestButton>
             </DialogActions>
           </form>
         )}

@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { from, of } from 'rxjs';
+import { from, of, empty } from 'rxjs';
 import { catchError, concatMap, map, switchMap, concat } from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
@@ -203,38 +203,38 @@ export class SignalrStore {
               connections: []
             })
             .pipe(
-              concatMap((g: IApiGroup) => {
+              map((g: IApiGroup) => {
                 g = this.applyOwnSnapshotsToGroup(g);
                 this.setActiveGroup(new Group(g));
                 this.activeGroup!.setActiveAccounts(
                   g.connections.map(c => c.account.uuid)
                 );
-                return switchMap(() => {
-                  // sends latest snapshot to group members
-                  if (profile.snapshots.length === 0) {
-                    return of(null);
-                  }
-                  const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-                    snapshotToSend,
-                    activeAccountLeague.stashtabs
+              }),
+              switchMap(() => {
+                // sends latest snapshot to group members
+                if (profile.snapshots.length === 0) {
+                  return of(this.joinGroupSuccess());
+                }
+                const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+                  snapshotToSend,
+                  activeAccountLeague.stashtabs
+                );
+                const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+                  snapshotToSend,
+                  activeAccountLeague.stashtabs
+                );
+                return profile
+                  .sendSnapshot(
+                    apiSnapshot,
+                    apiItems,
+                    this.sendSnapshotToGroupSuccess,
+                    this.sendSnapshotToGroupFail
+                  )
+                  .pipe(
+                    map(() => {
+                      return this.joinGroupSuccess();
+                    })
                   );
-                  const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
-                    snapshotToSend,
-                    activeAccountLeague.stashtabs
-                  );
-                  return profile
-                    .sendSnapshot(
-                      apiSnapshot,
-                      apiItems,
-                      this.sendSnapshotToGroupSuccess,
-                      this.sendSnapshotToGroupFail
-                    )
-                    .pipe(
-                      map(() => {
-                        return this.joinGroupSuccess();
-                      })
-                    );
-                });
               }),
               catchError((e: Error) => of(this.joinGroupFail(e)))
             )
