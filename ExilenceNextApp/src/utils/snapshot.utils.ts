@@ -15,7 +15,7 @@ export class SnapshotUtils {
   ) {
     return <IApiSnapshot>{
       uuid: snapshot.uuid,
-      datestamp: snapshot.datestamp,
+      created: snapshot.created,
       tabsFetchedCount: 0,
       stashTabs: stashTabs
         ? stashTabs

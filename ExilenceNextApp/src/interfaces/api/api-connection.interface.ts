@@ -4,5 +4,5 @@ export interface IApiConnection {
   connectionId: string;
   instanceName: string;
   account: IApiAccount;
-  datestamp: Date;
+  created: Date;
 }

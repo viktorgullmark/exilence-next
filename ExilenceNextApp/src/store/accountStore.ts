@@ -3,7 +3,13 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  map,
+  mergeMap,
+  switchMap
+} from 'rxjs/operators';
 import { stores } from '..';
 import { ICookie } from '../interfaces/cookie.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
@@ -18,6 +24,7 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
+import { IApiProfile } from '../interfaces/api/api-profile.interface';
 
 export class AccountStore {
   constructor(
@@ -236,11 +243,7 @@ export class AccountStore {
               this.priceStore.getPricesForLeagues();
 
               return forkJoin(
-                this.getSelectedAccount.authorize(
-                  this.getSelectedAccount.profiles.map(p =>
-                    ProfileUtils.mapProfileToApiProfile(p)
-                  )
-                ),
+                this.getSelectedAccount.authorize(),
                 forkJoin(
                   of(account.accountLeagues).pipe(
                     concatMap(leagues => leagues),
@@ -248,7 +251,9 @@ export class AccountStore {
                       return league.getStashTabs();
                     })
                   )
-                )
+                ).pipe(switchMap(() => {
+                  return this.getProfilesForAccount(this.getSelectedAccount.uuid)
+                }))
               ).pipe(switchMap(() => of(this.initSessionSuccess())));
             }),
             catchError((e: AxiosError) => {
@@ -320,7 +325,7 @@ export class AccountStore {
     } else {
       this.initSession();
     }
-  
+
     // const profile = this.getSelectedAccount.activeProfile;
 
     // if (profile.shouldSetStashTabs) {
@@ -361,6 +366,33 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
-    // this.uiStateStore.setIsInitiating(false);
+  }
+
+  @action
+  getProfilesForAccount(accountUuid: string) {
+    return this.signalrStore.signalrHub
+      .invokeEvent<IApiProfile[] | string>('GetAllProfiles', accountUuid)
+      .pipe(
+        map(() => this.getProfilesForAccountSuccess()),
+        catchError((e: Error) => of(this.getProfilesForAccountFail(e)))
+      );
+  }
+
+  @action
+  getProfilesForAccountSuccess() {
+    this.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'success'
+    );
+  }
+
+  @action
+  getProfilesForAccountFail(e: AxiosError | Error) {
+    this.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'error',
+      true,
+      e
+    );
   }
 }

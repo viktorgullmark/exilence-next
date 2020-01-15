@@ -56,17 +56,13 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize(profiles?: IApiProfile[]) {
+  authorize() {
     return authService
       .getToken({
         uuid: this.uuid,
         name: this.name!,
         accessToken: stores.accountStore.token!.accessToken,
-        profiles: profiles
-          ? profiles.map(p => {
-              return { ...p, snapshots: [] };
-            })
-          : []
+        profiles: []
       })
       .pipe(
         mergeMap(token => {
