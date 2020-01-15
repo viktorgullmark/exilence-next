@@ -87,9 +87,9 @@ namespace API.Controllers
                 {
                     return Ok(content);
                 }
-            }
 
-            return BadRequest();
+                return BadRequest(content);
+            }
         }
 
         public async Task<bool> ValidateAccount(string accountName, string accessToken)
