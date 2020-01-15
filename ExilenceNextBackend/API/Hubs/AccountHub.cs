@@ -13,6 +13,12 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
+        public async Task<List<SnapshotProfileModel>> GetAllProfiles(string accountId)
+        {
+            var profileModels = await _accountService.GetAllProfiles(accountId);
+            return profileModels;
+        }
+
         public async Task<SnapshotProfileModel> GetProfile(string profileId)
         {
             var profileModel = await _accountService.GetProfile(profileId);
