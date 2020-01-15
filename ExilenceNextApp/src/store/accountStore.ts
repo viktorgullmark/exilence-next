@@ -253,6 +253,7 @@ export class AccountStore {
                   )
                 ).pipe(switchMap(() => {
                   return this.getProfilesForAccount(this.getSelectedAccount.uuid)
+                  // todo: if no profiles, create default profile here and select it
                 }))
               ).pipe(switchMap(() => of(this.initSessionSuccess())));
             }),
