@@ -11,7 +11,7 @@ namespace Shared.Models
         public int? Id { get; set; }
         public string ConnectionId { get; set; }
         public string InstanceName { get; set; }
-        public DateTime Datestamp { get; set; }
+        public DateTime Created { get; set; }
 
         public AccountModel Account { get; set; }
     }

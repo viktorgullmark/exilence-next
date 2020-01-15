@@ -316,13 +316,13 @@ export class AccountStore {
 
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
-    this.uiStateStore.setValidated(true);
 
     // todo: check expiry date
     if (!this.token || sessionId) {
       this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
+      this.uiStateStore.setValidated(true);
       this.initSession();
     }
 

@@ -27,7 +27,7 @@ namespace API.Services
 
         public async Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName)
         {
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstAsync();
 
             var connection = _mapper.Map<Connection>(connectionModel);
 
@@ -122,7 +122,7 @@ namespace API.Services
             var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
                 .Include(group => group.Connections)
                 .ThenInclude(connection => connection.Account)
-                .FirstOrDefaultAsync();
+                .FirstAsync();
             var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 

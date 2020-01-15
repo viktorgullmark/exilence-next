@@ -120,6 +120,9 @@ namespace API.Services
                 throw new Exception("Can't find account");
 
             var profile = _mapper.Map<SnapshotProfile>(profileModel);
+
+            profile.Created = DateTime.UtcNow;
+
             account.Profiles.Add(profile);
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);

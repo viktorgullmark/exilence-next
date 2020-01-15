@@ -11,6 +11,6 @@ namespace Shared.Models
         [JsonPropertyName("uuid")]
         public string ClientId { get; set; }
         public List<StashtabModel> StashTabs { get; set; }
-        public DateTime Datestamp { get; set; }
+        public DateTime Created { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Shared.Entities
         public Role Role { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
-        public DateTime Datestamp { get; set; }
+        public DateTime Created { get; set; }
 
         public Account()
         {
