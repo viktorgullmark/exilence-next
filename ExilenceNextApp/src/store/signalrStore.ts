@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { from, of, empty } from 'rxjs';
+import { from, of, empty, forkJoin } from 'rxjs';
 import { catchError, concatMap, map, switchMap, concat } from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
@@ -398,22 +398,24 @@ export class SignalrStore {
     profileId: string,
     snapshotId: string
   ) {
-    return from(stashtabs).pipe(
-      concatMap(st => {
-        const items: IApiPricedItemsUpdate = {
-          profileId: profileId,
-          stashTabId: st.uuid,
-          snapshotId: snapshotId,
-          pricedItems: st.pricedItems
-        } as IApiPricedItemsUpdate;
+    return forkJoin(
+      from(stashtabs).pipe(
+        concatMap(st => {
+          const items: IApiPricedItemsUpdate = {
+            profileId: profileId,
+            stashTabId: st.uuid,
+            snapshotId: snapshotId,
+            pricedItems: st.pricedItems
+          } as IApiPricedItemsUpdate;
 
-        return this.signalrHub
-          .invokeEvent<IApiPricedItemsUpdate>('AddPricedItems', items)
-          .pipe(
-            map(() => this.uploadItemsSuccess),
-            catchError((e: Error) => of(this.uploadItemsFail(e)))
-          );
-      })
+          return this.signalrHub
+            .invokeEvent<IApiPricedItemsUpdate>('AddPricedItems', items)
+            .pipe(
+              map(() => this.uploadItemsSuccess()),
+              catchError((e: Error) => of(this.uploadItemsFail(e)))
+            );
+        })
+      )
     );
   }
 

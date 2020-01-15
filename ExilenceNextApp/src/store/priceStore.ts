@@ -36,7 +36,7 @@ export class PriceStore {
       interval(this.pollingInterval).pipe(
         switchMap(() => {
           if (
-            !stores.accountStore.getSelectedAccount.activeProfile.isSnapshotting
+            !stores.uiStateStore.isSnapshotting
           ) {
             return of(this.getPricesForLeagues());
           } else {
