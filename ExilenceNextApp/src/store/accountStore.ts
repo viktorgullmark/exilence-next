@@ -286,6 +286,8 @@ export class AccountStore {
 
   @action
   validateSession(sender: string, sessionId?: string) {
+    this.uiStateStore.setSubmitting(true);
+
     const request = externalService.getCharacters().pipe(
       switchMap(() => of(this.validateSessionSuccess(sessionId))),
       catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
@@ -300,7 +302,7 @@ export class AccountStore {
         : this.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
               if (cookies && cookies.length > 0) {
-                sessionId = cookies[0].value;
+                this.sessionId = cookies[0].value;
               }
               return request;
             })
