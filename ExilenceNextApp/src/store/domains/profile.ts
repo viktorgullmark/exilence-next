@@ -63,6 +63,7 @@ export class Profile {
       league.stashtabs.length > 0 &&
       !stores.priceStore.isUpdatingPrices &&
       stores.uiStateStore.validated &&
+      stores.uiStateStore.initiated &&
       !this.isSnapshotting
     );
   }
@@ -145,26 +146,22 @@ export class Profile {
     stores.notificationStore.createNotification('update_profile', 'success');
   }
 
-  @action
-  setIsSnapshotting(snapshotting: boolean = true) {
-    this.isSnapshotting = snapshotting;
-  }
 
   @action snapshot() {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
-    this.setIsSnapshotting();
+    stores.uiStateStore!.setIsSnapshotting(true);
     this.getItems();
   }
 
   @action snapshotSuccess() {
     stores.notificationStore.createNotification('snapshot', 'success');
-    this.setIsSnapshotting(false);
+    stores.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
     stores.notificationStore.createNotification('snapshot', 'error', true, e);
-    this.setIsSnapshotting(false);
+    stores.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action getItems() {

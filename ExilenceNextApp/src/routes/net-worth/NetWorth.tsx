@@ -41,7 +41,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
   const { activeGroup } = signalrStore!;
 
   useEffect(() => {
-    if (!uiStateStore!.validated && !uiStateStore!.initated) {
+    if (!uiStateStore!.validated && !uiStateStore!.initiated) {
       accountStore!.validateSession('/net-worth');
     }
 
