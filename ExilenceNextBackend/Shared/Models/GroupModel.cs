@@ -12,7 +12,6 @@ namespace Shared.Models
         public string ClientId { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
-
         public List<ConnectionModel> Connections { get; set; }
         public List<SnapshotProfileModel> Profiles { get; set; }
         public DateTime? Created { get; set; }

@@ -25,7 +25,7 @@ namespace ExilenceTests
             {
                 ConnectionId = TestHelper.GenerateUUID(),
                 InstanceName = _fixture.InstanceName,
-                Datestamp = DateTime.UtcNow
+                Created = DateTime.UtcNow
             };
 
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
@@ -42,7 +42,7 @@ namespace ExilenceTests
             {   
                 ConnectionId = TestHelper.GenerateUUID(),
                 InstanceName = _fixture.InstanceName,
-                Datestamp = DateTime.UtcNow
+                Created = DateTime.UtcNow
             };
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 

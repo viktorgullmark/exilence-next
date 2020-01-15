@@ -16,7 +16,7 @@ namespace Shared.Entities
         [Required, StringLength(20)]
         public string InstanceName { get; set; }
         [Required, StringLength(20)]
-        public DateTime Datestamp { get; set; }
+        public DateTime Created { get; set; }
         public virtual Account Account { get; set; }
         public virtual Group Group { get; set; }
 

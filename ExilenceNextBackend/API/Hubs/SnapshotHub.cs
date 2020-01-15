@@ -25,8 +25,8 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetLatestSnapshotForProfile(string profileId)
         {
             var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
-            var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Datestamp).FirstOrDefault();
-            var snapshotModelWithItems = await _snapshotService.GetLatestSnapshotWithItems(latestSnapshot.ClientId);
+            var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
 
             await Log($"Retrived latest snapshot with ClientId: {snapshotModelWithItems.ClientId} worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos.");
             return snapshotModelWithItems;
