@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import { action, observable } from 'mobx';
-import { from } from 'rxjs';
+import { from, throwError } from 'rxjs';
 import { stores } from '../..';
 import AppConfig from './../../config/app.config';
 
@@ -45,6 +45,9 @@ export class SignalrHub {
   }
 
   invokeEvent<T>(event: string, params: T | T[], id?: string) {
+    if(!this.connection) {
+      return throwError('error:not_connected');
+    }
     return from(
       id
         ? this.connection!.invoke<T>(event, params, id)
@@ -53,6 +56,9 @@ export class SignalrHub {
   }
 
   sendEvent<T>(event: string, params: T | T[], id?: string) {
+    if(!this.connection) {
+      return throwError('error:not_connected');
+    }
     return from(
       id
         ? this.connection!.send(event, params, id)
