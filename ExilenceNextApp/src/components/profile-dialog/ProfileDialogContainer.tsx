@@ -8,10 +8,12 @@ import { Profile } from '../../store/domains/profile';
 import { LeagueStore } from '../../store/leagueStore';
 import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
+import { UiStateStore } from '../../store/uiStateStore';
 
 interface Props {
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
+  uiStateStore?: UiStateStore;
   isOpen: boolean;
   isEditing: boolean;
   profile: Profile;
@@ -22,6 +24,7 @@ interface Props {
 const ProfileDialogContainer: React.FC<Props> = ({
   accountStore,
   leagueStore,
+  uiStateStore,
   profile,
   isOpen,
   isEditing,
@@ -71,7 +74,10 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(leagues, edit && activeLeague ? activeLeague.id : '');
+    const id = Dd.getDropdownSelection(
+      leagues,
+      edit && activeLeague ? activeLeague.id : ''
+    );
 
     // fallback in case league doesnt exist anymore
     const foundLeague = leagues.find(l => l.id === id);
@@ -89,7 +95,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: ChangeEvent<{ value: unknown; }>) => {
+  const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
     const id = event.target.value;
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.leagueId === id
@@ -98,7 +104,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     let characters: Character[] = [];
 
     setStashTabIds([]);
-  
+
     if (accountLeague) {
       characters = accountLeague.characters;
       setStashTabs(accountLeague.stashtabs);
@@ -118,11 +124,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
       activeStashTabIds: stashTabIds
     };
     if (isEditing) {
-      accountStore!.getSelectedAccount.activeProfile.editProfile(profile);
+      accountStore!.getSelectedAccount.activeProfile.updateProfile(
+        profile,
+        handleClickClose
+      );
     } else {
-      accountStore!.getSelectedAccount.createProfile(profile);
+      accountStore!.getSelectedAccount.createProfile(profile, handleClickClose);
     }
-    handleClickClose();
   };
   return (
     <ProfileDialog
@@ -140,11 +148,13 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
       characters={characters}
+      loading={uiStateStore!.savingProfile}
     />
   );
 };
 
 export default inject(
+  'uiStateStore',
   'accountStore',
   'leagueStore'
 )(observer(ProfileDialogContainer));

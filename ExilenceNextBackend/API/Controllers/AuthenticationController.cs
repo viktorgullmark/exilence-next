@@ -50,7 +50,7 @@ namespace API.Controllers
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
             {
-                throw new Exception("Accesstoken not matching Account");
+                return BadRequest("Accesstoken not matching Account");
             }
 
             var account = await _accountService.GetAccount(accountModel.Name);
@@ -59,11 +59,7 @@ namespace API.Controllers
             {
                 account = await _accountService.AddAccount(accountModel);
             }
-            else
-            {
-                account = await _accountService.EditAccount(accountModel);
-            }
-
+            
             var token = AuthHelper.GenerateToken(_secret, account);
 
             return Ok(token);
@@ -82,7 +78,7 @@ namespace API.Controllers
                 new KeyValuePair<string, string>("client_id", _clientId),
                 new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>("grant_type", "client_credentials")
+                new KeyValuePair<string, string>("grant_type", "authorization_code")
                 });
                 var response = await client.PostAsync(uri, data);
                 var content = await response.Content.ReadAsStringAsync();
@@ -91,9 +87,9 @@ namespace API.Controllers
                 {
                     return Ok(content);
                 }
-            }
 
-            return BadRequest();
+                return BadRequest(content);
+            }
         }
 
         public async Task<bool> ValidateAccount(string accountName, string accessToken)

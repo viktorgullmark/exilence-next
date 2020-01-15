@@ -29,6 +29,55 @@ export class UiStateStore {
   @observable groupExists: boolean | undefined = undefined;
   @observable groupError: AxiosError | Error | undefined = undefined;
   @observable redirectedTo: string = '';
+  @observable confirmClearSnapshotsDialogOpen: boolean = false;
+  @observable confirmRemoveProfileDialogOpen: boolean = false;
+  
+  @observable savingProfile: boolean = false;
+  @observable removingProfile: boolean = false;
+  @observable joiningGroup: boolean = false;
+  @observable creatingGroup: boolean = false;
+  @observable leavingGroup: boolean = false;
+  @observable clearingSnapshots: boolean = false;
+
+  @action
+  setSavingProfile(saving: boolean) {
+    this.savingProfile = saving;
+  }
+
+  @action
+  setRemovingProfile(removing: boolean) {
+    this.removingProfile = removing;
+  }
+
+  @action
+  setJoiningGroup(joining: boolean) {
+    this.joiningGroup = joining;
+  }
+
+  @action
+  setCreatingGroup(creating: boolean) {
+    this.creatingGroup = creating;
+  }
+  
+  @action
+  setLeavingGroup(leaving: boolean) {
+    this.leavingGroup = leaving;
+  }
+
+  @action
+  setClearingSnapshots(clearing: boolean) {
+    this.clearingSnapshots = clearing;
+  }
+
+  @action
+  setConfirmClearSnapshotsDialogOpen(open: boolean) {
+    this.confirmClearSnapshotsDialogOpen = open;
+  } 
+
+  @action
+  setConfirmRemoveProfileDialogOpen(open: boolean) {
+    this.confirmRemoveProfileDialogOpen = open;
+  }
 
   @action
   setGroupExists(exists: boolean) {
@@ -73,6 +122,11 @@ export class UiStateStore {
         });
       })
     );
+  }
+
+  @action
+  getSessIdCookie() {
+    return authService.getAuthCookie();
   }
 
   @action

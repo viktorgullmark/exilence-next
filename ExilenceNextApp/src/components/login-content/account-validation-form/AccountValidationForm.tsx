@@ -21,6 +21,7 @@ import { IAccount } from '../../../interfaces/account.interface';
 import HelpIcon from '@material-ui/icons/Help';
 import { WindowUtils } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
+import RequestButton from '../../request-button/RequestButton';
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
@@ -34,17 +35,6 @@ interface AccountFormValues {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  buttonProgress: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  wrapper: {
-    position: 'relative',
-    width: '100%'
-  },
   helperIcon: {
     color: theme.palette.primary.light,
     marginRight: theme.spacing(-0.5)
@@ -141,26 +131,19 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <div className={classes.wrapper}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        type="submit"
-                        disabled={
-                          !touched || props.isSubmitting || (dirty && !isValid)
-                        }
-                        endIcon={<ExitToApp />}
-                      >
-                        {t('action.authorize')}
-                      </Button>
-                      {props.isSubmitting && (
-                        <CircularProgress
-                          className={classes.buttonProgress}
-                          size={26}
-                        />
-                      )}
-                    </div>
+                    <RequestButton
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      type="submit"
+                      loading={props.isSubmitting}
+                      disabled={
+                        !touched || props.isSubmitting || (dirty && !isValid)
+                      }
+                      endIcon={<ExitToApp />}
+                    >
+                      {t('action.authorize')}
+                    </RequestButton>
                   </Grid>
                 </Grid>
               </div>

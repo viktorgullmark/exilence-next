@@ -71,25 +71,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
             }
         }
-
-        public async Task ForwardSnapshot(UpdateSnapshotModel updateModel)
-        {
-            var reciver = updateModel.ConnectionId;
-            updateModel.ConnectionId = ConnectionId;
-
-            await Log($"Forwarded snapshot with ClientId: {updateModel.Snapshot.ClientId} worth {updateModel.Snapshot.StashTabs.Sum(s => s.Value)} chaos.");
-            await Clients.Client(reciver).SendAsync("OnAddSnapshot", updateModel);
-        }
-
-        public async Task ForwardPricedItems(UpdatePricedItemsModel updateModel)
-        {
-            var reciver = updateModel.ConnectionId;
-            updateModel.ConnectionId = ConnectionId;
-
-            await Log($"Forwarded pricedItems for stashtab with ClientId: {updateModel.StashTabId}. Items included {updateModel.PricedItems.Count}");
-            await Clients.Client(reciver).SendAsync("OnAddPricedItems", updateModel);
-        }
-
+        
         public async Task<StashtabModel> AddPricedItems(UpdatePricedItemsModel updateModel)
         {
             var stashTabModel = await _snapshotService.AddPricedItems(updateModel.StashTabId, updateModel.PricedItems);
@@ -107,31 +89,31 @@ namespace API.Hubs
 
 
         #region Streams
-        public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
-        {
-            await foreach (var pricedItem in pricedItems)
-            {
-                await _snapshotService.AddPricedItem(stashtabId, pricedItem);
-            }
-        }
+        //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
+        //{
+        //    await foreach (var pricedItem in pricedItems)
+        //    {
+        //        await _snapshotService.AddPricedItem(stashtabId, pricedItem);
+        //    }
+        //}
 
-        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            var snapshots = _snapshotService.GetStashtabs(snapshotId);
+        //public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        //{
+        //    var snapshots = _snapshotService.GetStashtabs(snapshotId);
 
-            foreach (var snapshot in snapshots)
-            {
-                // Check the cancellation token regularly so that the server will stop
-                // producing items if the client disconnects.
-                cancellationToken.ThrowIfCancellationRequested();
+        //    foreach (var snapshot in snapshots)
+        //    {
+        //        // Check the cancellation token regularly so that the server will stop
+        //        // producing items if the client disconnects.
+        //        cancellationToken.ThrowIfCancellationRequested();
 
-                yield return _mapper.Map<SnapshotModel>(snapshot);
+        //        yield return _mapper.Map<SnapshotModel>(snapshot);
 
-                // Use the cancellationToken in other APIs that accept cancellation
-                // tokens so the cancellation can flow down to them.
-                await Task.Delay(100, cancellationToken);
-            }
-        }
+        //        // Use the cancellationToken in other APIs that accept cancellation
+        //        // tokens so the cancellation can flow down to them.
+        //        await Task.Delay(100, cancellationToken);
+        //    }
+        //}
         #endregion
 
     }

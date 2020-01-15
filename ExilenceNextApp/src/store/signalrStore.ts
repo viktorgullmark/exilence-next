@@ -1,8 +1,8 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { from, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { from, of, empty } from 'rxjs';
+import { catchError, concatMap, map, switchMap, concat } from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
@@ -15,7 +15,6 @@ import { SnapshotUtils } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { NotificationStore } from './notificationStore';
-import { RequestQueueStore } from './requestQueueStore';
 import { UiStateStore } from './uiStateStore';
 import { Snapshot } from './domains/snapshot';
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
@@ -35,7 +34,6 @@ export class SignalrStore {
   constructor(
     private uiStateStore: UiStateStore,
     private notificationStore: NotificationStore,
-    private requestQueueStore: RequestQueueStore,
     public signalrHub: SignalrHub
   ) {
     reaction(
@@ -86,63 +84,6 @@ export class SignalrStore {
     return this.activeGroup!.connections.find(
       c => c.account.name === stores.accountStore.getSelectedAccount.name
     )!;
-  }
-
-  @computed
-  get items() {
-    let items: IPricedItem[] = [];
-    if (this.activeGroup) {
-      items = this.activeGroup.connections
-        .flatMap(c => c.account)
-        .flatMap(a => a.profiles)
-        .flatMap(p => {
-          return SnapshotUtils.filterItems(p.snapshots);
-        });
-    } else {
-      items = SnapshotUtils.filterItems([
-        SnapshotUtils.mapSnapshotToApiSnapshot(
-          stores.accountStore.getSelectedAccount.activeProfile.snapshots[0]
-        )
-      ]);
-    }
-    return items;
-  }
-
-  @computed
-  get currentNetWorth() {
-    // todo: if in group, return group data, else local data
-    return 0;
-  }
-
-  @computed
-  get itemsCount() {
-    // todo: if in group, return group data, else local data
-    return 0;
-  }
-
-  @action
-  handleRequest<T>(
-    event: ISignalrEvent<T>,
-    successCallback: () => void,
-    failCallback: (e: Error) => void
-  ) {
-    if (this.online) {
-      return (event.stream
-        ? this.signalrHub.stream(event.method, event.stream, event.id)
-        : this.signalrHub.invokeEvent(event.method, event.object, event.id)
-      ).pipe(
-        map(() => {
-          return successCallback();
-        }),
-        catchError((e: Error) => {
-          this.requestQueueStore.queueFailedEvent(event);
-          return of(failCallback(e));
-        })
-      );
-    } else {
-      this.requestQueueStore.queueFailedEvent(event);
-      return of(failCallback(new Error('error:not_connected')));
-    }
   }
 
   // todo: test this thoroughly
@@ -239,25 +180,18 @@ export class SignalrStore {
     }
   }
 
-  /* #region Group */
   @action
   joinGroup(groupName: string, password: string) {
+    this.uiStateStore.setJoiningGroup(true);
     const profile = stores.accountStore.getSelectedAccount.activeProfile;
+
+    // todo: error handling if no snapshots
     const snapshotToSend: Snapshot = { ...profile.snapshots[0] };
 
     const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === profile.activeLeagueId
     );
     if (activeAccountLeague) {
-      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-        snapshotToSend,
-        activeAccountLeague.stashtabs
-      );
-      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
-        snapshotToSend,
-        activeAccountLeague.stashtabs
-      );
-      snapshotToSend.stashTabSnapshots = [];
       if (this.online && activeAccountLeague) {
         fromStream(
           this.signalrHub
@@ -275,25 +209,32 @@ export class SignalrStore {
                 this.activeGroup!.setActiveAccounts(
                   g.connections.map(c => c.account.uuid)
                 );
-                this.joinGroupSuccess();
               }),
               switchMap(() => {
                 // sends latest snapshot to group members
                 if (profile.snapshots.length === 0) {
-                  return of(null);
+                  return of(this.joinGroupSuccess());
                 }
-                return this.sendSnapshot(
-                  apiSnapshot,
-                  profile.uuid
-                ).pipe(
-                  switchMap(() => {
-                    return this.uploadItems(
-                      apiItems,
-                      profile.uuid,
-                      snapshotToSend.uuid
-                    );
-                  })
+                const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
+                  snapshotToSend,
+                  activeAccountLeague.stashtabs
                 );
+                const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+                  snapshotToSend,
+                  activeAccountLeague.stashtabs
+                );
+                return profile
+                  .sendSnapshot(
+                    apiSnapshot,
+                    apiItems,
+                    this.sendSnapshotToGroupSuccess,
+                    this.sendSnapshotToGroupFail
+                  )
+                  .pipe(
+                    map(() => {
+                      return this.joinGroupSuccess();
+                    })
+                  );
               }),
               catchError((e: Error) => of(this.joinGroupFail(e)))
             )
@@ -344,28 +285,38 @@ export class SignalrStore {
 
   @action
   joinGroupFail(e: Error | AxiosError) {
-    this.notificationStore.createNotification(
-      'api_join_group',
-      'error',
-      false,
-      e
-    );
+    this.uiStateStore.setJoiningGroup(false);
+    this.notificationStore.createNotification('join_group', 'error', false, e);
 
     if (e.message.includes('password')) {
       this.uiStateStore.setGroupError(e);
     } else {
-      this.notificationStore.createNotification(
-        'api_join_group',
-        'error',
-        true,
-        e
-      );
+      this.notificationStore.createNotification('join_group', 'error', true, e);
     }
   }
 
   @action
+  sendSnapshotToGroupSuccess() {
+    this.notificationStore.createNotification(
+      'send_snapshot_to_group',
+      'success'
+    );
+  }
+
+  @action
+  sendSnapshotToGroupFail(e: Error | AxiosError) {
+    this.notificationStore.createNotification(
+      'send_snapshot_to_group',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
   joinGroupSuccess() {
-    this.notificationStore.createNotification('api_join_group', 'success');
+    this.uiStateStore.setJoiningGroup(false);
+    this.notificationStore.createNotification('join_group', 'success');
     this.uiStateStore.setGroupDialogOpen(false);
   }
 
@@ -399,17 +350,12 @@ export class SignalrStore {
 
   @action
   leaveGroupFail(e: AxiosError | Error) {
-    this.notificationStore.createNotification(
-      'api_leave_group',
-      'error',
-      false,
-      e
-    );
+    this.notificationStore.createNotification('leave_group', 'error', false, e);
   }
 
   @action
   leaveGroupSuccess() {
-    this.notificationStore.createNotification('api_leave_group', 'success');
+    this.notificationStore.createNotification('leave_group', 'success');
   }
 
   @action
@@ -439,215 +385,10 @@ export class SignalrStore {
   @action
   groupExistsFail(e: AxiosError | Error) {
     this.notificationStore.createNotification(
-      'api_group_exists',
+      'group_exists',
       'error',
       false,
       e
-    );
-  }
-
-  /* #endregion */
-
-  /* #region Profile */
-  @action
-  createProfile(profile: IApiProfile) {
-    const request: ISignalrEvent<IApiProfile> = {
-      method: 'AddProfile',
-      object: profile
-    };
-
-    fromStream(
-      this.handleRequest(
-        request,
-        this.createProfileSuccess,
-        this.createProfileFail
-      )
-    );
-  }
-
-  @action
-  createProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_create_profile',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  createProfileSuccess() {
-    stores.notificationStore.createNotification(
-      'api_create_profile',
-      'success'
-    );
-  }
-
-  @action
-  updateProfile(profile: IApiProfile) {
-    const request: ISignalrEvent<IApiProfile> = {
-      method: 'EditProfile',
-      object: profile
-    };
-
-    fromStream(
-      this.handleRequest(
-        request,
-        this.updateProfileSuccess,
-        this.updateProfileFail
-      )
-    );
-  }
-
-  @action
-  updateProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_update_profile',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  updateProfileSuccess() {
-    stores.notificationStore.createNotification(
-      'api_update_profile',
-      'success'
-    );
-  }
-
-  @action
-  removeProfile(uuid: string) {
-    const request: ISignalrEvent<string> = {
-      method: 'RemoveProfile',
-      object: uuid
-    };
-
-    fromStream(
-      this.handleRequest(
-        request,
-        this.removeProfileSuccess,
-        this.removeProfileFail
-      )
-    );
-  }
-
-  @action
-  removeProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_remove_profile',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  removeProfileSuccess() {
-    stores.notificationStore.createNotification(
-      'api_remove_profile',
-      'success'
-    );
-  }
-  /* #endregion */
-
-  /* #region Snapshot */
-  @action
-  sendSnapshot(snapshot: IApiSnapshot, profileId: string) {
-    const request: ISignalrEvent<IApiSnapshot> = {
-      method: 'AddSnapshot',
-      object: snapshot,
-      id: profileId
-    };
-
-    return this.handleRequest(
-      request,
-      this.sendSnapshotSuccess,
-      this.sendSnapshotFail
-    );
-  }
-
-  @action
-  sendSnapshotFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_send_snapshot',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  sendSnapshotSuccess() {
-    stores.notificationStore.createNotification('api_send_snapshot', 'success');
-  }
-
-  @action
-  removeSnapshot(uuid: string) {
-    const request: ISignalrEvent<string> = {
-      method: 'RemoveSnapshot',
-      object: uuid
-    };
-
-    fromStream(
-      this.handleRequest(
-        request,
-        this.removeSnapshotSuccess,
-        this.removeSnapshotFail
-      )
-    );
-  }
-
-  @action
-  removeSnapshotFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_remove_snapshot',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  removeAllSnapshotsSuccess() {
-    stores.notificationStore.createNotification(
-      'api_remove_all_snapshots',
-      'success'
-    );
-  }
-
-  @action
-  removeAllSnapshots(uuid: string) {
-    const request: ISignalrEvent<string> = {
-      method: 'RemoveAllSnapshots',
-      object: uuid
-    };
-
-    fromStream(
-      this.handleRequest(
-        request,
-        this.removeSnapshotSuccess,
-        this.removeSnapshotFail
-      )
-    );
-  }
-
-  @action
-  removeAllSnapshotFail(e: Error) {
-    stores.notificationStore.createNotification(
-      'api_remove_all_snapshots',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  removeSnapshotSuccess() {
-    stores.notificationStore.createNotification(
-      'api_remove_snapshot',
-      'success'
     );
   }
 
@@ -659,23 +400,19 @@ export class SignalrStore {
   ) {
     return from(stashtabs).pipe(
       concatMap(st => {
-        const request: ISignalrEvent<IApiPricedItemsUpdate> = {
-          method: 'AddPricedItems',
-          object: {
-            profileId: profileId,
-            stashTabId: st.uuid,
-            snapshotId: snapshotId,
-            pricedItems: st.pricedItems
-          } as IApiPricedItemsUpdate
-        };
-        return this.handleRequest(
-          request,
-          this.uploadItemsSuccess,
-          this.uploadItemsFail
-        ).pipe(
-          map(() => this.uploadItemsSuccess),
-          catchError((e: Error) => of(this.uploadItemsFail(e)))
-        );
+        const items: IApiPricedItemsUpdate = {
+          profileId: profileId,
+          stashTabId: st.uuid,
+          snapshotId: snapshotId,
+          pricedItems: st.pricedItems
+        } as IApiPricedItemsUpdate;
+
+        return this.signalrHub
+          .invokeEvent<IApiPricedItemsUpdate>('AddPricedItems', items)
+          .pipe(
+            map(() => this.uploadItemsSuccess),
+            catchError((e: Error) => of(this.uploadItemsFail(e)))
+          );
       })
     );
   }
@@ -683,7 +420,7 @@ export class SignalrStore {
   @action
   uploadItemsFail(e: Error) {
     stores.notificationStore.createNotification(
-      'api_upload_items',
+      'upload_items',
       'error',
       false,
       e
@@ -692,8 +429,6 @@ export class SignalrStore {
 
   @action
   uploadItemsSuccess() {
-    stores.notificationStore.createNotification('api_upload_items', 'success');
+    stores.notificationStore.createNotification('upload_items', 'success');
   }
-
-  /* #endregion */
 }

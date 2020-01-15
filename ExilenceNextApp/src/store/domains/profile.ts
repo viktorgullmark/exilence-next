@@ -3,7 +3,13 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  mergeMap,
+  switchMap,
+  concatMap
+} from 'rxjs/operators';
 import uuid from 'uuid';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
@@ -19,6 +25,9 @@ import { Snapshot } from './snapshot';
 import { SnapshotUtils } from '../../utils/snapshot.utils';
 import { ProfileUtils } from '../../utils/profile.utils';
 import { StashTabSnapshot } from './stashtab-snapshot';
+import { IApiProfile } from '../../interfaces/api/api-profile.interface';
+import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
+import { IApiStashTabPricedItem } from '../../interfaces/api/api-stashtab-priceditem.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -94,12 +103,6 @@ export class Profile {
   }
 
   @action
-  clearSnapshots() {
-    this.snapshots = [];
-    stores.signalrStore.removeAllSnapshots(this.uuid);
-  }
-
-  @action
   setActivePriceLeague(id: string) {
     this.activePriceLeagueId = id;
   }
@@ -110,13 +113,36 @@ export class Profile {
   }
 
   @action
-  editProfile(profile: IProfile) {
+  updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    Object.assign(this, profile);
-    stores.signalrStore.updateProfile(
-      ProfileUtils.mapProfileToApiProfile(this)
+    const apiProfile = ProfileUtils.mapProfileToApiProfile(this);
+
+    fromStream(
+      stores.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
+        map((p: IApiProfile) => {
+          Object.assign(this, profile);
+          callback();
+          return this.updateProfileSuccess();
+        }),
+        catchError((e: AxiosError) => of(this.updateProfileFail(e)))
+      )
     );
+  }
+
+  @action
+  updateProfileFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'update_profile',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  updateProfileSuccess() {
+    stores.notificationStore.createNotification('update_profile', 'success');
   }
 
   @action
@@ -277,8 +303,6 @@ export class Profile {
     };
 
     const snapshotToAdd = new Snapshot(snapshot);
-    this.snapshots.unshift(snapshotToAdd);
-    this.snapshots = this.snapshots.slice(0, 100);
 
     const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === this.activeLeagueId
@@ -293,30 +317,92 @@ export class Profile {
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
+      const callback = () => {
+        // clear items from previous snapshot
+        if (this.snapshots.length > 1) {
+          this.snapshots[0].stashTabSnapshots.forEach(stss => {
+            stss.pricedItems = [];
+          });
+        }
 
+        if (stores.signalrStore.activeGroup) {
+          stores.signalrStore.addOwnSnapshotToActiveGroup(snapshotToAdd);
+        }
+        this.snapshots.unshift(snapshotToAdd);
+        this.snapshots = this.snapshots.slice(0, 100);
+      };
       fromStream(
-        stores.signalrStore.sendSnapshot(apiSnapshot, this.uuid).pipe(
-          switchMap(() => {
-            return stores.signalrStore.uploadItems(
-              apiItems,
-              this.uuid,
-              apiSnapshot.uuid
-            );
-          })
+        this.sendSnapshot(
+          apiSnapshot,
+          apiItems,
+          this.snapshotSuccess,
+          this.snapshotFail,
+          callback
         )
       );
     }
+  }
 
-    // clear items from previous snapshot
-    if (this.snapshots.length > 1) {
-      this.snapshots[1].stashTabSnapshots.forEach(stss => {
-        stss.pricedItems = [];
-      });
-    }
+  @action
+  sendSnapshot(
+    snapshot: IApiSnapshot,
+    items: IApiStashTabPricedItem[],
+    successAction: () => void,
+    failAction: (e: AxiosError) => void,
+    callback?: () => void
+  ) {
+    return stores.signalrHub
+      .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
+      .pipe(
+        concatMap(() => {
+          return switchMap(() => {
+            return stores.signalrStore
+              .uploadItems(items, this.uuid, snapshot.uuid)
+              .pipe(
+                map(() => {
+                  if (callback) {
+                    callback();
+                  }
+                  return successAction();
+                })
+              );
+          });
+        }),
+        catchError((e: AxiosError) => of(failAction(e)))
+      );
+  }
 
-    if (stores.signalrStore.activeGroup) {
-      stores.signalrStore.addOwnSnapshotToActiveGroup(this.snapshots[0]);
-    }
-    this.snapshotSuccess();
+  @action
+  removeAllSnapshotsSuccess() {
+    stores.uiStateStore.setClearingSnapshots(false);
+    stores.notificationStore.createNotification(
+      'remove_all_snapshots',
+      'success'
+    );
+  }
+
+  @action
+  removeAllSnapshots() {
+    stores.uiStateStore.setClearingSnapshots(true);
+    fromStream(
+      stores.signalrHub.invokeEvent<string>('RemoveAllSnapshots', this.uuid).pipe(
+        map(() => {
+          this.snapshots = [];
+          return this.removeAllSnapshotsSuccess();
+        }),
+        catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))
+      )
+    );
+  }
+
+  @action
+  removeAllSnapshotFail(e: Error) {
+    stores.uiStateStore.setClearingSnapshots(false);
+    stores.notificationStore.createNotification(
+      'remove_all_snapshots',
+      'error',
+      false,
+      e
+    );
   }
 }

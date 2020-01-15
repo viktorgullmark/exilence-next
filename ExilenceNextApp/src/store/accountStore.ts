@@ -3,9 +3,9 @@ import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { stores } from '..';
-import { IAccount } from '../interfaces/account.interface';
+import { ICookie } from '../interfaces/cookie.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
 import { IToken } from '../interfaces/token.interface';
@@ -26,12 +26,13 @@ export class AccountStore {
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
     private signalrStore: SignalrStore
-  ) { }
+  ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
-  @persist @observable code: string = '';
-  @observable token: IToken | undefined = undefined;
+  @persist('object') @observable token: IToken | undefined = undefined;
+  @observable code: string = '';
+  @observable sessionId: string = '';
 
   @computed
   get getSelectedAccount(): Account {
@@ -42,33 +43,24 @@ export class AccountStore {
   @action
   selectAccountByName(name: string) {
     this.activeAccount = '';
-    const account = this.findAccount({ name: name });
+    const account = this.findAccountByName(name);
     this.activeAccount = account!.uuid;
   }
 
   @action
-  findAccount(details: IAccount) {
-    if (details.name) {
-      return this.accounts.find(a => a.name === details.name);
-    } else if (details.sessionId) {
-      return this.accounts.find(a => a.sessionId === details.sessionId);
-    }
+  findAccountByName(name: string) {
+    return this.accounts.find(a => a.name === name);
   }
 
   @action
-  addOrUpdateAccount(details: IAccount) {
-    let foundAccount = this.findAccount(details);
+  addOrUpdateAccount(name: string, sessionId: string) {
+    let foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
-      if (details.name) {
-        foundAccount.name = details.name;
-      }
-      if (details.sessionId) {
-        foundAccount.sessionId = details.sessionId;
-      }
+      foundAccount.sessionId = sessionId;
       return foundAccount;
     } else {
-      const newAccount = new Account(details);
+      const newAccount = new Account({ name: name, sessionId: sessionId });
       this.accounts.push(newAccount);
       return newAccount;
     }
@@ -119,19 +111,19 @@ export class AccountStore {
       resizable: false,
       minimizable: false,
       maximizable: false,
-      alwaysOnTop: true,
+      alwaysOnTop: true
     });
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-redirect', function (event: any, url: any) {
+    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
       stores.accountStore.handleAuthCallback(url, authWindow);
     });
 
     // Reset the authWindow on close
     authWindow.on(
       'close',
-      function () {
+      function() {
         authWindow = null;
       },
       false
@@ -184,10 +176,9 @@ export class AccountStore {
       e
     );
 
-    if (!this.code) {
+    // todo: check expiry date here
+    if (!this.token) {
       this.uiStateStore.redirect('/login');
-    } else {
-      this.loginWithOAuth(this.code);
     }
   }
 
@@ -218,8 +209,11 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: AxiosResponse<IPoeProfile>) => {
-          const details: IAccount = { name: res.data.name };
-          const account = this.addOrUpdateAccount(details);
+          this.getPoeProfileSuccess();
+          const account = this.addOrUpdateAccount(
+            res.data.name,
+            this.sessionId
+          );
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
@@ -271,6 +265,7 @@ export class AccountStore {
   initSessionSuccess() {
     this.notificationStore.createNotification('init_session', 'success');
     this.uiStateStore.setIsInitiating(false);
+    this.uiStateStore.setInitiated(true);
   }
 
   @action
@@ -279,12 +274,15 @@ export class AccountStore {
 
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setIsInitiating(false);
+    this.uiStateStore.setInitiated(true);
   }
 
   @action
   validateSession(sender: string, sessionId?: string) {
+    this.uiStateStore.setSubmitting(true);
+
     const request = externalService.getCharacters().pipe(
-      switchMap(() => of(this.validateSessionSuccess(sessionId))),
+      switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
       catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
     );
     fromStream(
@@ -294,22 +292,34 @@ export class AccountStore {
               return request;
             })
           )
-        : request
+        : this.uiStateStore.getSessIdCookie().pipe(
+            mergeMap((cookies: ICookie[]) => {
+              if (cookies && cookies.length > 0) {
+                this.sessionId = cookies[0].value;
+              }
+              return request;
+            })
+          )
     );
   }
 
   @action
-  validateSessionSuccess(sessionId: string | undefined) {
-    this.addOrUpdateAccount({ sessionId: sessionId });
+  validateSessionSuccess(sender: string, sessionId: string | undefined) {
+    if (sessionId) {
+      this.sessionId = sessionId;
+    }
 
     this.notificationStore.createNotification('validate_session', 'success');
     this.uiStateStore.setSubmitting(false);
 
-    if (!this.code) {
+    // todo: check expiry date
+    if (!this.token || sessionId) {
+      this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
-      this.loginWithOAuth(this.code);
+      this.initSession();
     }
+  
     // const profile = this.getSelectedAccount.activeProfile;
 
     // if (profile.shouldSetStashTabs) {

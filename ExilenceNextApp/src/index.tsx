@@ -2,12 +2,12 @@ import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import localForage from 'localforage';
-import { configure} from 'mobx';
+import { configure } from 'mobx';
 import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { render } from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.min.css';
 import ua, { Visitor } from 'universal-analytics';
@@ -30,11 +30,11 @@ import { SignalrHub } from './store/domains/signalr-hub';
 import { LeagueStore } from './store/leagueStore';
 import { NotificationStore } from './store/notificationStore';
 import { PriceStore } from './store/priceStore';
-import { RequestQueueStore } from './store/requestQueueStore';
 import { SettingStore } from './store/settingStore';
 import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
 import { UpdateStore } from './store/updateStore';
+import { MigrationStore } from './store/migrationStore';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -52,23 +52,17 @@ localForage.config({
   driver: localForage.INDEXEDDB
 });
 
-const hydrate = create({
-  storage: localForage,
-  jsonify: true
-});
-
 const signalrHub: SignalrHub = new SignalrHub();
 
 const settingStore = new SettingStore();
 const uiStateStore = new UiStateStore();
+const migrationStore = new MigrationStore();
 const updateStore = new UpdateStore();
 const leagueStore = new LeagueStore(uiStateStore);
 const notificationStore = new NotificationStore(uiStateStore);
-const requestQueueStore = new RequestQueueStore(signalrHub, notificationStore);
 const signalrStore = new SignalrStore(
   uiStateStore,
   notificationStore,
-  requestQueueStore,
   signalrHub
 );
 const priceStore = new PriceStore(leagueStore, notificationStore);
@@ -85,10 +79,11 @@ export const stores = {
   accountStore,
   uiStateStore,
   notificationStore,
+  migrationStore,
   leagueStore,
   priceStore,
-  requestQueueStore,
   signalrStore,
+  signalrHub,
   updateStore,
   settingStore
 };
@@ -111,11 +106,11 @@ const app = (
                 exact
                 path="/"
                 render={() =>
-                  accountStore.getSelectedAccount.name !== '' ? (
+                  accountStore.getSelectedAccount.name ? (
                     <Redirect to="/net-worth" />
                   ) : (
-                      <Redirect to="/login" />
-                    )
+                    <Redirect to="/login" />
+                  )
                 }
               />
               <ToastWrapper />
@@ -129,12 +124,27 @@ const app = (
   </>
 );
 
-Promise.all([
-  hydrate('account', accountStore),
-  hydrate('uiState', uiStateStore),
-  hydrate('league', leagueStore),
-  hydrate('setting', settingStore)
-]).then(() => {
-  visitor = ua(AppConfig.trackingId, uiStateStore.userId);
-  ReactDOM.render(app, document.getElementById('root'));
+const hydrate = create({
+  storage: localForage,
+  jsonify: true
+});
+
+const renderApp = () => {
+  Promise.all([
+    hydrate('account', accountStore),
+    hydrate('uiState', uiStateStore),
+    hydrate('league', leagueStore),
+    hydrate('setting', settingStore)
+  ]).then(() => {
+    visitor = ua(AppConfig.trackingId, uiStateStore.userId);
+    ReactDOM.render(app, document.getElementById('root'));
+  });
+};
+
+hydrate('migration', migrationStore).then(() => {
+  if (migrationStore.current < migrationStore.latest) {
+    migrationStore.runMigrations().subscribe(() => renderApp());
+  } else {
+    renderApp();
+  }
 });
