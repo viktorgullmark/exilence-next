@@ -18,6 +18,7 @@ import { ExportUtils } from '../../utils/export.utils';
 import { useTranslation } from 'react-i18next';
 import { statusColors } from '../../assets/themes/exilence-theme';
 import { SignalrStore } from '../../store/signalrStore';
+import WarningIcon from '@material-ui/icons/Warning';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -46,6 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noItemPlaceholder: {
     color: theme.palette.primary.light
+  },
+  warningIcon: {
+    color: statusColors.warning,
+    marginLeft: theme.spacing(2)
   }
 }));
 
@@ -114,12 +119,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           >
             {getItems().length === 0 &&
               uiStateStore!.itemTableFilterText === '' && (
-                <Typography
-                  className={classes.noItemPlaceholder}
-                  align="center"
-                >
-                  {t('tables:label.item_table_placeholder')}
-                </Typography>
+                <WarningIcon
+                  titleAccess={t('label.no_snapshots_title')}
+                  className={classes.warningIcon}
+                />
               )}
           </Grid>
 
@@ -128,9 +131,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
               color="primary"
               variant="contained"
               disabled={getItems().length === 0}
-              onClick={() =>
-                ExportUtils.exportData(getItems())
-              }
+              onClick={() => ExportUtils.exportData(getItems())}
             >
               {t('label.net_worth_export')}
             </Button>

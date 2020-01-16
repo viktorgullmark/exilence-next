@@ -81,7 +81,8 @@
     "fetch_snapshot_spinner_title": "Fetching snapshots",
     "initiating_session_spinner_title": "Initiating session",
     "generate_name_icon_title": "Generate name",
-    "server_offline_title": "Not connected to server"
+    "server_offline_title": "Not connected to server",
+    "no_snapshots_title": "No snapshots found for profile"
   },
   "value": {
     "none": "None",
