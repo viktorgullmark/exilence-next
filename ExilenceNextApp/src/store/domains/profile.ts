@@ -116,7 +116,7 @@ export class Profile {
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    const apiProfile = ProfileUtils.mapProfileToApiProfile(this);
+    const apiProfile = ProfileUtils.mapProfileToApiProfile(new Profile(profile));
 
     fromStream(
       stores.signalrHub
