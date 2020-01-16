@@ -146,7 +146,7 @@ export class SignalrStore {
       );
       if (profile) {
         runInAction(() => {
-          snapshot.tabsFetchedCount = 0;
+          snapshot.tabsFetchedCount = snapshot.stashTabs.length;
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
