@@ -164,11 +164,16 @@ export class AccountStore {
 
   @action
   getPoeProfile() {
-    if (!this.token) {
-      this.getPoeProfileFail(new Error('error:no_token_set'));
-    }
-
-    return externalService.getProfile(this.token!.accessToken);
+    return externalService.getProfile(this.token!.accessToken).pipe(
+      map((profile: AxiosResponse<IPoeProfile>) => {
+        this.getPoeProfileSuccess();
+        return profile.data;
+      }),
+      catchError(e => {
+        this.getPoeProfileFail(e);
+        return throwError(e);
+      })
+    );
   }
 
   @action
@@ -215,91 +220,89 @@ export class AccountStore {
   @action
   initSession() {
     this.uiStateStore.setIsInitiating(true);
+
+    if (!this.token) {
+      return this.initSessionFail(new Error('error:no_token_set'));
+    }
+
     fromStream(
       this.getPoeProfile().pipe(
-        concatMap((res: AxiosResponse<IPoeProfile>) => {
-          this.getPoeProfileSuccess();
+        concatMap((res: IPoeProfile) => {
           const account = this.addOrUpdateAccount(
-            res.data.name,
+            res.name,
             this.sessionId
           );
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
             externalService.getCharacters()
-          )
-            .pipe(
-              concatMap(requests => {
-                const retrievedLeagues = requests[0].data;
-                const retrievedCharacters = requests[1].data;
+          ).pipe(
+            concatMap(requests => {
+              const retrievedLeagues = requests[0].data;
+              const retrievedCharacters = requests[1].data;
 
-                if (retrievedLeagues.length === 0) {
-                  throw new Error('error:no_leagues');
-                }
-                if (retrievedCharacters.length === 0) {
-                  throw new Error('error:no_characters');
-                }
+              if (retrievedLeagues.length === 0) {
+                throw new Error('error:no_leagues');
+              }
+              if (retrievedCharacters.length === 0) {
+                throw new Error('error:no_characters');
+              }
 
-                this.leagueStore.updateLeagues(retrievedLeagues);
-                this.getSelectedAccount.updateAccountLeagues(
-                  retrievedCharacters
-                );
-                this.priceStore.getPricesForLeagues();
+              this.leagueStore.updateLeagues(retrievedLeagues);
+              this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
+              this.priceStore.getPricesForLeagues();
 
-                return forkJoin(
-                  this.getSelectedAccount.authorize(),
-                  forkJoin(
-                    of(account.accountLeagues).pipe(
-                      concatMap(leagues => leagues),
-                      concatMap(league => {
-                        return league.getStashTabs();
-                      })
-                    )
-                  ).pipe(
-                    switchMap(() => {
-                      if (this.getSelectedAccount.profiles.length === 0) {
-                        const newProfile: IProfile = {
-                          name: 'profile 1',
-                          activeLeagueId: this.getSelectedAccount
-                            .accountLeagues[0].leagueId,
-                          activePriceLeagueId:
-                            stores.leagueStore.priceLeagues[0].id
-                        };
-
-                        const league = this.getSelectedAccount.accountLeagues.find(
-                          al => al.leagueId === newProfile.activeLeagueId
-                        );
-
-                        if (league) {
-                          runInAction(() => {
-                            newProfile.activeStashTabIds = league.stashtabs
-                              .slice(0, 6)
-                              .map(lst => lst.id);
-                          });
-                          return this.getSelectedAccount
-                            .createProfileObservable(newProfile, () => {})
-                            .pipe(
-                              map(() => {
-                                stores.uiStateStore.setProfilesLoaded(true);
-                              })
-                            );
-                        }
-                        return throwError(new Error('error:league_not_found'));
-                      }
-                      return of({});
+              return forkJoin(
+                this.getSelectedAccount.authorize(),
+                forkJoin(
+                  of(account.accountLeagues).pipe(
+                    concatMap(leagues => leagues),
+                    concatMap(league => {
+                      return league.getStashTabs();
                     })
                   )
-                );
-              })
-            )
-            .pipe(
-              switchMap(() => of(this.initSessionSuccess())),
-              catchError((e: AxiosError) => {
-                return of(this.initSessionFail(e));
-              })
-            );
+                ).pipe(
+                  switchMap(() => {
+                    if (this.getSelectedAccount.profiles.length === 0) {
+                      const newProfile: IProfile = {
+                        name: 'profile 1',
+                        activeLeagueId: this.getSelectedAccount
+                          .accountLeagues[0].leagueId,
+                        activePriceLeagueId:
+                          stores.leagueStore.priceLeagues[0].id
+                      };
+
+                      const league = this.getSelectedAccount.accountLeagues.find(
+                        al => al.leagueId === newProfile.activeLeagueId
+                      );
+
+                      if (league) {
+                        runInAction(() => {
+                          newProfile.activeStashTabIds = league.stashtabs
+                            .slice(0, 6)
+                            .map(lst => lst.id);
+                        });
+                        return this.getSelectedAccount
+                          .createProfileObservable(newProfile, () => {})
+                          .pipe(
+                            map(() => {
+                              stores.uiStateStore.setProfilesLoaded(true);
+                            })
+                          );
+                      }
+                      return throwError(new Error('error:league_not_found'));
+                    }
+                    return of({});
+                  })
+                )
+              );
+            })
+          );
         }),
-        catchError((e: AxiosError) => of(this.getPoeProfileFail(e)))
+        switchMap(() => of(this.initSessionSuccess())),
+        catchError((e: AxiosError) => {
+          return of(this.initSessionFail(e));
+        })
       )
     );
   }

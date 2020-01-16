@@ -119,16 +119,18 @@ export class Profile {
     const apiProfile = ProfileUtils.mapProfileToApiProfile(this);
 
     fromStream(
-      stores.signalrHub.invokeEvent<IApiProfile>('EditProfile', apiProfile).pipe(
-        map((p: IApiProfile) => {
-          runInAction(() => {
-            Object.assign(this, profile);
-          });
-          callback();
-          return this.updateProfileSuccess();
-        }),
-        catchError((e: AxiosError) => of(this.updateProfileFail(e)))
-      )
+      stores.signalrHub
+        .invokeEvent<IApiProfile>('EditProfile', apiProfile)
+        .pipe(
+          map((p: IApiProfile) => {
+            runInAction(() => {
+              Object.assign(this, profile);
+            });
+            callback();
+            return this.updateProfileSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.updateProfileFail(e)))
+        )
     );
   }
 
@@ -389,7 +391,9 @@ export class Profile {
         .invokeEvent<string>('RemoveAllSnapshots', this.uuid)
         .pipe(
           map(() => {
-            this.snapshots = [];
+            runInAction(() => {
+              this.snapshots = [];
+            });
             return this.removeAllSnapshotsSuccess();
           }),
           catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))
