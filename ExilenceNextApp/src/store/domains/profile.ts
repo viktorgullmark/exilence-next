@@ -119,7 +119,7 @@ export class Profile {
     const apiProfile = ProfileUtils.mapProfileToApiProfile(this);
 
     fromStream(
-      stores.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
+      stores.signalrHub.invokeEvent<IApiProfile>('EditProfile', apiProfile).pipe(
         map((p: IApiProfile) => {
           runInAction(() => {
             Object.assign(this, profile);
