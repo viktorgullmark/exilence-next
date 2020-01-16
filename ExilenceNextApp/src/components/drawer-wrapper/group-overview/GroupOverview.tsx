@@ -4,7 +4,8 @@ import {
   IconButton,
   Grid,
   Button,
-  Box
+  Box,
+  Typography
 } from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -37,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 1),
     justifyContent: 'flex-start'
+  },
+  groupName: {
+    textAlign: 'center'
   }
 }));
 
@@ -85,16 +89,21 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
       <Box p={2}>
         <Grid container spacing={2}>
           {activeGroup ? (
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleLeaveGroup}
-              >
-                {t('action.leave_group')}
-              </Button>
-            </Grid>
+            <>
+              <Grid item xs={12}>
+                <Typography component="h4" className={classes.groupName}>{activeGroup.name}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleLeaveGroup}
+                >
+                  {t('action.leave_group')}
+                </Button>
+              </Grid>
+            </>
           ) : (
             <>
               <Grid item xs={12}>
