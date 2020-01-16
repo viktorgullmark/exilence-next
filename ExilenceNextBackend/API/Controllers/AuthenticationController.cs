@@ -45,12 +45,12 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("token")]
-        public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
+        public async Task<AccountModel> Token([FromBody]AccountModel accountModel)
         {
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
             {
-                return BadRequest("Accesstoken not matching Account");
+                throw new Exception("Accesstoken not matching Account");
             }
 
             var account = await _accountService.GetAccount(accountModel.Name);
@@ -62,7 +62,9 @@ namespace API.Controllers
             
             var token = AuthHelper.GenerateToken(_secret, account);
 
-            return Ok(token);
+            account.AccessToken = token;
+
+            return account;
         }
 
         [HttpGet]
