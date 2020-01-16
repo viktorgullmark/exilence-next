@@ -132,7 +132,9 @@ export class Account implements IAccount {
           return this.getProfilesForAccount(this.uuid).pipe(
             map((profiles: IApiProfile[]) => {
               this.updateProfiles(profiles);
-              stores.uiStateStore.setProfilesLoaded(true);
+              if (this.profiles.length > 0) {
+                stores.uiStateStore.setProfilesLoaded(true);
+              }
             })
           );
         }),
@@ -301,26 +303,29 @@ export class Account implements IAccount {
 
   @action
   createProfile(profile: IProfile, callback: () => void) {
+    fromStream(this.createProfileObservable(profile, callback));
+  }
+
+  @action
+  createProfileObservable(profile: IProfile, callback: () => void) {
     stores.uiStateStore.setSavingProfile(true);
     const newProfile = new Profile(profile);
 
-    fromStream(
-      stores.signalrHub
-        .invokeEvent<IApiProfile>(
-          'AddProfile',
-          ProfileUtils.mapProfileToApiProfile(newProfile)
-        )
-        .pipe(
-          map((p: IApiProfile) => {
-            this.addProfile(newProfile);
-            this.setActiveProfile(newProfile.uuid);
-            callback();
-            this.createProfileSuccess();
-            return p;
-          }),
-          catchError((e: AxiosError) => of(this.createProfileFail(e)))
-        )
-    );
+    return stores.signalrHub
+      .invokeEvent<IApiProfile>(
+        'AddProfile',
+        ProfileUtils.mapProfileToApiProfile(newProfile)
+      )
+      .pipe(
+        map((p: IApiProfile) => {
+          this.addProfile(newProfile);
+          this.setActiveProfile(newProfile.uuid);
+          callback();
+          this.createProfileSuccess();
+          return p;
+        }),
+        catchError((e: AxiosError) => of(this.createProfileFail(e)))
+      );
   }
 
   @action

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, timer, throwError } from 'rxjs';
@@ -25,6 +25,8 @@ import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
+import { Profile } from './domains/profile';
+import { IProfile } from '../interfaces/profile.interface';
 
 export class AccountStore {
   constructor(
@@ -239,7 +241,6 @@ export class AccountStore {
 
               this.leagueStore.updateLeagues(retrievedLeagues);
               this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
-              this.getSelectedAccount.checkDefaultProfile();
               this.priceStore.getPricesForLeagues();
 
               return forkJoin(
@@ -253,8 +254,29 @@ export class AccountStore {
                   )
                 ).pipe(
                   switchMap(() => {
-                    return of({})
-                    // todo: if no profiles, create default profile here and select it
+                    if (this.getSelectedAccount.profiles.length === 0) {
+                      const newProfile: IProfile = {
+                        name: 'profile 1',
+                        activeLeagueId: this.getSelectedAccount
+                          .accountLeagues[0].leagueId,
+                        activePriceLeagueId:
+                          stores.leagueStore.priceLeagues[0].id
+                      };
+
+                      const league = this.getSelectedAccount.accountLeagues.find(
+                        al => al.leagueId === newProfile.activeLeagueId
+                      );
+
+                      if (league) {
+                        runInAction(() => {
+                          newProfile.activeStashTabIds = league.stashtabs
+                            .slice(0, 6)
+                            .map(lst => lst.id);
+                        });
+                        return this.getSelectedAccount.createProfileObservable(newProfile, () => {})
+                      }
+                    }
+                    return of({});
                   })
                 )
               ).pipe(switchMap(() => of(this.initSessionSuccess())));
