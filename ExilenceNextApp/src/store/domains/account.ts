@@ -70,9 +70,10 @@ export class Account implements IAccount {
       }
       return newProfile;
     });
+    // if no active profile, set first profile in array to active
     const activeProfile = profiles.find(p => p.active);
     if (!activeProfile && profiles.length > 0) {
-      throw Error('error:no_active_profile');
+      profiles[0].active = true;
     }
     this.profiles = mappedProfiles;
   }
