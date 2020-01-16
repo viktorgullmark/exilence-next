@@ -50,7 +50,6 @@ export class SignalrStore {
             'OnAddSnapshot',
             (connectionId, profileId, snapshot) => {
               if (this.activeGroup && snapshot && profileId) {
-                console.log('Before OnAddSnapshot', this.activeGroup);
                 this.addSnapshotToConnection(snapshot, connectionId, profileId);
               }
             }
@@ -59,7 +58,6 @@ export class SignalrStore {
             'OnAddPricedItems',
             pricedItemsUpdate => {
               if (this.activeGroup) {
-                console.log('Before OnAddPricedItems', this.activeGroup);
                 this.addPricedItemsToStashTab(pricedItemsUpdate);
               }
             }
@@ -68,8 +66,15 @@ export class SignalrStore {
             'OnRemoveAllSnapshots',
             (connectionId, profileId) => {
               if (this.activeGroup && profileId) {
-                console.log('Before OnRemoveAllSnapshots', this.activeGroup);
                 // todo: should remove all snapshots in group
+              }
+            }
+          );
+          signalrHub.onEvent<string, string>(
+            'OnChangeProfile',
+            (connectionId, profileId) => {
+              if (this.activeGroup && profileId) {
+                this.getLatestSnapshotForProfile(connectionId, profileId);
               }
             }
           );
@@ -84,6 +89,43 @@ export class SignalrStore {
     return this.activeGroup!.connections.find(
       c => c.account.name === stores.accountStore.getSelectedAccount.name
     )!;
+  }
+
+  @action
+  getLatestSnapshotForProfile(connectionId: string, profileUuid: string) {
+    if (this.online) {
+      fromStream(
+        this.signalrHub
+          .invokeEvent('GetLatestSnapshotForProfile', profileUuid)
+          .pipe(
+            map((snapshot: IApiSnapshot) => {
+              this.addSnapshotToConnection(snapshot, connectionId, profileUuid);
+              this.getLatestSnapshotForProfileSuccess();
+            }),
+            catchError((e: AxiosError) =>
+              of(this.getLatestSnapshotForProfileFail(e))
+            )
+          )
+      );
+    }
+  }
+
+  @action
+  getLatestSnapshotForProfileFail(e: Error) {
+    this.notificationStore.createNotification(
+      'retrieve_latest_snapshot',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  getLatestSnapshotForProfileSuccess() {
+    this.notificationStore.createNotification(
+      'retrieve_latest_snapshot',
+      'success'
+    );
   }
 
   // todo: test this thoroughly
@@ -108,7 +150,6 @@ export class SignalrStore {
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
-        console.log('After AddSnapshot', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
@@ -147,7 +188,6 @@ export class SignalrStore {
 
         this.activeGroup!.connections[connIndex] = connection;
 
-        console.log('After AddPricedItems', this.activeGroup);
         this.addSnapshotToConnectionSuccess();
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));

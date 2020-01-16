@@ -21,7 +21,9 @@
       "run_event_from_queue": "Successfully ran queued event",
       "get_poe_profile": "Successfully fetched PoE profile",
       "login_with_oauth": "Successfully logged in",
-      "get_profiles_for_account": "Successfully fetched profiles for account"
+      "get_profiles_for_account": "Successfully fetched profiles for account",
+      "retrieve_snapshot": "Successfully retrieved snapshot",
+      "retrieve_latest_snapshot": "Successfully retrieved snapshot"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -44,7 +46,9 @@
       "run_event_from_queue": "A previously failed event was now successfully sent",
       "get_poe_profile": "Successfully retrieved your PoE profile from pathofexile.com",
       "login_with_oauth": "Successfully logged in through pathofexile.com",
-      "get_profiles_for_account": "Successfully fetched all profiles for account from server"
+      "get_profiles_for_account": "Successfully fetched all profiles for account from server",
+      "retrieve_snapshot": "Successfully retrieved snapshot from server",
+      "retrieve_latest_snapshot": "Successfully retrieved latest snapshot for profile"
     }
   },
   "error": {
@@ -70,7 +74,9 @@
       "group_exists": "Group already exists",
       "get_poe_profile": "Failed retrieving PoE profile",
       "login_with_oauth": "Failed to login",
-      "get_profiles_for_account": "Failed to fetch profiles"
+      "get_profiles_for_account": "Failed to fetch profiles",
+      "retrieve_snapshot": "Failed to retrieve snapshot",
+      "retrieve_latest_snapshot": "Failed to retrieve snapshot"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -93,7 +99,9 @@
       "run_event_from_queue": "Failed when retrying a previously failed event",
       "get_poe_profile": "Failed when trying to retrieve your profile from pathofexile.com",
       "login_with_oauth": "Failed to login through pathofexile.com",
-      "get_profiles_for_account": "Failed when trying to fetch profiles for account"
+      "get_profiles_for_account": "Failed when trying to fetch profiles for account",
+      "retrieve_snapshot": "Failed to retrieve snapshot from server",
+      "retrieve_latest_snapshot": "Failed to retrieve latest snapshot"
     },
     "custom_description": {
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",

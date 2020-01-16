@@ -96,14 +96,9 @@ function getCurrencyPrices(league: string) {
         map((response: AxiosResponse<IPoeNinjaCurrencyOverview>) => {
           if (response.data) {
             return response.data.lines.map(lines => {
-
               const currencyDetail = response.data.currencyDetails.find(
                 detail => detail.name === lines.currencyTypeName
               );
-              if(lines.currencyTypeName.includes('Wisdom')) {
-                console.log(lines);
-                console.log('detail:', currencyDetail);
-              }
               return PriceUtils.getExternalPriceFromNinjaCurrencyItem(
                 lines,
                 currencyDetail
