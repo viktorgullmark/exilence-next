@@ -59,10 +59,12 @@ namespace API.Controllers
             {
                 account = await _accountService.AddAccount(accountModel);
             }
-            
+
             var token = AuthHelper.GenerateToken(_secret, account);
 
-            return Ok(token);
+            account.AccessToken = token;
+
+            return Ok(account);
         }
 
         [HttpGet]
@@ -82,7 +84,7 @@ namespace API.Controllers
                 });
                 var response = await client.PostAsync(uri, data);
                 var content = await response.Content.ReadAsStringAsync();
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     return Ok(content);

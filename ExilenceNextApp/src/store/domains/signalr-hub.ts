@@ -21,7 +21,7 @@ export class SignalrHub {
       })
       .build();
 
-    this.connection
+    return from(this.connection
       .start()
       .then(() => {
         this.connection!.onreconnected(() => {
@@ -37,7 +37,7 @@ export class SignalrHub {
 
         stores.signalrStore.setOnline(true);
       })
-      .catch((err: string) => console.log(err));
+      .catch((err: string) => console.log(err)));
   }
 
   onEvent<T, T2 = {}, T3 = {}>(event: string, callback: (arg1: T, arg2?: T2, arg3?: T3) => void) {
@@ -50,8 +50,8 @@ export class SignalrHub {
     }
     return from(
       id
-        ? this.connection!.invoke<T>(event, params, id)
-        : this.connection!.invoke<T>(event, params)
+        ? this.connection!.invoke(event, params, id)
+        : this.connection!.invoke(event, params)
     );
   }
 

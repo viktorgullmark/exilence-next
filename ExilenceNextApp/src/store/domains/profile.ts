@@ -45,7 +45,7 @@ export class Profile {
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
-  @observable shouldSetStashTabs: boolean = false;
+  @persist @observable active: boolean = false;
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -121,7 +121,9 @@ export class Profile {
     fromStream(
       stores.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
         map((p: IApiProfile) => {
-          Object.assign(this, profile);
+          runInAction(() => {
+            Object.assign(this, profile);
+          });
           callback();
           return this.updateProfileSuccess();
         }),

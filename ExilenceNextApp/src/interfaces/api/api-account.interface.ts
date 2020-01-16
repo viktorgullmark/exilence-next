@@ -3,7 +3,7 @@ import { IApiProfile } from './api-profile.interface';
 export interface IApiAccount {
   uuid: string;
   name: string;
-  token: string;
+  accessToken: string;
   verified: boolean;
   role: RoleEnum;
   profiles: IApiProfile[];

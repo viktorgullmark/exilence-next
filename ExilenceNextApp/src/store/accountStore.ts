@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, timer } from 'rxjs';
+import { forkJoin, of, timer, throwError } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -251,10 +251,12 @@ export class AccountStore {
                       return league.getStashTabs();
                     })
                   )
-                ).pipe(switchMap(() => {
-                  return this.getProfilesForAccount(this.getSelectedAccount.uuid)
-                  // todo: if no profiles, create default profile here and select it
-                }))
+                ).pipe(
+                  switchMap(() => {
+                    return of({})
+                    // todo: if no profiles, create default profile here and select it
+                  })
+                )
               ).pipe(switchMap(() => of(this.initSessionSuccess())));
             }),
             catchError((e: AxiosError) => {
@@ -367,33 +369,5 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
-  }
-
-  @action
-  getProfilesForAccount(accountUuid: string) {
-    return this.signalrStore.signalrHub
-      .invokeEvent<IApiProfile[] | string>('GetAllProfiles', accountUuid)
-      .pipe(
-        map(() => this.getProfilesForAccountSuccess()),
-        catchError((e: Error) => of(this.getProfilesForAccountFail(e)))
-      );
-  }
-
-  @action
-  getProfilesForAccountSuccess() {
-    this.notificationStore.createNotification(
-      'get_profiles_for_account',
-      'success'
-    );
-  }
-
-  @action
-  getProfilesForAccountFail(e: AxiosError | Error) {
-    this.notificationStore.createNotification(
-      'get_profiles_for_account',
-      'error',
-      true,
-      e
-    );
   }
 }
