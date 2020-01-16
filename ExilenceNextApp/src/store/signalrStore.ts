@@ -223,65 +223,33 @@ export class SignalrStore {
   @action
   joinGroup(groupName: string, password: string) {
     this.uiStateStore.setJoiningGroup(true);
-    const profile = stores.accountStore.getSelectedAccount.activeProfile;
 
-    // todo: error handling if no snapshots
-    const snapshotToSend: Snapshot = { ...profile.snapshots[0] };
-
-    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
-      al => al.leagueId === profile.activeLeagueId
-    );
-    if (activeAccountLeague) {
-      if (this.online && activeAccountLeague) {
-        fromStream(
-          this.signalrHub
-            .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
-              uuid: uuid.v4(),
-              name: groupName,
-              password: password,
-              created: new Date(),
-              connections: []
-            })
-            .pipe(
-              map((g: IApiGroup) => {
-                g = this.applyOwnSnapshotsToGroup(g);
-                this.setActiveGroup(new Group(g));
-                this.activeGroup!.setActiveAccounts(
-                  g.connections.map(c => c.account.uuid)
-                );
-              }),
-              switchMap(() => {
-                // sends latest snapshot to group members
-                if (profile.snapshots.length === 0) {
-                  return of(this.joinGroupSuccess());
-                }
-                const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-                  snapshotToSend,
-                  activeAccountLeague.stashtabs
-                );
-                const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
-                  snapshotToSend,
-                  activeAccountLeague.stashtabs
-                );
-                return profile
-                  .sendSnapshot(
-                    apiSnapshot,
-                    apiItems,
-                    this.sendSnapshotToGroupSuccess,
-                    this.sendSnapshotToGroupFail
-                  )
-                  .pipe(
-                    map(() => {
-                      return this.joinGroupSuccess();
-                    })
-                  );
-              }),
-              catchError((e: Error) => of(this.joinGroupFail(e)))
-            )
-        );
-      } else {
-        this.joinGroupFail(new Error('error:not_connected'));
-      }
+    if (this.online) {
+      fromStream(
+        this.signalrHub
+          .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
+            uuid: uuid.v4(),
+            name: groupName,
+            password: password,
+            created: new Date(),
+            connections: []
+          })
+          .pipe(
+            map((g: IApiGroup) => {
+              g = this.applyOwnSnapshotsToGroup(g);
+              this.setActiveGroup(new Group(g));
+              this.activeGroup!.setActiveAccounts(
+                g.connections.map(c => c.account.uuid)
+              );
+            }),
+            switchMap(() => {
+              return of(this.joinGroupSuccess());
+            }),
+            catchError((e: Error) => of(this.joinGroupFail(e)))
+          )
+      );
+    } else {
+      this.joinGroupFail(new Error('error:not_connected'));
     }
   }
 
