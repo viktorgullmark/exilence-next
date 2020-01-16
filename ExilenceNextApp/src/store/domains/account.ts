@@ -71,7 +71,7 @@ export class Account implements IAccount {
       return newProfile;
     });
     const activeProfile = profiles.find(p => p.active);
-    if (!activeProfile) {
+    if (!activeProfile && profiles.length > 0) {
       throw Error('error:no_active_profile');
     }
     this.profiles = mappedProfiles;
@@ -144,7 +144,10 @@ export class Account implements IAccount {
             scalingDuration: 3000
           })
         ),
-        catchError(e => of(this.authorizeFail(e)))
+        catchError(e => {
+          this.authorizeFail(e);
+          return throwError(e);
+        })
       );
   }
 
@@ -207,26 +210,6 @@ export class Account implements IAccount {
         this.accountLeagues.push(accLeague);
       }
     });
-  }
-
-  @action
-  checkDefaultProfile() {
-    if (this.accountLeagues.length === 0) {
-      throw Error('error:no_account_leagues');
-    }
-    if (stores.leagueStore.priceLeagues.length === 0) {
-      throw new Error('error:no_price_leagues');
-    }
-    if (this.profiles.length === 0) {
-      this.profiles.push(
-        new Profile({
-          name: 'profile 1',
-          activeLeagueId: this.accountLeagues[0].leagueId,
-          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id
-        })
-      );
-      this.setActiveProfile(this.profiles[0].uuid);
-    }
   }
 
   @action

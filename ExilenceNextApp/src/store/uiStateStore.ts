@@ -148,13 +148,13 @@ export class UiStateStore {
   @action
   toggleSidenav(open?: boolean) {
     this.groupOverviewOpen = false;
-    this.sidenavOpen = open || !this.sidenavOpen;
+    this.sidenavOpen = open !== undefined ? open : !this.sidenavOpen;
   }
 
   @action
   toggleGroupOverview(open?: boolean) {
     this.sidenavOpen = false;
-    this.groupOverviewOpen = open || !this.groupOverviewOpen;
+    this.groupOverviewOpen = open !== undefined ? open : !this.groupOverviewOpen;
   }
 
   @action

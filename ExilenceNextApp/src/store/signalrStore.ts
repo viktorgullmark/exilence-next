@@ -297,7 +297,7 @@ export class SignalrStore {
 
   @action
   sendSnapshotToGroupSuccess() {
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'send_snapshot_to_group',
       'success'
     );
@@ -305,7 +305,7 @@ export class SignalrStore {
 
   @action
   sendSnapshotToGroupFail(e: Error | AxiosError) {
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'send_snapshot_to_group',
       'error',
       false,

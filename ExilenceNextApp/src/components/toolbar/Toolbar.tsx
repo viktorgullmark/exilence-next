@@ -185,7 +185,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               >
                 <Grid item className={classes.profileArea}>
                   <IconButton
-                    disabled={props.isSnapshotting || !props.profilesLoaded}
+                    disabled={props.isSnapshotting || !props.profilesLoaded || !props.signalrOnline}
                     aria-label="edit"
                     className={classes.iconButton}
                     onClick={() => props.handleProfileOpen(true)}
@@ -195,7 +195,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   <FormControl className={classes.formControl}>
                     <Select
-                      disabled={props.isSnapshotting || !props.profilesLoaded}
+                      disabled={props.isSnapshotting || !props.profilesLoaded || !props.signalrOnline}
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
                         Dd.mapDomainToDropdown(props.profiles),
@@ -218,7 +218,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </FormControl>
 
                   <IconButton
-                    disabled={props.isSnapshotting || !props.profilesLoaded}
+                    disabled={props.isSnapshotting || !props.profilesLoaded || !props.signalrOnline}
                     onClick={() => props.handleProfileOpen()}
                     aria-label="create"
                     className={classes.iconButton}
@@ -230,7 +230,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       props.isSnapshotting ||
                       props.profiles.length < 2 ||
-                      !props.profilesLoaded
+                      !props.profilesLoaded ||
+                      !props.signalrOnline
                     }
                     onClick={() => props.handleRemoveProfile()}
                     aria-label="remove profile"
@@ -243,7 +244,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.snapshotArea}>
                   <IconButton
-                    disabled={!props.activeProfile.readyToSnapshot}
+                    disabled={!props.activeProfile.readyToSnapshot || !props.signalrOnline}
                     onClick={() => props.handleSnapshot()}
                     aria-label="snapshot"
                     className={classes.iconButton}
@@ -261,7 +262,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   {props.activeProfile.snapshots.length > 0 && (
                     <IconButton
-                      disabled={props.isSnapshotting}
+                      disabled={props.isSnapshotting || !props.signalrOnline}
                       onClick={() => props.handleClearSnapshots()}
                       aria-label="clear snapshots"
                       className={classes.iconButton}

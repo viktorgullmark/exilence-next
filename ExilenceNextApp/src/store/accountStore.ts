@@ -227,64 +227,77 @@ export class AccountStore {
           return forkJoin(
             externalService.getLeagues(),
             externalService.getCharacters()
-          ).pipe(
-            concatMap(requests => {
-              const retrievedLeagues = requests[0].data;
-              const retrievedCharacters = requests[1].data;
+          )
+            .pipe(
+              concatMap(requests => {
+                const retrievedLeagues = requests[0].data;
+                const retrievedCharacters = requests[1].data;
 
-              if (retrievedLeagues.length === 0) {
-                throw new Error('error:no_leagues');
-              }
-              if (retrievedCharacters.length === 0) {
-                throw new Error('error:no_characters');
-              }
+                if (retrievedLeagues.length === 0) {
+                  throw new Error('error:no_leagues');
+                }
+                if (retrievedCharacters.length === 0) {
+                  throw new Error('error:no_characters');
+                }
 
-              this.leagueStore.updateLeagues(retrievedLeagues);
-              this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
-              this.priceStore.getPricesForLeagues();
+                this.leagueStore.updateLeagues(retrievedLeagues);
+                this.getSelectedAccount.updateAccountLeagues(
+                  retrievedCharacters
+                );
+                this.priceStore.getPricesForLeagues();
 
-              return forkJoin(
-                this.getSelectedAccount.authorize(),
-                forkJoin(
-                  of(account.accountLeagues).pipe(
-                    concatMap(leagues => leagues),
-                    concatMap(league => {
-                      return league.getStashTabs();
+                return forkJoin(
+                  this.getSelectedAccount.authorize(),
+                  forkJoin(
+                    of(account.accountLeagues).pipe(
+                      concatMap(leagues => leagues),
+                      concatMap(league => {
+                        return league.getStashTabs();
+                      })
+                    )
+                  ).pipe(
+                    switchMap(() => {
+                      if (this.getSelectedAccount.profiles.length === 0) {
+                        const newProfile: IProfile = {
+                          name: 'profile 1',
+                          activeLeagueId: this.getSelectedAccount
+                            .accountLeagues[0].leagueId,
+                          activePriceLeagueId:
+                            stores.leagueStore.priceLeagues[0].id
+                        };
+
+                        const league = this.getSelectedAccount.accountLeagues.find(
+                          al => al.leagueId === newProfile.activeLeagueId
+                        );
+
+                        if (league) {
+                          runInAction(() => {
+                            newProfile.activeStashTabIds = league.stashtabs
+                              .slice(0, 6)
+                              .map(lst => lst.id);
+                          });
+                          return this.getSelectedAccount
+                            .createProfileObservable(newProfile, () => {})
+                            .pipe(
+                              map(() => {
+                                stores.uiStateStore.setProfilesLoaded(true);
+                              })
+                            );
+                        }
+                        return throwError(new Error('error:league_not_found'));
+                      }
+                      return of({});
                     })
                   )
-                ).pipe(
-                  switchMap(() => {
-                    if (this.getSelectedAccount.profiles.length === 0) {
-                      const newProfile: IProfile = {
-                        name: 'profile 1',
-                        activeLeagueId: this.getSelectedAccount
-                          .accountLeagues[0].leagueId,
-                        activePriceLeagueId:
-                          stores.leagueStore.priceLeagues[0].id
-                      };
-
-                      const league = this.getSelectedAccount.accountLeagues.find(
-                        al => al.leagueId === newProfile.activeLeagueId
-                      );
-
-                      if (league) {
-                        runInAction(() => {
-                          newProfile.activeStashTabIds = league.stashtabs
-                            .slice(0, 6)
-                            .map(lst => lst.id);
-                        });
-                        return this.getSelectedAccount.createProfileObservable(newProfile, () => {})
-                      }
-                    }
-                    return of({});
-                  })
-                )
-              ).pipe(switchMap(() => of(this.initSessionSuccess())));
-            }),
-            catchError((e: AxiosError) => {
-              return of(this.initSessionFail(e));
-            })
-          );
+                );
+              })
+            )
+            .pipe(
+              switchMap(() => of(this.initSessionSuccess())),
+              catchError((e: AxiosError) => {
+                return of(this.initSessionFail(e));
+              })
+            );
         }),
         catchError((e: AxiosError) => of(this.getPoeProfileFail(e)))
       )
@@ -300,7 +313,7 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    // todo: retry logic
+    fromStream(timer(15 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
     this.notificationStore.createNotification('init_session', 'error', true, e);
     this.uiStateStore.setIsInitiating(false);
@@ -350,36 +363,13 @@ export class AccountStore {
       this.uiStateStore.setValidated(true);
       this.initSession();
     }
-
-    // const profile = this.getSelectedAccount.activeProfile;
-
-    // if (profile.shouldSetStashTabs) {
-    //   const league = this.getSelectedAccount.accountLeagues.find(
-    //     al => al.leagueId === profile.activeLeagueId
-    //   );
-
-    //   if (league && profile.shouldSetStashTabs) {
-    //     profile.setActiveStashTabs(
-    //       league.stashtabs.slice(0, 6).map(lst => lst.id)
-    //     );
-
-    //     this.signalrStore.updateProfile(
-    //       ProfileUtils.mapProfileToApiProfile(profile)
-    //     );
-
-    //     runInAction(() => {
-    //       profile.shouldSetStashTabs = false;
-    //     });
-    //   }
-    // }
   }
 
   @action
   validateSessionFail(e: AxiosError | Error, sender: string) {
-    // retry validate session if it fails
     if (sender !== '/login') {
       fromStream(
-        timer(30 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
+        timer(15 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
       );
     }
 
