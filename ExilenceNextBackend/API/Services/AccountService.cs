@@ -97,6 +97,14 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task<SnapshotProfileModel> GetActiveProfileWithSnapshots(string accountId)
+        {
+            var profile = await _accountRepository.GetProfiles(profile => profile.Account.ClientId == accountId && profile.Active)
+                .Include(profile => profile.Snapshots)
+                .FirstOrDefaultAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
         public async Task<SnapshotProfileModel> GetProfileWithSnapshots(string profileId)
         {
             var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId)
