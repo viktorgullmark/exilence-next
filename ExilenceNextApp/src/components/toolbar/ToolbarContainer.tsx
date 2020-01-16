@@ -115,6 +115,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
           uiStateStore!.isSnapshotting
         }
         isInitiating={uiStateStore!.isInitiating}
+        profilesLoaded={uiStateStore!.profilesLoaded}
       />
     </>
   );

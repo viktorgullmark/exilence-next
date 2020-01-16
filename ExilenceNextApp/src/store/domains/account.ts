@@ -132,6 +132,7 @@ export class Account implements IAccount {
           return this.getProfilesForAccount(this.uuid).pipe(
             map((profiles: IApiProfile[]) => {
               this.updateProfiles(profiles);
+              stores.uiStateStore.setProfilesLoaded(true);
             })
           );
         }),

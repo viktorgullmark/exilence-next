@@ -38,11 +38,16 @@ export class UiStateStore {
   @observable creatingGroup: boolean = false;
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
-
+  @observable profilesLoaded: boolean = false;
 
   @action
   setSavingProfile(saving: boolean) {
     this.savingProfile = saving;
+  }
+
+  @action
+  setProfilesLoaded(loaded: boolean) {
+    this.profilesLoaded = loaded;
   }
 
   @action

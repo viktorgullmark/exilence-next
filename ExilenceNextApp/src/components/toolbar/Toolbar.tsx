@@ -123,6 +123,7 @@ interface Props {
   notifications: Notification[];
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
+  profilesLoaded: boolean;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
   markAllNotificationsRead: () => void;
@@ -153,7 +154,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           <AppBar
             position="fixed"
             className={clsx(classes.appBar, {
-              [classes.appBarShift]: props.sidenavOpened || props.groupOverviewOpened,
+              [classes.appBarShift]:
+                props.sidenavOpened || props.groupOverviewOpened,
               [classes.fromLeft]: props.sidenavOpened,
               [classes.fromRight]: props.groupOverviewOpened
             })}
@@ -183,7 +185,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               >
                 <Grid item className={classes.profileArea}>
                   <IconButton
-                    disabled={props.isSnapshotting}
+                    disabled={props.isSnapshotting || !props.profilesLoaded}
                     aria-label="edit"
                     className={classes.iconButton}
                     onClick={() => props.handleProfileOpen(true)}
@@ -193,7 +195,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   <FormControl className={classes.formControl}>
                     <Select
-                      disabled={props.isSnapshotting}
+                      disabled={props.isSnapshotting || !props.profilesLoaded}
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
                         Dd.mapDomainToDropdown(props.profiles),
@@ -216,7 +218,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </FormControl>
 
                   <IconButton
-                    disabled={props.isSnapshotting}
+                    disabled={props.isSnapshotting || !props.profilesLoaded}
                     onClick={() => props.handleProfileOpen()}
                     aria-label="create"
                     className={classes.iconButton}
@@ -227,7 +229,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   <IconButton
                     disabled={
                       props.isSnapshotting ||
-                      props.profiles.length < 2
+                      props.profiles.length < 2 ||
+                      !props.profilesLoaded
                     }
                     onClick={() => props.handleRemoveProfile()}
                     aria-label="remove profile"
