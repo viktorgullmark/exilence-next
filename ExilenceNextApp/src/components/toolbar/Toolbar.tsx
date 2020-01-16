@@ -24,7 +24,7 @@ import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router';
-import { primaryGradient } from '../../assets/themes/exilence-theme';
+import { primaryGradient, statusColors } from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
 import Dd from '../../utils/dropdown.utils';
 import { toolbarHeight } from '../header/Header';
@@ -35,6 +35,7 @@ import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
+import WarningIcon from '@material-ui/icons/Warning';
 
 export const innerToolbarHeight = 50;
 
@@ -103,11 +104,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.contrastText
   },
   initiationSpinner: {
-    marginLeft: '5px',
+    marginLeft: theme.spacing(1),
     color: theme.palette.primary.contrastText
   },
   badge: {
     backgroundColor: theme.palette.secondary.dark
+  },
+  offlineIcon: {
+    marginRight: theme.spacing(1),
+    color: statusColors.warning
   }
 }));
 
@@ -170,6 +175,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               >
                 <MenuIcon />
               </IconButton>
+              {!props.signalrOnline && (
+                 <WarningIcon titleAccess={t('label.server_offline_title')} className={classes.offlineIcon}/>
+              )}
               {props.isInitiating && (
                 <CircularProgress
                   title={t('label.initiating_session_spinner_title')}
