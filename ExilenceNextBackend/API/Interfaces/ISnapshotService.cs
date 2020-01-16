@@ -9,7 +9,7 @@ namespace API.Interfaces
     public interface ISnapshotService
     {
         Task<SnapshotModel> GetSnapshot(string snapshotId);
-        Task<SnapshotModel> GetLatestSnapshotWithItems(string snapshotClientId);
+        Task<SnapshotModel> GetSnapshotWithItems(string snapshotClientId);
         Task<SnapshotModel> AddSnapshot(string profileId, SnapshotModel snapshotModel);
         Task RemoveSnapshot(string snapshotId);
         Task RemoveAllSnapshots(string profileClientId);

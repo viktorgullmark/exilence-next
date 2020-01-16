@@ -9,4 +9,5 @@ export interface IApiProfile {
     activeCurrency: ICurrency;
     activeStashTabIds: string[];
     snapshots: IApiSnapshot[];
+    active: boolean;
 }

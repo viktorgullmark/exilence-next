@@ -13,6 +13,7 @@ namespace Shared.Models
         public string ClientId { get; set; }
         public string Name { get; set; }
         public string ActiveLeagueId { get; set; }
+        public DateTime Created { get; set; }
         public string ActivePriceLeagueId { get; set; }
         public List<string> ActiveStashTabIds { get; set; }
         public List<SnapshotModel> Snapshots { get; set; }

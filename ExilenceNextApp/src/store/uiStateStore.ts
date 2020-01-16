@@ -20,7 +20,7 @@ export class UiStateStore {
   @observable notificationListAnchor: null | HTMLElement = null;
   @observable accountMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
-  @observable initated: boolean = false;
+  @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
   @observable isInitiating: boolean = false;
   @observable groupDialogOpen: boolean = false;
@@ -31,13 +31,14 @@ export class UiStateStore {
   @observable redirectedTo: string = '';
   @observable confirmClearSnapshotsDialogOpen: boolean = false;
   @observable confirmRemoveProfileDialogOpen: boolean = false;
-  
+  @observable isSnapshotting: boolean = false;
   @observable savingProfile: boolean = false;
   @observable removingProfile: boolean = false;
   @observable joiningGroup: boolean = false;
   @observable creatingGroup: boolean = false;
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
+
 
   @action
   setSavingProfile(saving: boolean) {
@@ -125,6 +126,11 @@ export class UiStateStore {
   }
 
   @action
+  setIsSnapshotting(snapshotting: boolean = true) {
+    this.isSnapshotting = snapshotting;
+  }
+
+  @action
   getSessIdCookie() {
     return authService.getAuthCookie();
   }
@@ -158,7 +164,7 @@ export class UiStateStore {
 
   @action
   setInitiated(init: boolean) {
-    this.initated = init;
+    this.initiated = init;
   }
 
   @action

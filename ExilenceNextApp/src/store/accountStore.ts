@@ -2,8 +2,14 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, timer } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
+import { forkJoin, of, timer, throwError } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  map,
+  mergeMap,
+  switchMap
+} from 'rxjs/operators';
 import { stores } from '..';
 import { ICookie } from '../interfaces/cookie.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
@@ -18,6 +24,7 @@ import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
+import { IApiProfile } from '../interfaces/api/api-profile.interface';
 
 export class AccountStore {
   constructor(
@@ -236,11 +243,7 @@ export class AccountStore {
               this.priceStore.getPricesForLeagues();
 
               return forkJoin(
-                this.getSelectedAccount.authorize(
-                  this.getSelectedAccount.profiles.map(p =>
-                    ProfileUtils.mapProfileToApiProfile(p)
-                  )
-                ),
+                this.getSelectedAccount.authorize(),
                 forkJoin(
                   of(account.accountLeagues).pipe(
                     concatMap(leagues => leagues),
@@ -248,6 +251,11 @@ export class AccountStore {
                       return league.getStashTabs();
                     })
                   )
+                ).pipe(
+                  switchMap(() => {
+                    return of({})
+                    // todo: if no profiles, create default profile here and select it
+                  })
                 )
               ).pipe(switchMap(() => of(this.initSessionSuccess())));
             }),
@@ -317,9 +325,10 @@ export class AccountStore {
       this.uiStateStore.redirect('/login');
       this.loadAuthWindow();
     } else {
+      this.uiStateStore.setValidated(true);
       this.initSession();
     }
-  
+
     // const profile = this.getSelectedAccount.activeProfile;
 
     // if (profile.shouldSetStashTabs) {
@@ -360,6 +369,5 @@ export class AccountStore {
     );
     this.uiStateStore.setSubmitting(false);
     this.uiStateStore.setValidated(false);
-    // this.uiStateStore.setIsInitiating(false);
   }
 }

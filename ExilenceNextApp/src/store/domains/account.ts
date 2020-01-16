@@ -1,14 +1,15 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import {
   catchError,
   delay,
   mergeMap,
   retryWhen,
   take,
-  map
+  map,
+  switchMap
 } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
@@ -22,6 +23,7 @@ import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 import { genericRetryStrategy } from '../../utils/rxjs.utils';
 import { AxiosError } from 'axios';
+import { IApiAccount } from '../../interfaces/api/api-account.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -32,8 +34,6 @@ export class Account implements IAccount {
   @observable
   accountLeagues: AccountLeague[] = [];
   @persist('list', Profile) @observable profiles: Profile[] = [];
-
-  @persist @observable activeProfileUuid: string = '';
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
@@ -56,22 +56,84 @@ export class Account implements IAccount {
   }
 
   @action
-  authorize(profiles?: IApiProfile[]) {
+  updateAccountFromApi(account: IApiAccount) {
+    this.uuid = account.uuid;
+  }
+
+  @action
+  updateProfiles(profiles: IApiProfile[]) {
+    const mappedProfiles = profiles.map(p => {
+      const currentProfile = this.profiles.find(cp => cp.uuid === p.uuid);
+      const newProfile = new Profile(p);
+      if (currentProfile) {
+        newProfile.snapshots = currentProfile.snapshots;
+      }
+      return newProfile;
+    });
+    const activeProfile = profiles.find(p => p.active);
+    if (!activeProfile) {
+      throw Error('error:no_active_profile');
+    }
+    this.profiles = mappedProfiles;
+  }
+
+  @action
+  getProfilesForAccount(accountUuid: string) {
+    return stores.signalrStore.signalrHub
+      .invokeEvent<string>('GetAllProfiles', accountUuid)
+      .pipe(
+        map((profiles: IApiProfile[]) => {
+          this.getProfilesForAccountSuccess();
+          return profiles;
+        }),
+        catchError((e: Error) => {
+          this.getProfilesForAccountFail(e);
+          return throwError(e);
+        })
+      );
+  }
+
+  @action
+  getProfilesForAccountSuccess() {
+    stores.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'success'
+    );
+  }
+
+  @action
+  getProfilesForAccountFail(e: AxiosError | Error) {
+    stores.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'error',
+      true,
+      e
+    );
+  }
+
+  @action
+  authorize() {
     return authService
       .getToken({
         uuid: this.uuid,
         name: this.name!,
         accessToken: stores.accountStore.token!.accessToken,
-        profiles: profiles
-          ? profiles.map(p => {
-              return { ...p, snapshots: [] };
-            })
-          : []
+        profiles: []
       })
       .pipe(
-        mergeMap(token => {
+        mergeMap(account => {
           this.authorizeSuccess();
-          return of(stores.signalrStore.signalrHub.startConnection(token.data));
+          this.updateAccountFromApi(account.data);
+          return stores.signalrStore.signalrHub.startConnection(
+            account.data.accessToken
+          );
+        }),
+        switchMap(() => {
+          return this.getProfilesForAccount(this.uuid).pipe(
+            map((profiles: IApiProfile[]) => {
+              this.updateProfiles(profiles);
+            })
+          );
         }),
         retryWhen(
           genericRetryStrategy({
@@ -95,14 +157,35 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    const profile = this.profiles.find(p => p.uuid === this.activeProfileUuid);
+    const profile = this.profiles.find(p => p.active);
     return profile ? profile : new Profile();
   }
 
   @action
   setActiveProfile(uuid: string) {
     stores.uiStateStore.changeItemTablePage(0);
-    this.activeProfileUuid = uuid;
+
+    fromStream(
+      stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
+        map((uuid: string) => {
+          runInAction(() => {
+            this.profiles = this.profiles.map(p => {
+              p.active = false;
+              return p;
+            });
+          });
+          const foundProfile = this.profiles.find(p => p.uuid === uuid);
+          if (!foundProfile) {
+            return throwError('error:no_profile_found');
+          }
+          runInAction(() => {
+            foundProfile.active = true;
+          });
+          return this.setActiveProfileSuccess();
+        }),
+        catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
+      )
+    );
   }
 
   @action
@@ -136,8 +219,7 @@ export class Account implements IAccount {
         new Profile({
           name: 'profile 1',
           activeLeagueId: this.accountLeagues[0].leagueId,
-          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id,
-          shouldSetStashTabs: true
+          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id
         })
       );
       this.setActiveProfile(this.profiles[0].uuid);
@@ -149,9 +231,7 @@ export class Account implements IAccount {
     stores.uiStateStore.setRemovingProfile(true);
     visitor!.event('Profile', 'Remove profile').send();
 
-    const profileIndex = this.profiles.findIndex(
-      p => p.uuid === this.activeProfileUuid
-    );
+    const profileIndex = this.profiles.findIndex(p => p.active);
 
     fromStream(
       stores.signalrHub
@@ -161,11 +241,9 @@ export class Account implements IAccount {
             if (profileIndex === -1) {
               this.removeActiveProfileFail(new Error('profile_not_found'));
             } else {
-              const newActiveProfile = this.profiles.find(
-                p => p.uuid !== this.activeProfileUuid
-              );
-              this.setActiveProfile(newActiveProfile!.uuid);
+              const newActiveProfile = this.profiles.find(p => !p.active);
               this.deleteProfiles(profileIndex, 1);
+              this.setActiveProfile(newActiveProfile!.uuid);
             }
             stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
             return this.removeActiveProfileSuccess();
@@ -178,7 +256,7 @@ export class Account implements IAccount {
   @action
   deleteProfiles(index: number, amount: number) {
     this.profiles.splice(index, amount);
-  } 
+  }
 
   @action
   removeActiveProfileSuccess() {
@@ -191,6 +269,24 @@ export class Account implements IAccount {
     stores.uiStateStore.setRemovingProfile(false);
     stores.notificationStore.createNotification(
       'remove_profile',
+      'error',
+      true,
+      e
+    );
+  }
+
+  @action
+  setActiveProfileSuccess() {
+    stores.notificationStore.createNotification(
+      'set_active_profile',
+      'success'
+    );
+  }
+
+  @action
+  setActiveProfileFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'set_active_profile',
       'error',
       true,
       e

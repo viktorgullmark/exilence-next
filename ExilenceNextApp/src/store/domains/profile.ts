@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
@@ -8,7 +8,8 @@ import {
   map,
   mergeMap,
   switchMap,
-  concatMap
+  concatMap,
+  flatMap
 } from 'rxjs/operators';
 import uuid from 'uuid';
 import { ICurrency } from '../../interfaces/currency.interface';
@@ -44,9 +45,7 @@ export class Profile {
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
-  @observable isSnapshotting: boolean = false;
-
-  @observable shouldSetStashTabs: boolean = false;
+  @persist @observable active: boolean = false;
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -63,7 +62,8 @@ export class Profile {
       league.stashtabs.length > 0 &&
       !stores.priceStore.isUpdatingPrices &&
       stores.uiStateStore.validated &&
-      !this.isSnapshotting
+      stores.uiStateStore.initiated &&
+      !stores.uiStateStore.isSnapshotting
     );
   }
 
@@ -121,7 +121,9 @@ export class Profile {
     fromStream(
       stores.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
         map((p: IApiProfile) => {
-          Object.assign(this, profile);
+          runInAction(() => {
+            Object.assign(this, profile);
+          });
           callback();
           return this.updateProfileSuccess();
         }),
@@ -145,26 +147,21 @@ export class Profile {
     stores.notificationStore.createNotification('update_profile', 'success');
   }
 
-  @action
-  setIsSnapshotting(snapshotting: boolean = true) {
-    this.isSnapshotting = snapshotting;
-  }
-
   @action snapshot() {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
-    this.setIsSnapshotting();
+    stores.uiStateStore!.setIsSnapshotting(true);
     this.getItems();
   }
 
   @action snapshotSuccess() {
     stores.notificationStore.createNotification('snapshot', 'success');
-    this.setIsSnapshotting(false);
+    stores.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
     stores.notificationStore.createNotification('snapshot', 'error', true, e);
-    this.setIsSnapshotting(false);
+    stores.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action getItems() {
@@ -328,8 +325,10 @@ export class Profile {
         if (stores.signalrStore.activeGroup) {
           stores.signalrStore.addOwnSnapshotToActiveGroup(snapshotToAdd);
         }
-        this.snapshots.unshift(snapshotToAdd);
-        this.snapshots = this.snapshots.slice(0, 100);
+        runInAction(() => {
+          this.snapshots.unshift(snapshotToAdd);
+          this.snapshots = this.snapshots.slice(0, 100);
+        });
       };
       fromStream(
         this.sendSnapshot(
@@ -354,21 +353,22 @@ export class Profile {
     return stores.signalrHub
       .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
       .pipe(
-        concatMap(() => {
-          return switchMap(() => {
-            return stores.signalrStore
-              .uploadItems(items, this.uuid, snapshot.uuid)
-              .pipe(
-                map(() => {
-                  if (callback) {
-                    callback();
-                  }
-                  return successAction();
-                })
-              );
-          });
+        switchMap(() => {
+          return stores.signalrStore.uploadItems(
+            items,
+            this.uuid,
+            snapshot.uuid
+          );
         }),
-        catchError((e: AxiosError) => of(failAction(e)))
+        switchMap(() => {
+          if (callback) {
+            callback();
+          }
+          return of(successAction());
+        }),
+        catchError((e: AxiosError) => {
+          return of(failAction(e));
+        })
       );
   }
 
@@ -385,13 +385,15 @@ export class Profile {
   removeAllSnapshots() {
     stores.uiStateStore.setClearingSnapshots(true);
     fromStream(
-      stores.signalrHub.invokeEvent<string>('RemoveAllSnapshots', this.uuid).pipe(
-        map(() => {
-          this.snapshots = [];
-          return this.removeAllSnapshotsSuccess();
-        }),
-        catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))
-      )
+      stores.signalrHub
+        .invokeEvent<string>('RemoveAllSnapshots', this.uuid)
+        .pipe(
+          map(() => {
+            this.snapshots = [];
+            return this.removeAllSnapshotsSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))
+        )
     );
   }
 

@@ -4,7 +4,7 @@ import { IApiProfile } from './api-profile.interface';
 
 export interface IApiSnapshot {
   uuid: string;
-  datestamp: Moment;
+  created: Moment;
   stashTabs: IApiStashTabSnapshot[];
   profile: IApiProfile;
   tabsFetchedCount: number;

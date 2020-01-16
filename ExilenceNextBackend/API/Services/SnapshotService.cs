@@ -32,12 +32,12 @@ namespace API.Services
             return _mapper.Map<SnapshotModel>(snapshot);
         }
 
-        public async Task<SnapshotModel> GetLatestSnapshotWithItems(string snapshotClientId)
+        public async Task<SnapshotModel> GetSnapshotWithItems(string snapshotClientId)
         {
             var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId)
                 .Include(snapshot => snapshot.StashTabs)
                 .ThenInclude(stashtab => stashtab.PricedItems)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
 

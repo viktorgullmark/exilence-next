@@ -1,6 +1,6 @@
 import { reaction } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';

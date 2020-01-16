@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
+import { toolbarHeight } from '../header/Header';
 
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
@@ -18,6 +19,10 @@ interface LoginContentProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  content: {
+    height: `calc(100% - ${toolbarHeight}px)`,
+    flexGrow: 1,
+  },
   loginContentContainer: {
     'box-shadow': '0px 0px 32px 1px rgba(0,0,0,0.77)',
     borderRadius: 0,
@@ -49,7 +54,7 @@ const LoginContent: React.FC<LoginContentProps> = (
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="center">
+      <Grid container direction="row" justify="center" alignItems="center" className={classes.content}>
         <Grid item sm={9} md={5} lg={4} xl={3}>
           <Paper className={clsx('paper', classes.loginContentContainer)}>
             <Typography variant="h5" className={classes.loginTitle}>

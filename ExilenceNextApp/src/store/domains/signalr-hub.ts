@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import { action, observable } from 'mobx';
-import { from } from 'rxjs';
+import { from, throwError } from 'rxjs';
 import { stores } from '../..';
 import AppConfig from './../../config/app.config';
 
@@ -21,7 +21,7 @@ export class SignalrHub {
       })
       .build();
 
-    this.connection
+    return from(this.connection
       .start()
       .then(() => {
         this.connection!.onreconnected(() => {
@@ -37,7 +37,7 @@ export class SignalrHub {
 
         stores.signalrStore.setOnline(true);
       })
-      .catch((err: string) => console.log(err));
+      .catch((err: string) => console.log(err)));
   }
 
   onEvent<T, T2 = {}, T3 = {}>(event: string, callback: (arg1: T, arg2?: T2, arg3?: T3) => void) {
@@ -45,14 +45,20 @@ export class SignalrHub {
   }
 
   invokeEvent<T>(event: string, params: T | T[], id?: string) {
+    if(!this.connection) {
+      return throwError('error:not_connected');
+    }
     return from(
       id
-        ? this.connection!.invoke<T>(event, params, id)
-        : this.connection!.invoke<T>(event, params)
+        ? this.connection!.invoke(event, params, id)
+        : this.connection!.invoke(event, params)
     );
   }
 
   sendEvent<T>(event: string, params: T | T[], id?: string) {
+    if(!this.connection) {
+      return throwError('error:not_connected');
+    }
     return from(
       id
         ? this.connection!.send(event, params, id)
