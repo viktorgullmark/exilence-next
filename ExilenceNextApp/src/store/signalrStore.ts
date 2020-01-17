@@ -41,12 +41,6 @@ export class SignalrStore {
     private notificationStore: NotificationStore,
     public signalrHub: SignalrHub
   ) {
-    reaction(
-      () => signalrHub!.connection,
-      (_conn, reaction) => {
-        reaction.dispose();
-      }
-    );
   }
 
   @action
@@ -76,7 +70,6 @@ export class SignalrStore {
             withItems
           );
         }
-        console.log('after add snapshot items:', toJS(this.activeGroup));
       }
     );
     this.signalrHub.onEvent<IApiPricedItemsUpdate>(
