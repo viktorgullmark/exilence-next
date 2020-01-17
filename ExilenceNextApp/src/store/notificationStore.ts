@@ -28,7 +28,8 @@ export class NotificationStore {
 
   @action
   addDisplayed(uuid: string) {
-    this.displayed = [...this.displayed, uuid];
+    this.displayed.unshift(uuid);
+    this.displayed = this.displayed.slice(0, 10);
   }
 
   @action
