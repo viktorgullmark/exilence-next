@@ -1,23 +1,21 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
-import { from, of, empty, forkJoin } from 'rxjs';
-import { catchError, concatMap, map, switchMap, concat } from 'rxjs/operators';
+import { forkJoin, from, of } from 'rxjs';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
+import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
-import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
-import { IPricedItem } from '../interfaces/priced-item.interface';
 import { SnapshotUtils } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
+import { Snapshot } from './domains/snapshot';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
-import { Snapshot } from './domains/snapshot';
-import { IApiConnection } from '../interfaces/api/api-connection.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -105,8 +103,8 @@ export class SignalrStore {
         connection.account.profiles = connection.account.profiles.map(p => {
           p.active = false;
           return p;
-        })
-      })
+        });
+      });
 
       const profile = connection.account.profiles.find(
         p => p.uuid === profileId
@@ -118,10 +116,14 @@ export class SignalrStore {
         });
         this.changeProfileForConnectionSuccess();
       } else {
-        this.changeProfileForConnectionFail(new Error('error:profile_not_found'));
+        this.changeProfileForConnectionFail(
+          new Error('error:profile_not_found')
+        );
       }
     } else {
-      this.changeProfileForConnectionFail(new Error('error:connection_not_found'));
+      this.changeProfileForConnectionFail(
+        new Error('error:connection_not_found')
+      );
     }
   }
 
@@ -234,19 +236,46 @@ export class SignalrStore {
           st => st.uuid === pricedItemsUpdate.stashTabId
         );
 
+        if (snapshot!.tabsFetchedCount === snapshot!.stashTabs.length) {
+          profile.snapshots = profile.snapshots.map(ps => {
+            if (profile.snapshots.indexOf(ps) !== 0) {
+              ps.stashTabs.map(psst => {
+                psst.pricedItems = [];
+                return psst;
+              });
+            }
+            return ps;
+          }).slice(0, 100);
+        }
+
         stashTab!.pricedItems = stashTab!.pricedItems.concat(
           pricedItemsUpdate.pricedItems
         );
 
         this.activeGroup!.connections[connIndex] = connection;
 
-        this.addSnapshotToConnectionSuccess();
+        this.addPricedItemsToStashTabSuccess();
       } else {
-        this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
+        this.addPricedItemsToStashTabFail(new Error('error:profile_not_found'));
       }
     } else {
-      this.addSnapshotToConnectionFail(new Error('error:connection_not_found'));
+      this.addPricedItemsToStashTabFail(new Error('error:connection_not_found'));
     }
+  }
+
+  @action
+  addPricedItemsToStashTabFail(e: Error) {
+    this.notificationStore.createNotification(
+      'retrieve_items',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  addPricedItemsToStashTabSuccess() {
+    this.notificationStore.createNotification('retrieve_items', 'success');
   }
 
   @action
@@ -306,10 +335,9 @@ export class SignalrStore {
   }
 
   @action applyOwnSnapshotsToGroup(g: IApiGroup) {
-
     const activeProfile = stores.accountStore.getSelectedAccount.activeProfile;
 
-    if(!activeProfile) {
+    if (!activeProfile) {
       throw new Error('error:no_active_profile');
     }
 
@@ -317,16 +345,24 @@ export class SignalrStore {
       .find(
         c => c.account.name === stores.accountStore.getSelectedAccount.name
       )!
-      .account.profiles.find(
-        p =>
-          p.uuid === activeProfile.uuid
-      );
+      .account.profiles.find(p => p.uuid === activeProfile.uuid);
 
     if (!activeGroupProfile) {
       throw new Error('error:profile_not_found_on_server');
     } else {
-      activeGroupProfile.snapshots = activeProfile.snapshots.map(
-        s => SnapshotUtils.mapSnapshotToApiSnapshot(s)
+      // clear items from other snapshots
+      const snapShotsToAdd = activeProfile.snapshots.map(ps => {
+        if (activeProfile.snapshots.indexOf(ps) !== 0) {
+          ps.stashTabSnapshots.map(psst => {
+            psst.pricedItems = [];
+            return psst;
+          });
+        }
+        return ps;
+      }).slice(0, 100);
+
+      activeGroupProfile.snapshots = snapShotsToAdd.map(s =>
+        SnapshotUtils.mapSnapshotToApiSnapshot(s)
       );
     }
     return g;
@@ -335,10 +371,10 @@ export class SignalrStore {
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
     const activeProfile = stores.accountStore.getSelectedAccount.activeProfile;
 
-    if(!activeProfile) {
+    if (!activeProfile) {
       throw new Error('error:no_active_profile');
     }
-    
+
     const activeGroupProfile = this.ownConnection.account.profiles.find(
       p => p.uuid === activeProfile.uuid
     );
@@ -348,6 +384,17 @@ export class SignalrStore {
       activeGroupProfile.snapshots.unshift(
         SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
       );
+
+      // clear items from other snapshots
+      activeGroupProfile.snapshots = activeGroupProfile.snapshots.map(ps => {
+        if (activeGroupProfile.snapshots.indexOf(ps) !== 0) {
+          ps.stashTabs.map(psst => {
+            psst.pricedItems = [];
+            return psst;
+          });
+        }
+        return ps;
+      }).slice(0, 100);
     }
   }
 
