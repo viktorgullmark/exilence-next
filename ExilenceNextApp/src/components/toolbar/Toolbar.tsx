@@ -201,6 +201,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   <IconButton
                     disabled={
                       props.isSnapshotting ||
+                      !props.activeProfile ||
                       props.isInitiating ||
                       !props.profilesLoaded ||
                       !props.signalrOnline
