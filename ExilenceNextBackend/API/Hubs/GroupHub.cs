@@ -38,7 +38,7 @@ namespace API.Hubs
             await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", connection);
             if (lastSnapshot != null)
             {
-                var snapshotWithItems = _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
+                var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
                 await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
             }
 
