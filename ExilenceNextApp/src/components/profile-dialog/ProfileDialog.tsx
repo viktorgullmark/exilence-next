@@ -22,7 +22,7 @@ interface ProfileDialogProps {
   isOpen: boolean;
   loading: boolean;
   isEditing?: boolean;
-  profile: Profile;
+  profile?: Profile;
   leagueUuid: string;
   priceLeagueUuid: string;
   leagues: League[];
@@ -77,7 +77,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: props.isEditing ? props.profile.name : '',
+              profileName: props.isEditing && props.profile ? props.profile.name : '',
               league: props.leagueUuid,
               priceLeague: props.priceLeagueUuid,
               stashTabIds: props.stashTabIds

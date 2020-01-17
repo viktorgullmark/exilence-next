@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, throwError } from 'rxjs';
@@ -41,18 +41,26 @@ export class Account implements IAccount {
 
   @computed
   get activeLeague() {
-    const league = stores.leagueStore.leagues.find(
-      l => l.id === this.activeProfile.activeLeagueId
-    );
-    return league;
+    const profile = this.activeProfile;
+    if (profile) {
+      return stores.leagueStore.leagues.find(
+        l => l.id === profile.activeLeagueId
+      );
+    } else {
+      return undefined;
+    }
   }
 
   @computed
   get activePriceLeague() {
-    const league = stores.leagueStore.priceLeagues.find(
-      l => l.id === this.activeProfile.activePriceLeagueId
-    );
-    return league!;
+    const profile = this.activeProfile;
+    if (profile) {
+      return stores.leagueStore.priceLeagues.find(
+        l => l.id === profile.activePriceLeagueId
+      );
+    } else {
+      return undefined;
+    }
   }
 
   @action
@@ -164,8 +172,8 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    const profile = this.profiles.find(p => p.active);
-    return profile ? profile : new Profile();
+    let active = this.profiles.find(p => p.active);
+    return active;
   }
 
   @action
@@ -294,6 +302,7 @@ export class Account implements IAccount {
   createProfileObservable(profile: IProfile, callback: () => void) {
     stores.uiStateStore.setSavingProfile(true);
     const newProfile = new Profile(profile);
+    newProfile.active = true;
 
     return stores.signalrHub
       .invokeEvent<IApiProfile>(

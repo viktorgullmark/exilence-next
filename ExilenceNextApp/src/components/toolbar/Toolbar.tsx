@@ -123,7 +123,7 @@ interface Props {
   signalrOnline: boolean;
   sidenavOpened: boolean;
   groupOverviewOpened: boolean;
-  activeProfile: Profile;
+  activeProfile?: Profile;
   profiles: Profile[];
   profileOpen: boolean;
   isEditing: boolean;
@@ -201,6 +201,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   <IconButton
                     disabled={
                       props.isSnapshotting ||
+                      props.isInitiating ||
                       !props.profilesLoaded ||
                       !props.signalrOnline
                     }
@@ -215,13 +216,14 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <Select
                       disabled={
                         props.isSnapshotting ||
+                        props.isInitiating ||
                         !props.profilesLoaded ||
                         !props.signalrOnline
                       }
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
                         Dd.mapDomainToDropdown(props.profiles),
-                        props.activeProfile.uuid
+                        props.activeProfile ? props.activeProfile.uuid : ''
                       )}
                       onChange={e => props.handleProfileChange(e)}
                       inputProps={{
@@ -243,7 +245,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       props.isSnapshotting ||
                       !props.profilesLoaded ||
-                      !props.signalrOnline
+                      props.isInitiating ||
+                      !props.signalrOnline 
                     }
                     onClick={() => props.handleProfileOpen()}
                     aria-label="create"
@@ -271,8 +274,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <Grid item className={classes.snapshotArea}>
                   <IconButton
                     disabled={
+                      !props.activeProfile ||
                       !props.activeProfile.readyToSnapshot ||
-                      !props.signalrOnline
+                      !props.signalrOnline 
                     }
                     onClick={() => props.handleSnapshot()}
                     aria-label="snapshot"
@@ -291,6 +295,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                   <IconButton
                     disabled={
+                      !props.activeProfile ||
                       props.isSnapshotting ||
                       !props.signalrOnline ||
                       props.activeProfile.snapshots.length === 0

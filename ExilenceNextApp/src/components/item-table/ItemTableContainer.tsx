@@ -59,7 +59,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   signalrStore,
   uiStateStore
 }: ItemTableContainerProps) => {
-  const { items } = accountStore!.getSelectedAccount.activeProfile;
+  const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
   const classes = useStyles();
@@ -93,7 +93,11 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   };
 
   const getItems = () => {
-    return activeGroup ? activeGroup.items : items;
+    if (activeProfile) {
+      return activeGroup ? activeGroup.items : activeProfile.items;
+    } else {
+      return [];
+    }
   };
 
   return (

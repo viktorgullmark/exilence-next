@@ -1,4 +1,4 @@
-import { Chip, createStyles, FormControl, Input, InputLabel, makeStyles, MenuItem, Select, Theme, useTheme } from '@material-ui/core';
+import { Chip, createStyles, FormControl, Input, InputLabel, makeStyles, MenuItem, Select, Theme, useTheme, Typography } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent, useState } from 'react';
@@ -108,7 +108,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             >
               {stashTab.n}
             </MenuItem>
-          )) : <h2>{t('label.stash_tab_dropdown_placeholder')}</h2>}
+          )) : <Typography component="h4">{t('label.stash_tab_dropdown_placeholder')}</Typography>}
         </Select>
       </FormControl>
     </>

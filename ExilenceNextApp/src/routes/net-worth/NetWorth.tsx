@@ -31,12 +31,25 @@ const NetWorth: React.FC<NetWorthProps> = ({
 }: NetWorthProps) => {
   const location = useLocation();
   const theme = useTheme();
-  const {
-    itemCount,
-    netWorthValue,
-    snapshots,
-    activeCurrency
-  } = accountStore!.getSelectedAccount.activeProfile;
+  const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+
+  const itemCount = () => {
+    return activeProfile ? activeProfile.itemCount : 0;
+  };
+
+  const netWorthValue = () => {
+    return activeProfile ? activeProfile.netWorthValue : 0;
+  };
+
+  const snapshots = () => {
+    return activeProfile ? activeProfile.snapshots : [];
+  };
+
+  const activeCurrency = () => {
+    return activeProfile
+      ? activeProfile.activeCurrency
+      : { name: 'chaos', short: 'c' };
+  };
 
   const { activeGroup } = signalrStore!;
 
@@ -54,10 +67,10 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={4} lg={3}>
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.netWorthValue : netWorthValue}
+              value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
               title="label.total_value"
               valueColor={itemColors.chaosOrb}
-              currencyShort={activeCurrency.short}
+              currencyShort={activeCurrency().short}
               icon={<MonetizationOnIcon fontSize="large" />}
               currency
             />
@@ -66,7 +79,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={4} lg={3}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.itemCount : itemCount}
+              value={activeGroup ? activeGroup.itemCount : itemCount()}
               title="label.total_items"
               valueColor={theme.palette.text.primary}
               icon={<GavelIcon fontSize="large" />}

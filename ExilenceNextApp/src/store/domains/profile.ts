@@ -49,6 +49,10 @@ export class Profile {
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
+
+    runInAction(() => {
+      this.active = true;
+    });
   }
 
   @computed
@@ -116,7 +120,9 @@ export class Profile {
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    const apiProfile = ProfileUtils.mapProfileToApiProfile(new Profile(profile));
+    const apiProfile = ProfileUtils.mapProfileToApiProfile(
+      new Profile(profile)
+    );
 
     fromStream(
       stores.signalrHub
@@ -238,15 +244,22 @@ export class Profile {
 
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
+    const activePriceLeague =
+      stores.accountStore.getSelectedAccount.activePriceLeague;
+
+    if (!activePriceLeague) {
+      return this.priceItemsForStashTabsFail(
+        new Error('error:no_active_price_league')
+      );
+    }
+
     const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
-      l =>
-        l.leagueId ===
-        stores.accountStore.getSelectedAccount.activePriceLeague.id
+      l => l.leagueId === activePriceLeague.id
     );
 
     if (!activePriceDetails) {
       return this.priceItemsForStashTabsFail(
-        new Error('no_prices_received_for_league')
+        new Error('error:no_prices_received_for_league')
       );
     }
 

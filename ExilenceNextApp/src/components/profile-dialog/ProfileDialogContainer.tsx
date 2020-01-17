@@ -9,6 +9,7 @@ import { LeagueStore } from '../../store/leagueStore';
 import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 import { UiStateStore } from '../../store/uiStateStore';
+import uuid from 'uuid';
 
 interface Props {
   accountStore?: AccountStore;
@@ -16,7 +17,7 @@ interface Props {
   uiStateStore?: UiStateStore;
   isOpen: boolean;
   isEditing: boolean;
-  profile: Profile;
+  profile?: Profile;
   handleClickOpen: () => void;
   handleClickClose: () => void;
 }
@@ -60,7 +61,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
       }
 
       if (isEditing) {
-        setStashTabIds(profile.activeStashTabIds);
+        setStashTabIds(profile!.activeStashTabIds);
       }
     }
   }, [isOpen]);
@@ -87,7 +88,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   const getPriceLeagueSelection = (edit: boolean) => {
     const id = Dd.getDropdownSelection(
       priceLeagues,
-      edit ? activePriceLeague.id : ''
+      edit && activePriceLeague ? activePriceLeague.id : ''
     );
 
     // fallback in case league doesnt exist anymore
@@ -118,14 +119,14 @@ const ProfileDialogContainer: React.FC<Props> = ({
 
   const handleSubmit = (values: ProfileFormValues) => {
     const profile: IProfile = {
-      uuid: activeProfile.uuid,
+      uuid: isEditing ? activeProfile!.uuid : uuid.v4(),
       name: values.profileName,
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
       activeStashTabIds: stashTabIds
     };
     if (isEditing) {
-      accountStore!.getSelectedAccount.activeProfile.updateProfile(
+      accountStore!.getSelectedAccount.activeProfile!.updateProfile(
         profile,
         handleClickClose
       );

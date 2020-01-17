@@ -38,7 +38,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleClearSnapshots = () => {
-    accountStore!.getSelectedAccount.activeProfile.removeAllSnapshots();
+    accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
     uiStateStore!.setConfirmClearSnapshotsDialogOpen(false);
   };
 
@@ -47,7 +47,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleSnapshot = () => {
-    accountStore!.getSelectedAccount.activeProfile.snapshot();
+    accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
 
   const handleProfileChange = (
