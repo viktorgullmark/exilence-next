@@ -126,7 +126,7 @@ export class Profile {
         .pipe(
           map((p: IApiProfile) => {
             runInAction(() => {
-              Object.assign(this, profile);
+              Object.assign(this, apiProfile);
             });
             callback();
             return this.updateProfileSuccess();

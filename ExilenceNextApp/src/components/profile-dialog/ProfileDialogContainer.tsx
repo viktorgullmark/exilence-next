@@ -123,7 +123,8 @@ const ProfileDialogContainer: React.FC<Props> = ({
       name: values.profileName,
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
-      activeStashTabIds: stashTabIds
+      activeStashTabIds: stashTabIds,
+      active: true
     };
     if (isEditing) {
       accountStore!.getSelectedAccount.activeProfile!.updateProfile(

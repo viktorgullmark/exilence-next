@@ -247,8 +247,8 @@ export class Account implements IAccount {
             if (profileIndex === -1) {
               this.removeActiveProfileFail(new Error('profile_not_found'));
             } else {
-              const newActiveProfile = this.profiles.find(p => !p.active);
               this.deleteProfiles(profileIndex, 1);
+              const newActiveProfile = this.profiles.find(p => !p.active);
               this.setActiveProfile(newActiveProfile!.uuid);
             }
             stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);

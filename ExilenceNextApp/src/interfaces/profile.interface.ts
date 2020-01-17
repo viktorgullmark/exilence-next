@@ -7,4 +7,5 @@ export interface IProfile {
   activePriceLeagueId?: string;
   activeCurrency?: ICurrency;
   activeStashTabIds?: string[];
+  active?: boolean;
 }
