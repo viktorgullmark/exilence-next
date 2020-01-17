@@ -63,7 +63,7 @@ namespace API.Hubs
                 if (lastSnapshot != null)
                 {
                     var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
-                    await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
+                    await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems, true);
                 }
             }
 

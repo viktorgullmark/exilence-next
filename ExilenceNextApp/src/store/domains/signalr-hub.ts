@@ -7,8 +7,7 @@ import AppConfig from './../../config/app.config';
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
 
-  constructor() {
-  }
+  constructor() {}
 
   @action
   startConnection(token: string) {
@@ -21,31 +20,41 @@ export class SignalrHub {
       })
       .build();
 
-    return from(this.connection
-      .start()
-      .then(() => {
-        this.connection!.onreconnected(() => {
-          stores.notificationStore.createNotification('reconnected', 'success');
+    stores.signalrStore.registerEvents();
+
+    return from(
+      this.connection
+        .start()
+        .then(() => {
+          this.connection!.onreconnected(() => {
+            stores.notificationStore.createNotification(
+              'reconnected',
+              'success'
+            );
+            stores.signalrStore.setOnline(true);
+            stores.accountStore.initSession();
+          });
+
+          this.connection!.onreconnecting(e => {
+            stores.signalrStore.setActiveGroup(undefined);
+            this.connectionLost(e);
+          });
+
           stores.signalrStore.setOnline(true);
-          stores.accountStore.initSession();
-        });
-
-        this.connection!.onreconnecting(e => {
-          stores.signalrStore.setActiveGroup(undefined);
-          this.connectionLost(e);
-        });
-
-        stores.signalrStore.setOnline(true);
-      })
-      .catch((err: string) => console.log(err)));
+        })
+        .catch((err: string) => console.log(err))
+    );
   }
 
-  onEvent<T, T2 = {}, T3 = {}>(event: string, callback: (arg1: T, arg2?: T2, arg3?: T3) => void) {
+  onEvent<T, T2 = {}, T3 = {}, T4 = {}>(
+    event: string,
+    callback: (arg1: T, arg2?: T2, arg3?: T3, arg4?: T4) => void
+  ) {
     this.connection!.on(event, callback);
   }
 
   invokeEvent<T>(event: string, params: T | T[], id?: string) {
-    if(!this.connection) {
+    if (!this.connection) {
       return throwError('error:not_connected');
     }
     return from(
@@ -56,7 +65,7 @@ export class SignalrHub {
   }
 
   sendEvent<T>(event: string, params: T | T[], id?: string) {
-    if(!this.connection) {
+    if (!this.connection) {
       return throwError('error:not_connected');
     }
     return from(

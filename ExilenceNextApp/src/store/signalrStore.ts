@@ -1,5 +1,12 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  toJS
+} from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
@@ -37,48 +44,65 @@ export class SignalrStore {
     reaction(
       () => signalrHub!.connection,
       (_conn, reaction) => {
-        if (_conn) {
-          signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
-            this.activeGroup!.addConnection(connection);
-          });
-          signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
-            this.activeGroup!.removeConnection(connection.connectionId);
-          });
-          signalrHub.onEvent<string, string, IApiSnapshot>(
-            'OnAddSnapshot',
-            (connectionId, profileId, snapshot) => {
-              if (this.activeGroup && snapshot && profileId) {
-                this.addSnapshotToConnection(snapshot, connectionId, profileId);
-              }
-            }
-          );
-          signalrHub.onEvent<IApiPricedItemsUpdate>(
-            'OnAddPricedItems',
-            pricedItemsUpdate => {
-              if (this.activeGroup) {
-                this.addPricedItemsToStashTab(pricedItemsUpdate);
-              }
-            }
-          );
-          signalrHub.onEvent<string, string>(
-            'OnRemoveAllSnapshots',
-            (connectionId, profileId) => {
-              if (this.activeGroup && profileId) {
-                // todo: should remove all snapshots in group
-              }
-            }
-          );
-          signalrHub.onEvent<string, string>(
-            'OnChangeProfile',
-            (connectionId, profileId) => {
-              if (this.activeGroup && profileId) {
-                this.changeProfileForConnection(connectionId, profileId);
-                this.getLatestSnapshotForProfile(connectionId, profileId);
-              }
-            }
+        reaction.dispose();
+      }
+    );
+  }
+
+  @action
+  registerEvents() {
+    this.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
+      group = this.applyOwnSnapshotsToGroup(group);
+      this.setActiveGroup(new Group(group));
+      this.activeGroup!.setActiveAccounts(
+        group.connections.map(c => c.account.uuid)
+      );
+      this.joinGroupSuccess();
+    });
+    this.signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
+      this.activeGroup!.addConnection(connection);
+    });
+    this.signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
+      this.activeGroup!.removeConnection(connection.connectionId);
+    });
+    this.signalrHub.onEvent<string, string, IApiSnapshot, boolean>(
+      'OnAddSnapshot',
+      (connectionId, profileId, snapshot, withItems) => {
+        if (this.activeGroup && snapshot && profileId) {
+          this.addSnapshotToConnection(
+            snapshot,
+            connectionId,
+            profileId,
+            withItems
           );
         }
-        reaction.dispose();
+        console.log('after add snapshot items:', toJS(this.activeGroup));
+      }
+    );
+    this.signalrHub.onEvent<IApiPricedItemsUpdate>(
+      'OnAddPricedItems',
+      pricedItemsUpdate => {
+        if (this.activeGroup) {
+          this.addPricedItemsToStashTab(pricedItemsUpdate);
+        }
+        console.log('after add priced items:', toJS(this.activeGroup));
+      }
+    );
+    this.signalrHub.onEvent<string, string>(
+      'OnRemoveAllSnapshots',
+      (connectionId, profileId) => {
+        if (this.activeGroup && profileId) {
+          // todo: should remove all snapshots in group
+        }
+      }
+    );
+    this.signalrHub.onEvent<string, string>(
+      'OnChangeProfile',
+      (connectionId, profileId) => {
+        if (this.activeGroup && profileId) {
+          this.changeProfileForConnection(connectionId, profileId);
+          this.getLatestSnapshotForProfile(connectionId, profileId);
+        }
       }
     );
   }
@@ -187,7 +211,8 @@ export class SignalrStore {
   addSnapshotToConnection(
     snapshot: IApiSnapshot,
     connectionId: string,
-    profileId: string
+    profileId: string,
+    withItems?: boolean
   ) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === connectionId
@@ -200,7 +225,7 @@ export class SignalrStore {
       );
       if (profile) {
         runInAction(() => {
-          snapshot.tabsFetchedCount = snapshot.stashTabs.length;
+          snapshot.tabsFetchedCount = withItems ? snapshot.stashTabs.length : 0;
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
@@ -237,15 +262,17 @@ export class SignalrStore {
         );
 
         if (snapshot!.tabsFetchedCount === snapshot!.stashTabs.length) {
-          profile.snapshots = profile.snapshots.map(ps => {
-            if (profile.snapshots.indexOf(ps) !== 0) {
-              ps.stashTabs.map(psst => {
-                psst.pricedItems = [];
-                return psst;
-              });
-            }
-            return ps;
-          }).slice(0, 100);
+          profile.snapshots = profile.snapshots
+            .map(ps => {
+              if (profile.snapshots.indexOf(ps) !== 0) {
+                ps.stashTabs.map(psst => {
+                  psst.pricedItems = [];
+                  return psst;
+                });
+              }
+              return ps;
+            })
+            .slice(0, 100);
         }
 
         stashTab!.pricedItems = stashTab!.pricedItems.concat(
@@ -259,7 +286,9 @@ export class SignalrStore {
         this.addPricedItemsToStashTabFail(new Error('error:profile_not_found'));
       }
     } else {
-      this.addPricedItemsToStashTabFail(new Error('error:connection_not_found'));
+      this.addPricedItemsToStashTabFail(
+        new Error('error:connection_not_found')
+      );
     }
   }
 
@@ -307,27 +336,13 @@ export class SignalrStore {
 
     if (this.online) {
       fromStream(
-        this.signalrHub
-          .invokeEvent<IApiGroup>('JoinGroup', <IApiGroup>{
-            uuid: uuid.v4(),
-            name: groupName,
-            password: password,
-            created: new Date(),
-            connections: []
-          })
-          .pipe(
-            map((g: IApiGroup) => {
-              g = this.applyOwnSnapshotsToGroup(g);
-              this.setActiveGroup(new Group(g));
-              this.activeGroup!.setActiveAccounts(
-                g.connections.map(c => c.account.uuid)
-              );
-            }),
-            switchMap(() => {
-              return of(this.joinGroupSuccess());
-            }),
-            catchError((e: Error) => of(this.joinGroupFail(e)))
-          )
+        this.signalrHub.sendEvent<IApiGroup>('JoinGroup', <IApiGroup>{
+          uuid: uuid.v4(),
+          name: groupName,
+          password: password,
+          created: new Date(),
+          connections: []
+        })
       );
     } else {
       this.joinGroupFail(new Error('error:not_connected'));
@@ -351,15 +366,17 @@ export class SignalrStore {
       throw new Error('error:profile_not_found_on_server');
     } else {
       // clear items from other snapshots
-      const snapShotsToAdd = activeProfile.snapshots.map(ps => {
-        if (activeProfile.snapshots.indexOf(ps) !== 0) {
-          ps.stashTabSnapshots.map(psst => {
-            psst.pricedItems = [];
-            return psst;
-          });
-        }
-        return ps;
-      }).slice(0, 100);
+      const snapShotsToAdd = activeProfile.snapshots
+        .map(ps => {
+          if (activeProfile.snapshots.indexOf(ps) !== 0) {
+            ps.stashTabSnapshots.map(psst => {
+              psst.pricedItems = [];
+              return psst;
+            });
+          }
+          return ps;
+        })
+        .slice(0, 100);
 
       activeGroupProfile.snapshots = snapShotsToAdd.map(s =>
         SnapshotUtils.mapSnapshotToApiSnapshot(s)
@@ -386,15 +403,17 @@ export class SignalrStore {
       );
 
       // clear items from other snapshots
-      activeGroupProfile.snapshots = activeGroupProfile.snapshots.map(ps => {
-        if (activeGroupProfile.snapshots.indexOf(ps) !== 0) {
-          ps.stashTabs.map(psst => {
-            psst.pricedItems = [];
-            return psst;
-          });
-        }
-        return ps;
-      }).slice(0, 100);
+      activeGroupProfile.snapshots = activeGroupProfile.snapshots
+        .map(ps => {
+          if (activeGroupProfile.snapshots.indexOf(ps) !== 0) {
+            ps.stashTabs.map(psst => {
+              psst.pricedItems = [];
+              return psst;
+            });
+          }
+          return ps;
+        })
+        .slice(0, 100);
     }
   }
 

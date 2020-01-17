@@ -24,27 +24,37 @@ namespace API.Hubs
         }
 
         [Authorize]
-        public async Task<GroupModel> JoinGroup(GroupModel groupModel)
+        public async Task JoinGroup(GroupModel groupModel)
         {
             groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
             await Groups.AddToGroupAsync(ConnectionId, groupModel.Name);
 
             var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
 
-            var account = await _accountService.GetAccount(AccountName);
-            var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
-            var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+            await Clients.Caller.SendAsync("OnGroupEntered", groupModel);
+            await Clients.OthersInGroup(groupModel.Name).SendAsync("OnJoinGroup", connection);
 
-            await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", connection);
-            if (lastSnapshot != null)
+            foreach (var groupConnection in groupModel.Connections)
             {
-                var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
-                await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
+                var account = await _accountService.GetAccount(groupConnection.Account.Name);
+                var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
+                var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+                if (lastSnapshot != null)
+                {
+                    var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
+     
+                    if (groupConnection.ConnectionId == ConnectionId)
+                    {
+                        await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.ClientId, snapshotWithItems, true);
+                    }
+                    else
+                    {
+                        await Clients.Caller.SendAsync("OnAddSnapshot", groupConnection.ConnectionId, activeProfile.ClientId, snapshotWithItems, true);
+                    }
+                }            
             }
 
             await Log($"Joined group: {groupModel.Name}");
-
-            return groupModel;
         }
 
         [Authorize]
