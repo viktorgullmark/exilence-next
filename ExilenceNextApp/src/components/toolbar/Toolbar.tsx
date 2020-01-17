@@ -259,6 +259,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       props.isSnapshotting ||
                       props.profiles.length < 2 ||
+                      props.isInitiating ||
                       !props.profilesLoaded ||
                       !props.signalrOnline
                     }

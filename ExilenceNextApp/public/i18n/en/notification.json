@@ -23,7 +23,8 @@
       "login_with_oauth": "Successfully logged in",
       "get_profiles_for_account": "Successfully fetched profiles for account",
       "retrieve_snapshot": "Successfully retrieved snapshot",
-      "retrieve_latest_snapshot": "Successfully retrieved snapshot"
+      "retrieve_latest_snapshot": "Successfully retrieved snapshot",
+      "set_active_profile": "Successfully changed profile"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -48,7 +49,8 @@
       "login_with_oauth": "Successfully logged in through pathofexile.com",
       "get_profiles_for_account": "Successfully fetched all profiles for account from server",
       "retrieve_snapshot": "Successfully retrieved snapshot from server",
-      "retrieve_latest_snapshot": "Successfully retrieved latest snapshot for profile"
+      "retrieve_latest_snapshot": "Successfully retrieved latest snapshot for profile",
+      "set_active_profile": "Successfully changed the active profile"
     }
   },
   "error": {
@@ -76,7 +78,8 @@
       "login_with_oauth": "Failed to login",
       "get_profiles_for_account": "Failed to fetch profiles",
       "retrieve_snapshot": "Failed to retrieve snapshot",
-      "retrieve_latest_snapshot": "Failed to retrieve snapshot"
+      "retrieve_latest_snapshot": "Failed to retrieve snapshot",
+      "set_active_profile": "Failed to change profile"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -101,7 +104,8 @@
       "login_with_oauth": "Failed to login through pathofexile.com",
       "get_profiles_for_account": "Failed when trying to fetch profiles for account",
       "retrieve_snapshot": "Failed to retrieve snapshot from server",
-      "retrieve_latest_snapshot": "Failed to retrieve latest snapshot"
+      "retrieve_latest_snapshot": "Failed to retrieve latest snapshot",
+      "set_active_profile": "Failed to change the active profile"
     },
     "custom_description": {
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",
