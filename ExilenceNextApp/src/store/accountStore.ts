@@ -228,10 +228,7 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: IPoeProfile) => {
-          const account = this.addOrUpdateAccount(
-            res.name,
-            this.sessionId
-          );
+          const account = this.addOrUpdateAccount(res.name, this.sessionId);
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
@@ -361,6 +358,9 @@ export class AccountStore {
     // todo: check expiry date
     if (!this.token || sessionId) {
       this.uiStateStore.redirect('/login');
+      if (sender === '/login') {
+        this.loadAuthWindow();
+      }
     } else {
       this.uiStateStore.setValidated(true);
       this.initSession();
