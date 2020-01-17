@@ -196,6 +196,17 @@ export class Account implements IAccount {
           runInAction(() => {
             foundProfile.active = true;
           });
+          if (stores.signalrStore.activeGroup) {
+            stores.signalrStore.changeProfileForConnection(
+              stores.signalrStore.ownConnection.connectionId,
+              foundProfile.uuid
+            );
+            if (foundProfile.snapshots.length > 0) {
+              stores.signalrStore.addOwnSnapshotToActiveGroup(
+                foundProfile.snapshots[0]
+              );
+            }
+          }
           return this.setActiveProfileSuccess();
         }),
         catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))

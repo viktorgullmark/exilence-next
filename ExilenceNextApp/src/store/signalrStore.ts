@@ -74,6 +74,7 @@ export class SignalrStore {
             'OnChangeProfile',
             (connectionId, profileId) => {
               if (this.activeGroup && profileId) {
+                this.changeProfileForConnection(connectionId, profileId);
                 this.getLatestSnapshotForProfile(connectionId, profileId);
               }
             }
@@ -89,6 +90,57 @@ export class SignalrStore {
     return this.activeGroup!.connections.find(
       c => c.account.name === stores.accountStore.getSelectedAccount.name
     )!;
+  }
+
+  @action
+  changeProfileForConnection(connectionId: string, profileId: string) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === connectionId
+    );
+
+    if (connection) {
+      const connIndex = this.activeGroup!.connections.indexOf(connection);
+
+      runInAction(() => {
+        connection.account.profiles = connection.account.profiles.map(p => {
+          p.active = false;
+          return p;
+        })
+      })
+
+      const profile = connection.account.profiles.find(
+        p => p.uuid === profileId
+      );
+      if (profile) {
+        runInAction(() => {
+          profile.active = true;
+          this.activeGroup!.connections[connIndex] = connection;
+        });
+        this.changeProfileForConnectionSuccess();
+      } else {
+        this.changeProfileForConnectionFail(new Error('error:profile_not_found'));
+      }
+    } else {
+      this.changeProfileForConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  @action
+  changeProfileForConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'change_profile_for_connection',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  changeProfileForConnectionSuccess() {
+    this.notificationStore.createNotification(
+      'change_profile_for_connection',
+      'success'
+    );
   }
 
   @action

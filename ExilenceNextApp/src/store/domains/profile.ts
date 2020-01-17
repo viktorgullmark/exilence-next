@@ -49,10 +49,6 @@ export class Profile {
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
-
-    runInAction(() => {
-      this.active = true;
-    });
   }
 
   @computed

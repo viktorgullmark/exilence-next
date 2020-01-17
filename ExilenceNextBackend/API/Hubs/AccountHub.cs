@@ -55,6 +55,16 @@ namespace API.Hubs
             if (group != null)
             {
                 await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
+
+                var account = await _accountService.GetAccount(AccountName);
+                var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
+                var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+
+                if (lastSnapshot != null)
+                {
+                    var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
+                    await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
+                }
             }
 
             return profileModel.ClientId;

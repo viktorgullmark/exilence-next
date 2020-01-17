@@ -21,7 +21,7 @@ export class Group implements IApiGroup {
       .flatMap(c => c.account)
       .filter(a => this.activeAccounts.includes(a.uuid))
       .flatMap(a => {
-        const filter = a.profiles.flatMap(p =>
+        const filter = a.profiles.filter(ap => ap.active).flatMap(p =>
           p.snapshots.filter(
             s =>
               s.tabsFetchedCount === p.activeStashTabIds.length ||

@@ -92,7 +92,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
               value={
                 activeGroup
                   ? activeGroup.groupSnapshots.length
-                  : snapshots.length
+                  : snapshots().length
               }
               title="label.total_snapshots"
               valueColor={theme.palette.text.primary}
