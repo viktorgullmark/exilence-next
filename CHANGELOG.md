@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.0] - XXXX-XX-XX
 ##### Added
+- Added group system
+    - Added the ability to create/join/leave a group
+    - Added optional password protection for groups
+    - Added the ability to select multiple players in the group
 - Added integration with our servers
     - Added synchronization of profiles
     - Added synchronization of snapshots with items
