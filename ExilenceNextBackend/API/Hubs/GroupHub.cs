@@ -34,10 +34,14 @@ namespace API.Hubs
             var account = await _accountService.GetAccount(AccountName);
             var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
             var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-            var snapshotWithItems = _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
 
             await Clients.Group(groupModel.Name).SendAsync("OnJoinGroup", connection);
-            await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
+            if (lastSnapshot != null)
+            {
+                var snapshotWithItems = _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
+                await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
+            }
+
             await Log($"Joined group: {groupModel.Name}");
 
             return groupModel;
@@ -50,7 +54,7 @@ namespace API.Hubs
 
             groupModel = await _groupService.LeaveGroup(ConnectionId, groupModel);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupModel.Name);
-            
+
             await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", connection);
             await Log($"Left group: {groupModel.Name}");
             return groupModel;
