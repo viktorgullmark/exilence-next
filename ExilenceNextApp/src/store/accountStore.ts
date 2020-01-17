@@ -361,7 +361,6 @@ export class AccountStore {
     // todo: check expiry date
     if (!this.token || sessionId) {
       this.uiStateStore.redirect('/login');
-      this.loadAuthWindow();
     } else {
       this.uiStateStore.setValidated(true);
       this.initSession();
