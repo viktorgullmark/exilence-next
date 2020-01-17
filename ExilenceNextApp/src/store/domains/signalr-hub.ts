@@ -26,8 +26,8 @@ export class SignalrHub {
       .then(() => {
         this.connection!.onreconnected(() => {
           stores.notificationStore.createNotification('reconnected', 'success');
-
           stores.signalrStore.setOnline(true);
+          stores.accountStore.initSession();
         });
 
         this.connection!.onreconnecting(e => {

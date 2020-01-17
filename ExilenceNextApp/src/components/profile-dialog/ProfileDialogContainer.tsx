@@ -118,6 +118,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
 
   const handleSubmit = (values: ProfileFormValues) => {
     const profile: IProfile = {
+      uuid: activeProfile.uuid,
       name: values.profileName,
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
