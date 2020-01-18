@@ -59,26 +59,16 @@ export class SignalrStore {
     this.signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
       this.activeGroup!.removeConnection(connection.connectionId);
     });
-    this.signalrHub.onEvent<string, string, IApiSnapshot, boolean>(
+    this.signalrHub.onEvent<string, string, IApiSnapshot>(
       'OnAddSnapshot',
-      (connectionId, profileId, snapshot, withItems) => {
+      (connectionId, profileId, snapshot) => {
         if (this.activeGroup && snapshot && profileId) {
           this.addSnapshotToConnection(
             snapshot,
             connectionId,
-            profileId,
-            withItems
+            profileId
           );
         }
-      }
-    );
-    this.signalrHub.onEvent<IApiPricedItemsUpdate>(
-      'OnAddPricedItems',
-      pricedItemsUpdate => {
-        if (this.activeGroup) {
-          this.addPricedItemsToStashTab(pricedItemsUpdate);
-        }
-        console.log('after add priced items:', toJS(this.activeGroup));
       }
     );
     this.signalrHub.onEvent<string, string>(
@@ -199,13 +189,11 @@ export class SignalrStore {
     );
   }
 
-  // todo: test this thoroughly
   @action
   addSnapshotToConnection(
     snapshot: IApiSnapshot,
     connectionId: string,
-    profileId: string,
-    withItems?: boolean
+    profileId: string
   ) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === connectionId
@@ -218,7 +206,6 @@ export class SignalrStore {
       );
       if (profile) {
         runInAction(() => {
-          snapshot.tabsFetchedCount = withItems ? snapshot.stashTabs.length : 0;
           profile.snapshots.unshift(snapshot);
           this.activeGroup!.connections[connIndex] = connection;
         });
@@ -229,75 +216,6 @@ export class SignalrStore {
     } else {
       this.addSnapshotToConnectionFail(new Error('error:connection_not_found'));
     }
-  }
-
-  // todo: test this thoroughly
-  @action
-  addPricedItemsToStashTab(pricedItemsUpdate: IApiPricedItemsUpdate) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === pricedItemsUpdate.connectionId
-    );
-
-    if (connection) {
-      const connIndex = this.activeGroup!.connections.indexOf(connection);
-      const profile = connection.account.profiles.find(
-        p => p.uuid === pricedItemsUpdate.profileId
-      );
-      if (profile) {
-        const snapshot = profile.snapshots.find(
-          ss => ss.uuid === pricedItemsUpdate.snapshotId
-        );
-
-        snapshot!.tabsFetchedCount++;
-
-        const stashTab = snapshot!.stashTabs.find(
-          st => st.uuid === pricedItemsUpdate.stashTabId
-        );
-
-        if (snapshot!.tabsFetchedCount === snapshot!.stashTabs.length) {
-          profile.snapshots = profile.snapshots
-            .map(ps => {
-              if (profile.snapshots.indexOf(ps) !== 0) {
-                ps.stashTabs.map(psst => {
-                  psst.pricedItems = [];
-                  return psst;
-                });
-              }
-              return ps;
-            })
-            .slice(0, 100);
-        }
-
-        stashTab!.pricedItems = stashTab!.pricedItems.concat(
-          pricedItemsUpdate.pricedItems
-        );
-
-        this.activeGroup!.connections[connIndex] = connection;
-
-        this.addPricedItemsToStashTabSuccess();
-      } else {
-        this.addPricedItemsToStashTabFail(new Error('error:profile_not_found'));
-      }
-    } else {
-      this.addPricedItemsToStashTabFail(
-        new Error('error:connection_not_found')
-      );
-    }
-  }
-
-  @action
-  addPricedItemsToStashTabFail(e: Error) {
-    this.notificationStore.createNotification(
-      'retrieve_items',
-      'error',
-      false,
-      e
-    );
-  }
-
-  @action
-  addPricedItemsToStashTabSuccess() {
-    this.notificationStore.createNotification('retrieve_items', 'success');
   }
 
   @action

@@ -45,11 +45,11 @@ namespace API.Hubs
      
                     if (groupConnection.ConnectionId == ConnectionId)
                     {
-                        await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.ClientId, snapshotWithItems, true);
+                        await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.ClientId, snapshotWithItems);
                     }
                     else
                     {
-                        await Clients.Caller.SendAsync("OnAddSnapshot", groupConnection.ConnectionId, activeProfile.ClientId, snapshotWithItems, true);
+                        await Clients.Caller.SendAsync("OnAddSnapshot", groupConnection.ConnectionId, activeProfile.ClientId, snapshotWithItems);
                     }
                 }            
             }

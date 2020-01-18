@@ -321,10 +321,6 @@ export class Profile {
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
-      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-        snapshotToAdd,
-        activeAccountLeague.stashtabs
-      );
       const callback = () => {
         // clear items from previous snapshot
         if (this.snapshots.length > 1) {
@@ -344,7 +340,6 @@ export class Profile {
       fromStream(
         this.sendSnapshot(
           apiSnapshot,
-          apiItems,
           this.snapshotSuccess,
           this.snapshotFail,
           callback
@@ -356,7 +351,6 @@ export class Profile {
   @action
   sendSnapshot(
     snapshot: IApiSnapshot,
-    items: IApiStashTabPricedItem[],
     successAction: () => void,
     failAction: (e: AxiosError) => void,
     callback?: () => void
@@ -364,13 +358,6 @@ export class Profile {
     return stores.signalrHub
       .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
       .pipe(
-        switchMap(() => {
-          return stores.signalrStore.uploadItems(
-            items,
-            this.uuid,
-            snapshot.uuid
-          );
-        }),
         switchMap(() => {
           if (callback) {
             callback();

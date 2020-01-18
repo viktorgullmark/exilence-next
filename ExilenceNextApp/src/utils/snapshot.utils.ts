@@ -32,7 +32,7 @@ export class SnapshotUtils {
               return <IApiStashTabSnapshot>{
                 uuid: foundTab.uuid,
                 stashTabId: st.id,
-                pricedItems: [],
+                pricedItems: foundTab.pricedItems,
                 index: st.i,
                 value: +foundTab.value.toFixed(4),
                 color: ColourUtils.rgbToHex(
