@@ -59,16 +59,17 @@ namespace API.Hubs
         }
 
         [Authorize]
-        public async Task<GroupModel> LeaveGroup(GroupModel groupModel)
+        public async Task<string> LeaveGroup(string groupName)
         {
-            var connection = groupModel.Connections.First(c => c.ConnectionId == ConnectionId);
+            var connection = await _groupService.GetConnection(ConnectionId);
 
-            groupModel = await _groupService.LeaveGroup(ConnectionId, groupModel);
+            var groupModel = await _groupService.LeaveGroup(ConnectionId, groupName);
             await Groups.RemoveFromGroupAsync(ConnectionId, groupModel.Name);
 
+            await Clients.Caller.SendAsync("OnGroupLeft");
             await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", connection);
             await Log($"Left group: {groupModel.Name}");
-            return groupModel;
+            return groupModel.Name;
         }
 
         public async Task<GroupModel> AddLogger(GroupModel groupModel)

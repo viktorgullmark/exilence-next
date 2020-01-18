@@ -118,9 +118,9 @@ namespace API.Services
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> LeaveGroup(string connectionId, GroupModel groupModel)
+        public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
         {
-            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName)
                 .Include(group => group.Connections)
                 .ThenInclude(connection => connection.Account)
                 .FirstAsync();

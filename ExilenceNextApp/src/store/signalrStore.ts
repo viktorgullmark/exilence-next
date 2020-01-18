@@ -53,6 +53,10 @@ export class SignalrStore {
       );
       this.joinGroupSuccess();
     });
+    this.signalrHub.onEvent('OnGroupLeft', () => {
+      this.setActiveGroup(undefined);
+      this.leaveGroupSuccess();
+    });
     this.signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
       this.activeGroup!.addConnection(connection);
     });
@@ -379,17 +383,8 @@ export class SignalrStore {
     if (this.online) {
       fromStream(
         this.signalrHub
-          .invokeEvent<IApiGroup>('LeaveGroup', <IApiGroup>{
-            uuid: uuid.v4(),
-            name: this.activeGroup.name,
-            created: new Date(),
-            connections: [this.ownConnection]
-          })
+          .sendEvent<string>('LeaveGroup', this.activeGroup.name)
           .pipe(
-            map((g: IApiGroup) => {
-              this.setActiveGroup(undefined);
-              this.leaveGroupSuccess();
-            }),
             catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
           )
       );

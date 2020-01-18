@@ -12,7 +12,7 @@ namespace API.Interfaces
         Task<GroupModel> GetGroupForConnection(string connectionId);
         Task<bool> GroupExists(string groupName);
         Task<GroupModel> JoinGroup(string connectionId, GroupModel groupModel);
-        Task<GroupModel> LeaveGroup(string connectionId, GroupModel groupModel);
+        Task<GroupModel> LeaveGroup(string connectionId, string groupName);
 
         Task<ConnectionModel> GetConnection(string connectionId);
         Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName);

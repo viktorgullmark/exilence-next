@@ -66,7 +66,7 @@ export class SignalrHub {
     );
   }
 
-  sendEvent<T>(event: string, params: T | T[], id?: string) {
+  sendEvent<T = {}>(event: string, params?: T | T[], id?: string) {
     if (!this.connection) {
       return throwError('error:not_connected');
     }
