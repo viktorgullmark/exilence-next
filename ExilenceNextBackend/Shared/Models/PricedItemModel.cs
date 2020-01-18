@@ -21,7 +21,7 @@ namespace Shared.Models
         [Key("frameType")]
         public int FrameType { get; set; }
         [Key("calculated")]
-        public decimal Calculated { get; set; }
+        public double Calculated { get; set; }
         [Key("elder")]
         public bool Elder { get; set; }
         [Key("shaper")]
@@ -49,17 +49,17 @@ namespace Shared.Models
         [Key("variant")]
         public string Variant { get; set; }
         [Key("total")]
-        public decimal Total { get; set; }
+        public double Total { get; set; }
         [Key("max")]
-        public decimal Max { get; set; }
+        public double Max { get; set; }
         [Key("mean")]
-        public decimal Mean { get; set; }
+        public double Mean { get; set; }
         [Key("mode")]
-        public decimal Mode { get; set; }
+        public double Mode { get; set; }
         [Key("min")]
-        public decimal Min { get; set; }
+        public double Min { get; set; }
         [Key("median")]
-        public decimal Median { get; set; }
+        public double Median { get; set; }
         [Key("baseType")]
         public string BaseType { get; set; }
         [Key("count")]

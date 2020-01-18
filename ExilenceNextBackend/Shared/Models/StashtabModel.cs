@@ -23,7 +23,7 @@ namespace Shared.Models
         [Key("color")]
         public string Color { get; set; }
         [Key("value")]
-        public decimal Value { get; set; }
+        public double Value { get; set; }
         [Key("pricedItems")]
         public virtual List<PricedItemModel> PricedItems { get; set; }
     }
