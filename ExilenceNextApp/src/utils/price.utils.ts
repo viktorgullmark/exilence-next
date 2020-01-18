@@ -39,7 +39,7 @@ export class PriceUtils {
       icon: item.icon,
       calculated: item.chaosValue,
       links: item.links,
-      variant: item.variant,
+      variant: item.variant !== null && item.variant !== undefined ? item.variant : '',
       elder: item.variant === 'Elder' ? true : false,
       shaper: item.variant === 'Shaper' ? true : false,
       level: item.gemLevel,

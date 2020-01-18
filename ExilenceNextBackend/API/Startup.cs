@@ -23,6 +23,7 @@ using API.Services;
 using API.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using API.Providers;
+using MessagePack;
 
 namespace API
 {
@@ -55,12 +56,18 @@ namespace API
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
             //services.AddSignalR().AddMessagePackProtocol();
-            
+
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
                 o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
+            }).AddMessagePackProtocol(options =>
+            {
+                options.FormatterResolvers = new List<MessagePack.IFormatterResolver>()
+                {
+                    MessagePack.Resolvers.StandardResolver.Instance
+                };
             });
 
             services.AddAuthentication(x =>

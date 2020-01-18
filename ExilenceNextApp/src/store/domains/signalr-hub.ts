@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { from, throwError } from 'rxjs';
 import { stores } from '../..';
 import AppConfig from './../../config/app.config';
+import * as msgPack from '@microsoft/signalr-protocol-msgpack';
 
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
@@ -18,6 +19,7 @@ export class SignalrHub {
           return 30 * 1000;
         }
       })
+      .withHubProtocol(new msgPack.MessagePackHubProtocol())
       .build();
 
     stores.signalrStore.registerEvents();
@@ -53,14 +55,14 @@ export class SignalrHub {
     this.connection!.on(event, callback);
   }
 
-  invokeEvent<T>(event: string, params: T | T[], id?: string) {
+  invokeEvent<T>(event: string, args: T | T[], id?: string) {
     if (!this.connection) {
       return throwError('error:not_connected');
     }
     return from(
       id
-        ? this.connection!.invoke(event, params, id)
-        : this.connection!.invoke(event, params)
+        ? this.connection!.invoke(event, args, id)
+        : this.connection!.invoke(event, args)
     );
   }
 

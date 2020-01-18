@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;

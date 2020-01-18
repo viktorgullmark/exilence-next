@@ -313,12 +313,15 @@ export class Account implements IAccount {
   createProfileObservable(profile: IProfile, callback: () => void) {
     stores.uiStateStore.setSavingProfile(true);
     const newProfile = new Profile(profile);
+
     newProfile.active = true;
+
+    const apiProfile = ProfileUtils.mapProfileToApiProfile(newProfile);
 
     return stores.signalrHub
       .invokeEvent<IApiProfile>(
         'AddProfile',
-        ProfileUtils.mapProfileToApiProfile(newProfile)
+        apiProfile
       )
       .pipe(
         map((p: IApiProfile) => {

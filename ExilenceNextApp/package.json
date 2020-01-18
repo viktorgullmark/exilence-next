@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.5.2",
     "@microsoft/signalr": "^3.1.0",
-    "@microsoft/signalr-protocol-msgpack": "^3.0.0",
+    "@microsoft/signalr-protocol-msgpack": "^3.1.0",
     "@sentry/browser": "^5.9.1",
     "@sentry/electron": "^1.0.0",
     "@types/universal-analytics": "^0.4.3",

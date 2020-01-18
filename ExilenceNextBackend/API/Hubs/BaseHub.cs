@@ -1,5 +1,6 @@
 ﻿using API.Interfaces;
 using AutoMapper;
+using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -57,8 +58,7 @@ namespace API.Hubs
 
             var connection = new ConnectionModel() {
                 ConnectionId = ConnectionId,
-                InstanceName = _instanceName,
-                Created = DateTime.UtcNow
+                InstanceName = _instanceName
             };
             await _groupService.AddConnection(connection, AccountName);            
             await base.OnConnectedAsync();

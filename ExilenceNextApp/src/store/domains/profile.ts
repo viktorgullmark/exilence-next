@@ -355,6 +355,8 @@ export class Profile {
     failAction: (e: AxiosError) => void,
     callback?: () => void
   ) {
+    console.log(snapshot);
+    
     return stores.signalrHub
       .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
       .pipe(

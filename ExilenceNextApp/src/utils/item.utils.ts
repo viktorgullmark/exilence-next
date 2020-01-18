@@ -145,9 +145,6 @@ export class ItemUtils {
     explicitMods: string[],
     name: string
   ): string {
-    if (sockets === null || sockets === undefined) {
-      return '';
-    }
 
     if (name === 'Impresence') {
       if (explicitMods.filter(s => s.includes('Lightning Damage'))) {

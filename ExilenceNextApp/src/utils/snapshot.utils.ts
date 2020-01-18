@@ -16,7 +16,6 @@ export class SnapshotUtils {
     return <IApiSnapshot>{
       uuid: snapshot.uuid,
       created: snapshot.created,
-      tabsFetchedCount: 0,
       stashTabs: stashTabs
         ? stashTabs
             .filter(st =>

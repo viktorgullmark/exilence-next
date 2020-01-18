@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Profiles;
 using Microsoft.AspNetCore.Mvc;
+using MessagePack;
 
 namespace API.Hubs
 {
@@ -15,7 +16,7 @@ namespace API.Hubs
     {
         public async Task<List<SnapshotProfileModel>> GetAllProfiles(string accountId)
         {
-            var profileModels = await _accountService.GetAllProfiles(accountId);
+            var profileModels = await _accountService.GetAllProfiles(accountId.ToString());
             return profileModels;
         }
 

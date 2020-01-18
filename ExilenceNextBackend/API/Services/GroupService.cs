@@ -32,6 +32,7 @@ namespace API.Services
             var connection = _mapper.Map<Connection>(connectionModel);
 
             connection.Account = account;
+            connection.Created = DateTime.UtcNow;
 
             connection = _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
