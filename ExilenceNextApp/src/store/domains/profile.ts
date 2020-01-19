@@ -113,6 +113,14 @@ export class Profile {
   }
 
   @action
+  updateFromApiProfile(apiProfile: IApiProfile) {
+    this.activeLeagueId = apiProfile.activeLeagueId;
+    this.activePriceLeagueId = apiProfile.activePriceLeagueId;
+    this.activeStashTabIds = apiProfile.activeStashTabIds;
+    this.name = apiProfile.name;
+  }
+
+  @action
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
@@ -125,9 +133,7 @@ export class Profile {
         .invokeEvent<IApiProfile>('EditProfile', apiProfile)
         .pipe(
           map((p: IApiProfile) => {
-            runInAction(() => {
-              Object.assign(this, apiProfile);
-            });
+            this.updateFromApiProfile(apiProfile);
             callback();
             return this.updateProfileSuccess();
           }),
