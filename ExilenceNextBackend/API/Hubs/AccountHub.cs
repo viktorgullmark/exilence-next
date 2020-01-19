@@ -30,6 +30,13 @@ namespace API.Hubs
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
             await Log($"Added profile with name: {profileModel.Name} and clientId: {profileModel.ClientId}");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddProfile", ConnectionId, profileModel);
+            }
+
             return profileModel;
         }
 
@@ -44,6 +51,13 @@ namespace API.Hubs
         {
             var profileModel = await _accountService.RemoveProfile(AccountName, profileId);
             await Log($"Removed profile with name: {profileModel.Name} and clientId: {profileModel.ClientId}");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveProfile", ConnectionId, profileId);
+            }
+
             return profileModel.ClientId;
         }
 

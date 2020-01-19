@@ -23,6 +23,7 @@ import { SignalrHub } from './domains/signalr-hub';
 import { Snapshot } from './domains/snapshot';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
+import { IApiProfile } from '../interfaces/api/api-profile.interface';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -40,8 +41,7 @@ export class SignalrStore {
     private uiStateStore: UiStateStore,
     private notificationStore: NotificationStore,
     public signalrHub: SignalrHub
-  ) {
-  }
+  ) {}
 
   @action
   registerEvents() {
@@ -67,11 +67,7 @@ export class SignalrStore {
       'OnAddSnapshot',
       (connectionId, profileId, snapshot) => {
         if (this.activeGroup && snapshot && profileId) {
-          this.addSnapshotToConnection(
-            snapshot,
-            connectionId,
-            profileId
-          );
+          this.addSnapshotToConnection(snapshot, connectionId, profileId);
         }
       }
     );
@@ -89,6 +85,22 @@ export class SignalrStore {
         if (this.activeGroup && profileId) {
           this.changeProfileForConnection(connectionId, profileId);
           this.getLatestSnapshotForProfile(connectionId, profileId);
+        }
+      }
+    );
+    this.signalrHub.onEvent<string, IApiProfile>(
+      'OnAddProfile',
+      (connectionId, profile) => {
+        if (this.activeGroup && profile) {
+          this.addProfileToConnection(connectionId, profile);
+        }
+      }
+    );
+    this.signalrHub.onEvent<string, string>(
+      'OnRemoveProfile',
+      (connectionId, profileId) => {
+        if (this.activeGroup && profileId) {
+          this.removeProfileFromConnection(connectionId, profileId);
         }
       }
     );
@@ -152,6 +164,88 @@ export class SignalrStore {
   changeProfileForConnectionSuccess() {
     this.notificationStore.createNotification(
       'change_profile_for_connection',
+      'success'
+    );
+  }
+
+  @action
+  addProfileToConnection(connectionId: string, profile: IApiProfile) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === connectionId
+    );
+
+    if (connection) {
+      runInAction(() => {
+        connection.account.profiles.push(profile);
+      });
+
+      this.addProfileToConnectionSuccess();
+    } else {
+      this.addProfileToConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  @action
+  addProfileToConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'add_profile_to_connection',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  addProfileToConnectionSuccess() {
+    this.notificationStore.createNotification(
+      'add_profile_to_connection',
+      'success'
+    );
+  }
+
+  @action
+  removeProfileFromConnection(connectionId: string, profileId: string) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === connectionId
+    );
+
+    if (connection) {
+      const profile = connection.account.profiles.find(
+        p => p.uuid === profileId
+      );
+
+      if (profile) {
+        const index = connection.account.profiles.indexOf(profile);
+
+        runInAction(() => {
+          connection.account.profiles.splice(index, 1);
+        });
+
+        this.removeProfileFromConnectionSuccess();
+      } else {
+        this.removeProfileFromConnectionFail(
+          new Error('error:profile_not_found')
+        );
+      }
+    } else {
+      this.removeProfileFromConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  @action
+  removeProfileFromConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'remove_profile_from_connection',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  removeProfileFromConnectionSuccess() {
+    this.notificationStore.createNotification(
+      'remove_profile_from_connection',
       'success'
     );
   }
@@ -384,9 +478,7 @@ export class SignalrStore {
       fromStream(
         this.signalrHub
           .sendEvent<string>('LeaveGroup', this.activeGroup.name)
-          .pipe(
-            catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
-          )
+          .pipe(catchError((e: AxiosError) => of(this.leaveGroupFail(e))))
       );
     } else {
       this.leaveGroupFail(new Error('error:not_connected'));

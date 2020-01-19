@@ -25,7 +25,9 @@
       "retrieve_snapshot": "Successfully retrieved snapshot",
       "retrieve_latest_snapshot": "Successfully retrieved snapshot",
       "set_active_profile": "Successfully changed profile",
-      "change_profile_for_connection": "Successfully changed profile for connection"
+      "change_profile_for_connection": "Successfully changed profile for connection",
+      "remove_profile_from_connection": "Successfully removed profile for connection",
+      "add_profile_to_connection": "Successfully added profile to connection"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -52,7 +54,9 @@
       "retrieve_snapshot": "Successfully retrieved snapshot from server",
       "retrieve_latest_snapshot": "Successfully retrieved latest snapshot for profile",
       "set_active_profile": "Successfully changed the active profile",
-      "change_profile_for_connection": "Successfully changed profile for connection"
+      "change_profile_for_connection": "Successfully changed profile for connection",
+      "remove_profile_from_connection": "Successfully removed profile for connection",
+      "add_profile_to_connection": "Successfully added profile to connection"
     }
   },
   "error": {
@@ -82,7 +86,9 @@
       "retrieve_snapshot": "Failed to retrieve snapshot",
       "retrieve_latest_snapshot": "Failed to retrieve snapshot",
       "set_active_profile": "Failed to change profile",
-      "change_profile_for_connection": "Failed to change profile for connection"
+      "change_profile_for_connection": "Failed to change profile for connection",
+      "remove_profile_from_connection": "Failed to remove profile for connection",
+      "add_profile_to_connection": "Failed to add profile to connection"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -109,7 +115,9 @@
       "retrieve_snapshot": "Failed to retrieve snapshot from server",
       "retrieve_latest_snapshot": "Failed to retrieve latest snapshot",
       "set_active_profile": "Failed to change the active profile",
-      "change_profile_for_connection": "Failed to change profile for connection"
+      "change_profile_for_connection": "Failed to change profile for connection",
+      "remove_profile_from_connection": "Failed to remove profile for connection",
+      "add_profile_to_connection": "Failed to add profile to connection"
     },
     "custom_description": {
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",
