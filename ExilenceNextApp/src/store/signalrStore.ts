@@ -75,7 +75,7 @@ export class SignalrStore {
       'OnRemoveAllSnapshots',
       (connectionId, profileId) => {
         if (this.activeGroup && profileId) {
-          // todo: should remove all snapshots in group
+          this.removeAllSnapshotsForConnection(connectionId, profileId);
         }
       }
     );
@@ -199,6 +199,49 @@ export class SignalrStore {
   addProfileToConnectionSuccess() {
     this.notificationStore.createNotification(
       'add_profile_to_connection',
+      'success'
+    );
+  }
+
+  @action
+  removeAllSnapshotsForConnection(connectionId: string, profileId: string) {
+    const connection = this.activeGroup!.connections.find(
+      c => c.connectionId === connectionId
+    );
+
+    if (connection) {
+      const profile = connection.account.profiles.find(p => p.uuid === profileId);
+
+      if (profile) {
+        runInAction(() => {
+          profile.snapshots = [];
+        });
+
+        this.removeProfileFromConnectionSuccess();
+      } else {
+        this.removeProfileFromConnectionFail(
+          new Error('error:profile_not_found')
+        );
+      }
+    } else {
+      this.removeAllSnapshotsForConnectionFail(new Error('error:connection_not_found'));
+    }
+  }
+
+  @action
+  removeAllSnapshotsForConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'remove_all_snapshots_for_connection',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  removeAllSnapshotsForConnectionSuccess() {
+    this.notificationStore.createNotification(
+      'remove_all_snapshots_for_connection',
       'success'
     );
   }

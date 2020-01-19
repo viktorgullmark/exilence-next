@@ -27,7 +27,8 @@
       "set_active_profile": "Successfully changed profile",
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
-      "add_profile_to_connection": "Successfully added profile to connection"
+      "add_profile_to_connection": "Successfully added profile to connection",
+      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -56,7 +57,8 @@
       "set_active_profile": "Successfully changed the active profile",
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
-      "add_profile_to_connection": "Successfully added profile to connection"
+      "add_profile_to_connection": "Successfully added profile to connection",
+      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection"
     }
   },
   "error": {
@@ -88,7 +90,8 @@
       "set_active_profile": "Failed to change profile",
       "change_profile_for_connection": "Failed to change profile for connection",
       "remove_profile_from_connection": "Failed to remove profile for connection",
-      "add_profile_to_connection": "Failed to add profile to connection"
+      "add_profile_to_connection": "Failed to add profile to connection",
+      "remove_all_snapshots_for_connection": "Failed to clear snapshots for connection"
     },
     "description": {
       "init_session": "A new session could not be initiated",
@@ -117,7 +120,8 @@
       "set_active_profile": "Failed to change the active profile",
       "change_profile_for_connection": "Failed to change profile for connection",
       "remove_profile_from_connection": "Failed to remove profile for connection",
-      "add_profile_to_connection": "Failed to add profile to connection"
+      "add_profile_to_connection": "Failed to add profile to connection",
+      "remove_all_snapshots_for_connection": "Failed to clear snapshots for connection"
     },
     "custom_description": {
       "no_stash_tabs_selected_for_profile": "No stash tabs are selected for the profile",
