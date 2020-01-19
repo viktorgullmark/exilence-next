@@ -28,7 +28,7 @@ export class UiStateStore {
   @observable groupOverviewOpen: boolean = false;
   @observable groupExists: boolean | undefined = undefined;
   @observable groupError: AxiosError | Error | undefined = undefined;
-  @observable redirectedTo: string = '';
+  @observable redirectedTo: string | undefined = undefined;
   @observable confirmClearSnapshotsDialogOpen: boolean = false;
   @observable confirmRemoveProfileDialogOpen: boolean = false;
   @observable isSnapshotting: boolean = false;
@@ -92,6 +92,7 @@ export class UiStateStore {
 
   @action
   redirect(path: string) {
+    this.redirectedTo = undefined;
     this.redirectedTo = path;
   }
 
