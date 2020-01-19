@@ -66,6 +66,7 @@ export class Account implements IAccount {
   @action
   updateAccountFromApi(account: IApiAccount) {
     this.uuid = account.uuid;
+    stores.accountStore.setActiveAccount(this.uuid);
   }
 
   @action

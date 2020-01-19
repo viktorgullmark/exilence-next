@@ -57,6 +57,11 @@ export class AccountStore {
   }
 
   @action
+  setActiveAccount(uuid: string) {
+    this.activeAccount = uuid;
+  }
+
+  @action
   findAccountByName(name: string) {
     return this.accounts.find(a => a.name === name);
   }
