@@ -185,7 +185,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   className={classes.offlineIcon}
                 />
               )}
-              {props.isInitiating || props.changingProfile && (
+              {(props.isInitiating || props.changingProfile) && (
                 <CircularProgress
                   title={t('label.loading_title')}
                   className={classes.leftSpinner}
@@ -248,7 +248,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       props.isSnapshotting ||
                       !props.profilesLoaded ||
                       props.isInitiating ||
-                      !props.signalrOnline 
+                      !props.signalrOnline
                     }
                     onClick={() => props.handleProfileOpen()}
                     aria-label="create"
@@ -279,7 +279,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       !props.activeProfile ||
                       !props.activeProfile.readyToSnapshot ||
-                      !props.signalrOnline 
+                      !props.signalrOnline
                     }
                     onClick={() => props.handleSnapshot()}
                     aria-label="snapshot"
