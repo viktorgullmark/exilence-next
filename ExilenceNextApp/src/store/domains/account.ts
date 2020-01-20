@@ -184,6 +184,7 @@ export class Account implements IAccount {
     fromStream(
       stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
         map((uuid: string) => {
+          debugger;
           runInAction(() => {
             this.profiles = this.profiles.map(p => {
               p.active = false;

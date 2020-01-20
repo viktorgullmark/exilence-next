@@ -61,7 +61,7 @@ namespace API.Hubs
             return profileModel.ClientId;
         }
 
-        public async Task<SnapshotProfileModel> ChangeProfile(string profileId)
+        public async Task<string> ChangeProfile(string profileId)
         {
             var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
 
@@ -73,7 +73,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
             }
 
-            return profileModel;
+            return profileModel.ClientId;
         }
 
     }
