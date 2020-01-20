@@ -129,6 +129,7 @@ export class SignalrStore {
       );
       if (foundProfile) {
         const index = connection.account.profiles.indexOf(foundProfile);
+        profile.snapshots = foundProfile.snapshots;
         runInAction(() => {
           connection.account.profiles[index] = profile;
         });
