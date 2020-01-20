@@ -35,26 +35,6 @@ namespace API.Hubs
             await Clients.Caller.SendAsync("OnGroupEntered", groupModel);
             await Clients.OthersInGroup(groupModel.Name).SendAsync("OnJoinGroup", connection);
 
-            foreach (var groupConnection in groupModel.Connections)
-            {
-                var account = await _accountService.GetAccount(groupConnection.Account.Name);
-                var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
-                var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-                if (lastSnapshot != null)
-                {
-                    var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
-     
-                    if (groupConnection.ConnectionId == ConnectionId)
-                    {
-                        await Clients.OthersInGroup(groupModel.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.ClientId, snapshotWithItems);
-                    }
-                    else
-                    {
-                        await Clients.Caller.SendAsync("OnAddSnapshot", groupConnection.ConnectionId, activeProfile.ClientId, snapshotWithItems);
-                    }
-                }            
-            }
-
             await Log($"Joined group: {groupModel.Name}");
         }
 

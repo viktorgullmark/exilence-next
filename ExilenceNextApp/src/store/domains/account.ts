@@ -183,7 +183,7 @@ export class Account implements IAccount {
 
     fromStream(
       stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
-        map((profile: IApiProfile) => {
+        map((uuid: string) => {
           runInAction(() => {
             this.profiles = this.profiles.map(p => {
               p.active = false;
@@ -200,7 +200,7 @@ export class Account implements IAccount {
           if (stores.signalrStore.activeGroup) {
             stores.signalrStore.changeProfileForConnection(
               stores.signalrStore.ownConnection.connectionId,
-              profile
+              ProfileUtils.mapProfileToApiProfile(foundProfile)
             );
           }
           return this.setActiveProfileSuccess();

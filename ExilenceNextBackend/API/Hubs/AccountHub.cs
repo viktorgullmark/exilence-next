@@ -63,16 +63,10 @@ namespace API.Hubs
 
         public async Task<SnapshotProfileModel> ChangeProfile(string profileId)
         {
-            profileId = await _accountService.ChangeProfile(AccountName, profileId);
-            var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
-            var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
-
-            // todo: rework this, but we should include snapshots here instead of making two calls
-            profileModel.Snapshots = new List<SnapshotModel>() { snapshotModelWithItems };
+            var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
 
             await Log($"Set profile with name: {profileModel.Name} and clientId: {profileModel.ClientId} to active");
-
+             
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {

@@ -46,7 +46,6 @@ export class SignalrStore {
   @action
   registerEvents() {
     this.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
-      group = this.applyOwnSnapshotsToGroup(group);
       this.setActiveGroup(new Group(group));
       this.activeGroup!.setActiveAccounts(
         group.connections.map(c => c.account.uuid)

@@ -163,7 +163,7 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
-        public async Task<string> ChangeProfile(string accountName, string profileId)
+        public async Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId)
         {
             var account = await _accountRepository
                 .GetAccounts(account => account.Name == accountName)
@@ -180,7 +180,7 @@ namespace API.Services
             profile.Active = true;
 
             await _accountRepository.SaveChangesAsync();
-            return profile.ClientId;
+            return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
     }
