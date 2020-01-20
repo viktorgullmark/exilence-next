@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   spinner: {
     color: theme.palette.primary.contrastText
   },
-  initiationSpinner: {
+  leftSpinner: {
     marginLeft: theme.spacing(1),
     color: theme.palette.primary.contrastText
   },
@@ -132,6 +132,7 @@ interface Props {
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
   profilesLoaded: boolean;
+  changingProfile: boolean;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
   markAllNotificationsRead: () => void;
@@ -184,10 +185,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   className={classes.offlineIcon}
                 />
               )}
-              {props.isInitiating && (
+              {props.isInitiating || props.changingProfile && (
                 <CircularProgress
-                  title={t('label.initiating_session_spinner_title')}
-                  className={classes.initiationSpinner}
+                  title={t('label.loading_title')}
+                  className={classes.leftSpinner}
                   size={20}
                 />
               )}

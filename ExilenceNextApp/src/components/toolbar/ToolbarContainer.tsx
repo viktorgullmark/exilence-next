@@ -91,6 +91,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         loading={uiStateStore!.removingProfile}
       />
       <Toolbar
+        changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
@@ -109,11 +110,13 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
-        handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
-        isSnapshotting={
-          uiStateStore!.isSnapshotting
+        handleClearSnapshots={() =>
+          uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)
         }
+        handleRemoveProfile={() =>
+          uiStateStore!.setConfirmRemoveProfileDialogOpen(true)
+        }
+        isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating}
         profilesLoaded={uiStateStore!.profilesLoaded}
       />

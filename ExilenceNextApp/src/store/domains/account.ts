@@ -179,6 +179,7 @@ export class Account implements IAccount {
 
   @action
   setActiveProfile(uuid: string) {
+    stores.uiStateStore.setChangingProfile(true);
     stores.uiStateStore.changeItemTablePage(0);
 
     fromStream(
@@ -283,6 +284,7 @@ export class Account implements IAccount {
       'set_active_profile',
       'success'
     );
+    stores.uiStateStore.setChangingProfile(false);
   }
 
   @action
@@ -293,6 +295,7 @@ export class Account implements IAccount {
       true,
       e
     );
+    stores.uiStateStore.setChangingProfile(false);
   }
 
   @action
