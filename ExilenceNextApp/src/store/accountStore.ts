@@ -194,7 +194,7 @@ export class AccountStore {
       true,
       e
     );
-
+    
     // todo: check expiry date here
     if (!this.token) {
       this.uiStateStore.redirect('/login');
@@ -216,9 +216,9 @@ export class AccountStore {
   setToken(response: IOAuthResponse) {
     this.token = {
       accessToken: response.access_token,
-      expiresIn: response.expires_in,
       tokenType: response.token_type,
-      scope: response.scope
+      scope: response.scope,
+      expires: new Date(new Date().getTime() + (+response.expires_in * 1000)) 
     };
   }
 
@@ -227,7 +227,13 @@ export class AccountStore {
     this.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
-      return this.initSessionFail(new Error('error:no_token_set'));
+      this.initSessionFail(new Error('error:no_token_set'));
+      return this.uiStateStore.redirect('/login');
+    }
+
+    if(new Date() >= this.token.expires) {
+      this.initSessionFail(new Error('error:token_expired'));
+      return this.uiStateStore.redirect('/login');
     }
 
     fromStream(

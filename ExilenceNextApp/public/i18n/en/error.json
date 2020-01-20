@@ -4,5 +4,7 @@
     "group_already_exists": "Group already exists",
     "not_connected": "Not connected to server",
     "profile_not_found": "Profile not found",
-    "connection_not_found": "Connection not found"
+    "connection_not_found": "Connection not found",
+    "no_token_set": "No token set",
+    "token_expired": "Token expired"
 }

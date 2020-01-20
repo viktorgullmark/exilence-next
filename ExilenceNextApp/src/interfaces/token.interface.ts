@@ -1,6 +1,6 @@
 export interface IToken {
   accessToken: string;
-  expiresIn: string;
+  expires: Date;
   tokenType: string;
   scope: string;
 }
