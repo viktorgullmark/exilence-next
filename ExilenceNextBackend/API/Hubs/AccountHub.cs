@@ -61,28 +61,25 @@ namespace API.Hubs
             return profileModel.ClientId;
         }
 
-        public async Task<string> ChangeProfile(string profileId)
+        public async Task<SnapshotProfileModel> ChangeProfile(string profileId)
         {
-            var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
+            profileId = await _accountService.ChangeProfile(AccountName, profileId);
+            var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
+            var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
+
+            // todo: rework this, but we should include snapshots here instead of making two calls
+            profileModel.Snapshots = new List<SnapshotModel>() { snapshotModelWithItems };
+
             await Log($"Set profile with name: {profileModel.Name} and clientId: {profileModel.ClientId} to active");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
                 await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
-
-                var account = await _accountService.GetAccount(AccountName);
-                var activeProfile = await _accountService.GetActiveProfileWithSnapshots(account.ClientId);
-                var lastSnapshot = activeProfile.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-
-                if (lastSnapshot != null)
-                {
-                    var snapshotWithItems = await _snapshotService.GetSnapshotWithItems(lastSnapshot.ClientId);
-                    await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, activeProfile.Id, snapshotWithItems);
-                }
             }
 
-            return profileModel.ClientId;
+            return profileModel;
         }
 
     }

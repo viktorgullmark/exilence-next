@@ -183,7 +183,7 @@ export class Account implements IAccount {
 
     fromStream(
       stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
-        map((uuid: string) => {
+        map((profile: IApiProfile) => {
           runInAction(() => {
             this.profiles = this.profiles.map(p => {
               p.active = false;
@@ -200,13 +200,8 @@ export class Account implements IAccount {
           if (stores.signalrStore.activeGroup) {
             stores.signalrStore.changeProfileForConnection(
               stores.signalrStore.ownConnection.connectionId,
-              foundProfile.uuid
+              profile
             );
-            if (foundProfile.snapshots.length > 0) {
-              stores.signalrStore.addOwnSnapshotToActiveGroup(
-                foundProfile.snapshots[0]
-              );
-            }
           }
           return this.setActiveProfileSuccess();
         }),
@@ -320,10 +315,7 @@ export class Account implements IAccount {
     const apiProfile = ProfileUtils.mapProfileToApiProfile(newProfile);
 
     return stores.signalrHub
-      .invokeEvent<IApiProfile>(
-        'AddProfile',
-        apiProfile
-      )
+      .invokeEvent<IApiProfile>('AddProfile', apiProfile)
       .pipe(
         map((p: IApiProfile) => {
           this.addProfile(newProfile);
@@ -356,5 +348,11 @@ export class Account implements IAccount {
   @action
   addProfile(p: Profile) {
     this.profiles.push(p);
+    if (stores.signalrStore.activeGroup) {
+      stores.signalrStore.addProfileToConnection(
+        stores.signalrStore.ownConnection.connectionId,
+        ProfileUtils.mapProfileToApiProfile(p)
+      );
+    }
   }
 }

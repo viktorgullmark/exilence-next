@@ -79,12 +79,11 @@ export class SignalrStore {
         }
       }
     );
-    this.signalrHub.onEvent<string, string>(
+    this.signalrHub.onEvent<string, IApiProfile>(
       'OnChangeProfile',
-      (connectionId, profileId) => {
-        if (this.activeGroup && profileId) {
-          this.changeProfileForConnection(connectionId, profileId);
-          this.getLatestSnapshotForProfile(connectionId, profileId);
+      (connectionId, profile) => {
+        if (this.activeGroup && profile) {
+          this.changeProfileForConnection(connectionId, profile);
         }
       }
     );
@@ -114,35 +113,30 @@ export class SignalrStore {
   }
 
   @action
-  changeProfileForConnection(connectionId: string, profileId: string) {
+  changeProfileForConnection(connectionId: string, profile: IApiProfile) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === connectionId
     );
 
     if (connection) {
-      const connIndex = this.activeGroup!.connections.indexOf(connection);
-
       runInAction(() => {
         connection.account.profiles = connection.account.profiles.map(p => {
           p.active = false;
           return p;
         });
       });
-
-      const profile = connection.account.profiles.find(
-        p => p.uuid === profileId
+      let foundProfile = connection.account.profiles.find(
+        p => p.uuid === profile.uuid
       );
-      if (profile) {
+      if (foundProfile) {
+        const index = connection.account.profiles.indexOf(foundProfile);
         runInAction(() => {
-          profile.active = true;
-          this.activeGroup!.connections[connIndex] = connection;
+          connection.account.profiles[index] = profile;
         });
-        this.changeProfileForConnectionSuccess();
       } else {
-        this.changeProfileForConnectionFail(
-          new Error('error:profile_not_found')
-        );
+        connection.account.profiles.push(profile);
       }
+      this.changeProfileForConnectionSuccess();
     } else {
       this.changeProfileForConnectionFail(
         new Error('error:connection_not_found')
@@ -175,11 +169,16 @@ export class SignalrStore {
     );
 
     if (connection) {
-      runInAction(() => {
-        connection.account.profiles.push(profile);
-      });
-
-      this.addProfileToConnectionSuccess();
+      if (!connection.account.profiles.find(p => p.uuid === profile.uuid)) {
+        runInAction(() => {
+          connection.account.profiles.push(profile);
+        });
+        this.addProfileToConnectionSuccess();
+      } else {
+        this.addProfileToConnectionFail(
+          new Error('error:profile_already_exists')
+        );
+      }
     } else {
       this.addProfileToConnectionFail(new Error('error:connection_not_found'));
     }
@@ -210,7 +209,9 @@ export class SignalrStore {
     );
 
     if (connection) {
-      const profile = connection.account.profiles.find(p => p.uuid === profileId);
+      const profile = connection.account.profiles.find(
+        p => p.uuid === profileId
+      );
 
       if (profile) {
         runInAction(() => {
@@ -224,7 +225,9 @@ export class SignalrStore {
         );
       }
     } else {
-      this.removeAllSnapshotsForConnectionFail(new Error('error:connection_not_found'));
+      this.removeAllSnapshotsForConnectionFail(
+        new Error('error:connection_not_found')
+      );
     }
   }
 
@@ -271,7 +274,9 @@ export class SignalrStore {
         );
       }
     } else {
-      this.removeProfileFromConnectionFail(new Error('error:connection_not_found'));
+      this.removeProfileFromConnectionFail(
+        new Error('error:connection_not_found')
+      );
     }
   }
 
@@ -346,11 +351,17 @@ export class SignalrStore {
         p => p.uuid === profileId
       );
       if (profile) {
-        runInAction(() => {
-          profile.snapshots.unshift(snapshot);
-          this.activeGroup!.connections[connIndex] = connection;
-        });
-        this.addSnapshotToConnectionSuccess();
+        if (!profile.snapshots.find(s => s.uuid === snapshot.uuid)) {
+          runInAction(() => {
+            profile.snapshots.unshift(snapshot);
+            this.activeGroup!.connections[connIndex] = connection;
+          });
+          this.addSnapshotToConnectionSuccess();
+        } else {
+          this.addSnapshotToConnectionFail(
+            new Error('error:snapshot_already_received')
+          );
+        }
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
       }
@@ -450,22 +461,19 @@ export class SignalrStore {
     if (!activeGroupProfile) {
       throw new Error('error:profile_not_found_on_server');
     } else {
-      activeGroupProfile.snapshots.unshift(
-        SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
-      );
-
       // clear items from other snapshots
       activeGroupProfile.snapshots = activeGroupProfile.snapshots
         .map(ps => {
-          if (activeGroupProfile.snapshots.indexOf(ps) !== 0) {
-            ps.stashTabs.map(psst => {
-              psst.pricedItems = [];
-              return psst;
-            });
-          }
+          ps.stashTabs.map(psst => {
+            psst.pricedItems = [];
+            return psst;
+          });
           return ps;
         })
         .slice(0, 100);
+      activeGroupProfile.snapshots.unshift(
+        SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
+      );
     }
   }
 
