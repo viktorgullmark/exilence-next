@@ -33,7 +33,9 @@ export class Account implements IAccount {
   @persist('list', AccountLeague)
   @observable
   accountLeagues: AccountLeague[] = [];
-  @persist('list', Profile) @observable profiles: Profile[] = [];
+  @persist('list', Profile) @observable profiles: Profile[] = [
+    new Profile({ name: 'profile 1' })
+  ];
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
