@@ -412,42 +412,6 @@ export class SignalrStore {
     }
   }
 
-  @action applyOwnSnapshotsToGroup(g: IApiGroup) {
-    const activeProfile = stores.accountStore.getSelectedAccount.activeProfile;
-
-    if (!activeProfile) {
-      throw new Error('error:no_active_profile');
-    }
-
-    const activeGroupProfile = g.connections
-      .find(
-        c => c.account.name === stores.accountStore.getSelectedAccount.name
-      )!
-      .account.profiles.find(p => p.uuid === activeProfile.uuid);
-
-    if (!activeGroupProfile) {
-      throw new Error('error:profile_not_found_on_server');
-    } else {
-      // clear items from other snapshots
-      const snapShotsToAdd = activeProfile.snapshots
-        .map(ps => {
-          if (activeProfile.snapshots.indexOf(ps) !== 0) {
-            ps.stashTabSnapshots.map(psst => {
-              psst.pricedItems = [];
-              return psst;
-            });
-          }
-          return ps;
-        })
-        .slice(0, 100);
-
-      activeGroupProfile.snapshots = snapShotsToAdd.map(s =>
-        SnapshotUtils.mapSnapshotToApiSnapshot(s)
-      );
-    }
-    return g;
-  }
-
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
     const activeProfile = stores.accountStore.getSelectedAccount.activeProfile;
 
