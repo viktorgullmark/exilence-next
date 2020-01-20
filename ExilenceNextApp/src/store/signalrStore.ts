@@ -485,6 +485,7 @@ export class SignalrStore {
 
   @action
   leaveGroup() {
+    this.uiStateStore.setLeavingGroup(true);
     if (!this.activeGroup) {
       this.leaveGroupFail(new Error('error:not_in_group'));
       return;
@@ -502,11 +503,13 @@ export class SignalrStore {
 
   @action
   leaveGroupFail(e: AxiosError | Error) {
+    this.uiStateStore.setLeavingGroup(false);
     this.notificationStore.createNotification('leave_group', 'error', false, e);
   }
 
   @action
   leaveGroupSuccess() {
+    this.uiStateStore.setLeavingGroup(false);
     this.notificationStore.createNotification('leave_group', 'success');
   }
 

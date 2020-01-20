@@ -20,6 +20,7 @@ import {
 import { drawerWidth } from '../DrawerWrapper';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
 import { Group } from '../../../store/domains/group';
+import RequestButton from '../../request-button/RequestButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface GroupOverviewProps {
   open: boolean;
+  leavingGroup: boolean;
   toggleGroupOverview: () => void;
   handleJoinGroup: (event: React.MouseEvent<HTMLElement>) => void;
   handleCreateGroup: (event: React.MouseEvent<HTMLElement>) => void;
@@ -55,6 +57,7 @@ interface GroupOverviewProps {
 
 const GroupOverview: React.FC<GroupOverviewProps> = ({
   open,
+  leavingGroup,
   toggleGroupOverview,
   handleJoinGroup,
   handleCreateGroup,
@@ -94,14 +97,16 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
                 <Typography component="h4" className={classes.groupName}>{activeGroup.name}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Button
+                <RequestButton
                   variant="contained"
                   color="primary"
+                  disabled={leavingGroup}
+                  loading={leavingGroup}
                   fullWidth
                   onClick={handleLeaveGroup}
                 >
                   {t('action.leave_group')}
-                </Button>
+                </RequestButton>
               </Grid>
             </>
           ) : (

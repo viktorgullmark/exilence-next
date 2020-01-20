@@ -29,6 +29,7 @@ const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
     <>
       <GroupOverview
         open={uiStateStore!.groupOverviewOpen}
+        leavingGroup={uiStateStore!.leavingGroup}
         activeGroup={signalrStore!.activeGroup}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
         handleCreateGroup={() =>
