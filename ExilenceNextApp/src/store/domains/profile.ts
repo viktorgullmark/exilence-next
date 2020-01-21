@@ -379,6 +379,7 @@ export class Profile {
 
   @action
   removeAllSnapshotsSuccess() {
+    stores.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
     stores.uiStateStore.setClearingSnapshots(false);
     stores.notificationStore.createNotification(
       'remove_all_snapshots',
@@ -406,6 +407,7 @@ export class Profile {
 
   @action
   removeAllSnapshotFail(e: Error) {
+    stores.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
     stores.uiStateStore.setClearingSnapshots(false);
     stores.notificationStore.createNotification(
       'remove_all_snapshots',
