@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.5.2",
     "@microsoft/signalr": "^3.1.0",
-    "@microsoft/signalr-protocol-msgpack": "^3.0.0",
+    "@microsoft/signalr-protocol-msgpack": "^3.1.0",
     "@sentry/browser": "^5.9.1",
     "@sentry/electron": "^1.0.0",
     "@types/universal-analytics": "^0.4.3",
@@ -57,7 +57,7 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder",
+    "release": "npm run react-build && electron-builder --publish=never",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },

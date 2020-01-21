@@ -1,24 +1,25 @@
-import { Grid, useTheme, Paper } from '@material-ui/core';
-import blueGrey from '@material-ui/core/colors/blueGrey';
+import { Grid, useTheme } from '@material-ui/core';
 import GavelIcon from '@material-ui/icons/Gavel';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import { itemColors, cardColors } from '../../assets/themes/exilence-theme';
+import { useLocation } from 'react-router';
+import { appName, visitor } from '../..';
+import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import NetWorthTabGroup from '../../components/net-worth-tab-group/NetWorthTabGroup';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
 import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
+import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import { visitor, appName } from '../..';
-import { useLocation } from 'react-router';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
+  signalrStore?: SignalrStore;
   uiStateStore?: UiStateStore;
 }
 
@@ -28,14 +29,36 @@ export const chartHeight = 200;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
+  signalrStore,
   uiStateStore
 }: NetWorthProps) => {
   const location = useLocation();
   const theme = useTheme();
+  const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+
+  const itemCount = () => {
+    return activeProfile ? activeProfile.itemCount : 0;
+  };
+
+  const netWorthValue = () => {
+    return activeProfile ? activeProfile.netWorthValue : 0;
+  };
+
+  const snapshots = () => {
+    return activeProfile ? activeProfile.snapshots : [];
+  };
+
+  const activeCurrency = () => {
+    return activeProfile
+      ? activeProfile.activeCurrency
+      : { name: 'chaos', short: 'c' };
+  };
+
+  const { activeGroup } = signalrStore!;
 
   useEffect(() => {
-    if (!uiStateStore!.validated && !uiStateStore!.initated) {
-      accountStore!.initSession(location.pathname);
+    if (!uiStateStore!.validated && !uiStateStore!.initiated) {
+      accountStore!.validateSession('/net-worth');
     }
 
     visitor!.pageview('/net-worth', appName).send();
@@ -47,16 +70,10 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={4} lg={3}>
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
-              value={
-                accountStore!.getSelectedAccount.activeProfile
-                  .latestSnapshotValue
-              }
+              value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
               title="label.total_value"
               valueColor={itemColors.chaosOrb}
-              currencyShort={
-                accountStore!.getSelectedAccount.activeProfile.activeCurrency
-                  .short
-              }
+              currencyShort={activeCurrency().short}
               icon={<MonetizationOnIcon fontSize="large" />}
               currency
             />
@@ -65,10 +82,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={4} lg={3}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
-              value={
-                accountStore!.getSelectedAccount.activeProfile
-                  .latestSnapshotItemCount
-              }
+              value={activeGroup ? activeGroup.itemCount : itemCount()}
               title="label.total_items"
               valueColor={theme.palette.text.primary}
               icon={<GavelIcon fontSize="large" />}
@@ -79,7 +93,9 @@ const NetWorth: React.FC<NetWorthProps> = ({
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
               value={
-                accountStore!.getSelectedAccount.activeProfile.snapshots.length
+                activeGroup
+                  ? activeGroup.groupSnapshots.length
+                  : snapshots().length
               }
               title="label.total_snapshots"
               valueColor={theme.palette.text.primary}
@@ -100,4 +116,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(observer(NetWorth));
+export default inject(
+  'accountStore',
+  'signalrStore',
+  'uiStateStore'
+)(observer(NetWorth));

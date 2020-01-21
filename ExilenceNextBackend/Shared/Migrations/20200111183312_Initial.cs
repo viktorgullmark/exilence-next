@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shared.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,8 @@ namespace Shared.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(nullable: false),
+                    Hash = table.Column<string>(nullable: false),
+                    Salt = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -63,6 +65,7 @@ namespace Shared.Migrations
                     Name = table.Column<string>(nullable: true),
                     ActiveLeagueId = table.Column<string>(nullable: true),
                     ActivePriceLeagueId = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
                     ActiveStashTabIds = table.Column<string>(nullable: true),
                     AccountId = table.Column<int>(nullable: false)
                 },
@@ -164,7 +167,8 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
+                    ClientId = table.Column<string>(maxLength: 50, nullable: false),
+                    StashTabId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Index = table.Column<int>(nullable: false),
                     Color = table.Column<string>(nullable: true),
@@ -186,9 +190,10 @@ namespace Shared.Migrations
                 name: "PricedItems",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(19)", nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(maxLength: 100, nullable: false),
+                    ItemId = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(nullable: true),
                     TypeLine = table.Column<string>(nullable: true),
                     FrameType = table.Column<int>(nullable: false),
@@ -228,9 +233,19 @@ namespace Shared.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Accounts_ClientId",
+                table: "Accounts",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Characters_AccountId",
                 table: "Characters",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characters_ClientId",
+                table: "Characters",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Characters_LeagueId",
@@ -243,9 +258,29 @@ namespace Shared.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Connections_ConnectionId",
+                table: "Connections",
+                column: "ConnectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Connections_GroupId",
                 table: "Connections",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_ClientId",
+                table: "Groups",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Leagues_ClientId",
+                table: "Leagues",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PricedItems_ClientId",
+                table: "PricedItems",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PricedItems_StashtabId",
@@ -258,9 +293,24 @@ namespace Shared.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SnapshotProfiles_ClientId",
+                table: "SnapshotProfiles",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Snapshots_ClientId",
+                table: "Snapshots",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Snapshots_ProfileId",
                 table: "Snapshots",
                 column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StashTabs_ClientId",
+                table: "StashTabs",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StashTabs_SnapshotId",

@@ -17,9 +17,12 @@ import { reaction } from 'mobx';
 import { ExportUtils } from '../../utils/export.utils';
 import { useTranslation } from 'react-i18next';
 import { statusColors } from '../../assets/themes/exilence-theme';
+import { SignalrStore } from '../../store/signalrStore';
+import WarningIcon from '@material-ui/icons/Warning';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
+  signalrStore?: SignalrStore;
   accountStore?: AccountStore;
 }
 
@@ -44,14 +47,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noItemPlaceholder: {
     color: theme.palette.primary.light
+  },
+  warningIcon: {
+    color: statusColors.warning,
+    marginLeft: theme.spacing(2)
   }
 }));
 
 const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   accountStore,
+  signalrStore,
   uiStateStore
 }: ItemTableContainerProps) => {
-  const { filteredItems } = accountStore!.getSelectedAccount.activeProfile;
+  const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+  const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -83,6 +92,14 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     );
   };
 
+  const getItems = () => {
+    if (activeProfile) {
+      return activeGroup ? activeGroup.items : activeProfile.items;
+    } else {
+      return [];
+    }
+  };
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -93,10 +110,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           alignItems="center"
         >
           <Grid item xs={4} md={3}>
-            <ItemTableFilter
-              array={filteredItems}
-              handleFilter={handleFilter}
-            />
+            <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
           </Grid>
           <Grid
             container
@@ -107,14 +121,12 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             direction="column"
             justify="space-between"
           >
-            {filteredItems.length === 0 &&
+            {getItems().length === 0 &&
               uiStateStore!.itemTableFilterText === '' && (
-                <Typography
-                  className={classes.noItemPlaceholder}
-                  align="center"
-                >
-                  {t('tables:label.item_table_placeholder')}
-                </Typography>
+                <WarningIcon
+                  titleAccess={t('label.no_snapshots_title')}
+                  className={classes.warningIcon}
+                />
               )}
           </Grid>
 
@@ -122,11 +134,8 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             <Button
               color="primary"
               variant="contained"
-              disabled={
-                accountStore!.getSelectedAccount.activeProfile.filteredItems
-                  .length === 0
-              }
-              onClick={() => ExportUtils.exportData(filteredItems)}
+              disabled={getItems().length === 0}
+              onClick={() => ExportUtils.exportData(getItems())}
             >
               {t('label.net_worth_export')}
             </Button>
@@ -134,7 +143,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={filteredItems}
+        items={getItems()}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
       />
@@ -144,5 +153,6 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
 
 export default inject(
   'uiStateStore',
+  'signalrStore',
   'accountStore'
 )(observer(ItemTableContainer));

@@ -36,7 +36,7 @@ export class ItemUtils {
     let mergedStashTabs: IPricedItem[] = [];
 
     stashTabSnapshots.forEach(snapshot => {
-      mergedStashTabs = mergedStashTabs.concat(snapshot.items);
+      mergedStashTabs = mergedStashTabs.concat(snapshot.pricedItems);
     });
 
     return this.mergeItemStacks(mergedStashTabs);
@@ -145,9 +145,6 @@ export class ItemUtils {
     explicitMods: string[],
     name: string
   ): string {
-    if (sockets === null || sockets === undefined) {
-      return '';
-    }
 
     if (name === 'Impresence') {
       if (explicitMods.filter(s => s.includes('Lightning Damage'))) {

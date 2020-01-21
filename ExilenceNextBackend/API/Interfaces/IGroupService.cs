@@ -10,7 +10,8 @@ namespace API.Interfaces
     {
         Task<GroupModel> GetGroup(string groupName);
         Task<GroupModel> GetGroupForConnection(string connectionId);
-        Task<GroupModel> JoinGroup(string connectionId, string groupName);
+        Task<bool> GroupExists(string groupName);
+        Task<GroupModel> JoinGroup(string connectionId, GroupModel groupModel);
         Task<GroupModel> LeaveGroup(string connectionId, string groupName);
 
         Task<ConnectionModel> GetConnection(string connectionId);

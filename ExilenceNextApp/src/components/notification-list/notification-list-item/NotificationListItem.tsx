@@ -64,7 +64,6 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         return <InfoIcon />;
     }
   };
-
   return (
     <ListItem
       key={notification.uuid}

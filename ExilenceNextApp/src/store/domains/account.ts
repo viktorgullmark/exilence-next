@@ -1,11 +1,19 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { of } from 'rxjs';
-import { catchError, delay, mergeMap, retryWhen, take } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
+import {
+  catchError,
+  delay,
+  mergeMap,
+  retryWhen,
+  take,
+  map,
+  switchMap
+} from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
-import { IApiProfile } from '../../interfaces/api/profile.interface';
+import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { ProfileUtils } from '../../utils/profile.utils';
@@ -14,19 +22,20 @@ import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 import { genericRetryStrategy } from '../../utils/rxjs.utils';
+import { AxiosError } from 'axios';
+import { IApiAccount } from '../../interfaces/api/api-account.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
-  @persist name: string = '';
+  @persist name: string | undefined = undefined;
   @persist @observable sessionId: string = '';
-  @persist @observable token: string = uuid.v4();
 
   @persist('list', AccountLeague)
   @observable
   accountLeagues: AccountLeague[] = [];
-  @persist('list', Profile) @observable profiles: Profile[] = [];
-
-  @persist @observable activeProfileUuid: string = '';
+  @persist('list', Profile) @observable profiles: Profile[] = [
+    new Profile({ name: 'profile 1' })
+  ];
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
@@ -34,37 +43,112 @@ export class Account implements IAccount {
 
   @computed
   get activeLeague() {
-    const league = stores.leagueStore.leagues.find(
-      l => l.id === this.activeProfile.activeLeagueId
-    );
-    return league!;
+    const profile = this.activeProfile;
+    if (profile) {
+      return stores.leagueStore.leagues.find(
+        l => l.id === profile.activeLeagueId
+      );
+    } else {
+      return undefined;
+    }
   }
 
   @computed
   get activePriceLeague() {
-    const league = stores.leagueStore.priceLeagues.find(
-      l => l.id === this.activeProfile.activePriceLeagueId
-    );
-    return league!;
+    const profile = this.activeProfile;
+    if (profile) {
+      return stores.leagueStore.priceLeagues.find(
+        l => l.id === profile.activePriceLeagueId
+      );
+    } else {
+      return undefined;
+    }
   }
 
   @action
-  authorize(profiles?: IApiProfile[]) {
+  updateAccountFromApi(account: IApiAccount) {
+    this.uuid = account.uuid;
+    stores.accountStore.setActiveAccount(this.uuid);
+  }
+
+  @action
+  updateProfiles(profiles: IApiProfile[]) {
+    const mappedProfiles = profiles.map(p => {
+      const currentProfile = this.profiles.find(cp => cp.uuid === p.uuid);
+      const newProfile = new Profile(p);
+      if (currentProfile) {
+        newProfile.snapshots = currentProfile.snapshots;
+      }
+      return newProfile;
+    });
+    // if no active profile, set first profile in array to active
+    const activeProfile = profiles.find(p => p.active);
+    if (!activeProfile && profiles.length > 0) {
+      profiles[0].active = true;
+    }
+    this.profiles = mappedProfiles;
+  }
+
+  @action
+  getProfilesForAccount(accountUuid: string) {
+    return stores.signalrStore.signalrHub
+      .invokeEvent<string>('GetAllProfiles', accountUuid)
+      .pipe(
+        map((profiles: IApiProfile[]) => {
+          this.getProfilesForAccountSuccess();
+          return profiles;
+        }),
+        catchError((e: Error) => {
+          this.getProfilesForAccountFail(e);
+          return throwError(e);
+        })
+      );
+  }
+
+  @action
+  getProfilesForAccountSuccess() {
+    stores.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'success'
+    );
+  }
+
+  @action
+  getProfilesForAccountFail(e: AxiosError | Error) {
+    stores.notificationStore.createNotification(
+      'get_profiles_for_account',
+      'error',
+      true,
+      e
+    );
+  }
+
+  @action
+  authorize() {
     return authService
       .getToken({
         uuid: this.uuid,
-        name: this.name,
-        token: this.token,
-        profiles: profiles
-          ? profiles.map(p => {
-              return { ...p, snapshots: [] };
-            })
-          : []
+        name: this.name!,
+        accessToken: stores.accountStore.token!.accessToken,
+        profiles: []
       })
       .pipe(
-        mergeMap(token => {
+        mergeMap(account => {
           this.authorizeSuccess();
-          return of(stores.signalrStore.signalrHub.startConnection(token.data));
+          this.updateAccountFromApi(account.data);
+          return stores.signalrStore.signalrHub.startConnection(
+            account.data.accessToken
+          );
+        }),
+        switchMap(() => {
+          return this.getProfilesForAccount(this.uuid).pipe(
+            map((profiles: IApiProfile[]) => {
+              this.updateProfiles(profiles);
+              if (this.profiles.length > 0) {
+                stores.uiStateStore.setProfilesLoaded(true);
+              }
+            })
+          );
         }),
         retryWhen(
           genericRetryStrategy({
@@ -72,7 +156,10 @@ export class Account implements IAccount {
             scalingDuration: 3000
           })
         ),
-        catchError(e => of(this.authorizeFail(e)))
+        catchError(e => {
+          this.authorizeFail(e);
+          return throwError(e);
+        })
       );
   }
 
@@ -88,14 +175,42 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    const profile = this.profiles.find(p => p.uuid === this.activeProfileUuid);
-    return profile ? profile : new Profile();
+    let active = this.profiles.find(p => p.active);
+    return active;
   }
 
   @action
   setActiveProfile(uuid: string) {
+    stores.uiStateStore.setChangingProfile(true);
     stores.uiStateStore.changeItemTablePage(0);
-    this.activeProfileUuid = uuid;
+
+    fromStream(
+      stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
+        map((uuid: string) => {
+          runInAction(() => {
+            this.profiles = this.profiles.map(p => {
+              p.active = false;
+              return p;
+            });
+          });
+          const foundProfile = this.profiles.find(p => p.uuid === uuid);
+          if (!foundProfile) {
+            return throwError('error:no_profile_found');
+          }
+          runInAction(() => {
+            foundProfile.active = true;
+          });
+          if (stores.signalrStore.activeGroup) {
+            stores.signalrStore.changeProfileForConnection(
+              stores.signalrStore.ownConnection.connectionId,
+              ProfileUtils.mapProfileToApiProfile(foundProfile)
+            );
+          }
+          return this.setActiveProfileSuccess();
+        }),
+        catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
+      )
+    );
   }
 
   @action
@@ -117,52 +232,46 @@ export class Account implements IAccount {
   }
 
   @action
-  checkDefaultProfile() {
-    if (this.accountLeagues.length === 0) {
-      throw Error('error:no_account_leagues');
-    }
-    if (stores.leagueStore.priceLeagues.length === 0) {
-      throw new Error('error:no_price_leagues');
-    }
-    if (this.profiles.length === 0) {
-      this.profiles.push(
-        new Profile({
-          name: 'profile 1',
-          activeLeagueId: this.accountLeagues[0].leagueId,
-          activePriceLeagueId: stores.leagueStore.priceLeagues[0].id,
-          shouldSetStashTabs: true
-        })
-      );
-      this.setActiveProfile(this.profiles[0].uuid);
-    }
+  removeActiveProfile() {
+    stores.uiStateStore.setRemovingProfile(true);
+    visitor!.event('Profile', 'Remove profile').send();
+
+    const profileIndex = this.profiles.findIndex(p => p.active);
+
+    fromStream(
+      stores.signalrHub
+        .invokeEvent<string>('RemoveProfile', this.profiles[profileIndex].uuid)
+        .pipe(
+          map((uuid: string) => {
+            if (profileIndex === -1) {
+              this.removeActiveProfileFail(new Error('profile_not_found'));
+            } else {
+              this.deleteProfiles(profileIndex, 1);
+              const newActiveProfile = this.profiles.find(p => !p.active);
+              this.setActiveProfile(newActiveProfile!.uuid);
+            }
+            stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
+            return this.removeActiveProfileSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
+        )
+    );
   }
 
   @action
-  removeActiveProfile() {
-    visitor!.event('Profile', 'Remove profile').send();
-
-    const profileIndex = this.profiles.findIndex(
-      p => p.uuid === this.activeProfileUuid
-    );
-    if (profileIndex === -1) {
-      this.removeActiveProfileFail(new Error('profile_not_found'));
-    } else {
-      const newActiveProfile = this.profiles.find(
-        p => p.uuid !== this.activeProfileUuid
-      );
-      this.setActiveProfile(newActiveProfile!.uuid);
-      const removedProfile = this.profiles.splice(profileIndex, 1);
-      stores.signalrStore.removeProfile(removedProfile[0].uuid);
-    }
+  deleteProfiles(index: number, amount: number) {
+    this.profiles.splice(index, amount);
   }
 
   @action
   removeActiveProfileSuccess() {
+    stores.uiStateStore.setRemovingProfile(false);
     stores.notificationStore.createNotification('remove_profile', 'success');
   }
 
   @action
   removeActiveProfileFail(e: Error) {
+    stores.uiStateStore.setRemovingProfile(false);
     stores.notificationStore.createNotification(
       'remove_profile',
       'error',
@@ -172,19 +281,83 @@ export class Account implements IAccount {
   }
 
   @action
+  setActiveProfileSuccess() {
+    stores.notificationStore.createNotification(
+      'set_active_profile',
+      'success'
+    );
+    stores.uiStateStore.setChangingProfile(false);
+  }
+
+  @action
+  setActiveProfileFail(e: Error) {
+    stores.notificationStore.createNotification(
+      'set_active_profile',
+      'error',
+      true,
+      e
+    );
+    stores.uiStateStore.setChangingProfile(false);
+  }
+
+  @action
   setSessionId(sessionId: string) {
     this.sessionId = sessionId;
   }
 
   @action
-  createProfile(profile: IProfile) {
-    const created = new Profile(profile);
-    this.profiles.push(created);
+  createProfile(profile: IProfile, callback: () => void) {
+    fromStream(this.createProfileObservable(profile, callback));
+  }
 
-    stores.signalrStore.createProfile(
-      ProfileUtils.mapProfileToApiProfile(created)
+  @action
+  createProfileObservable(profile: IProfile, callback: () => void) {
+    stores.uiStateStore.setSavingProfile(true);
+    const newProfile = new Profile(profile);
+
+    newProfile.active = true;
+
+    const apiProfile = ProfileUtils.mapProfileToApiProfile(newProfile);
+
+    return stores.signalrHub
+      .invokeEvent<IApiProfile>('AddProfile', apiProfile)
+      .pipe(
+        map((p: IApiProfile) => {
+          this.addProfile(newProfile);
+          this.setActiveProfile(newProfile.uuid);
+          callback();
+          this.createProfileSuccess();
+          return p;
+        }),
+        catchError((e: AxiosError) => of(this.createProfileFail(e)))
+      );
+  }
+
+  @action
+  createProfileFail(e: Error) {
+    stores.uiStateStore.setSavingProfile(false);
+    stores.notificationStore.createNotification(
+      'create_profile',
+      'error',
+      false,
+      e
     );
+  }
 
-    this.setActiveProfile(created.uuid);
+  @action
+  createProfileSuccess() {
+    stores.uiStateStore.setSavingProfile(false);
+    stores.notificationStore.createNotification('create_profile', 'success');
+  }
+
+  @action
+  addProfile(p: Profile) {
+    this.profiles.push(p);
+    if (stores.signalrStore.activeGroup) {
+      stores.signalrStore.addProfileToConnection(
+        stores.signalrStore.ownConnection.connectionId,
+        ProfileUtils.mapProfileToApiProfile(p)
+      );
+    }
   }
 }

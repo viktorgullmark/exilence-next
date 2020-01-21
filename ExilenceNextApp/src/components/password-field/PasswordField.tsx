@@ -9,14 +9,17 @@ import { useField } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useLabelWidth from '../../hooks/use-label-width';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   name: string;
   label: string;
+  handleOnChange: (e: React.FormEvent<HTMLDivElement>) => void;
   placeholder?: string;
   required?: boolean;
   autoFocus?: boolean;
   helperText?: string;
+  customError?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -35,8 +38,11 @@ const PasswordField: React.FC<Props> = ({
   placeholder,
   required,
   autoFocus,
-  helperText
+  helperText,
+  customError,
+  handleOnChange
 }) => {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [field, meta] = useField(name);
   const [visible, setVisible] = useState(false);
@@ -50,11 +56,15 @@ const PasswordField: React.FC<Props> = ({
     <FormControl
       variant="outlined"
       className={classes.root}
-      error={meta.touched && !!meta.error}
+      error={meta.touched && (!!meta.error || !!customError)}
+      onChange={e => {
+        field.onChange(e);
+        handleOnChange(e);
+      }}
       fullWidth
     >
       <InputLabel ref={ref} htmlFor={name}>
-        {label}
+        {label} {!required && (`(${t('label.optional').toLowerCase()})`)}
       </InputLabel>
       <OutlinedInput
         id={name}
@@ -73,9 +83,9 @@ const PasswordField: React.FC<Props> = ({
         }
         {...field}
       />
-      {((meta.touched && meta.error) || helperText) && (
+      {((meta.touched && (meta.error || customError)) || helperText) && (
         <FormHelperText className={classes.helperText}>
-          {helperText || meta.error}
+          {customError || helperText || meta.error}
         </FormHelperText>
       )}
     </FormControl>

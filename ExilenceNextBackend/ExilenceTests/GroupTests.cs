@@ -46,15 +46,21 @@ namespace ExilenceTests
             };
             connection = await _fixture.GroupService.AddConnection(connection, TestHelper.GetRandomString());
 
-            var group = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupName);
 
-            Assert.NotNull(group.ClientId);
-            Assert.Single(group.Connections);
+            var groupModel = new GroupModel()
+            {
+                Name = TestHelper.GetRandomString(),
+                Password = TestHelper.GetRandomString()
+            };
+            groupModel = await _fixture.GroupService.JoinGroup(connection.ConnectionId, groupModel);
 
-            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupName);
-            group = await _fixture.GroupService.GetGroup(groupName);
+            Assert.NotNull(groupModel.ClientId);
+            Assert.Single(groupModel.Connections);
 
-            Assert.Null(group);
+            await _fixture.GroupService.LeaveGroup(connection.ConnectionId, groupModel);
+            groupModel = await _fixture.GroupService.GetGroup(groupName);
+
+            Assert.Null(groupModel);
         }
 
     }
