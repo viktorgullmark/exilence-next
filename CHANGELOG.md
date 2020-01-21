@@ -23,6 +23,8 @@ All notable changes to this project will be documented in this file.
 - Added link to Patreon page
 ##### Changed
 - Replaced the warning text in the item table with an icon
+##### Removed
+- Removed account name field at login screen (fetched via OAuth2 instead)
 ##### Fixed
 - Fixed a bug where the client would loop the validation if it failed on the login page
 - Fixed a bug where the relative time on notifications was not displayed correctly
