@@ -32,9 +32,9 @@ namespace API.Hubs
 
 
         public BaseHub(
-            IMapper mapper, 
+            IMapper mapper,
             ILogger<BaseHub> logger,
-            IConfiguration configuration, 
+            IConfiguration configuration,
             IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
@@ -55,14 +55,18 @@ namespace API.Hubs
             await Log($"ConnectionId: {ConnectionId} connected");
 
             var existingConnection = await _accountService.GetConnection(AccountName);
-            await CloseConnection(existingConnection.ConnectionId);
-            await _groupService.RemoveConnection(ConnectionId);
+            if (existingConnection != null)
+            {
+                await CloseConnection(existingConnection.ConnectionId);
+                await _groupService.RemoveConnection(ConnectionId);
+            }
 
-            var connection = new ConnectionModel() {
+            var connection = new ConnectionModel()
+            {
                 ConnectionId = ConnectionId,
                 InstanceName = _instanceName
             };
-            await _groupService.AddConnection(connection, AccountName);            
+            await _groupService.AddConnection(connection, AccountName);
             await base.OnConnectedAsync();
         }
 
@@ -83,7 +87,7 @@ namespace API.Hubs
             await Clients.Client(connectionId).SendAsync("CloseConnection");
         }
 
-        private async Task Log (string message)
+        private async Task Log(string message)
         {
             var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
             message = $"[Account: {AccountName}] -  " + message; // Add account name
