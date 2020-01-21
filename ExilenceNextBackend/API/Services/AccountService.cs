@@ -163,6 +163,17 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task RemoveAllProfiles(string accountId)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.ClientId == accountId)
+                .Include(account => account.Profiles)
+                .FirstOrDefaultAsync();
+
+            account.Profiles.Clear();
+
+            await _accountRepository.SaveChangesAsync();
+        }
+
         public async Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId)
         {
             var account = await _accountRepository

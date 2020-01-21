@@ -16,7 +16,7 @@ namespace API.Hubs
     {
         public async Task<List<SnapshotProfileModel>> GetAllProfiles(string accountId)
         {
-            var profileModels = await _accountService.GetAllProfiles(accountId.ToString());
+            var profileModels = await _accountService.GetAllProfiles(accountId);
             return profileModels;
         }
 
@@ -59,6 +59,12 @@ namespace API.Hubs
             }
 
             return profileModel.ClientId;
+        }
+
+        public async Task RemoveAllProfiles(string accountId)
+        {
+            await _accountService.RemoveAllProfiles(accountId);
+            
         }
 
         public async Task<string> ChangeProfile(string profileId)
