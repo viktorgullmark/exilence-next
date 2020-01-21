@@ -88,6 +88,16 @@ export class Profile {
   }
 
   @computed
+  get chartData() {
+    if (this.snapshots.length === 0) {
+      return [];
+    }
+    return SnapshotUtils.formatSnapshotsForChart(
+      this.snapshots.map(s => SnapshotUtils.mapSnapshotToApiSnapshot(s))
+    );
+  }
+
+  @computed
   get itemCount() {
     if (this.snapshots.length === 0) {
       return 0;
@@ -361,7 +371,6 @@ export class Profile {
     failAction: (e: AxiosError) => void,
     callback?: () => void
   ) {
-
     return stores.signalrHub
       .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
       .pipe(

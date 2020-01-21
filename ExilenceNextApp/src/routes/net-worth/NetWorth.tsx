@@ -104,7 +104,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={12}>
-          <Widget height={chartHeight} backgroundColor={theme.palette.background.default}>
+          <Widget height={chartHeight} backgroundColor={theme.palette.background.default} compact>
             <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>

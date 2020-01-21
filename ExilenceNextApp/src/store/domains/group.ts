@@ -71,6 +71,14 @@ export class Group implements IApiGroup {
     }
     return SnapshotUtils.getItemCount(this.latestGroupSnapshots);
   }
+  
+  @computed
+  get chartData() {
+    if (this.groupSnapshots.length === 0) {
+      return [];
+    }
+    return SnapshotUtils.formatSnapshotsForChart(this.groupSnapshots);
+  }
 
   @action
   setActiveAccounts(uuids: string[]) {
