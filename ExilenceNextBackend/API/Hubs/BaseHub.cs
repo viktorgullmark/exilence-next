@@ -54,11 +54,11 @@ namespace API.Hubs
         {
             await Log($"ConnectionId: {ConnectionId} connected");
 
+            //Close already existing connection for the same account
             var existingConnection = await _accountService.GetConnection(AccountName);
             if (existingConnection != null)
             {
                 await CloseConnection(existingConnection.ConnectionId);
-                await _groupService.RemoveConnection(ConnectionId);
             }
 
             var connection = new ConnectionModel()
