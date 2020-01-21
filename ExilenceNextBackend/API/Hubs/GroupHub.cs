@@ -17,14 +17,12 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        [Authorize]
         public async Task<string> GroupExists(string groupName)
         {
             var group = await _groupService.GetGroup(groupName);
             return group?.Name;
         }
 
-        [Authorize]
         public async Task JoinGroup(GroupModel groupModel)
         {
             groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
@@ -38,7 +36,6 @@ namespace API.Hubs
             await Log($"Joined group: {groupModel.Name}");
         }
 
-        [Authorize]
         public async Task<string> LeaveGroup(string groupName)
         {
             var connection = await _groupService.GetConnection(ConnectionId);
