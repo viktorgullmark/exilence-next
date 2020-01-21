@@ -405,7 +405,11 @@ export class SignalrStore {
           password: password,
           created: new Date(),
           connections: []
-        })
+        }).pipe(
+          catchError((e: AxiosError) =>
+            of(this.joinGroupFail(e))
+          )
+        )
       );
     } else {
       this.joinGroupFail(new Error('error:not_connected'));
