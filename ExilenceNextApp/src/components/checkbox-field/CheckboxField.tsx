@@ -11,12 +11,6 @@ interface Props {
 const CheckboxField = ({ name, label, required }: Props) => {
   const [field, meta] = useField(name);
 
-  const handleChange = (event: any, checked: boolean) => {
-    console.log('---> event.target.checked', event.target.checked);
-    console.log('---> checked', checked);
-    field.onChange(event);
-  };
-
   return (
     <FormControl
       id={name}
@@ -32,7 +26,7 @@ const CheckboxField = ({ name, label, required }: Props) => {
             checked={field.checked}
             color="primary"
             value={name}
-            onChange={handleChange} // temporary
+            onChange={field.onChange}
           />
         }
         label={label}
