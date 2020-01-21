@@ -10,8 +10,8 @@ using Shared;
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    [Migration("20191222131358_initial")]
-    partial class initial
+    [Migration("20200111183312_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,8 @@ namespace Shared.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Accounts");
                 });
@@ -85,6 +87,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Characters");
@@ -121,6 +125,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ConnectionId");
+
                     b.HasIndex("GroupId");
 
                     b.ToTable("Connections");
@@ -141,11 +147,21 @@ namespace Shared.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Groups");
                 });
@@ -165,14 +181,16 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Leagues");
                 });
 
             modelBuilder.Entity("Shared.Entities.PricedItem", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(19)")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseType")
@@ -203,6 +221,11 @@ namespace Shared.Migrations
 
                     b.Property<int>("Ilvl")
                         .HasColumnType("int");
+
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
@@ -260,6 +283,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("StashtabId");
 
                     b.ToTable("PricedItems");
@@ -285,6 +310,8 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Snapshots");
@@ -299,6 +326,9 @@ namespace Shared.Migrations
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ActiveLeagueId")
                         .HasColumnType("nvarchar(max)");
@@ -321,6 +351,8 @@ namespace Shared.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("SnapshotProfiles");
                 });
 
@@ -333,8 +365,8 @@ namespace Shared.Migrations
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
@@ -348,10 +380,17 @@ namespace Shared.Migrations
                     b.Property<int>("SnapshotId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StashTabId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(13,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("SnapshotId");
 
@@ -377,7 +416,7 @@ namespace Shared.Migrations
                         .WithMany()
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("Shared.Entities.Group", null)
+                    b.HasOne("Shared.Entities.Group", "Group")
                         .WithMany("Connections")
                         .HasForeignKey("GroupId");
                 });

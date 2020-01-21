@@ -1,5 +1,6 @@
 ﻿using API.Interfaces;
 using AutoMapper;
+using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace API.Hubs
 {
+    [Authorize]
     public partial class BaseHub : Hub
     {
         readonly IMapper _mapper;
@@ -27,7 +29,7 @@ namespace API.Hubs
         private bool IsAdmin => Context.User.IsInRole("Admin");
         private bool IsPremium => Context.User.IsInRole("Premium");
 
-        
+
         public BaseHub(
             IMapper mapper, 
             ILogger<BaseHub> logger,
@@ -50,21 +52,18 @@ namespace API.Hubs
 
         }
 
-        [Authorize]
         public override async Task OnConnectedAsync()
         {
             await Log($"ConnectionId: {ConnectionId} connected");
 
             var connection = new ConnectionModel() {
                 ConnectionId = ConnectionId,
-                InstanceName = _instanceName,
-                Created = DateTime.UtcNow
+                InstanceName = _instanceName
             };
             await _groupService.AddConnection(connection, AccountName);            
             await base.OnConnectedAsync();
         }
 
-        [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await Log($"ConnectionId: {ConnectionId} disconnected");
@@ -77,13 +76,11 @@ namespace API.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        [Authorize]
         public string GetConnectionId()
         {
             return Context.ConnectionId;
         }
 
-        [Authorize]
         private async Task Log (string message)
         {
             var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);

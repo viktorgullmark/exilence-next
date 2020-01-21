@@ -1,5 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
+import { observer } from 'mobx-react';
+import RequestButton from '../request-button/RequestButton';
 
 interface Props {
   show: boolean;
@@ -9,6 +11,7 @@ interface Props {
   cancelButtonText: string;
   onClose: () => void;
   onConfirm: () => void;
+  loading?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ConfirmationDialog: React.FC<Props> = props => {
-  const { show, onClose, onConfirm, title, body, acceptButtonText, cancelButtonText } = props;
+  const { show, onClose, onConfirm, title, body, acceptButtonText, cancelButtonText, loading } = props;
   const classes = useStyles();
 
   return (
@@ -29,12 +32,12 @@ const ConfirmationDialog: React.FC<Props> = props => {
         <Button onClick={onClose}>
           {cancelButtonText}
         </Button>
-        <Button onClick={onConfirm} color="primary" variant="contained">
+        <RequestButton onClick={onConfirm} color="primary" variant="contained" disabled={loading} loading={!!loading}>
           {acceptButtonText}
-        </Button>
+        </RequestButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default ConfirmationDialog;
+export default observer(ConfirmationDialog);

@@ -1,11 +1,12 @@
 import { IPricedItem } from '../priced-item.interface';
-import { IApiPricedItem } from './priceditem.interface';
 
 export interface IApiStashTabSnapshot {
   uuid: string;
   value: number;
-  pricedItems: IApiPricedItem[];
+  stashTabId: string;
+  pricedItems: IPricedItem[];
   index: number;
   name: string;
   color: string;
+  created: Date;
 }

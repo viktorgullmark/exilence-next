@@ -7,30 +7,25 @@ import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
+import { SignalrStore } from '../../store/signalrStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
   notificationStore?: NotificationStore;
+  signalrStore?: SignalrStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   uiStateStore,
   accountStore,
+  signalrStore,
   notificationStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [
-    showConfirmClearSnapshotsDialog,
-    setShowConfirmClearSnapshotsDialog
-  ] = useState(false);
-  const [
-    showConfirmRemoveProfileDialog,
-    setShowConfirmRemoveProfileDialog
-  ] = useState(false);
   const { notifications } = notificationStore!;
 
   const handleOpen = (edit: boolean = false) => {
@@ -43,17 +38,15 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleClearSnapshots = () => {
-    accountStore!.getSelectedAccount.activeProfile.clearSnapshots();
-    setShowConfirmClearSnapshotsDialog(false);
+    accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
   };
 
   const handleRemoveProfile = () => {
     accountStore!.getSelectedAccount.removeActiveProfile();
-    setShowConfirmRemoveProfileDialog(false);
   };
 
   const handleSnapshot = () => {
-    accountStore!.getSelectedAccount.activeProfile.snapshot();
+    accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
 
   const handleProfileChange = (
@@ -77,28 +70,34 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   return (
     <>
       <ConfirmationDialog
-        show={showConfirmClearSnapshotsDialog}
-        onClose={() => setShowConfirmClearSnapshotsDialog(false)}
+        show={uiStateStore!.confirmClearSnapshotsDialogOpen}
+        onClose={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(false)}
         onConfirm={handleClearSnapshots}
         title={t('title.confirm_clear_snapshots')}
         body={t('body.clear_snapshots')}
         acceptButtonText={t('action.confirm')}
         cancelButtonText={t('action.cancel')}
+        loading={uiStateStore!.clearingSnapshots}
       />
       <ConfirmationDialog
-        show={showConfirmRemoveProfileDialog}
-        onClose={() => setShowConfirmRemoveProfileDialog(false)}
+        show={uiStateStore!.confirmRemoveProfileDialogOpen}
+        onClose={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(false)}
         onConfirm={handleRemoveProfile}
         title={t('title.confirm_remove_profile')}
         body={t('body.remove_profile')}
         acceptButtonText={t('action.confirm')}
         cancelButtonText={t('action.cancel')}
+        loading={uiStateStore!.removingProfile}
       />
       <Toolbar
+        changingProfile={uiStateStore!.changingProfile}
+        signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
+        groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
         toggleSidenav={() => uiStateStore!.toggleSidenav()}
+        toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
         markAllNotificationsRead={() => notificationStore!.markAllAsRead()}
         handleProfileChange={handleProfileChange}
         handleSnapshot={handleSnapshot}
@@ -110,12 +109,15 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() => setShowConfirmClearSnapshotsDialog(true)}
-        handleRemoveProfile={() => setShowConfirmRemoveProfileDialog(true)}
-        isSnapshotting={
-          accountStore!.getSelectedAccount.activeProfile.isSnapshotting
+        handleClearSnapshots={() =>
+          uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)
         }
+        handleRemoveProfile={() =>
+          uiStateStore!.setConfirmRemoveProfileDialogOpen(true)
+        }
+        isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating}
+        profilesLoaded={uiStateStore!.profilesLoaded}
       />
     </>
   );
@@ -124,5 +126,6 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 export default inject(
   'uiStateStore',
   'accountStore',
-  'notificationStore'
+  'notificationStore',
+  'signalrStore'
 )(observer(ToolbarContainer));

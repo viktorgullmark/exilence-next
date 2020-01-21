@@ -3,6 +3,6 @@ import { IProfile } from './profile.interface';
 export interface IAccountAuth {
     uuid: string;
     name: string;
-    token: string;
+    accessToken: string;
     profiles: IProfile[];
 }

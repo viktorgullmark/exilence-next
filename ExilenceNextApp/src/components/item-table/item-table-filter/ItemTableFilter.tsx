@@ -4,6 +4,7 @@ import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import { observer } from 'mobx-react';
 
 export interface TableFilterProps<T> {
   array: T[];
@@ -57,4 +58,4 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
   );
 };
 
-export default ItemTableFilter;
+export default observer(ItemTableFilter);

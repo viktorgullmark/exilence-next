@@ -21,6 +21,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Services;
 using API.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using API.Providers;
+using MessagePack;
 
 namespace API
 {
@@ -59,6 +62,12 @@ namespace API
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
                 o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
+            }).AddMessagePackProtocol(options =>
+            {
+                options.FormatterResolvers = new List<MessagePack.IFormatterResolver>()
+                {
+                    MessagePack.Resolvers.StandardResolver.Instance
+                };
             });
 
             services.AddAuthentication(x =>
@@ -74,8 +83,9 @@ namespace API
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Settings")["Secret"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateIssuer = false
+
                 };
                 // https://docs.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-3.0
                 x.Events = new JwtBearerEvents
@@ -93,6 +103,9 @@ namespace API
                     }
                 };
             });
+
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,7 +116,6 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseAuthentication();
@@ -120,7 +132,7 @@ namespace API
             //Remove faulty connections to this node on startup if node crasched
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
             //Remove groups with no connections after connection cleanup
-            exilenceContext.Database.ExecuteSqlRaw($"delete from Groups where Id in (select g.Id from Groups g where (select count(*) from Connections where GroupId = g.Id) = 0)");
+            exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT g.Id FROM Groups g WHERE (SELECT COUNT(*) FROM Connections WHERE GroupId = g.Id) = 0)");
         }
     }
 }

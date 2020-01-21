@@ -22,6 +22,17 @@ const ReactionContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
     }
   );
 
+  reaction(
+    () => uiStateStore!.redirectedTo,
+    (_path, reaction) => {
+      if (_path && location.pathname !== _path) {
+        history.push(_path);
+      }
+      reaction.dispose();
+    }
+  );
+
+
   return null;
 };
 

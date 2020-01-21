@@ -44,8 +44,14 @@ namespace BackgroundProcessor
                 Console.WriteLine($"{message}");
             });
 
+            var groupModel = new GroupModel()
+            {
+                Name = $"Logger",
+                Password = password
+            };
+
             await _connection.StartAsync();
-            await _connection.InvokeAsync("AddLogger", password);
+            await _connection.InvokeAsync("AddLogger", groupModel);
 
             Console.ReadLine();
         }
@@ -57,11 +63,11 @@ namespace BackgroundProcessor
                 var accountModel = new AccountModel()
                 {
                     ClientId = Guid.NewGuid().ToString(),
-                    Name = "Logger"
+                    Name = $"{Environment.MachineName} Logger"
 
                 };
                 var data = JsonSerializer.Serialize(accountModel);
-                var result = await httpClient.PostAsync("https://localhost:5001/api/authentication", new StringContent(data, Encoding.UTF8, "application/json"));
+                var result = await httpClient.PostAsync("https://localhost:5001/api/authentication/token", new StringContent(data, Encoding.UTF8, "application/json"));
                 string token = await result.Content.ReadAsStringAsync();
                 return token;
             }

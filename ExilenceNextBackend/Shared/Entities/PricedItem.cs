@@ -9,10 +9,11 @@ namespace Shared.Entities
     public class PricedItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(TypeName = "decimal(19)")]
-        public decimal Id { get; set; }
+        public long Id { get; set; }
         [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
         public string ClientId { get; set; }
+        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
+        public string ItemId { get; set; }
         public string Name { get; set; }
         public string TypeLine { get; set; }
         public int FrameType { get; set; }

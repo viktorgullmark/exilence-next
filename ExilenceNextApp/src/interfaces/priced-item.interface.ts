@@ -1,7 +1,7 @@
-
 export interface IPricedItem {
-  id: string;
+  uuid: string;
   name: string;
+  itemId: string;
   typeLine: string;
   frameType: number;
   total: number;

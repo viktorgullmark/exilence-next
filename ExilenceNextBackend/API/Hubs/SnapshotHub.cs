@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MessagePack;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Shared.Entities;
 using Shared.Models;
+using Shared.TemporaryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +15,6 @@ namespace API.Hubs
 {
     public partial class BaseHub : Hub
     {
-        /* STUFF TODO
-         * Add Snapshots
-         * Add Stashtabs to Snapshot
-         * Retrive Snapshot
-         * Retrive Stashtabs for Snapshot
-         * 
-         */
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
@@ -28,50 +23,99 @@ namespace API.Hubs
             return snapshotModel;
         }
 
-        public async Task<SnapshotModel> AddSnapshot([FromBody]SnapshotModel snapshotModel, string profileId)
+        public async Task<SnapshotModel> GetLatestSnapshotForProfile(string profileId)
+        {
+            var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
+            var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
+            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
+
+            await Log($"Retrived latest snapshot with ClientId: {snapshotModelWithItems.ClientId} worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos.");
+            return snapshotModelWithItems;
+        }
+
+        public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
             snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
             await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
+            }
+
             return snapshotModel;
         }
 
-        public async Task<string> RemoveSnapshot(string profileClientId, string snapshotId)
+        public async Task<string> RemoveSnapshot(string snapshotId)
         {
-            var snapshotModel = await _snapshotService.RemoveSnapshot(profileClientId, snapshotId);
-            await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await _snapshotService.RemoveSnapshot(snapshotId);
+            await Log($"Removed snapshot with ClientId: {snapshotId}.");
+
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
+            {
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
+            }
+
             return snapshotId;
         }
 
-        public async Task AddPricedItems(List<PricedItemModel> pricedItems, string stashtabId)
+        public async Task RemoveAllSnapshots(string profileClientId)
         {
-            await _snapshotService.AddPricedItems(stashtabId, pricedItems);
-        }
+            await _snapshotService.RemoveAllSnapshots(profileClientId);
+            await Log($"Removed snapshot for ProfileId: {profileClientId}");
 
-        public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
-        {
-            await foreach (var pricedItem in pricedItems)
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
             {
-                await _snapshotService.AddPricedItem(stashtabId, pricedItem);
+                await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
             }
         }
-
-        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        
+        public async Task<StashtabModel> AddPricedItems(UpdatePricedItemsModel updateModel)
         {
-            var snapshots = _snapshotService.GetStashtabs(snapshotId);
+            var stashTabModel = await _snapshotService.AddPricedItems(updateModel.StashTabId, updateModel.PricedItems);
+            await Log($"Added {updateModel.PricedItems.Count} pricedItems to StashTabId: {updateModel.StashTabId}");
 
-            foreach (var snapshot in snapshots)
+            var group = await _groupService.GetGroupForConnection(ConnectionId);
+            if (group != null)
             {
-                // Check the cancellation token regularly so that the server will stop
-                // producing items if the client disconnects.
-                cancellationToken.ThrowIfCancellationRequested();
-
-                yield return _mapper.Map<SnapshotModel>(snapshot);
-
-                // Use the cancellationToken in other APIs that accept cancellation
-                // tokens so the cancellation can flow down to them.
-                await Task.Delay(100, cancellationToken);
+                updateModel.ConnectionId = ConnectionId;
+                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
             }
+
+            return stashTabModel;
         }
+
+
+        #region Streams
+        //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
+        //{
+        //    await foreach (var pricedItem in pricedItems)
+        //    {
+        //        await _snapshotService.AddPricedItem(stashtabId, pricedItem);
+        //    }
+        //}
+
+        //public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        //{
+        //    var snapshots = _snapshotService.GetStashtabs(snapshotId);
+
+        //    foreach (var snapshot in snapshots)
+        //    {
+        //        // Check the cancellation token regularly so that the server will stop
+        //        // producing items if the client disconnects.
+        //        cancellationToken.ThrowIfCancellationRequested();
+
+        //        yield return _mapper.Map<SnapshotModel>(snapshot);
+
+        //        // Use the cancellationToken in other APIs that accept cancellation
+        //        // tokens so the cancellation can flow down to them.
+        //        await Task.Delay(100, cancellationToken);
+        //    }
+        //}
+        #endregion
 
     }
 }

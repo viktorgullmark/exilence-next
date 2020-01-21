@@ -1,7 +1,6 @@
-import { IPricedItem } from '../priced-item.interface';
-
-export interface IApiPricedItem {
+export interface IPricedItem {
   uuid: string;
+  itemId: string;
   name: string;
   typeLine: string;
   frameType: number;

@@ -10,8 +10,10 @@ namespace Shared.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
+        [Required, StringLength(50)] // This is our own id.
         public string ClientId { get; set; }
+        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
+        public string StashTabId { get; set; }
         public string Name { get; set; }
         public int Index { get; set; }
         public string Color { get; set; }

@@ -25,6 +25,8 @@ const VisibilityIcon: React.FC<Props> = ({
         title={t('label.toggle_visibility_icon_title')}
         onClick={handleClickShowIcon}
         onMouseDown={handleMouseDownIcon}
+        edge="start"
+        size="small"
       >
         {visible ? <Visibility /> : <VisibilityOff />}
       </IconButton>

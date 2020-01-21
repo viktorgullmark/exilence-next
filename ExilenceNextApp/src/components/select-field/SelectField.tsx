@@ -3,7 +3,9 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Select
+  Select,
+  makeStyles,
+  Theme
 } from '@material-ui/core';
 import { useField } from 'formik';
 import React from 'react';
@@ -17,6 +19,12 @@ interface Props {
   options?: ISelectOption[];
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(2)
+  }
+}));
+
 const SelectField: React.FC<Props> = ({
   name,
   label,
@@ -24,6 +32,7 @@ const SelectField: React.FC<Props> = ({
   required,
   children
 }) => {
+  const classes = useStyles();
   const [field, meta] = useField(name);
   const { labelWidth, ref } = useLabelWidth(0);
 
@@ -32,6 +41,7 @@ const SelectField: React.FC<Props> = ({
       variant="outlined"
       error={meta.touched && !!meta.error}
       required={required}
+      className={classes.root}
       fullWidth
     >
       <InputLabel ref={ref}>{label}</InputLabel>

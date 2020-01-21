@@ -1,5 +1,5 @@
-import { IStashTabSnapshot } from './stash-tab-snapshot.interface';
+import { StashTabSnapshot } from '../store/domains/stashtab-snapshot';
 
 export interface ISnapshot {
-  stashTabSnapshots: Array<IStashTabSnapshot>;
+  stashTabSnapshots: Array<StashTabSnapshot>;
 }

@@ -1,3 +1,10 @@
 {
-    "no_characters_in_league": "You have no characters in the selected league"
+    "no_characters_in_league": "You have no characters in the selected league",
+    "group_not_found": "Group not found",
+    "group_already_exists": "Group already exists",
+    "not_connected": "Not connected to server",
+    "profile_not_found": "Profile not found",
+    "connection_not_found": "Connection not found",
+    "no_token_set": "No token set",
+    "token_expired": "Token expired"
 }

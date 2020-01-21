@@ -6,6 +6,13 @@ import { toolbarHeight, resizeHandleContainerHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import { useLocation } from 'react-router';
 import clsx from 'clsx';
+import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
+import { UiStateStore } from '../../store/uiStateStore';
+import { observer, inject } from 'mobx-react';
+
+interface Props {
+  uiStateStore?: UiStateStore;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,20 +25,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       resizeHandleContainerHeight +
       innerToolbarHeight +
       theme.spacing(2)
+  },
+  rightMargin: {
+    right: drawerWidth + theme.spacing(2)
   }
 }));
 
-const ToastWrapper: React.FC = () => {
+const ToastWrapper: React.FC<Props> = ({ uiStateStore }: Props) => {
   const classes = useStyles();
   const location = useLocation();
 
   return (
     <ToastContainer
       className={clsx(classes.root, {
-        [classes.authorized]: location.pathname !== '/login'
+        [classes.authorized]: location.pathname !== '/login',
+        [classes.rightMargin]: uiStateStore!.groupOverviewOpen
       })}
     />
   );
 };
 
-export default ToastWrapper;
+export default inject('uiStateStore')(observer(ToastWrapper));
+
