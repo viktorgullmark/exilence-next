@@ -47,9 +47,6 @@ namespace API.Hubs
             _snapshotService = snapshotService;
             _accountService = accountService;
             _groupService = groupService;
-
-
-
         }
 
         public override async Task OnConnectedAsync()
