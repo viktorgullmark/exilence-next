@@ -8,6 +8,7 @@ namespace API.Interfaces
 {
     public interface IAccountService
     {
+        Task<ConnectionModel> GetConnection(string accountName);
         Task<AccountModel> GetAccount(string accountName);
         Task<AccountModel> AddAccount(AccountModel accountModel);
         Task<AccountModel> EditAccount(AccountModel accountModel);

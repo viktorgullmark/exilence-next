@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Shared.Models;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -53,6 +54,10 @@ namespace API.Hubs
         {
             await Log($"ConnectionId: {ConnectionId} connected");
 
+            var existingConnection = await _accountService.GetConnection(AccountName);
+            await CloseConnection(existingConnection.ConnectionId);
+            await _groupService.RemoveConnection(ConnectionId);
+
             var connection = new ConnectionModel() {
                 ConnectionId = ConnectionId,
                 InstanceName = _instanceName
@@ -73,9 +78,9 @@ namespace API.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public string GetConnectionId()
+        public async Task CloseConnection(string connectionId)
         {
-            return Context.ConnectionId;
+            await Clients.Client(connectionId).SendAsync("CloseConnection");
         }
 
         private async Task Log (string message)
