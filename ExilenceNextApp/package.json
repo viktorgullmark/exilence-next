@@ -54,7 +54,6 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-toastify": "^5.4.1",
-    "react-vis": "^1.11.7",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
     "tslib": "^1.10.0",
