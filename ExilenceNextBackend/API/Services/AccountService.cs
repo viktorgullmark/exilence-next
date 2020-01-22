@@ -30,6 +30,12 @@ namespace API.Services
             return _mapper.Map<AccountModel>(account);
         }
 
+        public async Task<ConnectionModel> GetConnection(string accountName)
+        {
+            var account = await _accountRepository.GetConnections(connection => connection.Account.Name == accountName).FirstOrDefaultAsync();
+            return _mapper.Map<ConnectionModel>(account);
+        }
+
         public async Task<AccountModel> AddAccount(AccountModel accountModel)
         {
             var account = _mapper.Map<Account>(accountModel);

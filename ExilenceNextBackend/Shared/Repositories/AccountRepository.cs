@@ -35,6 +35,11 @@ namespace Shared.Repositories
             return _exilenceContext.Accounts.Where(predicate);
         }
 
+        public IQueryable<Connection> GetConnections(Expression<Func<Connection, bool>> predicate)
+        {
+            return _exilenceContext.Connections.Where(predicate);
+        }
+
         public IQueryable<SnapshotProfile> GetProfiles(Expression<Func<SnapshotProfile, bool>> predicate)
         {
             return _exilenceContext.SnapshotProfiles.Where(predicate);

@@ -11,6 +11,16 @@ export class SignalrHub {
   constructor() {}
 
   @action
+  stopConnection() {
+    if (!this.connection) {
+      return throwError('error:not_connected');
+    }
+    return from(this.connection.stop().then(() => {
+      stores.signalrStore.setOnline(false);
+    }));
+  }
+
+  @action
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
@@ -34,7 +44,7 @@ export class SignalrHub {
               'success'
             );
             stores.signalrStore.setOnline(true);
-            stores.accountStore.initSession();
+            stores.accountStore.initSession(true);
           });
 
           this.connection!.onreconnecting(e => {

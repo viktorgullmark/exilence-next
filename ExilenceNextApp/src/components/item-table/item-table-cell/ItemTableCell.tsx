@@ -12,7 +12,7 @@ import { ItemUtils } from '../../../utils/item.utils';
 
 const useStyles = makeStyles(theme => ({
   tableCell: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(0.75),
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(1)
+    padding: theme.spacing(0.5)
   },
   iconImg: {
     minHeight: 35,
