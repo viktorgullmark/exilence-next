@@ -11,7 +11,6 @@ import { Tooltip, withTooltip } from '@vx/tooltip';
 import { bisector, extent, max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 import React from 'react';
-import '../../../node_modules/react-vis/dist/style.css';
 import {
   primaryDarker,
   primaryLighter
