@@ -1,18 +1,16 @@
 import { Box } from '@material-ui/core';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 import { localPoint } from '@vx/event';
 import { LinearGradient } from '@vx/gradient';
 import { GridColumns, GridRows } from '@vx/grid';
 import { Group } from '@vx/group';
-import { appleStock } from '@vx/mock-data';
 import { scaleLinear, scaleTime } from '@vx/scale';
 import { AreaClosed, Bar, Line } from '@vx/shape';
 import { Tooltip, withTooltip } from '@vx/tooltip';
 import { bisector, extent, max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 import React from 'react';
-import { AreaSeriesPoint } from 'react-vis';
 import '../../../node_modules/react-vis/dist/style.css';
 import {
   primaryDarker,
@@ -29,12 +27,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingLeft: 15
-  }
-}));
 
 const areEqual = (prevProps: any, nextProps: any) => {
   if (nextProps.tooltipLeft && prevProps.tooltipLeft) {
@@ -54,7 +46,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
   ({ width, height, chartData, ...props }) => {
     const theme = useTheme();
 
-    const formatDate = timeFormat("%b %d, %I:%M");
+    const formatDate = timeFormat('%b %d, %I:%M');
     const data: DataPoint[] = chartData;
 
     const margin = {

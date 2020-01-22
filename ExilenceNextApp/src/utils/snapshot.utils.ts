@@ -93,7 +93,6 @@ export class SnapshotUtils {
   public static formatSnapshotsForChart(
     snapshots: IApiSnapshot[]
   ): DataPoint[] {
-    console.log(snapshots);
     return snapshots.map(s => {
       return {
         date: s.created,
