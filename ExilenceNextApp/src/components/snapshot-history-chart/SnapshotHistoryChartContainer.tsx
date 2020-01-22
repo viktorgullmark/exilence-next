@@ -25,15 +25,15 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
     return activeProfile ? activeProfile.chartData : [];
   };
 
+  const getChartLength = () => {
+    return activeGroup ? activeGroup.chartData.length : chartData().length;
+  };
+
   const { activeGroup } = signalrStore!;
 
   return (
     <div ref={parentRef} style={{ height: '100%', width: '100%' }}>
-      {(activeGroup ? (
-        activeGroup.chartData.length
-      ) : (
-        chartData().length > 20
-      )) ? (
+      {getChartLength() > 20 ? (
         <SnapshotHistoryChart
           width={size.width}
           height={size.height}
