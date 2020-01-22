@@ -18,10 +18,12 @@ All notable changes to this project will be documented in this file.
     - Added indicator that shows if you're disconnected from our servers
     - Communication via websockets, with automatic reconnect
         - Using the messagepack protocol (binary)
+- Added a basic chart that displays snapshot history
 - Added migrations to client
 - Added description to notifications
 - Added link to Patreon page
 ##### Changed
+- Reduced spacing in item table for a more minimalistic look
 - Replaced the warning text in the item table with an icon
 ##### Removed
 - Removed account name field at login screen (fetched via OAuth2 instead)

@@ -80,7 +80,9 @@ export class SnapshotUtils {
   public static getValueForSnapshotsTabs(snapshots: IApiSnapshot[]) {
     return snapshots
       .flatMap(sts => sts.stashTabs)
-      .flatMap(sts => sts.value)
+      .flatMap(sts => sts.pricedItems)
+      .flatMap(item => item.total)
+      .filter(value => value >= stores.settingStore.priceTreshold)
       .reduce((a, b) => a + b, 0);
   }
 

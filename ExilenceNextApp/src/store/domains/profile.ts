@@ -293,6 +293,7 @@ export class Profile {
         );
 
         stashTabWithItems.value = stashTabWithItems.pricedItems
+          .filter(item => (item.calculated * item.stackSize) >= stores.settingStore.priceTreshold)
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
 
@@ -322,6 +323,7 @@ export class Profile {
 
   @action
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
+    console.log(pricedStashTabs);
     const snapshot: ISnapshot = {
       stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
     };
