@@ -84,6 +84,7 @@ namespace API.Hubs
 
         public async Task CloseConnection(string connectionId)
         {
+            await Log($"Telling connectionId: {connectionId} to close");
             await Clients.Client(connectionId).SendAsync("OnCloseConnection");
         }
 
