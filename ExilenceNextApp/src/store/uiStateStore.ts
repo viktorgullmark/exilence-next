@@ -70,7 +70,7 @@ export class UiStateStore {
   setCreatingGroup(creating: boolean) {
     this.creatingGroup = creating;
   }
-  
+
   @action
   setLeavingGroup(leaving: boolean) {
     this.leavingGroup = leaving;
@@ -84,7 +84,7 @@ export class UiStateStore {
   @action
   setConfirmClearSnapshotsDialogOpen(open: boolean) {
     this.confirmClearSnapshotsDialogOpen = open;
-  } 
+  }
 
   @action
   setConfirmRemoveProfileDialogOpen(open: boolean) {
@@ -161,7 +161,8 @@ export class UiStateStore {
   @action
   toggleGroupOverview(open?: boolean) {
     this.sidenavOpen = false;
-    this.groupOverviewOpen = open !== undefined ? open : !this.groupOverviewOpen;
+    this.groupOverviewOpen =
+      open !== undefined ? open : !this.groupOverviewOpen;
   }
 
   @action

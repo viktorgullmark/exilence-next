@@ -82,7 +82,8 @@
     "initiating_session_spinner_title": "Initiating session",
     "generate_name_icon_title": "Generate name",
     "server_offline_title": "Not connected to server",
-    "no_snapshots_title": "No snapshots found for selection"
+    "no_snapshots_title": "No snapshots found for selection",
+    "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots"
   },
   "value": {
     "none": "None",

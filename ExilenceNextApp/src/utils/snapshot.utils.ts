@@ -7,6 +7,8 @@ import { Snapshot } from '../store/domains/snapshot';
 import { ColourUtils } from './colour.utils';
 import { stores } from '..';
 import { ItemUtils } from './item.utils';
+import { AreaSeriesPoint } from 'react-vis';
+import { DataPoint } from '../components/snapshot-history-chart/SnapshotHistoryChart';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
@@ -69,16 +71,34 @@ export class SnapshotUtils {
       });
   }
 
-  public static calculateNetWorth(snapshots: IApiSnapshot[]) {
-    // todo: test calculation, might be wrong with first flatmap
-    const values = snapshots
-      .flatMap(sts => sts.stashTabs)
-      .flatMap(sts => sts.pricedItems)
-      .flatMap(item => item.total)
-      .filter(value => value >= stores.settingStore.priceTreshold)
+  public static getValueForSnapshot(snapshot: IApiSnapshot) {
+    return snapshot.stashTabs
+      .map(sts => sts.value)
       .reduce((a, b) => a + b, 0);
+  }
+
+  public static getValueForSnapshotsTabs(snapshots: IApiSnapshot[]) {
+    return snapshots
+      .flatMap(sts => sts.stashTabs)
+      .flatMap(sts => sts.value)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  public static calculateNetWorth(snapshots: IApiSnapshot[]) {
+    const values = SnapshotUtils.getValueForSnapshotsTabs(snapshots);
 
     return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  public static formatSnapshotsForChart(
+    snapshots: IApiSnapshot[]
+  ): DataPoint[] {
+    return snapshots.map(s => {
+      return {
+        date: s.created,
+        value: +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
+      };
+    }).reverse();
   }
 
   public static filterItems(snapshots: IApiSnapshot[]) {

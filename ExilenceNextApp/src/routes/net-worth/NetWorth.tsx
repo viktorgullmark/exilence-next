@@ -15,6 +15,7 @@ import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
+import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -23,6 +24,8 @@ interface NetWorthProps {
 }
 
 export const netWorthGridSpacing = 3;
+export const cardHeight = 100;
+export const chartHeight = 200;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
@@ -64,7 +67,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
@@ -76,7 +79,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.itemCount : itemCount()}
@@ -86,7 +89,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
               value={
@@ -98,6 +101,11 @@ const NetWorth: React.FC<NetWorthProps> = ({
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
+          </Widget>
+        </Grid>
+        <Grid item xs={6} md={3} lg={3} style={{ overflow: 'hidden' }}>
+          <Widget backgroundColor={theme.palette.background.default} compact>
+            <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>
         <Grid item xs={12}>
