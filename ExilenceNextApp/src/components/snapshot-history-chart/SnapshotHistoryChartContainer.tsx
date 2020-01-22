@@ -33,7 +33,7 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
 
   return (
     <div ref={parentRef} style={{ height: '100%', width: '100%' }}>
-      {getChartLength() > 20 ? (
+      {getChartLength() >= 10 ? (
         <SnapshotHistoryChart
           width={size.width}
           height={size.height}
