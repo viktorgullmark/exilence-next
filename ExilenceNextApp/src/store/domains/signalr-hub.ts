@@ -42,7 +42,7 @@ export class SignalrHub {
               'success'
             );
             stores.signalrStore.setOnline(true);
-            stores.accountStore.initSession();
+            stores.accountStore.initSession(true);
           });
 
           this.connection!.onreconnecting(e => {
