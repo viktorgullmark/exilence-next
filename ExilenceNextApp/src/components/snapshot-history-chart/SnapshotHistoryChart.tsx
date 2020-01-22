@@ -1,25 +1,20 @@
 import { Box } from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { AxisBottom, AxisLeft } from '@vx/axis';
+import { localPoint } from '@vx/event';
+import { LinearGradient } from '@vx/gradient';
+import { GridColumns, GridRows } from '@vx/grid';
 import { Group } from '@vx/group';
 import { appleStock } from '@vx/mock-data';
 import { scaleLinear, scaleTime } from '@vx/scale';
 import { AreaClosed, Bar, Line } from '@vx/shape';
-import { extent, max, bisector } from 'd3-array';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { AreaSeriesPoint, makeWidthFlexible, XYPlot } from 'react-vis';
-import '../../../node_modules/react-vis/dist/style.css';
-import { LinearGradient } from '@vx/gradient';
-import {
-  primaryLighter,
-  primaryDarker
-} from '../../assets/themes/exilence-theme';
-import { GridRows, GridColumns } from '@vx/grid';
-import { withTooltip, Tooltip } from '@vx/tooltip';
-import { WithTooltipProvidedProps } from '@vx/tooltip/lib/enhancers/withTooltip';
-import { localPoint } from '@vx/event';
+import { Tooltip, withTooltip } from '@vx/tooltip';
+import { bisector, extent, max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
+import React from 'react';
+import { AreaSeriesPoint } from 'react-vis';
+import '../../../node_modules/react-vis/dist/style.css';
+import { primaryDarker, primaryLighter } from '../../assets/themes/exilence-theme';
 
 export interface DataPoint {
   x: any;
@@ -54,9 +49,6 @@ const areEqual = (prevProps: any, nextProps: any) => {
 
 const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
   ({ width, height, ...props }) => {
-    const [value, setValue] = useState<AreaSeriesPoint | undefined>(undefined);
-    const classes = useStyles();
-    const { t } = useTranslation();
     const theme = useTheme();
 
     const formatDate = timeFormat("%b %d, '%y");
@@ -113,15 +105,19 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
       });
     };
 
+    const calculateLeftTooltip = () => {
+      return props.tooltipLeft + 100 < width ? props.tooltipLeft + 12 : props.tooltipLeft - 70 ;
+    }
+
     const chart = (
-      <svg width={width} height={height}>
+      <svg width={width} height={height} style={{ borderRadius: 4 }}>
         <rect
           x={0}
           y={0}
           width={width}
           height={height}
           fill={theme.palette.background.default}
-          rx={2}
+          rx={14}
         />
         <defs>
           <LinearGradient
@@ -153,15 +149,15 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
             lineStyle={{ pointerEvents: 'none' }}
             scale={yScale}
             width={xMax}
-            strokeDasharray="2,2"
-            stroke="rgba(255,255,255,0.3)"
+            strokeDasharray="1,1"
+            stroke="rgba(255,255,255,0.1)"
           />
           <GridColumns
             lineStyle={{ pointerEvents: 'none' }}
             scale={xScale}
             height={yMax}
-            strokeDasharray="2,2"
-            stroke="rgba(255,255,255,0.3)"
+            strokeDasharray="1,1"
+            stroke="rgba(255,255,255,0.1)"
           />
           <AreaClosed
             data={data}
@@ -176,16 +172,12 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
             width={width}
             height={height}
             fill="transparent"
-            rx={2}
+            rx={14}
             onTouchStart={event =>
               handleTooltip(event, data, x, xScale, yScale)
             }
-            onTouchMove={event =>
-              handleTooltip(event, data, x, xScale, yScale)
-            }
-            onMouseMove={event =>
-              handleTooltip(event, data, x, xScale, yScale)
-            }
+            onTouchMove={event => handleTooltip(event, data, x, xScale, yScale)}
+            onMouseMove={event => handleTooltip(event, data, x, xScale, yScale)}
             onMouseLeave={event => props.hideTooltip()}
           />
           {props.tooltipData && (
@@ -230,7 +222,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
           <div>
             <Tooltip
               top={props.tooltipTop - 12}
-              left={props.tooltipLeft + 12}
+              left={calculateLeftTooltip()}
               style={{
                 backgroundColor: 'rgba(92, 119, 235, 1.000)',
                 color: 'white'
@@ -240,10 +232,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
             </Tooltip>
             <Tooltip
               top={yMax - 14}
-              left={props.tooltipLeft}
-              style={{
-                transform: 'translateX(-50%)'
-              }}
+              left={calculateLeftTooltip() - 25}
             >
               {formatDate(x(props.tooltipData))}
             </Tooltip>
@@ -251,7 +240,8 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
         )}
       </Box>
     );
-  }, areEqual
+  },
+  areEqual
 );
 
 export default React.memo(withTooltip(SnapshotHistoryChart), areEqual);

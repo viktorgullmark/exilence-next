@@ -67,7 +67,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
@@ -79,7 +79,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.itemCount : itemCount()}
@@ -89,7 +89,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={4} lg={3}>
+        <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
               value={
@@ -103,8 +103,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={12}>
-          <Widget height={chartHeight} backgroundColor={theme.palette.background.default} compact>
+        <Grid item xs={6} md={3} lg={3}>
+          <Widget backgroundColor={theme.palette.background.default} compact>
             <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>

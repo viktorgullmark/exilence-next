@@ -29,8 +29,8 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${chartHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
-        netWorthGridSpacing * 4 + tabPanelSpacing * 2 + itemTableFilterSpacing
+      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
+        netWorthGridSpacing * 3 + tabPanelSpacing * 2 + itemTableFilterSpacing
       )}px - ${netWorthTabGroupHeight}px)`
     },
     tableWrapper: {
