@@ -11,6 +11,14 @@ export class SignalrHub {
   constructor() {}
 
   @action
+  stopConnection() {
+    if (!this.connection) {
+      return throwError('error:not_connected');
+    }
+    return from(this.connection.stop());
+  }
+
+  @action
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
