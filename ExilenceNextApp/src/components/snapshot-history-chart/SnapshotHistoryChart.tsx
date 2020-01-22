@@ -14,15 +14,18 @@ import { timeFormat } from 'd3-time-format';
 import React from 'react';
 import { AreaSeriesPoint } from 'react-vis';
 import '../../../node_modules/react-vis/dist/style.css';
-import { primaryDarker, primaryLighter } from '../../assets/themes/exilence-theme';
+import {
+  primaryDarker,
+  primaryLighter
+} from '../../assets/themes/exilence-theme';
 
 export interface DataPoint {
-  x: any;
-  y: any;
+  date: any;
+  value: any;
 }
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  data?: AreaSeriesPoint[];
+  chartData: DataPoint[];
   width: number;
   height: number;
 }
@@ -48,11 +51,11 @@ const areEqual = (prevProps: any, nextProps: any) => {
 };
 
 const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
-  ({ width, height, ...props }) => {
+  ({ width, height, chartData, ...props }) => {
     const theme = useTheme();
 
     const formatDate = timeFormat("%b %d, '%y");
-    const data = appleStock.slice(800);
+    const data: DataPoint[] = chartData;
 
     const margin = {
       top: 0,
@@ -65,7 +68,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
     const yMax = height - margin.top - margin.bottom;
 
     const x = (d: { date: string | number | Date }) => new Date(d.date);
-    const y = (d: { close: any }) => d.close;
+    const y = (d: { value: any }) => d.value;
     const bisectDate = bisector(
       (d: { date: string | number | Date }) => new Date(d.date)
     ).left;
@@ -98,16 +101,20 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
         d = x0 - xStock(d0.date) > xStock(d1.date) - x0 ? d1 : d0;
       }
 
-      props.showTooltip({
-        tooltipData: d,
-        tooltipLeft: point.x,
-        tooltipTop: yScale(d.close)
-      });
+      if (d) {
+        props.showTooltip({
+          tooltipData: d,
+          tooltipLeft: point.x,
+          tooltipTop: yScale(d.value)
+        });
+      }
     };
 
     const calculateLeftTooltip = () => {
-      return props.tooltipLeft + 100 < width ? props.tooltipLeft + 12 : props.tooltipLeft - 70 ;
-    }
+      return props.tooltipLeft + 100 < width
+        ? props.tooltipLeft + 12
+        : props.tooltipLeft - 70;
+    };
 
     const chart = (
       <svg width={width} height={height} style={{ borderRadius: 4 }}>
@@ -134,7 +141,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
             scale={yScale}
             top={0}
             left={0}
-            label={'Close Price ($)'}
+            label={'Value '}
             stroke={'#1b1a1e'}
             tickStroke={'#1b1a1e'}
           />
@@ -230,10 +237,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
             >
               {y(props.tooltipData)}
             </Tooltip>
-            <Tooltip
-              top={yMax - 14}
-              left={calculateLeftTooltip() - 25}
-            >
+            <Tooltip top={yMax - 14} left={calculateLeftTooltip() - 25}>
               {formatDate(x(props.tooltipData))}
             </Tooltip>
           </div>

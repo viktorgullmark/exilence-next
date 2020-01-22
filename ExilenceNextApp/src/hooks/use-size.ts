@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-function useChartSize(windowWidth: number) {
+function useSize(listener?: number) {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -10,9 +10,10 @@ function useChartSize(windowWidth: number) {
     const height = ref.current ? ref.current.clientHeight : 0;
     setWidth(width);
     setHeight(height);
-  }, [windowWidth]);
+  }, [listener]);
 
   return { width, height, ref };
 }
 
-export default useChartSize;
+export default useSize;
+

@@ -103,7 +103,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3}>
+        <Grid item xs={6} md={3} lg={3} style={{ overflow: 'hidden' }}>
           <Widget backgroundColor={theme.palette.background.default} compact>
             <SnapshotHistoryChartContainer />
           </Widget>

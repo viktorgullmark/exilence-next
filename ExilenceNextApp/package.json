@@ -8,6 +8,7 @@
     "@material-ui/styles": "^4.5.2",
     "@microsoft/signalr": "^3.1.0",
     "@microsoft/signalr-protocol-msgpack": "^3.1.0",
+    "@rehooks/component-size": "^1.0.3",
     "@sentry/browser": "^5.9.1",
     "@sentry/electron": "^1.0.0",
     "@types/d3-array": "^2.0.0",

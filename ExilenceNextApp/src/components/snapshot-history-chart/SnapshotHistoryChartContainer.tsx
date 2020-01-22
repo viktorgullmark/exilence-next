@@ -1,11 +1,14 @@
 import { inject, observer } from 'mobx-react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
 import { SignalrStore } from '../../store/signalrStore';
-import useChartSize from '../../hooks/use-chart-size';
+import { Box, Typography } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+import useSize from '../../hooks/use-size';
 import { useWindowSize } from '../../hooks/use-window-size';
+import useComponentSize from '@rehooks/component-size'
 
 interface Props {
   accountStore?: AccountStore;
@@ -18,8 +21,11 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   signalrStore,
   uiStateStore
 }: Props) => {
-  const [windowWidth,] = useWindowSize();
-  const { width, height, ref } = useChartSize(windowWidth);
+  const { t } = useTranslation();
+  const [windowWidth] = useWindowSize();
+  let parentRef = useRef(null)
+  let size = useComponentSize(parentRef)
+  const { width, height, ref } = useSize(size.width);
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
   const chartData = () => {
@@ -29,12 +35,28 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   const { activeGroup } = signalrStore!;
 
   return (
-    <div ref={ref} style={{ height: '100%', width: '100%'}}>
-      <SnapshotHistoryChart
-        width={width}
-        height={height}
-        data={activeGroup ? activeGroup.chartData : chartData()}
-      />
+    <div style={{ height: '100%', width: '100%' }} ref={parentRef}>
+      <div ref={ref} style={{ height: '100%', width: '100%' }}>
+        {(activeGroup ? activeGroup.chartData.length : chartData().length > 20) ? (
+          <SnapshotHistoryChart
+            width={width}
+            height={height}
+            chartData={activeGroup ? activeGroup.chartData : chartData()}
+          />
+        ) : (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+            p={2}
+          >
+            <Typography variant="subtitle2" align="center">
+              {t('label.snapshot_length_requirement_text')}
+            </Typography>
+          </Box>
+        )}
+      </div>
     </div>
   );
 };

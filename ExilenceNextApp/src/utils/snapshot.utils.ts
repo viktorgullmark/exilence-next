@@ -73,23 +73,19 @@ export class SnapshotUtils {
 
   public static getValueForSnapshot(snapshot: IApiSnapshot) {
     return snapshot.stashTabs
-      .flatMap(sts => sts.pricedItems)
-      .flatMap(item => item.total)
-      .filter(value => value >= stores.settingStore.priceTreshold)
+      .map(sts => sts.value)
       .reduce((a, b) => a + b, 0);
   }
 
-  public static getValueForSnapshots(snapshots: IApiSnapshot[]) {
+  public static getValueForSnapshotsTabs(snapshots: IApiSnapshot[]) {
     return snapshots
       .flatMap(sts => sts.stashTabs)
-      .flatMap(sts => sts.pricedItems)
-      .flatMap(item => item.total)
-      .filter(value => value >= stores.settingStore.priceTreshold)
+      .flatMap(sts => sts.value)
       .reduce((a, b) => a + b, 0);
   }
 
   public static calculateNetWorth(snapshots: IApiSnapshot[]) {
-    const values = SnapshotUtils.getValueForSnapshots(snapshots);
+    const values = SnapshotUtils.getValueForSnapshotsTabs(snapshots);
 
     return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
@@ -97,12 +93,13 @@ export class SnapshotUtils {
   public static formatSnapshotsForChart(
     snapshots: IApiSnapshot[]
   ): DataPoint[] {
+    console.log(snapshots);
     return snapshots.map(s => {
       return {
-        x: new Date(s.created),
-        y: SnapshotUtils.getValueForSnapshot(s)
+        date: s.created,
+        value: +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
       };
-    });
+    }).reverse();
   }
 
   public static filterItems(snapshots: IApiSnapshot[]) {
