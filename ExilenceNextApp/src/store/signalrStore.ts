@@ -9,7 +9,13 @@ import {
 } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  map,
+  switchMap,
+  retryWhen
+} from 'rxjs/operators';
 import uuid from 'uuid';
 import { stores } from '..';
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
@@ -24,6 +30,7 @@ import { Snapshot } from './domains/snapshot';
 import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
+import { genericRetryStrategy } from '../utils/rxjs.utils';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -335,6 +342,12 @@ export class SignalrStore {
               this.addSnapshotToConnection(snapshot, connectionId, profileUuid);
               this.getLatestSnapshotForProfileSuccess();
             }),
+            retryWhen(
+              genericRetryStrategy({
+                maxRetryAttempts: 5,
+                scalingDuration: 5000
+              })
+            ),
             catchError((e: AxiosError) =>
               of(this.getLatestSnapshotForProfileFail(e))
             )
@@ -433,7 +446,15 @@ export class SignalrStore {
             created: new Date(),
             connections: []
           })
-          .pipe(catchError((e: AxiosError) => of(this.joinGroupFail(e))))
+          .pipe(
+            retryWhen(
+              genericRetryStrategy({
+                maxRetryAttempts: 5,
+                scalingDuration: 5000
+              })
+            ),
+            catchError((e: AxiosError) => of(this.joinGroupFail(e)))
+          )
       );
     } else {
       this.joinGroupFail(new Error('error:not_connected'));
@@ -522,7 +543,15 @@ export class SignalrStore {
       fromStream(
         this.signalrHub
           .sendEvent<string>('LeaveGroup', this.activeGroup.name)
-          .pipe(catchError((e: AxiosError) => of(this.leaveGroupFail(e))))
+          .pipe(
+            retryWhen(
+              genericRetryStrategy({
+                maxRetryAttempts: 5,
+                scalingDuration: 5000
+              })
+            ),
+            catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
+          )
       );
     } else {
       this.leaveGroupFail(new Error('error:not_connected'));
@@ -554,6 +583,12 @@ export class SignalrStore {
             }
             return this.groupExistsSuccess();
           }),
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 5000
+            })
+          ),
           catchError((e: AxiosError) => of(this.groupExistsFail(e)))
         )
       );
@@ -595,6 +630,12 @@ export class SignalrStore {
             .invokeEvent<IApiPricedItemsUpdate>('AddPricedItems', items)
             .pipe(
               map(() => this.uploadItemsSuccess()),
+              retryWhen(
+                genericRetryStrategy({
+                  maxRetryAttempts: 5,
+                  scalingDuration: 5000
+                })
+              ),
               catchError((e: Error) => of(this.uploadItemsFail(e)))
             );
         })

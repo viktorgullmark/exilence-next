@@ -98,6 +98,12 @@ export class Account implements IAccount {
           this.getProfilesForAccountSuccess();
           return profiles;
         }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 5,
+            scalingDuration: 5000
+          })
+        ),
         catchError((e: Error) => {
           this.getProfilesForAccountFail(e);
           return throwError(e);
@@ -152,8 +158,8 @@ export class Account implements IAccount {
         }),
         retryWhen(
           genericRetryStrategy({
-            maxRetryAttempts: 3,
-            scalingDuration: 3000
+            maxRetryAttempts: 5,
+            scalingDuration: 5000
           })
         ),
         catchError(e => {
@@ -208,6 +214,12 @@ export class Account implements IAccount {
           }
           return this.setActiveProfileSuccess();
         }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 5,
+            scalingDuration: 5000
+          })
+        ),
         catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
       )
     );
@@ -253,6 +265,12 @@ export class Account implements IAccount {
             stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
             return this.removeActiveProfileSuccess();
           }),
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 5000
+            })
+          ),
           catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
         )
     );
@@ -329,6 +347,12 @@ export class Account implements IAccount {
           this.createProfileSuccess();
           return p;
         }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 5,
+            scalingDuration: 5000
+          })
+        ),
         catchError((e: AxiosError) => of(this.createProfileFail(e)))
       );
   }
