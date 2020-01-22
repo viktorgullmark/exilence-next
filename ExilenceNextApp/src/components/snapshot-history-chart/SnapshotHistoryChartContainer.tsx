@@ -22,10 +22,8 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   uiStateStore
 }: Props) => {
   const { t } = useTranslation();
-  const [windowWidth] = useWindowSize();
   let parentRef = useRef(null)
   let size = useComponentSize(parentRef)
-  const { width, height, ref } = useSize(size.width);
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
   const chartData = () => {
@@ -35,12 +33,12 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   const { activeGroup } = signalrStore!;
 
   return (
-    <div style={{ height: '100%', width: '100%' }} ref={parentRef}>
-      <div ref={ref} style={{ height: '100%', width: '100%' }}>
+    <div ref={parentRef} style={{ height: '100%', width: '100%' }} >
+      <div style={{ height: '100%', width: '100%' }}>
         {(activeGroup ? activeGroup.chartData.length : chartData().length > 20) ? (
           <SnapshotHistoryChart
-            width={width}
-            height={height}
+            width={size.width}
+            height={size.height}
             chartData={activeGroup ? activeGroup.chartData : chartData()}
           />
         ) : (
