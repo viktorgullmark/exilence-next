@@ -323,7 +323,6 @@ export class Profile {
 
   @action
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
-    console.log(pricedStashTabs);
     const snapshot: ISnapshot = {
       stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
     };
