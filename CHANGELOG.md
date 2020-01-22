@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - XXXX-XX-XX
+## [0.2.0] - 2020-01-22
 ##### Added
 - Added group system
     - Added the ability to create/join/leave a group
