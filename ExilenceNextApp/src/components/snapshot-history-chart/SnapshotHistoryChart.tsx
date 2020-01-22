@@ -54,7 +54,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
   ({ width, height, chartData, ...props }) => {
     const theme = useTheme();
 
-    const formatDate = timeFormat("%b %d, '%y");
+    const formatDate = timeFormat("%b %d, %I:%M");
     const data: DataPoint[] = chartData;
 
     const margin = {
@@ -113,7 +113,7 @@ const SnapshotHistoryChart: React.FC<any & Props> = React.memo(
     const calculateLeftTooltip = () => {
       return props.tooltipLeft + 100 < width
         ? props.tooltipLeft + 12
-        : props.tooltipLeft - 70;
+        : props.tooltipLeft - 80;
     };
 
     const chart = (
