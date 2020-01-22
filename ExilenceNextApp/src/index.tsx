@@ -40,7 +40,7 @@ export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
 initSentry();
-enableLogging();
+enableLogging({ action: true, reaction: false, transaction: false, compute: false });
 configureI18n();
 
 configure({ enforceActions: 'observed' });
