@@ -15,7 +15,9 @@ export class SignalrHub {
     if (!this.connection) {
       return throwError('error:not_connected');
     }
-    return from(this.connection.stop());
+    return from(this.connection.stop().then(() => {
+      stores.signalrStore.setOnline(false);
+    }));
   }
 
   @action
