@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Shared.Models;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -31,9 +32,9 @@ namespace API.Hubs
 
 
         public BaseHub(
-            IMapper mapper, 
+            IMapper mapper,
             ILogger<BaseHub> logger,
-            IConfiguration configuration, 
+            IConfiguration configuration,
             IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
@@ -53,11 +54,19 @@ namespace API.Hubs
         {
             await Log($"ConnectionId: {ConnectionId} connected");
 
-            var connection = new ConnectionModel() {
+            //Close already existing connection for the same account
+            var existingConnection = await _accountService.GetConnection(AccountName);
+            if (existingConnection != null)
+            {
+                await CloseConnection(existingConnection.ConnectionId);
+            }
+
+            var connection = new ConnectionModel()
+            {
                 ConnectionId = ConnectionId,
                 InstanceName = _instanceName
             };
-            await _groupService.AddConnection(connection, AccountName);            
+            await _groupService.AddConnection(connection, AccountName);
             await base.OnConnectedAsync();
         }
 
@@ -73,12 +82,13 @@ namespace API.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public string GetConnectionId()
+        public async Task CloseConnection(string connectionId)
         {
-            return Context.ConnectionId;
+            await Log($"Telling connectionId: {connectionId} to close");
+            await Clients.Client(connectionId).SendAsync("OnCloseConnection");
         }
 
-        private async Task Log (string message)
+        private async Task Log(string message)
         {
             var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
             message = $"[Account: {AccountName}] -  " + message; // Add account name

@@ -52,6 +52,14 @@ export class SignalrStore {
 
   @action
   registerEvents() {
+    this.signalrHub.onEvent('OnCloseConnection', () => {
+      fromStream(
+        this.signalrHub.stopConnection().pipe(
+          map(() => of(this.stopConnectionSuccess())),
+          catchError(e => of(this.stopConnectionFail(e)))
+        )
+      );
+    });
     this.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
       this.setActiveGroup(new Group(group));
       this.activeGroup!.setActiveAccounts(
@@ -165,6 +173,24 @@ export class SignalrStore {
   changeProfileForConnectionSuccess() {
     this.notificationStore.createNotification(
       'change_profile_for_connection',
+      'success'
+    );
+  }
+
+  @action
+  stopConnectionFail(e: Error) {
+    this.notificationStore.createNotification(
+      'stop_connection',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  stopConnectionSuccess() {
+    this.notificationStore.createNotification(
+      'stop_connection',
       'success'
     );
   }

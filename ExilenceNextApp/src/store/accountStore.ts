@@ -223,7 +223,7 @@ export class AccountStore {
   }
 
   @action
-  initSession() {
+  initSession(skipAuth?: boolean) {
     this.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
@@ -244,7 +244,7 @@ export class AccountStore {
           return forkJoin(
             externalService.getLeagues(),
             externalService.getCharacters(),
-            this.getSelectedAccount.authorize()
+            !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap(requests => {
               const retrievedLeagues = requests[0].data;

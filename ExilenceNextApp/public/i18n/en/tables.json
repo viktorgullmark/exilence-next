@@ -6,7 +6,7 @@
     "level": "Level",
     "quality": "Quality",
     "corrupted": "Corrupted",
-    "stacksize": "Stacksize",
+    "stacksize": "Quantity",
     "calculated": "Price",
     "total": "Total"
   },
