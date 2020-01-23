@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Shared.Entities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using EFCore.BulkExtensions;
 
 namespace Shared.Repositories
 {
@@ -33,6 +34,29 @@ namespace Shared.Repositories
         {
             return _exilenceContext.StashTabs.Where(predicate);
         }
+
+        public async Task BulkInsertStashTabs(List<Stashtab> stashtabs)
+        {
+            var pricedItems = new List<PricedItem>();
+
+            using (var transaction = _exilenceContext.Database.BeginTransaction())
+            {
+                var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
+                await _exilenceContext.BulkInsertAsync(stashtabs, bulkConfig);
+                foreach (var stashtab in stashtabs)
+                {
+                    foreach (var pricedItem in stashtab.PricedItems)
+                    {
+                        pricedItem.StashtabId = stashtab.Id;
+                    }
+                    pricedItems.AddRange(stashtab.PricedItems);
+                }
+                await _exilenceContext.BulkInsertAsync(pricedItems);
+
+                transaction.Commit();
+            }
+        }
+
         public async Task SaveChangesAsync()
         {
             await _exilenceContext.SaveChangesAsync();

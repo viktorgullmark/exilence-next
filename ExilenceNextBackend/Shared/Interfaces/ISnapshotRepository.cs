@@ -17,6 +17,8 @@ namespace Shared.Interfaces
         Snapshot RemoveSnapshot(Snapshot snapshot);
         Stashtab RemoveStashtab(Stashtab stashtab);
 
+        Task BulkInsertStashTabs(List<Stashtab> pricedItems);
+
         Task SaveChangesAsync();
 
 

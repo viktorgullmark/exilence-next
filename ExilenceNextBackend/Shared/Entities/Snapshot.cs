@@ -16,6 +16,7 @@ namespace Shared.Entities
         public virtual ICollection<Stashtab> StashTabs { get; set; }
         [Required]
         public virtual SnapshotProfile Profile { get; set; }
+        public virtual int ProfileId { get; set; }
 
     }
 }

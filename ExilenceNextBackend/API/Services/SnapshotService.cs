@@ -44,9 +44,20 @@ namespace API.Services
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
+
+            var stashtabs = snapshot.StashTabs.Select(stashtab => stashtab).ToList();
+            
+            snapshot.StashTabs.Clear();
+
             var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
             profile.Snapshots.Add(snapshot);
+
             await _snapshotRepository.SaveChangesAsync();
+
+            stashtabs.ForEach(stashtab => stashtab.SnapshotId = snapshot.Id);
+
+            await _snapshotRepository.BulkInsertStashTabs(stashtabs);
+
             return _mapper.Map<SnapshotModel>(snapshot);
         }
         public async Task RemoveSnapshot(string snapshotClientId)

@@ -49,5 +49,6 @@ namespace Shared.Entities
 
         [Required]
         public virtual Stashtab Stashtab { get; set; }
+        public virtual int StashtabId { get; set; }
     }
 }

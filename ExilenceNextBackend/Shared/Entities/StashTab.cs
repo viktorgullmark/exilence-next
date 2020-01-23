@@ -22,6 +22,7 @@ namespace Shared.Entities
         public virtual ICollection<PricedItem> PricedItems { get; set; }
         [Required]
         public virtual Snapshot Snapshot { get; set; }
+        public virtual int SnapshotId { get; set; }
 
     }
 }
