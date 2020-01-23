@@ -212,38 +212,41 @@ export class Account implements IAccount {
     stores.uiStateStore.setChangingProfile(true);
     stores.uiStateStore.changeItemTablePage(0);
 
-    fromStream(
-      stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
-        map((uuid: string) => {
-          runInAction(() => {
-            this.profiles = this.profiles.map(p => {
-              p.active = false;
-              return p;
-            });
+    fromStream(this.setActiveProfileObservable(uuid));
+  }
+
+  @action
+  setActiveProfileObservable(uuid: string) {
+    return stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
+      map((uuid: string) => {
+        runInAction(() => {
+          this.profiles = this.profiles.map(p => {
+            p.active = false;
+            return p;
           });
-          const foundProfile = this.profiles.find(p => p.uuid === uuid);
-          if (!foundProfile) {
-            return throwError('error:no_profile_found');
-          }
-          runInAction(() => {
-            foundProfile.active = true;
-          });
-          if (stores.signalrStore.activeGroup) {
-            stores.signalrStore.changeProfileForConnection(
-              stores.signalrStore.ownConnection.connectionId,
-              ProfileUtils.mapProfileToApiProfile(foundProfile)
-            );
-          }
-          return this.setActiveProfileSuccess();
-        }),
-        retryWhen(
-          genericRetryStrategy({
-            maxRetryAttempts: 5,
-            scalingDuration: 5000
-          })
-        ),
-        catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
-      )
+        });
+        const foundProfile = this.profiles.find(p => p.uuid === uuid);
+        if (!foundProfile) {
+          return throwError('error:no_profile_found');
+        }
+        runInAction(() => {
+          foundProfile.active = true;
+        });
+        if (stores.signalrStore.activeGroup) {
+          stores.signalrStore.changeProfileForConnection(
+            stores.signalrStore.ownConnection.connectionId,
+            ProfileUtils.mapProfileToApiProfile(foundProfile)
+          );
+        }
+        return this.setActiveProfileSuccess();
+      }),
+      retryWhen(
+        genericRetryStrategy({
+          maxRetryAttempts: 5,
+          scalingDuration: 5000
+        })
+      ),
+      catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
     );
   }
 
@@ -271,30 +274,33 @@ export class Account implements IAccount {
     visitor!.event('Profile', 'Remove profile').send();
 
     const profileIndex = this.profiles.findIndex(p => p.active);
+    const newActiveProfile = this.profiles.find(p => !p.active);
+
+    if (profileIndex === -1) {
+      this.removeActiveProfileFail(new Error('profile_not_found'));
+    }
 
     fromStream(
-      stores.signalrHub
-        .invokeEvent<string>('RemoveProfile', this.profiles[profileIndex].uuid)
-        .pipe(
-          map((uuid: string) => {
-            if (profileIndex === -1) {
-              this.removeActiveProfileFail(new Error('profile_not_found'));
-            } else {
-              this.deleteProfiles(profileIndex, 1);
-              const newActiveProfile = this.profiles.find(p => !p.active);
-              this.setActiveProfile(newActiveProfile!.uuid);
-            }
-            stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
-            return this.removeActiveProfileSuccess();
-          }),
-          retryWhen(
-            genericRetryStrategy({
-              maxRetryAttempts: 5,
-              scalingDuration: 5000
-            })
-          ),
-          catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
-        )
+      this.setActiveProfileObservable(newActiveProfile!.uuid).pipe(
+        switchMap(() => {
+          return stores.signalrHub.invokeEvent<string>(
+            'RemoveProfile',
+            this.profiles[profileIndex].uuid
+          );
+        }),
+        map((uuid: string) => {
+          this.deleteProfiles(profileIndex, 1);
+          stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
+          return this.removeActiveProfileSuccess();
+        }),
+        retryWhen(
+          genericRetryStrategy({
+            maxRetryAttempts: 5,
+            scalingDuration: 5000
+          })
+        ),
+        catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
+      )
     );
   }
 

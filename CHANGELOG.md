@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where low confidence pricing was enabled even though the setting was turned off
 - Fixed a bug where users would get force-kicked from the server if trying to login twice
 - Fixed a bug where multiple sessions could be initiated at the same time
+- Fixed a bug where users sometimes would end up with no active profile after removal
 
 ## [0.2.0] - 2020-01-22
 ##### Added
