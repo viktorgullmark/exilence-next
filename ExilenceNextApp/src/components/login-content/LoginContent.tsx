@@ -15,6 +15,7 @@ import { toolbarHeight } from '../header/Header';
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
   isSubmitting: boolean;
+  isInitiating: boolean;
   account: Account;
 }
 
@@ -67,6 +68,7 @@ const LoginContent: React.FC<LoginContentProps> = (
                 }
                 styles={classes}
                 isSubmitting={props.isSubmitting}
+                isInitiating={props.isInitiating}
                 account={props.account}
               />
             </Box>

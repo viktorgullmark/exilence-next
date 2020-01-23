@@ -27,6 +27,7 @@ interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
   styles: Record<string, string>;
   isSubmitting: boolean;
+  isInitiating: boolean;
   account: Account;
 }
 
@@ -136,9 +137,9 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                       color="primary"
                       fullWidth
                       type="submit"
-                      loading={props.isSubmitting}
+                      loading={props.isSubmitting || props.isInitiating}
                       disabled={
-                        !touched || props.isSubmitting || (dirty && !isValid)
+                        !touched || props.isSubmitting || props.isInitiating || (dirty && !isValid)
                       }
                       endIcon={<ExitToApp />}
                     >

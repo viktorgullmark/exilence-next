@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2020-XX-XX
+##### Fixed
+- Fixed a bug where multiple sessions could be initiated at the same time
+
 ## [0.2.0] - 2020-01-22
 ##### Added
 - Added group system

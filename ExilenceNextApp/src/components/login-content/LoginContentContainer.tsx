@@ -16,8 +16,7 @@ interface LoginContentProps {
 
 const LoginContentContainer: React.FC<LoginContentProps> = ({
   accountStore,
-  uiStateStore,
-  leagueStore
+  uiStateStore
 }: LoginContentProps) => {
   const history = useHistory();
   const location = useLocation();
@@ -44,6 +43,7 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
     <LoginContent
       handleValidate={(details: IAccount) => handleValidate(details)}
       isSubmitting={uiStateStore!.isSubmitting}
+      isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
     ></LoginContent>
   );
@@ -51,6 +51,5 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
 
 export default inject(
   'accountStore',
-  'uiStateStore',
-  'leagueStore'
+  'uiStateStore'
 )(observer(LoginContentContainer));
