@@ -109,7 +109,7 @@ namespace API.Services
                 //.ThenInclude(snapshot => snapshot.Profile)
                 .Include(stashtab => stashtab.PricedItems)
                 .FirstAsync();
-            pricedItems.ForEach(pricedItem => stashtab.PricedItems.Add(pricedItem));
+            pricedItems.AddRange(pricedItems);
             await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<StashtabModel>(stashtab);
         }
