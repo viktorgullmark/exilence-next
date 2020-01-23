@@ -1,7 +1,7 @@
-import { action, computed, observable, runInAction, toJS } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject, interval, timer } from 'rxjs';
 import {
   catchError,
   delay,
@@ -9,7 +9,8 @@ import {
   retryWhen,
   take,
   map,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
@@ -37,6 +38,8 @@ export class Account implements IAccount {
     new Profile({ name: 'profile 1' })
   ];
 
+  cancelled: Subject<boolean> = new Subject();
+
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
   }
@@ -63,6 +66,25 @@ export class Account implements IAccount {
     } else {
       return undefined;
     }
+  }
+
+  @action
+  queueSnapshot() {
+    fromStream(
+      timer(stores.settingStore.autoSnapshotInterval).pipe(
+        map(() => {
+          if (this.activeProfile && this.activeProfile.readyToSnapshot) {
+            this.activeProfile.snapshot();
+          }
+        }),
+        takeUntil(this.cancelled)
+      )
+    );
+  }
+
+  @action
+  dequeueSnapshot() {
+    this.cancelled.next(true);
   }
 
   @action

@@ -9,6 +9,7 @@ import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
 import { SignalrStore } from '../../store/signalrStore';
 import { PriceStore } from '../../store/priceStore';
+import { SettingStore } from '../../store/settingStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -17,6 +18,7 @@ interface ToolbarContainerProps {
   notificationStore?: NotificationStore;
   signalrStore?: SignalrStore;
   priceStore?: PriceStore;
+  settingStore?: SettingStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
@@ -24,7 +26,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   accountStore,
   signalrStore,
   notificationStore,
-  priceStore
+  priceStore,
+  settingStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -96,6 +99,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
+        autoSnapshotting={settingStore!.autoSnapshotting}
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
@@ -132,5 +136,6 @@ export default inject(
   'accountStore',
   'notificationStore',
   'signalrStore',
-  'priceStore'
+  'priceStore',
+  'settingStore'
 )(observer(ToolbarContainer));
