@@ -8,6 +8,7 @@ import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
 import { SignalrStore } from '../../store/signalrStore';
+import { PriceStore } from '../../store/priceStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -15,13 +16,15 @@ interface ToolbarContainerProps {
   leagueStore?: LeagueStore;
   notificationStore?: NotificationStore;
   signalrStore?: SignalrStore;
+  priceStore?: PriceStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   uiStateStore,
   accountStore,
   signalrStore,
-  notificationStore
+  notificationStore,
+  priceStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -117,6 +120,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         }
         isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating}
+        isUpdatingPrices={priceStore!.isUpdatingPrices}
         profilesLoaded={uiStateStore!.profilesLoaded}
       />
     </>
@@ -127,5 +131,6 @@ export default inject(
   'uiStateStore',
   'accountStore',
   'notificationStore',
-  'signalrStore'
+  'signalrStore',
+  'priceStore'
 )(observer(ToolbarContainer));

@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.1] - 2020-XX-XX
+##### Added
+- Added a spinner for when new prices are being fetched
 ##### Fixed
 - Fixed a bug where multiple sessions could be initiated at the same time
 

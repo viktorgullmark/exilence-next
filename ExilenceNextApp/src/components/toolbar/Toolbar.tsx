@@ -131,6 +131,7 @@ interface Props {
   notifications: Notification[];
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
+  isUpdatingPrices: boolean;
   profilesLoaded: boolean;
   changingProfile: boolean;
   toggleSidenav: () => void;
@@ -185,7 +186,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   className={classes.offlineIcon}
                 />
               )}
-              {(props.isInitiating || props.changingProfile) && (
+              {(props.isInitiating ||
+                props.changingProfile ||
+                props.isUpdatingPrices) && (
                 <CircularProgress
                   title={t('label.loading_title')}
                   className={classes.leftSpinner}
