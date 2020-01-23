@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.1] - 2020-XX-XX
 ##### Added
+- Added setting for auto snapshotting with custom intervals
 - Added a spinner for when new prices are being fetched
 ##### Fixed
 - Fixed a bug where users would get force-kicked from the server if trying to login twice

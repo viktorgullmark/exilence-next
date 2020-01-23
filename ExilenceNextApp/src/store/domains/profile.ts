@@ -177,6 +177,9 @@ export class Profile {
   @action snapshotSuccess() {
     stores.notificationStore.createNotification('snapshot', 'success');
     stores.uiStateStore!.setIsSnapshotting(false);
+    if (stores.settingStore.autoSnapshotting) {
+      stores.accountStore.getSelectedAccount.queueSnapshot();
+    }
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
@@ -293,7 +296,11 @@ export class Profile {
         );
 
         stashTabWithItems.value = stashTabWithItems.pricedItems
-          .filter(item => (item.calculated * item.stackSize) >= stores.settingStore.priceTreshold)
+          .filter(
+            item =>
+              item.calculated * item.stackSize >=
+              stores.settingStore.priceTreshold
+          )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
 

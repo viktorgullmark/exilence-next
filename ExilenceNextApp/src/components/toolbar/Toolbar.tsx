@@ -122,6 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   signalrOnline: boolean;
   sidenavOpened: boolean;
+  autoSnapshotting: boolean;
   groupOverviewOpened: boolean;
   activeProfile?: Profile;
   profiles: Profile[];
@@ -282,7 +283,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       !props.activeProfile ||
                       !props.activeProfile.readyToSnapshot ||
-                      !props.signalrOnline
+                      !props.signalrOnline ||
+                      props.autoSnapshotting
                     }
                     onClick={() => props.handleSnapshot()}
                     aria-label="snapshot"

@@ -2,6 +2,7 @@ import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { ISelectOption } from '../interfaces/select-option.interface';
 import { SettingUtils } from '../utils/setting.utils';
+import { stores } from '..';
 
 export class SettingStore {
 
@@ -22,6 +23,11 @@ export class SettingStore {
 
   @action
   setAutoSnapshotting(value: boolean) {
+    if(!value) {
+      stores.accountStore.getSelectedAccount.dequeueSnapshot();
+    } else {
+      stores.accountStore.getSelectedAccount.queueSnapshot();
+    }
     this.autoSnapshotting = value;
   }
 
@@ -33,5 +39,7 @@ export class SettingStore {
   @action
   setAutoSnapshotInterval(value: number) {
     this.autoSnapshotInterval = value * 60 * 1000;
+    stores.accountStore.getSelectedAccount.dequeueSnapshot();
+    stores.accountStore.getSelectedAccount.queueSnapshot();
   }
 }

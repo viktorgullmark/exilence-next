@@ -27,6 +27,7 @@ import { UiStateStore } from './uiStateStore';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { Profile } from './domains/profile';
 import { IProfile } from '../interfaces/profile.interface';
+import { SettingStore } from './settingStore';
 
 export class AccountStore {
   constructor(
@@ -34,7 +35,8 @@ export class AccountStore {
     private notificationStore: NotificationStore,
     private leagueStore: LeagueStore,
     private priceStore: PriceStore,
-    private signalrStore: SignalrStore
+    private signalrStore: SignalrStore,
+    private settingStore: SettingStore
   ) {}
 
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -306,6 +308,13 @@ export class AccountStore {
               );
             })
           );
+        }),
+        switchMap(() => {
+          if (this.settingStore.autoSnapshotting) {
+            return of(this.getSelectedAccount.queueSnapshot());
+          } else {
+            return of({});
+          }
         }),
         switchMap(() => of(this.initSessionSuccess())),
         catchError((e: AxiosError) => {
