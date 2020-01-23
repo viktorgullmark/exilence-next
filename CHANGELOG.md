@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Added a spinner for when new prices are being fetched
 ##### Changed
 - Changed how prices are calculated for currency items
+    - This fixes the overpricing we previously had with certain items
     - They are now a direct reflection of the 'Buy' price at http://poe.ninja instead of the estimated value
     - They will only be included if there are at least 10 items for sale (unless low confidence is turned on)
 ##### Fixed
