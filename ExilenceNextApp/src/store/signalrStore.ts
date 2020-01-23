@@ -127,6 +127,35 @@ export class SignalrStore {
   }
 
   @action
+  signOut() {
+    fromStream(
+      this.signalrHub.stopConnection().pipe(
+        map(() => {
+          this.stopConnectionSuccess();
+          this.uiStateStore.redirect('/login');
+          this.signOutSuccess();
+        }),
+        catchError(e => {
+          // connection probably doesnt exist
+          this.stopConnectionFail(e);
+          this.uiStateStore.redirect('/login');
+          return of(this.signOutFail(e))
+        })
+      )
+    );
+  }
+
+  @action
+  signOutFail(e: Error) {
+    this.notificationStore.createNotification('sign_out', 'error', true, e);
+  }
+
+  @action
+  signOutSuccess() {
+    this.notificationStore.createNotification('sign_out', 'success');
+  }
+
+  @action
   changeProfileForConnection(connectionId: string, profile: IApiProfile) {
     const connection = this.activeGroup!.connections.find(
       c => c.connectionId === connectionId
@@ -189,10 +218,7 @@ export class SignalrStore {
 
   @action
   stopConnectionSuccess() {
-    this.notificationStore.createNotification(
-      'stop_connection',
-      'success'
-    );
+    this.notificationStore.createNotification('stop_connection', 'success');
   }
 
   @action

@@ -1,15 +1,15 @@
-import React from 'react';
-import { useHistory } from 'react-router';
-import { UiStateStore } from '../../store/uiStateStore';
 import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { SignalrStore } from '../../store/signalrStore';
+import { UiStateStore } from '../../store/uiStateStore';
 import AccountMenu from './AccountMenu';
 
 interface Props {
   uiStateStore?: UiStateStore;
+  signalrStore?: SignalrStore;
 }
 
-const AccountMenuContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
-  const history = useHistory();
+const AccountMenuContainer: React.FC<Props> = ({ uiStateStore, signalrStore }: Props) => {
   const open = Boolean(uiStateStore!.accountMenuAnchor);
 
   const handleMenuClose = () => {
@@ -17,7 +17,7 @@ const AccountMenuContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
   };
 
   const handleSignOut = () => {
-    history.push('/login');
+    signalrStore!.signOut();
   };
 
   return (
@@ -30,4 +30,4 @@ const AccountMenuContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
   );
 };
 
-export default inject('uiStateStore')(observer(AccountMenuContainer));
+export default inject('uiStateStore', 'signalrStore')(observer(AccountMenuContainer));

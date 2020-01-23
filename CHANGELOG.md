@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added a spinner for when new prices are being fetched
 ##### Fixed
+- Fixed a bug where users would get force-kicked from the server if trying to login twice
 - Fixed a bug where multiple sessions could be initiated at the same time
 
 ## [0.2.0] - 2020-01-22
