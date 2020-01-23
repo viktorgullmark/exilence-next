@@ -10,6 +10,7 @@ import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
+import SnapshotSettingsContainer from './snapshot-settings/SnapshotSettingsContainer';
 
 function a11yProps(index: any) {
   return {
@@ -37,7 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   indicator: {
     backgroundColor: theme.palette.primary.light
   },
-  subSection: {}
+  subSection: {
+    marginBottom: theme.spacing(5)
+  }
 }));
 
 const SettingsTabs: React.FC = () => {
@@ -61,9 +64,21 @@ const SettingsTabs: React.FC = () => {
           indicator: classes.indicator
         }}
       >
-        <Tab label={t('title.net_worth_settings')} className={classes.tab} {...a11yProps(0)} />
+        <Tab
+          label={t('title.net_worth_settings')}
+          className={classes.tab}
+          {...a11yProps(0)}
+        />
       </Tabs>
       <SettingsTab value={value} index={0}>
+        <Box className={classes.subSection}>
+          <Typography variant="overline">
+            {t('title.snapshot_settings')}
+          </Typography>
+          <Box my={2}>
+            <SnapshotSettingsContainer />
+          </Box>
+        </Box>
         <Box className={classes.subSection}>
           <Typography variant="overline">
             {t('title.pricing_settings')}

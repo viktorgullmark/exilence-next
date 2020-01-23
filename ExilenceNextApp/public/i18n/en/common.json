@@ -32,7 +32,8 @@
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",
     "create_group_dialog_title": "Create new group",
-    "join_group_dialog_title": "Join existing group"
+    "join_group_dialog_title": "Join existing group",
+    "snapshot_settings": "Snapshot settings"
   },
   "label": {
     "required": "Required",
@@ -83,16 +84,22 @@
     "generate_name_icon_title": "Generate name",
     "server_offline_title": "Not connected to server",
     "no_snapshots_title": "No snapshots found for selection",
-    "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots"
+    "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots",
+    "auto_snapshotting": "Activate auto snapshotting",
+    "auto_snapshot_interval": "Set auto snapshot interval"
   },
   "value": {
     "none": "None",
     "low_confidence_pricing": "Low confidence",
-    "price_treshold": "Price treshold"
+    "price_treshold": "Price treshold",
+    "auto_snapshotting": "Auto snapshotting",
+    "auto_snapshot_interval": "Snapshotting interval"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
-    "price_treshold": "Sets the cutoff for including items"
+    "price_treshold": "Sets the cutoff for including items",
+    "auto_snapshotting": "Handles snapshotting for you at set intervals",
+    "auto_snapshot_interval": "Sets the interval for auto snapshotting"
   },
   "link": {
     "restart_now": "Restart now"
