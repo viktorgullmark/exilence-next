@@ -71,7 +71,7 @@ export class Account implements IAccount {
   @action
   queueSnapshot() {
     fromStream(
-      timer(20000).pipe( //stores.settingStore.autoSnapshotInterval
+      timer(stores.settingStore.autoSnapshotInterval).pipe(
         map(() => {
           if (this.activeProfile && this.activeProfile.readyToSnapshot) {
             this.activeProfile.snapshot();
