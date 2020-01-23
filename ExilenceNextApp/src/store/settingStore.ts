@@ -7,7 +7,7 @@ import { stores } from '..';
 export class SettingStore {
 
   @persist @observable lowConfidencePricing: boolean = false;
-  @persist @observable autoSnapshotting: boolean = true;
+  @persist @observable autoSnapshotting: boolean = false;
   @persist @observable priceTreshold: number = 1;
   @persist @observable autoSnapshotInterval: number = 60 * 5 * 1000; // default to 5 minutes
 
