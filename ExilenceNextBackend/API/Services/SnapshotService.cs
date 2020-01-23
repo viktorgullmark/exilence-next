@@ -58,6 +58,8 @@ namespace API.Services
 
             await _snapshotRepository.BulkInsertStashTabs(stashtabs);
 
+            snapshot.StashTabs = stashtabs;
+
             return _mapper.Map<SnapshotModel>(snapshot);
         }
         public async Task RemoveSnapshot(string snapshotClientId)
