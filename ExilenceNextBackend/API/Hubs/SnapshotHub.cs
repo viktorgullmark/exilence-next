@@ -36,7 +36,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
             snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
-            await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
