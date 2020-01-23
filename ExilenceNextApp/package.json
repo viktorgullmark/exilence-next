@@ -111,6 +111,7 @@
     "wait-on": "^3.3.0"
   },
   "build": {
+    "productName": "Exilence Next",
     "appId": "com.exilence.exilence-next-app",
     "files": [
       "build/**/*",
