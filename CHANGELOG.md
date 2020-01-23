@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.1] - 2020-XX-XX
+## [0.2.1] - 2020-01-23
 ##### Added
 - Added setting for auto snapshotting with custom intervals
 - Added a spinner for when new prices are being fetched
