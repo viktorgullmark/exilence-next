@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added setting for auto snapshotting with custom intervals
 - Added a spinner for when new prices are being fetched
+##### Changed
+- Changed how prices are calculated for currency items
+    - They are now a direct reflection of the 'Buy' price at http://poe.ninja instead of the estimated value
+    - They will only be included if there are at least 10 items for sale (unless low confidence is turned on)
 ##### Fixed
+- Fixed a bug where low confidence pricing was enabled even though the setting was turned off
 - Fixed a bug where users would get force-kicked from the server if trying to login twice
 - Fixed a bug where multiple sessions could be initiated at the same time
 

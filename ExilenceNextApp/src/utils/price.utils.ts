@@ -58,9 +58,12 @@ export class PriceUtils {
     item: IPoeNinjaCurrencyOverviewLine,
     details: IPoeNinjaCurrencyOverviewCurrencyDetail | undefined
   ) {
+
+    const calculated = item.receive ? item.receive.value : 0;
+
     return {
       name: item.currencyTypeName,
-      calculated: item.chaosEquivalent,
+      calculated: calculated,
       icon: details !== undefined ? details.icon : undefined,
       count: item.receive ? item.receive.count : 0
     } as IExternalPrice;

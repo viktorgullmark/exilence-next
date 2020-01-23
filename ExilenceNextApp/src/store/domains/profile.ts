@@ -278,10 +278,14 @@ export class Profile {
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(
-      p => p.count > 10
-    );
-    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
+    let prices = activePriceDetails.leaguePriceSources[0].prices;
+
+    if (!stores.settingStore.lowConfidencePricing) {
+      prices = prices.filter(
+        p => p.count > 10
+      );
+    }
+    prices = PriceUtils.excludeLegacyMaps(prices);
 
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
@@ -290,7 +294,7 @@ export class Profile {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              filteredPrices
+              prices
             );
           }
         );
