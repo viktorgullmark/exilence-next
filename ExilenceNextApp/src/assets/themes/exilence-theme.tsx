@@ -47,6 +47,11 @@ export const statusColors = {
   error: red[900]
 };
 
+export const background = {
+  default: '#191919',
+  paper: '#232323'
+};
+
 export type Rarity = typeof rarityColors;
 export type ItemColor = typeof itemColors;
 export type StatusColor = typeof statusColors;
@@ -89,10 +94,7 @@ export default function exilenceTheme() {
         dark: primaryDark
       },
       secondary: secondary,
-      background: {
-        default: '#191919',
-        paper: '#232323'
-      },
+      background: background,
       type: 'dark'
     }
   });

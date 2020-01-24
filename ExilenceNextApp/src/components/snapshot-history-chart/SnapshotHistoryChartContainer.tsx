@@ -1,5 +1,4 @@
 import { Box, Typography } from '@material-ui/core';
-import useComponentSize from '@rehooks/component-size';
 import { inject, observer } from 'mobx-react';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,8 +16,7 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   signalrStore
 }: Props) => {
   const { t } = useTranslation();
-  let parentRef = useRef(null);
-  let size = useComponentSize(parentRef);
+
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
   const chartData = () => {
@@ -32,11 +30,9 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   const { activeGroup } = signalrStore!;
 
   return (
-    <div ref={parentRef} style={{ height: '100%', width: '100%' }}>
+    <>
       {getChartLength() >= 10 ? (
         <SnapshotHistoryChart
-          width={size.width}
-          height={size.height}
           chartData={activeGroup ? activeGroup.chartData : chartData()}
         />
       ) : (
@@ -52,7 +48,7 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
           </Typography>
         </Box>
       )}
-    </div>
+    </>
   );
 };
 

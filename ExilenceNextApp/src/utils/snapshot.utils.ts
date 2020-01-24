@@ -1,3 +1,4 @@
+import { stores } from '..';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
@@ -5,10 +6,7 @@ import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-pricedite
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
 import { ColourUtils } from './colour.utils';
-import { stores } from '..';
 import { ItemUtils } from './item.utils';
-import { AreaSeriesPoint } from 'react-vis';
-import { DataPoint } from '../components/snapshot-history-chart/SnapshotHistoryChart';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
@@ -72,9 +70,7 @@ export class SnapshotUtils {
   }
 
   public static getValueForSnapshot(snapshot: IApiSnapshot) {
-    return snapshot.stashTabs
-      .map(sts => sts.value)
-      .reduce((a, b) => a + b, 0);
+    return snapshot.stashTabs.map(sts => sts.value).reduce((a, b) => a + b, 0);
   }
 
   public static getValueForSnapshotsTabs(snapshots: IApiSnapshot[]) {
@@ -94,13 +90,14 @@ export class SnapshotUtils {
 
   public static formatSnapshotsForChart(
     snapshots: IApiSnapshot[]
-  ): DataPoint[] {
+  ): Array<Array<number>> {
     return snapshots.map(s => {
-      return {
-        date: s.created,
-        value: +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
-      };
-    }).reverse();
+      const values: number[] = [
+        new Date(s.created).getTime(),
+        +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
+      ];
+      return values;
+    });
   }
 
   public static filterItems(snapshots: IApiSnapshot[]) {

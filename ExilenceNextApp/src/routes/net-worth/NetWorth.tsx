@@ -25,14 +25,12 @@ interface NetWorthProps {
 
 export const netWorthGridSpacing = 3;
 export const cardHeight = 100;
-export const chartHeight = 200;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   signalrStore,
   uiStateStore
 }: NetWorthProps) => {
-  const location = useLocation();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
@@ -101,11 +99,6 @@ const NetWorth: React.FC<NetWorthProps> = ({
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
-          </Widget>
-        </Grid>
-        <Grid item xs={6} md={3} lg={3} style={{ overflow: 'hidden' }}>
-          <Widget backgroundColor={theme.palette.background.default} compact>
-            <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>
         <Grid item xs={12}>

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { netWorthGridSpacing, cardHeight, chartHeight } from '../../routes/net-worth/NetWorth';
+import { netWorthGridSpacing, cardHeight } from '../../routes/net-worth/NetWorth';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
 import { tabPanelSpacing } from '../tab-panel/TabPanel';
