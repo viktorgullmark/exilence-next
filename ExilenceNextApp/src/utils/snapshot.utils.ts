@@ -97,7 +97,7 @@ export class SnapshotUtils {
         +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
       ];
       return values;
-    });
+    }).sort((n1,n2) => n1[0] - n2[0]);
   }
 
   public static filterItems(snapshots: IApiSnapshot[]) {

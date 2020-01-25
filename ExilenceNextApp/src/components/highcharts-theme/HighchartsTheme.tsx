@@ -8,10 +8,10 @@ const HighchartsTheme: React.FC = () => {
   const highchartsTheme: Highcharts.Options = {
     colors: [theme.palette.primary.main],
     chart: {
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: theme.palette.background.paper,
       style: {
         color: theme.palette.text.primary
-      },
+      }
     },
     title: {
       style: {
@@ -32,6 +32,33 @@ const HighchartsTheme: React.FC = () => {
       },
       itemHoverStyle: {
         color: 'gray'
+      }
+    },
+    plotOptions: {
+      line: {
+        marker: {
+          enabled: true
+        }
+      },
+      spline: {
+        marker: {
+          enabled: true
+        }
+      },
+      area: {
+        marker: {
+          enabled: true
+        }
+      },
+      areaspline: {
+        marker: {
+          enabled: true
+        }
+      },
+      arearange: {
+        marker: {
+          enabled: true
+        }
       }
     }
   };

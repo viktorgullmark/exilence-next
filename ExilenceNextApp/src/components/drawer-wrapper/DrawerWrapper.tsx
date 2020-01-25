@@ -12,11 +12,11 @@ export const drawerWidth = 300;
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
-    height: `calc(100% - ${toolbarHeight}px)`,
+    height: `100%`,
     padding: `calc(${toolbarHeight}px + ${innerToolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
-      2
+      1
     )}px) 
-    ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    ${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(1)}px`,
     flexGrow: 1,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,

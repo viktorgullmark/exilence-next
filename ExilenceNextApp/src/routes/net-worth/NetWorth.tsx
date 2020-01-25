@@ -23,8 +23,9 @@ interface NetWorthProps {
   uiStateStore?: UiStateStore;
 }
 
-export const netWorthGridSpacing = 3;
+export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
+export const chartHeight = 220;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
@@ -99,6 +100,11 @@ const NetWorth: React.FC<NetWorthProps> = ({
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
+          </Widget>
+        </Grid>
+        <Grid item xs={12}>
+          <Widget height={chartHeight}>
+            <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>
         <Grid item xs={12}>

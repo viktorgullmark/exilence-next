@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
+import useComponentSize from '@rehooks/component-size';
 
 interface Props {
   accountStore?: AccountStore;
@@ -17,38 +18,27 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
 }: Props) => {
   const { t } = useTranslation();
 
+  let ref = useRef(null);
+  let size = useComponentSize(ref);
+
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
   const chartData = () => {
     return activeProfile ? activeProfile.chartData : [];
   };
 
-  const getChartLength = () => {
-    return activeGroup ? activeGroup.chartData.length : chartData().length;
-  };
-
+  console.log(size);
   const { activeGroup } = signalrStore!;
 
   return (
-    <>
-      {getChartLength() >= 10 ? (
-        <SnapshotHistoryChart
-          chartData={activeGroup ? activeGroup.chartData : chartData()}
-        />
-      ) : (
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          p={2}
-        >
-          <Typography variant="subtitle2" align="center">
-            {t('label.snapshot_length_requirement_text')}
-          </Typography>
-        </Box>
-      )}
-    </>
+    <div ref={ref} style={{ height: '100%', width: '100%' }}>
+      <SnapshotHistoryChart
+        width={size.width}
+        height={size.height}
+        seriesName={activeGroup ? activeGroup.name : activeProfile?.name}
+        chartData={activeGroup ? activeGroup.chartData : chartData()}
+      />
+    </div>
   );
 };
 

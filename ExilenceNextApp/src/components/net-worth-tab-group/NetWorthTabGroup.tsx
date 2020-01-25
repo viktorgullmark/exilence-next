@@ -68,11 +68,6 @@ const NetWorthTabGroup: React.FC = () => {
             className={classes.tab}
             {...a11yProps(0)}
           />
-          <Tab
-            label={t('label.graphs')}
-            className={classes.tab}
-            {...a11yProps(1)}
-          />
         </Tabs>
         <Box
           position="absolute"
@@ -95,9 +90,6 @@ const NetWorthTabGroup: React.FC = () => {
       </AppBar>
       <TabPanel value={value} index={0}>
         <ItemTableContainer />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <SnapshotHistoryChartContainer />
       </TabPanel>
     </>
   );
