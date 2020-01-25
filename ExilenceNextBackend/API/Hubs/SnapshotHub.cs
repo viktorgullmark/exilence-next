@@ -88,7 +88,6 @@ namespace API.Hubs
             return stashTabModel;
         }
 
-
         #region Streams
         //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
         //{

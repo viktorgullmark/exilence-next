@@ -45,20 +45,16 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            var stashtabs = snapshot.StashTabs.Select(stashtab => stashtab).ToList();
-            
-            snapshot.StashTabs.Clear();
+            await _snapshotRepository.RemovePricedItems(profileClientId);
 
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
-            profile.Snapshots.Add(snapshot);
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId)
+                .Include(profile => profile.Snapshots)
+                .AsNoTracking()
+                .FirstAsync();
 
-            await _snapshotRepository.SaveChangesAsync();
+            snapshot.ProfileId = profile.Id;
 
-            stashtabs.ForEach(stashtab => stashtab.SnapshotId = snapshot.Id);
-
-            await _snapshotRepository.BulkInsertStashTabs(stashtabs);
-
-            snapshot.StashTabs = stashtabs;
+            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
