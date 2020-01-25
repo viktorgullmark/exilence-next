@@ -49,16 +49,20 @@ namespace Shared.Repositories
                 foreach (var stashtab in snapshot.StashTabs)
                 {
                     stashtab.SnapshotId = snapshot.Id;
-                    foreach (var pricedItem in stashtab.PricedItems)
-                    {
-                        pricedItem.StashtabId = stashtab.Id;
-                    }
-                    pricedItems.AddRange(stashtab.PricedItems);
                 }
                 stashTabs.AddRange(snapshot.StashTabs);
             }
-
             await _exilenceContext.BulkInsertAsync(stashTabs, bulkConfig);
+
+            foreach (var stashtab in stashTabs)
+            {
+                foreach (var pricedItem in stashtab.PricedItems)
+                {
+                    pricedItem.StashtabId = stashtab.Id;
+                }
+                pricedItems.AddRange(stashtab.PricedItems);
+            }
+
             await _exilenceContext.BulkInsertAsync(pricedItems);
 
             transaction.Commit();
