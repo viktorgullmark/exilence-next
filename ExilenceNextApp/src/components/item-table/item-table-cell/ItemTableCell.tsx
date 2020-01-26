@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: theme.spacing(0.5)
   },
+  lastCell: {
+    paddingRight: theme.spacing(1)
+  },
   iconImg: {
     minHeight: 35,
     maxHeight: 35,
@@ -157,6 +160,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
             case 'total':
               return (
                 <span
+                  className={classes.lastCell}
                   style={{
                     color: itemColors.chaosOrb
                   }}
