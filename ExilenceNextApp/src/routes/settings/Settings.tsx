@@ -20,7 +20,7 @@ const Settings: React.FC<Props> = (props: Props) => {
 
   return (
     <FeatureWrapper>
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <SettingsTabs />
         </Grid>

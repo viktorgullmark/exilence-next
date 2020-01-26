@@ -16,7 +16,7 @@ export const secondary = {
   dark: '#000'
 }
 
-export const gridSpacing = 3;
+export const gridSpacing = 2;
 
 export const cardColors = {
   primary: '#263238',
@@ -45,6 +45,11 @@ export const statusColors = {
   warning: amber[900],
   info: grey[900],
   error: red[900]
+};
+
+export const background = {
+  default: '#191919',
+  paper: '#202020'
 };
 
 export type Rarity = typeof rarityColors;
@@ -89,10 +94,7 @@ export default function exilenceTheme() {
         dark: primaryDark
       },
       secondary: secondary,
-      background: {
-        default: '#191919',
-        paper: '#232323'
-      },
+      background: background,
       type: 'dark'
     }
   });

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react';
 import React from 'react';
 import clsx from 'clsx';
+import { cardHeight } from '../../routes/net-worth/NetWorth';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,7 +26,7 @@ const Widget: React.FC<WidgetProps> = ({
   children,
   backgroundColor,
   textColor,
-  height = 100,
+  height = cardHeight,
   compact
 }: WidgetProps) => {
   const classes = useStyles();

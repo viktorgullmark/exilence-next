@@ -33,7 +33,8 @@
     "pricing_settings": "Pricing settings",
     "create_group_dialog_title": "Create new group",
     "join_group_dialog_title": "Join existing group",
-    "snapshot_settings": "Snapshot settings"
+    "snapshot_settings": "Snapshot settings",
+    "snapshot_history_chart": "Snapshot history"
   },
   "label": {
     "required": "Required",

@@ -1,4 +1,4 @@
-/// <reference path="./react-vis.d.ts"/> 
+/// <reference path="./react-vis.d.ts"/>
 
 import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
@@ -8,7 +8,7 @@ import { configure } from 'mobx';
 import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -37,12 +37,18 @@ import { SignalrStore } from './store/signalrStore';
 import { UiStateStore } from './store/uiStateStore';
 import { UpdateStore } from './store/updateStore';
 import { MigrationStore } from './store/migrationStore';
+import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
 initSentry();
-enableLogging({ action: true, reaction: false, transaction: false, compute: false });
+enableLogging({
+  action: true,
+  reaction: false,
+  transaction: false,
+  compute: false
+});
 configureI18n();
 
 configure({ enforceActions: 'observed' });
@@ -97,6 +103,7 @@ const app = (
       <Provider {...stores}>
         <Suspense fallback={null}>
           <Router>
+            <HighchartsTheme />
             <CssBaseline />
             <GlobalStyles />
             <ToastWrapper />

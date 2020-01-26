@@ -1,11 +1,11 @@
 import { Box, Typography } from '@material-ui/core';
-import useComponentSize from '@rehooks/component-size';
 import { inject, observer } from 'mobx-react';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
+import useComponentSize from '@rehooks/component-size';
 
 interface Props {
   accountStore?: AccountStore;
@@ -17,41 +17,27 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
   signalrStore
 }: Props) => {
   const { t } = useTranslation();
-  let parentRef = useRef(null);
-  let size = useComponentSize(parentRef);
+
+  let ref = useRef(null);
+  let size = useComponentSize(ref);
+
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
   const chartData = () => {
     return activeProfile ? activeProfile.chartData : [];
   };
 
-  const getChartLength = () => {
-    return activeGroup ? activeGroup.chartData.length : chartData().length;
-  };
-
+  console.log(size);
   const { activeGroup } = signalrStore!;
 
   return (
-    <div ref={parentRef} style={{ height: '100%', width: '100%' }}>
-      {getChartLength() >= 10 ? (
-        <SnapshotHistoryChart
-          width={size.width}
-          height={size.height}
-          chartData={activeGroup ? activeGroup.chartData : chartData()}
-        />
-      ) : (
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          p={2}
-        >
-          <Typography variant="subtitle2" align="center">
-            {t('label.snapshot_length_requirement_text')}
-          </Typography>
-        </Box>
-      )}
+    <div ref={ref} style={{ height: '100%', width: '100%' }}>
+      <SnapshotHistoryChart
+        width={size.width}
+        height={size.height}
+        seriesName={activeGroup ? activeGroup.name : activeProfile?.name}
+        chartData={activeGroup ? activeGroup.chartData : chartData()}
+      />
     </div>
   );
 };

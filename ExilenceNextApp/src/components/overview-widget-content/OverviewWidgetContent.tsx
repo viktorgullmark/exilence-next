@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const useStyles = makeStyles(theme => ({
   iconWrapper: {},
   title: {
-    fontSize: '0.8rem'
+    fontSize: '0.7rem'
   }
 }));
 
@@ -33,12 +33,12 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item sm={3}>
           <div className={classes.iconWrapper}>{icon}</div>
         </Grid>
         <Grid item sm={9}>
-          <Typography variant="h5" align="right" style={{ color: valueColor }}>
+          <Typography variant="h6" align="right" style={{ color: valueColor }}>
             {currency ? `${value} ${currencyShort}` : value}
           </Typography>
         </Grid>
