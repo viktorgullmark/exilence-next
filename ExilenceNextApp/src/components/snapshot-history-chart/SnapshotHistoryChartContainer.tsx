@@ -27,7 +27,6 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
     return activeProfile ? activeProfile.chartData : [];
   };
 
-  console.log(size);
   const { activeGroup } = signalrStore!;
 
   return (

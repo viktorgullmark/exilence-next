@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.3] - 2020-01-26
+##### Removed
+- Removed a forgotten console log
+
 ## [0.2.2] - 2020-01-26
 ##### Added
 - Added a new chart widget (replaces the smaller one)
