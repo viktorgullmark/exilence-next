@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
-import { action, observable } from 'mobx';
-import { from, throwError } from 'rxjs';
+import { action, observable, runInAction } from 'mobx';
+import { from, throwError, of } from 'rxjs';
 import { stores } from '../..';
 import AppConfig from './../../config/app.config';
 import * as msgPack from '@microsoft/signalr-protocol-msgpack';
@@ -15,15 +15,19 @@ export class SignalrHub {
     if (!this.connection) {
       return throwError('error:not_connected');
     }
-    return from(this.connection.stop().then(() => {
-      stores.signalrStore.setOnline(false);
-    }));
+    return from(
+      this.connection.stop().then(() => {
+        stores.signalrStore.setOnline(false);
+      })
+    );
   }
 
   @action
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${AppConfig.baseUrl}/hub`, { accessTokenFactory: () => token })
+      .withUrl(`${AppConfig.baseUrl}/hub`, {
+        accessTokenFactory: () => token
+      })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => {
           return 30 * 1000;
@@ -50,6 +54,12 @@ export class SignalrHub {
           this.connection!.onreconnecting(e => {
             stores.signalrStore.setActiveGroup(undefined);
             this.connectionLost(e);
+          });
+
+          this.connection!.onclose(e => {
+            runInAction(() => {
+              this.connection = undefined;
+            });
           });
 
           stores.signalrStore.setOnline(true);

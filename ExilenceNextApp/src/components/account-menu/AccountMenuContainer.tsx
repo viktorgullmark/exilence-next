@@ -17,6 +17,7 @@ const AccountMenuContainer: React.FC<Props> = ({ uiStateStore, signalrStore }: P
   };
 
   const handleSignOut = () => {
+    uiStateStore!.setAccountMenuAnchor(null);
     signalrStore!.signOut();
   };
 

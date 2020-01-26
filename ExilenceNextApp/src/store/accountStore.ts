@@ -163,6 +163,7 @@ export class AccountStore {
 
   @action
   loginWithOAuthSuccess(response: IOAuthResponse) {
+    this.uiStateStore.redirect('/net-worth');
     this.uiStateStore.setValidated(true);
     this.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
@@ -384,6 +385,7 @@ export class AccountStore {
       }
     } else {
       this.uiStateStore.setValidated(true);
+      this.uiStateStore.redirect('/net-worth');
       this.initSession();
     }
   }

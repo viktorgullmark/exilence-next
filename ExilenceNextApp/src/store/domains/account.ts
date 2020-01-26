@@ -162,11 +162,12 @@ export class Account implements IAccount {
       })
       .pipe(
         mergeMap(account => {
-          this.authorizeSuccess();
           this.updateAccountFromApi(account.data);
-          return stores.signalrStore.signalrHub.startConnection(
-            account.data.accessToken
-          );
+          return !stores.signalrHub.connection
+            ? stores.signalrStore.signalrHub.startConnection(
+                account.data.accessToken
+              )
+            : of({});
         }),
         switchMap(() => {
           return this.getProfilesForAccount(this.uuid).pipe(
@@ -178,12 +179,9 @@ export class Account implements IAccount {
             })
           );
         }),
-        retryWhen(
-          genericRetryStrategy({
-            maxRetryAttempts: 5,
-            scalingDuration: 5000
-          })
-        ),
+        switchMap(() => {
+          return of(this.authorizeSuccess());
+        }),
         catchError(e => {
           this.authorizeFail(e);
           return throwError(e);

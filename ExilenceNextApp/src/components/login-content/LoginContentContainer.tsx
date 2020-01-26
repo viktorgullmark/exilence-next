@@ -29,14 +29,6 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
     } else {
       accountStore!.validateSession(location.pathname, details.sessionId);
     }
-
-    reaction(
-      () => uiStateStore!.validated,
-      (_cookie, reaction) => {
-        history.push('/net-worth');
-        reaction.dispose();
-      }
-    );
   };
 
   return (

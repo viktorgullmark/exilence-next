@@ -7,6 +7,8 @@ import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import uuid from 'uuid';
 import { AxiosError } from 'axios';
+import { stores } from '..';
+import { fromStream } from 'mobx-utils';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -98,7 +100,9 @@ export class UiStateStore {
 
   @action
   redirect(path: string) {
-    this.redirectedTo = undefined;
+    if(path === '/login') {
+      fromStream(stores.signalrHub.stopConnection());
+    }
     this.redirectedTo = path;
   }
 
