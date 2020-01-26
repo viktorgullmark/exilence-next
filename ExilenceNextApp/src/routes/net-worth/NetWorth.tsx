@@ -1,4 +1,4 @@
-import { Grid, useTheme } from '@material-ui/core';
+import { Grid, useTheme, Box, makeStyles, Theme } from '@material-ui/core';
 import GavelIcon from '@material-ui/icons/Gavel';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -16,6 +16,9 @@ import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
+import DiscordLogo from '../../assets/img/discord-wordmark-white.svg';
+import PatreonLogo from '../../assets/img/patreon-white.png';
+import { WindowUtils } from '../../utils/window.utils';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -26,12 +29,27 @@ interface NetWorthProps {
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
+const discordLogoHeight = 24;
+const patreonLogoHeight = 62;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  discordLogo: {
+    marginLeft: 5,
+    height: discordLogoHeight,
+    maxWidth: '100%'
+  },
+  patreonLogo: {
+    height: patreonLogoHeight,
+    maxWidth: '100%'
+  }
+}));
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   signalrStore,
   uiStateStore
 }: NetWorthProps) => {
+  const classes = useStyles();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
@@ -100,6 +118,28 @@ const NetWorth: React.FC<NetWorthProps> = ({
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="large" />}
             />
+          </Widget>
+        </Grid>
+        <Grid item xs={6} md={3} lg={3}>
+          <Widget>
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <a
+                href="https://patreon.com/exilence"
+                onClick={e => WindowUtils.openLink(e)}
+              >
+                <Box display="flex" alignItems="center" height={1}>
+                  <img className={classes.patreonLogo} src={PatreonLogo} />
+                </Box>
+              </a>
+              <a
+                href="https://discord.gg/yxuBrPY"
+                onClick={e => WindowUtils.openLink(e)}
+              >
+                <Box display="flex" alignItems="center" height={1}>
+                  <img className={classes.discordLogo} src={DiscordLogo} />
+                </Box>
+              </a>
+            </Box>
           </Widget>
         </Grid>
         <Grid item xs={12}>
