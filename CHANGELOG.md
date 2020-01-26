@@ -3,9 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.2] - 2020-01-26
 ##### Added
+- Added a new chart widget (replaces the smaller one)
 - Adding spacing to the "Total" column in the item table
 ##### Changed
 - Changed default state for navigation menu
+##### Removed
+- Removed the smaller chart widget
 ##### Fixed
 - Fixed a bug where some users would not be connected to our servers properly
     - Caused by multiple connections on the same client
