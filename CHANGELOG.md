@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2020-01-26
+##### Added
+##### Changed
+##### Fixed
+- Fixed a bug where some users would not be connected to our servers properly
+    - Caused by multiple connections on the same client
+- Fixed a bug where redirects in the app would only work the first time
+- Fixed a bug where dropdown menus would linger after signing out
+
 ## [0.2.1] - 2020-01-23
 ##### Added
 - Added setting for auto snapshotting with custom intervals
