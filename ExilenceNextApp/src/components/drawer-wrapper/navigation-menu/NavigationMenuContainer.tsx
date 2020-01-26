@@ -15,6 +15,7 @@ const NavigationMenuContainer: React.FC<NavigationMenuContainerProps> = ({
     <NavigationMenu
       open={uiStateStore!.sidenavOpen}
       toggleSidenav={() => uiStateStore!.toggleSidenav()}
+      handleRedirect={(path: string) => uiStateStore!.redirect(path)}
     >
       {children}
     </NavigationMenu>

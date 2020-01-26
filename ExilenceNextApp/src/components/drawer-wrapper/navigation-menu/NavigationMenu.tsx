@@ -1,4 +1,14 @@
-import { Box, Divider, Drawer, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Box,
+  Divider,
+  Drawer,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -7,12 +17,15 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { WindowUtils } from '../../../utils/window.utils';
 import DiscordLogo from '../../../assets/img/discord-wordmark-white.svg';
 import PatreonLogo from '../../../assets/img/patreon-white.png';
-import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
+import {
+  resizeHandleContainerHeight,
+  toolbarHeight
+} from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
 
 const discordLogoHeight = 25;
@@ -48,11 +61,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface NavigationMenuProps {
   open: boolean;
   toggleSidenav: () => void;
+  handleRedirect: (path: string) => void;
 }
 
 const NavigationMenu: React.FC<NavigationMenuProps> = ({
   open,
-  toggleSidenav
+  toggleSidenav,
+  handleRedirect
 }: NavigationMenuProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -84,9 +99,8 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({
         <ListItem
           button
           key="net-worth"
-          component={Link}
-          to="/net-worth"
           selected={location.pathname === '/net-worth'}
+          onClick={() => handleRedirect('/net-worth')}
         >
           <ListItemIcon>
             <AttachMoneyIcon />
@@ -96,9 +110,8 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({
         <ListItem
           button
           key="settings"
-          component={Link}
-          to="/settings"
           selected={location.pathname === '/settings'}
+          onClick={() => handleRedirect('/settings')}
         >
           <ListItemIcon>
             <SettingsIcon />
