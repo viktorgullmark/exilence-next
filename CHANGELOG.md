@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Adding spacing to the "Total" column in the item table
 ##### Changed
 - Changed default state for navigation menu
+- Changed position for Discord and Patreon logos, to be more visible
 ##### Removed
 - Removed the smaller chart widget
 ##### Fixed
