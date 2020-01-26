@@ -25,7 +25,7 @@ interface NetWorthProps {
 
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
-export const chartHeight = 220;
+export const chartHeight = 240;
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,

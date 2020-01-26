@@ -10,7 +10,8 @@ const HighchartsTheme: React.FC = () => {
     chart: {
       backgroundColor: theme.palette.background.paper,
       style: {
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        font: 'Roboto'
       }
     },
     title: {
@@ -32,6 +33,32 @@ const HighchartsTheme: React.FC = () => {
       },
       itemHoverStyle: {
         color: 'gray'
+      }
+    },
+    yAxis: {
+      gridLineColor: theme.palette.text.hint,
+      lineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.text.hint,
+      title: {
+        text: '',
+        style: {
+          color: theme.palette.text.primary
+        }
+      },
+      labels: {
+        style: {
+          color: theme.palette.text.primary
+        }
+      }
+    },
+    xAxis: {
+      gridLineColor: theme.palette.text.hint,
+      lineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.text.hint,
+      labels: {
+        style: {
+          color: theme.palette.text.primary
+        }
       }
     },
     plotOptions: {
