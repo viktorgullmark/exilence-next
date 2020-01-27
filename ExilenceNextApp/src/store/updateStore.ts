@@ -8,6 +8,7 @@ import { electronService } from '../services/electron.service';
 export class UpdateStore {
   @observable currentVersion: string = pkg['version'];
   @observable pollingInterval: number = 60 * 1000 * 5;
+  @observable updateAvailable: boolean = false;
 
   constructor() {
     fromStream(
@@ -15,10 +16,24 @@ export class UpdateStore {
         switchMap(() => of(this.checkForUpdate()))
       )
     );
+
+    electronService.ipcRenderer.on('updateDownloaded', () => {
+      this.setUpdateReady(true);
+    });
   }
 
   @action
   checkForUpdate() {
     electronService.ipcRenderer.send('checkForUpdates');
+  }
+
+  @action
+  quitAndInstall() {
+    electronService.ipcRenderer.send('quitAndInstall');
+  }
+
+  @action
+  setUpdateReady(available: boolean) {
+    this.updateAvailable = available;
   }
 }

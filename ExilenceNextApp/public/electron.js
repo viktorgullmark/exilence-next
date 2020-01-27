@@ -47,6 +47,10 @@ ipcMain.on('checkForUpdates', function(event) {
   }
 });
 
+ipcMain.on('quitAndInstall', function(event) {
+  autoUpdater.quitAndInstall();
+});
+
 ipcMain.on('notify', function(event) {
   mainWindow.flashFrame(true);
 });
@@ -76,8 +80,9 @@ autoUpdater.on('download-progress', progressObj => {
   sendStatusToWindow(log_message);
 });
 
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+autoUpdater.on('update-downloaded', (event, releaseName, releaseNotes) => {
   sendStatusToWindow('Update downloaded');
+  mainWindow.webContents.send('updateDownloaded');
   shouldNotify = false;
 });
 
