@@ -16,7 +16,7 @@ import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
-import DiscordLogo from '../../assets/img/discord-wordmark-white.svg';
+import DiscordLogo from '../../assets/img/discord-wordmark-colored.svg';
 import PatreonLogo from '../../assets/img/patreon-white.png';
 import { WindowUtils } from '../../utils/window.utils';
 
@@ -29,8 +29,8 @@ interface NetWorthProps {
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
-const discordLogoHeight = 24;
-const patreonLogoHeight = 62;
+const discordLogoHeight = 35;
+const patreonLogoHeight = 55;
 
 const useStyles = makeStyles((theme: Theme) => ({
   discordLogo: {
@@ -122,7 +122,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
         </Grid>
         <Grid item xs={6} md={3} lg={3}>
           <Widget>
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box display="flex" alignItems="center" justifyContent="center" height={1}>
               <a
                 href="https://patreon.com/exilence"
                 onClick={e => WindowUtils.openLink(e)}
