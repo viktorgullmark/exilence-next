@@ -3,7 +3,6 @@ import {
   Badge,
   FormControl,
   Grid,
-  Menu,
   MenuItem,
   Select
 } from '@material-ui/core';
@@ -14,31 +13,32 @@ import MuiToolbar from '@material-ui/core/Toolbar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+import GroupIcon from '@material-ui/icons/Group';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
-import GroupIcon from '@material-ui/icons/Group';
+import WarningIcon from '@material-ui/icons/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import {
   primaryGradient,
   statusColors
 } from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
 import Dd from '../../utils/dropdown.utils';
+import AccountMenuContainer from '../account-menu/AccountMenuContainer';
+import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
+import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import { toolbarHeight } from '../header/Header';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
-import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
-import AccountMenuContainer from '../account-menu/AccountMenuContainer';
-import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
-import WarningIcon from '@material-ui/icons/Warning';
 
 export const innerToolbarHeight = 50;
 
@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing(1)}px`
   },
   miscArea: {
+    padding: `0 ${theme.spacing(1)}px`
+  },
+  groupArea: {
     padding: `0 ${theme.spacing(1)}px`
   },
   formControl: {
@@ -313,7 +316,20 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     className={classes.iconButton}
                     title={t('label.remove_snapshot_icon_title')}
                   >
-                    <DeleteIcon fontSize="small" />
+                    <DeleteSweepIcon fontSize="small" />
+                  </IconButton>
+                </Grid>
+                <Grid item className={classes.divider}></Grid>
+                <Grid item className={classes.groupArea}>
+                  <IconButton
+                    disabled={!props.signalrOnline}
+                    onClick={() => props.toggleGroupOverview()}
+                    aria-label="group"
+                    aria-haspopup="true"
+                    className={clsx(classes.iconButton)}
+                    title={t('label.group_icon_title')}
+                  >
+                    <GroupIcon fontSize="small" />
                   </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
@@ -345,16 +361,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     title={t('label.account_icon_title')}
                   >
                     <AccountCircle fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    disabled={!props.signalrOnline}
-                    onClick={() => props.toggleGroupOverview()}
-                    aria-label="group"
-                    aria-haspopup="true"
-                    className={clsx(classes.iconButton)}
-                    title={t('label.group_icon_title')}
-                  >
-                    <GroupIcon fontSize="small" />
                   </IconButton>
                 </Grid>
               </Grid>
