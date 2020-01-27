@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.4] - 2020-XX-XX
+##### Changed
+- Changed order of the sections in the toolbar
+
 ## [0.2.3] - 2020-01-26
 ##### Removed
 - Removed a forgotten console log
