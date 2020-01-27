@@ -150,6 +150,7 @@ const renderApp = () => {
     hydrate('league', leagueStore),
     hydrate('setting', settingStore)
   ]).then(() => {
+    settingStore.setUiScale(settingStore.uiScale);
     visitor = ua(AppConfig.trackingId, uiStateStore.userId);
     ReactDOM.render(app, document.getElementById('root'));
   });

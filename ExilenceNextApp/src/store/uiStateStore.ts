@@ -9,6 +9,7 @@ import uuid from 'uuid';
 import { AxiosError } from 'axios';
 import { stores } from '..';
 import { fromStream } from 'mobx-utils';
+import { electronService } from '../services/electron.service';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -100,7 +101,7 @@ export class UiStateStore {
 
   @action
   redirect(path: string) {
-    if(path === '/login') {
+    if (path === '/login') {
       fromStream(stores.signalrHub.stopConnection());
     }
     this.redirectedTo = path;

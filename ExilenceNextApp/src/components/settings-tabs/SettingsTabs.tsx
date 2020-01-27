@@ -11,6 +11,7 @@ import { innerToolbarHeight } from '../toolbar/Toolbar';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 import SnapshotSettingsContainer from './snapshot-settings/SnapshotSettingsContainer';
+import UiSettingsContainer from './ui-settings/UiSettingsContainer';
 
 function a11yProps(index: any) {
   return {
@@ -69,6 +70,11 @@ const SettingsTabs: React.FC = () => {
           className={classes.tab}
           {...a11yProps(0)}
         />
+        <Tab
+          label={t('title.ui_settings')}
+          className={classes.tab}
+          {...a11yProps(1)}
+        />
       </Tabs>
       <SettingsTab value={value} index={0}>
         <Box className={classes.subSection}>
@@ -85,6 +91,16 @@ const SettingsTabs: React.FC = () => {
           </Typography>
           <Box my={2}>
             <NetWorthSettingsContainer />
+          </Box>
+        </Box>
+      </SettingsTab>
+      <SettingsTab value={value} index={1}>
+        <Box className={classes.subSection}>
+          <Typography variant="overline">
+            {t('title.general')}
+          </Typography>
+          <Box my={2}>
+            <UiSettingsContainer />
           </Box>
         </Box>
       </SettingsTab>
