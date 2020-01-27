@@ -55,7 +55,6 @@ configureI18n();
 
 configure({ enforceActions: 'observed' });
 
-console.log(electronService.remote.app.getLocale());
 moment.locale(electronService.remote.app.getLocale());
 
 const theme = responsiveFontSizes(exilenceTheme());
