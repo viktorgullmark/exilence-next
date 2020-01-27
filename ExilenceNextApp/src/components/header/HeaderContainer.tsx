@@ -21,6 +21,8 @@ const HeaderContainer: React.FC<HeaderContainerProps> = ({
       sidenavOpened={uiStateStore!.sidenavOpen}
       toggleSidenav={() => uiStateStore!.toggleSidenav()}
       currentVersion={updateStore!.currentVersion}
+      updateAvailable={updateStore!.updateAvailable}
+      quitAndInstall={() => updateStore!.quitAndInstall()}
     ></Header>
   );
 };

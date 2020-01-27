@@ -1,4 +1,4 @@
-import { AppBar, Toolbar } from '@material-ui/core';
+import { AppBar, Toolbar, Link } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +12,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IGithubRelease } from '../../interfaces/github/github-release.interface';
 import { WindowUtils } from '../../utils/window.utils';
+import { primaryLighter } from '../../assets/themes/exilence-theme';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -33,6 +34,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     color: theme.palette.text.hint
   },
+  updateAvailable: {
+    flexGrow: 1,
+    color: '#20cc76'
+  },
   toolbar: {
     minHeight: toolbarHeight,
     maxHeight: toolbarHeight,
@@ -45,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   resizeHandleContainer: {
     height: resizeHandleContainerHeight
+  },
+  updateLink: {
+    color: primaryLighter
   },
   noDrag: {
     '-webkit-app-region': 'no-drag',
@@ -83,6 +91,8 @@ interface HeaderProps {
   setMaximized: (maximized: boolean) => void;
   toggleSidenav: () => void;
   currentVersion: string;
+  updateAvailable: boolean;
+  quitAndInstall: () => void;
 }
 
 const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
@@ -117,6 +127,26 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                   v.{props.currentVersion}
                 </Typography>
               </Grid>
+              {props.updateAvailable && (
+                <Grid item onClick={props.quitAndInstall}>
+                  <Typography
+                    variant="subtitle2"
+                    noWrap
+                    className={clsx(classes.updateAvailable, classes.noDrag)}
+                  >
+                    {t('label.update_available')}
+                    {t('label.click')}
+                    &nbsp;
+                    <Link
+                      className={classes.updateLink}
+                    >
+                      {t('label.here')}
+                    </Link>
+                    &nbsp;
+                    {t('label.to_update_now')}
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           <Grid item>
