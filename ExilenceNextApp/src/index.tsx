@@ -38,6 +38,8 @@ import { UiStateStore } from './store/uiStateStore';
 import { UpdateStore } from './store/updateStore';
 import { MigrationStore } from './store/migrationStore';
 import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
+import moment from 'moment';
+import { electronService } from './services/electron.service';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -52,6 +54,9 @@ enableLogging({
 configureI18n();
 
 configure({ enforceActions: 'observed' });
+
+console.log(electronService.remote.app.getLocale());
+moment.locale(electronService.remote.app.getLocale());
 
 const theme = responsiveFontSizes(exilenceTheme());
 

@@ -6,7 +6,7 @@ import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Snapshot implements ISnapshot {
     @persist uuid: string = uuid.v4();
-    @persist('object') created: Date = new Date();
+    @persist('object') created: Date = moment.utc().toDate();
     @persist('list', StashTabSnapshot) stashTabSnapshots: StashTabSnapshot[] = [];
 
     constructor(obj?: ISnapshot) {

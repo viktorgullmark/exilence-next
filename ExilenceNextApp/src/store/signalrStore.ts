@@ -31,6 +31,7 @@ import { NotificationStore } from './notificationStore';
 import { UiStateStore } from './uiStateStore';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { genericRetryStrategy } from '../utils/rxjs.utils';
+import moment from 'moment';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -469,7 +470,7 @@ export class SignalrStore {
             uuid: uuid.v4(),
             name: groupName,
             password: password,
-            created: new Date(),
+            created: moment.utc().toDate(),
             connections: []
           })
           .pipe(

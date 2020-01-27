@@ -4,11 +4,12 @@ import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { computed, observable, action } from 'mobx';
 import { SnapshotUtils } from '../../utils/snapshot.utils';
 import { stores } from '../..';
+import moment from 'moment';
 
 export class Group implements IApiGroup {
   uuid: string = uuid.v4();
   name: string = '';
-  created: Date = new Date();
+  created: Date = moment.utc().toDate();
   @observable connections: IApiConnection[] = [];
   @observable activeAccounts: string[] = [];
 
@@ -21,7 +22,9 @@ export class Group implements IApiGroup {
       .flatMap(c => c.account)
       .filter(a => this.activeAccounts.includes(a.uuid))
       .flatMap(a => {
-        const filter = a.profiles.filter(ap => ap.active).flatMap(p => p.snapshots);
+        const filter = a.profiles
+          .filter(ap => ap.active)
+          .flatMap(p => p.snapshots);
         return onlyLatest && filter.length > 0 ? [filter[0]] : filter;
       });
   }
@@ -71,7 +74,7 @@ export class Group implements IApiGroup {
     }
     return SnapshotUtils.getItemCount(this.latestGroupSnapshots);
   }
-  
+
   @computed
   get chartData() {
     if (this.groupSnapshots.length === 0) {

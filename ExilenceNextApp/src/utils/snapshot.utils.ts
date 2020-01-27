@@ -7,6 +7,7 @@ import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
 import { ColourUtils } from './colour.utils';
 import { ItemUtils } from './item.utils';
+import moment from 'moment';
 
 export class SnapshotUtils {
   public static mapSnapshotToApiSnapshot(
@@ -93,7 +94,7 @@ export class SnapshotUtils {
   ): Array<Array<number>> {
     return snapshots.map(s => {
       const values: number[] = [
-        new Date(s.created).getTime(),
+        moment(new Date(s.created).getTime()).valueOf(),
         +SnapshotUtils.getValueForSnapshot(s).toFixed(2)
       ];
       return values;

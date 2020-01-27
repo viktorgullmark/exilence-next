@@ -6,6 +6,9 @@ const HighchartsTheme: React.FC = () => {
   const theme = useTheme();
 
   const highchartsTheme: Highcharts.Options = {
+    time: {
+      timezoneOffset: new Date().getTimezoneOffset()
+    },
     colors: [theme.palette.primary.main],
     chart: {
       backgroundColor: theme.palette.background.paper,
