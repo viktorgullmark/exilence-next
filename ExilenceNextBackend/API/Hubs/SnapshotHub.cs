@@ -19,7 +19,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
             var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
-            await Log($"Retrived snapshot with ClientId: {snapshotModel.ClientId} worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
             return snapshotModel;
         }
 
@@ -29,14 +29,14 @@ namespace API.Hubs
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
             var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
 
-            await Log($"Retrived latest snapshot with ClientId: {snapshotModelWithItems.ClientId} worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos.");
+            await Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos.");
             return snapshotModelWithItems;
         }
 
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
             snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
-            await Log($"Added snapshot with ClientId: {snapshotModel.ClientId} containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            await Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)

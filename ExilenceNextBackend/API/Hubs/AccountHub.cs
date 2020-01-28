@@ -29,7 +29,7 @@ namespace API.Hubs
         public async Task<SnapshotProfileModel> AddProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
-            await Log($"Added profile with name: {profileModel.Name} and clientId: {profileModel.ClientId}");
+            await Log($"Added profile with name: {profileModel.Name}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -43,14 +43,14 @@ namespace API.Hubs
         public async Task<SnapshotProfileModel> EditProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.EditProfile(AccountName, profileModel);
-            await Log($"Updated profile with name: {profileModel.Name} and clientId: {profileModel.ClientId}");
+            await Log($"Updated profile with name: {profileModel.Name}");
             return profileModel;
         }
 
         public async Task<string> RemoveProfile(string profileId)
         {
             var profileModel = await _accountService.RemoveProfile(AccountName, profileId);
-            await Log($"Removed profile with name: {profileModel.Name} and clientId: {profileModel.ClientId}");
+            await Log($"Removed profile with name: {profileModel.Name}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -71,7 +71,7 @@ namespace API.Hubs
         {
             var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
 
-            await Log($"Set profile with name: {profileModel.Name} and clientId: {profileModel.ClientId} to active");
+            await Log($"Set profile with name: {profileModel.Name} to active");
              
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
