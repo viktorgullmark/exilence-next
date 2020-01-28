@@ -8,6 +8,7 @@ import { Snapshot } from '../store/domains/snapshot';
 import { ColourUtils } from './colour.utils';
 import { ItemUtils } from './item.utils';
 import moment from 'moment';
+import { IApiConnection } from '../interfaces/api/api-connection.interface';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
@@ -120,7 +121,8 @@ export const formatValue = (
 
 export const formatSnapshotsForChart = (
   snapshots: IApiSnapshot[]
-): Array<Array<number>> => {
+): number[][] => {
+
   return snapshots
     .map(s => {
       const values: number[] = [

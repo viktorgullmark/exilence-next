@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
     - Currently based on the past 1 hour, but will be configurable later on
 - Added a label to the net worth card that displays the diff for the last two snapshots
 - Added a label to the snapshot card that displays the time since the last snapshot occured
+- Added group support for the chart
+    - Now displays one line per player
+- Added styling for tooltips
 - Now displays a text when an update is ready
     - Ability to update manually from within the app
 ##### Changed

@@ -5,17 +5,19 @@ import {
   Theme,
   useTheme
 } from '@material-ui/core/styles';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import Highcharts from './../highcharts-base/HighchartsBase';
-import { primaryDarker } from '../../assets/themes/exilence-theme';
 import HC from 'highcharts';
+import React from 'react';
+import { primaryDarker } from '../../assets/themes/exilence-theme';
+import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
+import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
+import Highcharts from './../highcharts-base/HighchartsBase';
+import { Group } from '../../store/domains/group';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
-  chartData: number[][];
-  seriesName: string | undefined;
+  playerData?: IConnectionChartSeries;
+  groupData?: IGroupChartSeries;
 }
 
 export const useStyles = makeStyles((theme: Theme) =>
@@ -28,11 +30,27 @@ export const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SnapshotHistoryChart: React.FC<Props> = ({
-  chartData,
-  seriesName
+  playerData,
+  groupData
 }: Props) => {
   const theme = useTheme();
-  const classes = useStyles();
+  const classes = useStyles(); 
+
+  let seriesData = [{
+    type: 'area',
+    name: playerData?.seriesName,
+    data: playerData?.series
+  }];
+
+  if (groupData) {
+    seriesData = groupData.connections.map(player => {
+      return {
+        type: 'area',
+        name: player.seriesName,
+        data: player.series
+      };
+    });
+  }
 
   const options = {
     title: {
@@ -68,7 +86,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
         marker: {
           radius: 2
         },
-        lineWidth: 1,
+        lineWidth: 2,
         states: {
           hover: {
             lineWidth: 1
@@ -77,14 +95,10 @@ const SnapshotHistoryChart: React.FC<Props> = ({
         threshold: null
       }
     },
-    series: [
-      {
-        type: 'area',
-        name: seriesName,
-        data: chartData
-      }
-    ]
+    series: seriesData
   };
+
+  console.log(options);
 
   return (
     <Box className={classes.root}>
