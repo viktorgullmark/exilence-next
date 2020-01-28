@@ -5,7 +5,8 @@ import { background } from '../../assets/themes/exilence-theme';
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
     'html, body': {
-      height: '100%'
+      height: '100%',
+      backgroundColor: background.darker
     },
     '#root': {
       background: background.darker,
