@@ -62,7 +62,6 @@ export class SignalrStore {
       );
     });
     this.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
-      console.log(group);
       this.setActiveGroup(new Group(group));
       this.activeGroup!.setActiveAccounts(
         group.connections.map(c => c.account.uuid)
