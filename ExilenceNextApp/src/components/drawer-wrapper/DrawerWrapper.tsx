@@ -7,6 +7,8 @@ import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import GroupOverviewContainer from './group-overview/GroupOverviewContainer';
 import NavigationMenuContainer from './navigation-menu/NavigationMenuContainer';
+import { Box } from '@material-ui/core';
+import { background } from '../../assets/themes/exilence-theme';
 
 export const drawerWidth = 300;
 
@@ -35,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fromLeft: {
     marginLeft: drawerWidth
+  },
+  windowBottomBorder: {
+    background: background.darker
   }
 }));
 
@@ -73,6 +78,16 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
           })}
         >
           {children}
+          <Box
+            className={classes.windowBottomBorder}
+            display="block"
+            width="1"
+            height="12px"
+            zIndex="100"
+            bottom="0"
+            left="0"
+            position="fixed"
+          ></Box>
         </main>
       )}
     </>

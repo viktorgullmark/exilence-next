@@ -58,7 +58,8 @@ export const currencyChangeColors = {
 
 export const background = {
   default: '#191919',
-  paper: '#202020'
+  paper: '#202020',
+  darker: '#151515'
 };
 
 export type Rarity = typeof rarityColors;
