@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
   },
   negativeChange: {
     color: currencyChangeColors.negative
+  },
+  tooltip: {
+    maxWidth: 150
   }
 }));
 
@@ -51,6 +54,7 @@ interface OverviewWidgetContentProps {
   valueColor?: string;
   currency?: boolean;
   currencyShort?: string;
+  tooltip?: string;
 }
 
 const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
@@ -64,7 +68,8 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
   secondaryValueStyles,
   valueColor,
   currency,
-  currencyShort
+  currencyShort,
+  tooltip
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -76,14 +81,8 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
         </Grid>
         <Grid item sm={9}>
           <div className={classes.ellipsis}>
-            <Typography
-              variant="h6"
-              align="right"
-              style={{ color: valueColor }}
-            >
-              {currency
-                ? `${formatValue(value, currencyShort, valueIsDiff, true)}`
-                : value}
+            <Typography variant="h6" align="right" style={{ color: valueColor }}>
+              {currency ? `${formatValue(value, currencyShort, valueIsDiff, true)}` : value}
               <span className={classes.valueSuffix}>{valueSuffix}</span>
             </Typography>
           </div>
@@ -97,33 +96,35 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
             </Typography>
           </Grid>
           <Grid item sm={6}>
-            <div className={classes.ellipsis}>
-              {secondaryValue && secondaryValueIsDiff ? (
-                <Typography
-                  component="span"
-                  noWrap
-                  style={secondaryValueStyles}
-                  className={clsx(classes.secondary, {
-                    [classes.currencyChange]: currency,
-                    [classes.positiveChange]: secondaryValue > 0,
-                    [classes.negativeChange]: secondaryValue < 0
-                  })}
-                >
-                  {formatValue(secondaryValue, currencyShort, true)}
-                </Typography>
-              ) : (
-                <Typography
-                  component="span"
-                  noWrap
-                  style={secondaryValueStyles}
-                  className={clsx(classes.secondary, {
-                    [classes.currencyChange]: currency
-                  })}
-                >
-                  {secondaryValue !== 0 ? secondaryValue : ''}
-                </Typography>
-              )}
-            </div>
+            <Tooltip title={tooltip} classes={{ tooltip: classes.tooltip }} placement="bottom-end">
+              <div className={classes.ellipsis}>
+                {secondaryValue && secondaryValueIsDiff ? (
+                  <Typography
+                    component="span"
+                    noWrap
+                    style={secondaryValueStyles}
+                    className={clsx(classes.secondary, {
+                      [classes.currencyChange]: currency,
+                      [classes.positiveChange]: secondaryValue > 0,
+                      [classes.negativeChange]: secondaryValue < 0
+                    })}
+                  >
+                    {formatValue(secondaryValue, currencyShort, true)}
+                  </Typography>
+                ) : (
+                  <Typography
+                    component="span"
+                    noWrap
+                    style={secondaryValueStyles}
+                    className={clsx(classes.secondary, {
+                      [classes.currencyChange]: currency
+                    })}
+                  >
+                    {secondaryValue !== 0 ? secondaryValue : ''}
+                  </Typography>
+                )}
+              </div>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>
