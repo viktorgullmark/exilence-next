@@ -3,7 +3,13 @@ import moment from 'moment';
 import uuid from 'uuid';
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
-import { calculateNetWorth, filterItems, formatSnapshotsForChart, getItemCount, getValueForSnapshotsTabs } from '../../utils/snapshot.utils';
+import {
+  calculateNetWorth,
+  filterItems,
+  formatSnapshotsForChart,
+  getItemCount,
+  getValueForSnapshotsTabs
+} from '../../utils/snapshot.utils';
 
 export class Group implements IApiGroup {
   uuid: string = uuid.v4();
@@ -24,7 +30,7 @@ export class Group implements IApiGroup {
         let profileSnapshots = a.profiles
           .filter(ap => ap.active)
           .flatMap(p => p.snapshots)
-          .sort((a, b) => moment(a.created).isBefore(b.created) ? 1 : -1);
+          .sort((a, b) => (moment(a.created).isBefore(b.created) ? 1 : -1));
 
         if (excludeSnapshotId) {
           profileSnapshots = profileSnapshots.filter(s => s.uuid !== excludeSnapshotId);
@@ -41,9 +47,7 @@ export class Group implements IApiGroup {
 
   @action
   removeConnection(connectionId: string) {
-    this.connections = this.connections.filter(
-      c => c.connectionId !== connectionId
-    );
+    this.connections = this.connections.filter(c => c.connectionId !== connectionId);
   }
 
   @computed
@@ -52,15 +56,11 @@ export class Group implements IApiGroup {
       return 0;
     }
 
-    const latestSnapshot = this.latestGroupSnapshots.sort((a, b) => moment(a.created).isBefore(b.created) ? 1 : -1)[0];
+    const latestSnapshot = this.latestGroupSnapshots.sort((a, b) => (moment(a.created).isBefore(b.created) ? 1 : -1))[0];
 
-    const previousNetworth = getValueForSnapshotsTabs(
-      this.latestGroupSnapshotsExceptLast(latestSnapshot.uuid)
-    );
+    const previousNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshotsExceptLast(latestSnapshot.uuid));
 
-    const newNetworth = getValueForSnapshotsTabs(
-      this.latestGroupSnapshots
-    );
+    const newNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
 
     return newNetworth - previousNetworth;
   }
@@ -92,10 +92,7 @@ export class Group implements IApiGroup {
       if (snapshots && snapshots.length > 1) {
         const lastSnapshot = snapshots[0];
         const firstSnapshot = snapshots[snapshots.length - 1];
-        const incomePerHour =
-          (calculateNetWorth([lastSnapshot]) -
-            calculateNetWorth([firstSnapshot])) /
-          hours;
+        const incomePerHour = (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
         incomeForGroup += incomePerHour;
       }
     });
