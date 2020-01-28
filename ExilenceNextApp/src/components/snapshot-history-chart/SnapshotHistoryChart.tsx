@@ -98,8 +98,6 @@ const SnapshotHistoryChart: React.FC<Props> = ({
     series: seriesData
   };
 
-  console.log(options);
-
   return (
     <Box className={classes.root}>
       <Highcharts
