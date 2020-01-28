@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.4] - 2020-XX-XX
+## [0.2.4] - 2020-01-28
 ##### Added
 - Added a setting for scaling the user interface
 - Added a new card for income (gain per hour)
@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - Changed how the scroll behaves on the net worth page, to allow for more control
 - Changed how the price treshold setting works
     - It now updates the actual value on the snapshot, which means you have to wait for a new snapshot for changes
+##### Fixed
+- Fixed a bug where the font was not properly set for some users
 
 ## [0.2.3] - 2020-01-26
 ##### Removed
