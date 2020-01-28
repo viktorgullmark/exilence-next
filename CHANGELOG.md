@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.4] - 2020-XX-XX
+##### Added
+- Added a setting for scaling the user interface
+- Now displays a text when an update is ready
+    - Ability to update manually from within the app
 ##### Changed
 - Changed order of the sections in the toolbar
 
