@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import LoginContentContainer from '../../components/login-content/LoginContentContainer';
 import { observer } from 'mobx-react';
 import { visitor, appName } from '../..';
-import Image from '../../assets/img/blight-bg.jpg';
+import Image from '../../assets/img/conquerorsoftheatlas-bg.jpg';
 
 const useStyles = makeStyles(theme => ({
   loginWrapper: {
