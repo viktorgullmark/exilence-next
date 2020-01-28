@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -55,6 +55,7 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
 }: DrawerWrapperProps) => {
   const classes = useStyles();
   const location = useLocation();
+  const theme = useTheme();
 
   const atLoginRoute = () => {
     return location.pathname === '/login';
@@ -82,7 +83,7 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
             className={classes.windowBottomBorder}
             display="block"
             width="1"
-            height="12px"
+            height={theme.spacing(2)}
             zIndex="100"
             bottom="0"
             left="0"
