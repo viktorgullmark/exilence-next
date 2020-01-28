@@ -1,17 +1,9 @@
-import uuid from 'uuid';
-import { IApiGroup } from '../../interfaces/api/api-group.interface';
-import { IApiConnection } from '../../interfaces/api/api-connection.interface';
-import { computed, observable, action } from 'mobx';
-import { stores } from '../..';
+import { action, computed, observable } from 'mobx';
 import moment from 'moment';
-import {
-  getValueForSnapshotsTabs,
-  filterItems,
-  calculateNetWorth,
-  formatSnapshotsForChart,
-  getItemCount,
-  mapSnapshotToApiSnapshot
-} from '../../utils/snapshot.utils';
+import uuid from 'uuid';
+import { IApiConnection } from '../../interfaces/api/api-connection.interface';
+import { IApiGroup } from '../../interfaces/api/api-group.interface';
+import { calculateNetWorth, filterItems, formatSnapshotsForChart, getItemCount, getValueForSnapshotsTabs } from '../../utils/snapshot.utils';
 
 export class Group implements IApiGroup {
   uuid: string = uuid.v4();
@@ -29,15 +21,16 @@ export class Group implements IApiGroup {
       .flatMap(c => c.account)
       .filter(a => this.activeAccounts.includes(a.uuid))
       .flatMap(a => {
-        let filter = a.profiles
+        let profileSnapshots = a.profiles
           .filter(ap => ap.active)
-          .flatMap(p => p.snapshots);
+          .flatMap(p => p.snapshots)
+          .sort((a, b) => moment(a.created).isBefore(b.created) ? 1 : -1);
 
         if (excludeSnapshotId) {
-          filter = filter.filter(s => s.uuid !== excludeSnapshotId);
+          profileSnapshots = profileSnapshots.filter(s => s.uuid !== excludeSnapshotId);
         }
 
-        return onlyLatest && filter.length > 0 ? [filter[0]] : filter;
+        return onlyLatest && profileSnapshots.length > 0 ? [profileSnapshots[0]] : profileSnapshots;
       });
   }
 
@@ -59,15 +52,17 @@ export class Group implements IApiGroup {
       return 0;
     }
 
-    const latestSnapshot = this.latestGroupSnapshots[0];
+    const latestSnapshot = this.latestGroupSnapshots.sort((a, b) => moment(a.created).isBefore(b.created) ? 1 : -1)[0];
 
-    const netWorthValue = getValueForSnapshotsTabs(
+    const previousNetworth = getValueForSnapshotsTabs(
       this.latestGroupSnapshotsExceptLast(latestSnapshot.uuid)
     );
 
-    const lastSnapshotNetWorth = getValueForSnapshotsTabs([latestSnapshot]);
+    const newNetworth = getValueForSnapshotsTabs(
+      this.latestGroupSnapshots
+    );
 
-    return lastSnapshotNetWorth - netWorthValue;
+    return newNetworth - previousNetworth;
   }
 
   @computed
