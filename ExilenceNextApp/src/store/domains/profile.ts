@@ -3,15 +3,10 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of } from 'rxjs';
-import {
-  catchError,
-  map,
-  mergeMap,
-  switchMap,
-  concatMap,
-  flatMap
-} from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
+import { IApiProfile } from '../../interfaces/api/api-profile.interface';
+import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
@@ -20,15 +15,20 @@ import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface
 import { pricingService } from '../../services/pricing.service';
 import { ItemUtils } from '../../utils/item.utils';
 import { PriceUtils } from '../../utils/price.utils';
+import { ProfileUtils } from '../../utils/profile.utils';
+import {
+  calculateNetWorth,
+  filterItems,
+  formatSnapshotsForChart,
+  getItemCount,
+  getValueForSnapshotsTabs,
+  mapSnapshotToApiSnapshot
+} from '../../utils/snapshot.utils';
 import { stores, visitor } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { SnapshotUtils } from '../../utils/snapshot.utils';
-import { ProfileUtils } from '../../utils/profile.utils';
 import { StashTabSnapshot } from './stashtab-snapshot';
-import { IApiProfile } from '../../interfaces/api/api-profile.interface';
-import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
-import { IApiStashTabPricedItem } from '../../interfaces/api/api-stashtab-priceditem.interface';
+import moment from 'moment';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -72,9 +72,7 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return SnapshotUtils.filterItems([
-      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
-    ]);
+    return filterItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
   @computed
@@ -82,9 +80,22 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return SnapshotUtils.calculateNetWorth([
-      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
+    return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+  }
+
+  @computed
+  get lastSnapshotChange() {
+    if (this.snapshots.length < 2) {
+      return 0;
+    }
+    const lastSnapshotNetWorth = getValueForSnapshotsTabs([
+      mapSnapshotToApiSnapshot(this.snapshots[0])
     ]);
+    const previousSnapshotNetWorth = getValueForSnapshotsTabs([
+      mapSnapshotToApiSnapshot(this.snapshots[1])
+    ]);
+
+    return lastSnapshotNetWorth - previousSnapshotNetWorth;
   }
 
   @computed
@@ -92,8 +103,8 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return [];
     }
-    return SnapshotUtils.formatSnapshotsForChart(
-      this.snapshots.map(s => SnapshotUtils.mapSnapshotToApiSnapshot(s))
+    return formatSnapshotsForChart(
+      this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
     );
   }
 
@@ -102,9 +113,31 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return SnapshotUtils.getItemCount([
-      SnapshotUtils.mapSnapshotToApiSnapshot(this.snapshots[0])
-    ]);
+    return getItemCount([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+  }
+
+  @computed
+  get income() {
+    const hours = 1;
+    const hoursAgo = moment().utc().subtract(hours, 'hours');
+    const snapshots = this.snapshots.filter(s => moment(s.created).utc().isAfter(hoursAgo));
+
+    if(snapshots.length > 1) {
+      const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
+      const firstSnapshot = mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1]);
+      const incomePerHour = (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
+      return incomePerHour;
+    }
+
+    return 0;
+  }
+
+  @computed
+  get timeSinceLastSnapshot() {
+    if (this.snapshots.length === 0) {
+      return undefined;
+    }
+    return moment(this.snapshots[0].created).fromNow();
   }
 
   @action
@@ -281,10 +314,13 @@ export class Profile {
     let prices = activePriceDetails.leaguePriceSources[0].prices;
 
     if (!stores.settingStore.lowConfidencePricing) {
-      prices = prices.filter(
-        p => p.count > 10
-      );
+      prices = prices.filter(p => p.count > 10);
     }
+
+    prices = prices.filter(
+      p => p.calculated && p.calculated >= stores.settingStore.priceTreshold
+    );
+
     prices = PriceUtils.excludeLegacyMaps(prices);
 
     const pricedStashTabs = stashTabsWithItems.map(
@@ -345,7 +381,7 @@ export class Profile {
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+      const apiSnapshot = mapSnapshotToApiSnapshot(
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );

@@ -5,7 +5,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import { appName, visitor } from '../..';
 import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
@@ -19,6 +19,8 @@ import SnapshotHistoryChartContainer from '../../components/snapshot-history-cha
 import DiscordLogo from '../../assets/img/discord-wordmark-colored.svg';
 import PatreonLogo from '../../assets/img/patreon-white.png';
 import { WindowUtils } from '../../utils/window.utils';
+import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -52,13 +54,22 @@ const NetWorth: React.FC<NetWorthProps> = ({
   const classes = useStyles();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+  const { t } = useTranslation();
 
-  const itemCount = () => {
-    return activeProfile ? activeProfile.itemCount : 0;
+  const income = () => {
+    return activeProfile ? activeProfile.income : 0;
   };
 
   const netWorthValue = () => {
     return activeProfile ? activeProfile.netWorthValue : 0;
+  };
+
+  const lastSnapshotChange = () => {
+    return activeProfile ? activeProfile.lastSnapshotChange : 0;
+  };
+
+  const timeSinceLastSnapshot = () => {
+    return activeProfile ? activeProfile.timeSinceLastSnapshot : undefined;
   };
 
   const snapshots = () => {
@@ -88,10 +99,17 @@ const NetWorth: React.FC<NetWorthProps> = ({
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
+              secondaryValue={
+                activeGroup
+                  ? activeGroup.lastSnapshotChange
+                  : lastSnapshotChange()
+              }
+              secondaryValueIsDiff
+              secondaryValueStyles={{ fontSize: '0.8rem' }}
               title="label.total_value"
               valueColor={itemColors.chaosOrb}
               currencyShort={activeCurrency().short}
-              icon={<MonetizationOnIcon fontSize="large" />}
+              icon={<MonetizationOnIcon fontSize="default" />}
               currency
             />
           </Widget>
@@ -99,10 +117,14 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.itemCount : itemCount()}
-              title="label.total_items"
-              valueColor={theme.palette.text.primary}
-              icon={<GavelIcon fontSize="large" />}
+              value={activeGroup ? activeGroup.income : income()}
+              valueIsDiff
+              valueSuffix={` ${t('label.hour_suffix')}`}
+              title="label.total_income"
+              valueColor={itemColors.chaosOrb}
+              icon={<TrendingUpIcon fontSize="default" />}
+              currencyShort={activeCurrency().short}
+              currency
             />
           </Widget>
         </Grid>
@@ -115,14 +137,25 @@ const NetWorth: React.FC<NetWorthProps> = ({
                   : snapshots().length
               }
               title="label.total_snapshots"
+              secondaryValue={
+                activeGroup
+                  ? activeGroup.timeSinceLastSnapshot
+                  : timeSinceLastSnapshot()
+              }
+              secondaryValueStyles={{ color: theme.palette.text.primary, fontSize: '0.8rem', fontWeight: 'normal'}}
               valueColor={theme.palette.text.primary}
-              icon={<UpdateIcon fontSize="large" />}
+              icon={<UpdateIcon fontSize="default" />}
             />
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3}>
           <Widget>
-            <Box display="flex" alignItems="center" justifyContent="center" height={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height={1}
+            >
               <a
                 href="https://patreon.com/exilence"
                 onClick={e => WindowUtils.openLink(e)}

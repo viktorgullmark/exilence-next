@@ -36,6 +36,7 @@ const NetWorthSettings: React.FC<Props> = ({
           value={priceTreshold}
           handleChange={(value: number) => setPriceTreshold(value)}
           translationKey="price_treshold"
+          requiresSnapshot
         />
       </Grid>
     </Grid>

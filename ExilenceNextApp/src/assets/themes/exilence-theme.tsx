@@ -10,6 +10,10 @@ const primaryDark = '#720e30';
 export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
 
+export const fontColors = {
+  hintDarker: 'rgba(255, 255, 255, 0.2)'
+}
+
 export const secondary = {
   light: '#696969',
   main: '#282828',
@@ -20,7 +24,7 @@ export const gridSpacing = 2;
 
 export const cardColors = {
   primary: '#263238',
-  secondary: '#1c3533',
+  secondary: '#1b3331',
   third: '#14394c'
 };
 
@@ -46,6 +50,11 @@ export const statusColors = {
   info: grey[900],
   error: red[900]
 };
+
+export const currencyChangeColors = {
+  positive: green[600],
+  negative: red[700]
+}
 
 export const background = {
   default: '#191919',
@@ -96,6 +105,12 @@ export default function exilenceTheme() {
       secondary: secondary,
       background: background,
       type: 'dark'
+    },
+    typography: {
+      h6: {
+        fontWeight: 400,
+        fontSize: '1.15rem'
+      }
     }
   });
 }
