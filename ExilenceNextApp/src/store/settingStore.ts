@@ -8,7 +8,7 @@ import { electronService } from '../services/electron.service';
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
   @persist @observable autoSnapshotting: boolean = false;
-  @persist @observable priceTreshold: number = 1;
+  @persist @observable priceTreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 5 * 1000; // default to 5 minutes
   @persist
   @observable

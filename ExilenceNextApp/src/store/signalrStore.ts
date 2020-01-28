@@ -23,7 +23,6 @@ import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
-import { SnapshotUtils } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { SignalrHub } from './domains/signalr-hub';
 import { Snapshot } from './domains/snapshot';
@@ -32,6 +31,7 @@ import { UiStateStore } from './uiStateStore';
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { genericRetryStrategy } from '../utils/rxjs.utils';
 import moment from 'moment';
+import { mapSnapshotToApiSnapshot } from '../utils/snapshot.utils';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -512,7 +512,7 @@ export class SignalrStore {
         })
         .slice(0, 100);
       activeGroupProfile.snapshots.unshift(
-        SnapshotUtils.mapSnapshotToApiSnapshot(snapshot)
+        mapSnapshotToApiSnapshot(snapshot)
       );
     }
   }

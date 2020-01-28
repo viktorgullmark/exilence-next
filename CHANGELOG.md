@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 ## [0.2.4] - 2020-XX-XX
 ##### Added
 - Added a setting for scaling the user interface
+- Added a new card for income (gain per hour)
+    - Currently based on the past 1 hour, but will be configurable later on
+- Added a label to the net worth card that displays the diff for the last two snapshots
+- Added a label to the snapshot card that displays the time since the last snapshot occured
 - Now displays a text when an update is ready
     - Ability to update manually from within the app
 ##### Changed
+- Changed the look and feel of the cards in the top of the net worth page
 - Changed order of the sections in the toolbar
+- Changed how the price treshold setting works
+    - It now updates the actual value on the snapshot, which means you have to wait for a new snapshot for changes
 
 ## [0.2.3] - 2020-01-26
 ##### Removed

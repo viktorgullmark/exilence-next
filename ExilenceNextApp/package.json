@@ -48,6 +48,7 @@
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
     "tslib": "^1.10.0",
+    "typeface-roboto": "0.0.75",
     "typelevel-ts": "^0.3.5",
     "typescript": "^3.7.5",
     "universal-analytics": "^0.4.20",
