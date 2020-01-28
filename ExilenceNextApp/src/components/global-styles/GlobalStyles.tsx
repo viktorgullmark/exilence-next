@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.paper
       },
       '*::-webkit-scrollbar-thumb': {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: '#616161',
         outline: '1px solid slategrey'
       }
     }
