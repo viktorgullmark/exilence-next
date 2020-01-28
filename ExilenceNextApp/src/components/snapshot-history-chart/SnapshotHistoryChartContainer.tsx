@@ -23,10 +23,6 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
 
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
-  const chartData = () => {
-    return activeProfile ? activeProfile.chartData : [];
-  };
-
   const { activeGroup } = signalrStore!;
 
   return (
@@ -34,8 +30,8 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
       <SnapshotHistoryChart
         width={size.width}
         height={size.height}
-        seriesName={activeGroup ? activeGroup.name : activeProfile?.name}
-        chartData={activeGroup ? activeGroup.chartData : chartData()}
+        groupData={activeGroup?.chartData}
+        playerData={activeProfile?.chartData}
       />
     </div>
   );

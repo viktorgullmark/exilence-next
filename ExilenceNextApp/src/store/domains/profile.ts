@@ -29,6 +29,7 @@ import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 import moment from 'moment';
+import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -101,11 +102,17 @@ export class Profile {
   @computed
   get chartData() {
     if (this.snapshots.length === 0) {
-      return [];
+      return undefined;
     }
-    return formatSnapshotsForChart(
-      this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
-    );
+
+    const connectionSeries: IConnectionChartSeries = {
+      seriesName: this.name,
+      series: formatSnapshotsForChart(
+        this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
+      )
+    };
+
+    return connectionSeries;
   }
 
   @computed
@@ -119,13 +126,24 @@ export class Profile {
   @computed
   get income() {
     const hours = 1;
-    const hoursAgo = moment().utc().subtract(hours, 'hours');
-    const snapshots = this.snapshots.filter(s => moment(s.created).utc().isAfter(hoursAgo));
+    const hoursAgo = moment()
+      .utc()
+      .subtract(hours, 'hours');
+    const snapshots = this.snapshots.filter(s =>
+      moment(s.created)
+        .utc()
+        .isAfter(hoursAgo)
+    );
 
-    if(snapshots.length > 1) {
+    if (snapshots.length > 1) {
       const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
-      const firstSnapshot = mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1]);
-      const incomePerHour = (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
+      const firstSnapshot = mapSnapshotToApiSnapshot(
+        snapshots[snapshots.length - 1]
+      );
+      const incomePerHour =
+        (calculateNetWorth([lastSnapshot]) -
+          calculateNetWorth([firstSnapshot])) /
+        hours;
       return incomePerHour;
     }
 

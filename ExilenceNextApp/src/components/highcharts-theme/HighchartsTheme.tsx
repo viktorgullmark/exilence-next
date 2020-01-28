@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@material-ui/core';
 import Highcharts from 'highcharts';
+import { cyan, amber, lightBlue, deepPurple, pink } from '@material-ui/core/colors';
 
 const HighchartsTheme: React.FC = () => {
   const theme = useTheme();
@@ -9,7 +10,9 @@ const HighchartsTheme: React.FC = () => {
     time: {
       timezoneOffset: new Date().getTimezoneOffset()
     },
-    colors: [theme.palette.primary.main],
+    colors: [
+      theme.palette.primary.main
+    ],
     chart: {
       backgroundColor: theme.palette.background.paper,
       style: {
