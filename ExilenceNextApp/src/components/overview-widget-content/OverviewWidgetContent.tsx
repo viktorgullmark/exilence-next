@@ -69,7 +69,7 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
   valueColor,
   currency,
   currencyShort,
-  tooltip
+  tooltip = ''
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
