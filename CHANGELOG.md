@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ##### Changed
 - Changed the look and feel of the cards in the top of the net worth page
 - Changed order of the sections in the toolbar
+- Changed how the scroll behaves on the net worth page, to allow for more control
 - Changed how the price treshold setting works
     - It now updates the actual value on the snapshot, which means you have to wait for a new snapshot for changes
 
