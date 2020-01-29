@@ -42,6 +42,7 @@ const ToolbarStepper: React.FC<Props> = ({ isOpen, handleClose }: Props) => {
         onRequestClose={handleClose}
         accentColor={theme.palette.primary.main}
         maskSpace={theme.spacing(2)}
+        closeWithMask={false}
         disableInteraction
       />
     </>
