@@ -28,6 +28,9 @@ import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { Profile } from './domains/profile';
 import { IProfile } from '../interfaces/profile.interface';
 import { SettingStore } from './settingStore';
+import { ILeague } from '../interfaces/league.interface';
+import { ICharacter } from '../interfaces/character.interface';
+import { getCharacterLeagues } from '../utils/league.utils';
 
 export class AccountStore {
   constructor(
@@ -250,8 +253,8 @@ export class AccountStore {
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap(requests => {
-              const retrievedLeagues = requests[0].data;
-              const retrievedCharacters = requests[1].data;
+              const retrievedLeagues: ILeague[] = requests[0].data;
+              const retrievedCharacters: ICharacter[] = requests[1].data;
 
               if (retrievedLeagues.length === 0) {
                 throw new Error('error:no_leagues');
@@ -260,7 +263,12 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              this.leagueStore.updateLeagues(retrievedLeagues);
+              this.leagueStore.updateLeagues(
+                getCharacterLeagues(retrievedCharacters)
+              );
+              this.leagueStore.updatePriceLeagues(
+                retrievedLeagues.filter(l => l.id.indexOf('SSF') === -1)
+              );
               this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
               this.priceStore.getPricesForLeagues();
 
