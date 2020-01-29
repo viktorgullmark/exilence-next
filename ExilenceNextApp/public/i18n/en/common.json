@@ -13,7 +13,8 @@
     "close": "Close",
     "create_group": "Create group",
     "join_group": "Join group",
-    "leave_group": "Leave group"
+    "leave_group": "Leave group",
+    "lets_begin": "Lets begin!"
   },
   "title": {
     "login": "Login",

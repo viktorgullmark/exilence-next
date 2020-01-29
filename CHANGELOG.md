@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.6] - 2020-XX-XX
 ##### Added
+- Added a introduction tour for new users that will be displayed once
 - Added styled tooltips when hovering icon buttons
 
 ## [0.2.5] - 2020-01-29
