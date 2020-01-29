@@ -40,6 +40,7 @@ import { MigrationStore } from './store/migrationStore';
 import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
 import moment from 'moment';
 import { electronService } from './services/electron.service';
+import './assets/styles/reactour.scss';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;

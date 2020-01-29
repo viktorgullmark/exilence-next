@@ -17,6 +17,7 @@ export class UiStateStore {
   @observable @persist userId: string = uuid.v4();
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = true;
+  @persist @observable toolbarTourOpen: boolean = true;
   @observable validated: boolean = false;
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
@@ -47,6 +48,11 @@ export class UiStateStore {
   @action
   setChangingProfile(changing: boolean) {
     this.changingProfile = changing;
+  }
+
+  @action
+  setToolbarTourOpen(open: boolean) {
+    this.toolbarTourOpen = open;
   }
 
   @action

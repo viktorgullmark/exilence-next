@@ -39,6 +39,7 @@ import NotificationListContainer from '../notification-list/NotificationListCont
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
+import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -174,6 +175,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               [classes.fromRight]: props.groupOverviewOpened
             })}
           >
+            <ToolbarStepperContainer />
             <MuiToolbar className={classes.toolbar}>
               <IconButton
                 color="inherit"
@@ -205,7 +207,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 justify="flex-end"
                 className={classes.toolbarGrid}
               >
-                <Grid item className={classes.profileArea}>
+                <Grid
+                  item
+                  className={classes.profileArea}
+                  data-tour-elem="profileArea"
+                >
                   <IconButton
                     disabled={
                       props.isSnapshotting ||
@@ -281,7 +287,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.snapshotArea}>
+                <Grid
+                  item
+                  className={classes.snapshotArea}
+                  data-tour-elem="snapshotArea"
+                >
                   <IconButton
                     disabled={
                       !props.activeProfile ||
@@ -320,7 +330,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.groupArea}>
+                <Grid
+                  item
+                  className={classes.groupArea}
+                  data-tour-elem="groupArea"
+                >
                   <IconButton
                     disabled={!props.signalrOnline}
                     onClick={() => props.toggleGroupOverview()}
@@ -335,6 +349,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.miscArea}>
                   <IconButton
+                    data-tour-elem="notificationList"
                     onClick={e => props.handleNotificationsOpen(e)}
                     aria-label="show new notifications"
                     color="inherit"
