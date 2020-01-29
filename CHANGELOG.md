@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.6] - 2020-XX-XX
+##### Added
+- Added styled tooltips when hovering icon buttons
+
 ## [0.2.5] - 2020-01-29
 ##### Changed
 - Changed the position and behaviour of the scrollbar
