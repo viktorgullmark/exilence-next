@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.5] - 2020-01-29
+##### Fixed
+- Fixed a bug where the app would crash when switching profiles
+
 ## [0.2.4] - 2020-01-28
 ##### Added
 - Added a setting for scaling the user interface

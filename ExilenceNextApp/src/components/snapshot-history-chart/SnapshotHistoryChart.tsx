@@ -39,7 +39,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   let seriesData = [{
     type: 'area',
     name: playerData ? playerData.seriesName : 'No data',
-    data: playerData?.series
+    data: playerData ? playerData.series : []
   }];
 
   if (groupData) {
