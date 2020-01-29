@@ -66,6 +66,7 @@
     "sign_out": "Sign out",
     "join_group": "Join group",
     "create_group": "Create group",
+    "toggle_menu_title": "Toggle menu",
     "edit_profile_icon_title": "Edit profile",
     "create_profile_icon_title": "Create profile",
     "fetch_snapshot_icon_title": "Fetch snapshot",

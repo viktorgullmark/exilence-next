@@ -4,7 +4,8 @@ import {
   FormControl,
   Grid,
   MenuItem,
-  Select
+  Select,
+  Tooltip
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
@@ -177,15 +178,22 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           >
             <ToolbarStepperContainer />
             <MuiToolbar className={classes.toolbar}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={() => props.toggleSidenav()}
-                edge="start"
-                className={clsx(props.sidenavOpened && classes.hide)}
+              <Tooltip
+                title={t('label.toggle_menu_title')}
+                placement="bottom"
               >
-                <MenuIcon />
-              </IconButton>
+                <span>
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={() => props.toggleSidenav()}
+                    edge="start"
+                    className={clsx(props.sidenavOpened && classes.hide)}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
               {!props.signalrOnline && (
                 <WarningIcon
                   titleAccess={t('label.server_offline_title')}
@@ -207,26 +215,28 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 justify="flex-end"
                 className={classes.toolbarGrid}
               >
-                <Grid
-                  item
-                  className={classes.profileArea}
-                  data-tour-elem="profileArea"
-                >
-                  <IconButton
-                    disabled={
-                      props.isSnapshotting ||
-                      !props.activeProfile ||
-                      props.isInitiating ||
-                      !props.profilesLoaded ||
-                      !props.signalrOnline
-                    }
-                    aria-label="edit"
-                    className={classes.iconButton}
-                    onClick={() => props.handleProfileOpen(true)}
+              <Grid item className={classes.profileArea} data-tour-elem="profileArea">
+                  <Tooltip
                     title={t('label.edit_profile_icon_title')}
+                    placement="bottom"
                   >
-                    <SettingsIcon fontSize="small" />
-                  </IconButton>
+                    <span>
+                      <IconButton
+                        disabled={
+                          props.isSnapshotting ||
+                          !props.activeProfile ||
+                          props.isInitiating ||
+                          !props.profilesLoaded ||
+                          !props.signalrOnline
+                        }
+                        aria-label="edit"
+                        className={classes.iconButton}
+                        onClick={() => props.handleProfileOpen(true)}
+                      >
+                        <SettingsIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                   <FormControl className={classes.formControl}>
                     <Select
                       disabled={
@@ -256,127 +266,160 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     </Select>
                   </FormControl>
 
-                  <IconButton
-                    disabled={
-                      props.isSnapshotting ||
-                      !props.profilesLoaded ||
-                      props.isInitiating ||
-                      !props.signalrOnline
-                    }
-                    onClick={() => props.handleProfileOpen()}
-                    aria-label="create"
-                    className={classes.iconButton}
+                  <Tooltip
                     title={t('label.create_profile_icon_title')}
+                    placement="bottom"
                   >
-                    <AddIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    disabled={
-                      props.isSnapshotting ||
-                      props.profiles.length < 2 ||
-                      props.isInitiating ||
-                      !props.profilesLoaded ||
-                      !props.signalrOnline
-                    }
-                    onClick={() => props.handleRemoveProfile()}
-                    aria-label="remove profile"
-                    className={classes.iconButton}
+                    <span>
+                      <IconButton
+                        disabled={
+                          props.isSnapshotting ||
+                          !props.profilesLoaded ||
+                          props.isInitiating ||
+                          !props.signalrOnline
+                        }
+                        onClick={() => props.handleProfileOpen()}
+                        aria-label="create"
+                        className={classes.iconButton}
+                      >
+                        <AddIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                  <Tooltip
                     title={t('label.remove_profile_icon_title')}
+                    placement="bottom"
                   >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+                    <span>
+                      <IconButton
+                        disabled={
+                          props.isSnapshotting ||
+                          props.profiles.length < 2 ||
+                          props.isInitiating ||
+                          !props.profilesLoaded ||
+                          !props.signalrOnline
+                        }
+                        onClick={() => props.handleRemoveProfile()}
+                        aria-label="remove profile"
+                        className={classes.iconButton}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid
-                  item
-                  className={classes.snapshotArea}
-                  data-tour-elem="snapshotArea"
-                >
-                  <IconButton
-                    disabled={
-                      !props.activeProfile ||
-                      !props.activeProfile.readyToSnapshot ||
-                      !props.signalrOnline ||
-                      props.autoSnapshotting
-                    }
-                    onClick={() => props.handleSnapshot()}
-                    aria-label="snapshot"
-                    className={classes.iconButton}
+                <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
+                  <Tooltip
                     title={t('label.fetch_snapshot_icon_title')}
+                    placement="bottom"
                   >
-                    {!props.isSnapshotting ? (
-                      <UpdateIcon fontSize="small" />
-                    ) : (
-                      <CircularProgress
-                        title={t('label.fetch_snapshot_spinner_title')}
-                        className={classes.spinner}
-                        size={20}
-                      />
-                    )}
-                  </IconButton>
-                  <IconButton
-                    disabled={
-                      !props.activeProfile ||
-                      props.isSnapshotting ||
-                      !props.signalrOnline ||
-                      props.activeProfile.snapshots.length === 0
-                    }
-                    onClick={() => props.handleClearSnapshots()}
-                    aria-label="clear snapshots"
-                    className={classes.iconButton}
+                    <span>
+                      <IconButton
+                        disabled={
+                          !props.activeProfile ||
+                          !props.activeProfile.readyToSnapshot ||
+                          !props.signalrOnline ||
+                          props.autoSnapshotting
+                        }
+                        onClick={() => props.handleSnapshot()}
+                        aria-label="snapshot"
+                        className={classes.iconButton}
+                      >
+                        {!props.isSnapshotting ? (
+                          <UpdateIcon fontSize="small" />
+                        ) : (
+                          <CircularProgress
+                            className={classes.spinner}
+                            size={20}
+                          />
+                        )}
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                  <Tooltip
                     title={t('label.remove_snapshot_icon_title')}
+                    placement="bottom"
                   >
-                    <DeleteSweepIcon fontSize="small" />
-                  </IconButton>
+                    <span>
+                      <IconButton
+                        disabled={
+                          !props.activeProfile ||
+                          props.isSnapshotting ||
+                          !props.signalrOnline ||
+                          props.activeProfile.snapshots.length === 0
+                        }
+                        onClick={() => props.handleClearSnapshots()}
+                        aria-label="clear snapshots"
+                        className={classes.iconButton}
+                      >
+                        <DeleteSweepIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid
-                  item
-                  className={classes.groupArea}
-                  data-tour-elem="groupArea"
-                >
-                  <IconButton
-                    disabled={!props.signalrOnline}
-                    onClick={() => props.toggleGroupOverview()}
-                    aria-label="group"
-                    aria-haspopup="true"
-                    className={clsx(classes.iconButton)}
+                <Grid item className={classes.groupArea} data-tour-elem="groupArea">
+                  <Tooltip
                     title={t('label.group_icon_title')}
+                    placement="bottom"
                   >
-                    <GroupIcon fontSize="small" />
-                  </IconButton>
+                    <span>
+                      <IconButton
+                        disabled={!props.signalrOnline}
+                        onClick={() => props.toggleGroupOverview()}
+                        aria-label="group"
+                        aria-haspopup="true"
+                        className={clsx(classes.iconButton)}
+                      >
+                        <GroupIcon fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
                 <Grid item className={classes.miscArea}>
-                  <IconButton
-                    data-tour-elem="notificationList"
-                    onClick={e => props.handleNotificationsOpen(e)}
-                    aria-label="show new notifications"
-                    color="inherit"
-                    className={clsx(classes.iconButton)}
+                  <Tooltip
                     title={t('label.notification_icon_title')}
+                    placement="bottom"
                   >
-                    <Badge
-                      max={9}
-                      badgeContent={
-                        props.unreadNotifications.length > 0
-                          ? props.unreadNotifications.length
-                          : undefined
-                      }
-                      classes={{ badge: classes.badge }}
-                    >
-                      <NotificationsIcon fontSize="small" />
-                    </Badge>
-                  </IconButton>
-                  <IconButton
-                    onClick={e => props.handleAccountMenuOpen(e)}
-                    aria-label="account"
-                    aria-haspopup="true"
-                    className={clsx(classes.iconButton)}
+                    <span>
+                      <IconButton
+                        data-tour-elem="notificationList"
+                        onClick={e => props.handleNotificationsOpen(e)}
+                        aria-label="show new notifications"
+                        color="inherit"
+                        className={clsx(classes.iconButton)}
+                      >
+                        <Badge
+                          max={9}
+                          badgeContent={
+                            props.unreadNotifications.length > 0
+                              ? props.unreadNotifications.length
+                              : undefined
+                          }
+                          classes={{ badge: classes.badge }}
+                        >
+                          <NotificationsIcon fontSize="small" />
+                        </Badge>
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                  <Tooltip
                     title={t('label.account_icon_title')}
+                    placement="bottom"
                   >
-                    <AccountCircle fontSize="small" />
-                  </IconButton>
+                    <span>
+                      <IconButton
+                        onClick={e => props.handleAccountMenuOpen(e)}
+                        aria-label="account"
+                        aria-haspopup="true"
+                        className={clsx(classes.iconButton)}
+                      >
+                        <AccountCircle fontSize="small" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Grid>
               </Grid>
             </MuiToolbar>
