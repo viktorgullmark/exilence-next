@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.6] - 2020-XX-XX
 ##### Added
+- Added support for private leagues
 - Added a introduction tour for new users that will be displayed once
 - Added styled tooltips when hovering icon buttons
 
