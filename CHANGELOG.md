@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.5] - 2020-01-29
+##### Changed
+- Changed the position and behaviour of the scrollbar
 ##### Fixed
 - Fixed a bug where the app would crash when switching profiles
 
