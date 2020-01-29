@@ -35,7 +35,7 @@ const patreonLogoHeight = 55;
 const useStyles = makeStyles((theme: Theme) => ({
   discordLogo: {
     marginLeft: 5,
-    maxHeight: discordLogoHeight,
+    height: discordLogoHeight,
     maxWidth: '100%'
   },
   patreonLogo: {
