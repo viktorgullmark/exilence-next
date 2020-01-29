@@ -1,6 +1,6 @@
 import React from 'react';
 import Tour from 'reactour';
-import { useTheme } from '@material-ui/core';
+import { useTheme, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import StepContent from './StepContent/StepContent';
 import { getToolbarSteps } from '../../utils/stepper.utils';
@@ -43,6 +43,11 @@ const ToolbarStepper: React.FC<Props> = ({ isOpen, handleClose }: Props) => {
         accentColor={theme.palette.primary.main}
         maskSpace={theme.spacing(2)}
         closeWithMask={false}
+        lastStepNextButton={
+          <Button color="primary" variant="contained">
+            {t('action.lets_begin')}
+          </Button>
+        }
         disableInteraction
       />
     </>
