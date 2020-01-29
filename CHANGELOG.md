@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Changed the position and behaviour of the scrollbar
 ##### Fixed
 - Fixed a bug where the app would crash when switching profiles
+- Fixed a bug where the app would crash when removing all snapshots
 
 ## [0.2.4] - 2020-01-28
 ##### Added
