@@ -8,15 +8,10 @@ import { stores } from '..';
 export class LeagueStore {
   uiStateStore: UiStateStore;
   @persist('list', League) @observable leagues: League[] = [];
+  @persist('list', League) @observable priceLeagues: League[] = [];
 
   constructor(uiStateStore: UiStateStore) {
     this.uiStateStore = uiStateStore;
-  }
-
-  @computed
-  get priceLeagues() {
-    // todo: don't include leagues with no prices
-    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
   }
 
   @action
@@ -29,5 +24,12 @@ export class LeagueStore {
         return new League(league);
       })
     );
+  }
+
+  @action
+  updatePriceLeagues(leagues: ILeague[]) {
+    this.priceLeagues = leagues.map(l => {
+      return new League(l);
+    });
   }
 }
