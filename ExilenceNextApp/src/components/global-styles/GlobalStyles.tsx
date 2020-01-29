@@ -6,9 +6,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
     'html, body': {
       height: '100%',
-      backgroundColor: background.darker
+      backgroundColor: background.darker,
+      overflow: 'hidden'
     },
     '#root': {
+      height: '100%',
       background: background.darker,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover'

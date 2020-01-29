@@ -15,6 +15,7 @@ export const drawerWidth = 300;
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
     height: `100%`,
+    overflow: 'scroll',
     padding: `calc(${toolbarHeight}px + ${innerToolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
       1
     )}px) 
