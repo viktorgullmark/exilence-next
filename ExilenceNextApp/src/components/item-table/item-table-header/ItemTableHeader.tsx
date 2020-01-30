@@ -8,7 +8,8 @@ import {
 import React from 'react';
 import { IColumn } from '../../../interfaces/column.interface';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
-import { Order, useStyles } from '../ItemTable';
+import { Order } from '../ItemTable';
+import { useStyles } from '../ItemTable.styles';
 
 interface ItemTableHeaderProps {
   classes: ReturnType<typeof useStyles>;

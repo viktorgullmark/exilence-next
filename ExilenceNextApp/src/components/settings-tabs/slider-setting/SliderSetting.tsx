@@ -1,18 +1,17 @@
 import {
-  createStyles,
+  Box,
   FormControl,
   FormGroup,
   FormHelperText,
   FormLabel,
-  Input,
-  makeStyles,
   Grid,
-  Box
+  Input
 } from '@material-ui/core';
-import React, { ChangeEvent, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Slider from '@material-ui/core/Slider';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import React, { ChangeEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import useStyles from './SliderSetting.styles';
 
 interface Props {
   value: number;
@@ -25,23 +24,6 @@ interface Props {
   waitForMouseUp?: boolean;
   requiresSnapshot?: boolean;
 }
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    root: {
-      width: 250
-    },
-    input: {
-      width: 42
-    },
-    label: {
-      '& + .MuiInput-formControl': {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1)
-      }
-    }
-  })
-);
 
 const SliderSetting: React.FC<Props> = ({
   value,

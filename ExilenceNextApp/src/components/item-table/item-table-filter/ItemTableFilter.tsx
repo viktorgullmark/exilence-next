@@ -1,10 +1,11 @@
-import { TextField, makeStyles, Theme } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { Formik } from 'formik';
+import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
-import { observer } from 'mobx-react';
+import useStyles from './ItemTableFilter.styles';
 
 export interface TableFilterProps<T> {
   array: T[];
@@ -12,12 +13,6 @@ export interface TableFilterProps<T> {
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  searchField: {
-    width: '100%'
-  }
-}));
 
 const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
   array,

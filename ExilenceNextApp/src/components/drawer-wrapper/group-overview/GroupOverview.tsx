@@ -1,49 +1,22 @@
 import {
+  Box,
+  Button,
   Divider,
   Drawer,
-  IconButton,
   Grid,
-  Button,
-  Box,
+  IconButton,
   Typography
 } from '@material-ui/core';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  resizeHandleContainerHeight,
-  toolbarHeight
-} from '../../header/Header';
-import { drawerWidth } from '../DrawerWrapper';
-import PlayerListContainer from '../../player-list/PlayerListContainer';
 import { Group } from '../../../store/domains/group';
+import PlayerListContainer from '../../player-list/PlayerListContainer';
 import RequestButton from '../../request-button/RequestButton';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    height: `calc(100% - ${toolbarHeight}px)`,
-    top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
-    width: drawerWidth,
-    background: theme.palette.background.default
-  },
-  drawerHeader: {
-    background: theme.palette.background.default,
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    justifyContent: 'flex-start'
-  },
-  groupName: {
-    textAlign: 'center'
-  }
-}));
+import useStyles from './GroupOverview.styles';
 
 interface GroupOverviewProps {
   open: boolean;
@@ -94,7 +67,9 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
           {activeGroup ? (
             <>
               <Grid item xs={12}>
-                <Typography component="h4" className={classes.groupName}>{activeGroup.name}</Typography>
+                <Typography component="h4" className={classes.groupName}>
+                  {activeGroup.name}
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <RequestButton

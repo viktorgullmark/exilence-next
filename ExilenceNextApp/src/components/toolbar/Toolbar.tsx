@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AddIcon from '@material-ui/icons/Add';
@@ -26,106 +25,18 @@ import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
-import {
-  primaryGradient,
-  statusColors
-} from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
 import {
-  mapDomainToDropdown,
-  getDropdownSelection
+  getDropdownSelection,
+  mapDomainToDropdown
 } from '../../utils/dropdown.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
-import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
-import { toolbarHeight } from '../header/Header';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
-import { resizeHandleContainerHeight } from './../header/Header';
-
-export const innerToolbarHeight = 50;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  appBar: {
-    background: primaryGradient,
-    top: toolbarHeight + resizeHandleContainerHeight,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  fromLeft: {
-    marginLeft: drawerWidth
-  },
-  fromRight: {
-    marginRight: drawerWidth
-  },
-  toolbar: {
-    maxHeight: innerToolbarHeight,
-    minHeight: innerToolbarHeight
-  },
-  hide: {
-    display: 'none'
-  },
-  windowIcon: {
-    fontSize: 14,
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    cursor: 'pointer'
-  },
-  selectMenu: {
-    fontSize: '0.9rem'
-  },
-  iconButton: {
-    padding: theme.spacing(0.5)
-  },
-  toolbarGrid: {
-    maxHeight: innerToolbarHeight,
-    minHeight: innerToolbarHeight
-  },
-  profileArea: {
-    padding: `0 ${theme.spacing(1)}px`
-  },
-  snapshotArea: {
-    padding: `0 ${theme.spacing(1)}px`
-  },
-  miscArea: {
-    padding: `0 ${theme.spacing(1)}px`
-  },
-  groupArea: {
-    padding: `0 ${theme.spacing(1)}px`
-  },
-  formControl: {
-    padding: `0 ${theme.spacing(0.5)}px`
-  },
-  divider: {
-    height: innerToolbarHeight,
-    borderLeft: `1px solid ${theme.palette.primary.dark}`
-  },
-  spinner: {
-    color: theme.palette.primary.contrastText
-  },
-  leftSpinner: {
-    marginLeft: theme.spacing(1),
-    color: theme.palette.primary.contrastText
-  },
-  badge: {
-    backgroundColor: theme.palette.secondary.dark
-  },
-  offlineIcon: {
-    marginRight: theme.spacing(1),
-    color: statusColors.warning
-  }
-}));
+import useStyles from './Toolbar.styles';
 
 interface Props {
   signalrOnline: boolean;
@@ -183,6 +94,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
     handleClearSnapshots,
     handleRemoveProfile
   } = props;
+
   const classes = useStyles();
   const location = useLocation();
   const { t } = useTranslation();

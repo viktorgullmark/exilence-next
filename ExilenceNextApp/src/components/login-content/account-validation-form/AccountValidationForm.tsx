@@ -1,42 +1,27 @@
 import {
-  Button,
-  CircularProgress,
-  TextField,
-  makeStyles,
-  Theme,
-  Box,
+  Grid,
   IconButton,
-  Typography,
   Link,
-  Grid
+  TextField,
+  Typography
 } from '@material-ui/core';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import HelpIcon from '@material-ui/icons/Help';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
-import HelpIcon from '@material-ui/icons/Help';
+import { Account } from '../../../store/domains/account';
+import { openLink } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
 import RequestButton from '../../request-button/RequestButton';
-import { openLink } from '../../../utils/window.utils';
+import useStyles from './AccountValidationForm.styles';
 
 interface AccountFormValues {
   sessionId: string;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  helperIcon: {
-    color: theme.palette.primary.light,
-    marginRight: theme.spacing(-0.5)
-  },
-  inlineLink: {
-    color: theme.palette.primary.light,
-    verticalAlign: 'baseline'
-  }
-}));
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;

@@ -1,6 +1,5 @@
 import { AppBar, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CloseIcon from '@material-ui/icons/Close';
@@ -10,79 +9,13 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { primaryLighter } from '../../assets/themes/exilence-theme';
-import { minimize, maximize, unmaximize, close} from '../../utils/window.utils';
-
-export const resizeHandleContainerHeight = 5;
-export const toolbarHeight = 30;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    zIndex: 1290,
-    backgroundColor: theme.palette.secondary.dark
-  },
-  title: {
-    flexGrow: 1,
-    fontSize: '0.85rem',
-    textTransform: 'uppercase',
-    letterSpacing: '4px',
-    color: theme.palette.primary.light,
-    fontWeight: 700
-  },
-  version: {
-    flexGrow: 1,
-    color: theme.palette.text.hint
-  },
-  updateAvailable: {
-    flexGrow: 1,
-    color: '#20cc76'
-  },
-  toolbar: {
-    minHeight: toolbarHeight,
-    maxHeight: toolbarHeight,
-    '-webkit-app-region': 'drag',
-    paddingBottom: resizeHandleContainerHeight
-  },
-  menuButton: {},
-  hide: {
-    display: 'none'
-  },
-  resizeHandleContainer: {
-    height: resizeHandleContainerHeight
-  },
-  updateLink: {
-    color: primaryLighter
-  },
-  noDrag: {
-    '-webkit-app-region': 'no-drag',
-    cursor: 'pointer'
-  },
-  windowHandlerButton: {
-    display: 'flex',
-    alignItems: 'center',
-    width: 40,
-    justifyContent: 'center',
-    height: resizeHandleContainerHeight + toolbarHeight,
-    '&:hover': {
-      backgroundColor: theme.palette.background.paper
-    }
-  },
-  exit: {
-    '&:hover': {
-      backgroundColor: theme.palette.error.dark
-    }
-  },
-  windowHandlers: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  windowIcon: {
-    fontSize: 14,
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    cursor: 'pointer'
-  }
-}));
+import {
+  close,
+  maximize,
+  minimize,
+  unmaximize
+} from '../../utils/window.utils';
+import useStyles from './Header.styles';
 
 interface HeaderProps {
   maximized: boolean;

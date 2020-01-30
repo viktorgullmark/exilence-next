@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -16,31 +16,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
-import {
-  resizeHandleContainerHeight,
-  toolbarHeight
-} from '../../header/Header';
-import { drawerWidth } from '../DrawerWrapper';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    height: `calc(100% - ${toolbarHeight}px)`,
-    top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
-    width: drawerWidth,
-    background: theme.palette.background.default
-  },
-  drawerHeader: {
-    background: theme.palette.background.default,
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    justifyContent: 'flex-end'
-  }
-}));
+import useStyles from './NavigationMenu.styles';
 
 interface NavigationMenuProps {
   open: boolean;

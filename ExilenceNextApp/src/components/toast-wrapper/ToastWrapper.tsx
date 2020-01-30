@@ -1,35 +1,14 @@
-import { ToastContainer } from 'react-toastify';
-import React from 'react';
-import { makeStyles } from '@material-ui/core';
-import { Theme } from '@material-ui/core';
-import { toolbarHeight, resizeHandleContainerHeight } from '../header/Header';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
-import { useLocation } from 'react-router';
 import clsx from 'clsx';
-import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
+import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { useLocation } from 'react-router';
+import { ToastContainer } from 'react-toastify';
 import { UiStateStore } from '../../store/uiStateStore';
-import { observer, inject } from 'mobx-react';
+import useStyles from './ToastWrapper.styles';
 
 interface Props {
   uiStateStore?: UiStateStore;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    top: toolbarHeight + resizeHandleContainerHeight + theme.spacing(2),
-    width: 350
-  },
-  authorized: {
-    top:
-      toolbarHeight +
-      resizeHandleContainerHeight +
-      innerToolbarHeight +
-      theme.spacing(2)
-  },
-  rightMargin: {
-    right: drawerWidth + theme.spacing(2)
-  }
-}));
 
 const ToastWrapper: React.FC<Props> = ({ uiStateStore }: Props) => {
   const classes = useStyles();
@@ -46,4 +25,3 @@ const ToastWrapper: React.FC<Props> = ({ uiStateStore }: Props) => {
 };
 
 export default inject('uiStateStore')(observer(ToastWrapper));
-

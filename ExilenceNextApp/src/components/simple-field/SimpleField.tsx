@@ -1,7 +1,8 @@
-import { TextField, makeStyles, Theme } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { useField } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import useStyles from './SimpleField.styles';
 
 interface Props {
   name: string;
@@ -14,12 +15,6 @@ interface Props {
   customError?: string;
   handleBlur?: (value: string) => void;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(2)
-  }
-}));
 
 const SimpleField: React.FC<Props> = ({
   name,

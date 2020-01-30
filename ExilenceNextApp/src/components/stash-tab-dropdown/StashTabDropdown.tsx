@@ -1,15 +1,13 @@
 import {
   Chip,
-  createStyles,
   FormControl,
   Input,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   Theme,
-  useTheme,
-  Typography
+  Typography,
+  useTheme
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
@@ -17,6 +15,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
+import useStyles from './StashTabDropdown.styles';
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
@@ -26,24 +25,6 @@ interface StashTabDropdownProps {
   handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      minWidth: 120
-    },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
-    chip: {
-      margin: 2
-    },
-    noLabel: {
-      marginTop: theme.spacing(3)
-    }
-  })
-);
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

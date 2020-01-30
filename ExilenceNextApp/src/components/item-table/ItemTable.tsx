@@ -1,5 +1,4 @@
 import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -11,49 +10,9 @@ import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { netWorthGridSpacing, cardHeight, chartHeight } from '../../routes/net-worth/NetWorth';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
-import { tabPanelSpacing } from '../tab-panel/TabPanel';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
-import {
-  itemTableFilterHeight,
-  itemTableFilterSpacing
-} from './ItemTableContainer';
-
-export const tableFooterHeight = 52;
-
-export const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%'
-    },
-    tableWrapper: {
-      overflow: 'auto',
-      height: `calc(100% - ${tableFooterHeight}px)`
-    },
-    noItems: {
-      height: 'auto'
-    },
-    pagination: {
-      height: tableFooterHeight,
-      backgroundColor: theme.palette.secondary.main
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1
-    }
-  })
-);
+import { useStyles } from './ItemTable.styles';
 
 export type Order = 'asc' | 'desc';
 
@@ -164,9 +123,9 @@ const ItemTable: React.FC<ItemTableProps> = ({
     order: Order,
     orderBy: K
   ): (
-      a: { [key in K]: number | string | boolean },
-      b: { [key in K]: number | string | boolean }
-    ) => number {
+    a: { [key in K]: number | string | boolean },
+    b: { [key in K]: number | string | boolean }
+  ) => number {
     return order === 'desc'
       ? (a, b) => desc(a, b, orderBy)
       : (a, b) => -desc(a, b, orderBy);

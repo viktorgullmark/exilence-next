@@ -3,20 +3,20 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import { noCharError } from '../../utils/validation.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
+import { noCharError } from '../../utils/validation.utils';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
+import RequestButton from '../request-button/RequestButton';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
-import RequestButton from '../request-button/RequestButton';
+import useStyles from './ProfileDialog.styles';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -24,18 +24,6 @@ export interface ProfileFormValues {
   priceLeague?: string;
   stashTabIds?: string[];
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogContent: {
-    minWidth: 500,
-    maxWidth: 500
-  },
-  dialogActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    margin: theme.spacing(2, 0)
-  }
-}));
 
 interface ProfileDialogProps {
   isOpen: boolean;
@@ -84,15 +72,12 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
-          {isEditing
-            ? t('title.save_profile')
-            : t('title.create_profile')}
+          {isEditing ? t('title.save_profile') : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName:
-                isEditing && profile ? profile.name : '',
+              profileName: isEditing && profile ? profile.name : '',
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
               stashTabIds: stashTabIds

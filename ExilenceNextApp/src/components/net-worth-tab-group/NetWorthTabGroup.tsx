@@ -1,15 +1,13 @@
 import { Box, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { primaryLighter } from '../../assets/themes/exilence-theme';
 import { openLink } from '../../utils/window.utils';
 import ItemTableContainer from '../item-table/ItemTableContainer';
 import TabPanel from './../tab-panel/TabPanel';
-import SnapshotHistoryChartContainer from '../snapshot-history-chart/SnapshotHistoryChartContainer';
+import useStyles from './NetWorthTabGroup.styles';
 
 function a11yProps(index: any) {
   return {
@@ -17,34 +15,6 @@ function a11yProps(index: any) {
     'aria-controls': `net-worth-tabpanel-${index}`
   };
 }
-
-export const netWorthTabGroupHeight = 48;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tabHeader: {
-    height: netWorthTabGroupHeight,
-    background: theme.palette.secondary.main
-  },
-  poeNinjaCredit: {
-    height: netWorthTabGroupHeight,
-    right: theme.spacing(2),
-    color: theme.palette.text.primary
-  },
-  creditText: {
-    fontSize: '0.85rem'
-  },
-  inlineLink: {
-    color: primaryLighter,
-    verticalAlign: 'baseline',
-    textDecoration: 'none'
-  },
-  indicator: {
-    backgroundColor: theme.palette.primary.light
-  },
-  tab: {
-    // color: theme.palette.primary.light
-  }
-}));
 
 const NetWorthTabGroup: React.FC = () => {
   const classes = useStyles();

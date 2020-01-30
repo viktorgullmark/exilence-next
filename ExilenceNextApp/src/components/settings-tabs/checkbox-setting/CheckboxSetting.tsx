@@ -1,16 +1,15 @@
-import React from 'react';
 import {
-  FormControl,
-  FormLabel,
-  FormGroup,
-  FormControlLabel,
   Checkbox,
-  Typography,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
   FormHelperText,
-  makeStyles,
-  createStyles
+  FormLabel,
+  Typography
 } from '@material-ui/core';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import useStyles from './CheckboxSetting.styles';
 
 interface Props {
   value: boolean;
@@ -18,17 +17,6 @@ interface Props {
   translationKey: string;
   requiresSnapshot?: boolean;
 }
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    checkBox: {
-      marginTop: theme.spacing(0.75)
-    },
-    checkBoxValue: {
-      color: theme.palette.text.primary
-    }
-  })
-);
 
 const CheckboxSetting: React.FC<Props> = ({
   value,
@@ -40,7 +28,9 @@ const CheckboxSetting: React.FC<Props> = ({
   const { t } = useTranslation();
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">{t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}</FormLabel>
+      <FormLabel component="legend">
+        {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
+      </FormLabel>
       <FormGroup className={classes.checkBox}>
         <FormControlLabel
           control={

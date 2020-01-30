@@ -4,19 +4,11 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
-  ListItemText,
-  makeStyles,
-  Theme
+  ListItemText
 } from '@material-ui/core';
 import React, { forwardRef } from 'react';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    color: theme.palette.text.primary
-  }
-}));
+import useStyles from './PlayerListItem.styles';
 
 interface Props {
   account: IApiAccount;
