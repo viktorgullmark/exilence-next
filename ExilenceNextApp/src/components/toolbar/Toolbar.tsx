@@ -31,7 +31,10 @@ import {
   statusColors
 } from '../../assets/themes/exilence-theme';
 import { Notification } from '../../store/domains/notification';
-import Dd from '../../utils/dropdown.utils';
+import {
+  mapDomainToDropdown,
+  getDropdownSelection
+} from '../../utils/dropdown.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
@@ -268,8 +271,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                         !signalrOnline
                       }
                       className={classes.selectMenu}
-                      value={Dd.getDropdownSelection(
-                        Dd.mapDomainToDropdown(profiles),
+                      value={getDropdownSelection(
+                        mapDomainToDropdown(profiles),
                         activeProfile ? activeProfile.uuid : ''
                       )}
                       onChange={e => handleProfileChange(e)}

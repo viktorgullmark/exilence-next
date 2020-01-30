@@ -19,9 +19,9 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
 import HelpIcon from '@material-ui/icons/Help';
-import { WindowUtils } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
 import RequestButton from '../../request-button/RequestButton';
+import { openLink } from '../../../utils/window.utils';
 
 interface AccountFormValues {
   sessionId: string;
@@ -110,7 +110,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
                         className={classes.helperIcon}
                         edge="start"
                         size="small"
-                        onClick={e => WindowUtils.openLink(e)}
+                        onClick={e => openLink(e)}
                         href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
                       >
                         <HelpIcon />

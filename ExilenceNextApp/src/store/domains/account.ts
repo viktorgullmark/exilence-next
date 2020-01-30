@@ -17,7 +17,7 @@ import { IAccount } from '../../interfaces/account.interface';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
-import { ProfileUtils } from '../../utils/profile.utils';
+import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import { stores, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
@@ -233,7 +233,7 @@ export class Account implements IAccount {
         if (stores.signalrStore.activeGroup) {
           stores.signalrStore.changeProfileForConnection(
             stores.signalrStore.ownConnection.connectionId,
-            ProfileUtils.mapProfileToApiProfile(foundProfile)
+            mapProfileToApiProfile(foundProfile)
           );
         }
         return this.setActiveProfileSuccess();
@@ -361,7 +361,7 @@ export class Account implements IAccount {
 
     newProfile.active = true;
 
-    const apiProfile = ProfileUtils.mapProfileToApiProfile(newProfile);
+    const apiProfile = mapProfileToApiProfile(newProfile);
 
     return stores.signalrHub
       .invokeEvent<IApiProfile>('AddProfile', apiProfile)
@@ -406,7 +406,7 @@ export class Account implements IAccount {
     if (stores.signalrStore.activeGroup) {
       stores.signalrStore.addProfileToConnection(
         stores.signalrStore.ownConnection.connectionId,
-        ProfileUtils.mapProfileToApiProfile(p)
+        mapProfileToApiProfile(p)
       );
     }
   }

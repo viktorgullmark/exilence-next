@@ -1,6 +1,9 @@
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState, ChangeEvent } from 'react';
-import Dd from '../../utils/dropdown.utils';
+import {
+  mapDomainToDropdown,
+  getDropdownSelection
+} from '../../utils/dropdown.utils';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
@@ -75,7 +78,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(
+    const id = getDropdownSelection(
       leagues,
       edit && activeLeague ? activeLeague.id : ''
     );
@@ -86,7 +89,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   };
 
   const getPriceLeagueSelection = (edit: boolean) => {
-    const id = Dd.getDropdownSelection(
+    const id = getDropdownSelection(
       priceLeagues,
       edit && activePriceLeague ? activePriceLeague.id : ''
     );

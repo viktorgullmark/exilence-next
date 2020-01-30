@@ -1,4 +1,12 @@
-import { Box, Divider, Drawer, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -8,8 +16,10 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
-import { WindowUtils } from '../../../utils/window.utils';
-import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
+import {
+  resizeHandleContainerHeight,
+  toolbarHeight
+} from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
 
 const useStyles = makeStyles((theme: Theme) => ({

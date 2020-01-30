@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
-import { WindowUtils } from '../../utils/window.utils';
+import { openLink } from '../../utils/window.utils';
 import ItemTableContainer from '../item-table/ItemTableContainer';
 import TabPanel from './../tab-panel/TabPanel';
 import SnapshotHistoryChartContainer from '../snapshot-history-chart/SnapshotHistoryChartContainer';
@@ -81,7 +81,7 @@ const NetWorthTabGroup: React.FC = () => {
             <a
               className={classes.inlineLink}
               href="https://poe.ninja"
-              onClick={e => WindowUtils.openLink(e)}
+              onClick={e => openLink(e)}
             >
               https://poe.ninja
             </a>

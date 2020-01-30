@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import error from '../../utils/validation.utils';
+import { noCharError } from '../../utils/validation.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
@@ -75,7 +75,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const noCharacters = t(error.noCharacters(characters));
+  const noCharacters = t(noCharError(characters));
   return (
     <div>
       <Dialog

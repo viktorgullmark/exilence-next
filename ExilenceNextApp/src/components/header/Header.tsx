@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
-import { WindowUtils } from '../../utils/window.utils';
+import { minimize, maximize, unmaximize, close} from '../../utils/window.utils';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -155,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({
               <Grid
                 item
                 className={clsx(classes.noDrag, classes.windowHandlerButton)}
-                onClick={() => WindowUtils.minimize()}
+                onClick={() => minimize()}
               >
                 <MinimizeIcon className={classes.windowIcon} />
               </Grid>
@@ -165,11 +165,11 @@ const Header: React.FC<HeaderProps> = ({
                 onClick={
                   !maximized
                     ? () => {
-                        WindowUtils.maximize();
+                        maximize();
                         setMaximized(true);
                       }
                     : () => {
-                        WindowUtils.unmaximize();
+                        unmaximize();
                         setMaximized(false);
                       }
                 }
@@ -187,7 +187,7 @@ const Header: React.FC<HeaderProps> = ({
                   classes.windowHandlerButton,
                   classes.exit
                 )}
-                onClick={() => WindowUtils.close()}
+                onClick={() => close()}
               >
                 <CloseIcon className={classes.windowIcon} />
               </Grid>

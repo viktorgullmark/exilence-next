@@ -2,12 +2,12 @@ import axios from 'axios';
 import { forkJoin, from } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-import { PriceUtils } from '../utils/price.utils';
 import { IPoeWatchCategory } from '../interfaces/poe-watch/poe-watch-category.interface';
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPoeWatchCompactPriceData } from '../interfaces/poe-watch/poe-watch-compact-price-data.interface';
 import { IPoeWatchItemListing } from '../interfaces/poe-watch/poe-watch-item-listing.interface';
 import { IPoeWatchItem } from '../interfaces/poe-watch/poe-watch-item.interface';
+import { getExternalPriceFromWatchItem } from '../utils/price.utils';
 
 const rateLimiter = new RateLimiter(1, 1);
 const apiUrl = 'https://api.poe.watch';
@@ -50,7 +50,7 @@ function getPrices(league: string) {
         .map((item: any) => {
           return {...item, ...priceData.find(price => price.id === item.id) }; });
 
-      return combinedData.map(data => PriceUtils.getExternalPriceFromWatchItem(data));
+      return combinedData.map(data => getExternalPriceFromWatchItem(data));
     })
   );
 }

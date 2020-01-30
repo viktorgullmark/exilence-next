@@ -3,7 +3,7 @@ import { action, computed, observable } from 'mobx';
 import { NotificationType } from '../interfaces/notification.interface';
 import { Notification } from './domains/notification';
 import { UiStateStore } from './uiStateStore';
-import { ErrorUtils } from '../utils/error.utils';
+import { translateError } from '../utils/error.utils';
 
 export class NotificationStore {
   uiStateStore: UiStateStore;
@@ -43,7 +43,7 @@ export class NotificationStore {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
     const description = error
-      ? ErrorUtils.translateError(error)
+      ? translateError(error)
       : `${prefix}.description.${key}`;
 
     const notification = new Notification({

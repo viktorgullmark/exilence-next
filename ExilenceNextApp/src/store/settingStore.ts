@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { ISelectOption } from '../interfaces/select-option.interface';
-import { SettingUtils } from '../utils/setting.utils';
+import { getPriceTresholdOptions } from '../utils/setting.utils';
 import { stores } from '..';
 import { electronService } from '../services/electron.service';
 
@@ -14,10 +14,9 @@ export class SettingStore {
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
 
-  priceTresholdOptions: ISelectOption[] = SettingUtils.getPriceTresholdOptions();
+  priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
 
-  constructor() {
-  }
+  constructor() {}
 
   @action
   setUiScale(factor: number | string | number[]) {

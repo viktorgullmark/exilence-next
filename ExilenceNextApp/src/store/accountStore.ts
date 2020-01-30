@@ -2,35 +2,26 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, timer, throwError } from 'rxjs';
-import {
-  catchError,
-  concatMap,
-  map,
-  mergeMap,
-  switchMap
-} from 'rxjs/operators';
+import { forkJoin, of, throwError, timer } from 'rxjs';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { stores } from '..';
+import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
+import { ILeague } from '../interfaces/league.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
+import { IProfile } from '../interfaces/profile.interface';
 import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
-import { ProfileUtils } from '../utils/profile.utils';
+import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { PriceStore } from './priceStore';
+import { SettingStore } from './settingStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
-import { IApiProfile } from '../interfaces/api/api-profile.interface';
-import { Profile } from './domains/profile';
-import { IProfile } from '../interfaces/profile.interface';
-import { SettingStore } from './settingStore';
-import { ILeague } from '../interfaces/league.interface';
-import { ICharacter } from '../interfaces/character.interface';
-import { getCharacterLeagues } from '../utils/league.utils';
 
 export class AccountStore {
   constructor(

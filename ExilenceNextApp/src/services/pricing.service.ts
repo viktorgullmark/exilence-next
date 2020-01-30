@@ -1,7 +1,7 @@
 import { stores } from '..';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IExternalPrice } from '../interfaces/external-price.interface';
-import { PriceUtils } from '../utils/price.utils';
+import { mapPriceToItem } from '../utils/price.utils';
 
 export const pricingService = {
   priceItem
@@ -94,7 +94,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
 
   if (price) {
     item.total = item.stackSize * (price.calculated ? price.calculated : 1);
-    item = PriceUtils.mapPriceToItem(item, price);
+    item = mapPriceToItem(item, price);
   }  
 
   const data = <IPricedItem>{
