@@ -23,14 +23,6 @@ import { WindowUtils } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
 import RequestButton from '../../request-button/RequestButton';
 
-interface AccountValidationFormProps {
-  handleValidate: (account: IAccount) => void;
-  styles: Record<string, string>;
-  isSubmitting: boolean;
-  isInitiating: boolean;
-  account: Account;
-}
-
 interface AccountFormValues {
   sessionId: string;
 }
@@ -46,9 +38,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const AccountValidationForm: React.FC<AccountValidationFormProps> = (
-  props: AccountValidationFormProps
-) => {
+interface AccountValidationFormProps {
+  handleValidate: (account: IAccount) => void;
+  styles: Record<string, string>;
+  isSubmitting: boolean;
+  isInitiating: boolean;
+  account: Account;
+}
+
+const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
+  handleValidate,
+  styles,
+  isSubmitting,
+  isInitiating,
+  account
+}: AccountValidationFormProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -58,10 +62,10 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
     <>
       <Formik
         initialValues={{
-          sessionId: props.account.sessionId
+          sessionId: account.sessionId
         }}
         onSubmit={(values: AccountFormValues) => {
-          props.handleValidate({
+          handleValidate({
             sessionId: values.sessionId
           });
         }}
@@ -115,7 +119,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                   }}
                 ></TextField>
               </div>
-              <div className={props.styles.loginFooter}>
+              <div className={styles.loginFooter}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2">
@@ -137,9 +141,12 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                       color="primary"
                       fullWidth
                       type="submit"
-                      loading={props.isSubmitting || props.isInitiating}
+                      loading={isSubmitting || isInitiating}
                       disabled={
-                        !touched || props.isSubmitting || props.isInitiating || (dirty && !isValid)
+                        !touched ||
+                        isSubmitting ||
+                        isInitiating ||
+                        (dirty && !isValid)
                       }
                       endIcon={<ExitToApp />}
                     >

@@ -1,17 +1,23 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select
+} from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { League } from '../../store/domains/league';
-import { LeagueFormValues } from '../league-selection-form/LeagueSelectionForm';
+import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 
 interface PriceLeagueDropdownProps {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   priceLeagues: League[];
-  handleChange: (event: ChangeEvent<{ value: unknown; }>) => void;
-  values: LeagueFormValues;
+  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  values: ILeagueFormValues;
 }
 
 const PriceLeagueDropdown: React.FC<PriceLeagueDropdownProps> = ({

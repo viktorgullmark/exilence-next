@@ -18,24 +18,6 @@ import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
 import RequestButton from '../request-button/RequestButton';
 
-interface ProfileDialogProps {
-  isOpen: boolean;
-  loading: boolean;
-  isEditing?: boolean;
-  profile?: Profile;
-  leagueUuid: string;
-  priceLeagueUuid: string;
-  leagues: League[];
-  priceLeagues: League[];
-  stashTabs: IStashTab[];
-  stashTabIds: string[];
-  characters: Character[];
-  handleClickClose: () => void;
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
-  handleSubmit: (values: ProfileFormValues) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
-}
-
 export interface ProfileFormValues {
   profileName: string;
   league?: string;
@@ -55,35 +37,68 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const ProfileDialog: React.FC<ProfileDialogProps> = (
-  props: ProfileDialogProps
-) => {
+interface ProfileDialogProps {
+  isOpen: boolean;
+  loading: boolean;
+  isEditing?: boolean;
+  profile?: Profile;
+  leagueUuid: string;
+  priceLeagueUuid: string;
+  leagues: League[];
+  priceLeagues: League[];
+  stashTabs: IStashTab[];
+  stashTabIds: string[];
+  characters: Character[];
+  handleClickClose: () => void;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleSubmit: (values: ProfileFormValues) => void;
+  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
+}
+
+const ProfileDialog: React.FC<ProfileDialogProps> = ({
+  isOpen,
+  loading,
+  isEditing,
+  profile,
+  leagueUuid,
+  priceLeagueUuid,
+  leagues,
+  priceLeagues,
+  stashTabs,
+  stashTabIds,
+  characters,
+  handleClickClose,
+  handleLeagueChange,
+  handleSubmit,
+  handleStashTabChange
+}: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const noCharacters = t(error.noCharacters(props.characters));
+  const noCharacters = t(error.noCharacters(characters));
   return (
     <div>
       <Dialog
-        open={props.isOpen}
-        onClose={() => props.handleClickClose()}
+        open={isOpen}
+        onClose={() => handleClickClose()}
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
-          {props.isEditing
+          {isEditing
             ? t('title.save_profile')
             : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: props.isEditing && props.profile ? props.profile.name : '',
-              league: props.leagueUuid,
-              priceLeague: props.priceLeagueUuid,
-              stashTabIds: props.stashTabIds
+              profileName:
+                isEditing && profile ? profile.name : '',
+              league: leagueUuid,
+              priceLeague: priceLeagueUuid,
+              stashTabIds: stashTabIds
             }}
             onSubmit={(values: ProfileFormValues) => {
-              props.handleSubmit(values);
+              handleSubmit(values);
             }}
             validationSchema={Yup.object().shape({
               profileName: Yup.string().required('Required'),
@@ -126,47 +141,47 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     fullWidth
                   />
                   <LeagueDropdown
-                    leagues={props.leagues}
+                    leagues={leagues}
                     touched={touched}
                     errors={errors}
                     fullWidth
                     noCharacters={noCharacters}
-                    handleLeagueChange={props.handleLeagueChange}
+                    handleLeagueChange={handleLeagueChange}
                     handleChange={handleChange}
                     values={values}
                   />
                   <PriceLeagueDropdown
-                    priceLeagues={props.priceLeagues}
+                    priceLeagues={priceLeagues}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
                     values={values}
                   />
                   <StashTabDropdown
-                    stashTabs={props.stashTabs}
+                    stashTabs={stashTabs}
                     touched={touched}
                     errors={errors}
-                    stashTabIds={props.stashTabIds}
-                    handleStashTabChange={props.handleStashTabChange}
+                    stashTabIds={stashTabIds}
+                    handleStashTabChange={handleStashTabChange}
                     handleChange={handleChange}
                   />
                   <div className={classes.dialogActions}>
-                    <Button onClick={() => props.handleClickClose()}>
+                    <Button onClick={() => handleClickClose()}>
                       {t('action.cancel')}
                     </Button>
                     <RequestButton
                       variant="contained"
                       type="submit"
                       color="primary"
-                      loading={props.loading}
+                      loading={loading}
                       disabled={
-                        props.loading ||
+                        loading ||
                         noCharacters.length > 0 ||
-                        props.stashTabIds.length === 0 ||
+                        stashTabIds.length === 0 ||
                         (dirty && !isValid)
                       }
                     >
-                      {props.isEditing
+                      {isEditing
                         ? t('action.save_profile')
                         : t('action.create_profile')}
                     </RequestButton>

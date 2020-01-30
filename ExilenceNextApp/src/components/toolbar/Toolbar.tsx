@@ -38,9 +38,9 @@ import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import { toolbarHeight } from '../header/Header';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
+import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
 import { resizeHandleContainerHeight } from './../header/Header';
-import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -134,7 +134,6 @@ interface Props {
   profileOpen: boolean;
   isEditing: boolean;
   isInitiating: boolean;
-  notifications: Notification[];
   unreadNotifications: Notification[];
   isSnapshotting: boolean;
   isUpdatingPrices: boolean;
@@ -142,7 +141,6 @@ interface Props {
   changingProfile: boolean;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
-  markAllNotificationsRead: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
   handleProfileChange: (
@@ -156,6 +154,32 @@ interface Props {
 }
 
 const Toolbar: React.FC<Props> = (props: Props) => {
+  const {
+    signalrOnline,
+    sidenavOpened,
+    autoSnapshotting,
+    groupOverviewOpened,
+    activeProfile,
+    profiles,
+    profileOpen,
+    isEditing,
+    isInitiating,
+    unreadNotifications,
+    isSnapshotting,
+    isUpdatingPrices,
+    profilesLoaded,
+    changingProfile,
+    toggleSidenav,
+    toggleGroupOverview,
+    handleProfileOpen,
+    handleProfileClose,
+    handleProfileChange,
+    handleSnapshot,
+    handleNotificationsOpen,
+    handleAccountMenuOpen,
+    handleClearSnapshots,
+    handleRemoveProfile
+  } = props;
   const classes = useStyles();
   const location = useLocation();
   const { t } = useTranslation();
@@ -170,39 +194,33 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           <AppBar
             position="fixed"
             className={clsx(classes.appBar, {
-              [classes.appBarShift]:
-                props.sidenavOpened || props.groupOverviewOpened,
-              [classes.fromLeft]: props.sidenavOpened,
-              [classes.fromRight]: props.groupOverviewOpened
+              [classes.appBarShift]: sidenavOpened || groupOverviewOpened,
+              [classes.fromLeft]: sidenavOpened,
+              [classes.fromRight]: groupOverviewOpened
             })}
           >
             <ToolbarStepperContainer />
             <MuiToolbar className={classes.toolbar}>
-              <Tooltip
-                title={t('label.toggle_menu_title')}
-                placement="bottom"
-              >
+              <Tooltip title={t('label.toggle_menu_title')} placement="bottom">
                 <span>
                   <IconButton
                     color="inherit"
                     aria-label="open drawer"
-                    onClick={() => props.toggleSidenav()}
+                    onClick={() => toggleSidenav()}
                     edge="start"
-                    className={clsx(props.sidenavOpened && classes.hide)}
+                    className={clsx(sidenavOpened && classes.hide)}
                   >
                     <MenuIcon />
                   </IconButton>
                 </span>
               </Tooltip>
-              {!props.signalrOnline && (
+              {!signalrOnline && (
                 <WarningIcon
                   titleAccess={t('label.server_offline_title')}
                   className={classes.offlineIcon}
                 />
               )}
-              {(props.isInitiating ||
-                props.changingProfile ||
-                props.isUpdatingPrices) && (
+              {(isInitiating || changingProfile || isUpdatingPrices) && (
                 <CircularProgress
                   title={t('label.loading_title')}
                   className={classes.leftSpinner}
@@ -215,7 +233,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 justify="flex-end"
                 className={classes.toolbarGrid}
               >
-              <Grid item className={classes.profileArea} data-tour-elem="profileArea">
+                <Grid
+                  item
+                  className={classes.profileArea}
+                  data-tour-elem="profileArea"
+                >
                   <Tooltip
                     title={t('label.edit_profile_icon_title')}
                     placement="bottom"
@@ -223,15 +245,15 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         disabled={
-                          props.isSnapshotting ||
-                          !props.activeProfile ||
-                          props.isInitiating ||
-                          !props.profilesLoaded ||
-                          !props.signalrOnline
+                          isSnapshotting ||
+                          !activeProfile ||
+                          isInitiating ||
+                          !profilesLoaded ||
+                          !signalrOnline
                         }
                         aria-label="edit"
                         className={classes.iconButton}
-                        onClick={() => props.handleProfileOpen(true)}
+                        onClick={() => handleProfileOpen(true)}
                       >
                         <SettingsIcon fontSize="small" />
                       </IconButton>
@@ -240,23 +262,23 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   <FormControl className={classes.formControl}>
                     <Select
                       disabled={
-                        props.isSnapshotting ||
-                        props.isInitiating ||
-                        !props.profilesLoaded ||
-                        !props.signalrOnline
+                        isSnapshotting ||
+                        isInitiating ||
+                        !profilesLoaded ||
+                        !signalrOnline
                       }
                       className={classes.selectMenu}
                       value={Dd.getDropdownSelection(
-                        Dd.mapDomainToDropdown(props.profiles),
-                        props.activeProfile ? props.activeProfile.uuid : ''
+                        Dd.mapDomainToDropdown(profiles),
+                        activeProfile ? activeProfile.uuid : ''
                       )}
-                      onChange={e => props.handleProfileChange(e)}
+                      onChange={e => handleProfileChange(e)}
                       inputProps={{
                         name: 'profile',
                         id: 'profile-dd'
                       }}
                     >
-                      {props.profiles.map((profile: Profile) => {
+                      {profiles.map((profile: Profile) => {
                         return (
                           <MenuItem key={profile.uuid} value={profile.uuid}>
                             {profile.name}
@@ -273,12 +295,12 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         disabled={
-                          props.isSnapshotting ||
-                          !props.profilesLoaded ||
-                          props.isInitiating ||
-                          !props.signalrOnline
+                          isSnapshotting ||
+                          !profilesLoaded ||
+                          isInitiating ||
+                          !signalrOnline
                         }
-                        onClick={() => props.handleProfileOpen()}
+                        onClick={() => handleProfileOpen()}
                         aria-label="create"
                         className={classes.iconButton}
                       >
@@ -293,13 +315,13 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         disabled={
-                          props.isSnapshotting ||
-                          props.profiles.length < 2 ||
-                          props.isInitiating ||
-                          !props.profilesLoaded ||
-                          !props.signalrOnline
+                          isSnapshotting ||
+                          profiles.length < 2 ||
+                          isInitiating ||
+                          !profilesLoaded ||
+                          !signalrOnline
                         }
-                        onClick={() => props.handleRemoveProfile()}
+                        onClick={() => handleRemoveProfile()}
                         aria-label="remove profile"
                         className={classes.iconButton}
                       >
@@ -309,7 +331,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </Tooltip>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
+                <Grid
+                  item
+                  className={classes.snapshotArea}
+                  data-tour-elem="snapshotArea"
+                >
                   <Tooltip
                     title={t('label.fetch_snapshot_icon_title')}
                     placement="bottom"
@@ -317,16 +343,16 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         disabled={
-                          !props.activeProfile ||
-                          !props.activeProfile.readyToSnapshot ||
-                          !props.signalrOnline ||
-                          props.autoSnapshotting
+                          !activeProfile ||
+                          !activeProfile.readyToSnapshot ||
+                          !signalrOnline ||
+                          autoSnapshotting
                         }
-                        onClick={() => props.handleSnapshot()}
+                        onClick={() => handleSnapshot()}
                         aria-label="snapshot"
                         className={classes.iconButton}
                       >
-                        {!props.isSnapshotting ? (
+                        {!isSnapshotting ? (
                           <UpdateIcon fontSize="small" />
                         ) : (
                           <CircularProgress
@@ -344,12 +370,12 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         disabled={
-                          !props.activeProfile ||
-                          props.isSnapshotting ||
-                          !props.signalrOnline ||
-                          props.activeProfile.snapshots.length === 0
+                          !activeProfile ||
+                          isSnapshotting ||
+                          !signalrOnline ||
+                          activeProfile.snapshots.length === 0
                         }
-                        onClick={() => props.handleClearSnapshots()}
+                        onClick={() => handleClearSnapshots()}
                         aria-label="clear snapshots"
                         className={classes.iconButton}
                       >
@@ -359,15 +385,19 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </Tooltip>
                 </Grid>
                 <Grid item className={classes.divider}></Grid>
-                <Grid item className={classes.groupArea} data-tour-elem="groupArea">
+                <Grid
+                  item
+                  className={classes.groupArea}
+                  data-tour-elem="groupArea"
+                >
                   <Tooltip
                     title={t('label.group_icon_title')}
                     placement="bottom"
                   >
                     <span>
                       <IconButton
-                        disabled={!props.signalrOnline}
-                        onClick={() => props.toggleGroupOverview()}
+                        disabled={!signalrOnline}
+                        onClick={() => toggleGroupOverview()}
                         aria-label="group"
                         aria-haspopup="true"
                         className={clsx(classes.iconButton)}
@@ -386,7 +416,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     <span>
                       <IconButton
                         data-tour-elem="notificationList"
-                        onClick={e => props.handleNotificationsOpen(e)}
+                        onClick={e => handleNotificationsOpen(e)}
                         aria-label="show new notifications"
                         color="inherit"
                         className={clsx(classes.iconButton)}
@@ -394,8 +424,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                         <Badge
                           max={9}
                           badgeContent={
-                            props.unreadNotifications.length > 0
-                              ? props.unreadNotifications.length
+                            unreadNotifications.length > 0
+                              ? unreadNotifications.length
                               : undefined
                           }
                           classes={{ badge: classes.badge }}
@@ -411,7 +441,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   >
                     <span>
                       <IconButton
-                        onClick={e => props.handleAccountMenuOpen(e)}
+                        onClick={e => handleAccountMenuOpen(e)}
                         aria-label="account"
                         aria-haspopup="true"
                         className={clsx(classes.iconButton)}
@@ -427,11 +457,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           <AccountMenuContainer />
           <NotificationListContainer />
           <ProfileDialogContainer
-            profile={props.activeProfile}
-            isOpen={props.profileOpen}
-            isEditing={props.isEditing}
-            handleClickClose={props.handleProfileClose}
-            handleClickOpen={props.handleProfileOpen}
+            profile={activeProfile}
+            isOpen={profileOpen}
+            isEditing={isEditing}
+            handleClickClose={handleProfileClose}
+            handleClickOpen={handleProfileOpen}
           />
           <CreateGroupDialogContainer />
         </>

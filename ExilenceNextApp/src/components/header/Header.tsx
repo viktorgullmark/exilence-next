@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Link } from '@material-ui/core';
+import { AppBar, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -10,9 +10,8 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IGithubRelease } from '../../interfaces/github/github-release.interface';
-import { WindowUtils } from '../../utils/window.utils';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
+import { WindowUtils } from '../../utils/window.utils';
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -87,15 +86,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface HeaderProps {
   maximized: boolean;
-  sidenavOpened: boolean;
   setMaximized: (maximized: boolean) => void;
-  toggleSidenav: () => void;
   currentVersion: string;
   updateAvailable: boolean;
   quitAndInstall: () => void;
 }
 
-const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
+const Header: React.FC<HeaderProps> = ({
+  maximized,
+  setMaximized,
+  currentVersion,
+  updateAvailable,
+  quitAndInstall
+}: HeaderProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -124,11 +127,11 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                   noWrap
                   className={classes.version}
                 >
-                  v.{props.currentVersion}
+                  v.{currentVersion}
                 </Typography>
               </Grid>
-              {props.updateAvailable && (
-                <Grid item onClick={props.quitAndInstall}>
+              {updateAvailable && (
+                <Grid item onClick={quitAndInstall}>
                   <Typography
                     variant="subtitle2"
                     noWrap
@@ -137,9 +140,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                     {t('label.update_available')}
                     {t('label.click')}
                     &nbsp;
-                    <Link
-                      className={classes.updateLink}
-                    >
+                    <Link className={classes.updateLink}>
                       {t('label.here')}
                     </Link>
                     &nbsp;
@@ -162,18 +163,18 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                 item
                 className={clsx(classes.noDrag, classes.windowHandlerButton)}
                 onClick={
-                  !props.maximized
+                  !maximized
                     ? () => {
                         WindowUtils.maximize();
-                        props.setMaximized(true);
+                        setMaximized(true);
                       }
                     : () => {
                         WindowUtils.unmaximize();
-                        props.setMaximized(false);
+                        setMaximized(false);
                       }
                 }
               >
-                {!props.maximized ? (
+                {!maximized ? (
                   <CheckBoxOutlineBlankIcon className={classes.windowIcon} />
                 ) : (
                   <FilterNone className={classes.windowIcon} />

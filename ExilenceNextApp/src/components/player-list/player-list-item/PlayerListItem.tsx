@@ -1,24 +1,15 @@
 import {
-  makeStyles,
-  Theme,
-  Paper,
-  Box,
+  Avatar,
+  Checkbox,
   ListItem,
   ListItemAvatar,
-  Avatar,
-  ListItemText,
   ListItemSecondaryAction,
-  Checkbox
+  ListItemText,
+  makeStyles,
+  Theme
 } from '@material-ui/core';
 import React, { forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
-
-interface Props {
-  account: IApiAccount;
-  selected: boolean;
-  handleToggle: (uuid: string) => void;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,35 +18,41 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const PlayerListItem = forwardRef((props: Props, ref) => {
-  const { account } = props;
-  const classes = useStyles();
-  const { t } = useTranslation();
+interface Props {
+  account: IApiAccount;
+  selected: boolean;
+  handleToggle: (uuid: string) => void;
+}
 
-  return (
-    <ListItem
-      key={account.uuid}
-      innerRef={ref}
-      className={classes.root}
-      button
-      onClick={() => props.handleToggle(account.uuid)}
-    >
-      <ListItemAvatar>
-        <Avatar>{account.name[0]}</Avatar>
-      </ListItemAvatar>
-      <ListItemText id={account.uuid} primary={`${account.name}`} />
-      <ListItemSecondaryAction>
-        <Checkbox
-          edge="end"
-          color="primary"
-          onChange={() => props.handleToggle(account.uuid)}
-          checked={props.selected}
-          inputProps={{ 'aria-labelledby': account.uuid }}
-        />
-      </ListItemSecondaryAction>
-    </ListItem>
-  );
-});
+const PlayerListItem = forwardRef(
+  ({ account, selected, handleToggle }: Props, ref) => {
+    const classes = useStyles();
+
+    return (
+      <ListItem
+        key={account.uuid}
+        innerRef={ref}
+        className={classes.root}
+        button
+        onClick={() => handleToggle(account.uuid)}
+      >
+        <ListItemAvatar>
+          <Avatar>{account.name[0]}</Avatar>
+        </ListItemAvatar>
+        <ListItemText id={account.uuid} primary={`${account.name}`} />
+        <ListItemSecondaryAction>
+          <Checkbox
+            edge="end"
+            color="primary"
+            onChange={() => handleToggle(account.uuid)}
+            checked={selected}
+            inputProps={{ 'aria-labelledby': account.uuid }}
+          />
+        </ListItemSecondaryAction>
+      </ListItem>
+    );
+  }
+);
 
 PlayerListItem.displayName = 'PlayerListItem';
 

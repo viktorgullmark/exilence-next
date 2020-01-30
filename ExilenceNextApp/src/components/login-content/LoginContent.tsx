@@ -12,17 +12,10 @@ import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import { toolbarHeight } from '../header/Header';
 
-interface LoginContentProps {
-  handleValidate: (account: IAccount) => void;
-  isSubmitting: boolean;
-  isInitiating: boolean;
-  account: Account;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
     height: `calc(100% - ${toolbarHeight}px)`,
-    flexGrow: 1,
+    flexGrow: 1
   },
   loginContentContainer: {
     'box-shadow': '0px 0px 32px 1px rgba(0,0,0,0.77)',
@@ -47,15 +40,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const LoginContent: React.FC<LoginContentProps> = (
-  props: LoginContentProps
-) => {
+interface LoginContentProps {
+  handleValidate: (account: IAccount) => void;
+  isSubmitting: boolean;
+  isInitiating: boolean;
+  account: Account;
+}
+
+const LoginContent: React.FC<LoginContentProps> = ({
+  handleValidate,
+  isSubmitting,
+  isInitiating,
+  account
+}: LoginContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="center" className={classes.content}>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        className={classes.content}
+      >
         <Grid item sm={9} md={5} lg={4} xl={3}>
           <Paper className={clsx('paper', classes.loginContentContainer)}>
             <Typography variant="h5" className={classes.loginTitle}>
@@ -64,12 +73,12 @@ const LoginContent: React.FC<LoginContentProps> = (
             <Box>
               <AccountValidationForm
                 handleValidate={(details: IAccount) =>
-                  props.handleValidate(details)
+                  handleValidate(details)
                 }
                 styles={classes}
-                isSubmitting={props.isSubmitting}
-                isInitiating={props.isInitiating}
-                account={props.account}
+                isSubmitting={isSubmitting}
+                isInitiating={isInitiating}
+                account={account}
               />
             </Box>
           </Paper>
