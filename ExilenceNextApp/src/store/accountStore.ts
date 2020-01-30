@@ -279,7 +279,7 @@ export class AccountStore {
                           activeLeagueId: this.getSelectedAccount
                             .accountLeagues[0].leagueId,
                           activePriceLeagueId:
-                            stores.leagueStore.priceLeagues[0].id
+                            this.leagueStore.priceLeagues[0].id
                         };
 
                         const league = this.getSelectedAccount.accountLeagues.find(
@@ -296,7 +296,7 @@ export class AccountStore {
                             .createProfileObservable(newProfile, () => {})
                             .pipe(
                               map(() => {
-                                stores.uiStateStore.setProfilesLoaded(true);
+                                this.uiStateStore.setProfilesLoaded(true);
                               })
                             );
                         }
