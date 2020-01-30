@@ -35,9 +35,7 @@ export class PriceStore {
     fromStream(
       interval(this.pollingInterval).pipe(
         switchMap(() => {
-          if (
-            !stores.uiStateStore.isSnapshotting
-          ) {
+          if (!stores.uiStateStore.isSnapshotting) {
             return of(this.getPricesForLeagues());
           } else {
             return of(null);
@@ -92,7 +90,7 @@ export class PriceStore {
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
-            const league = this.leagueStore.leagues.find(
+            const league = this.leagueStore.priceLeagues.find(
               l => l.id === leagueId
             );
 
