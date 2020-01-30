@@ -1,15 +1,13 @@
 import localForage from 'localforage';
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { from, Observable, of, forkJoin } from 'rxjs';
+import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
-import { stores } from '..';
+import stores from '.';
 
 export class MigrationStore {
   @observable @persist current: number = 1;
   @observable latest: number = 2;
-
-  constructor() {}
 
   @action
   increment() {
@@ -49,7 +47,7 @@ export class MigrationStore {
 
   @action
   runMigrations() {
-    stores.uiStateStore.redirect('/login');
+    stores.routeStore.redirect('/login');
     return from([...Array(this.latest - this.current).keys()])
       .pipe(
         concatMap(() => {

@@ -1,11 +1,11 @@
 import moment from 'moment';
-import { stores } from '..';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
+import stores from '../store';
 import { rgbToHex } from './colour.utils';
 import { mergeItemStacks } from './item.utils';
 

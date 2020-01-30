@@ -1,18 +1,12 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable } from 'mobx';
 import { NotificationType } from '../interfaces/notification.interface';
-import { Notification } from './domains/notification';
-import { UiStateStore } from './uiStateStore';
 import { translateError } from '../utils/error.utils';
+import { Notification } from './domains/notification';
 
 export class NotificationStore {
-  uiStateStore: UiStateStore;
   @observable notifications: Notification[] = [];
   @observable displayed: string[] = [];
-
-  constructor(uiStateStore: UiStateStore) {
-    this.uiStateStore = uiStateStore;
-  }
 
   @computed
   get alertNotifications() {

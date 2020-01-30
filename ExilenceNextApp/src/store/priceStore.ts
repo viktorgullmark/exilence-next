@@ -3,16 +3,13 @@ import { action, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
-
-import { stores } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
 import { LeaguePriceDetails } from './domains/league-price-details';
 import { LeaguePriceSource } from './domains/league-price-source';
 import { PriceSource } from './domains/price-source';
-import { LeagueStore } from './leagueStore';
-import { NotificationStore } from './notificationStore';
+import stores from '.';
 
 export class PriceStore {
   @observable priceSources: PriceSource[] = [
@@ -28,16 +25,11 @@ export class PriceStore {
   @observable isUpdatingPrices: boolean = false;
   @observable pollingInterval: number = 60 * 1000 * 20;
 
-  constructor(
-    private leagueStore: LeagueStore,
-    private notificationStore: NotificationStore
-  ) {
+  constructor() {
     fromStream(
       interval(this.pollingInterval).pipe(
         switchMap(() => {
-          if (
-            !stores.uiStateStore.isSnapshotting
-          ) {
+          if (!stores.uiStateStore.isSnapshotting) {
             return of(this.getPricesForLeagues());
           } else {
             return of(null);
@@ -86,13 +78,13 @@ export class PriceStore {
 
   @action
   getPricesForLeagues() {
-    const leagueIds = this.leagueStore.priceLeagues.map(l => l.id);
+    const leagueIds = stores.leagueStore.priceLeagues.map(l => l.id);
     this.isUpdatingPrices = true;
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
-            const league = this.leagueStore.leagues.find(
+            const league = stores.leagueStore.leagues.find(
               l => l.id === leagueId
             );
 
@@ -136,7 +128,7 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'get_prices_for_leagues',
       'success'
     );
@@ -145,7 +137,7 @@ export class PriceStore {
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'get_prices_for_leagues',
       'error',
       true,

@@ -26,8 +26,9 @@ import {
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot
 } from '../../utils/snapshot.utils';
-import { stores, visitor } from './../../index';
+import { visitor } from './../../index';
 import { externalService } from './../../services/external.service';
+import stores from '..';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 

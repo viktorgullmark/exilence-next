@@ -1,15 +1,15 @@
 import { persist } from 'mobx-persist';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import uuid from 'uuid';
 import { ISnapshot } from './../../interfaces/snapshot.interface';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Snapshot implements ISnapshot {
-    @persist uuid: string = uuid.v4();
-    @persist('object') created: Date = moment.utc().toDate();
-    @persist('list', StashTabSnapshot) stashTabSnapshots: StashTabSnapshot[] = [];
+  @persist uuid: string = uuid.v4();
+  @persist('object') created: Date = moment.utc().toDate();
+  @persist('list', StashTabSnapshot) stashTabSnapshots: StashTabSnapshot[] = [];
 
-    constructor(obj?: ISnapshot) {
-        Object.assign(this, obj);
-    }
+  constructor(obj?: ISnapshot) {
+    Object.assign(this, obj);
   }
+}

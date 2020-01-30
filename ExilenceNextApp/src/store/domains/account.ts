@@ -1,30 +1,29 @@
+import { AxiosError } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { of, throwError, Subject, interval, timer } from 'rxjs';
+import { of, Subject, throwError, timer } from 'rxjs';
 import {
   catchError,
-  delay,
+  map,
   mergeMap,
   retryWhen,
-  take,
-  map,
   switchMap,
   takeUntil
 } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
+import { IApiAccount } from '../../interfaces/api/api-account.interface';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
-import { stores, visitor } from './../../index';
+import { genericRetryStrategy } from '../../utils/rxjs.utils';
+import { visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
+import stores from '..';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
-import { genericRetryStrategy } from '../../utils/rxjs.utils';
-import { AxiosError } from 'axios';
-import { IApiAccount } from '../../interfaces/api/api-account.interface';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -113,7 +112,7 @@ export class Account implements IAccount {
 
   @action
   getProfilesForAccount(accountUuid: string) {
-    return stores.signalrStore.signalrHub
+    return stores.signalrHub
       .invokeEvent<string>('GetAllProfiles', accountUuid)
       .pipe(
         map((profiles: IApiProfile[]) => {
@@ -164,7 +163,7 @@ export class Account implements IAccount {
         mergeMap(account => {
           this.updateAccountFromApi(account.data);
           return !stores.signalrHub.connection
-            ? stores.signalrStore.signalrHub.startConnection(
+            ? stores.signalrHub.startConnection(
                 account.data.accessToken
               )
             : of({});
