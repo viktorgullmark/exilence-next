@@ -3,7 +3,13 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, throwError, timer } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  map,
+  mergeMap,
+  switchMap
+} from 'rxjs/operators';
 import { stores } from '..';
 import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
@@ -244,23 +250,21 @@ export class AccountStore {
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap(requests => {
-              const retrievedLeagues: ILeague[] = requests[0].data;
-              const retrievedCharacters: ICharacter[] = requests[1].data;
+              const leagues: ILeague[] = requests[0].data;
+              const characters: ICharacter[] = requests[1].data;
 
-              if (retrievedLeagues.length === 0) {
+              if (leagues.length === 0) {
                 throw new Error('error:no_leagues');
               }
-              if (retrievedCharacters.length === 0) {
+              if (characters.length === 0) {
                 throw new Error('error:no_characters');
               }
 
-              this.leagueStore.updateLeagues(
-                getCharacterLeagues(retrievedCharacters)
-              );
+              this.leagueStore.updateLeagues(getCharacterLeagues(characters));
               this.leagueStore.updatePriceLeagues(
-                retrievedLeagues.filter(l => l.id.indexOf('SSF') === -1)
+                leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
-              this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
+              this.getSelectedAccount.updateAccountLeagues(characters);
               this.priceStore.getPricesForLeagues();
 
               return forkJoin(
@@ -278,8 +282,8 @@ export class AccountStore {
                           name: 'profile 1',
                           activeLeagueId: this.getSelectedAccount
                             .accountLeagues[0].leagueId,
-                          activePriceLeagueId:
-                            this.leagueStore.priceLeagues[0].id
+                          activePriceLeagueId: this.leagueStore.priceLeagues[0]
+                            .id
                         };
 
                         const league = this.getSelectedAccount.accountLeagues.find(
