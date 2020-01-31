@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
-
-export const netWorthTabGroupHeight = 48;
+import { netWorthTabGroupHeight } from './NetWorthTabGroup';
 
 const useStyles = makeStyles(theme => ({
   tabHeader: {

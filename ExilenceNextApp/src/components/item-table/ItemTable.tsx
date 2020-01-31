@@ -16,6 +16,8 @@ import { useStyles } from './ItemTable.styles';
 
 export type Order = 'asc' | 'desc';
 
+export const tableFooterHeight = 52;
+
 interface ItemTableProps {
   items: IPricedItem[];
   pageIndex: number;

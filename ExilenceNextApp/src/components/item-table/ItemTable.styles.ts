@@ -1,6 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core';
-
-export const tableFooterHeight = 52;
+import { tableFooterHeight } from './ItemTable';
 
 export const useStyles = makeStyles(theme =>
   createStyles({

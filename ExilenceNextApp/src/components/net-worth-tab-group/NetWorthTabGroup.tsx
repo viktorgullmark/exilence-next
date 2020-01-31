@@ -9,6 +9,8 @@ import ItemTableContainer from '../item-table/ItemTableContainer';
 import TabPanel from './../tab-panel/TabPanel';
 import useStyles from './NetWorthTabGroup.styles';
 
+export const netWorthTabGroupHeight = 48;
+
 function a11yProps(index: any) {
   return {
     id: `net-worth-tab-${index}`,
