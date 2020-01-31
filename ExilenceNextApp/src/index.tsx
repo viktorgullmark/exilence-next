@@ -1,5 +1,3 @@
-/// <reference path="./react-vis.d.ts"/>
-
 import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
@@ -8,15 +6,18 @@ import { configure } from 'mobx';
 import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
-import React, { Suspense, useEffect } from 'react';
-import ReactDOM, { render } from 'react-dom';
+import moment from 'moment';
+import React, { Suspense } from 'react';
+import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.min.css';
 import ua, { Visitor } from 'universal-analytics';
+import './assets/styles/reactour.scss';
 import exilenceTheme from './assets/themes/exilence-theme';
 import DrawerWrapperContainer from './components/drawer-wrapper/DrawerWrapperContainer';
 import GlobalStyles from './components/global-styles/GlobalStyles';
 import HeaderContainer from './components/header/HeaderContainer';
+import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
 import Notifier from './components/notifier/Notifier';
 import ReactionContainer from './components/reaction-container/ReactionContainer';
 import ToastWrapper from './components/toast-wrapper/ToastWrapper';
@@ -27,32 +28,20 @@ import initSentry from './config/sentry';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
-import { AccountStore } from './store/accountStore';
-import { SignalrHub } from './store/domains/signalr-hub';
-import { LeagueStore } from './store/leagueStore';
-import { NotificationStore } from './store/notificationStore';
-import { PriceStore } from './store/priceStore';
-import { SettingStore } from './store/settingStore';
-import { SignalrStore } from './store/signalrStore';
-import { UiStateStore } from './store/uiStateStore';
-import { UpdateStore } from './store/updateStore';
-import { MigrationStore } from './store/migrationStore';
-import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
-import moment from 'moment';
 import { electronService } from './services/electron.service';
-import './assets/styles/reactour.scss';
+import stores from './store';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
 initSentry();
+configureI18n();
 enableLogging({
   action: true,
   reaction: false,
   transaction: false,
   compute: false
 });
-configureI18n();
 
 configure({ enforceActions: 'observed' });
 
@@ -64,43 +53,6 @@ localForage.config({
   name: 'exilence-next-db',
   driver: localForage.INDEXEDDB
 });
-
-const signalrHub: SignalrHub = new SignalrHub();
-
-const settingStore = new SettingStore();
-const uiStateStore = new UiStateStore();
-const migrationStore = new MigrationStore();
-const updateStore = new UpdateStore();
-const leagueStore = new LeagueStore(uiStateStore);
-const notificationStore = new NotificationStore(uiStateStore);
-const signalrStore = new SignalrStore(
-  uiStateStore,
-  notificationStore,
-  signalrHub
-);
-const priceStore = new PriceStore(leagueStore, notificationStore);
-const accountStore = new AccountStore(
-  uiStateStore,
-  notificationStore,
-  leagueStore,
-  priceStore,
-  signalrStore,
-  settingStore
-);
-
-// make stores globally available for domain objects
-export const stores = {
-  accountStore,
-  uiStateStore,
-  notificationStore,
-  migrationStore,
-  leagueStore,
-  priceStore,
-  signalrStore,
-  signalrHub,
-  updateStore,
-  settingStore
-};
 
 const app = (
   <>
@@ -122,7 +74,7 @@ const app = (
                 exact
                 path="/"
                 render={() =>
-                  accountStore.getSelectedAccount.name ? (
+                  stores.accountStore.getSelectedAccount.name ? (
                     <Redirect to="/net-worth" />
                   ) : (
                     <Redirect to="/login" />
@@ -146,20 +98,20 @@ const hydrate = create({
 
 const renderApp = () => {
   Promise.all([
-    hydrate('account', accountStore),
-    hydrate('uiState', uiStateStore),
-    hydrate('league', leagueStore),
-    hydrate('setting', settingStore)
+    hydrate('account', stores.accountStore),
+    hydrate('uiState', stores.uiStateStore),
+    hydrate('league', stores.leagueStore),
+    hydrate('setting', stores.settingStore)
   ]).then(() => {
-    settingStore.setUiScale(settingStore.uiScale);
-    visitor = ua(AppConfig.trackingId, uiStateStore.userId);
+    stores.settingStore.setUiScale(stores.settingStore.uiScale);
+    visitor = ua(AppConfig.trackingId, stores.uiStateStore.userId);
     ReactDOM.render(app, document.getElementById('root'));
   });
 };
 
-hydrate('migration', migrationStore).then(() => {
-  if (migrationStore.current < migrationStore.latest) {
-    migrationStore.runMigrations().subscribe(() => renderApp());
+hydrate('migration', stores.migrationStore).then(() => {
+  if (stores.migrationStore.current < stores.migrationStore.latest) {
+    stores.migrationStore.runMigrations().subscribe(() => renderApp());
   } else {
     renderApp();
   }

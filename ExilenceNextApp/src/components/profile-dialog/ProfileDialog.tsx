@@ -3,20 +3,27 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import error from '../../utils/validation.utils';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
+import { noCharError } from '../../utils/validation.utils';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
+import RequestButton from '../request-button/RequestButton';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
-import RequestButton from '../request-button/RequestButton';
+import useStyles from './ProfileDialog.styles';
+
+export interface ProfileFormValues {
+  profileName: string;
+  league?: string;
+  priceLeague?: string;
+  stashTabIds?: string[];
+}
 
 interface ProfileDialogProps {
   isOpen: boolean;
@@ -36,54 +43,47 @@ interface ProfileDialogProps {
   handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
 }
 
-export interface ProfileFormValues {
-  profileName: string;
-  league?: string;
-  priceLeague?: string;
-  stashTabIds?: string[];
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogContent: {
-    minWidth: 500,
-    maxWidth: 500
-  },
-  dialogActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    margin: theme.spacing(2, 0)
-  }
-}));
-
-const ProfileDialog: React.FC<ProfileDialogProps> = (
-  props: ProfileDialogProps
-) => {
+const ProfileDialog: React.FC<ProfileDialogProps> = ({
+  isOpen,
+  loading,
+  isEditing,
+  profile,
+  leagueUuid,
+  priceLeagueUuid,
+  leagues,
+  priceLeagues,
+  stashTabs,
+  stashTabIds,
+  characters,
+  handleClickClose,
+  handleLeagueChange,
+  handleSubmit,
+  handleStashTabChange
+}: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const noCharacters = t(error.noCharacters(props.characters));
+  const noCharacters = t(noCharError(characters));
   return (
     <div>
       <Dialog
-        open={props.isOpen}
-        onClose={() => props.handleClickClose()}
+        open={isOpen}
+        onClose={() => handleClickClose()}
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
-          {props.isEditing
-            ? t('title.save_profile')
-            : t('title.create_profile')}
+          {isEditing ? t('title.save_profile') : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: props.isEditing && props.profile ? props.profile.name : '',
-              league: props.leagueUuid,
-              priceLeague: props.priceLeagueUuid,
-              stashTabIds: props.stashTabIds
+              profileName: isEditing && profile ? profile.name : '',
+              league: leagueUuid,
+              priceLeague: priceLeagueUuid,
+              stashTabIds: stashTabIds
             }}
             onSubmit={(values: ProfileFormValues) => {
-              props.handleSubmit(values);
+              handleSubmit(values);
             }}
             validationSchema={Yup.object().shape({
               profileName: Yup.string().required('Required'),
@@ -126,47 +126,47 @@ const ProfileDialog: React.FC<ProfileDialogProps> = (
                     fullWidth
                   />
                   <LeagueDropdown
-                    leagues={props.leagues}
+                    leagues={leagues}
                     touched={touched}
                     errors={errors}
                     fullWidth
                     noCharacters={noCharacters}
-                    handleLeagueChange={props.handleLeagueChange}
+                    handleLeagueChange={handleLeagueChange}
                     handleChange={handleChange}
                     values={values}
                   />
                   <PriceLeagueDropdown
-                    priceLeagues={props.priceLeagues}
+                    priceLeagues={priceLeagues}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
                     values={values}
                   />
                   <StashTabDropdown
-                    stashTabs={props.stashTabs}
+                    stashTabs={stashTabs}
                     touched={touched}
                     errors={errors}
-                    stashTabIds={props.stashTabIds}
-                    handleStashTabChange={props.handleStashTabChange}
+                    stashTabIds={stashTabIds}
+                    handleStashTabChange={handleStashTabChange}
                     handleChange={handleChange}
                   />
                   <div className={classes.dialogActions}>
-                    <Button onClick={() => props.handleClickClose()}>
+                    <Button onClick={() => handleClickClose()}>
                       {t('action.cancel')}
                     </Button>
                     <RequestButton
                       variant="contained"
                       type="submit"
                       color="primary"
-                      loading={props.loading}
+                      loading={loading}
                       disabled={
-                        props.loading ||
+                        loading ||
                         noCharacters.length > 0 ||
-                        props.stashTabIds.length === 0 ||
+                        stashTabIds.length === 0 ||
                         (dirty && !isValid)
                       }
                     >
-                      {props.isEditing
+                      {isEditing
                         ? t('action.save_profile')
                         : t('action.create_profile')}
                     </RequestButton>

@@ -1,9 +1,9 @@
 import * as signalR from '@microsoft/signalr';
-import { action, observable, runInAction } from 'mobx';
-import { from, throwError, of } from 'rxjs';
-import { stores } from '../..';
-import AppConfig from './../../config/app.config';
 import * as msgPack from '@microsoft/signalr-protocol-msgpack';
+import { action, observable, runInAction } from 'mobx';
+import { from, throwError } from 'rxjs';
+import AppConfig from './../../config/app.config';
+import stores from '..';
 
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;

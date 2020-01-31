@@ -2,20 +2,22 @@ import { AxiosError } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
+import moment from 'moment';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
+import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { ItemUtils } from '../../utils/item.utils';
-import { PriceUtils } from '../../utils/price.utils';
-import { ProfileUtils } from '../../utils/profile.utils';
+import { mergeItemStacks } from '../../utils/item.utils';
+import { excludeLegacyMaps } from '../../utils/price.utils';
+import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
   filterItems,
@@ -24,12 +26,11 @@ import {
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot
 } from '../../utils/snapshot.utils';
-import { stores, visitor } from './../../index';
+import { visitor } from './../../index';
 import { externalService } from './../../services/external.service';
+import stores from '..';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
-import moment from 'moment';
-import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -185,9 +186,7 @@ export class Profile {
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    const apiProfile = ProfileUtils.mapProfileToApiProfile(
-      new Profile(profile)
-    );
+    const apiProfile = mapProfileToApiProfile(new Profile(profile));
 
     fromStream(
       stores.signalrHub
@@ -268,7 +267,7 @@ export class Profile {
         .pipe(
           map(stashTabsWithItems => {
             return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.pricedItems = ItemUtils.mergeItemStacks(
+              stashTabWithItems.pricedItems = mergeItemStacks(
                 stashTabWithItems.pricedItems
               );
               return stashTabWithItems;
@@ -339,7 +338,7 @@ export class Profile {
       p => p.calculated && p.calculated >= stores.settingStore.priceTreshold
     );
 
-    prices = PriceUtils.excludeLegacyMaps(prices);
+    prices = excludeLegacyMaps(prices);
 
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {

@@ -1,24 +1,15 @@
+import { Box, Button, Grid, makeStyles, Theme } from '@material-ui/core';
+import WarningIcon from '@material-ui/icons/Warning';
 import { inject, observer } from 'mobx-react';
-import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
-import { UiStateStore } from '../../store/uiStateStore';
-import ItemTable from './ItemTable';
-import { AccountStore } from '../../store/accountStore';
-import ItemTableFilter from './item-table-filter/ItemTableFilter';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import {
-  Grid,
-  Box,
-  makeStyles,
-  Theme,
-  Button,
-  Typography
-} from '@material-ui/core';
-import { reaction } from 'mobx';
-import { ExportUtils } from '../../utils/export.utils';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { statusColors } from '../../assets/themes/exilence-theme';
+import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
-import WarningIcon from '@material-ui/icons/Warning';
+import { UiStateStore } from '../../store/uiStateStore';
+import { exportData } from '../../utils/export.utils';
+import ItemTableFilter from './item-table-filter/ItemTableFilter';
+import ItemTable from './ItemTable';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -135,7 +126,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
               color="primary"
               variant="contained"
               disabled={getItems().length === 0}
-              onClick={() => ExportUtils.exportData(getItems())}
+              onClick={() => exportData(getItems())}
             >
               {t('label.net_worth_export')}
             </Button>

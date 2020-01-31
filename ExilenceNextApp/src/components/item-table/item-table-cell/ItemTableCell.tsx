@@ -1,40 +1,15 @@
 import { Box, CircularProgress, TableCell } from '@material-ui/core';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  rarityColors,
-  itemColors
+  itemColors,
+  rarityColors
 } from '../../../assets/themes/exilence-theme';
 import { IColumn } from '../../../interfaces/column.interface';
-import { ItemUtils } from '../../../utils/item.utils';
-
-const useStyles = makeStyles(theme => ({
-  tableCell: {
-    padding: theme.spacing(0.75),
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
-  },
-  iconCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(0.5)
-  },
-  lastCell: {
-    paddingRight: theme.spacing(1)
-  },
-  iconImg: {
-    minHeight: 35,
-    maxHeight: 35,
-    maxWidth: 120
-  },
-  noLinks: {
-    color: theme.palette.text.hint
-  }
-}));
+import { getRarity } from '../../../utils/item.utils';
+import useStyles from './ItemTableCell.styles';
 
 interface ItemTableCellProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string | number | boolean;
@@ -64,9 +39,9 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
 
   const noLinks = (value: number) => {
     return !value || value === 0;
-  }
+  };
 
-  const rarityColor = rarityColors[ItemUtils.getRarity(frameType)];
+  const rarityColor = rarityColors[getRarity(frameType)];
 
   return (
     <>

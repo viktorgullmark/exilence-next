@@ -1,14 +1,13 @@
-import { stores } from '..';
+import moment from 'moment';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
-import { ColourUtils } from './colour.utils';
-import { ItemUtils } from './item.utils';
-import moment from 'moment';
-import { IApiConnection } from '../interfaces/api/api-connection.interface';
+import stores from '../store';
+import { rgbToHex } from './colour.utils';
+import { mergeItemStacks } from './item.utils';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
@@ -35,11 +34,7 @@ export const mapSnapshotToApiSnapshot = (
               pricedItems: foundTab.pricedItems,
               index: st.i,
               value: +foundTab.value.toFixed(4),
-              color: ColourUtils.rgbToHex(
-                st.colour.r,
-                st.colour.g,
-                st.colour.b
-              ),
+              color: rgbToHex(st.colour.r, st.colour.g, st.colour.b),
               name: st.n
             };
           })
@@ -122,7 +117,6 @@ export const formatValue = (
 export const formatSnapshotsForChart = (
   snapshots: IApiSnapshot[]
 ): number[][] => {
-
   return snapshots
     .map(s => {
       const values: number[] = [
@@ -138,7 +132,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
-  const mergedItems = ItemUtils.mergeItemStacks(
+  const mergedItems = mergeItemStacks(
     snapshots
       .flatMap(sts => sts.stashTabs)
       .flatMap(sts =>
@@ -156,7 +150,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 };
 
 export const getItemCount = (snapshots: IApiSnapshot[]) => {
-  return ItemUtils.mergeItemStacks(
+  return mergeItemStacks(
     snapshots
       .flatMap(sts => sts.stashTabs)
       .flatMap(sts => sts.pricedItems.filter(i => i.calculated > 0))

@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
 import { externalService } from '../../services/external.service';
-import { stores } from './../../index';
+import stores from '..';
 import { Character } from './character';
 
 export class AccountLeague {

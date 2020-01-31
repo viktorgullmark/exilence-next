@@ -105,14 +105,12 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
         toggleSidenav={() => uiStateStore!.toggleSidenav()}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
-        markAllNotificationsRead={() => notificationStore!.markAllAsRead()}
         handleProfileChange={handleProfileChange}
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
-        notifications={notificationStore!.notifications}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}

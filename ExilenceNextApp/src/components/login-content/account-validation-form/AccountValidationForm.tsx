@@ -1,27 +1,27 @@
 import {
-  Button,
-  CircularProgress,
-  TextField,
-  makeStyles,
-  Theme,
-  Box,
+  Grid,
   IconButton,
-  Typography,
   Link,
-  Grid
+  TextField,
+  Typography
 } from '@material-ui/core';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import HelpIcon from '@material-ui/icons/Help';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
-import HelpIcon from '@material-ui/icons/Help';
-import { WindowUtils } from '../../../utils/window.utils';
+import { Account } from '../../../store/domains/account';
+import { openLink } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
 import RequestButton from '../../request-button/RequestButton';
+import useStyles from './AccountValidationForm.styles';
+
+interface AccountFormValues {
+  sessionId: string;
+}
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
@@ -31,24 +31,13 @@ interface AccountValidationFormProps {
   account: Account;
 }
 
-interface AccountFormValues {
-  sessionId: string;
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-  helperIcon: {
-    color: theme.palette.primary.light,
-    marginRight: theme.spacing(-0.5)
-  },
-  inlineLink: {
-    color: theme.palette.primary.light,
-    verticalAlign: 'baseline'
-  }
-}));
-
-const AccountValidationForm: React.FC<AccountValidationFormProps> = (
-  props: AccountValidationFormProps
-) => {
+const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
+  handleValidate,
+  styles,
+  isSubmitting,
+  isInitiating,
+  account
+}: AccountValidationFormProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -58,10 +47,10 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
     <>
       <Formik
         initialValues={{
-          sessionId: props.account.sessionId
+          sessionId: account.sessionId
         }}
         onSubmit={(values: AccountFormValues) => {
-          props.handleValidate({
+          handleValidate({
             sessionId: values.sessionId
           });
         }}
@@ -106,7 +95,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                         className={classes.helperIcon}
                         edge="start"
                         size="small"
-                        onClick={e => WindowUtils.openLink(e)}
+                        onClick={e => openLink(e)}
                         href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
                       >
                         <HelpIcon />
@@ -115,7 +104,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                   }}
                 ></TextField>
               </div>
-              <div className={props.styles.loginFooter}>
+              <div className={styles.loginFooter}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2">
@@ -137,9 +126,12 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                       color="primary"
                       fullWidth
                       type="submit"
-                      loading={props.isSubmitting || props.isInitiating}
+                      loading={isSubmitting || isInitiating}
                       disabled={
-                        !touched || props.isSubmitting || props.isInitiating || (dirty && !isValid)
+                        !touched ||
+                        isSubmitting ||
+                        isInitiating ||
+                        (dirty && !isValid)
                       }
                       endIcon={<ExitToApp />}
                     >

@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, timer, throwError } from 'rxjs';
+import { forkJoin, of, throwError, timer } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -10,38 +10,20 @@ import {
   mergeMap,
   switchMap
 } from 'rxjs/operators';
-import { stores } from '..';
+import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
+import { ILeague } from '../interfaces/league.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
+import { IProfile } from '../interfaces/profile.interface';
 import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
-import { ProfileUtils } from '../utils/profile.utils';
+import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
-import { LeagueStore } from './leagueStore';
-import { NotificationStore } from './notificationStore';
-import { PriceStore } from './priceStore';
-import { SignalrStore } from './signalrStore';
-import { UiStateStore } from './uiStateStore';
-import { IApiProfile } from '../interfaces/api/api-profile.interface';
-import { Profile } from './domains/profile';
-import { IProfile } from '../interfaces/profile.interface';
-import { SettingStore } from './settingStore';
-import { ILeague } from '../interfaces/league.interface';
-import { ICharacter } from '../interfaces/character.interface';
-import { getCharacterLeagues } from '../utils/league.utils';
+import stores from '.';
 
 export class AccountStore {
-  constructor(
-    private uiStateStore: UiStateStore,
-    private notificationStore: NotificationStore,
-    private leagueStore: LeagueStore,
-    private priceStore: PriceStore,
-    private signalrStore: SignalrStore,
-    private settingStore: SettingStore
-  ) {}
-
   @persist('list', Account) @observable accounts: Account[] = [];
   @persist @observable activeAccount: string = '';
   @persist('object') @observable token: IToken | undefined = undefined;
@@ -166,9 +148,9 @@ export class AccountStore {
 
   @action
   loginWithOAuthSuccess(response: IOAuthResponse) {
-    this.uiStateStore.redirect('/net-worth');
-    this.uiStateStore.setValidated(true);
-    this.notificationStore.createNotification('login_with_oauth', 'success');
+    stores.routeStore.redirect('/net-worth');
+    stores.uiStateStore.setValidated(true);
+    stores.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     this.initSession();
   }
@@ -189,12 +171,12 @@ export class AccountStore {
 
   @action
   getPoeProfileSuccess() {
-    this.notificationStore.createNotification('get_poe_profile', 'success');
+    stores.notificationStore.createNotification('get_poe_profile', 'success');
   }
 
   @action
   getPoeProfileFail(e: AxiosError | Error) {
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'get_poe_profile',
       'error',
       true,
@@ -203,19 +185,19 @@ export class AccountStore {
 
     // todo: check expiry date here
     if (!this.token) {
-      this.uiStateStore.redirect('/login');
+      stores.routeStore.redirect('/login');
     }
   }
 
   @action
   loginWithOAuthFail(e?: AxiosError) {
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'login_with_oauth',
       'error',
       true,
       e
     );
-    this.uiStateStore.redirect('/login');
+    stores.routeStore.redirect('/login');
   }
 
   @action
@@ -230,16 +212,16 @@ export class AccountStore {
 
   @action
   initSession(skipAuth?: boolean) {
-    this.uiStateStore.setIsInitiating(true);
+    stores.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
       this.initSessionFail(new Error('error:no_token_set'));
-      return this.uiStateStore.redirect('/login');
+      return stores.routeStore.redirect('/login');
     }
 
     if (new Date() >= this.token.expires) {
       this.initSessionFail(new Error('error:token_expired'));
-      return this.uiStateStore.redirect('/login');
+      return stores.routeStore.redirect('/login');
     }
 
     fromStream(
@@ -253,24 +235,22 @@ export class AccountStore {
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap(requests => {
-              const retrievedLeagues: ILeague[] = requests[0].data;
-              const retrievedCharacters: ICharacter[] = requests[1].data;
+              const leagues: ILeague[] = requests[0].data;
+              const characters: ICharacter[] = requests[1].data;
 
-              if (retrievedLeagues.length === 0) {
+              if (leagues.length === 0) {
                 throw new Error('error:no_leagues');
               }
-              if (retrievedCharacters.length === 0) {
+              if (characters.length === 0) {
                 throw new Error('error:no_characters');
               }
 
-              this.leagueStore.updateLeagues(
-                getCharacterLeagues(retrievedCharacters)
+              stores.leagueStore.updateLeagues(getCharacterLeagues(characters));
+              stores.leagueStore.updatePriceLeagues(
+                leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
-              this.leagueStore.updatePriceLeagues(
-                retrievedLeagues.filter(l => l.id.indexOf('SSF') === -1)
-              );
-              this.getSelectedAccount.updateAccountLeagues(retrievedCharacters);
-              this.priceStore.getPricesForLeagues();
+              this.getSelectedAccount.updateAccountLeagues(characters);
+              stores.priceStore.getPricesForLeagues();
 
               return forkJoin(
                 of(account.accountLeagues)
@@ -319,7 +299,7 @@ export class AccountStore {
           );
         }),
         switchMap(() => {
-          if (this.settingStore.autoSnapshotting) {
+          if (stores.settingStore.autoSnapshotting) {
             return of(this.getSelectedAccount.queueSnapshot());
           } else {
             return of({});
@@ -335,23 +315,28 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.notificationStore.createNotification('init_session', 'success');
-    this.uiStateStore.setIsInitiating(false);
-    this.uiStateStore.setInitiated(true);
+    stores.notificationStore.createNotification('init_session', 'success');
+    stores.uiStateStore.setIsInitiating(false);
+    stores.uiStateStore.setInitiated(true);
   }
 
   @action
   initSessionFail(e: AxiosError | Error) {
     fromStream(timer(15 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
-    this.notificationStore.createNotification('init_session', 'error', true, e);
-    this.uiStateStore.setIsInitiating(false);
-    this.uiStateStore.setInitiated(true);
+    stores.notificationStore.createNotification(
+      'init_session',
+      'error',
+      true,
+      e
+    );
+    stores.uiStateStore.setIsInitiating(false);
+    stores.uiStateStore.setInitiated(true);
   }
 
   @action
   validateSession(sender: string, sessionId?: string) {
-    this.uiStateStore.setSubmitting(true);
+    stores.uiStateStore.setSubmitting(true);
 
     const request = externalService.getCharacters().pipe(
       switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
@@ -359,12 +344,12 @@ export class AccountStore {
     );
     fromStream(
       sessionId
-        ? this.uiStateStore.setSessIdCookie(sessionId).pipe(
+        ? stores.uiStateStore.setSessIdCookie(sessionId).pipe(
             switchMap(() => {
               return request;
             })
           )
-        : this.uiStateStore.getSessIdCookie().pipe(
+        : stores.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
               if (cookies && cookies.length > 0) {
                 this.sessionId = cookies[0].value;
@@ -381,19 +366,19 @@ export class AccountStore {
       this.sessionId = sessionId;
     }
 
-    this.notificationStore.createNotification('validate_session', 'success');
-    this.uiStateStore.setSubmitting(false);
+    stores.notificationStore.createNotification('validate_session', 'success');
+    stores.uiStateStore.setSubmitting(false);
 
     // todo: check expiry date
     if (!this.token || sessionId) {
       if (sender === '/login') {
         this.loadAuthWindow();
       } else {
-        this.uiStateStore.redirect('/login');
+        stores.routeStore.redirect('/login');
       }
     } else {
-      this.uiStateStore.setValidated(true);
-      this.uiStateStore.redirect('/net-worth');
+      stores.uiStateStore.setValidated(true);
+      stores.routeStore.redirect('/net-worth');
       this.initSession();
     }
   }
@@ -406,13 +391,13 @@ export class AccountStore {
       );
     }
 
-    this.notificationStore.createNotification(
+    stores.notificationStore.createNotification(
       'validate_session',
       'error',
       true,
       e
     );
-    this.uiStateStore.setSubmitting(false);
-    this.uiStateStore.setValidated(false);
+    stores.uiStateStore.setSubmitting(false);
+    stores.uiStateStore.setValidated(false);
   }
 }

@@ -1,15 +1,10 @@
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  makeStyles,
-  OutlinedInput
-} from '@material-ui/core';
+import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@material-ui/core';
 import { useField } from 'formik';
-import React, { useEffect, useRef, useState } from 'react';
-import VisibilityIcon from '../visibility-icon/VisibilityIcon';
-import useLabelWidth from '../../hooks/use-label-width';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useLabelWidth from '../../hooks/use-label-width';
+import VisibilityIcon from '../visibility-icon/VisibilityIcon';
+import useStyles from './PasswordField.styles';
 
 interface Props {
   name: string;
@@ -21,16 +16,6 @@ interface Props {
   helperText?: string;
   customError?: string;
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    marginBottom: theme.spacing(2)
-  },
-  helperText: {
-    fontSize: '0.75rem',
-    lineHeight: '1.2em'
-  }
-}));
 
 const PasswordField: React.FC<Props> = ({
   name,
@@ -64,7 +49,7 @@ const PasswordField: React.FC<Props> = ({
       fullWidth
     >
       <InputLabel ref={ref} htmlFor={name}>
-        {label} {!required && (`(${t('label.optional').toLowerCase()})`)}
+        {label} {!required && `(${t('label.optional').toLowerCase()})`}
       </InputLabel>
       <OutlinedInput
         id={name}

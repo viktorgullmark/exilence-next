@@ -3,14 +3,13 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Select,
-  makeStyles,
-  Theme
+  Select
 } from '@material-ui/core';
 import { useField } from 'formik';
 import React from 'react';
-import { ISelectOption } from '../../interfaces/select-option.interface';
 import useLabelWidth from '../../hooks/use-label-width';
+import { ISelectOption } from '../../interfaces/select-option.interface';
+import useStyles from './SelectField.styles';
 
 interface Props {
   name: string;
@@ -18,12 +17,6 @@ interface Props {
   required?: boolean;
   options?: ISelectOption[];
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(2)
-  }
-}));
 
 const SelectField: React.FC<Props> = ({
   name,

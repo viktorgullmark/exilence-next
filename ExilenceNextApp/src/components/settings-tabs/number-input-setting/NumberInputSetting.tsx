@@ -1,16 +1,14 @@
 import {
-  createStyles,
   FormControl,
   FormGroup,
   FormHelperText,
   FormLabel,
-  Input,
-  makeStyles,
   TextField
 } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import MinuteFormat from '../../minute-format/MinuteFormat';
+import useStyles from './NumberInputSetting.styles';
 
 interface Props {
   value: number;
@@ -20,18 +18,6 @@ interface Props {
   minutes?: boolean;
   disabled?: boolean;
 }
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-      '&::after': {
-        content: 'min !important'
-      }
-    }
-  })
-);
 
 const NumberInputSetting: React.FC<Props> = ({
   value,

@@ -1,38 +1,17 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-  Theme,
-  IconButton
-} from '@material-ui/core';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Formik } from 'formik';
-import { IGroupForm } from './GroupDialogContainer';
-import * as Yup from 'yup';
-import SimpleField from '../simple-field/SimpleField';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 import CasinoIcon from '@material-ui/icons/CasinoRounded';
-import PasswordField from '../password-field/PasswordField';
-import { generateGroupName } from '../../utils/group.utils';
-import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
+import { Formik } from 'formik';
+import { observer } from 'mobx-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import { generateGroupName } from '../../utils/group.utils';
+import PasswordField from '../password-field/PasswordField';
 import RequestButton from '../request-button/RequestButton';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogActions: {
-    padding: theme.spacing(2)
-  },
-  consent: {
-    color: theme.palette.text.hint
-  },
-  formField: {
-    marginBottom: theme.spacing(2)
-  },
-  helperIcon: {}
-}));
+import SimpleField from '../simple-field/SimpleField';
+import useStyles from './GroupDialog.styles';
+import { IGroupForm } from './GroupDialogContainer';
 
 interface Props {
   show: boolean;
@@ -43,7 +22,7 @@ interface Props {
   handleGroupExists: (groupName: string) => void;
   handleClearError: () => void;
   loading: boolean;
-  groupError?:  AxiosError | Error;
+  groupError?: AxiosError | Error;
   groupExists?: boolean;
 }
 
@@ -138,7 +117,9 @@ const GroupDialog: React.FC<Props> = ({
               <Button onClick={onClose}>{t('action.close')}</Button>
               <RequestButton
                 type="submit"
-                disabled={loading || !isValid || getGroupExistsError() !== undefined}
+                disabled={
+                  loading || !isValid || getGroupExistsError() !== undefined
+                }
                 color="primary"
                 variant="contained"
                 loading={loading}

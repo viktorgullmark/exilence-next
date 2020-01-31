@@ -18,7 +18,7 @@ import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import { WindowUtils } from '../../utils/window.utils';
+import { openLink } from '../../utils/window.utils';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -133,12 +133,12 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
         <Grid item xs={6} md={3} lg={3}>
           <Widget>
             <Box display="flex" alignItems="center" justifyContent="center" height={1}>
-              <a href="https://patreon.com/exilence" onClick={e => WindowUtils.openLink(e)}>
+              <a href="https://patreon.com/exilence" onClick={e => openLink(e)}>
                 <Box display="flex" alignItems="center" height={1}>
                   <img className={classes.patreonLogo} src={PatreonLogo} />
                 </Box>
               </a>
-              <a href="https://discord.gg/yxuBrPY" onClick={e => WindowUtils.openLink(e)}>
+              <a href="https://discord.gg/yxuBrPY" onClick={e => openLink(e)}>
                 <Box display="flex" alignItems="center" height={1}>
                   <img className={classes.discordLogo} src={DiscordLogo} />
                 </Box>

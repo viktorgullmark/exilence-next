@@ -3,6 +3,7 @@ import moment from 'moment';
 import uuid from 'uuid';
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
+import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
 import {
   calculateNetWorth,
   filterItems,
@@ -10,7 +11,6 @@ import {
   getItemCount,
   getValueForSnapshotsTabs
 } from '../../utils/snapshot.utils';
-import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
 
 export class Group implements IApiGroup {
   uuid: string = uuid.v4();

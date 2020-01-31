@@ -1,11 +1,14 @@
-import RateLimiter from 'rxjs-ratelimiter';
-import { map, concatAll, flatMap } from 'rxjs/operators';
-import { forkJoin, from } from 'rxjs';
-import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-currency-overview.interface';
-import { IExternalPrice } from '../interfaces/external-price.interface';
 import axios, { AxiosResponse } from 'axios';
+import { forkJoin, from } from 'rxjs';
+import RateLimiter from 'rxjs-ratelimiter';
+import { map } from 'rxjs/operators';
+import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
-import { PriceUtils } from '../utils/price.utils';
+import {
+  getExternalPriceFromNinjaCurrencyItem,
+  getExternalPriceFromNinjaItem
+} from '../utils/price.utils';
+import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-currency-overview.interface';
 
 const rateLimiter = new RateLimiter(1, 1);
 const apiUrl = 'https://poe.ninja/api/data';
@@ -76,9 +79,7 @@ function getItemPrices(league: string) {
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
           if (response.data) {
             return response.data.lines.map(lines => {
-              return PriceUtils.getExternalPriceFromNinjaItem(
-                lines
-              ) as IExternalPrice;
+              return getExternalPriceFromNinjaItem(lines) as IExternalPrice;
             });
           } else {
             return []; // no prices found on ninja
@@ -99,7 +100,7 @@ function getCurrencyPrices(league: string) {
               const currencyDetail = response.data.currencyDetails.find(
                 detail => detail.name === lines.currencyTypeName
               );
-              return PriceUtils.getExternalPriceFromNinjaCurrencyItem(
+              return getExternalPriceFromNinjaCurrencyItem(
                 lines,
                 currencyDetail
               ) as IExternalPrice;

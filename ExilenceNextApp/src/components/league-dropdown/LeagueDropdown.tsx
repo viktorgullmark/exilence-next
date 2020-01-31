@@ -12,23 +12,20 @@ import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { League } from '../../store/domains/league';
-import { LeagueFormValues } from '../league-selection-form/LeagueSelectionForm';
+import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 
 interface LeagueDropdownProps {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   noCharacters: string;
   leagues: League[];
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown; }>) => void;
-  handleChange: (event: ChangeEvent<{ value: unknown; }>) => void;
-  values: LeagueFormValues;
+  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  values: ILeagueFormValues;
   margin?: 'normal' | 'none' | 'dense' | undefined;
   fullWidth?: boolean;
   hideLabel?: boolean;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-}));
 
 const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   margin = 'normal',
@@ -43,7 +40,6 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   values
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
-  const classes = useStyles();
 
   return (
     <>

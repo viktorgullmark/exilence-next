@@ -1,18 +1,11 @@
-import { action, computed, observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { ILeague } from '../interfaces/league.interface';
 import { League } from './domains/league';
-import { UiStateStore } from './uiStateStore';
-import { stores } from '..';
 
 export class LeagueStore {
-  uiStateStore: UiStateStore;
   @persist('list', League) @observable leagues: League[] = [];
   @persist('list', League) @observable priceLeagues: League[] = [];
-
-  constructor(uiStateStore: UiStateStore) {
-    this.uiStateStore = uiStateStore;
-  }
 
   @action
   updateLeagues(leagues: ILeague[]) {

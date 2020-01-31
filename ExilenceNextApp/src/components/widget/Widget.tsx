@@ -1,19 +1,9 @@
 import { Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
-import clsx from 'clsx';
 import { cardHeight } from '../../routes/net-worth/NetWorth';
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary
-  },
-  noPadding: {
-    padding: 0
-  }
-}));
+import useStyles from './Widget.styles';
 
 interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundColor?: string;

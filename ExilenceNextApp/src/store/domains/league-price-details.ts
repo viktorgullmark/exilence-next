@@ -1,17 +1,15 @@
-import { persist } from 'mobx-persist';
+import { action, observable } from 'mobx';
 import uuid from 'uuid';
 import { LeaguePriceSource } from './league-price-source';
-import { observable, action } from 'mobx';
-import { ILeaguePriceSource } from './../../interfaces/league-price-source.interface';
 
 export class LeaguePriceDetails {
-    uuid: string = uuid.v4();
-    leagueId: string = '';
-    
-    @observable leaguePriceSources: LeaguePriceSource[] = [];
+  uuid: string = uuid.v4();
+  leagueId: string = '';
 
-    @action
-    addLeaguePriceSource(leaguePriceSource: LeaguePriceSource) {
-      this.leaguePriceSources.push(leaguePriceSource);
-    }
+  @observable leaguePriceSources: LeaguePriceSource[] = [];
+
+  @action
+  addLeaguePriceSource(leaguePriceSource: LeaguePriceSource) {
+    this.leaguePriceSources.push(leaguePriceSource);
   }
+}

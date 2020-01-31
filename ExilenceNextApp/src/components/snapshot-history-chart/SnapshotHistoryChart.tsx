@@ -1,17 +1,12 @@
 import { Box } from '@material-ui/core';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  useTheme
-} from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import HC from 'highcharts';
 import React from 'react';
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
 import Highcharts from './../highcharts-base/HighchartsBase';
-import { Group } from '../../store/domains/group';
+import useStyles from './SnapshotHistoryChart.styles';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
@@ -20,27 +15,20 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   groupData?: IGroupChartSeries;
 }
 
-export const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: '100%',
-      width: '100%'
-    }
-  })
-);
-
 const SnapshotHistoryChart: React.FC<Props> = ({
   playerData,
   groupData
 }: Props) => {
   const theme = useTheme();
-  const classes = useStyles(); 
+  const classes = useStyles();
 
-  let seriesData = [{
-    type: 'area',
-    name: playerData ? playerData.seriesName : 'No data',
-    data: playerData ? playerData.series : []
-  }];
+  let seriesData = [
+    {
+      type: 'area',
+      name: playerData ? playerData.seriesName : 'No data',
+      data: playerData ? playerData.series : []
+    }
+  ];
 
   if (groupData) {
     seriesData = groupData.connections.map(player => {

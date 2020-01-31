@@ -1,15 +1,12 @@
+import { AxiosError } from 'axios';
 import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
-import { CookieUtils } from '../utils/cookie.utils';
+import uuid from 'uuid';
+import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
-import uuid from 'uuid';
-import { AxiosError } from 'axios';
-import { stores } from '..';
-import { fromStream } from 'mobx-utils';
-import { electronService } from '../services/electron.service';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -32,7 +29,6 @@ export class UiStateStore {
   @observable groupOverviewOpen: boolean = false;
   @observable groupExists: boolean | undefined = undefined;
   @observable groupError: AxiosError | Error | undefined = undefined;
-  @observable redirectedTo: string | undefined = undefined;
   @observable confirmClearSnapshotsDialogOpen: boolean = false;
   @observable confirmRemoveProfileDialogOpen: boolean = false;
   @observable isSnapshotting: boolean = false;
@@ -106,14 +102,6 @@ export class UiStateStore {
   }
 
   @action
-  redirect(path: string) {
-    if (path === '/login') {
-      fromStream(stores.signalrHub.stopConnection());
-    }
-    this.redirectedTo = path;
-  }
-
-  @action
   setNotificationList(list: Notification[]) {
     this.notificationList = list;
   }
@@ -138,7 +126,7 @@ export class UiStateStore {
 
   @action
   setSessIdCookie(sessionId: string) {
-    const cookie = CookieUtils.constructCookie(sessionId);
+    const cookie = constructCookie(sessionId);
     return authService.setAuthCookie(cookie).pipe(
       map(() => {
         return runInAction(() => {

@@ -1,5 +1,6 @@
+import { Box, Typography } from '@material-ui/core';
 import React from 'react';
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core';
+import useStyles from './TabPanel.styles';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -8,12 +9,6 @@ interface TabPanelProps {
 }
 
 export const tabPanelSpacing = 2;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.default
-  }
-}));
 
 const TabPanel: React.FC<TabPanelProps> = ({
   children,
