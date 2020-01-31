@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added support for private leagues
 - Added a introduction tour for new users that will be displayed once
 - Added styled tooltips when hovering icon buttons
+##### Updated
+- Updated Electron framework to version 7
 
 ## [0.2.5] - 2020-01-29
 ##### Changed
