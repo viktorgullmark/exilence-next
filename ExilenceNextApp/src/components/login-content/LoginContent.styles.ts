@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import { toolbarHeight } from '../header/Header.styles';
+import { toolbarHeight } from '../header/Header';
 
 const useStyles = makeStyles(theme => ({
   content: {

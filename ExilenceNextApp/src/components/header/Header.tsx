@@ -17,6 +17,9 @@ import {
 } from '../../utils/window.utils';
 import useStyles from './Header.styles';
 
+export const resizeHandleContainerHeight = 5;
+export const toolbarHeight = 30;
+
 interface HeaderProps {
   maximized: boolean;
   setMaximized: (maximized: boolean) => void;

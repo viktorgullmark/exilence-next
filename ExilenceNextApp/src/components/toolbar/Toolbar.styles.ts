@@ -4,9 +4,8 @@ import {
   statusColors
 } from '../../assets/themes/exilence-theme';
 import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header.styles';
-
-export const innerToolbarHeight = 50;
+import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
+import { innerToolbarHeight } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {

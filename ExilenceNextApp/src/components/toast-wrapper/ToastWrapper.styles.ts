@@ -1,7 +1,7 @@
 import { makeStyles, Theme } from '@material-ui/core';
 import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header.styles';
-import { innerToolbarHeight } from '../toolbar/Toolbar.styles';
+import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
+import { innerToolbarHeight } from '../toolbar/Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

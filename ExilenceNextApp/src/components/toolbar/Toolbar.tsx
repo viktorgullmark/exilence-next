@@ -37,6 +37,8 @@ import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer'
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
 
+export const innerToolbarHeight = 50;
+
 interface Props {
   signalrOnline: boolean;
   sidenavOpened: boolean;

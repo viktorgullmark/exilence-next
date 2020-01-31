@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import {
   resizeHandleContainerHeight,
   toolbarHeight
-} from '../../header/Header.styles';
+} from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
 
 const useStyles = makeStyles(theme => ({

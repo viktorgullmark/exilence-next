@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import { gridSpacing } from '../../assets/themes/exilence-theme';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header.styles';
-import { innerToolbarHeight } from '../toolbar/Toolbar.styles';
+import { toolbarHeight, resizeHandleContainerHeight } from '../header/Header';
+import { innerToolbarHeight } from '../toolbar/Toolbar';
 
 const useStyles = makeStyles(theme => ({
   root: {
