@@ -84,7 +84,7 @@ export class PriceStore {
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
-            const league = stores.leagueStore.leagues.find(
+            const league = this.leagueStore.priceLeagues.find(
               l => l.id === leagueId
             );
 
