@@ -3,10 +3,13 @@ import { action, computed, observable } from 'mobx';
 import { NotificationType } from '../interfaces/notification.interface';
 import { translateError } from '../utils/error.utils';
 import { Notification } from './domains/notification';
+import { RootStore } from './rootStore';
 
 export class NotificationStore {
   @observable notifications: Notification[] = [];
   @observable displayed: string[] = [];
+
+  constructor(private rootStore: RootStore) {}
 
   @computed
   get alertNotifications() {

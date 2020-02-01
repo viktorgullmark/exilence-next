@@ -15,7 +15,7 @@ import { genericRetryStrategy } from '../utils/rxjs.utils';
 import { mapSnapshotToApiSnapshot } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { Snapshot } from './domains/snapshot';
-import stores from '.';
+import { RootStore } from './rootStore';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -29,34 +29,36 @@ export class SignalrStore {
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
+  constructor(private rootStore: RootStore) {}
+
   @action
   registerEvents() {
-    stores.signalrHub.onEvent('OnCloseConnection', () => {
+    this.rootStore.signalrHub.onEvent('OnCloseConnection', () => {
       fromStream(
-        stores.signalrHub.stopConnection().pipe(
+        this.rootStore.signalrHub.stopConnection().pipe(
           map(() => of(this.stopConnectionSuccess())),
           catchError(e => of(this.stopConnectionFail(e)))
         )
       );
     });
-    stores.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
+    this.rootStore.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
       this.setActiveGroup(new Group(group));
       this.activeGroup!.setActiveAccounts(
         group.connections.map(c => c.account.uuid)
       );
       this.joinGroupSuccess();
     });
-    stores.signalrHub.onEvent('OnGroupLeft', () => {
+    this.rootStore.signalrHub.onEvent('OnGroupLeft', () => {
       this.setActiveGroup(undefined);
       this.leaveGroupSuccess();
     });
-    stores.signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
+    this.rootStore.signalrHub.onEvent<IApiConnection>('OnJoinGroup', connection => {
       this.activeGroup!.addConnection(connection);
     });
-    stores.signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
+    this.rootStore.signalrHub.onEvent<IApiConnection>('OnLeaveGroup', connection => {
       this.activeGroup!.removeConnection(connection.connectionId);
     });
-    stores.signalrHub.onEvent<string, string, IApiSnapshot>(
+    this.rootStore.signalrHub.onEvent<string, string, IApiSnapshot>(
       'OnAddSnapshot',
       (connectionId, profileId, snapshot) => {
         if (this.activeGroup && snapshot && profileId) {
@@ -64,7 +66,7 @@ export class SignalrStore {
         }
       }
     );
-    stores.signalrHub.onEvent<string, string>(
+    this.rootStore.signalrHub.onEvent<string, string>(
       'OnRemoveAllSnapshots',
       (connectionId, profileId) => {
         if (this.activeGroup && profileId) {
@@ -72,7 +74,7 @@ export class SignalrStore {
         }
       }
     );
-    stores.signalrHub.onEvent<string, IApiProfile>(
+    this.rootStore.signalrHub.onEvent<string, IApiProfile>(
       'OnChangeProfile',
       (connectionId, profile) => {
         if (this.activeGroup && profile) {
@@ -80,7 +82,7 @@ export class SignalrStore {
         }
       }
     );
-    stores.signalrHub.onEvent<string, IApiProfile>(
+    this.rootStore.signalrHub.onEvent<string, IApiProfile>(
       'OnAddProfile',
       (connectionId, profile) => {
         if (this.activeGroup && profile) {
@@ -88,7 +90,7 @@ export class SignalrStore {
         }
       }
     );
-    stores.signalrHub.onEvent<string, string>(
+    this.rootStore.signalrHub.onEvent<string, string>(
       'OnRemoveProfile',
       (connectionId, profileId) => {
         if (this.activeGroup && profileId) {
@@ -101,23 +103,23 @@ export class SignalrStore {
   @computed
   get ownConnection() {
     return this.activeGroup!.connections.find(
-      c => c.account.name === stores.accountStore.getSelectedAccount.name
+      c => c.account.name === this.rootStore.accountStore.getSelectedAccount.name
     )!;
   }
 
   @action
   signOut() {
     fromStream(
-      stores.signalrHub.stopConnection().pipe(
+      this.rootStore.signalrHub.stopConnection().pipe(
         map(() => {
           this.stopConnectionSuccess();
-          stores.routeStore.redirect('/login');
+          this.rootStore.routeStore.redirect('/login');
           this.signOutSuccess();
         }),
         catchError(e => {
           // connection probably doesnt exist
           this.stopConnectionFail(e);
-          stores.routeStore.redirect('/login');
+          this.rootStore.routeStore.redirect('/login');
           return of(this.signOutFail(e));
         })
       )
@@ -126,12 +128,12 @@ export class SignalrStore {
 
   @action
   signOutFail(e: Error) {
-    stores.notificationStore.createNotification('sign_out', 'error', true, e);
+    this.rootStore.notificationStore.createNotification('sign_out', 'error', true, e);
   }
 
   @action
   signOutSuccess() {
-    stores.notificationStore.createNotification('sign_out', 'success');
+    this.rootStore.notificationStore.createNotification('sign_out', 'success');
   }
 
   @action
@@ -169,7 +171,7 @@ export class SignalrStore {
 
   @action
   changeProfileForConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'change_profile_for_connection',
       'error',
       false,
@@ -179,7 +181,7 @@ export class SignalrStore {
 
   @action
   changeProfileForConnectionSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'change_profile_for_connection',
       'success'
     );
@@ -187,7 +189,7 @@ export class SignalrStore {
 
   @action
   stopConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'stop_connection',
       'error',
       false,
@@ -197,7 +199,7 @@ export class SignalrStore {
 
   @action
   stopConnectionSuccess() {
-    stores.notificationStore.createNotification('stop_connection', 'success');
+    this.rootStore.notificationStore.createNotification('stop_connection', 'success');
   }
 
   @action
@@ -224,7 +226,7 @@ export class SignalrStore {
 
   @action
   addProfileToConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'add_profile_to_connection',
       'error',
       false,
@@ -234,7 +236,7 @@ export class SignalrStore {
 
   @action
   addProfileToConnectionSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'add_profile_to_connection',
       'success'
     );
@@ -271,7 +273,7 @@ export class SignalrStore {
 
   @action
   removeAllSnapshotsForConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'remove_all_snapshots_for_connection',
       'error',
       false,
@@ -281,7 +283,7 @@ export class SignalrStore {
 
   @action
   removeAllSnapshotsForConnectionSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'remove_all_snapshots_for_connection',
       'success'
     );
@@ -320,7 +322,7 @@ export class SignalrStore {
 
   @action
   removeProfileFromConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'remove_profile_from_connection',
       'error',
       false,
@@ -330,7 +332,7 @@ export class SignalrStore {
 
   @action
   removeProfileFromConnectionSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'remove_profile_from_connection',
       'success'
     );
@@ -340,7 +342,7 @@ export class SignalrStore {
   getLatestSnapshotForProfile(connectionId: string, profileUuid: string) {
     if (this.online) {
       fromStream(
-        stores.signalrHub
+        this.rootStore.signalrHub
           .invokeEvent('GetLatestSnapshotForProfile', profileUuid)
           .pipe(
             map((snapshot: IApiSnapshot) => {
@@ -363,7 +365,7 @@ export class SignalrStore {
 
   @action
   getLatestSnapshotForProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'retrieve_latest_snapshot',
       'error',
       false,
@@ -373,7 +375,7 @@ export class SignalrStore {
 
   @action
   getLatestSnapshotForProfileSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'retrieve_latest_snapshot',
       'success'
     );
@@ -416,7 +418,7 @@ export class SignalrStore {
 
   @action
   addSnapshotToConnectionFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'retrieve_snapshot',
       'error',
       false,
@@ -426,24 +428,24 @@ export class SignalrStore {
 
   @action
   addSnapshotToConnectionSuccess() {
-    stores.notificationStore.createNotification('retrieve_snapshot', 'success');
+    this.rootStore.notificationStore.createNotification('retrieve_snapshot', 'success');
   }
 
   @action
   setOnline(online: boolean) {
     this.online = online;
     if (!online) {
-      stores.uiStateStore.toggleGroupOverview(false);
+      this.rootStore.uiStateStore.toggleGroupOverview(false);
     }
   }
 
   @action
   joinGroup(groupName: string, password: string) {
-    stores.uiStateStore.setJoiningGroup(true);
+    this.rootStore.uiStateStore.setJoiningGroup(true);
 
     if (this.online) {
       fromStream(
-        stores.signalrHub
+        this.rootStore.signalrHub
           .sendEvent<IApiGroup>('JoinGroup', <IApiGroup>{
             uuid: uuid.v4(),
             name: groupName,
@@ -467,7 +469,7 @@ export class SignalrStore {
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
-    const activeProfile = stores.accountStore.getSelectedAccount.activeProfile;
+    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
 
     if (!activeProfile) {
       throw new Error('error:no_active_profile');
@@ -500,8 +502,8 @@ export class SignalrStore {
 
   @action
   joinGroupFail(e: Error | AxiosError) {
-    stores.uiStateStore.setJoiningGroup(false);
-    stores.notificationStore.createNotification(
+    this.rootStore.uiStateStore.setJoiningGroup(false);
+    this.rootStore.notificationStore.createNotification(
       'join_group',
       'error',
       false,
@@ -509,9 +511,9 @@ export class SignalrStore {
     );
 
     if (e.message.includes('password')) {
-      stores.uiStateStore.setGroupError(e);
+      this.rootStore.uiStateStore.setGroupError(e);
     } else {
-      stores.notificationStore.createNotification(
+      this.rootStore.notificationStore.createNotification(
         'join_group',
         'error',
         true,
@@ -522,7 +524,7 @@ export class SignalrStore {
 
   @action
   sendSnapshotToGroupSuccess() {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'send_snapshot_to_group',
       'success'
     );
@@ -530,7 +532,7 @@ export class SignalrStore {
 
   @action
   sendSnapshotToGroupFail(e: Error | AxiosError) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'send_snapshot_to_group',
       'error',
       false,
@@ -540,21 +542,21 @@ export class SignalrStore {
 
   @action
   joinGroupSuccess() {
-    stores.uiStateStore.setJoiningGroup(false);
-    stores.notificationStore.createNotification('join_group', 'success');
-    stores.uiStateStore.setGroupDialogOpen(false);
+    this.rootStore.uiStateStore.setJoiningGroup(false);
+    this.rootStore.notificationStore.createNotification('join_group', 'success');
+    this.rootStore.uiStateStore.setGroupDialogOpen(false);
   }
 
   @action
   leaveGroup() {
-    stores.uiStateStore.setLeavingGroup(true);
+    this.rootStore.uiStateStore.setLeavingGroup(true);
     if (!this.activeGroup) {
       this.leaveGroupFail(new Error('error:not_in_group'));
       return;
     }
     if (this.online) {
       fromStream(
-        stores.signalrHub
+        this.rootStore.signalrHub
           .sendEvent<string>('LeaveGroup', this.activeGroup.name)
           .pipe(
             retryWhen(
@@ -573,8 +575,8 @@ export class SignalrStore {
 
   @action
   leaveGroupFail(e: AxiosError | Error) {
-    stores.uiStateStore.setLeavingGroup(false);
-    stores.notificationStore.createNotification(
+    this.rootStore.uiStateStore.setLeavingGroup(false);
+    this.rootStore.notificationStore.createNotification(
       'leave_group',
       'error',
       false,
@@ -584,20 +586,20 @@ export class SignalrStore {
 
   @action
   leaveGroupSuccess() {
-    stores.uiStateStore.setLeavingGroup(false);
-    stores.notificationStore.createNotification('leave_group', 'success');
+    this.rootStore.uiStateStore.setLeavingGroup(false);
+    this.rootStore.notificationStore.createNotification('leave_group', 'success');
   }
 
   @action
   groupExists(groupName: string) {
     if (this.online) {
       fromStream(
-        stores.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
+        this.rootStore.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
           map((name: string) => {
             if (name) {
-              stores.uiStateStore.setGroupExists(true);
+              this.rootStore.uiStateStore.setGroupExists(true);
             } else {
-              stores.uiStateStore.setGroupExists(false);
+              this.rootStore.uiStateStore.setGroupExists(false);
             }
             return this.groupExistsSuccess();
           }),
@@ -620,7 +622,7 @@ export class SignalrStore {
 
   @action
   groupExistsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'group_exists',
       'error',
       false,
@@ -644,7 +646,7 @@ export class SignalrStore {
             pricedItems: st.pricedItems
           } as IApiPricedItemsUpdate;
 
-          return stores.signalrHub
+          return this.rootStore.signalrHub
             .invokeEvent<IApiPricedItemsUpdate>('AddPricedItems', items)
             .pipe(
               map(() => this.uploadItemsSuccess()),
@@ -663,7 +665,7 @@ export class SignalrStore {
 
   @action
   uploadItemsFail(e: Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'upload_items',
       'error',
       false,
@@ -673,6 +675,6 @@ export class SignalrStore {
 
   @action
   uploadItemsSuccess() {
-    stores.notificationStore.createNotification('upload_items', 'success');
+    this.rootStore.notificationStore.createNotification('upload_items', 'success');
   }
 }

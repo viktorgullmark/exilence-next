@@ -9,7 +9,7 @@ import { poeninjaService } from './../services/poe-ninja.service';
 import { LeaguePriceDetails } from './domains/league-price-details';
 import { LeaguePriceSource } from './domains/league-price-source';
 import { PriceSource } from './domains/price-source';
-import stores from '.';
+import { RootStore } from './rootStore';
 
 export class PriceStore {
   @observable priceSources: PriceSource[] = [
@@ -25,11 +25,11 @@ export class PriceStore {
   @observable isUpdatingPrices: boolean = false;
   @observable pollingInterval: number = 60 * 1000 * 20;
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     fromStream(
       interval(this.pollingInterval).pipe(
         switchMap(() => {
-          if (!stores.uiStateStore.isSnapshotting) {
+          if (!this.rootStore.uiStateStore.isSnapshotting) {
             return of(this.getPricesForLeagues());
           } else {
             return of(null);
@@ -78,13 +78,13 @@ export class PriceStore {
 
   @action
   getPricesForLeagues() {
-    const leagueIds = stores.leagueStore.priceLeagues.map(l => l.id);
+    const leagueIds = this.rootStore.leagueStore.priceLeagues.map(l => l.id);
     this.isUpdatingPrices = true;
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
-            const league = stores.leagueStore.priceLeagues.find(
+            const league = this.rootStore.leagueStore.priceLeagues.find(
               l => l.id === leagueId
             );
 
@@ -128,7 +128,7 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'get_prices_for_leagues',
       'success'
     );
@@ -137,7 +137,7 @@ export class PriceStore {
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'get_prices_for_leagues',
       'error',
       true,

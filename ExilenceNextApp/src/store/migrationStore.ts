@@ -3,11 +3,13 @@ import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
-import stores from '.';
+import { RootStore } from './rootStore';
 
 export class MigrationStore {
   @observable @persist current: number = 1;
   @observable latest: number = 2;
+
+  constructor(private rootStore: RootStore) {}
 
   @action
   increment() {
@@ -47,7 +49,7 @@ export class MigrationStore {
 
   @action
   runMigrations() {
-    stores.routeStore.redirect('/login');
+    this.rootStore.routeStore.redirect('/login');
     return from([...Array(this.latest - this.current).keys()])
       .pipe(
         concatMap(() => {

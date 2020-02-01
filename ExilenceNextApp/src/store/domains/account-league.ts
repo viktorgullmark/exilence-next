@@ -6,8 +6,8 @@ import { catchError, map } from 'rxjs/operators';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
 import { externalService } from '../../services/external.service';
-import stores from '..';
 import { Character } from './character';
+import { rootStore } from '../..';
 
 export class AccountLeague {
   @persist uuid: string = '';
@@ -34,7 +34,7 @@ export class AccountLeague {
   @action
   getStashTabs() {
     return externalService
-      .getStashTabs(stores.accountStore.getSelectedAccount.name!, this.leagueId)
+      .getStashTabs(rootStore.accountStore.getSelectedAccount.name!, this.leagueId)
       .pipe(
         map((response: AxiosResponse<IStash>) => {
           runInAction(() => {
@@ -53,7 +53,7 @@ export class AccountLeague {
 
   @action getStashTabsSuccess() {
     // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_stash_tabs',
       'success',
       undefined,
@@ -63,7 +63,7 @@ export class AccountLeague {
   }
 
   @action getStashTabsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_stash_tabs',
       'error',
       true,

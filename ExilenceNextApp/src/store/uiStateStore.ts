@@ -7,6 +7,7 @@ import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
+import { RootStore } from './rootStore';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -40,6 +41,8 @@ export class UiStateStore {
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable changingProfile: boolean = false;
+
+  constructor(private rootStore: RootStore) {}
 
   @action
   setChangingProfile(changing: boolean) {
