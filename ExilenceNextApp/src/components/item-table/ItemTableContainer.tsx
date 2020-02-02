@@ -9,7 +9,8 @@ import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { exportData } from '../../utils/export.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
-import ItemTable from './ItemTable';
+import ItemTable, { Order } from './ItemTable';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -137,6 +138,12 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         items={getItems()}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
+        order={uiStateStore!.itemTableOrder}
+        orderBy={uiStateStore!.itemTableOrderBy}
+        setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
+        setOrderBy={(col: keyof IPricedItem) =>
+          uiStateStore!.setItemTableOrderBy(col)
+        }
       />
     </>
   );

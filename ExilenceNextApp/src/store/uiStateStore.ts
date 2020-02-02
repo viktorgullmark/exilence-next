@@ -7,6 +7,8 @@ import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
+import { Order } from '../components/item-table/ItemTable';
+import { IPricedItem } from '../interfaces/priced-item.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -41,10 +43,22 @@ export class UiStateStore {
   @observable profilesLoaded: boolean = false;
   @observable changingProfile: boolean = false;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
+  @persist @observable itemTableOrder: Order = 'desc';
+  @persist @observable itemTableOrderBy: keyof IPricedItem = 'total';
 
   @action
   setTimeSinceLastSnapshotLabel(label: string | undefined) {
     this.timeSinceLastSnapshotLabel = label;
+  }
+
+  @action
+  setItemTableOrder(order: Order) {
+    this.itemTableOrder = order;
+  } 
+
+  @action
+  setItemTableOrderBy(orderBy: keyof IPricedItem) {
+    this.itemTableOrderBy = orderBy;
   }
 
   @action

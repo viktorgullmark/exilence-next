@@ -22,17 +22,23 @@ interface ItemTableProps {
   items: IPricedItem[];
   pageIndex: number;
   changePage: (i: number) => void;
+  order: Order;
+  orderBy: keyof IPricedItem;
+  setOrderBy: (col: keyof IPricedItem) => void;
+  setOrder: (order: Order) => void;
 }
 
 const ItemTable: React.FC<ItemTableProps> = ({
   items,
   pageIndex,
-  changePage
+  changePage,
+  order,
+  orderBy,
+  setOrder,
+  setOrderBy
 }: ItemTableProps) => {
   const classes = useStyles();
   const { t } = useTranslation(['tables']);
-  const [orderBy, setOrderBy] = useState<keyof IPricedItem>('name');
-  const [order, setOrder] = useState<Order>('asc');
 
   const columns: IColumn[] = [
     {

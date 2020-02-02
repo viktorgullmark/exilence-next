@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 - Added support for private leagues
 - Added a introduction tour for new users that will be displayed once
 - Added styled tooltips when hovering icon buttons
+- Added persistance of item table sort order
+##### Changed
+- Changed default sort order in item table
+    - The total column is now the default (descending)
 ##### Fixed
 - Fixed a bug where the label displaying the time since snapshot wasn't updating properly
 ##### Updated
