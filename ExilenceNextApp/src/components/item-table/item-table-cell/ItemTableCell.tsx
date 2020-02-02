@@ -50,121 +50,123 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
         key={column.id}
         align={column.numeric ? 'right' : 'left'}
       >
-        {(() => {
-          switch (column.id) {
-            case 'icon':
-              return (
-                <div
-                  style={{
-                    borderLeft: `5px solid ${rarityColor}`,
-                    background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(0,0,0,0) 100%)`
-                  }}
-                  className={clsx({
-                    [classes.iconCell]: column.id === 'icon'
-                  })}
-                >
-                  <Box
-                    position="relative"
-                    alignItems="center"
-                    justifyContent="center"
-                    display="flex"
-                    className={classes.iconImg}
+        <div>
+          {(() => {
+            switch (column.id) {
+              case 'icon':
+                return (
+                  <div
+                    style={{
+                      borderLeft: `5px solid ${rarityColor}`,
+                      background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(0,0,0,0) 100%)`
+                    }}
+                    className={clsx({
+                      [classes.iconCell]: column.id === 'icon'
+                    })}
                   >
-                    {!iconLoaded && <CircularProgress size={20} />}
-                    <img
+                    <Box
+                      position="relative"
+                      alignItems="center"
+                      justifyContent="center"
+                      display="flex"
                       className={classes.iconImg}
-                      alt={value.toString()}
-                      title={value.toString()}
-                      style={!iconLoaded ? { display: 'none' } : {}}
-                      src={typeof value === 'string' ? value : ''}
-                      onLoad={handleImageLoad}
-                    />
-                  </Box>
-                </div>
-              );
-            case 'name':
-              return (
-                <span
-                  style={{
-                    color: rarityColor
-                  }}
-                >
-                  {value}
-                </span>
-              );
-            case 'links':
-              return (
-                <>
-                  {typeof value === 'number' && (
-                    <span
-                      className={clsx({
-                        [classes.noLinks]: noLinks(value)
-                      })}
                     >
-                      {noLinks(value) ? t('label.not_available') : value}
-                    </span>
-                  )}
-                </>
-              );
-            case 'corrupted':
-              return (
-                <span
-                  style={{
-                    color: itemColors.corrupted
-                  }}
-                >
-                  {value ? (
-                    <span
-                      style={{
-                        color: itemColors.corrupted
-                      }}
-                    >
-                      {t(`tables:value.${value.toString()}`)}
-                    </span>
-                  ) : (
-                    <span
-                      style={{
-                        color: theme.palette.primary.contrastText
-                      }}
-                    >
-                      {t(`tables:value.${value.toString()}`)}
-                    </span>
-                  )}
-                </span>
-              );
-            case 'total':
-              return (
-                <span
-                  className={classes.lastCell}
-                  style={{
-                    color: itemColors.chaosOrb
-                  }}
-                >
-                  {tryParseNumber(value)}
-                </span>
-              );
-            case 'calculated':
-              return (
-                <span
-                  style={{
-                    color: itemColors.chaosOrb
-                  }}
-                >
-                  {tryParseNumber(value)}
-                </span>
-              );
-            default:
-              return (
-                <>
-                  {column.format && typeof value === 'number'
-                    ? column.format(value)
-                    : typeof value === 'boolean'
-                    ? t(`tables:value.${value.toString()}`)
-                    : value}
-                </>
-              );
-          }
-        })()}
+                      {!iconLoaded && <CircularProgress size={20} />}
+                      <img
+                        className={classes.iconImg}
+                        alt={value.toString()}
+                        title={value.toString()}
+                        style={!iconLoaded ? { display: 'none' } : {}}
+                        src={typeof value === 'string' ? value : ''}
+                        onLoad={handleImageLoad}
+                      />
+                    </Box>
+                  </div>
+                );
+              case 'name':
+                return (
+                  <span
+                    style={{
+                      color: rarityColor
+                    }}
+                  >
+                    {value}
+                  </span>
+                );
+              case 'links':
+                return (
+                  <>
+                    {typeof value === 'number' && (
+                      <span
+                        className={clsx({
+                          [classes.noLinks]: noLinks(value)
+                        })}
+                      >
+                        {noLinks(value) ? t('label.not_available') : value}
+                      </span>
+                    )}
+                  </>
+                );
+              case 'corrupted':
+                return (
+                  <span
+                    style={{
+                      color: itemColors.corrupted
+                    }}
+                  >
+                    {value ? (
+                      <span
+                        style={{
+                          color: itemColors.corrupted
+                        }}
+                      >
+                        {t(`tables:value.${value.toString()}`)}
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          color: theme.palette.primary.contrastText
+                        }}
+                      >
+                        {t(`tables:value.${value.toString()}`)}
+                      </span>
+                    )}
+                  </span>
+                );
+              case 'total':
+                return (
+                  <span
+                    className={classes.lastCell}
+                    style={{
+                      color: itemColors.chaosOrb
+                    }}
+                  >
+                    {tryParseNumber(value)}
+                  </span>
+                );
+              case 'calculated':
+                return (
+                  <span
+                    style={{
+                      color: itemColors.chaosOrb
+                    }}
+                  >
+                    {tryParseNumber(value)}
+                  </span>
+                );
+              default:
+                return (
+                  <>
+                    {column.format && typeof value === 'number'
+                      ? column.format(value)
+                      : typeof value === 'boolean'
+                      ? t(`tables:value.${value.toString()}`)
+                      : value}
+                  </>
+                );
+            }
+          })()}
+        </div>
       </TableCell>
     </>
   );
