@@ -322,7 +322,7 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    fromStream(timer(15 * 1000).pipe(switchMap(() => of(this.initSession()))));
+    fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
     stores.notificationStore.createNotification(
       'init_session',
@@ -387,7 +387,7 @@ export class AccountStore {
   validateSessionFail(e: AxiosError | Error, sender: string) {
     if (sender !== '/login') {
       fromStream(
-        timer(15 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
+        timer(45 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
       );
     }
 
