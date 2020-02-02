@@ -22,16 +22,6 @@ if (!isDev) {
   });
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = isDev;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return Promise.all(
-    extensions.map(name => installer.default(installer[name], forceDownload))
-  ).catch(console.log);
-};
-
 let mainWindow;
 
 function sendStatusToWindow(text) {
@@ -119,9 +109,6 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
-  if (isDev) {
-    await installExtensions();
-  }
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
