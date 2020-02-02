@@ -542,6 +542,7 @@ export class SignalrStore {
   joinGroupSuccess() {
     stores.uiStateStore.setJoiningGroup(false);
     stores.notificationStore.createNotification('join_group', 'success');
+    stores.uiStateStore!.setTimeSinceLastSnapshotLabel(this.activeGroup?.timeSinceLastSnapshot);
     stores.uiStateStore.setGroupDialogOpen(false);
   }
 

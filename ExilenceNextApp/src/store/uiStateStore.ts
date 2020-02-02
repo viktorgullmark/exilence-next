@@ -40,6 +40,12 @@ export class UiStateStore {
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable changingProfile: boolean = false;
+  @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
+
+  @action
+  setTimeSinceLastSnapshotLabel(label: string | undefined) {
+    this.timeSinceLastSnapshotLabel = label;
+  }
 
   @action
   setChangingProfile(changing: boolean) {

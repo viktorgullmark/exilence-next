@@ -227,6 +227,7 @@ export class Profile {
   @action snapshotSuccess() {
     stores.notificationStore.createNotification('snapshot', 'success');
     stores.uiStateStore!.setIsSnapshotting(false);
+    stores.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
     if (stores.settingStore.autoSnapshotting) {
       stores.accountStore.getSelectedAccount.queueSnapshot();
     }

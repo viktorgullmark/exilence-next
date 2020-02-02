@@ -4,7 +4,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
 import DiscordLogo from '../../assets/img/discord-wordmark-colored.svg';
@@ -19,6 +19,7 @@ import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { openLink } from '../../utils/window.utils';
+import moment from 'moment';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -44,11 +45,34 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiStateStore }: NetWorthProps) => {
+const NetWorth: React.FC<NetWorthProps> = ({
+  accountStore,
+  signalrStore,
+  uiStateStore
+}: NetWorthProps) => {
   const classes = useStyles();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+  const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
+
+  const updateTimeLabel = () => {
+    let timeLabel: string | undefined;
+    if (activeGroup) {
+      timeLabel = activeGroup?.timeSinceLastSnapshot;
+    } else {
+      timeLabel = activeProfile?.timeSinceLastSnapshot;
+    }
+    uiStateStore!.setTimeSinceLastSnapshotLabel(timeLabel);
+  };
+
+  useEffect(() => {
+    updateTimeLabel();
+    const t = setInterval(() => {
+      updateTimeLabel();
+    }, 1000);
+    return () => clearInterval(t);
+  }, [activeGroup, activeProfile]);
 
   const income = () => {
     return activeProfile ? activeProfile.income : 0;
@@ -62,19 +86,15 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
     return activeProfile ? activeProfile.lastSnapshotChange : 0;
   };
 
-  const timeSinceLastSnapshot = () => {
-    return activeProfile ? activeProfile.timeSinceLastSnapshot : undefined;
-  };
-
   const snapshots = () => {
     return activeProfile ? activeProfile.snapshots : [];
   };
 
   const activeCurrency = () => {
-    return activeProfile ? activeProfile.activeCurrency : { name: 'chaos', short: 'c' };
+    return activeProfile
+      ? activeProfile.activeCurrency
+      : { name: 'chaos', short: 'c' };
   };
-
-  const { activeGroup } = signalrStore!;
 
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initiated) {
@@ -91,7 +111,11 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
-              secondaryValue={activeGroup ? activeGroup.lastSnapshotChange : lastSnapshotChange()}
+              secondaryValue={
+                activeGroup
+                  ? activeGroup.lastSnapshotChange
+                  : lastSnapshotChange()
+              }
               secondaryValueIsDiff
               secondaryValueStyles={{ fontSize: '0.8rem' }}
               title="label.total_value"
@@ -120,10 +144,18 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
         <Grid item xs={6} md={3} lg={3}>
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.groupSnapshots.length : snapshots().length}
+              value={
+                activeGroup
+                  ? activeGroup.groupSnapshots.length
+                  : snapshots().length
+              }
               title="label.total_snapshots"
-              secondaryValue={activeGroup ? activeGroup.timeSinceLastSnapshot : timeSinceLastSnapshot()}
-              secondaryValueStyles={{ color: theme.palette.text.primary, fontSize: '0.8rem', fontWeight: 'normal' }}
+              secondaryValue={uiStateStore!.timeSinceLastSnapshotLabel}
+              secondaryValueStyles={{
+                color: theme.palette.text.primary,
+                fontSize: '0.8rem',
+                fontWeight: 'normal'
+              }}
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="default" />}
               tooltip="Time since last snapshot"
@@ -132,7 +164,12 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
         </Grid>
         <Grid item xs={6} md={3} lg={3}>
           <Widget>
-            <Box display="flex" alignItems="center" justifyContent="center" height={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height={1}
+            >
               <a href="https://patreon.com/exilence" onClick={e => openLink(e)}>
                 <Box display="flex" alignItems="center" height={1}>
                   <img className={classes.patreonLogo} src={PatreonLogo} />
@@ -159,4 +196,8 @@ const NetWorth: React.FC<NetWorthProps> = ({ accountStore, signalrStore, uiState
   );
 };
 
-export default inject('accountStore', 'signalrStore', 'uiStateStore')(observer(NetWorth));
+export default inject(
+  'accountStore',
+  'signalrStore',
+  'uiStateStore'
+)(observer(NetWorth));
