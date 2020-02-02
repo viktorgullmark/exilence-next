@@ -22,14 +22,14 @@ const SnapshotSettings: React.FC<Props> = ({
   
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={4}>
         <CheckboxSetting
           value={autoSnapshotting}
           handleChange={setAutoSnapshotting}
           translationKey="auto_snapshotting"
         />
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={4}>
         <NumberInputSetting
           value={autoSnapshotInterval / 1000 / 60}
           handleChange={setAutoSnapshotInterval}

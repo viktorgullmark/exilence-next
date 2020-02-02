@@ -188,7 +188,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             <SnapshotHistoryChartContainer />
           </Widget>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ paddingBottom: 0 }}>
           <NetWorthTabGroup />
         </Grid>
       </Grid>

@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.7] - 2020-02-XX
+##### Added
+- Minor style tweaks
+##### Fixed
+- Fixed a bug where part of the scrollbar was hidden beneath the toolbar
+
 ## [0.2.6] - 2020-02-02
 ##### Added
 - Added support for private leagues

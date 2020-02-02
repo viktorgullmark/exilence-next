@@ -12,14 +12,17 @@ import { background } from '../../assets/themes/exilence-theme';
 
 export const drawerWidth = 300;
 
+const topMargin = toolbarHeight + innerToolbarHeight + resizeHandleContainerHeight;
+
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
-    height: `100%`,
-    overflow: 'scroll',
-    padding: `calc(${toolbarHeight}px + ${innerToolbarHeight}px + ${resizeHandleContainerHeight}px + ${theme.spacing(
-      1
-    )}px) 
-    ${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(1)}px`,
+    height: `calc(100% - ${topMargin}px - ${theme.spacing(2.25)}px)`,
+    overflowY: 'scroll',
+    overflowX: 'hidden',
+    marginTop: topMargin,
+    marginBottom: theme.spacing(2.25),
+    padding: theme.spacing(1),
+    paddingBottom: 0,
     flexGrow: 1,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,

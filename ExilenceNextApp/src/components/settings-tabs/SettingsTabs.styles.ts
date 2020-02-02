@@ -8,9 +8,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${theme.spacing(
-      gridSpacing * 2
-    )}px)`
+    minHeight: 800
   },
   tabs: {
     minWidth: 160,

@@ -22,7 +22,7 @@ const NetWorthSettings: React.FC<Props> = ({
 }: Props) => {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={4}>
         <CheckboxSetting
           value={lowConfidencePricing}
           handleChange={setLowConfidencePricing}
@@ -30,7 +30,7 @@ const NetWorthSettings: React.FC<Props> = ({
           requiresSnapshot
         />
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={4}>
         <SelectSetting
           options={priceTresholdOptions}
           value={priceTreshold}
