@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.2.7] - 2020-02-XX
 ##### Added
 - Minor style tweaks
+- Minor client optimizations
 ##### Fixed
 - Fixed a bug where part of the scrollbar was hidden beneath the toolbar
 - Fixed a bug where the table row borders would sometimes be distorted
