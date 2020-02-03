@@ -7,7 +7,8 @@ import {
   Select,
   Theme,
   Typography,
-  useTheme
+  useTheme,
+  MenuProps
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
@@ -29,14 +30,7 @@ interface StashTabDropdownProps {
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+
 function getStyles(name: string, stashTabIds: string[], theme: Theme) {
   return {
     fontWeight:
@@ -55,6 +49,15 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   const theme = useTheme();
   const { t } = useTranslation(['tables']);
   const classes = useStyles();
+
+  const MenuProps: Partial<MenuProps> = {
+    PaperProps: {
+      style: {
+        maxHeight: `${ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP}px !important`,
+        width: 250
+      }
+    }
+  };
 
   const [touched, setTouched] = useState(false);
 
