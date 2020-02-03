@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
+import useLabelWidth from '../../hooks/use-label-width';
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
@@ -68,20 +69,24 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
       ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
       : '';
   };
+  const { labelWidth, ref } = useLabelWidth(0);
 
   return (
     <>
       <FormControl
+        variant="outlined"
         className={classes.formControl}
         fullWidth
         required
         margin="normal"
         error={touched && stashTabIds.length === 0}
       >
-        <InputLabel id="mutiple-chip-label">
+        <InputLabel ref={ref} id="mutiple-chip-label">
           {t('common:label.select_stash_tabs')}
         </InputLabel>
         <Select
+          labelWidth={labelWidth}
+          fullWidth
           labelId="mutiple-chip-label"
           id="mutiple-chip"
           multiple
@@ -92,7 +97,6 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             handleStashTabChange(e);
             setTouched(true);
           }}
-          input={<Input id="select-multiple-chip" />}
           renderValue={selected => (
             <div className={classes.chips}>
               {(selected as string[]).map(value => (

@@ -1,7 +1,8 @@
-import { TextField } from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
@@ -17,6 +18,8 @@ import RequestButton from '../request-button/RequestButton';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './ProfileDialog.styles';
+import SimpleField from '../simple-field/SimpleField';
+import { generateProfileName } from '../../utils/profile.utils';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -77,7 +80,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: isEditing && profile ? profile.name : '',
+              profileName: isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
               stashTabIds: stashTabIds
@@ -92,88 +95,89 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
             })}
           >
             {/* todo: refactor and use new formik */}
-            {(formProps: any) => {
-              const {
-                values,
-                touched,
-                errors,
-                isSubmitting,
-                handleChange,
-                handleSubmit,
-                handleBlur,
-                dirty,
-                isValid
-              } = formProps;
-
-              return (
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    label={t('label.profile_name')}
-                    name="profileName"
-                    value={values.profileName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    helperText={
-                      errors.profileName &&
-                      touched.profileName &&
-                      errors.profileName
-                    }
-                    error={
-                      touched.profileName && errors.profileName !== undefined
-                    }
-                    margin="none"
-                    required
-                    fullWidth
-                  />
-                  <LeagueDropdown
-                    leagues={leagues}
-                    touched={touched}
-                    errors={errors}
-                    fullWidth
-                    noCharacters={noCharacters}
-                    handleLeagueChange={handleLeagueChange}
-                    handleChange={handleChange}
-                    values={values}
-                  />
-                  <PriceLeagueDropdown
-                    priceLeagues={priceLeagues}
-                    touched={touched}
-                    errors={errors}
-                    handleChange={handleChange}
-                    values={values}
-                  />
-                  <StashTabDropdown
-                    stashTabs={stashTabs}
-                    touched={touched}
-                    errors={errors}
-                    stashTabIds={stashTabIds}
-                    handleStashTabChange={handleStashTabChange}
-                    handleChange={handleChange}
-                  />
-                  <div className={classes.dialogActions}>
-                    <Button onClick={() => handleClickClose()}>
-                      {t('action.cancel')}
-                    </Button>
-                    <RequestButton
-                      variant="contained"
-                      type="submit"
-                      color="primary"
-                      loading={loading}
-                      disabled={
-                        loading ||
-                        noCharacters.length > 0 ||
-                        stashTabIds.length === 0 ||
-                        (dirty && !isValid)
-                      }
+            {({
+              values,
+              touched,
+              errors,
+              isSubmitting,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              dirty,
+              isValid,
+              setFieldValue
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <SimpleField
+                  name="profileName"
+                  type="text"
+                  label={t('label.profile_name')}
+                  placeholder={t('label.profile_name_placeholder')}
+                  endIcon={
+                    <IconButton
+                      aria-label="generate"
+                      title={t('label.generate_name_icon_title')}
+                      edge="start"
+                      size="small"
+                      onClick={() => {
+                        const name = generateProfileName();
+                        setFieldValue('profileName', name);
+                      }}
                     >
-                      {isEditing
-                        ? t('action.save_profile')
-                        : t('action.create_profile')}
-                    </RequestButton>
-                  </div>
-                </form>
-              );
-            }}
+                      <CasinoIcon />
+                    </IconButton>
+                  }
+                  required
+                  autoFocus
+                />
+                <LeagueDropdown
+                  leagues={leagues}
+                  touched={touched}
+                  errors={errors}
+                  fullWidth
+                  noCharacters={noCharacters}
+                  handleLeagueChange={handleLeagueChange}
+                  handleChange={handleChange}
+                  values={values}
+                />
+                <PriceLeagueDropdown
+                  priceLeagues={priceLeagues}
+                  touched={touched}
+                  errors={errors}
+                  handleChange={handleChange}
+                  values={values}
+                />
+                <StashTabDropdown
+                  stashTabs={stashTabs}
+                  touched={touched}
+                  errors={errors}
+                  stashTabIds={stashTabIds}
+                  handleStashTabChange={handleStashTabChange}
+                  handleChange={handleChange}
+                />
+                <div className={classes.dialogActions}>
+                  <Button onClick={() => handleClickClose()}>
+                    {t('action.cancel')}
+                  </Button>
+                  <RequestButton
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                    loading={loading}
+                    disabled={
+                      loading ||
+                      noCharacters.length > 0 ||
+                      stashTabIds.length === 0 ||
+                      (dirty && !isValid)
+                    }
+                  >
+                    {isEditing
+                      ? t('action.save_profile')
+                      : t('action.create_profile')}
+                  </RequestButton>
+                </div>
+              </form>
+            )}
           </Formik>
         </DialogContent>
       </Dialog>

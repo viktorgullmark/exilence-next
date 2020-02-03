@@ -53,6 +53,7 @@
     "profile_placeholder": "Select a profile",
     "group_name": "Group name",
     "group_name_placeholder": "Enter a group name",
+    "profile_name_placeholder": "Enter a profile name",
     "password": "Password",
     "password_placeholder": "Enter password here",
     "password_helper_text": "Must be at least 6 characters in length",

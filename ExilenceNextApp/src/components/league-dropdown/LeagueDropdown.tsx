@@ -13,6 +13,7 @@ import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { League } from '../../store/domains/league';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
+import useLabelWidth from '../../hooks/use-label-width';
 
 interface LeagueDropdownProps {
   touched: FormikTouched<any>;
@@ -40,10 +41,12 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   values
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
+  const { labelWidth, ref } = useLabelWidth(0);
 
   return (
     <>
       <FormControl
+        variant="outlined"
         fullWidth={fullWidth}
         margin={margin}
         error={
@@ -52,11 +55,13 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
         }
       >
         {!hideLabel && (
-          <InputLabel htmlFor="league-dd">
+          <InputLabel ref={ref} htmlFor="league-dd">
             {t('label.select_main_league')}
           </InputLabel>
         )}
         <Select
+          labelWidth={labelWidth}
+          fullWidth
           value={values.league}
           onChange={e => {
             handleChange(e);
