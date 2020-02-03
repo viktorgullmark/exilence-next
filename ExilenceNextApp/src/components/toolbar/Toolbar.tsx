@@ -255,8 +255,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     disabled={
                       !activeProfile ||
                       !activeProfile.readyToSnapshot ||
-                      !signalrOnline ||
-                      autoSnapshotting
+                      !signalrOnline
                     }
                     onClick={() => handleSnapshot()}
                     aria-label="snapshot"

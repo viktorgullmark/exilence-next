@@ -225,11 +225,12 @@ export class Profile {
 
   @action snapshotSuccess() {
     rootStore.notificationStore.createNotification('snapshot', 'success');
-    rootStore.uiStateStore!.setIsSnapshotting(false);
-    rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
     if (rootStore.settingStore.autoSnapshotting) {
+      rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
       rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
+    rootStore.uiStateStore!.setIsSnapshotting(false);
+    rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
   }
 
   @action snapshotFail(e?: AxiosError | Error) {

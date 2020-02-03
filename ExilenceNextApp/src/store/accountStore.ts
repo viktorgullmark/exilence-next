@@ -152,7 +152,10 @@ export class AccountStore {
   loginWithOAuthSuccess(response: IOAuthResponse) {
     this.rootStore.routeStore.redirect('/net-worth');
     this.rootStore.uiStateStore.setValidated(true);
-    this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
+    this.rootStore.notificationStore.createNotification(
+      'login_with_oauth',
+      'success'
+    );
     this.setToken(response);
     this.initSession();
   }
@@ -173,7 +176,10 @@ export class AccountStore {
 
   @action
   getPoeProfileSuccess() {
-    this.rootStore.notificationStore.createNotification('get_poe_profile', 'success');
+    this.rootStore.notificationStore.createNotification(
+      'get_poe_profile',
+      'success'
+    );
   }
 
   @action
@@ -247,7 +253,9 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
+              this.rootStore.leagueStore.updateLeagues(
+                getCharacterLeagues(characters)
+              );
               this.rootStore.leagueStore.updatePriceLeagues(
                 leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
@@ -255,47 +263,46 @@ export class AccountStore {
               this.rootStore.priceStore.getPricesForLeagues();
 
               return forkJoin(
-                of(account.accountLeagues)
-                  .pipe(
-                    concatMap(leagues => leagues),
-                    concatMap(league => {
-                      return league.getStashTabs();
-                    })
-                  )
-                  .pipe(
-                    switchMap(() => {
-                      if (this.getSelectedAccount.profiles.length === 0) {
-                        const newProfile: IProfile = {
-                          name: 'profile 1',
-                          activeLeagueId: this.getSelectedAccount
-                            .accountLeagues[0].leagueId,
-                          activePriceLeagueId:
-                            this.rootStore.leagueStore.priceLeagues[0].id
-                        };
+                of(account.accountLeagues).pipe(
+                  concatMap(leagues => leagues),
+                  concatMap(league => {
+                    return league.getStashTabs();
+                  }),
+                  switchMap(() => {
+                    if (this.getSelectedAccount.profiles.length === 0) {
+                      const newProfile: IProfile = {
+                        name: 'profile 1',
+                        activeLeagueId: this.getSelectedAccount
+                          .accountLeagues[0].leagueId,
+                        activePriceLeagueId: this.rootStore.leagueStore
+                          .priceLeagues[0].id
+                      };
 
-                        const league = this.getSelectedAccount.accountLeagues.find(
-                          al => al.leagueId === newProfile.activeLeagueId
-                        );
+                      const league = this.getSelectedAccount.accountLeagues.find(
+                        al => al.leagueId === newProfile.activeLeagueId
+                      );
 
-                        if (league) {
-                          runInAction(() => {
-                            newProfile.activeStashTabIds = league.stashtabs
-                              .slice(0, 6)
-                              .map(lst => lst.id);
-                          });
-                          return this.getSelectedAccount
-                            .createProfileObservable(newProfile, () => {})
-                            .pipe(
-                              map(() => {
-                                this.rootStore.uiStateStore.setProfilesLoaded(true);
-                              })
-                            );
-                        }
-                        return throwError(new Error('error:league_not_found'));
+                      if (league) {
+                        runInAction(() => {
+                          newProfile.activeStashTabIds = league.stashtabs
+                            .slice(0, 6)
+                            .map(lst => lst.id);
+                        });
+                        return this.getSelectedAccount
+                          .createProfileObservable(newProfile, () => {})
+                          .pipe(
+                            map(() => {
+                              this.rootStore.uiStateStore.setProfilesLoaded(
+                                true
+                              );
+                            })
+                          );
                       }
-                      return of({});
-                    })
-                  )
+                      return throwError(new Error('error:league_not_found'));
+                    }
+                    return of({});
+                  })
+                )
               );
             })
           );
@@ -317,7 +324,10 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.rootStore.notificationStore.createNotification('init_session', 'success');
+    this.rootStore.notificationStore.createNotification(
+      'init_session',
+      'success'
+    );
     this.rootStore.uiStateStore.setIsInitiating(false);
     this.rootStore.uiStateStore.setInitiated(true);
   }
@@ -338,6 +348,7 @@ export class AccountStore {
 
   @action
   validateSession(sender: string, sessionId?: string) {
+    this.rootStore.uiStateStore.setValidating(true);
     this.rootStore.uiStateStore.setSubmitting(true);
 
     const request = externalService.getCharacters().pipe(
@@ -368,9 +379,12 @@ export class AccountStore {
       this.sessionId = sessionId;
     }
 
-    this.rootStore.notificationStore.createNotification('validate_session', 'success');
+    this.rootStore.notificationStore.createNotification(
+      'validate_session',
+      'success'
+    );
     this.rootStore.uiStateStore.setSubmitting(false);
-
+    this.rootStore.uiStateStore.setValidating(false);
     // todo: check expiry date
     if (!this.token || sessionId) {
       if (sender === '/login') {
@@ -399,6 +413,7 @@ export class AccountStore {
       true,
       e
     );
+    this.rootStore.uiStateStore.setValidating(false);
     this.rootStore.uiStateStore.setSubmitting(false);
     this.rootStore.uiStateStore.setValidated(false);
   }

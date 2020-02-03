@@ -19,6 +19,7 @@ export class UiStateStore {
   @persist @observable sidenavOpen: boolean = true;
   @persist @observable toolbarTourOpen: boolean = true;
   @observable validated: boolean = false;
+  @observable isValidating: boolean = false;
   @observable isSubmitting: boolean = false;
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
@@ -82,6 +83,11 @@ export class UiStateStore {
   @action
   setProfilesLoaded(loaded: boolean) {
     this.profilesLoaded = loaded;
+  }
+
+  @action
+  setValidating(validating: boolean) {
+    this.isValidating = validating;
   }
 
   @action

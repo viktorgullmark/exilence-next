@@ -97,12 +97,16 @@ const NetWorth: React.FC<NetWorthProps> = ({
   };
 
   useEffect(() => {
-    if (!uiStateStore!.validated && !uiStateStore!.initiated) {
+    if (
+      !uiStateStore!.validated &&
+      !uiStateStore!.initiated &&
+      !uiStateStore!.isValidating
+    ) {
       accountStore!.validateSession('/net-worth');
     }
 
     visitor!.pageview('/net-worth', appName).send();
-  });
+  }, []);
 
   return (
     <FeatureWrapper>
