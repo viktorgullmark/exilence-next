@@ -19,9 +19,8 @@ import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import { genericRetryStrategy } from '../../utils/rxjs.utils';
-import { visitor } from './../../index';
+import { visitor, rootStore } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
-import stores from '..';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 
@@ -47,7 +46,7 @@ export class Account implements IAccount {
   get activeLeague() {
     const profile = this.activeProfile;
     if (profile) {
-      return stores.leagueStore.leagues.find(
+      return rootStore.leagueStore.leagues.find(
         l => l.id === profile.activeLeagueId
       );
     } else {
@@ -59,7 +58,7 @@ export class Account implements IAccount {
   get activePriceLeague() {
     const profile = this.activeProfile;
     if (profile) {
-      return stores.leagueStore.priceLeagues.find(
+      return rootStore.leagueStore.priceLeagues.find(
         l => l.id === profile.activePriceLeagueId
       );
     } else {
@@ -70,7 +69,7 @@ export class Account implements IAccount {
   @action
   queueSnapshot() {
     fromStream(
-      timer(stores.settingStore.autoSnapshotInterval).pipe(
+      timer(rootStore.settingStore.autoSnapshotInterval).pipe(
         map(() => {
           if (this.activeProfile && this.activeProfile.readyToSnapshot) {
             this.activeProfile.snapshot();
@@ -89,7 +88,7 @@ export class Account implements IAccount {
   @action
   updateAccountFromApi(account: IApiAccount) {
     this.uuid = account.uuid;
-    stores.accountStore.setActiveAccount(this.uuid);
+    rootStore.accountStore.setActiveAccount(this.uuid);
   }
 
   @action
@@ -112,7 +111,7 @@ export class Account implements IAccount {
 
   @action
   getProfilesForAccount(accountUuid: string) {
-    return stores.signalrHub
+    return rootStore.signalrHub
       .invokeEvent<string>('GetAllProfiles', accountUuid)
       .pipe(
         map((profiles: IApiProfile[]) => {
@@ -134,7 +133,7 @@ export class Account implements IAccount {
 
   @action
   getProfilesForAccountSuccess() {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_profiles_for_account',
       'success'
     );
@@ -142,7 +141,7 @@ export class Account implements IAccount {
 
   @action
   getProfilesForAccountFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_profiles_for_account',
       'error',
       true,
@@ -156,14 +155,14 @@ export class Account implements IAccount {
       .getToken({
         uuid: this.uuid,
         name: this.name!,
-        accessToken: stores.accountStore.token!.accessToken,
+        accessToken: rootStore.accountStore.token!.accessToken,
         profiles: []
       })
       .pipe(
         mergeMap(account => {
           this.updateAccountFromApi(account.data);
-          return !stores.signalrHub.connection
-            ? stores.signalrHub.startConnection(
+          return !rootStore.signalrHub.connection
+            ? rootStore.signalrHub.startConnection(
                 account.data.accessToken
               )
             : of({});
@@ -173,7 +172,7 @@ export class Account implements IAccount {
             map((profiles: IApiProfile[]) => {
               this.updateProfiles(profiles);
               if (this.profiles.length > 0) {
-                stores.uiStateStore.setProfilesLoaded(true);
+                rootStore.uiStateStore.setProfilesLoaded(true);
               }
             })
           );
@@ -190,12 +189,12 @@ export class Account implements IAccount {
 
   @action
   authorizeSuccess() {
-    stores.notificationStore.createNotification('authorize', 'success');
+    rootStore.notificationStore.createNotification('authorize', 'success');
   }
 
   @action
   authorizeFail(e: Error) {
-    stores.notificationStore.createNotification('authorize', 'error', true, e);
+    rootStore.notificationStore.createNotification('authorize', 'error', true, e);
   }
 
   @computed
@@ -206,15 +205,15 @@ export class Account implements IAccount {
 
   @action
   setActiveProfile(uuid: string) {
-    stores.uiStateStore.setChangingProfile(true);
-    stores.uiStateStore.changeItemTablePage(0);
+    rootStore.uiStateStore.setChangingProfile(true);
+    rootStore.uiStateStore.changeItemTablePage(0);
 
     fromStream(this.setActiveProfileObservable(uuid));
   }
 
   @action
   setActiveProfileObservable(uuid: string) {
-    return stores.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
+    return rootStore.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
       map((uuid: string) => {
         runInAction(() => {
           this.profiles = this.profiles.map(p => {
@@ -229,9 +228,9 @@ export class Account implements IAccount {
         runInAction(() => {
           foundProfile.active = true;
         });
-        if (stores.signalrStore.activeGroup) {
-          stores.signalrStore.changeProfileForConnection(
-            stores.signalrStore.ownConnection.connectionId,
+        if (rootStore.signalrStore.activeGroup) {
+          rootStore.signalrStore.changeProfileForConnection(
+            rootStore.signalrStore.ownConnection.connectionId,
             mapProfileToApiProfile(foundProfile)
           );
         }
@@ -249,7 +248,7 @@ export class Account implements IAccount {
 
   @action
   updateAccountLeagues(characters: ICharacter[]) {
-    stores.leagueStore.leagues.forEach(l => {
+    rootStore.leagueStore.leagues.forEach(l => {
       let accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
       const leagueCharacters = characters.filter(c => c.league === l.id);
 
@@ -267,7 +266,7 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfile() {
-    stores.uiStateStore.setRemovingProfile(true);
+    rootStore.uiStateStore.setRemovingProfile(true);
     visitor!.event('Profile', 'Remove profile').send();
 
     const profileIndex = this.profiles.findIndex(p => p.active);
@@ -280,14 +279,14 @@ export class Account implements IAccount {
     fromStream(
       this.setActiveProfileObservable(newActiveProfile!.uuid).pipe(
         switchMap(() => {
-          return stores.signalrHub.invokeEvent<string>(
+          return rootStore.signalrHub.invokeEvent<string>(
             'RemoveProfile',
             this.profiles[profileIndex].uuid
           );
         }),
         map((uuid: string) => {
           this.deleteProfiles(profileIndex, 1);
-          stores.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
+          rootStore.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
           return this.removeActiveProfileSuccess();
         }),
         retryWhen(
@@ -308,14 +307,14 @@ export class Account implements IAccount {
 
   @action
   removeActiveProfileSuccess() {
-    stores.uiStateStore.setRemovingProfile(false);
-    stores.notificationStore.createNotification('remove_profile', 'success');
+    rootStore.uiStateStore.setRemovingProfile(false);
+    rootStore.notificationStore.createNotification('remove_profile', 'success');
   }
 
   @action
   removeActiveProfileFail(e: Error) {
-    stores.uiStateStore.setRemovingProfile(false);
-    stores.notificationStore.createNotification(
+    rootStore.uiStateStore.setRemovingProfile(false);
+    rootStore.notificationStore.createNotification(
       'remove_profile',
       'error',
       true,
@@ -325,22 +324,22 @@ export class Account implements IAccount {
 
   @action
   setActiveProfileSuccess() {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'set_active_profile',
       'success'
     );
-    stores.uiStateStore.setChangingProfile(false);
+    rootStore.uiStateStore.setChangingProfile(false);
   }
 
   @action
   setActiveProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'set_active_profile',
       'error',
       true,
       e
     );
-    stores.uiStateStore.setChangingProfile(false);
+    rootStore.uiStateStore.setChangingProfile(false);
   }
 
   @action
@@ -355,14 +354,14 @@ export class Account implements IAccount {
 
   @action
   createProfileObservable(profile: IProfile, callback: () => void) {
-    stores.uiStateStore.setSavingProfile(true);
+    rootStore.uiStateStore.setSavingProfile(true);
     const newProfile = new Profile(profile);
 
     newProfile.active = true;
 
     const apiProfile = mapProfileToApiProfile(newProfile);
 
-    return stores.signalrHub
+    return rootStore.signalrHub
       .invokeEvent<IApiProfile>('AddProfile', apiProfile)
       .pipe(
         map((p: IApiProfile) => {
@@ -384,8 +383,8 @@ export class Account implements IAccount {
 
   @action
   createProfileFail(e: Error) {
-    stores.uiStateStore.setSavingProfile(false);
-    stores.notificationStore.createNotification(
+    rootStore.uiStateStore.setSavingProfile(false);
+    rootStore.notificationStore.createNotification(
       'create_profile',
       'error',
       false,
@@ -395,16 +394,16 @@ export class Account implements IAccount {
 
   @action
   createProfileSuccess() {
-    stores.uiStateStore.setSavingProfile(false);
-    stores.notificationStore.createNotification('create_profile', 'success');
+    rootStore.uiStateStore.setSavingProfile(false);
+    rootStore.notificationStore.createNotification('create_profile', 'success');
   }
 
   @action
   addProfile(p: Profile) {
     this.profiles.push(p);
-    if (stores.signalrStore.activeGroup) {
-      stores.signalrStore.addProfileToConnection(
-        stores.signalrStore.ownConnection.connectionId,
+    if (rootStore.signalrStore.activeGroup) {
+      rootStore.signalrStore.addProfileToConnection(
+        rootStore.signalrStore.ownConnection.connectionId,
         mapProfileToApiProfile(p)
       );
     }

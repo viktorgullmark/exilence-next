@@ -21,7 +21,7 @@ import { externalService } from '../services/external.service';
 import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
-import stores from '.';
+import { RootStore } from './rootStore';
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -29,6 +29,8 @@ export class AccountStore {
   @persist('object') @observable token: IToken | undefined = undefined;
   @observable code: string = '';
   @observable sessionId: string = '';
+
+  constructor(private rootStore: RootStore) {}
 
   @computed
   get getSelectedAccount(): Account {
@@ -117,8 +119,8 @@ export class AccountStore {
 
     var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
-    authWindow.webContents.on('will-redirect', function(event: any, url: any) {
-      stores.accountStore.handleAuthCallback(url, authWindow);
+    authWindow.webContents.on('will-redirect', (event: any, url: any) => {
+      this.handleAuthCallback(url, authWindow);
     });
 
     // Reset the authWindow on close
@@ -148,9 +150,9 @@ export class AccountStore {
 
   @action
   loginWithOAuthSuccess(response: IOAuthResponse) {
-    stores.routeStore.redirect('/net-worth');
-    stores.uiStateStore.setValidated(true);
-    stores.notificationStore.createNotification('login_with_oauth', 'success');
+    this.rootStore.routeStore.redirect('/net-worth');
+    this.rootStore.uiStateStore.setValidated(true);
+    this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     this.initSession();
   }
@@ -171,12 +173,12 @@ export class AccountStore {
 
   @action
   getPoeProfileSuccess() {
-    stores.notificationStore.createNotification('get_poe_profile', 'success');
+    this.rootStore.notificationStore.createNotification('get_poe_profile', 'success');
   }
 
   @action
   getPoeProfileFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'get_poe_profile',
       'error',
       true,
@@ -185,19 +187,19 @@ export class AccountStore {
 
     // todo: check expiry date here
     if (!this.token) {
-      stores.routeStore.redirect('/login');
+      this.rootStore.routeStore.redirect('/login');
     }
   }
 
   @action
   loginWithOAuthFail(e?: AxiosError) {
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'login_with_oauth',
       'error',
       true,
       e
     );
-    stores.routeStore.redirect('/login');
+    this.rootStore.routeStore.redirect('/login');
   }
 
   @action
@@ -212,16 +214,16 @@ export class AccountStore {
 
   @action
   initSession(skipAuth?: boolean) {
-    stores.uiStateStore.setIsInitiating(true);
+    this.rootStore.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
       this.initSessionFail(new Error('error:no_token_set'));
-      return stores.routeStore.redirect('/login');
+      return this.rootStore.routeStore.redirect('/login');
     }
 
     if (new Date() >= this.token.expires) {
       this.initSessionFail(new Error('error:token_expired'));
-      return stores.routeStore.redirect('/login');
+      return this.rootStore.routeStore.redirect('/login');
     }
 
     fromStream(
@@ -245,12 +247,12 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              stores.leagueStore.updateLeagues(getCharacterLeagues(characters));
-              stores.leagueStore.updatePriceLeagues(
+              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
+              this.rootStore.leagueStore.updatePriceLeagues(
                 leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
               this.getSelectedAccount.updateAccountLeagues(characters);
-              stores.priceStore.getPricesForLeagues();
+              this.rootStore.priceStore.getPricesForLeagues();
 
               return forkJoin(
                 of(account.accountLeagues)
@@ -268,7 +270,7 @@ export class AccountStore {
                           activeLeagueId: this.getSelectedAccount
                             .accountLeagues[0].leagueId,
                           activePriceLeagueId:
-                            stores.leagueStore.priceLeagues[0].id
+                            this.rootStore.leagueStore.priceLeagues[0].id
                         };
 
                         const league = this.getSelectedAccount.accountLeagues.find(
@@ -285,7 +287,7 @@ export class AccountStore {
                             .createProfileObservable(newProfile, () => {})
                             .pipe(
                               map(() => {
-                                stores.uiStateStore.setProfilesLoaded(true);
+                                this.rootStore.uiStateStore.setProfilesLoaded(true);
                               })
                             );
                         }
@@ -299,7 +301,7 @@ export class AccountStore {
           );
         }),
         switchMap(() => {
-          if (stores.settingStore.autoSnapshotting) {
+          if (this.rootStore.settingStore.autoSnapshotting) {
             return of(this.getSelectedAccount.queueSnapshot());
           } else {
             return of({});
@@ -315,28 +317,28 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    stores.notificationStore.createNotification('init_session', 'success');
-    stores.uiStateStore.setIsInitiating(false);
-    stores.uiStateStore.setInitiated(true);
+    this.rootStore.notificationStore.createNotification('init_session', 'success');
+    this.rootStore.uiStateStore.setIsInitiating(false);
+    this.rootStore.uiStateStore.setInitiated(true);
   }
 
   @action
   initSessionFail(e: AxiosError | Error) {
     fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'init_session',
       'error',
       true,
       e
     );
-    stores.uiStateStore.setIsInitiating(false);
-    stores.uiStateStore.setInitiated(true);
+    this.rootStore.uiStateStore.setIsInitiating(false);
+    this.rootStore.uiStateStore.setInitiated(true);
   }
 
   @action
   validateSession(sender: string, sessionId?: string) {
-    stores.uiStateStore.setSubmitting(true);
+    this.rootStore.uiStateStore.setSubmitting(true);
 
     const request = externalService.getCharacters().pipe(
       switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
@@ -344,12 +346,12 @@ export class AccountStore {
     );
     fromStream(
       sessionId
-        ? stores.uiStateStore.setSessIdCookie(sessionId).pipe(
+        ? this.rootStore.uiStateStore.setSessIdCookie(sessionId).pipe(
             switchMap(() => {
               return request;
             })
           )
-        : stores.uiStateStore.getSessIdCookie().pipe(
+        : this.rootStore.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
               if (cookies && cookies.length > 0) {
                 this.sessionId = cookies[0].value;
@@ -366,19 +368,19 @@ export class AccountStore {
       this.sessionId = sessionId;
     }
 
-    stores.notificationStore.createNotification('validate_session', 'success');
-    stores.uiStateStore.setSubmitting(false);
+    this.rootStore.notificationStore.createNotification('validate_session', 'success');
+    this.rootStore.uiStateStore.setSubmitting(false);
 
     // todo: check expiry date
     if (!this.token || sessionId) {
       if (sender === '/login') {
         this.loadAuthWindow();
       } else {
-        stores.routeStore.redirect('/login');
+        this.rootStore.routeStore.redirect('/login');
       }
     } else {
-      stores.uiStateStore.setValidated(true);
-      stores.routeStore.redirect('/net-worth');
+      this.rootStore.uiStateStore.setValidated(true);
+      this.rootStore.routeStore.redirect('/net-worth');
       this.initSession();
     }
   }
@@ -391,13 +393,13 @@ export class AccountStore {
       );
     }
 
-    stores.notificationStore.createNotification(
+    this.rootStore.notificationStore.createNotification(
       'validate_session',
       'error',
       true,
       e
     );
-    stores.uiStateStore.setSubmitting(false);
-    stores.uiStateStore.setValidated(false);
+    this.rootStore.uiStateStore.setSubmitting(false);
+    this.rootStore.uiStateStore.setValidated(false);
   }
 }

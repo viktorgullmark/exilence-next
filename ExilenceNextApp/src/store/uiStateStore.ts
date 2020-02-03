@@ -9,6 +9,7 @@ import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { Order } from '../components/item-table/ItemTable';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { RootStore } from './rootStore';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -60,6 +61,8 @@ export class UiStateStore {
   setItemTableOrderBy(orderBy: keyof IPricedItem) {
     this.itemTableOrderBy = orderBy;
   }
+
+  constructor(private rootStore: RootStore) {}
 
   @action
   setChangingProfile(changing: boolean) {

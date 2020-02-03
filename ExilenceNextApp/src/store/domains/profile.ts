@@ -26,9 +26,8 @@ import {
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot
 } from '../../utils/snapshot.utils';
-import { visitor } from './../../index';
+import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
-import stores from '..';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
@@ -55,17 +54,17 @@ export class Profile {
 
   @computed
   get readyToSnapshot() {
-    const account = stores.accountStore.getSelectedAccount;
+    const account = rootStore.accountStore.getSelectedAccount;
     const league = account.accountLeagues.find(
       al => account.activeLeague && al.leagueId === account.activeLeague.id
     );
     return (
       league &&
       league.stashtabs.length > 0 &&
-      !stores.priceStore.isUpdatingPrices &&
-      stores.uiStateStore.validated &&
-      stores.uiStateStore.initiated &&
-      !stores.uiStateStore.isSnapshotting
+      !rootStore.priceStore.isUpdatingPrices &&
+      rootStore.uiStateStore.validated &&
+      rootStore.uiStateStore.initiated &&
+      !rootStore.uiStateStore.isSnapshotting
     );
   }
 
@@ -189,7 +188,7 @@ export class Profile {
     const apiProfile = mapProfileToApiProfile(new Profile(profile));
 
     fromStream(
-      stores.signalrHub
+      rootStore.signalrHub
         .invokeEvent<IApiProfile>('EditProfile', apiProfile)
         .pipe(
           map((p: IApiProfile) => {
@@ -204,7 +203,7 @@ export class Profile {
 
   @action
   updateProfileFail(e: Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'update_profile',
       'error',
       false,
@@ -214,36 +213,36 @@ export class Profile {
 
   @action
   updateProfileSuccess() {
-    stores.notificationStore.createNotification('update_profile', 'success');
+    rootStore.notificationStore.createNotification('update_profile', 'success');
   }
 
   @action snapshot() {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
-    stores.uiStateStore!.setIsSnapshotting(true);
+    rootStore.uiStateStore!.setIsSnapshotting(true);
     this.getItems();
   }
 
   @action snapshotSuccess() {
-    stores.notificationStore.createNotification('snapshot', 'success');
-    stores.uiStateStore!.setIsSnapshotting(false);
-    stores.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
-    if (stores.settingStore.autoSnapshotting) {
-      stores.accountStore.getSelectedAccount.queueSnapshot();
+    rootStore.notificationStore.createNotification('snapshot', 'success');
+    rootStore.uiStateStore!.setIsSnapshotting(false);
+    rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
+    if (rootStore.settingStore.autoSnapshotting) {
+      rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
-    stores.notificationStore.createNotification('snapshot', 'error', true, e);
-    stores.uiStateStore!.setIsSnapshotting(false);
+    rootStore.notificationStore.createNotification('snapshot', 'error', true, e);
+    rootStore.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action getItems() {
-    const accountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === this.activeLeagueId
     );
 
-    const league = stores.leagueStore.leagues.find(
+    const league = rootStore.leagueStore.leagues.find(
       l => l.id === this.activeLeagueId
     );
 
@@ -262,7 +261,7 @@ export class Profile {
       externalService
         .getItemsForTabs(
           selectedStashTabs,
-          stores.accountStore.getSelectedAccount.name!,
+          rootStore.accountStore.getSelectedAccount.name!,
           league.id
         )
         .pipe(
@@ -287,7 +286,7 @@ export class Profile {
     leagueId: string
   ) {
     // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_items',
       'success',
       undefined,
@@ -298,7 +297,7 @@ export class Profile {
   }
 
   @action getItemsFail(e: AxiosError | Error, leagueId: string) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_items',
       'error',
       true,
@@ -311,7 +310,7 @@ export class Profile {
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
     const activePriceLeague =
-      stores.accountStore.getSelectedAccount.activePriceLeague;
+      rootStore.accountStore.getSelectedAccount.activePriceLeague;
 
     if (!activePriceLeague) {
       return this.priceItemsForStashTabsFail(
@@ -319,7 +318,7 @@ export class Profile {
       );
     }
 
-    const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
+    const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
       l => l.leagueId === activePriceLeague.id
     );
 
@@ -331,12 +330,12 @@ export class Profile {
 
     let prices = activePriceDetails.leaguePriceSources[0].prices;
 
-    if (!stores.settingStore.lowConfidencePricing) {
+    if (!rootStore.settingStore.lowConfidencePricing) {
       prices = prices.filter(p => p.count > 10);
     }
 
     prices = prices.filter(
-      p => p.calculated && p.calculated >= stores.settingStore.priceTreshold
+      p => p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
     );
 
     prices = excludeLegacyMaps(prices);
@@ -357,7 +356,7 @@ export class Profile {
           .filter(
             item =>
               item.calculated * item.stackSize >=
-              stores.settingStore.priceTreshold
+              rootStore.settingStore.priceTreshold
           )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
@@ -371,13 +370,13 @@ export class Profile {
 
   @action
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
-    stores.notificationStore.createNotification('price_stash_items', 'success');
+    rootStore.notificationStore.createNotification('price_stash_items', 'success');
     this.saveSnapshot(pricedStashTabs);
   }
 
   @action
   priceItemsForStashTabsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'price_stash_items',
       'error',
       true,
@@ -394,7 +393,7 @@ export class Profile {
 
     const snapshotToAdd = new Snapshot(snapshot);
 
-    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+    const activeAccountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === this.activeLeagueId
     );
 
@@ -411,8 +410,8 @@ export class Profile {
           });
         }
 
-        if (stores.signalrStore.activeGroup) {
-          stores.signalrStore.addOwnSnapshotToActiveGroup(snapshotToAdd);
+        if (rootStore.signalrStore.activeGroup) {
+          rootStore.signalrStore.addOwnSnapshotToActiveGroup(snapshotToAdd);
         }
         runInAction(() => {
           this.snapshots.unshift(snapshotToAdd);
@@ -437,7 +436,7 @@ export class Profile {
     failAction: (e: AxiosError) => void,
     callback?: () => void
   ) {
-    return stores.signalrHub
+    return rootStore.signalrHub
       .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
       .pipe(
         switchMap(() => {
@@ -454,9 +453,9 @@ export class Profile {
 
   @action
   removeAllSnapshotsSuccess() {
-    stores.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
-    stores.uiStateStore.setClearingSnapshots(false);
-    stores.notificationStore.createNotification(
+    rootStore.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification(
       'remove_all_snapshots',
       'success'
     );
@@ -464,9 +463,9 @@ export class Profile {
 
   @action
   removeAllSnapshots() {
-    stores.uiStateStore.setClearingSnapshots(true);
+    rootStore.uiStateStore.setClearingSnapshots(true);
     fromStream(
-      stores.signalrHub
+      rootStore.signalrHub
         .invokeEvent<string>('RemoveAllSnapshots', this.uuid)
         .pipe(
           map(() => {
@@ -482,9 +481,9 @@ export class Profile {
 
   @action
   removeAllSnapshotFail(e: Error) {
-    stores.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
-    stores.uiStateStore.setClearingSnapshots(false);
-    stores.notificationStore.createNotification(
+    rootStore.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification(
       'remove_all_snapshots',
       'error',
       false,

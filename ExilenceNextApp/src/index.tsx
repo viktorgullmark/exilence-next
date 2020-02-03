@@ -29,7 +29,7 @@ import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
 import { electronService } from './services/electron.service';
-import stores from './store';
+import { RootStore } from './store/rootStore';
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -48,6 +48,7 @@ configure({ enforceActions: 'observed' });
 moment.locale(electronService.remote.app.getLocale());
 
 const theme = responsiveFontSizes(exilenceTheme());
+export const rootStore: RootStore = new RootStore();
 
 localForage.config({
   name: 'exilence-next-db',
@@ -57,7 +58,7 @@ localForage.config({
 const app = (
   <>
     <ThemeProvider theme={theme}>
-      <Provider {...stores}>
+      <Provider {...rootStore}>
         <Suspense fallback={null}>
           <Router>
             <HighchartsTheme />
@@ -74,7 +75,7 @@ const app = (
                 exact
                 path="/"
                 render={() =>
-                  stores.accountStore.getSelectedAccount.name ? (
+                  rootStore.accountStore.getSelectedAccount.name ? (
                     <Redirect to="/net-worth" />
                   ) : (
                     <Redirect to="/login" />
@@ -98,20 +99,20 @@ const hydrate = create({
 
 const renderApp = () => {
   Promise.all([
-    hydrate('account', stores.accountStore),
-    hydrate('uiState', stores.uiStateStore),
-    hydrate('league', stores.leagueStore),
-    hydrate('setting', stores.settingStore)
+    hydrate('account', rootStore.accountStore),
+    hydrate('uiState', rootStore.uiStateStore),
+    hydrate('league', rootStore.leagueStore),
+    hydrate('setting', rootStore.settingStore)
   ]).then(() => {
-    stores.settingStore.setUiScale(stores.settingStore.uiScale);
-    visitor = ua(AppConfig.trackingId, stores.uiStateStore.userId);
+    rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
+    visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
     ReactDOM.render(app, document.getElementById('root'));
   });
 };
 
-hydrate('migration', stores.migrationStore).then(() => {
-  if (stores.migrationStore.current < stores.migrationStore.latest) {
-    stores.migrationStore.runMigrations().subscribe(() => renderApp());
+hydrate('migration', rootStore.migrationStore).then(() => {
+  if (rootStore.migrationStore.current < rootStore.migrationStore.latest) {
+    rootStore.migrationStore.runMigrations().subscribe(() => renderApp());
   } else {
     renderApp();
   }

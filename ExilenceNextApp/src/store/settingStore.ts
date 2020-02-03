@@ -3,7 +3,7 @@ import { persist } from 'mobx-persist';
 import { ISelectOption } from '../interfaces/select-option.interface';
 import { electronService } from '../services/electron.service';
 import { getPriceTresholdOptions } from '../utils/setting.utils';
-import stores from '.';
+import { RootStore } from './rootStore';
 
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
@@ -15,6 +15,8 @@ export class SettingStore {
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
 
   priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
+
+  constructor(private rootStore: RootStore) {}
 
   @action
   setUiScale(factor: number | string | number[]) {
@@ -36,9 +38,9 @@ export class SettingStore {
   @action
   setAutoSnapshotting(value: boolean) {
     if (!value) {
-      stores.accountStore.getSelectedAccount.dequeueSnapshot();
+      this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
     } else {
-      stores.accountStore.getSelectedAccount.queueSnapshot();
+      this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     this.autoSnapshotting = value;
   }
@@ -51,7 +53,7 @@ export class SettingStore {
   @action
   setAutoSnapshotInterval(value: number) {
     this.autoSnapshotInterval = value * 60 * 1000;
-    stores.accountStore.getSelectedAccount.dequeueSnapshot();
-    stores.accountStore.getSelectedAccount.queueSnapshot();
+    this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+    this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
   }
 }

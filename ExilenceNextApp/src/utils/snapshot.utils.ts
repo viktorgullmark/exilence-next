@@ -5,9 +5,9 @@ import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.i
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
-import stores from '../store';
 import { rgbToHex } from './colour.utils';
 import { mergeItemStacks } from './item.utils';
+import { rootStore } from '..';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
@@ -141,7 +141,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
             i.calculated > 0 &&
             i.name
               .toLowerCase()
-              .includes(stores.uiStateStore.itemTableFilterText.toLowerCase())
+              .includes(rootStore.uiStateStore.itemTableFilterText.toLowerCase())
         )
       )
   );

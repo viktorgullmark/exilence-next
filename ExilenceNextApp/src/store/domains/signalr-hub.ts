@@ -3,12 +3,12 @@ import * as msgPack from '@microsoft/signalr-protocol-msgpack';
 import { action, observable, runInAction } from 'mobx';
 import { from, throwError } from 'rxjs';
 import AppConfig from './../../config/app.config';
-import stores from '..';
+import { RootStore } from '../rootStore';
 
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
 
-  constructor() {}
+  constructor(private rootStore: RootStore) {}
 
   @action
   stopConnection() {
@@ -17,7 +17,7 @@ export class SignalrHub {
     }
     return from(
       this.connection.stop().then(() => {
-        stores.signalrStore.setOnline(false);
+        this.rootStore.signalrStore.setOnline(false);
       })
     );
   }
@@ -36,23 +36,23 @@ export class SignalrHub {
       .withHubProtocol(new msgPack.MessagePackHubProtocol())
       .build();
 
-    stores.signalrStore.registerEvents();
+    this.rootStore.signalrStore.registerEvents();
 
     return from(
       this.connection
         .start()
         .then(() => {
           this.connection!.onreconnected(() => {
-            stores.notificationStore.createNotification(
+            this.rootStore.notificationStore.createNotification(
               'reconnected',
               'success'
             );
-            stores.signalrStore.setOnline(true);
-            stores.accountStore.initSession(true);
+            this.rootStore.signalrStore.setOnline(true);
+            this.rootStore.accountStore.initSession(true);
           });
 
           this.connection!.onreconnecting(e => {
-            stores.signalrStore.setActiveGroup(undefined);
+            this.rootStore.signalrStore.setActiveGroup(undefined);
             this.connectionLost(e);
           });
 
@@ -62,7 +62,7 @@ export class SignalrHub {
             });
           });
 
-          stores.signalrStore.setOnline(true);
+          this.rootStore.signalrStore.setOnline(true);
         })
         .catch((err: string) => console.log(err))
     );
@@ -113,8 +113,8 @@ export class SignalrHub {
   }
 
   connectionLost(e?: Error) {
-    stores.signalrStore.setOnline(false);
-    stores.notificationStore.createNotification(
+    this.rootStore.signalrStore.setOnline(false);
+    this.rootStore.notificationStore.createNotification(
       'connection_lost',
       'error',
       false,
