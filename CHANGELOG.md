@@ -3,9 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.7] - 2020-02-XX
 ##### Added
+- Added the ability to trigger manual snapshots while auto snapshotting is turned on
 - Minor style tweaks
 - Minor client optimizations
 ##### Fixed
+- Fixed a bug where failed stash tab requests would trigger an infinite loop for init session
 - Fixed a bug where part of the scrollbar was hidden beneath the toolbar
 - Fixed a bug where the table row borders would sometimes be distorted
 
