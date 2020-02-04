@@ -1,23 +1,14 @@
-import { action, computed, observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { ILeague } from '../interfaces/league.interface';
 import { League } from './domains/league';
-import { UiStateStore } from './uiStateStore';
-import { stores } from '..';
+import { RootStore } from './rootStore';
 
 export class LeagueStore {
-  uiStateStore: UiStateStore;
   @persist('list', League) @observable leagues: League[] = [];
+  @persist('list', League) @observable priceLeagues: League[] = [];
 
-  constructor(uiStateStore: UiStateStore) {
-    this.uiStateStore = uiStateStore;
-  }
-
-  @computed
-  get priceLeagues() {
-    // todo: don't include leagues with no prices
-    return this.leagues.filter(l => l.id.indexOf('SSF') === -1);
-  }
+  constructor(private rootStore: RootStore) {}
 
   @action
   updateLeagues(leagues: ILeague[]) {
@@ -29,5 +20,12 @@ export class LeagueStore {
         return new League(league);
       })
     );
+  }
+
+  @action
+  updatePriceLeagues(leagues: ILeague[]) {
+    this.priceLeagues = leagues.map(l => {
+      return new League(l);
+    });
   }
 }

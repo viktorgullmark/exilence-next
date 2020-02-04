@@ -1,18 +1,19 @@
 ﻿using API.Interfaces;
 using AutoMapper;
+using MessagePack;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
-using Shared.Interfaces;
+using Microsoft.Extensions.Logging;
 using Shared.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace API.Hubs
 {
+    [Authorize]
     public partial class BaseHub : Hub
     {
         readonly IMapper _mapper;
@@ -20,60 +21,79 @@ namespace API.Hubs
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
 
+        private readonly ILogger<BaseHub> _logger;
+
         private readonly string _instanceName;
+        private readonly string _loggerPassword;
         private string ConnectionId => Context.ConnectionId;
         private string AccountName => Context.User.Identity.Name;
         private bool IsAdmin => Context.User.IsInRole("Admin");
         private bool IsPremium => Context.User.IsInRole("Premium");
 
+
         public BaseHub(
-            IMapper mapper, 
-            IConfiguration configuration, 
+            IMapper mapper,
+            ILogger<BaseHub> logger,
+            IConfiguration configuration,
             IGroupService groupService,
             ISnapshotService snapshotService,
             IAccountService accountService
             )
         {
+            _logger = logger;
             _mapper = mapper;
-            _instanceName = configuration.GetSection("Settings")["InstanceName"];   
+            _instanceName = configuration.GetSection("Settings")["InstanceName"];
+            _loggerPassword = configuration.GetSection("Logger")["Password"];
 
             _snapshotService = snapshotService;
             _accountService = accountService;
             _groupService = groupService;
         }
 
-        [Authorize]
         public override async Task OnConnectedAsync()
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} connected");
+            await Log($"ConnectionId: {ConnectionId} connected");
 
-            var connection = new ConnectionModel() {
+            //Close already existing connection for the same account
+            var existingConnection = await _accountService.GetConnection(AccountName);
+            if (existingConnection != null)
+            {
+                await CloseConnection(existingConnection.ConnectionId);
+            }
+
+            var connection = new ConnectionModel()
+            {
                 ConnectionId = ConnectionId,
-                InstanceName = _instanceName,
-                Created = DateTime.UtcNow
+                InstanceName = _instanceName
             };
-            await _groupService.AddConnection(connection, AccountName);            
+            await _groupService.AddConnection(connection, AccountName);
             await base.OnConnectedAsync();
         }
 
-        [Authorize]
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"Account {AccountName} with connectionId: {ConnectionId} disconnected");
+            await Log($"ConnectionId: {ConnectionId} disconnected");
+            var groupModel = await _groupService.GetGroupForConnection(ConnectionId);
+            if (groupModel != null)
+            {
+                await LeaveGroup(groupModel.Name);
+            }
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
-        [Authorize]
-        public string GetConnectionId()
+        public async Task CloseConnection(string connectionId)
         {
-            return Context.ConnectionId;
+            await Log($"Telling connectionId: {connectionId} to close");
+            await Clients.Client(connectionId).SendAsync("OnCloseConnection");
         }
 
-        [Authorize]
-        private async Task Log (string message)
+        private async Task Log(string message)
         {
-            await Clients.All.SendAsync("Log", message);
+            var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
+            message = $"[Account: {AccountName}] -  " + message; // Add account name
+            await Clients.Group("logger").SendAsync("Debug", $"[{time}] {message}");
+            _logger.LogDebug(message);
         }
 
 

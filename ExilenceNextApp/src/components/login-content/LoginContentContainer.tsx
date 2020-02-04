@@ -1,6 +1,6 @@
 import { reaction } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
@@ -16,8 +16,7 @@ interface LoginContentProps {
 
 const LoginContentContainer: React.FC<LoginContentProps> = ({
   accountStore,
-  uiStateStore,
-  leagueStore
+  uiStateStore
 }: LoginContentProps) => {
   const history = useHistory();
   const location = useLocation();
@@ -25,29 +24,24 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   uiStateStore!.setValidated(false);
 
   const handleValidate = (details: IAccount) => {
-    accountStore!.initSession(location.pathname, {
-      name: details.name,
-      sessionId: details.sessionId
-    });
-
-    reaction(
-      () => uiStateStore!.validated,
-      (_cookie, reaction) => {
-        history.push('/net-worth');
-        reaction.dispose();
-      }
-    );
+    if (uiStateStore!.validated) {
+      accountStore!.loadAuthWindow();
+    } else {
+      accountStore!.validateSession(location.pathname, details.sessionId);
+    }
   };
 
   return (
     <LoginContent
       handleValidate={(details: IAccount) => handleValidate(details)}
       isSubmitting={uiStateStore!.isSubmitting}
+      isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
     ></LoginContent>
   );
 };
 
-export default inject('accountStore', 'uiStateStore', 'leagueStore')(
-  observer(LoginContentContainer)
-);
+export default inject(
+  'accountStore',
+  'uiStateStore'
+)(observer(LoginContentContainer));

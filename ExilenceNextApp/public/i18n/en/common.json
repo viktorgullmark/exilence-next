@@ -10,7 +10,11 @@
     "save_profile": "Save profile",
     "create_profile": "Create profile",
     "new_profile": "New profile",
-    "close": "Close"
+    "close": "Close",
+    "create_group": "Create group",
+    "join_group": "Join group",
+    "leave_group": "Leave group",
+    "lets_begin": "Lets begin!"
   },
   "title": {
     "login": "Login",
@@ -23,12 +27,21 @@
     "select_characters": "Select your characters",
     "confirm_clear_snapshots": "Clear snapshots for profile",
     "confirm_remove_profile": "Remove profile",
+    "confirm_leave_group": "Leave group",
     "ga_consent_dialog_title": "Terms and conditions",
     "net_worth_settings": "Net worth",
     "misc_settings": "Misc",
-    "pricing_settings": "Pricing settings"
+    "pricing_settings": "Pricing settings",
+    "create_group_dialog_title": "Create new group",
+    "join_group_dialog_title": "Join existing group",
+    "snapshot_settings": "Snapshot settings",
+    "snapshot_history_chart": "Snapshot history",
+    "ui_settings": "Interface",
+    "general": "General"
   },
   "label": {
+    "required": "Required",
+    "optional": "Optional",
     "account_name": "Account name",
     "session_id": "Session Id",
     "profile_name": "Profile name",
@@ -38,13 +51,23 @@
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
     "profile_placeholder": "Select a profile",
+    "group_name": "Group name",
+    "group_name_placeholder": "Enter a group name",
+    "profile_name_placeholder": "Enter a profile name",
+    "password": "Password",
+    "password_placeholder": "Enter password here",
+    "password_helper_text": "Must be at least 6 characters in length",
     "item_table": "Items",
     "graphs": "Graphs",
     "total_value": "Net worth",
     "total_items": "Items",
+    "total_income": "Income",
     "total_snapshots": "Snapshots",
     "session_id_link": "How to find your session id",
     "sign_out": "Sign out",
+    "join_group": "Join group",
+    "create_group": "Create group",
+    "toggle_menu_title": "Toggle menu",
     "edit_profile_icon_title": "Edit profile",
     "create_profile_icon_title": "Create profile",
     "fetch_snapshot_icon_title": "Fetch snapshot",
@@ -53,25 +76,43 @@
     "notification_icon_title": "Notifications",
     "session_id_icon_title": "Help finding session ID",
     "account_icon_title": "My account",
+    "group_icon_title": "Groups",
+    "toggle_visibility_icon_title": "Show/hide",
     "net_worth_export": "Export data",
     "these_terms_inline": "these terms",
-    "update_available": "Version {{version}} available",
+    "update_available": "Update available, ",
+    "click": "click",
+    "here": "here",
+    "to_update_now": "to update now!",
     "prices_fetched_from": "Prices fetched from ",
     "not_available": "N/A",
+    "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",
     "price_treshold": "Select price treshold",
     "requires_snapshot_info": "* = requires a new snapshot to take effect",
     "fetch_snapshot_spinner_title": "Fetching snapshots",
-    "initiating_session_spinner_title": "Initiating session"
+    "initiating_session_spinner_title": "Initiating session",
+    "generate_name_icon_title": "Generate name",
+    "server_offline_title": "Not connected to server",
+    "no_snapshots_title": "No snapshots found for selection",
+    "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots",
+    "auto_snapshotting": "Activate auto snapshotting",
+    "auto_snapshot_interval": "Set auto snapshot interval",
+    "ui_scale": "Interface scale (%)"
   },
   "value": {
     "none": "None",
     "low_confidence_pricing": "Low confidence",
-    "price_treshold": "Price treshold"
+    "price_treshold": "Price treshold",
+    "auto_snapshotting": "Auto snapshotting",
+    "auto_snapshot_interval": "Snapshotting interval"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
-    "price_treshold": "Sets the cutoff for including items"
+    "price_treshold": "Sets the cutoff for including items",
+    "auto_snapshotting": "Handles snapshotting for you at set intervals",
+    "auto_snapshot_interval": "Sets the interval for auto snapshotting",
+    "ui_scale": "Sets the UI scale"
   },
   "link": {
     "restart_now": "Restart now"
@@ -79,6 +120,7 @@
   "body": {
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",
     "remove_profile": "Are you sure you want to remove your profile?",
+    "leave_group": "Are you sure you want to leave your current group?",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
     "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
     "ga_consent_short_text": "By proceeding below, you agree to "

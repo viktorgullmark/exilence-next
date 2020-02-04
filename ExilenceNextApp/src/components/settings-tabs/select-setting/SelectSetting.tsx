@@ -1,16 +1,15 @@
 import {
-  createStyles,
   FormControl,
   FormGroup,
   FormHelperText,
   FormLabel,
-  makeStyles,
   MenuItem,
   Select
 } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ISelectOption } from '../../../interfaces/select-option.interface';
+import useStyles from './SelectSetting.styles';
 
 interface Props {
   value: number;
@@ -19,17 +18,6 @@ interface Props {
   translationKey: string;
   requiresSnapshot?: boolean;
 }
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    label: {
-      '& + .MuiInput-formControl': {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1)
-      }
-    }
-  })
-);
 
 const SelectSetting: React.FC<Props> = ({
   value,

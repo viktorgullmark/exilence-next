@@ -22,16 +22,6 @@ if (!isDev) {
   });
 }
 
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = isDev;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return Promise.all(
-    extensions.map(name => installer.default(installer[name], forceDownload))
-  ).catch(console.log);
-};
-
 let mainWindow;
 
 function sendStatusToWindow(text) {
@@ -45,6 +35,10 @@ ipcMain.on('checkForUpdates', function(event) {
   } else {
     autoUpdater.checkForUpdates();
   }
+});
+
+ipcMain.on('quitAndInstall', function(event) {
+  autoUpdater.quitAndInstall();
 });
 
 ipcMain.on('notify', function(event) {
@@ -76,8 +70,9 @@ autoUpdater.on('download-progress', progressObj => {
   sendStatusToWindow(log_message);
 });
 
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+autoUpdater.on('update-downloaded', (event, releaseName, releaseNotes) => {
   sendStatusToWindow('Update downloaded');
+  mainWindow.webContents.send('updateDownloaded');
   shouldNotify = false;
 });
 
@@ -114,9 +109,6 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
-  if (isDev) {
-    await installExtensions();
-  }
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });

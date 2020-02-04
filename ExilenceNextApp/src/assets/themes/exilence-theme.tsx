@@ -10,18 +10,22 @@ const primaryDark = '#720e30';
 export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
 
+export const fontColors = {
+  hintDarker: 'rgba(255, 255, 255, 0.2)'
+}
+
 export const secondary = {
   light: '#696969',
   main: '#282828',
   dark: '#000'
 }
 
-export const gridSpacing = 3;
+export const gridSpacing = 2;
 
 export const cardColors = {
-  primary: '#263238',
-  secondary: '#1c3533',
-  third: '#14394c'
+  primary: 'linear-gradient(90deg, #273238 0%, #1c262b 100%)',
+  secondary: 'linear-gradient(90deg, #1d3e3b 0%, #192f2d 100%)', 
+  third: 'linear-gradient(90deg, #14384a 0%, #082533 100%)'
 };
 
 export const rarityColors = {
@@ -45,6 +49,17 @@ export const statusColors = {
   warning: amber[900],
   info: grey[900],
   error: red[900]
+};
+
+export const currencyChangeColors = {
+  positive: green[600],
+  negative: red[700]
+}
+
+export const background = {
+  default: '#191919',
+  paper: '#202020',
+  darker: '#151515'
 };
 
 export type Rarity = typeof rarityColors;
@@ -89,11 +104,14 @@ export default function exilenceTheme() {
         dark: primaryDark
       },
       secondary: secondary,
-      background: {
-        default: '#191919',
-        paper: '#232323'
-      },
+      background: background,
       type: 'dark'
+    },
+    typography: {
+      h6: {
+        fontWeight: 400,
+        fontSize: '1.15rem'
+      }
     }
   });
 }

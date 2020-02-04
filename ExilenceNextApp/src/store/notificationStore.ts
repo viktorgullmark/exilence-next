@@ -1,18 +1,15 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable } from 'mobx';
 import { NotificationType } from '../interfaces/notification.interface';
+import { translateError } from '../utils/error.utils';
 import { Notification } from './domains/notification';
-import { UiStateStore } from './uiStateStore';
-import { ErrorUtils } from '../utils/error.utils';
+import { RootStore } from './rootStore';
 
 export class NotificationStore {
-  uiStateStore: UiStateStore;
   @observable notifications: Notification[] = [];
   @observable displayed: string[] = [];
 
-  constructor(uiStateStore: UiStateStore) {
-    this.uiStateStore = uiStateStore;
-  }
+  constructor(private rootStore: RootStore) {}
 
   @computed
   get alertNotifications() {
@@ -28,7 +25,8 @@ export class NotificationStore {
 
   @action
   addDisplayed(uuid: string) {
-    this.displayed = [...this.displayed, uuid];
+    this.displayed.unshift(uuid);
+    this.displayed = this.displayed.slice(0, 10);
   }
 
   @action
@@ -42,7 +40,7 @@ export class NotificationStore {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
     const description = error
-      ? ErrorUtils.translateError(error)
+      ? translateError(error)
       : `${prefix}.description.${key}`;
 
     const notification = new Notification({

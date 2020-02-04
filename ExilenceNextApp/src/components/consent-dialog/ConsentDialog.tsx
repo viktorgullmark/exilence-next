@@ -1,25 +1,15 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  makeStyles,
-  Theme,
-  Typography,
-  Box
+  Typography
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogActions: {
-    padding: theme.spacing(2)
-  },
-  consent: {
-    color: theme.palette.text.hint
-  }
-}));
+import useStyles from './ConsentDialog.styles';
 
 interface Props {
   show: boolean;

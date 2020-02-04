@@ -41,7 +41,7 @@ namespace ExilenceTests
                 Characters = new List<CharacterModel>(),
                 Verified = true
             };
-            accountModel.Token = AuthHelper.GenerateToken(_fixture.Secret, accountModel);
+            accountModel.AccessToken = AuthHelper.GenerateToken(_fixture.Secret, accountModel);
 
             accountModel = await _fixture.AccountService.AddAccount(accountModel);
             Assert.NotNull(accountModel.ClientId);
@@ -58,7 +58,7 @@ namespace ExilenceTests
                 Characters = new List<CharacterModel>(),
                 Verified = true
             };
-            createdAccountModel.Token = AuthHelper.GenerateToken(_fixture.Secret, createdAccountModel);
+            createdAccountModel.AccessToken = AuthHelper.GenerateToken(_fixture.Secret, createdAccountModel);
 
             createdAccountModel = await _fixture.AccountService.AddAccount(createdAccountModel);
             var retrivedAccountModel = await _fixture.AccountService.GetAccount(createdAccountModel.Name);
@@ -77,7 +77,7 @@ namespace ExilenceTests
                 Characters = new List<CharacterModel>(),
                 Verified = true
             };
-            createdAccountModel.Token = AuthHelper.GenerateToken(_fixture.Secret, createdAccountModel);
+            createdAccountModel.AccessToken = AuthHelper.GenerateToken(_fixture.Secret, createdAccountModel);
 
             createdAccountModel = await _fixture.AccountService.AddAccount(createdAccountModel);
             await _fixture.AccountService.RemoveAccount(createdAccountModel.Name);
@@ -97,7 +97,7 @@ namespace ExilenceTests
                 Characters = new List<CharacterModel>(),
                 Verified = true
             };
-            account.Token = AuthHelper.GenerateToken(_fixture.Secret, account);
+            account.AccessToken = AuthHelper.GenerateToken(_fixture.Secret, account);
 
             account = await _fixture.AccountService.AddAccount(account);
 

@@ -20,7 +20,7 @@ namespace Shared.Repositories
 
         public Account AddAccount(Account account)
         {
-            account.Datestamp = DateTime.UtcNow;
+            account.Created = DateTime.UtcNow;
             _exilenceContext.Accounts.Add(account);
             return account;
         }
@@ -33,6 +33,11 @@ namespace Shared.Repositories
         public IQueryable<Account> GetAccounts(Expression<Func<Account, bool>> predicate)
         {
             return _exilenceContext.Accounts.Where(predicate);
+        }
+
+        public IQueryable<Connection> GetConnections(Expression<Func<Connection, bool>> predicate)
+        {
+            return _exilenceContext.Connections.Where(predicate);
         }
 
         public IQueryable<SnapshotProfile> GetProfiles(Expression<Func<SnapshotProfile, bool>> predicate)

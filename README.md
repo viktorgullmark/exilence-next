@@ -3,7 +3,7 @@ Exilence Next
 ===
 Complete rewrite of Exilence, with performance and user experience in focus
 
-![Preview image](https://i.imgur.com/OknRP2H.png)
+![Preview image](https://i.imgur.com/MjLdHlK.png)
 
 ## Contents
 
@@ -14,6 +14,7 @@ Complete rewrite of Exilence, with performance and user experience in focus
 - [Contact us](#contact-us)
 - [Supporting us](#supporting-us)
 - [Acknowledgements](#acknowledgements)
+- [License](#license)
 
 ## Download
 
@@ -23,7 +24,7 @@ Download the latest release at https://github.com/viktorgullmark/exilence-next/r
 
 Currently runs with:
 
-- Electron 6.0.1
+- Electron 7.1.11
 - React 16.10.1
 - .NET Core 3.1
 
@@ -53,3 +54,7 @@ If you feel like chiming in with something, here's our Patreon: https://www.patr
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
 - https://poe.watch for providing in-depth pricing data for items
+
+## License
+
+This work is licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/3.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.

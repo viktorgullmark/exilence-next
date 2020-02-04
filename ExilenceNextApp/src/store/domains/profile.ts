@@ -1,23 +1,35 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
+import moment from 'moment';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
+import { IApiProfile } from '../../interfaces/api/api-profile.interface';
+import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
+import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { ItemUtils } from '../../utils/item.utils';
-import { PriceUtils } from '../../utils/price.utils';
-import { stores, visitor } from './../../index';
+import { mergeItemStacks } from '../../utils/item.utils';
+import { excludeLegacyMaps } from '../../utils/price.utils';
+import { mapProfileToApiProfile } from '../../utils/profile.utils';
+import {
+  calculateNetWorth,
+  filterItems,
+  formatSnapshotsForChart,
+  getItemCount,
+  getValueForSnapshotsTabs,
+  mapSnapshotToApiSnapshot
+} from '../../utils/snapshot.utils';
+import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
-import { SnapshotUtils } from '../../utils/snapshot.utils';
-import { ProfileUtils } from '../../utils/profile.utils';
+import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -34,9 +46,7 @@ export class Profile {
 
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
-  @observable isSnapshotting: boolean = false;
-
-  @observable shouldSetStashTabs: boolean = false;
+  @persist @observable active: boolean = false;
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -44,97 +54,113 @@ export class Profile {
 
   @computed
   get readyToSnapshot() {
-    const account = stores.accountStore.getSelectedAccount;
+    const account = rootStore.accountStore.getSelectedAccount;
     const league = account.accountLeagues.find(
-      al => al.leagueId === account.activeLeague.id
+      al => account.activeLeague && al.leagueId === account.activeLeague.id
     );
     return (
       league &&
       league.stashtabs.length > 0 &&
-      !stores.priceStore.isUpdatingPrices &&
-      stores.uiStateStore.validated &&
-      !this.isSnapshotting
+      !rootStore.priceStore.isUpdatingPrices &&
+      rootStore.uiStateStore.validated &&
+      rootStore.uiStateStore.initiated &&
+      !rootStore.uiStateStore.isSnapshotting
     );
   }
 
   @computed
-  get tableItems() {
+  get items() {
     if (this.snapshots.length === 0) {
       return [];
     }
-    const mergedItems = ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(i => i.calculated > 0)
-      )
-    );
-
-    return mergedItems.filter(
-      mi => mi.total >= stores.settingStore.priceTreshold
-    );
+    return filterItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
   @computed
-  get filteredItems() {
-    if (this.snapshots.length === 0) {
-      return [];
-    }
-    const mergedItems = ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(
-          i =>
-            i.calculated > 0 &&
-            i.name
-              .toLowerCase()
-              .includes(stores.uiStateStore.itemTableFilterText.toLowerCase())
-        )
-      )
-    );
-
-    return mergedItems.filter(
-      mi => mi.total >= stores.settingStore.priceTreshold
-    );
-  }
-
-  @computed
-  get latestSnapshotValue() {
+  get netWorthValue() {
     if (this.snapshots.length === 0) {
       return 0;
     }
-
-    const values = this.snapshots[0].stashTabSnapshots
-      .flatMap(sts => sts.items)
-      .flatMap(item => item.total)
-      .filter(value => value >= stores.settingStore.priceTreshold)
-      .reduce((a, b) => a + b, 0);
-
-    return values.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
   @computed
-  get latestSnapshotItemCount() {
+  get lastSnapshotChange() {
+    if (this.snapshots.length < 2) {
+      return 0;
+    }
+    const lastSnapshotNetWorth = getValueForSnapshotsTabs([
+      mapSnapshotToApiSnapshot(this.snapshots[0])
+    ]);
+    const previousSnapshotNetWorth = getValueForSnapshotsTabs([
+      mapSnapshotToApiSnapshot(this.snapshots[1])
+    ]);
+
+    return lastSnapshotNetWorth - previousSnapshotNetWorth;
+  }
+
+  @computed
+  get chartData() {
+    if (this.snapshots.length === 0) {
+      return undefined;
+    }
+
+    const connectionSeries: IConnectionChartSeries = {
+      seriesName: this.name,
+      series: formatSnapshotsForChart(
+        this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
+      )
+    };
+
+    return connectionSeries;
+  }
+
+  @computed
+  get itemCount() {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return ItemUtils.mergeItemStacks(
-      this.snapshots[0].stashTabSnapshots.flatMap(sts =>
-        sts.items.filter(i => i.calculated > 0)
-      )
-    ).length;
+    return getItemCount([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+  }
+
+  @computed
+  get income() {
+    const hours = 1;
+    const hoursAgo = moment()
+      .utc()
+      .subtract(hours, 'hours');
+    const snapshots = this.snapshots.filter(s =>
+      moment(s.created)
+        .utc()
+        .isAfter(hoursAgo)
+    );
+
+    if (snapshots.length > 1) {
+      const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
+      const firstSnapshot = mapSnapshotToApiSnapshot(
+        snapshots[snapshots.length - 1]
+      );
+      const incomePerHour =
+        (calculateNetWorth([lastSnapshot]) -
+          calculateNetWorth([firstSnapshot])) /
+        hours;
+      return incomePerHour;
+    }
+
+    return 0;
+  }
+
+  @computed
+  get timeSinceLastSnapshot() {
+    if (this.snapshots.length === 0) {
+      return undefined;
+    }
+    return moment(this.snapshots[0].created).fromNow();
   }
 
   @action
   setActiveLeague(id: string) {
     this.activeLeagueId = id;
-  }
-
-  @action
-  clearSnapshots() {
-    const snapshotsToRemove = [...this.snapshots];
-    this.snapshots = [];
-
-    snapshotsToRemove.forEach(s => {
-      stores.signalrStore.removeSnapshot(s.uuid);
-    });
   }
 
   @action
@@ -148,43 +174,76 @@ export class Profile {
   }
 
   @action
-  editProfile(profile: IProfile) {
+  updateFromApiProfile(apiProfile: IApiProfile) {
+    this.activeLeagueId = apiProfile.activeLeagueId;
+    this.activePriceLeagueId = apiProfile.activePriceLeagueId;
+    this.activeStashTabIds = apiProfile.activeStashTabIds;
+    this.name = apiProfile.name;
+  }
+
+  @action
+  updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    Object.assign(this, profile);
-    stores.signalrStore.updateProfile(
-      ProfileUtils.mapProfileToApiProfile(this)
+    const apiProfile = mapProfileToApiProfile(new Profile(profile));
+
+    fromStream(
+      rootStore.signalrHub
+        .invokeEvent<IApiProfile>('EditProfile', apiProfile)
+        .pipe(
+          map((p: IApiProfile) => {
+            this.updateFromApiProfile(apiProfile);
+            callback();
+            return this.updateProfileSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.updateProfileFail(e)))
+        )
     );
   }
 
   @action
-  setIsSnapshotting(snapshotting: boolean = true) {
-    this.isSnapshotting = snapshotting;
+  updateProfileFail(e: Error) {
+    rootStore.notificationStore.createNotification(
+      'update_profile',
+      'error',
+      false,
+      e
+    );
+  }
+
+  @action
+  updateProfileSuccess() {
+    rootStore.notificationStore.createNotification('update_profile', 'success');
   }
 
   @action snapshot() {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
-    this.setIsSnapshotting();
+    rootStore.uiStateStore!.setIsSnapshotting(true);
     this.getItems();
   }
 
   @action snapshotSuccess() {
-    stores.notificationStore.createNotification('snapshot', 'success');
-    this.setIsSnapshotting(false);
+    rootStore.notificationStore.createNotification('snapshot', 'success');
+    if (rootStore.settingStore.autoSnapshotting) {
+      rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+      rootStore.accountStore.getSelectedAccount.queueSnapshot();
+    }
+    rootStore.uiStateStore!.setIsSnapshotting(false);
+    rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
-    stores.notificationStore.createNotification('snapshot', 'error', true, e);
-    this.setIsSnapshotting(false);
+    rootStore.notificationStore.createNotification('snapshot', 'error', true, e);
+    rootStore.uiStateStore!.setIsSnapshotting(false);
   }
 
   @action getItems() {
-    const accountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === this.activeLeagueId
     );
 
-    const league = stores.leagueStore.leagues.find(
+    const league = rootStore.leagueStore.leagues.find(
       l => l.id === this.activeLeagueId
     );
 
@@ -203,14 +262,14 @@ export class Profile {
       externalService
         .getItemsForTabs(
           selectedStashTabs,
-          stores.accountStore.getSelectedAccount.name,
+          rootStore.accountStore.getSelectedAccount.name!,
           league.id
         )
         .pipe(
           map(stashTabsWithItems => {
             return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.items = ItemUtils.mergeItemStacks(
-                stashTabWithItems.items
+              stashTabWithItems.pricedItems = mergeItemStacks(
+                stashTabWithItems.pricedItems
               );
               return stashTabWithItems;
             });
@@ -228,7 +287,7 @@ export class Profile {
     leagueId: string
   ) {
     // todo: clean up, must be possible to write this in a nicer manner (perhaps a joint function for both error/success?)
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_items',
       'success',
       undefined,
@@ -239,7 +298,7 @@ export class Profile {
   }
 
   @action getItemsFail(e: AxiosError | Error, leagueId: string) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'get_items',
       'error',
       true,
@@ -251,36 +310,55 @@ export class Profile {
 
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
-    const activePriceDetails = stores.priceStore.leaguePriceDetails.find(
-      l =>
-        l.leagueId ===
-        stores.accountStore.getSelectedAccount.activePriceLeague.id
+    const activePriceLeague =
+      rootStore.accountStore.getSelectedAccount.activePriceLeague;
+
+    if (!activePriceLeague) {
+      return this.priceItemsForStashTabsFail(
+        new Error('error:no_active_price_league')
+      );
+    }
+
+    const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
+      l => l.leagueId === activePriceLeague.id
     );
 
     if (!activePriceDetails) {
       return this.priceItemsForStashTabsFail(
-        new Error('no_prices_received_for_league')
+        new Error('error:no_prices_received_for_league')
       );
     }
 
-    let filteredPrices = activePriceDetails.leaguePriceSources[0].prices.filter(
-      p => p.count > 10
+    let prices = activePriceDetails.leaguePriceSources[0].prices;
+
+    if (!rootStore.settingStore.lowConfidencePricing) {
+      prices = prices.filter(p => p.count > 10);
+    }
+
+    prices = prices.filter(
+      p => p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
     );
-    filteredPrices = PriceUtils.excludeLegacyMaps(filteredPrices);
+
+    prices = excludeLegacyMaps(prices);
 
     const pricedStashTabs = stashTabsWithItems.map(
       (stashTabWithItems: IStashTabSnapshot) => {
-        stashTabWithItems.items = stashTabWithItems.items.map(
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.map(
           (item: IPricedItem) => {
             return pricingService.priceItem(
               item,
               // todo: add support for multiple sources
-              filteredPrices
+              prices
             );
           }
         );
 
-        stashTabWithItems.value = stashTabWithItems.items
+        stashTabWithItems.value = stashTabWithItems.pricedItems
+          .filter(
+            item =>
+              item.calculated * item.stackSize >=
+              rootStore.settingStore.priceTreshold
+          )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);
 
@@ -293,13 +371,13 @@ export class Profile {
 
   @action
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
-    stores.notificationStore.createNotification('price_stash_items', 'success');
+    rootStore.notificationStore.createNotification('price_stash_items', 'success');
     this.saveSnapshot(pricedStashTabs);
   }
 
   @action
   priceItemsForStashTabsFail(e: AxiosError | Error) {
-    stores.notificationStore.createNotification(
+    rootStore.notificationStore.createNotification(
       'price_stash_items',
       'error',
       true,
@@ -311,42 +389,106 @@ export class Profile {
   @action
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
     const snapshot: ISnapshot = {
-      stashTabSnapshots: pricedStashTabs
+      stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
     };
 
     const snapshotToAdd = new Snapshot(snapshot);
-    this.snapshots.unshift(snapshotToAdd);
-    this.snapshots = this.snapshots.slice(0, 100);
 
-    const activeAccountLeague = stores.accountStore.getSelectedAccount.accountLeagues.find(
+    const activeAccountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       al => al.leagueId === this.activeLeagueId
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = SnapshotUtils.mapSnapshotToApiSnapshot(
+      const apiSnapshot = mapSnapshotToApiSnapshot(
         snapshotToAdd,
         activeAccountLeague.stashtabs
       );
-      const apiItems = SnapshotUtils.mapSnapshotsToStashTabPricedItems(
-        snapshotToAdd,
-        activeAccountLeague.stashtabs
-      );
+      const callback = () => {
+        // clear items from previous snapshot
+        if (this.snapshots.length > 1) {
+          this.snapshots[0].stashTabSnapshots.forEach(stss => {
+            stss.pricedItems = [];
+          });
+        }
 
+        if (rootStore.signalrStore.activeGroup) {
+          rootStore.signalrStore.addOwnSnapshotToActiveGroup(snapshotToAdd);
+        }
+        runInAction(() => {
+          this.snapshots.unshift(snapshotToAdd);
+          this.snapshots = this.snapshots.slice(0, 100);
+        });
+      };
       fromStream(
-        stores.signalrStore.createSnapshot(apiSnapshot, this.uuid).pipe(
-          switchMap(() => {
-            return of(stores.signalrStore.uploadItems(apiItems));
-          })
+        this.sendSnapshot(
+          apiSnapshot,
+          this.snapshotSuccess,
+          this.snapshotFail,
+          callback
         )
       );
     }
+  }
 
-    // clear items from previous snapshot
-    if (this.snapshots.length > 1) {
-      this.snapshots[1].stashTabSnapshots.forEach(stss => {
-        stss.items = [];
-      });
-    }
-    this.snapshotSuccess();
+  @action
+  sendSnapshot(
+    snapshot: IApiSnapshot,
+    successAction: () => void,
+    failAction: (e: AxiosError) => void,
+    callback?: () => void
+  ) {
+    return rootStore.signalrHub
+      .invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid)
+      .pipe(
+        switchMap(() => {
+          if (callback) {
+            callback();
+          }
+          return of(successAction());
+        }),
+        catchError((e: AxiosError) => {
+          return of(failAction(e));
+        })
+      );
+  }
+
+  @action
+  removeAllSnapshotsSuccess() {
+    rootStore.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification(
+      'remove_all_snapshots',
+      'success'
+    );
+  }
+
+  @action
+  removeAllSnapshots() {
+    rootStore.uiStateStore.setClearingSnapshots(true);
+    fromStream(
+      rootStore.signalrHub
+        .invokeEvent<string>('RemoveAllSnapshots', this.uuid)
+        .pipe(
+          map(() => {
+            runInAction(() => {
+              this.snapshots = [];
+            });
+            return this.removeAllSnapshotsSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))
+        )
+    );
+  }
+
+  @action
+  removeAllSnapshotFail(e: Error) {
+    rootStore.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification(
+      'remove_all_snapshots',
+      'error',
+      false,
+      e
+    );
   }
 }

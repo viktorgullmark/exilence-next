@@ -1,9 +1,11 @@
-import { TextField, makeStyles, Theme } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { Formik } from 'formik';
+import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import useStyles from './ItemTableFilter.styles';
 
 export interface TableFilterProps<T> {
   array: T[];
@@ -12,15 +14,10 @@ export interface TableFilterProps<T> {
   ) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  searchField: {
-    width: '100%'
-  }
-}));
-
-const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
-  props: TableFilterProps<IPricedItem>
-) => {
+const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
+  array,
+  handleFilter
+}: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -29,13 +26,13 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
       initialValues={{
         searchText: ''
       }}
-      onSubmit={(values: { searchText: string }) => {
-      }}
+      onSubmit={(values: { searchText: string }) => {}}
       validationSchema={Yup.object().shape({
         searchText: Yup.string().max(20)
       })}
     >
-      {formProps => {
+      {/* todo: refactor and use new formik */}
+      {(formProps: any) => {
         const { values, handleChange } = formProps;
 
         return (
@@ -43,7 +40,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
             <TextField
               onChange={e => {
                 handleChange(e);
-                props.handleFilter(e);
+                handleFilter(e);
               }}
               id="search-text"
               label={t('tables:label.search_text')}
@@ -56,4 +53,4 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = (
   );
 };
 
-export default ItemTableFilter;
+export default observer(ItemTableFilter);

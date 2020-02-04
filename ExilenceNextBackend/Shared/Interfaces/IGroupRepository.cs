@@ -8,7 +8,6 @@ namespace Shared.Interfaces
 {   public interface IGroupRepository
     {
         IQueryable<Group> GetGroups(Expression<Func<Group, bool>> predicate);
-        Task<Group> GetGroup(string name);
         Group AddGroup(Group group);
         Task<Group> RemoveGroup(string name);
 

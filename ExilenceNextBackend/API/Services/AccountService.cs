@@ -30,6 +30,12 @@ namespace API.Services
             return _mapper.Map<AccountModel>(account);
         }
 
+        public async Task<ConnectionModel> GetConnection(string accountName)
+        {
+            var account = await _accountRepository.GetConnections(connection => connection.Account.Name == accountName).FirstOrDefaultAsync();
+            return _mapper.Map<ConnectionModel>(account);
+        }
+
         public async Task<AccountModel> AddAccount(AccountModel accountModel)
         {
             var account = _mapper.Map<Account>(accountModel);
@@ -48,21 +54,22 @@ namespace API.Services
 
             _mapper.Map<AccountModel, Account>(accountModel, account);
 
-            foreach (var profileModel in accountModel.Profiles)
+            if (accountModel.Profiles != null) //Logger account dosen't have any profiles
             {
-                var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
-                if (profile != null)
+                foreach (var profileModel in accountModel.Profiles.Where(profile => profile.Name != "Profile 1")) //Never add default on edit (fix for multi client use)
                 {
-                    _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
-                }
-                else
-                {
-                    var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
-                    account.Profiles.Add(newProfile);
+                    var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
+                    if (profile != null)
+                    {
+                        _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
+                    }
+                    else
+                    {
+                        var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
+                        account.Profiles.Add(newProfile);
+                    }
                 }
             }
-
-            //TODO: Remove profiles removed on client
 
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<AccountModel>(account);
@@ -96,6 +103,29 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task<SnapshotProfileModel> GetActiveProfileWithSnapshots(string accountId)
+        {
+            var profile = await _accountRepository.GetProfiles(profile => profile.Account.ClientId == accountId && profile.Active)
+                .Include(profile => profile.Snapshots)
+                .FirstOrDefaultAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
+        public async Task<SnapshotProfileModel> GetProfileWithSnapshots(string profileId)
+        {
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId)
+                .Include(profile => profile.Snapshots).FirstOrDefaultAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
+        public async Task<List<SnapshotProfileModel>> GetAllProfiles(string accountId)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.ClientId == accountId)
+                .Include(account => account.Profiles)
+                .FirstOrDefaultAsync();
+            return _mapper.Map<List<SnapshotProfileModel>>(account.Profiles);
+        }
+
         public async Task<SnapshotProfileModel> AddProfile(string accountName, SnapshotProfileModel profileModel)
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
@@ -104,6 +134,9 @@ namespace API.Services
                 throw new Exception("Can't find account");
 
             var profile = _mapper.Map<SnapshotProfile>(profileModel);
+
+            profile.Created = DateTime.UtcNow;
+
             account.Profiles.Add(profile);
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
@@ -132,6 +165,37 @@ namespace API.Services
             var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
             var profile = account.Profiles.First(p => p.ClientId == profileId);
             _accountRepository.RemoveProfile(profile);
+            await _accountRepository.SaveChangesAsync();
+            return _mapper.Map<SnapshotProfileModel>(profile);
+        }
+
+        public async Task RemoveAllProfiles(string accountId)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.ClientId == accountId)
+                .Include(account => account.Profiles)
+                .FirstOrDefaultAsync();
+
+            account.Profiles.Clear();
+
+            await _accountRepository.SaveChangesAsync();
+        }
+
+        public async Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId)
+        {
+            var account = await _accountRepository
+                .GetAccounts(account => account.Name == accountName)
+                .Include(account => account.Profiles)
+                .FirstOrDefaultAsync();
+
+            var profile = account.Profiles.First(p => p.ClientId == profileId);
+
+            foreach (var accountProfile in account.Profiles)
+            {
+                accountProfile.Active = false;
+            }
+
+            profile.Active = true;
+
             await _accountRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotProfileModel>(profile);
         }

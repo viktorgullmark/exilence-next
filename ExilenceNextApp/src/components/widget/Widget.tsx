@@ -1,32 +1,31 @@
 import { Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
-
-export const cardHeight = 100;
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
-    height: cardHeight
-  }
-}));
+import { cardHeight } from '../../routes/net-worth/NetWorth';
+import useStyles from './Widget.styles';
 
 interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundColor?: string;
   textColor?: string;
+  height?: number;
+  compact?: boolean;
 }
 
 const Widget: React.FC<WidgetProps> = ({
   children,
   backgroundColor,
-  textColor
+  textColor,
+  height = cardHeight,
+  compact
 }: WidgetProps) => {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.paper} style={{ background: backgroundColor, color: textColor }}>
+    <Paper
+      className={clsx(classes.paper, { [classes.noPadding]: compact })}
+      style={{ background: backgroundColor, color: textColor, height: height }}
+    >
       {children}
     </Paper>
   );

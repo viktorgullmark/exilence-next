@@ -1,5 +1,4 @@
 import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -11,71 +10,35 @@ import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { netWorthGridSpacing } from '../../routes/net-worth/NetWorth';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { netWorthTabGroupHeight } from '../net-worth-tab-group/NetWorthTabGroup';
-import { tabPanelSpacing } from '../tab-panel/TabPanel';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
-import { cardHeight } from '../widget/Widget';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
-import {
-  itemTableFilterHeight,
-  itemTableFilterSpacing
-} from './ItemTableContainer';
-
-export const tableFooterHeight = 52;
-
-export const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${cardHeight}px - ${itemTableFilterHeight}px - ${theme.spacing(
-        netWorthGridSpacing * 3 + tabPanelSpacing * 2 + itemTableFilterSpacing
-      )}px - ${netWorthTabGroupHeight}px)`
-    },
-    tableWrapper: {
-      overflow: 'auto',
-      height: `calc(100% - ${tableFooterHeight}px)`
-    },
-    noItems: {
-      height: 'auto'
-    },
-    pagination: {
-      height: tableFooterHeight,
-      backgroundColor: theme.palette.secondary.main
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1
-    }
-  })
-);
+import { useStyles } from './ItemTable.styles';
 
 export type Order = 'asc' | 'desc';
+
+export const tableFooterHeight = 52;
 
 interface ItemTableProps {
   items: IPricedItem[];
   pageIndex: number;
   changePage: (i: number) => void;
+  order: Order;
+  orderBy: keyof IPricedItem;
+  setOrderBy: (col: keyof IPricedItem) => void;
+  setOrder: (order: Order) => void;
 }
 
 const ItemTable: React.FC<ItemTableProps> = ({
   items,
   pageIndex,
-  changePage
+  changePage,
+  order,
+  orderBy,
+  setOrder,
+  setOrderBy
 }: ItemTableProps) => {
   const classes = useStyles();
   const { t } = useTranslation(['tables']);
-  const [orderBy, setOrderBy] = useState<keyof IPricedItem>('name');
-  const [order, setOrder] = useState<Order>('asc');
 
   const columns: IColumn[] = [
     {
@@ -168,9 +131,9 @@ const ItemTable: React.FC<ItemTableProps> = ({
     order: Order,
     orderBy: K
   ): (
-      a: { [key in K]: number | string | boolean },
-      b: { [key in K]: number | string | boolean }
-    ) => number {
+    a: { [key in K]: number | string | boolean },
+    b: { [key in K]: number | string | boolean }
+  ) => number {
     return order === 'desc'
       ? (a, b) => desc(a, b, orderBy)
       : (a, b) => -desc(a, b, orderBy);

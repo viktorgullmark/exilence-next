@@ -1,15 +1,14 @@
-import { Box, Grid, Typography } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Box, Typography } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { gridSpacing } from '../../assets/themes/exilence-theme';
-import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
+import useStyles from './SettingsTabs.styles';
+import SnapshotSettingsContainer from './snapshot-settings/SnapshotSettingsContainer';
+import UiSettingsContainer from './ui-settings/UiSettingsContainer';
 
 function a11yProps(index: any) {
   return {
@@ -17,28 +16,6 @@ function a11yProps(index: any) {
     'aria-controls': `vertical-tabpanel-${index}`
   };
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    height: `calc(100vh - ${toolbarHeight}px - ${resizeHandleContainerHeight}px - ${innerToolbarHeight}px - ${theme.spacing(
-      gridSpacing * 2
-    )}px)`
-  },
-  tabs: {
-    minWidth: 160,
-    borderRight: `1px solid ${theme.palette.divider}`
-  },
-  tab: {
-    minWidth: 'auto'
-  },
-  indicator: {
-    backgroundColor: theme.palette.primary.light
-  },
-  subSection: {}
-}));
 
 const SettingsTabs: React.FC = () => {
   const classes = useStyles();
@@ -61,15 +38,40 @@ const SettingsTabs: React.FC = () => {
           indicator: classes.indicator
         }}
       >
-        <Tab label={t('title.net_worth_settings')} className={classes.tab} {...a11yProps(0)} />
+        <Tab
+          label={t('title.net_worth_settings')}
+          className={classes.tab}
+          {...a11yProps(0)}
+        />
+        <Tab
+          label={t('title.ui_settings')}
+          className={classes.tab}
+          {...a11yProps(1)}
+        />
       </Tabs>
       <SettingsTab value={value} index={0}>
+        <Box className={classes.subSection}>
+          <Typography variant="overline">
+            {t('title.snapshot_settings')}
+          </Typography>
+          <Box my={2}>
+            <SnapshotSettingsContainer />
+          </Box>
+        </Box>
         <Box className={classes.subSection}>
           <Typography variant="overline">
             {t('title.pricing_settings')}
           </Typography>
           <Box my={2}>
             <NetWorthSettingsContainer />
+          </Box>
+        </Box>
+      </SettingsTab>
+      <SettingsTab value={value} index={1}>
+        <Box className={classes.subSection}>
+          <Typography variant="overline">{t('title.general')}</Typography>
+          <Box my={2}>
+            <UiSettingsContainer />
           </Box>
         </Box>
       </SettingsTab>

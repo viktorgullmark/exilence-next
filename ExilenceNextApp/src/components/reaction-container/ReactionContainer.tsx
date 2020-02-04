@@ -1,28 +1,22 @@
+import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { reaction } from 'mobx';
-import { UiStateStore } from '../../store/uiStateStore';
-import { observer, inject } from 'mobx-react';
 import { useHistory, useLocation } from 'react-router';
+import { RouteStore } from '../../store/routeStore';
 
 interface Props {
-  uiStateStore?: UiStateStore;
+  routeStore?: RouteStore;
 }
 
-const ReactionContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
+const ReactionContainer: React.FC<Props> = ({ routeStore }: Props) => {
   const history = useHistory();
   const location = useLocation();
 
-  reaction(
-    () => uiStateStore!.validated,
-    (_data, reaction) => {
-      if (!_data && location.pathname !== '/login') {
-        history.push('/login');
-      }
-      reaction.dispose();
-    }
-  );
+  const path = routeStore!.redirectedTo;
+  if (path && path !== location.pathname) {
+    history.push(path);
+  }
 
   return null;
 };
 
-export default inject('uiStateStore')(observer(ReactionContainer));
+export default inject('routeStore')(observer(ReactionContainer));

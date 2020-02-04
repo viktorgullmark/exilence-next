@@ -1,42 +1,23 @@
-import React, { ReactNode, forwardRef } from 'react';
-import { Notification } from '../../../store/domains/notification';
 import {
-  ListItem,
-  makeStyles,
-  Theme,
-  ListItemAvatar,
   Avatar,
+  ListItem,
+  ListItemAvatar,
   ListItemText,
   Typography
 } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import WarningIcon from '@material-ui/icons/Warning';
-import { t } from 'i18next';
 import moment from 'moment';
+import React, { forwardRef, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Notification } from '../../../store/domains/notification';
+import useStyles from './NotificationListItem.styles';
 
 interface Props {
   children?: ReactNode;
   notification: Notification;
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  notification: {
-    paddingTop: 0,
-    paddingBottom: theme.spacing(0.25),
-    '&:focus': {
-      outline: 'none'
-    }
-  },
-  timestamp: {
-    display: 'inline',
-    fontSize: '12px'
-  },
-  notificationItem: {
-    fontSize: '14px'
-  }
-}));
 
 const NotificationListItem = forwardRef((props: Props, ref) => {
   const { notification } = props;
@@ -53,7 +34,6 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         return <InfoIcon />;
     }
   };
-
   return (
     <ListItem
       key={notification.uuid}
@@ -64,7 +44,10 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         <Avatar>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
-        classes={{ primary: classes.notificationItem }}
+        classes={{
+          primary: classes.notificationItem,
+          secondary: classes.secondary
+        }}
         primary={t(notification.title, { param: notification.translateParam })}
         secondary={
           <>
@@ -73,11 +56,17 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
               variant="body2"
               className={classes.timestamp}
             >
-              {moment(notification.timestamp)
-                .startOf('hour')
-                .fromNow()}
+              {moment(notification.timestamp).fromNow()}
             </Typography>
-            {/* temporary disabled {` — ${t(notification.description, { param: notification.translateParam })}`} */}
+            <Typography
+              component="span"
+              variant="body2"
+              className={classes.description}
+            >
+              {` — ${t(notification.description, {
+                param: notification.translateParam
+              })}`}
+            </Typography>
           </>
         }
       />

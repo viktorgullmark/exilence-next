@@ -1,64 +1,43 @@
 import {
-  Button,
-  CircularProgress,
-  TextField,
-  makeStyles,
-  Theme,
-  Box,
+  Grid,
   IconButton,
-  Typography,
   Link,
-  Grid
+  TextField,
+  Typography
 } from '@material-ui/core';
-import { Formik, FormikActions } from 'formik';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import HelpIcon from '@material-ui/icons/Help';
+import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import { Account } from '../../../store/domains/account';
 import { IAccount } from '../../../interfaces/account.interface';
-import HelpIcon from '@material-ui/icons/Help';
-import { WindowUtils } from '../../../utils/window.utils';
+import { Account } from '../../../store/domains/account';
+import { openLink } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
+import RequestButton from '../../request-button/RequestButton';
+import useStyles from './AccountValidationForm.styles';
+
+interface AccountFormValues {
+  sessionId: string;
+}
 
 interface AccountValidationFormProps {
   handleValidate: (account: IAccount) => void;
   styles: Record<string, string>;
   isSubmitting: boolean;
+  isInitiating: boolean;
   account: Account;
 }
 
-interface AccountFormValues {
-  accountName: string;
-  sessionId: string;
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-  buttonProgress: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  wrapper: {
-    position: 'relative',
-    width: '100%'
-  },
-  helperIcon: {
-    color: theme.palette.primary.light,
-    marginRight: theme.spacing(-0.5)
-  },
-  inlineLink: {
-    color: theme.palette.primary.light,
-    verticalAlign: 'baseline'
-  }
-}));
-
-const AccountValidationForm: React.FC<AccountValidationFormProps> = (
-  props: AccountValidationFormProps
-) => {
+const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
+  handleValidate,
+  styles,
+  isSubmitting,
+  isInitiating,
+  account
+}: AccountValidationFormProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -68,24 +47,19 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
     <>
       <Formik
         initialValues={{
-          accountName: props.account.name,
-          sessionId: props.account.sessionId
+          sessionId: account.sessionId
         }}
-        onSubmit={(
-          values: AccountFormValues,
-          { setSubmitting }: FormikActions<AccountFormValues>
-        ) => {
-          props.handleValidate({
-            name: values.accountName,
+        onSubmit={(values: AccountFormValues) => {
+          handleValidate({
             sessionId: values.sessionId
           });
         }}
         validationSchema={Yup.object().shape({
-          accountName: Yup.string().required('Required'),
           sessionId: Yup.string().required('Required')
         })}
       >
-        {formProps => {
+        {/* todo: refactor and use new formik */}
+        {(formProps: any) => {
           const {
             values,
             touched,
@@ -99,24 +73,6 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
           return (
             <form onSubmit={handleSubmit}>
               <div>
-                <TextField
-                  label={t('label.account_name')}
-                  name="accountName"
-                  value={values.accountName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  variant="outlined"
-                  helperText={
-                    errors.accountName &&
-                    touched.accountName &&
-                    errors.accountName
-                  }
-                  error={
-                    touched.accountName && errors.accountName !== undefined
-                  }
-                  margin="none"
-                  fullWidth
-                />
                 <TextField
                   label={t('label.session_id')}
                   name="sessionId"
@@ -139,7 +95,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                         className={classes.helperIcon}
                         edge="start"
                         size="small"
-                        onClick={e => WindowUtils.openLink(e)}
+                        onClick={e => openLink(e)}
                         href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
                       >
                         <HelpIcon />
@@ -148,7 +104,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                   }}
                 ></TextField>
               </div>
-              <div className={props.styles.loginFooter}>
+              <div className={styles.loginFooter}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2">
@@ -165,26 +121,22 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = (
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <div className={classes.wrapper}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        type="submit"
-                        disabled={
-                          !touched || props.isSubmitting || (dirty && !isValid)
-                        }
-                        endIcon={<ExitToApp />}
-                      >
-                        {t('action.authorize')}
-                      </Button>
-                      {props.isSubmitting && (
-                        <CircularProgress
-                          className={classes.buttonProgress}
-                          size={26}
-                        />
-                      )}
-                    </div>
+                    <RequestButton
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      type="submit"
+                      loading={isSubmitting || isInitiating}
+                      disabled={
+                        !touched ||
+                        isSubmitting ||
+                        isInitiating ||
+                        (dirty && !isValid)
+                      }
+                      endIcon={<ExitToApp />}
+                    >
+                      {t('action.authorize')}
+                    </RequestButton>
                   </Grid>
                 </Grid>
               </div>

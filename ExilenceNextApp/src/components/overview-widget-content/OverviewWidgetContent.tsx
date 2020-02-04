@@ -1,52 +1,106 @@
-import { Box, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles(theme => ({
-  iconWrapper: {},
-  title: {
-    fontSize: '0.8rem'
-  }
-}));
+import { formatValue } from '../../utils/snapshot.utils';
+import useStyles from './OverviewWidgetContent.styles';
 
 interface OverviewWidgetContentProps {
   value: number | string;
+  valueIsDiff?: boolean;
+  valueSuffix?: string;
+  secondaryValue?: number | string;
+  secondaryValueIsDiff?: boolean;
+  secondaryValueStyles?: React.CSSProperties;
   title: string;
   icon: JSX.Element;
   valueColor?: string;
   currency?: boolean;
   currencyShort?: string;
+  tooltip?: string;
 }
 
 const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
   icon,
   title,
   value,
+  valueIsDiff,
+  valueSuffix,
+  secondaryValue,
+  secondaryValueIsDiff,
+  secondaryValueStyles,
   valueColor,
   currency,
-  currencyShort
+  currencyShort,
+  tooltip = ''
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container className={classes.topContent}>
         <Grid item sm={3}>
           <div className={classes.iconWrapper}>{icon}</div>
         </Grid>
         <Grid item sm={9}>
-          <Typography variant="h5" align="right" style={{ color: valueColor }}>
-            {currency ? `${value} ${currencyShort}` : value}
-          </Typography>
+          <div className={classes.ellipsis}>
+            <Typography
+              variant="h6"
+              align="right"
+              style={{ color: valueColor }}
+            >
+              {currency
+                ? `${formatValue(value, currencyShort, valueIsDiff, true)}`
+                : value}
+              <span className={classes.valueSuffix}>{valueSuffix}</span>
+            </Typography>
+          </div>
         </Grid>
       </Grid>
       <Box mt={1}>
-        <Typography component="span" className={classes.title}>
-          {t(title)}
-        </Typography>
+        <Grid container spacing={1}>
+          <Grid item sm={6}>
+            <Typography component="span" style={{}} className={classes.title}>
+              {t(title)}
+            </Typography>
+          </Grid>
+          <Grid item sm={6}>
+            <Tooltip
+              title={tooltip}
+              classes={{ tooltip: classes.tooltip }}
+              placement="bottom-end"
+            >
+              <div className={classes.ellipsis}>
+                {secondaryValue && secondaryValueIsDiff ? (
+                  <Typography
+                    component="span"
+                    noWrap
+                    style={secondaryValueStyles}
+                    className={clsx(classes.secondary, {
+                      [classes.currencyChange]: currency,
+                      [classes.positiveChange]: secondaryValue > 0,
+                      [classes.negativeChange]: secondaryValue < 0
+                    })}
+                  >
+                    {formatValue(secondaryValue, currencyShort, true)}
+                  </Typography>
+                ) : (
+                  <Typography
+                    component="span"
+                    noWrap
+                    style={secondaryValueStyles}
+                    className={clsx(classes.secondary, {
+                      [classes.currencyChange]: currency
+                    })}
+                  >
+                    {secondaryValue !== 0 ? secondaryValue : ''}
+                  </Typography>
+                )}
+              </div>
+            </Tooltip>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

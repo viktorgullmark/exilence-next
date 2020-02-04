@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
+using Shared.Helpers;
 using Shared.Interfaces;
 using Shared.Models;
 using System;
@@ -26,11 +27,12 @@ namespace API.Services
 
         public async Task<ConnectionModel> AddConnection(ConnectionModel connectionModel, string accountName)
         {
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstAsync();
 
             var connection = _mapper.Map<Connection>(connectionModel);
 
             connection.Account = account;
+            connection.Created = DateTime.UtcNow;
 
             connection = _groupRepository.AddConnection(connection);
             await _groupRepository.SaveChangesAsync();
@@ -49,38 +51,79 @@ namespace API.Services
             return _mapper.Map<ConnectionModel>(connection);
         }
 
+        public async Task<bool> GroupExists(string groupName)
+        {
+            var group = await GetGroup(groupName);
+            if (group != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<GroupModel> GetGroup(string groupName)
         {
-            var group = await _groupRepository.GetGroup(groupName);
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName).FirstOrDefaultAsync();
             return _mapper.Map<GroupModel>(group);
         }
 
-        public async Task<GroupModel> JoinGroup(string connectionId, string groupName)
+        public async Task<GroupModel> GetGroupForConnection(string connectionId)
+        {
+            var group = await _groupRepository.GetGroups(group => group.Connections.Any(connection => connection.ConnectionId == connectionId))
+                .Include(grp => grp.Connections)
+                .ThenInclude(connection => connection.Account)
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<GroupModel>(group);
+        }
+
+        public async Task<GroupModel> JoinGroup(string connectionId, GroupModel groupModel)
         {
             var connection = await _groupRepository.GetConnection(connectionId);
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupModel.Name)
+                .Include(group => group.Connections)
+                .ThenInclude(connection => connection.Account)
+                .ThenInclude(account => account.Profiles)
+                .FirstOrDefaultAsync();
+
             if (group == null)
             {
+                var salt = Password.Salt();
+
                 group = new Group()
                 {
-                    Name = groupName,
+                    Name = groupModel.Name,
                     ClientId = Guid.NewGuid().ToString(),
-                    Connections = new List<Connection>() { connection }
+                    Connections = new List<Connection>() { connection },
+                    Created = DateTime.UtcNow,
+                    Salt = salt,
+                    Hash = Password.Hash(salt, groupModel.Password)
                 };
                 _groupRepository.AddGroup(group);
             }
             else
             {
-                group.Connections.Add(connection);
+                bool verified = Password.Verify(groupModel.Password, group.Salt, group.Hash);
+                if (verified)
+                {
+                    group.Connections.Add(connection);
+                }
+                else
+                {
+                    throw new Exception("The password is incorrect");
+                }
             }
 
-            await _groupRepository.SaveChangesAsync();
+            await _groupRepository.SaveChangesAsync();            
             return _mapper.Map<GroupModel>(group);
         }
 
         public async Task<GroupModel> LeaveGroup(string connectionId, string groupName)
         {
-            var group = await _groupRepository.GetGroups(group => group.Name == groupName).Include(group => group.Connections).FirstOrDefaultAsync();
+            var group = await _groupRepository.GetGroups(group => group.Name == groupName)
+                .Include(group => group.Connections)
+                .ThenInclude(connection => connection.Account)
+                .FirstAsync();
             var connection = group.Connections.First(connection => connection.ConnectionId == connectionId);
             group.Connections.Remove(connection);
 

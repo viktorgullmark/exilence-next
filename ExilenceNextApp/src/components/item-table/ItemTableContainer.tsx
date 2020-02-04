@@ -1,25 +1,20 @@
+import { Box, Button, Grid, makeStyles, Theme } from '@material-ui/core';
+import WarningIcon from '@material-ui/icons/Warning';
 import { inject, observer } from 'mobx-react';
-import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
-import { UiStateStore } from '../../store/uiStateStore';
-import ItemTable from './ItemTable';
-import { AccountStore } from '../../store/accountStore';
-import ItemTableFilter from './item-table-filter/ItemTableFilter';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import {
-  Grid,
-  Box,
-  makeStyles,
-  Theme,
-  Button,
-  Typography
-} from '@material-ui/core';
-import { reaction } from 'mobx';
-import { ExportUtils } from '../../utils/export.utils';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { statusColors } from '../../assets/themes/exilence-theme';
+import { AccountStore } from '../../store/accountStore';
+import { SignalrStore } from '../../store/signalrStore';
+import { UiStateStore } from '../../store/uiStateStore';
+import { exportData } from '../../utils/export.utils';
+import ItemTableFilter from './item-table-filter/ItemTableFilter';
+import ItemTable, { Order } from './ItemTable';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
+  signalrStore?: SignalrStore;
   accountStore?: AccountStore;
 }
 
@@ -44,14 +39,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noItemPlaceholder: {
     color: theme.palette.primary.light
+  },
+  warningIcon: {
+    color: statusColors.warning,
+    marginLeft: theme.spacing(2)
   }
 }));
 
 const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   accountStore,
+  signalrStore,
   uiStateStore
 }: ItemTableContainerProps) => {
-  const { filteredItems } = accountStore!.getSelectedAccount.activeProfile;
+  const activeProfile = accountStore!.getSelectedAccount.activeProfile;
+  const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -83,6 +84,14 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     );
   };
 
+  const getItems = () => {
+    if (activeProfile) {
+      return activeGroup ? activeGroup.items : activeProfile.items;
+    } else {
+      return [];
+    }
+  };
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -92,40 +101,33 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item xs={2}>
-            <ItemTableFilter
-              array={filteredItems}
-              handleFilter={handleFilter}
-            />
+          <Grid item xs={4} md={3}>
+            <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
           </Grid>
           <Grid
             container
             item
-            xs={8}
+            xs={4}
+            md={6}
             className={classes.placeholder}
             direction="column"
             justify="space-between"
           >
-            {filteredItems.length === 0 &&
+            {getItems().length === 0 &&
               uiStateStore!.itemTableFilterText === '' && (
-                <Typography
-                  className={classes.noItemPlaceholder}
-                  align="center"
-                >
-                  {t('tables:label.item_table_placeholder')}
-                </Typography>
+                <WarningIcon
+                  titleAccess={t('label.no_snapshots_title')}
+                  className={classes.warningIcon}
+                />
               )}
           </Grid>
 
-          <Grid item xs={2} className={classes.actionArea}>
+          <Grid item xs={4} md={3} className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"
-              disabled={
-                accountStore!.getSelectedAccount.activeProfile.filteredItems
-                  .length === 0
-              }
-              onClick={() => ExportUtils.exportData(filteredItems)}
+              disabled={getItems().length === 0}
+              onClick={() => exportData(getItems())}
             >
               {t('label.net_worth_export')}
             </Button>
@@ -133,9 +135,15 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={filteredItems}
+        items={getItems()}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
+        order={uiStateStore!.itemTableOrder}
+        orderBy={uiStateStore!.itemTableOrderBy}
+        setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
+        setOrderBy={(col: keyof IPricedItem) =>
+          uiStateStore!.setItemTableOrderBy(col)
+        }
       />
     </>
   );
@@ -143,5 +151,6 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
 
 export default inject(
   'uiStateStore',
+  'signalrStore',
   'accountStore'
 )(observer(ItemTableContainer));
