@@ -1,23 +1,23 @@
 import {
   Chip,
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
   Theme,
   Typography,
-  useTheme,
-  MenuProps
+  useTheme
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, CSSProperties, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useLabelWidth from '../../hooks/use-label-width';
+import useOffset from '../../hooks/use-popover-offset';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
-import useLabelWidth from '../../hooks/use-label-width';
+import { useWindowSize } from '../../hooks/use-window-size';
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
@@ -49,16 +49,6 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   const theme = useTheme();
   const { t } = useTranslation(['tables']);
   const classes = useStyles();
-
-  const MenuProps: Partial<MenuProps> = {
-    PaperProps: {
-      style: {
-        maxHeight: `${ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP}px !important`,
-        width: 250
-      }
-    }
-  };
-
   const [touched, setTouched] = useState(false);
 
   const getStashTabName = (id: string) => {
@@ -73,9 +63,12 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
       : '';
   };
   const { labelWidth, ref } = useLabelWidth(0);
+  
+  const windowSize = useWindowSize();
+  const offsetProps = useOffset(windowSize);
 
   return (
-    <>
+    <div ref={offsetProps.ref}>
       <FormControl
         variant="outlined"
         className={classes.formControl}
@@ -112,7 +105,19 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
               ))}
             </div>
           )}
-          MenuProps={MenuProps}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250
+              }
+            },
+            anchorPosition: {
+              top: offsetProps.offset.top,
+              left: offsetProps.offset.left
+            },
+            anchorReference: 'anchorPosition'
+          }}
         >
           {stashTabs.length != 0 ? (
             stashTabs.map((stashTab: IStashTab) => (
@@ -131,7 +136,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           )}
         </Select>
       </FormControl>
-    </>
+    </div>
   );
 };
 
