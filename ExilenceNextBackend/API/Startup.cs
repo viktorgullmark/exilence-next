@@ -64,7 +64,7 @@ namespace API
                 o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
             }).AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
             {
-                options.Configuration.ChannelPrefix = "ExilenceSignalR";
+                options.Configuration.ChannelPrefix = "ExilenceNextSignalR";
                 options.Configuration.ConnectTimeout = 10000;
             }).AddMessagePackProtocol(options =>
             {
