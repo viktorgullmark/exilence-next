@@ -111,7 +111,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
-        <Grid item xs={6} md={3} lg={3}>
+        <Grid item xs={6} md={3} lg={2}>
           <Widget backgroundColor={cardColors.primary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
@@ -131,7 +131,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3}>
+        <Grid item xs={6} md={3} lg={2}>
           <Widget backgroundColor={cardColors.secondary}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.income : income()}
@@ -145,7 +145,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3}>
+        <Grid item xs={6} md={3} lg={2}>
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
               value={
@@ -166,25 +166,44 @@ const NetWorth: React.FC<NetWorthProps> = ({
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3}>
-          <Widget>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              height={1}
-            >
-              <a href="https://patreon.com/exilence" onClick={e => openLink(e)}>
-                <Box display="flex" alignItems="center" height={1}>
-                  <img className={classes.patreonLogo} src={PatreonLogo} />
+        <Grid item xs={6} md={3} lg={2}>
+          <Widget center>
+            <Grid container>
+              <Grid item xs={6}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  height="1"
+                >
+                  <a
+                    href="https://patreon.com/exilence"
+                    onClick={e => openLink(e)}
+                  >
+                    <Box display="flex" alignItems="center" height={1}>
+                      <img className={classes.patreonLogo} src={PatreonLogo} />
+                    </Box>
+                  </a>
                 </Box>
-              </a>
-              <a href="https://discord.gg/yxuBrPY" onClick={e => openLink(e)}>
-                <Box display="flex" alignItems="center" height={1}>
-                  <img className={classes.discordLogo} src={DiscordLogo} />
+              </Grid>
+              <Grid item xs={6}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  height="1"
+                >
+                  <a
+                    href="https://discord.gg/yxuBrPY"
+                    onClick={e => openLink(e)}
+                  >
+                    <Box display="flex" alignItems="center" height={1}>
+                      <img className={classes.discordLogo} src={DiscordLogo} />
+                    </Box>
+                  </a>
                 </Box>
-              </a>
-            </Box>
+              </Grid>
+            </Grid>
           </Widget>
         </Grid>
         <Grid item xs={12}>

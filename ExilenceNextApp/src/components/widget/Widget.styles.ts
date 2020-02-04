@@ -7,6 +7,10 @@ const useStyles = makeStyles(theme => ({
   },
   noPadding: {
     padding: 0
+  },
+  centered: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 

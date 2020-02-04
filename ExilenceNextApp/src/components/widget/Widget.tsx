@@ -10,6 +10,7 @@ interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
   textColor?: string;
   height?: number;
   compact?: boolean;
+  center?: boolean;
 }
 
 const Widget: React.FC<WidgetProps> = ({
@@ -17,13 +18,14 @@ const Widget: React.FC<WidgetProps> = ({
   backgroundColor,
   textColor,
   height = cardHeight,
-  compact
+  compact,
+  center
 }: WidgetProps) => {
   const classes = useStyles();
 
   return (
     <Paper
-      className={clsx(classes.paper, { [classes.noPadding]: compact })}
+      className={clsx(classes.paper, { [classes.noPadding]: compact, [classes.centered]: center })}
       style={{ background: backgroundColor, color: textColor, height: height }}
     >
       {children}
