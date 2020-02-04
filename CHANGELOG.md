@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added the ability to trigger manual snapshots while auto snapshotting is turned on
 - Minor style tweaks
 - Minor client optimizations
+##### Changed
+- Changed the input field styles in the profile dialog
 ##### Fixed
 - Fixed a bug where failed stash tab requests would trigger an infinite loop for init session
 - Fixed a bug where the stash tab dropdown position sometimes would change when selecting a stash tab
