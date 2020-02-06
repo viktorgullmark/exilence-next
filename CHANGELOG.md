@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.8] - XXXX-XX-XX
+##### Added
+- Minor style tweaks
+
 ## [0.2.7] - 2020-02-04
 ##### Added
 - Added the ability to trigger manual snapshots while auto snapshotting is turned on
