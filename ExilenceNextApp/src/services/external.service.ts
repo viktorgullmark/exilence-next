@@ -21,6 +21,7 @@ import {
   getLevel,
   getItemVariant
 } from '../utils/item.utils';
+import { rootStore } from '..';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
@@ -77,12 +78,12 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
   if (tabs.length === 0) {
     return throwError(new Error('no_stash_tabs_selected_for_profile'));
   }
-  // todo: reset fetched tabs count
+
   return forkJoin(
     tabs.map((tab: IStashTab) => {
       return getStashTab(account, league, tab.i).pipe(
         map((stash: AxiosResponse<IStash>) => {
-          // todo: increment fetched tabs count
+          rootStore.uiStateStore.incrementStatusMessageCount();
           const items = {
             pricedItems: stash.data.items.map((item: IItem) => {
               return {

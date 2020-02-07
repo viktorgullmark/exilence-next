@@ -15,7 +15,11 @@ const StatusMessage: React.FC<Props> = ({ statusMessage }: Props) => {
     <>
       {statusMessage && (
         <Typography variant="body2">
-          {t(`status:message.${statusMessage.message}`, { param: statusMessage?.translateParam })} ...
+          {t(`status:message.${statusMessage.message}`, { param: statusMessage?.translateParam })} {(statusMessage.currentCount && statusMessage.totalCount) && (
+            <>
+              {statusMessage.currentCount} / {statusMessage.totalCount}
+            </>
+          )} ...
         </Typography>
       )}
     </>
