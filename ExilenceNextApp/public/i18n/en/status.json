@@ -2,6 +2,8 @@
     "message": {
         "initializing_session": "Initializing session",
         "fetching_stash_tabs": "Fetching stash tabs for {{param}}",
-        "creating_default_profile": "Creating default profile: {{param}}"
+        "creating_default_profile": "Creating default profile: {{param}}",
+        "fetching_characters": "Fetching characters",
+        "validating_session": "Validating session"
     }
 }

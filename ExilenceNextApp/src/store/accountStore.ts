@@ -360,15 +360,18 @@ export class AccountStore {
       switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
       catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
     );
+    this.rootStore.uiStateStore.setStatusMessage('validating_session');
     fromStream(
       sessionId
         ? this.rootStore.uiStateStore.setSessIdCookie(sessionId).pipe(
             switchMap(() => {
+              this.rootStore.uiStateStore.setStatusMessage('fetching_characters'); 
               return request;
             })
           )
         : this.rootStore.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
+              this.rootStore.uiStateStore.setStatusMessage('fetching_characters'); 
               if (cookies && cookies.length > 0) {
                 this.sessionId = cookies[0].value;
               }
@@ -384,6 +387,7 @@ export class AccountStore {
       this.sessionId = sessionId;
     }
 
+    this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
       'validate_session',
       'success'
@@ -412,6 +416,7 @@ export class AccountStore {
       );
     }
 
+    this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
       'validate_session',
       'error',
