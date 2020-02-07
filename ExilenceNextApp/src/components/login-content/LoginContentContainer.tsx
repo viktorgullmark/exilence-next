@@ -21,8 +21,6 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   const history = useHistory();
   const location = useLocation();
 
-  uiStateStore!.setValidated(false);
-
   const handleValidate = (details: IAccount) => {
     if (uiStateStore!.validated) {
       accountStore!.loadAuthWindow();
