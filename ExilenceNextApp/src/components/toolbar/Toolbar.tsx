@@ -132,8 +132,13 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               className={classes.offlineIcon}
             />
           )}
-          {(isInitiating || changingProfile || isUpdatingPrices) && (
-            <Box ml={1} display="flex" alignItems="center" justifyContent="center">
+          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
+            <Box
+              ml={1}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
               <CircularProgress
                 className={classes.leftSpinner}
                 title={t('label.loading_title')}
@@ -268,11 +273,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     aria-label="snapshot"
                     className={classes.iconButton}
                   >
-                    {!isSnapshotting ? (
-                      <UpdateIcon fontSize="small" />
-                    ) : (
-                      <CircularProgress className={classes.spinner} size={20} />
-                    )}
+                    <UpdateIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>
