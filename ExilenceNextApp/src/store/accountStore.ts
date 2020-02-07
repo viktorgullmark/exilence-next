@@ -220,6 +220,7 @@ export class AccountStore {
 
   @action
   initSession(skipAuth?: boolean) {
+    this.rootStore.uiStateStore.setStatusMessage('initializing_session'); 
     this.rootStore.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
@@ -266,6 +267,7 @@ export class AccountStore {
                 of(account.accountLeagues).pipe(
                   concatMap(leagues => leagues),
                   concatMap(league => {
+                    this.rootStore.uiStateStore.setStatusMessage('fetching_stash_tabs', league.leagueId); 
                     return league.getStashTabs();
                   }),
                   switchMap(() => {
@@ -288,6 +290,7 @@ export class AccountStore {
                             .slice(0, 6)
                             .map(lst => lst.id);
                         });
+                        this.rootStore.uiStateStore.setStatusMessage('creating_default_profile', newProfile.name); 
                         return this.getSelectedAccount
                           .createProfileObservable(newProfile, () => {})
                           .pipe(
@@ -324,6 +327,7 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
+    this.rootStore.uiStateStore.resetStatusMessage(); 
     this.rootStore.notificationStore.createNotification(
       'init_session',
       'success'
@@ -336,6 +340,7 @@ export class AccountStore {
   initSessionFail(e: AxiosError | Error) {
     fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
+    this.rootStore.uiStateStore.resetStatusMessage(); 
     this.rootStore.notificationStore.createNotification(
       'init_session',
       'error',

@@ -75,7 +75,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.contrastText
   },
   leftSpinner: {
-    marginLeft: theme.spacing(1),
     color: theme.palette.primary.contrastText
   },
   badge: {
