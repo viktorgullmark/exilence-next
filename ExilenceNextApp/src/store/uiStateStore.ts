@@ -71,9 +71,7 @@ export class UiStateStore {
       totalCount: totalCount
     };
 
-    console.log('before', toJS(this.statusMessage));
     this.statusMessage = { ...statusMessage };
-    console.log('after', toJS(this.statusMessage));
   }
 
   @action
