@@ -22,7 +22,7 @@ const MinuteFormat = (props: any) => {
       suffix={` ${t('minutes')}`}
       isAllowed={values => {
         const { floatValue } = values;
-        return floatValue >= 3 && floatValue <= 1000;
+        return floatValue >= 2 && floatValue <= 1000;
       }}
     />
   );

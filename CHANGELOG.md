@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.2.8] - XXXX-XX-XX
 ##### Added
 - Minor style tweaks
+##### Changed
+- Changed the lower limit of the auto snapshot interval to 2 minutes
 
 ## [0.2.7] - 2020-02-04
 ##### Added

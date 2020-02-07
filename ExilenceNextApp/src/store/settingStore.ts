@@ -9,7 +9,7 @@ export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
   @persist @observable autoSnapshotting: boolean = false;
   @persist @observable priceTreshold: number = 0;
-  @persist @observable autoSnapshotInterval: number = 60 * 5 * 1000; // default to 5 minutes
+  @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
