@@ -18,12 +18,10 @@ interface ItemTableContainerProps {
   accountStore?: AccountStore;
 }
 
-export const itemTableFilterHeight = 48;
 export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {
-    height: itemTableFilterHeight
   },
   actionArea: {
     display: 'flex',

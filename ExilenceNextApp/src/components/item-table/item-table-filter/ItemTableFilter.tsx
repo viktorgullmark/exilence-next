@@ -38,6 +38,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
         return (
           <form>
             <TextField
+              variant="outlined"
               onChange={e => {
                 handleChange(e);
                 handleFilter(e);
