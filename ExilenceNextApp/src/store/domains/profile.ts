@@ -58,11 +58,7 @@ export class Profile {
     const league = account.accountLeagues.find(
       al => account.activeLeague && al.leagueId === account.activeLeague.id
     );
-    console.log('league', league);
-    console.log('stashtabslength', league?.stashtabs.length);
-    console.log('isNotUpdatingPrices', !rootStore.priceStore.isUpdatingPrices);
-    console.log('validated', rootStore.uiStateStore.validated);
-    console.log('initiated', rootStore.uiStateStore.initiated);
+
     return (
       league &&
       league.stashtabs.length > 0 &&
