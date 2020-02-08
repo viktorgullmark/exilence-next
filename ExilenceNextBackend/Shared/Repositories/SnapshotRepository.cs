@@ -39,7 +39,7 @@ namespace Shared.Repositories
             var pricedItems = new List<PricedItem>();
             var stashTabs = new List<Stashtab>();
 
-            using var transaction = _exilenceContext.Database.BeginTransaction();
+            using var transaction = await _exilenceContext.Database.BeginTransactionAsync();
 
             var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
             await _exilenceContext.BulkInsertAsync(snapshots, bulkConfig);
@@ -65,7 +65,7 @@ namespace Shared.Repositories
 
             await _exilenceContext.BulkInsertAsync(pricedItems);
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
 
         public async Task RemovePricedItems(string profileId)
