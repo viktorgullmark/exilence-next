@@ -29,7 +29,6 @@ namespace API.Hubs
         public async Task<SnapshotProfileModel> AddProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.AddProfile(AccountName, profileModel);
-            await Log($"Added profile with name: {profileModel.Name}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -37,20 +36,20 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddProfile", ConnectionId, profileModel);
             }
 
+            Log($"Added profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel;
         }
 
         public async Task<SnapshotProfileModel> EditProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.EditProfile(AccountName, profileModel);
-            await Log($"Updated profile with name: {profileModel.Name}");
+            Log($"Updated profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel;
         }
 
         public async Task<string> RemoveProfile(string profileId)
         {
             var profileModel = await _accountService.RemoveProfile(AccountName, profileId);
-            await Log($"Removed profile with name: {profileModel.Name}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -58,6 +57,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveProfile", ConnectionId, profileId);
             }
 
+            Log($"Removed profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel.ClientId;
         }
 
@@ -71,7 +71,6 @@ namespace API.Hubs
         {
             var profileModel = await _accountService.ChangeProfile(AccountName, profileId);
 
-            await Log($"Set profile with name: {profileModel.Name} to active");
              
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -79,6 +78,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
             }
 
+            Log($"Set profile with name: {profileModel.Name} to active in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel.ClientId;
         }
 

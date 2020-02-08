@@ -13,13 +13,8 @@ namespace Shared.Interfaces
         Task<bool> SnapshotExists(string clientId);
         IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate);
         IQueryable<Stashtab> GetStashtabs(Expression<Func<Stashtab, bool>> predicate);
-
         Snapshot RemoveSnapshot(Snapshot snapshot);
         Stashtab RemoveStashtab(Stashtab stashtab);
-
-        Task AddSnapshots(List<Snapshot> pricedItems);
-        Task RemovePricedItems(string profileId);
-
         Task SaveChangesAsync();
 
 

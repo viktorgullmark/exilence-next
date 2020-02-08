@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace API.Hubs
         private string AccountName => Context.User.Identity.Name;
         private bool IsAdmin => Context.User.IsInRole("Admin");
         private bool IsPremium => Context.User.IsInRole("Premium");
+        private Stopwatch _timer;
 
 
         public BaseHub(
@@ -48,11 +50,12 @@ namespace API.Hubs
             _snapshotService = snapshotService;
             _accountService = accountService;
             _groupService = groupService;
+
+            _timer = Stopwatch.StartNew();
         }
 
         public override async Task OnConnectedAsync()
         {
-            await Log($"ConnectionId: {ConnectionId} connected");
 
             //Close already existing connection for the same account
             var existingConnection = await _accountService.GetConnection(AccountName);
@@ -68,11 +71,11 @@ namespace API.Hubs
             };
             await _groupService.AddConnection(connection, AccountName);
             await base.OnConnectedAsync();
+            Log($"ConnectionId: {ConnectionId} connected in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Log($"ConnectionId: {ConnectionId} disconnected");
             var groupModel = await _groupService.GetGroupForConnection(ConnectionId);
             if (groupModel != null)
             {
@@ -80,51 +83,20 @@ namespace API.Hubs
             }
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
+            Log($"ConnectionId: {ConnectionId} disconnected in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
         public async Task CloseConnection(string connectionId)
         {
-            await Log($"Telling connectionId: {connectionId} to close");
             await Clients.Client(connectionId).SendAsync("OnCloseConnection");
+            Log($"Told connectionId: {connectionId} to close");
         }
 
-        private async Task Log(string message)
+        private void Log(string message)
         {
-            var time = String.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.UtcNow);
             message = $"[Account: {AccountName}] -  " + message; // Add account name
-            await Clients.Group("logger").SendAsync("Debug", $"[{time}] {message}");
             _logger.LogDebug(message);
         }
-
-
-        // EXAMPLE OF HOW TO RECIVE A STREAM
-        //public async Task UploadStream(IAsyncEnumerable<string> stream)
-        //{
-        //    await foreach (var item in stream)
-        //    {
-        //        Console.WriteLine(item);
-        //    }
-        //}
-
-        // EXAMPLE OF HOW TO SEND A STREAM
-        //public async IAsyncEnumerable<int> DownloadSnapshots(int count, int delay, [EnumeratorCancellation] CancellationToken cancellationToken)
-        //{
-        //    //Can be something else then ints
-        //    var listOfSnapshots = Enumerable.Range(0, count).AsQueryable();
-
-        //    foreach (var snapshot in listOfSnapshots)
-        //    {
-        //        // Check the cancellation token regularly so that the server will stop
-        //        // producing items if the client disconnects.
-        //        cancellationToken.ThrowIfCancellationRequested();
-
-        //        yield return snapshot;
-
-        //        // Use the cancellationToken in other APIs that accept cancellation
-        //        // tokens so the cancellation can flow down to them.
-        //        await Task.Delay(delay, cancellationToken);
-        //    }
-        //}
 
 
     }
