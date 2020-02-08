@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
@@ -10,6 +10,7 @@ import { Notification } from './domains/notification';
 import { Order } from '../components/item-table/ItemTable';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
+import { IStatusMessage } from '../interfaces/status-message.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -45,8 +46,40 @@ export class UiStateStore {
   @observable profilesLoaded: boolean = false;
   @observable changingProfile: boolean = false;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
+  @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
   @persist @observable itemTableOrderBy: keyof IPricedItem = 'total';
+
+  constructor(private rootStore: RootStore) {}
+
+  @action
+  resetStatusMessage() {
+    this.statusMessage = undefined;
+  }
+
+  @action
+  setStatusMessage(
+    message: string,
+    translateParam?: string | number,
+    currentCount?: number,
+    totalCount?: number
+  ) {
+    const statusMessage = {
+      message: message,
+      translateParam: translateParam,
+      currentCount: currentCount,
+      totalCount: totalCount
+    };
+
+    this.statusMessage = { ...statusMessage };
+  }
+
+  @action
+  incrementStatusMessageCount() {
+    if (this.statusMessage?.currentCount) {
+      this.statusMessage.currentCount++;
+    }
+  }
 
   @action
   setTimeSinceLastSnapshotLabel(label: string | undefined) {
@@ -56,14 +89,12 @@ export class UiStateStore {
   @action
   setItemTableOrder(order: Order) {
     this.itemTableOrder = order;
-  } 
+  }
 
   @action
   setItemTableOrderBy(orderBy: keyof IPricedItem) {
     this.itemTableOrderBy = orderBy;
   }
-
-  constructor(private rootStore: RootStore) {}
 
   @action
   setChangingProfile(changing: boolean) {

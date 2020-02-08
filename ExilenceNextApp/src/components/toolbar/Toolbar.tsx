@@ -5,7 +5,8 @@ import {
   Grid,
   MenuItem,
   Select,
-  Tooltip
+  Tooltip,
+  Box
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
@@ -36,6 +37,7 @@ import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
 import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
+import StatusMessageContainer from '../status-message/StatusMessageContainer';
 
 export const innerToolbarHeight = 50;
 
@@ -130,13 +132,23 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               className={classes.offlineIcon}
             />
           )}
-          {(isInitiating || changingProfile || isUpdatingPrices) && (
-            <CircularProgress
-              title={t('label.loading_title')}
-              className={classes.leftSpinner}
-              size={20}
-            />
+          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
+            <Box
+              ml={1}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <CircularProgress
+                className={classes.leftSpinner}
+                title={t('label.loading_title')}
+                size={20}
+              />
+            </Box>
           )}
+          <Box ml={2} display="flex" whiteSpace="nowrap">
+            <StatusMessageContainer />
+          </Box>
           <Grid
             container
             alignItems="center"
@@ -261,11 +273,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     aria-label="snapshot"
                     className={classes.iconButton}
                   >
-                    {!isSnapshotting ? (
-                      <UpdateIcon fontSize="small" />
-                    ) : (
-                      <CircularProgress className={classes.spinner} size={20} />
-                    )}
+                    <UpdateIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>

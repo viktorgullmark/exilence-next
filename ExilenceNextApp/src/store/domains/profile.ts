@@ -58,11 +58,7 @@ export class Profile {
     const league = account.accountLeagues.find(
       al => account.activeLeague && al.leagueId === account.activeLeague.id
     );
-    console.log('league', league);
-    console.log('stashtabslength', league?.stashtabs.length);
-    console.log('isNotUpdatingPrices', !rootStore.priceStore.isUpdatingPrices);
-    console.log('validated', rootStore.uiStateStore.validated);
-    console.log('initiated', rootStore.uiStateStore.initiated);
+
     return (
       league &&
       league.stashtabs.length > 0 &&
@@ -229,6 +225,7 @@ export class Profile {
   }
 
   @action snapshotSuccess() {
+    rootStore.uiStateStore.resetStatusMessage();
     rootStore.notificationStore.createNotification('snapshot', 'success');
     if (rootStore.settingStore.autoSnapshotting) {
       rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
@@ -239,6 +236,7 @@ export class Profile {
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
+    rootStore.uiStateStore.resetStatusMessage();
     rootStore.notificationStore.createNotification('snapshot', 'error', true, e);
     rootStore.uiStateStore!.setIsSnapshotting(false);
   }
@@ -262,6 +260,8 @@ export class Profile {
     const selectedStashTabs = accountLeague.stashtabs.filter(
       st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
     );
+ 
+    rootStore.uiStateStore.setStatusMessage('fetching_stash_tab', undefined, 1, selectedStashTabs.length);
 
     fromStream(
       externalService
@@ -315,6 +315,7 @@ export class Profile {
 
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
+    rootStore.uiStateStore.setStatusMessage('pricing_items');
     const activePriceLeague =
       rootStore.accountStore.getSelectedAccount.activePriceLeague;
 
@@ -393,6 +394,7 @@ export class Profile {
 
   @action
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
+    rootStore.uiStateStore.setStatusMessage('saving_snapshot');
     const snapshot: ISnapshot = {
       stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
     };

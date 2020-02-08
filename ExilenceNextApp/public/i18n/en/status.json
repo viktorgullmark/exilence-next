@@ -1,0 +1,12 @@
+{
+    "message": {
+        "initializing_session": "Initializing session",
+        "fetching_stash_tabs": "Fetching stash tabs for {{param}}",
+        "creating_default_profile": "Creating default profile: {{param}}",
+        "fetching_characters": "Fetching characters",
+        "validating_session": "Validating session",
+        "fetching_stash_tab": "Fetching stash tab",
+        "pricing_items": "Pricing items",
+        "saving_snapshot": "Saving snapshot"
+    }
+}
