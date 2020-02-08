@@ -19,6 +19,8 @@ namespace Shared.Entities
         public Role Role { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
+        public string Version { get; set; }
+        public DateTime LastLogin { get; set; }
         public DateTime Created { get; set; }
 
         public Account()

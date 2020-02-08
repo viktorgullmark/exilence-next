@@ -45,6 +45,14 @@ namespace API.Services
             return accountModel;
         }
 
+        public async Task UpdateVersionAndLastSeen(string accountName, string version)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
+            account.Version = version;
+            account.LastLogin = DateTime.UtcNow;
+            await _accountRepository.SaveChangesAsync();
+        }
+
         public async Task<AccountModel> EditAccount(AccountModel accountModel)
         {
             var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).Include(account => account.Profiles).FirstOrDefaultAsync();

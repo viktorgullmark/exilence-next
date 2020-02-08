@@ -59,6 +59,13 @@ namespace API.Controllers
             {
                 account = await _accountService.AddAccount(accountModel);
             }
+            else
+            {
+                var userAgent = Request.Headers["User-Agent"].ToString();
+                var version = MiscHelper.VersionFromUserAgent(userAgent);
+                await _accountService.UpdateVersionAndLastSeen(account.Name, version);
+
+            }
 
             var token = AuthHelper.GenerateToken(_secret, account);
 
