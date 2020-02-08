@@ -15,6 +15,9 @@ namespace Shared.Interfaces
         IQueryable<Stashtab> GetStashtabs(Expression<Func<Stashtab, bool>> predicate);
         Snapshot RemoveSnapshot(Snapshot snapshot);
         Stashtab RemoveStashtab(Stashtab stashtab);
+
+        Task AddSnapshots(List<Snapshot> snapshots);
+        Task RemovePricedItems(string profileId);
         Task SaveChangesAsync();
 
 
