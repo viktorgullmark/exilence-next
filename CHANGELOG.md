@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.8] - XXXX-XX-XX
 ##### Added
+- Added detailed status messages to the toolbar
 - Minor style tweaks
 ##### Changed
 - Changed the lower limit of the auto snapshot interval to 2 minutes
