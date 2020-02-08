@@ -40,24 +40,17 @@ namespace API.Services
                 .FirstOrDefaultAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
-
+        
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
-
-            await _snapshotRepository.RemovePricedItems(profileClientId);
-
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId)
-                .Include(profile => profile.Snapshots)
-                .AsNoTracking()
-                .FirstAsync();
-
-            snapshot.ProfileId = profile.Id;
-
-            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
-
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
+            profile.Snapshots.Clear();
+            profile.Snapshots.Add(snapshot);
+            await _snapshotRepository.SaveChangesAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
+
         public async Task RemoveSnapshot(string snapshotClientId)
         {
             var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Shared.Entities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using EFCore.BulkExtensions;
 
 namespace Shared.Repositories
 {
@@ -33,51 +32,7 @@ namespace Shared.Repositories
         {
             return _exilenceContext.StashTabs.Where(predicate);
         }
-
-        public async Task AddSnapshots(List<Snapshot> snapshots)
-        {
-            var pricedItems = new List<PricedItem>();
-            var stashTabs = new List<Stashtab>();
-
-            using var transaction = await _exilenceContext.Database.BeginTransactionAsync();
-
-            var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
-            await _exilenceContext.BulkInsertAsync(snapshots, bulkConfig);
-
-            foreach (var snapshot in snapshots)
-            {
-                foreach (var stashtab in snapshot.StashTabs)
-                {
-                    stashtab.SnapshotId = snapshot.Id;
-                }
-                stashTabs.AddRange(snapshot.StashTabs);
-            }
-            await _exilenceContext.BulkInsertAsync(stashTabs, bulkConfig);
-
-            foreach (var stashtab in stashTabs)
-            {
-                foreach (var pricedItem in stashtab.PricedItems)
-                {
-                    pricedItem.StashtabId = stashtab.Id;
-                }
-                pricedItems.AddRange(stashtab.PricedItems);
-            }
-
-            await _exilenceContext.BulkInsertAsync(pricedItems);
-
-            await transaction.CommitAsync();
-        }
-
-        public async Task RemovePricedItems(string profileId)
-        {
-            await _exilenceContext.PricedItems.Where(pricedItems => pricedItems.Stashtab.Snapshot.Profile.ClientId == profileId).BatchDeleteAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _exilenceContext.SaveChangesAsync();
-        }
-
+        
         public Snapshot RemoveSnapshot(Snapshot snapshot)
         {
             _exilenceContext.Snapshots.Remove(snapshot);
@@ -88,6 +43,11 @@ namespace Shared.Repositories
         {
             _exilenceContext.StashTabs.Remove(stashtab);
             return stashtab;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _exilenceContext.SaveChangesAsync();
         }
     }
 }

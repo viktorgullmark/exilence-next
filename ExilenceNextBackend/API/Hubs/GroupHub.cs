@@ -33,7 +33,7 @@ namespace API.Hubs
             await Clients.Caller.SendAsync("OnGroupEntered", groupModel);
             await Clients.OthersInGroup(groupModel.Name).SendAsync("OnJoinGroup", connection);
 
-            await Log($"Joined group: {groupModel.Name}");
+            Log($"Joined group: {groupModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
         public async Task<string> LeaveGroup(string groupName)
@@ -45,23 +45,8 @@ namespace API.Hubs
 
             await Clients.Caller.SendAsync("OnGroupLeft");
             await Clients.Group(groupModel.Name).SendAsync("OnLeaveGroup", connection);
-            await Log($"Left group: {groupModel.Name}");
+            Log($"Left group: {groupModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return groupModel.Name;
         }
-
-        public async Task<GroupModel> AddLogger(GroupModel groupModel)
-        {
-            if (groupModel.Password == _loggerPassword)
-            {
-                var groupName = "logger";
-                groupModel = await _groupService.JoinGroup(ConnectionId, groupModel);
-                await Groups.AddToGroupAsync(ConnectionId, groupName);
-                await Log($"Joined logger group.");
-                return groupModel;
-            }
-            return null;
-        }
-
-
     }
 }

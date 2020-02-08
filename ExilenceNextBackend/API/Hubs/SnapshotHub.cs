@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using API.Helpers;
+using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Shared.Entities;
@@ -6,6 +7,7 @@ using Shared.Models;
 using Shared.TemporaryModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -19,7 +21,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
             var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
-            await Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
+            Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
 
@@ -29,14 +31,13 @@ namespace API.Hubs
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
             var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
 
-            await Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos.");
+            Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModelWithItems;
         }
 
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
             snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
-            await Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos.");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -44,13 +45,13 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
+            Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
 
         public async Task<string> RemoveSnapshot(string snapshotId)
         {
             await _snapshotService.RemoveSnapshot(snapshotId);
-            await Log($"Removed snapshot with ClientId: {snapshotId}.");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -58,25 +59,25 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
             }
 
+            Log($"Removed snapshot with ClientId: {snapshotId} in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotId;
         }
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
             await _snapshotService.RemoveAllSnapshots(profileClientId);
-            await Log($"Removed snapshot for ProfileId: {profileClientId}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
             {
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
             }
+            Log($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
         
         public async Task<StashtabModel> AddPricedItems(UpdatePricedItemsModel updateModel)
         {
             var stashTabModel = await _snapshotService.AddPricedItems(updateModel.StashTabId, updateModel.PricedItems);
-            await Log($"Added {updateModel.PricedItems.Count} pricedItems to StashTabId: {updateModel.StashTabId}");
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -85,6 +86,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
             }
 
+            Log($"Added {updateModel.PricedItems.Count} pricedItems to StashTabId: {updateModel.StashTabId} in " + _timer.ElapsedMilliseconds + " ms.");
             return stashTabModel;
         }
 
