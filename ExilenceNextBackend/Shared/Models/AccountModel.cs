@@ -27,5 +27,7 @@ namespace Shared.Models
         public List<CharacterModel> Characters { get; set; }
         [Key("profiles")]
         public List<SnapshotProfileModel> Profiles { get; set; }
+        [IgnoreMember]
+        public string Version { get; set; }
     }
 }

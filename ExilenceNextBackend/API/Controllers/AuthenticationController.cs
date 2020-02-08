@@ -54,6 +54,10 @@ namespace API.Controllers
             }
 
             var account = await _accountService.GetAccount(accountModel.Name);
+            var userAgent = Request.Headers["User-Agent"].ToString();
+            var version = MiscHelper.VersionFromUserAgent(userAgent);
+
+            accountModel.Version = version;
 
             if (account == null)
             {
@@ -61,9 +65,7 @@ namespace API.Controllers
             }
             else
             {
-                var userAgent = Request.Headers["User-Agent"].ToString();
-                var version = MiscHelper.VersionFromUserAgent(userAgent);
-                await _accountService.UpdateVersionAndLastSeen(account.Name, version);
+                await _accountService.EditAccount(accountModel);
 
             }
 

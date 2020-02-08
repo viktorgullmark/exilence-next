@@ -11,7 +11,6 @@ namespace API.Interfaces
         Task<ConnectionModel> GetConnection(string accountName);
         Task<AccountModel> GetAccount(string accountName);
         Task<AccountModel> AddAccount(AccountModel accountModel);
-        Task UpdateVersionAndLastSeen(string accountName, string version);
         Task<AccountModel> EditAccount(AccountModel accountModel);
         Task<AccountModel> RemoveAccount(string accountName);
         Task<SnapshotProfileModel> GetProfile(string profileId);

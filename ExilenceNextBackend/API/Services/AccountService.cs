@@ -40,47 +40,20 @@ namespace API.Services
         {
             var account = _mapper.Map<Account>(accountModel);
             account = _accountRepository.AddAccount(account);
+            account.LastLogin = DateTime.UtcNow;
             await _accountRepository.SaveChangesAsync();
             accountModel = _mapper.Map<AccountModel>(account);
             return accountModel;
         }
 
-        public async Task UpdateVersionAndLastSeen(string accountName, string version)
-        {
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).FirstOrDefaultAsync();
-            account.Version = version;
-            account.LastLogin = DateTime.UtcNow;
-            await _accountRepository.SaveChangesAsync();
-        }
-
         public async Task<AccountModel> EditAccount(AccountModel accountModel)
         {
-            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).Include(account => account.Profiles).FirstOrDefaultAsync();
-
-            if (account == null)
-                throw new Exception("Can't find account");
-
-            _mapper.Map<AccountModel, Account>(accountModel, account);
-
-            if (accountModel.Profiles != null) //Logger account dosen't have any profiles
-            {
-                foreach (var profileModel in accountModel.Profiles.Where(profile => profile.Name != "Profile 1")) //Never add default on edit (fix for multi client use)
-                {
-                    var profile = account.Profiles.FirstOrDefault(profile => profile.ClientId == profileModel.ClientId);
-                    if (profile != null)
-                    {
-                        _mapper.Map<SnapshotProfileModel, SnapshotProfile>(profileModel, profile);
-                    }
-                    else
-                    {
-                        var newProfile = _mapper.Map<SnapshotProfile>(profileModel);
-                        account.Profiles.Add(newProfile);
-                    }
-                }
-            }
-
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountModel.Name).FirstOrDefaultAsync();
+            _mapper.Map(accountModel, account);
+            account.LastLogin = DateTime.UtcNow;
             await _accountRepository.SaveChangesAsync();
-            return _mapper.Map<AccountModel>(account);
+
+            return accountModel = _mapper.Map<AccountModel>(account);
         }
 
         public async Task<AccountModel> RemoveAccount(string accountName)
