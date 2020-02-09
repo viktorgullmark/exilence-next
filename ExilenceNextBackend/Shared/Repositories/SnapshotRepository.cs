@@ -89,6 +89,11 @@ namespace Shared.Repositories
             await _exilenceContext.PricedItems.Where(pricedItems => pricedItems.Stashtab.Snapshot.Profile.ClientId == profileId).BatchDeleteAsync();
         }
 
+        public async Task RemoveAllSnapshots(string profileId)
+        {
+            await _exilenceContext.Snapshots.Where(snapshot => snapshot.Profile.ClientId == profileId).BatchDeleteAsync();
+        }
+
         public async Task SaveChangesAsync()
         {
             await _exilenceContext.SaveChangesAsync();

@@ -67,9 +67,7 @@ namespace API.Services
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
-            profile.Snapshots.Clear();
-            await _snapshotRepository.SaveChangesAsync();
+            await _snapshotRepository.RemoveAllSnapshots(profileClientId);
         }
         #endregion
 
