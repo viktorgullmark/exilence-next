@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
 using Shared.Interfaces;
 using Shared.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +45,7 @@ namespace API.Services
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
             await _snapshotRepository.RemovePricedItems(profileClientId);
+
             var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId)
                 .Include(profile => profile.Snapshots)
                 .AsNoTracking()

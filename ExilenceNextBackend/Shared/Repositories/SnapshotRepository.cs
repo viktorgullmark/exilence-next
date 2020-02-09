@@ -51,33 +51,37 @@ namespace Shared.Repositories
             var pricedItems = new List<PricedItem>();
             var stashTabs = new List<Stashtab>();
 
-            using var transaction = await _exilenceContext.Database.BeginTransactionAsync();
-
             var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
-            await _exilenceContext.BulkInsertAsync(snapshots, bulkConfig);
 
-            foreach (var snapshot in snapshots)
+            try
             {
-                foreach (var stashtab in snapshot.StashTabs)
+                using (var transaction = await _exilenceContext.Database.BeginTransactionAsync())
                 {
-                    stashtab.SnapshotId = snapshot.Id;
-                }
-                stashTabs.AddRange(snapshot.StashTabs);
-            }
-            await _exilenceContext.BulkInsertAsync(stashTabs, bulkConfig);
+                    await _exilenceContext.BulkInsertAsync(snapshots, bulkConfig);
 
-            foreach (var stashtab in stashTabs)
+                    foreach (var snapshot in snapshots){
+                        foreach (var stashtab in snapshot.StashTabs){
+                            stashtab.SnapshotId = snapshot.Id;
+                        }
+                        stashTabs.AddRange(snapshot.StashTabs);
+                    }
+                    await _exilenceContext.BulkInsertAsync(stashTabs, bulkConfig);
+
+                    foreach (var stashtab in stashTabs){
+                        foreach (var pricedItem in stashtab.PricedItems){
+                            pricedItem.StashtabId = stashtab.Id;
+                        }
+                        pricedItems.AddRange(stashtab.PricedItems);
+                    }
+                    await _exilenceContext.BulkInsertAsync(pricedItems);
+
+                    await transaction.CommitAsync();
+                }
+            }
+            catch (Exception e)
             {
-                foreach (var pricedItem in stashtab.PricedItems)
-                {
-                    pricedItem.StashtabId = stashtab.Id;
-                }
-                pricedItems.AddRange(stashtab.PricedItems);
+                throw e;
             }
-
-            await _exilenceContext.BulkInsertAsync(pricedItems);
-
-            await transaction.CommitAsync();
         }
 
         public async Task RemovePricedItems(string profileId)
