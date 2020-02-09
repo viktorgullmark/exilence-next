@@ -10,7 +10,6 @@ namespace API.Interfaces
     {
         Task<SnapshotModel> GetSnapshot(string snapshotId);
         Task<SnapshotModel> GetSnapshotWithItems(string snapshotClientId);
-        //Task<SnapshotModel> AddSnapshotUsingBulk(string profileId, SnapshotModel snapshotModel);
         Task<SnapshotModel> AddSnapshot(string profileId, SnapshotModel snapshotModel);
         Task RemoveSnapshot(string snapshotId);
         Task RemoveAllSnapshots(string profileClientId);

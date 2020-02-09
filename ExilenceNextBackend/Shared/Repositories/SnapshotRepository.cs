@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Shared.Entities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using EFCore.BulkExtensions;
 
 namespace Shared.Repositories
 {
@@ -43,6 +44,54 @@ namespace Shared.Repositories
         {
             _exilenceContext.StashTabs.Remove(stashtab);
             return stashtab;
+        }
+
+        public async Task AddSnapshots(List<Snapshot> snapshots)
+        {
+            var pricedItems = new List<PricedItem>();
+            var stashTabs = new List<Stashtab>();
+
+            var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
+
+            try
+            {
+                using (var transaction = await _exilenceContext.Database.BeginTransactionAsync())
+                {
+                    await _exilenceContext.BulkInsertAsync(snapshots, bulkConfig);
+
+                    foreach (var snapshot in snapshots){
+                        foreach (var stashtab in snapshot.StashTabs){
+                            stashtab.SnapshotId = snapshot.Id;
+                        }
+                        stashTabs.AddRange(snapshot.StashTabs);
+                    }
+                    await _exilenceContext.BulkInsertAsync(stashTabs, bulkConfig);
+
+                    foreach (var stashtab in stashTabs){
+                        foreach (var pricedItem in stashtab.PricedItems){
+                            pricedItem.StashtabId = stashtab.Id;
+                        }
+                        pricedItems.AddRange(stashtab.PricedItems);
+                    }
+                    await _exilenceContext.BulkInsertAsync(pricedItems);
+
+                    await transaction.CommitAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task RemovePricedItems(string profileId)
+        {
+            await _exilenceContext.PricedItems.Where(pricedItems => pricedItems.Stashtab.Snapshot.Profile.ClientId == profileId).BatchDeleteAsync();
+        }
+
+        public async Task RemoveAllSnapshots(string profileId)
+        {
+            await _exilenceContext.Snapshots.Where(snapshot => snapshot.Profile.ClientId == profileId).BatchDeleteAsync();
         }
 
         public async Task SaveChangesAsync()

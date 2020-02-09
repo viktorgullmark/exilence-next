@@ -1,16 +1,10 @@
-﻿using API.Helpers;
-using MessagePack;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Shared.Entities;
+﻿using Microsoft.AspNetCore.SignalR;
+using Polly;
+using Polly.Contrib.WaitAndRetry;
 using Shared.Models;
 using Shared.TemporaryModels;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -37,7 +31,12 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
-            snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
+            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
+            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
+                Log($"Add snapshot failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
+            });
+
+            snapshotModel = await retryPolicy.ExecuteAsync(() => _snapshotService.AddSnapshot(profileId, snapshotModel));
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -65,7 +64,13 @@ namespace API.Hubs
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-            await _snapshotService.RemoveAllSnapshots(profileClientId);
+
+            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
+            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
+                Log($"Remove all snapshots failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
+            });
+
+            await retryPolicy.ExecuteAsync(() => _snapshotService.RemoveAllSnapshots(profileClientId));
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)

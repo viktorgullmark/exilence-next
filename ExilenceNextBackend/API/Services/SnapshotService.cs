@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
 using Shared.Interfaces;
 using Shared.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,10 +43,18 @@ namespace API.Services
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
-            profile.Snapshots.Clear();
-            profile.Snapshots.Add(snapshot);
-            await _snapshotRepository.SaveChangesAsync();
+
+            await _snapshotRepository.RemovePricedItems(profileClientId);
+
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId)
+                .Include(profile => profile.Snapshots)
+                .AsNoTracking()
+                .FirstAsync();
+
+            snapshot.ProfileId = profile.Id;
+
+            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
+
             return _mapper.Map<SnapshotModel>(snapshot);
         }
 
@@ -60,9 +67,7 @@ namespace API.Services
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).Include(profile => profile.Snapshots).FirstAsync();
-            profile.Snapshots.Clear();
-            await _snapshotRepository.SaveChangesAsync();
+            await _snapshotRepository.RemoveAllSnapshots(profileClientId);
         }
         #endregion
 
