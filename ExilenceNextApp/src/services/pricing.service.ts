@@ -52,12 +52,13 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         const itemPrices = prices.filter(
           p =>
             item.name.startsWith(p.name) &&
-            ((item.links < 5 && p.links && p.links < 5) ||
+            ((item.links < 5 && p.links !== undefined && p.links < 5) ||
               p.links === item.links) &&
             p.frameType === 3 &&
             p.corrupted === item.corrupted &&
             (p.variant === item.variant ||
               p.variant === undefined ||
+              p.variant === '' ||
               p.variant === null)
         );
 

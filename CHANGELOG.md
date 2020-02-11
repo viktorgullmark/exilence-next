@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Changed the lower limit of the auto snapshot interval to 2 minutes
 ##### Fixed
 - Fixed a bug where uniques with quality were not priced correctly
+- Fixed a bug where some uniques with links were not priced correctly
 - Fixed a bug where the snapshot button would be disabled after relogging
 
 ## [0.2.7] - 2020-02-04
