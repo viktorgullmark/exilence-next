@@ -11,7 +11,7 @@ import useLabelWidth from '../../hooks/use-label-width';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import useStyles from './SelectField.styles';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   label: string;
   required?: boolean;
