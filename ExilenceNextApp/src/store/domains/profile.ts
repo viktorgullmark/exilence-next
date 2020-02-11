@@ -37,6 +37,7 @@ export class Profile {
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
+  @persist @observable activeCharacterName: string = '';
   @persist('object') @observable activeCurrency: ICurrency = {
     name: 'chaos',
     short: 'c'
@@ -167,6 +168,11 @@ export class Profile {
   @action
   setActivePriceLeague(id: string) {
     this.activePriceLeagueId = id;
+  }
+
+  @action
+  setActiveCharacterName(name: string) {
+    this.activeCharacterName = name;
   }
 
   @action

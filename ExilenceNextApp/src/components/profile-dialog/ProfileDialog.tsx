@@ -20,6 +20,8 @@ import { Profile } from './../../store/domains/profile';
 import useStyles from './ProfileDialog.styles';
 import SimpleField from '../simple-field/SimpleField';
 import { generateProfileName } from '../../utils/profile.utils';
+import SelectField from '../select-field/SelectField';
+import { ISelectOption } from '../../interfaces/select-option.interface';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -33,6 +35,7 @@ interface ProfileDialogProps {
   loading: boolean;
   isEditing?: boolean;
   profile?: Profile;
+  characterName: string;
   leagueUuid: string;
   priceLeagueUuid: string;
   leagues: League[];
@@ -61,6 +64,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   handleClickClose,
   handleLeagueChange,
   handleSubmit,
+  characterName,
   handleStashTabChange
 }: ProfileDialogProps) => {
   const classes = useStyles();
@@ -80,10 +84,12 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: isEditing && profile ? profile.name : generateProfileName(),
+              profileName:
+                isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
-              stashTabIds: stashTabIds
+              stashTabIds: stashTabIds,
+              character: characterName
             }}
             onSubmit={(values: ProfileFormValues) => {
               handleSubmit(values);
@@ -154,6 +160,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   stashTabIds={stashTabIds}
                   handleStashTabChange={handleStashTabChange}
                   handleChange={handleChange}
+                />
+                <SelectField
+                  name="character"
+                  label={t('label.select_character')}
+                  options={characters?.map(c => {
+                    return { id: c.name, value: c.name, label: c.name } as ISelectOption;
+                  })}
                 />
                 <div className={classes.dialogActions}>
                   <Button onClick={() => handleClickClose()}>

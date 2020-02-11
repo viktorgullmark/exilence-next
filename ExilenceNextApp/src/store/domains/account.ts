@@ -55,6 +55,28 @@ export class Account implements IAccount {
   }
 
   @computed
+  get activeCharacter() {
+    const profile = this.activeProfile;
+    const accountLeague = this.accountLeagues.find(
+      l => l.leagueId === profile?.activeLeagueId
+    );
+    return accountLeague?.characters?.find(
+      ac => ac.name === profile?.activeCharacterName
+    );
+  }
+
+  get characters() {
+    const profile = this.activeProfile;
+    if (profile) {
+      return this.accountLeagues.find(
+        l => l.leagueId === profile.activeLeagueId
+      )?.characters;
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed
   get activePriceLeague() {
     const profile = this.activeProfile;
     if (profile) {
@@ -162,9 +184,7 @@ export class Account implements IAccount {
         mergeMap(account => {
           this.updateAccountFromApi(account.data);
           return !rootStore.signalrHub.connection
-            ? rootStore.signalrHub.startConnection(
-                account.data.accessToken
-              )
+            ? rootStore.signalrHub.startConnection(account.data.accessToken)
             : of({});
         }),
         switchMap(() => {
@@ -194,7 +214,12 @@ export class Account implements IAccount {
 
   @action
   authorizeFail(e: Error) {
-    rootStore.notificationStore.createNotification('authorize', 'error', true, e);
+    rootStore.notificationStore.createNotification(
+      'authorize',
+      'error',
+      true,
+      e
+    );
   }
 
   @computed

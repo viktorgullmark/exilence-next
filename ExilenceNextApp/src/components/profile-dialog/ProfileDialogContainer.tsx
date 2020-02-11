@@ -2,7 +2,8 @@ import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   mapDomainToDropdown,
-  getDropdownSelection
+  getDropdownSelection,
+  getNameDropdownSelection
 } from '../../utils/dropdown.utils';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -38,12 +39,14 @@ const ProfileDialogContainer: React.FC<Props> = ({
   const {
     activeLeague,
     activePriceLeague,
+    activeCharacter,
     accountLeagues,
-    activeProfile
+    activeProfile,
+    characters
   } = account;
   const { leagues, priceLeagues } = leagueStore!;
 
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [chars, setCharacters] = useState<Character[]>(characters ? characters : []);
   const [league, setLeague] = useState('');
   const [priceLeague, setPriceLeague] = useState('');
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
@@ -88,6 +91,19 @@ const ProfileDialogContainer: React.FC<Props> = ({
     return foundLeague ? foundLeague : leagues[0];
   };
 
+  // const getCharacterSelection = (edit: boolean) => {
+  //   if (!chars) {
+  //     return '';
+  //   }
+  
+  //   const name = getNameDropdownSelection(
+  //     chars,
+  //     edit && activeCharacter ? activeCharacter.name : ''
+  //   );
+
+  //   return name;
+  // };
+
   const getPriceLeagueSelection = (edit: boolean) => {
     const id = getDropdownSelection(
       priceLeagues,
@@ -104,15 +120,11 @@ const ProfileDialogContainer: React.FC<Props> = ({
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.leagueId === id
     );
-
-    let characters: Character[] = [];
-
     setStashTabIds([]);
 
     if (accountLeague) {
-      characters = accountLeague.characters;
       setStashTabs(accountLeague.stashtabs);
-      setCharacters(characters);
+      setCharacters(accountLeague.characters);
     } else {
       setStashTabs([]);
       setCharacters([]);
@@ -153,7 +165,8 @@ const ProfileDialogContainer: React.FC<Props> = ({
       leagues={leagues}
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
-      characters={characters}
+      characterName={activeCharacter ? activeCharacter.name : ''}
+      characters={chars}
       loading={uiStateStore!.savingProfile}
     />
   );
