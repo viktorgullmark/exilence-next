@@ -1,13 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.8] - XXXX-XX-XX
+## [0.2.8] - 2019-02-11
 ##### Added
 - Added detailed status messages to the toolbar
 - Minor style tweaks
 ##### Changed
 - Changed the lower limit of the auto snapshot interval to 2 minutes
 ##### Fixed
+- Fixed a bug where uniques with quality were not priced correctly
 - Fixed a bug where the snapshot button would be disabled after relogging
 
 ## [0.2.7] - 2020-02-04
