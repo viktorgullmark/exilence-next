@@ -9,7 +9,6 @@ export const pricingService = {
 function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   let price: IExternalPrice | undefined;
   item.total = 0;
-  console.log(item);
   if (item.name === 'Chaos Orb') {
     price = {
       max: 1,
