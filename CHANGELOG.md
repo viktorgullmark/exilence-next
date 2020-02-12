@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.9] - NOT RELEASED
+##### Added
+- Added support for pricing watchstones
+- Added support for pricing incubators
+##### Fixed
+- Fixed a bug where users sometimes could not sign in from multiple locations
+
 ## [0.2.8] - 2019-02-11
 ##### Added
 - Added detailed status messages to the toolbar
