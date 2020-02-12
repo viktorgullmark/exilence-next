@@ -162,13 +162,11 @@ export class Account implements IAccount {
         mergeMap(account => {
           this.updateAccountFromApi(account.data);
           return !rootStore.signalrHub.connection
-            ? rootStore.signalrHub.startConnection(
-                account.data.accessToken
-              )
+            ? rootStore.signalrHub.startConnection(account.data.accessToken)
             : of({});
         }),
-        switchMap(() => {
-          return this.getProfilesForAccount(this.uuid).pipe(
+        mergeMap(() => {
+          return this.getProfilesForAccount(this.name!).pipe(
             map((profiles: IApiProfile[]) => {
               this.updateProfiles(profiles);
               if (this.profiles.length > 0) {
@@ -194,7 +192,12 @@ export class Account implements IAccount {
 
   @action
   authorizeFail(e: Error) {
-    rootStore.notificationStore.createNotification('authorize', 'error', true, e);
+    rootStore.notificationStore.createNotification(
+      'authorize',
+      'error',
+      true,
+      e
+    );
   }
 
   @computed

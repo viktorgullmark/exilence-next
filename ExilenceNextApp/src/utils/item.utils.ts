@@ -140,6 +140,14 @@ export function getItemVariant(
   explicitMods: string[],
   name: string
 ): string {
+  const watchStoneUsesMod = explicitMods.find(em =>
+    em.includes('uses remaining')
+  );
+
+  if (watchStoneUsesMod) {
+    return watchStoneUsesMod.split(' ')[0];
+  }
+
   if (name === 'Impresence') {
     if (explicitMods.filter(s => s.includes('Lightning Damage'))) {
       return 'Lightning';

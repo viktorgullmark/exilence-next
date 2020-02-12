@@ -9,7 +9,7 @@ export const pricingService = {
 function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   let price: IExternalPrice | undefined;
   item.total = 0;
-
+  console.log(item);
   if (item.name === 'Chaos Orb') {
     price = {
       max: 1,
@@ -24,6 +24,10 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   } else {
     switch (item.frameType) {
       case 0: // normal
+        if (item.name.includes('Incubator')) {
+          price = prices.find(p => p.name === item.name);
+        }
+        break;
       case 1: // magic
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {

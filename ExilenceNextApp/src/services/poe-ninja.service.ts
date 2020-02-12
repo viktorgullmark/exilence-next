@@ -46,6 +46,7 @@ function getItemCategories() {
     'UniqueFlask',
     'UniqueWeapon',
     'UniqueArmour',
+    'Watchstone',
     'UniqueAccessory',
     'Beast'
   ];
