@@ -4,6 +4,7 @@ import { action, observable, runInAction } from 'mobx';
 import { from, throwError } from 'rxjs';
 import AppConfig from './../../config/app.config';
 import { RootStore } from '../rootStore';
+import { randomIntFromInterval } from '../../utils/misc.utils';
 
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
@@ -30,7 +31,7 @@ export class SignalrHub {
       })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => {
-          return 30 * 1000;
+          return (30 * 1000) + randomIntFromInterval(0, 10 * 1000);
         }
       })
       .withHubProtocol(new msgPack.MessagePackHubProtocol())
