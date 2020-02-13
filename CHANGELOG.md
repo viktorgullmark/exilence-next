@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added support for pricing watchstones
 - Added support for pricing incubators
+##### Changed
+- Improved the retry policy for SignalR
 ##### Fixed
 - Fixed a bug where users sometimes could not sign in from multiple locations
 
