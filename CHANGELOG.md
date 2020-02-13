@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.10] - 2019-02-13
+##### Fixed
+- Fixed a bug where some normal items (fragments, maps etc) were not priced
+
 ## [0.2.9] - 2019-02-13
 ##### Added
 - Added support for pricing watchstones

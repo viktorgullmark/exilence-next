@@ -23,9 +23,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   } else {
     switch (item.frameType) {
       case 0: // normal
-        if (item.name.includes('Incubator')) {
-          price = prices.find(p => p.name === item.name);
-        }
+        price = prices.find(p => p.name === item.name);
         break;
       case 1: // magic
       case 2: // rare
