@@ -31,7 +31,7 @@ export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
 const discordLogoHeight = 35;
-const patreonLogoHeight = 55;
+const patreonLogoHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) => ({
   discordLogo: {
