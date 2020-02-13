@@ -18,6 +18,7 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import GroupIcon from '@material-ui/icons/Group';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -294,6 +295,21 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     className={classes.iconButton}
                   >
                     <DeleteSweepIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
+              <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
+                <span>
+                  <IconButton
+                    onClick={() => {}}
+                    aria-label="overlay"
+                    aria-haspopup="true"
+                    className={clsx(classes.iconButton)}
+                  >
+                    <AddToPhotosIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>
