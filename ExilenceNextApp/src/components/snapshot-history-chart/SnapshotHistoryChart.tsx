@@ -41,6 +41,9 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   }
 
   const options = {
+    chart: {
+      zoomType: 'x'
+    },
     title: {
       text: ''
     },

@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.11] - NOT RELEASED
+##### Added
+- Added the ability to zoom in the chart
+    - Select a portion of the chart with the mouse to zoom in
 ##### Fixed
 - Fixed a bug where magic maps weren't priced
 
