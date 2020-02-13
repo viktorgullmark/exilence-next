@@ -58,7 +58,6 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
             ((item.links < 5 && p.links !== undefined && p.links < 5) ||
               p.links === item.links) &&
             p.frameType === 3 &&
-            p.corrupted === item.corrupted &&
             (p.variant === item.variant ||
               p.variant === undefined ||
               p.variant === '' ||
@@ -114,7 +113,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
 
   const data = <IPricedItem>{
     ...item,
-    ...price
+    ...price,
+    corrupted: item.corrupted
   };
 
   return data;

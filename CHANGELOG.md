@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 ##### Changed
 - Improved the retry policy for SignalR
 ##### Fixed
+- Fixed a bug where corrupted unique items were not priced
 - Fixed a bug where users sometimes could not sign in from multiple locations
 
 ## [0.2.8] - 2019-02-11
