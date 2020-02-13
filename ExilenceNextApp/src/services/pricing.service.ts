@@ -26,6 +26,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(p => p.name === item.name);
         break;
       case 1: // magic
+        price = prices.find(p => p.name === item.name);
+        break;
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
           price = prices.find(

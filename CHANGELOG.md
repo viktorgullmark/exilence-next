@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.11] - NOT RELEASED
+##### Fixed
+- Fixed a bug where magic maps weren't priced
+
 ## [0.2.10] - 2019-02-13
 ##### Added
 - Added support for pricing fragments
