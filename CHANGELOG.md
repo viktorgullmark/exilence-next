@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added the ability to zoom in the chart
     - Select a portion of the chart with the mouse to zoom in
 ##### Fixed
+- Fixed a bug where auto snapshotting would stop working
 - Fixed a bug where magic maps weren't priced
 
 ## [0.2.10] - 2019-02-13

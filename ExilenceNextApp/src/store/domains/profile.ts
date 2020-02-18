@@ -237,7 +237,16 @@ export class Profile {
 
   @action snapshotFail(e?: AxiosError | Error) {
     rootStore.uiStateStore.resetStatusMessage();
-    rootStore.notificationStore.createNotification('snapshot', 'error', true, e);
+    rootStore.notificationStore.createNotification(
+      'snapshot',
+      'error',
+      true,
+      e
+    );
+    if (rootStore.settingStore.autoSnapshotting) {
+      rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+      rootStore.accountStore.getSelectedAccount.queueSnapshot();
+    }
     rootStore.uiStateStore!.setIsSnapshotting(false);
   }
 
@@ -260,8 +269,13 @@ export class Profile {
     const selectedStashTabs = accountLeague.stashtabs.filter(
       st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
     );
- 
-    rootStore.uiStateStore.setStatusMessage('fetching_stash_tab', undefined, 1, selectedStashTabs.length);
+
+    rootStore.uiStateStore.setStatusMessage(
+      'fetching_stash_tab',
+      undefined,
+      1,
+      selectedStashTabs.length
+    );
 
     fromStream(
       externalService
@@ -377,7 +391,10 @@ export class Profile {
 
   @action
   priceItemsForStashTabsSuccess(pricedStashTabs: IStashTabSnapshot[]) {
-    rootStore.notificationStore.createNotification('price_stash_items', 'success');
+    rootStore.notificationStore.createNotification(
+      'price_stash_items',
+      'success'
+    );
     this.saveSnapshot(pricedStashTabs);
   }
 
