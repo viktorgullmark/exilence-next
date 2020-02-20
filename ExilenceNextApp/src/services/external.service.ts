@@ -120,14 +120,11 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
                     : 0,
                 stackSize: item.stackSize || 1,
                 totalStacksize: item.maxStackSize || 1,
-                variant:
-                  item.sockets !== undefined && item.sockets !== null
-                    ? getItemVariant(
-                        item.sockets,
-                        item.explicitMods,
-                        getItemName(item.typeLine, item.name)
-                      )
-                    : ''
+                variant: getItemVariant(
+                  item.sockets,
+                  item.explicitMods,
+                  getItemName(item.typeLine, item.name)
+                )
               } as IPricedItem;
             })
           };

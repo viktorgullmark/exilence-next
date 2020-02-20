@@ -1,13 +1,39 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.8] - XXXX-XX-XX
+## [0.2.11] - NOT RELEASED
+##### Added
+- Added the ability to zoom in the chart
+    - Select a portion of the chart with the mouse to zoom in
+##### Fixed
+- Fixed a bug where auto snapshotting would stop working
+- Fixed a bug where magic maps weren't priced
+
+## [0.2.10] - 2019-02-13
+##### Added
+- Added support for pricing fragments
+- Added support for pricing maps (outside of the map tab)
+- Added support for pricing other common items
+
+## [0.2.9] - 2019-02-13
+##### Added
+- Added support for pricing watchstones
+- Added support for pricing incubators
+##### Changed
+- Improved the retry policy for SignalR
+##### Fixed
+- Fixed a bug where corrupted unique items were not priced
+- Fixed a bug where users sometimes could not sign in from multiple locations
+
+## [0.2.8] - 2019-02-11
 ##### Added
 - Added detailed status messages to the toolbar
 - Minor style tweaks
 ##### Changed
 - Changed the lower limit of the auto snapshot interval to 2 minutes
 ##### Fixed
+- Fixed a bug where uniques with quality were not priced correctly
+- Fixed a bug where some uniques with links were not priced correctly
 - Fixed a bug where the snapshot button would be disabled after relogging
 
 ## [0.2.7] - 2020-02-04

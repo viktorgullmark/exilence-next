@@ -9,7 +9,6 @@ export const pricingService = {
 function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   let price: IExternalPrice | undefined;
   item.total = 0;
-
   if (item.name === 'Chaos Orb') {
     price = {
       max: 1,
@@ -24,7 +23,11 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   } else {
     switch (item.frameType) {
       case 0: // normal
+        price = prices.find(p => p.name === item.name);
+        break;
       case 1: // magic
+        price = prices.find(p => p.name === item.name);
+        break;
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
           price = prices.find(
@@ -47,20 +50,32 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
           price = prices.find(p => p.name === item.name);
         }
         break;
-      case 3: // unique
-        price = prices.find(
+      case 3: {
+        // unique
+        const itemPrices = prices.filter(
           p =>
             item.name.startsWith(p.name) &&
-            ((item.links < 5 && p.links && p.links < 5) ||
+            ((item.links < 5 && p.links !== undefined && p.links < 5) ||
               p.links === item.links) &&
             p.frameType === 3 &&
-            p.corrupted === item.corrupted &&
             (p.variant === item.variant ||
               p.variant === undefined ||
-              p.variant === null) &&
-            (!p.quality || p.quality === item.quality)
+              p.variant === '' ||
+              p.variant === null)
         );
+
+        const qualityPrice = itemPrices.find(
+          ip => !ip.quality || ip.quality === item.quality
+        );
+
+        if (qualityPrice) {
+          price = qualityPrice;
+        } else {
+          price = itemPrices.find(ip => ip.quality === 0);
+        }
+
         break;
+      }
       case 4: // gem
         price = prices.find(
           p =>
@@ -98,7 +113,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
 
   const data = <IPricedItem>{
     ...item,
-    ...price
+    ...price,
+    corrupted: item.corrupted
   };
 
   return data;

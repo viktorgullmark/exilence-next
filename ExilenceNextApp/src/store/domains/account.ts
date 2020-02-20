@@ -187,8 +187,8 @@ export class Account implements IAccount {
             ? rootStore.signalrHub.startConnection(account.data.accessToken)
             : of({});
         }),
-        switchMap(() => {
-          return this.getProfilesForAccount(this.uuid).pipe(
+        mergeMap(() => {
+          return this.getProfilesForAccount(this.name!).pipe(
             map((profiles: IApiProfile[]) => {
               this.updateProfiles(profiles);
               if (this.profiles.length > 0) {

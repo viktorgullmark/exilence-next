@@ -38,14 +38,13 @@ function getItemCategories() {
     'DivinationCard',
     'Prophecy',
     'SkillGem',
-    'BaseType',
-    'HelmetEnchant',
     'UniqueMap',
     'Map',
     'UniqueJewel',
     'UniqueFlask',
     'UniqueWeapon',
     'UniqueArmour',
+    'Watchstone',
     'UniqueAccessory',
     'Beast'
   ];
