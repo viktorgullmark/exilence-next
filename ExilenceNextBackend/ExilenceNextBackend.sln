@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{CECAA008-D3A2-46F7-8069-BAE7DD93216D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExilenceTests", "ExilenceTests\ExilenceTests.csproj", "{520233CD-593A-42F8-9B63-670BF2502925}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CECAA008-D3A2-46F7-8069-BAE7DD93216D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{520233CD-593A-42F8-9B63-670BF2502925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{520233CD-593A-42F8-9B63-670BF2502925}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{520233CD-593A-42F8-9B63-670BF2502925}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{520233CD-593A-42F8-9B63-670BF2502925}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
