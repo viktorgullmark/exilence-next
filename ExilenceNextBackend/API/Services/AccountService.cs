@@ -15,11 +15,12 @@ namespace API.Services
     {
         ISnapshotRepository _snapshotRepository;
         IAccountRepository _accountRepository;
+        IMongoRepository _mongoRepository;
         readonly IMapper _mapper;
 
-        public AccountService(ISnapshotRepository snapshotRepository, IAccountRepository accountRepository, IMapper mapper)
+        public AccountService(IAccountRepository accountRepository, IMongoRepository mongoRepository, IMapper mapper)
         {
-            _snapshotRepository = snapshotRepository;
+            _mongoRepository = mongoRepository;
             _accountRepository = accountRepository;
             _mapper = mapper;
         }
@@ -86,17 +87,22 @@ namespace API.Services
 
         public async Task<SnapshotProfileModel> GetActiveProfileWithSnapshots(string accountId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.Account.ClientId == accountId && profile.Active)
-                .Include(profile => profile.Snapshots)
-                .FirstOrDefaultAsync();
-            return _mapper.Map<SnapshotProfileModel>(profile);
+            var profile = await _accountRepository.GetProfiles(profile => profile.Account.ClientId == accountId && profile.Active).FirstOrDefaultAsync();
+            var snapshots = await _mongoRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
+            
+            var profileModel = _mapper.Map<SnapshotProfileModel>(profile);
+            profileModel.Snapshots = _mapper.Map<List<SnapshotModel>>(snapshots);
+            return profileModel;
         }
 
         public async Task<SnapshotProfileModel> GetProfileWithSnapshots(string profileId)
         {
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId)
-                .Include(profile => profile.Snapshots).FirstOrDefaultAsync();
-            return _mapper.Map<SnapshotProfileModel>(profile);
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId).FirstOrDefaultAsync();
+            var snapshots = await _mongoRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
+
+            var profileModel = _mapper.Map<SnapshotProfileModel>(profile);
+            profileModel.Snapshots = _mapper.Map<List<SnapshotModel>>(snapshots);
+            return profileModel;
         }
 
         public async Task<List<SnapshotProfileModel>> GetAllProfiles(string accountName)

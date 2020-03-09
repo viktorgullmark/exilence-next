@@ -80,21 +80,6 @@ namespace API.Hubs
             Log($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
         
-        public async Task<StashtabModel> AddPricedItems(UpdatePricedItemsModel updateModel)
-        {
-            var stashTabModel = await _snapshotService.AddPricedItems(updateModel.StashTabId, updateModel.PricedItems);
-
-            var group = await _groupService.GetGroupForConnection(ConnectionId);
-            if (group != null)
-            {
-                updateModel.ConnectionId = ConnectionId;
-                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
-            }
-
-            Log($"Added {updateModel.PricedItems.Count} pricedItems to StashTabId: {updateModel.StashTabId} in " + _timer.ElapsedMilliseconds + " ms.");
-            return stashTabModel;
-        }
-
         #region Streams
         //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
         //{

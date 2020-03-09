@@ -12,14 +12,14 @@ namespace API.Services
 {
     public class SnapshotService : ISnapshotService
     {
-        ISnapshotRepository _snapshotRepository;
+        IMongoRepository _mongoRepository;
         IAccountRepository _accountRepository;
         readonly IMapper _mapper;
 
-        public SnapshotService(ISnapshotRepository snapshotRepository, IAccountRepository accountRepository, IMapper mapper)
+        public SnapshotService(IAccountRepository accountRepository, IMongoRepository mongoRepository, IMapper mapper)
         {
-            _snapshotRepository = snapshotRepository;
             _accountRepository = accountRepository;
+            _mongoRepository = mongoRepository;
             _mapper = mapper;
         }
 
@@ -27,99 +27,53 @@ namespace API.Services
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
-            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
+            var snapshot = await _mongoRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
             return _mapper.Map<SnapshotModel>(snapshot);
         }
 
         public async Task<SnapshotModel> GetSnapshotWithItems(string snapshotClientId)
         {
-            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId)
-                .Include(snapshot => snapshot.StashTabs)
-                .ThenInclude(stashtab => stashtab.PricedItems)
-                .FirstOrDefaultAsync();
-            return _mapper.Map<SnapshotModel>(snapshot);
+            var snapshot = await _mongoRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstOrDefaultAsync();
+            var stashtabs = await _mongoRepository.GetStashtabs(stashtab => stashtab.SnapshotClientId == snapshot.Id).ToListAsync();
+            var pricedItems = await _mongoRepository.GetPricedItems(pricedItem => stashtabs.Select(stashTab => stashTab.ClientId).Contains(pricedItem.StashtabClientId)).ToListAsync();
+
+            var snapshotModel = _mapper.Map<SnapshotModel>(snapshot);
+            snapshotModel.StashTabs = _mapper.Map<List<StashtabModel>>(stashtabs);
+            foreach (var stashTab in snapshotModel.StashTabs)
+            {
+                var items = pricedItems.Where(p => p.StashtabClientId == stashTab.ClientId);
+                stashTab.PricedItems = _mapper.Map<List<PricedItemModel>>(items);
+            }
+
+            return snapshotModel;
         }
         
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            await _snapshotRepository.RemovePricedItems(profileClientId);
+            await _mongoRepository.RemovePricedItems(profileClientId);
 
-            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId)
-                .Include(profile => profile.Snapshots)
-                .AsNoTracking()
-                .FirstAsync();
+            var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).AsNoTracking().FirstAsync();
 
-            snapshot.ProfileId = profile.Id;
+            snapshot.ProfileClientId = profile.ClientId;
 
-            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
+            await _mongoRepository.AddSnapshots(new List<Snapshot>() { snapshot });
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
 
         public async Task RemoveSnapshot(string snapshotClientId)
         {
-            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
-            _snapshotRepository.RemoveSnapshot(snapshot);
-            await _snapshotRepository.SaveChangesAsync();
+            var snapshot = await _mongoRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotClientId).FirstAsync();
+            await _mongoRepository.RemoveSnapshot(snapshot);
         }
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-            await _snapshotRepository.RemoveAllSnapshots(profileClientId);
+            await _mongoRepository.RemoveAllSnapshots(profileClientId);
         }
         #endregion
 
-        #region Stashtab
-        public async Task<StashtabModel> GetStashtab(string stashtabId)
-        {
-            var stashtab = await _snapshotRepository.GetStashtabs(stashtab => stashtab.ClientId == stashtabId).FirstAsync();
-            return _mapper.Map<StashtabModel>(stashtab);
-        }
-        public IQueryable<Stashtab> GetStashtabs(string snapshotId)
-        {
-            var stashtabs = _snapshotRepository.GetStashtabs(stashtab => stashtab.Snapshot.ClientId == snapshotId);
-            return stashtabs;
-        }
-        public async Task<StashtabModel> AddStashtab(string snapshotId, StashtabModel stashtabModel)
-        {
-            var stashtab = _mapper.Map<Stashtab>(stashtabModel);
-            var snapshot = await _snapshotRepository.GetSnapshots(tab => tab.ClientId == snapshotId).FirstAsync();
-            snapshot.StashTabs.Add(stashtab);
-            await _snapshotRepository.SaveChangesAsync();
-            return _mapper.Map<StashtabModel>(stashtab);
-        }
-        public async Task<StashtabModel> RemoveStashtab(string snapshotId, string stashtabId)
-        {
-            var snapshot = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ClientId == snapshotId).Include(snapshot => snapshot.StashTabs).FirstAsync();
-            var stashtasb = snapshot.StashTabs.FirstOrDefault(snapshot => snapshot.ClientId == snapshotId);
-            _snapshotRepository.RemoveStashtab(stashtasb);
-            await _snapshotRepository.SaveChangesAsync();
-            return _mapper.Map<StashtabModel>(snapshot);
-        }
-
-        public async Task<PricedItemModel> AddPricedItem(string stashtabId, PricedItemModel pricedItemModel)
-        {
-            var pricedItem = _mapper.Map<PricedItem>(pricedItemModel);
-            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId).Include(stashtab => stashtab.PricedItems).FirstAsync();
-            stashtab.PricedItems.Add(pricedItem);
-            await _snapshotRepository.SaveChangesAsync();
-            return _mapper.Map<PricedItemModel>(pricedItem);
-        }
-
-        public async Task<StashtabModel> AddPricedItems(string stashtabId, List<PricedItemModel> pricedItemModels)
-        {
-            var pricedItems = _mapper.Map<List<PricedItem>>(pricedItemModels);
-            var stashtab = await _snapshotRepository.GetStashtabs(tab => tab.ClientId == stashtabId)
-                //.Include(stashtab => stashtab.Snapshot)
-                //.ThenInclude(snapshot => snapshot.Profile)
-                .Include(stashtab => stashtab.PricedItems)
-                .FirstAsync();
-            pricedItems.AddRange(pricedItems);
-            await _snapshotRepository.SaveChangesAsync();
-            return _mapper.Map<StashtabModel>(stashtab);
-        }
-        #endregion
     }
 }
