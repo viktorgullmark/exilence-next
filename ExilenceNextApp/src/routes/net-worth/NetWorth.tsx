@@ -158,6 +158,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={12}>
+          {/* todo: this block should be refactored to its own component */}
           <ExpansionPanel
             expanded={uiStateStore!.netWorthChartExpanded}
             onChange={() =>
@@ -186,6 +187,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </ExpansionPanel>
         </Grid>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
+          {/* todo: this block should be refactored to its own component */}
           <ExpansionPanel
             expanded={uiStateStore!.netWorthItemsExpanded}
             onChange={() =>
