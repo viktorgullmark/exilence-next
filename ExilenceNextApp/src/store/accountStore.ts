@@ -228,7 +228,7 @@ export class AccountStore {
       return this.rootStore.routeStore.redirect('/login');
     }
 
-    if (new Date().getTime() >= this.token.expires.getTime()) {
+    if (new Date().getTime() >= new Date(this.token.expires).getTime()) {
       this.initSessionFail(new Error('error:token_expired'));
       return this.rootStore.routeStore.redirect('/login');
     }
