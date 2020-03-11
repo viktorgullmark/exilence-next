@@ -171,7 +171,9 @@ const NetWorth: React.FC<NetWorthProps> = ({
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>{t('label.net_worth_chart')}</Typography>
+              <Typography variant="overline">
+                {t('label.net_worth_chart')}
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
               style={{
@@ -199,19 +201,27 @@ const NetWorth: React.FC<NetWorthProps> = ({
             >
               <Grid container justify="space-between">
                 <Grid item>
-                  <Typography>{t('label.item_table')}</Typography>
+                  <Typography variant="overline">
+                    {t('label.item_table')}
+                  </Typography>
                 </Grid>
                 <Grid item className={classes.secondaryHeader}>
-                  <Typography className={classes.creditText}>
-                    {t('label.prices_fetched_from')}
-                    <a
-                      className={classes.inlineLink}
-                      href="https://poe.ninja"
-                      onClick={e => openLink(e)}
-                    >
-                      https://poe.ninja
-                    </a>
-                  </Typography>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Typography variant="body2" className={classes.creditText}>
+                      {t('label.prices_fetched_from')}
+                      <a
+                        className={classes.inlineLink}
+                        href="https://poe.ninja"
+                        onClick={e => openLink(e)}
+                      >
+                        https://poe.ninja
+                      </a>
+                    </Typography>
+                  </Box>
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>

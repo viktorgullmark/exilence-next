@@ -12,7 +12,6 @@ export const useStyles = makeStyles(theme =>
       right: theme.spacing(2),
     },
     creditText: {
-      fontSize: '0.85rem',
       color: theme.palette.text.secondary
     },
     inlineLink: {
