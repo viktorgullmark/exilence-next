@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added the ability to zoom in the chart
     - Select a portion of the chart with the mouse to zoom in
 - Added a support tab that redirects to Discord
+- Added the ability to show/hide the chart
+- Added the ability to show/hide the item table
 ##### Changed
 - Changed position of the Patreon logo, to allow for more space
 ##### Fixed
