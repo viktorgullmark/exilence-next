@@ -30,27 +30,12 @@ interface NetWorthProps {
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
-const discordLogoHeight = 35;
-const patreonLogoHeight = 52;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  discordLogo: {
-    marginLeft: 5,
-    height: discordLogoHeight,
-    maxWidth: '100%'
-  },
-  patreonLogo: {
-    maxHeight: patreonLogoHeight,
-    maxWidth: '100%'
-  }
-}));
 
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   signalrStore,
   uiStateStore
 }: NetWorthProps) => {
-  const classes = useStyles();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -164,46 +149,6 @@ const NetWorth: React.FC<NetWorthProps> = ({
               icon={<UpdateIcon fontSize="default" />}
               tooltip="Time since last snapshot"
             />
-          </Widget>
-        </Grid>
-        <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget center>
-            <Grid container>
-              <Grid item xs={6}>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  height="1"
-                >
-                  <a
-                    href="https://patreon.com/exilence"
-                    onClick={e => openLink(e)}
-                  >
-                    <Box display="flex" alignItems="center" height={1}>
-                      <img className={classes.patreonLogo} src={PatreonLogo} />
-                    </Box>
-                  </a>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  height="1"
-                >
-                  <a
-                    href="https://discord.gg/yxuBrPY"
-                    onClick={e => openLink(e)}
-                  >
-                    <Box display="flex" alignItems="center" height={1}>
-                      <img className={classes.discordLogo} src={DiscordLogo} />
-                    </Box>
-                  </a>
-                </Box>
-              </Grid>
-            </Grid>
           </Widget>
         </Grid>
         <Grid item xs={12}>

@@ -40,6 +40,7 @@
     "general": "General"
   },
   "label": {
+    "support": "Support",
     "required": "Required",
     "optional": "Optional",
     "account_name": "Account name",

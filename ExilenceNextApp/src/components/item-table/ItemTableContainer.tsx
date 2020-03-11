@@ -99,28 +99,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item xs={4} md={3}>
+          <Grid item>
             <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
           </Grid>
-          <Grid
-            container
-            item
-            xs={4}
-            md={6}
-            className={classes.placeholder}
-            direction="column"
-            justify="space-between"
-          >
-            {getItems().length === 0 &&
-              uiStateStore!.itemTableFilterText === '' && (
-                <WarningIcon
-                  titleAccess={t('label.no_snapshots_title')}
-                  className={classes.warningIcon}
-                />
-              )}
-          </Grid>
-
-          <Grid item xs={4} md={3} className={classes.actionArea}>
+          <Grid item className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"
