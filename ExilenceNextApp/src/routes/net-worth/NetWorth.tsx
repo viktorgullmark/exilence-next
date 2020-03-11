@@ -1,14 +1,12 @@
-import { Box, Grid, makeStyles, Theme, useTheme } from '@material-ui/core';
+import { Grid, useTheme, Box, Typography } from '@material-ui/core';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
-import DiscordLogo from '../../assets/img/discord-wordmark-colored.svg';
-import PatreonLogo from '../../assets/img/patreon-white.png';
 import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import NetWorthTabGroup from '../../components/net-worth-tab-group/NetWorthTabGroup';
@@ -18,8 +16,15 @@ import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useStyles } from './NetWorth.styles';
+import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
+} from '../../components/expansion-panel/ExpansionPanel';
+import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
-import moment from 'moment';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -40,6 +45,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
+  const classes = useStyles();
 
   const updateTimeLabel = () => {
     let timeLabel: string | undefined;
@@ -152,12 +158,72 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={12}>
-          <Widget height={chartHeight}>
-            <SnapshotHistoryChartContainer />
-          </Widget>
+          <ExpansionPanel
+            expanded={uiStateStore!.netWorthChartExpanded}
+            onChange={() =>
+              uiStateStore!.setNetWorthChartExpanded(
+                !uiStateStore!.netWorthChartExpanded
+              )
+            }
+          >
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>{t('label.net_worth_chart')}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails
+              style={{
+                height: chartHeight,
+                background: theme.palette.background.default
+              }}
+            >
+              <SnapshotHistoryChartContainer />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </Grid>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
-          <NetWorthTabGroup />
+          <ExpansionPanel
+            expanded={uiStateStore!.netWorthItemsExpanded}
+            onChange={() =>
+              uiStateStore!.setNetWorthItemsExpanded(
+                !uiStateStore!.netWorthItemsExpanded
+              )
+            }
+          >
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Grid container justify="space-between">
+                <Grid item>
+                  <Typography>{t('label.item_table')}</Typography>
+                </Grid>
+                <Grid item className={classes.secondaryHeader}>
+                  <Typography className={classes.creditText}>
+                    {t('label.prices_fetched_from')}
+                    <a
+                      className={classes.inlineLink}
+                      href="https://poe.ninja"
+                      onClick={e => openLink(e)}
+                    >
+                      https://poe.ninja
+                    </a>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails
+              style={{
+                background: theme.palette.background.default,
+                display: 'block'
+              }}
+            >
+              <ItemTableContainer />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </Grid>
       </Grid>
     </FeatureWrapper>

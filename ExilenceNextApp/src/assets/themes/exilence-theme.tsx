@@ -98,6 +98,9 @@ export default function exilenceTheme() {
       }
     },
     palette: {
+      text: {
+        secondary: '#c2c2c2'
+      },
       primary: {
         light: primaryLight,
         main: primaryMain,
