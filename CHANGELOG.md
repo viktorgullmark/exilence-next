@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added the ability to zoom in the chart
     - Select a portion of the chart with the mouse to zoom in
+- Added a support tab that redirects to Discord
+##### Changed
+- Changed position of the Patreon logo, to allow for more space
 ##### Fixed
 - Fixed a bug where auto snapshotting would stop working
 - Fixed a bug where magic maps weren't priced
