@@ -220,7 +220,7 @@ export class AccountStore {
 
   @action
   initSession(skipAuth?: boolean) {
-    this.rootStore.uiStateStore.setStatusMessage('initializing_session'); 
+    this.rootStore.uiStateStore.setStatusMessage('initializing_session');
     this.rootStore.uiStateStore.setIsInitiating(true);
 
     if (!this.token) {
@@ -228,7 +228,7 @@ export class AccountStore {
       return this.rootStore.routeStore.redirect('/login');
     }
 
-    if (new Date() >= this.token.expires) {
+    if (new Date().getTime() >= this.token.expires.getTime()) {
       this.initSessionFail(new Error('error:token_expired'));
       return this.rootStore.routeStore.redirect('/login');
     }
@@ -267,7 +267,10 @@ export class AccountStore {
                 of(account.accountLeagues).pipe(
                   concatMap(leagues => leagues),
                   concatMap(league => {
-                    this.rootStore.uiStateStore.setStatusMessage('fetching_stash_tabs', league.leagueId); 
+                    this.rootStore.uiStateStore.setStatusMessage(
+                      'fetching_stash_tabs',
+                      league.leagueId
+                    );
                     return league.getStashTabs();
                   }),
                   switchMap(() => {
@@ -290,7 +293,10 @@ export class AccountStore {
                             .slice(0, 6)
                             .map(lst => lst.id);
                         });
-                        this.rootStore.uiStateStore.setStatusMessage('creating_default_profile', newProfile.name); 
+                        this.rootStore.uiStateStore.setStatusMessage(
+                          'creating_default_profile',
+                          newProfile.name
+                        );
                         return this.getSelectedAccount
                           .createProfileObservable(newProfile, () => {})
                           .pipe(
@@ -327,7 +333,7 @@ export class AccountStore {
 
   @action
   initSessionSuccess() {
-    this.rootStore.uiStateStore.resetStatusMessage(); 
+    this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
       'init_session',
       'success'
@@ -340,7 +346,7 @@ export class AccountStore {
   initSessionFail(e: AxiosError | Error) {
     fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
 
-    this.rootStore.uiStateStore.resetStatusMessage(); 
+    this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
       'init_session',
       'error',
@@ -365,13 +371,17 @@ export class AccountStore {
       sessionId
         ? this.rootStore.uiStateStore.setSessIdCookie(sessionId).pipe(
             switchMap(() => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters'); 
+              this.rootStore.uiStateStore.setStatusMessage(
+                'fetching_characters'
+              );
               return request;
             })
           )
         : this.rootStore.uiStateStore.getSessIdCookie().pipe(
             mergeMap((cookies: ICookie[]) => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters'); 
+              this.rootStore.uiStateStore.setStatusMessage(
+                'fetching_characters'
+              );
               if (cookies && cookies.length > 0) {
                 this.sessionId = cookies[0].value;
               }
