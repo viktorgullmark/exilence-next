@@ -50,7 +50,7 @@ namespace API.Controllers
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
             {
-                return BadRequest("Accesstoken not matching Account");
+                return BadRequest("error:token_expired");
             }
 
             var account = await _accountService.GetAccount(accountModel.Name);
@@ -107,21 +107,30 @@ namespace API.Controllers
         {
             string uri = $"https://www.pathofexile.com/api/profile?access_token={accessToken}";
 
-            using (var client = _httpClientFactory.CreateClient())
+            try
             {
-                var response = await client.GetAsync(uri);
-                var content = await response.Content.ReadAsStringAsync();
 
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var model = JsonSerializer.Deserialize<ProfileEndpointModel>(content, options);
-
-                if (model.Name == accountName)
+                using (var client = _httpClientFactory.CreateClient())
                 {
-                    return true;
+                    var response = await client.GetAsync(uri);
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var model = JsonSerializer.Deserialize<ProfileEndpointModel>(content, options);
+
+                    if (model.Name == accountName)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return false;
+
         }
     }
 }
