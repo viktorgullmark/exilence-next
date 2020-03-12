@@ -27,6 +27,7 @@ import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Notification } from '../../store/domains/notification';
+import PatreonLogo from '../../assets/img/patreon-white.png';
 import {
   getDropdownSelection,
   mapDomainToDropdown
@@ -39,8 +40,11 @@ import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer'
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
 import StatusMessageContainer from '../status-message/StatusMessageContainer';
+import { openLink } from '../../utils/window.utils';
 
 export const innerToolbarHeight = 50;
+export const patreonLogoHeight = 35;
+export const patreonLogoWidth = 86;
 
 interface Props {
   signalrOnline: boolean;
@@ -127,13 +131,30 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               </IconButton>
             </span>
           </Tooltip>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="1"
+            mr={1.5}
+            className={clsx({ [classes.marginLeft]: sidenavOpened })}
+          >
+            <a href="https://patreon.com/exilence" onClick={e => openLink(e)}>
+              <Box display="flex" alignItems="center" height={1}>
+                <img className={classes.patreonLogo} src={PatreonLogo} />
+              </Box>
+            </a>
+          </Box>
           {!signalrOnline && (
             <WarningIcon
               titleAccess={t('label.server_offline_title')}
               className={classes.offlineIcon}
             />
           )}
-          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
+          {(isInitiating ||
+            changingProfile ||
+            isUpdatingPrices ||
+            isSnapshotting) && (
             <Box
               ml={1}
               display="flex"
@@ -147,6 +168,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               />
             </Box>
           )}
+
           <Box ml={2} display="flex" whiteSpace="nowrap">
             <StatusMessageContainer />
           </Box>

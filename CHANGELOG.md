@@ -1,13 +1,33 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.9] - NOT RELEASED
+## [0.2.11] - NOT RELEASED
+##### Added
+- Added the ability to zoom in the chart
+    - Select a portion of the chart with the mouse to zoom in
+- Added a support tab that redirects to Discord
+- Added the ability to show/hide the chart
+- Added the ability to show/hide the item table
+##### Changed
+- Changed position of the Patreon logo, to allow for more space
+##### Fixed
+- Fixed a bug where auto snapshotting would stop working
+- Fixed a bug where magic maps weren't priced
+
+## [0.2.10] - 2019-02-13
+##### Added
+- Added support for pricing fragments
+- Added support for pricing maps (outside of the map tab)
+- Added support for pricing other common items
+
+## [0.2.9] - 2019-02-13
 ##### Added
 - Added support for pricing watchstones
 - Added support for pricing incubators
 ##### Changed
 - Improved the retry policy for SignalR
 ##### Fixed
+- Fixed a bug where corrupted unique items were not priced
 - Fixed a bug where users sometimes could not sign in from multiple locations
 
 ## [0.2.8] - 2019-02-11
