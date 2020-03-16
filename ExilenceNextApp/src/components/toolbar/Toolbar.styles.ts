@@ -5,7 +5,7 @@ import {
 } from '../../assets/themes/exilence-theme';
 import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { innerToolbarHeight } from './Toolbar';
+import { innerToolbarHeight, patreonLogoHeight, patreonLogoWidth } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -23,11 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.enteringScreen
     })
   },
+  patreonLogo: {
+    height: patreonLogoHeight,
+    width: patreonLogoWidth
+  },
   fromLeft: {
     marginLeft: drawerWidth
   },
   fromRight: {
     marginRight: drawerWidth
+  },
+  marginLeft: {
+    marginLeft: theme.spacing(1)
   },
   toolbar: {
     maxHeight: innerToolbarHeight,

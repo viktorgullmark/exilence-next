@@ -45,6 +45,8 @@ export class UiStateStore {
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable changingProfile: boolean = false;
+  @persist @observable netWorthChartExpanded: boolean = false;
+  @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
@@ -72,6 +74,16 @@ export class UiStateStore {
     };
 
     this.statusMessage = { ...statusMessage };
+  }
+
+  @action
+  setNetWorthItemsExpanded(expanded: boolean) {
+    this.netWorthItemsExpanded = expanded;
+  }
+
+  @action
+  setNetWorthChartExpanded(expanded: boolean) {
+    this.netWorthChartExpanded = expanded;
   }
 
   @action

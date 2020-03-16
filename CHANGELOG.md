@@ -1,10 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.11] - NOT RELEASED
+## [0.2.11] - 2020-03-12
 ##### Added
 - Added the ability to zoom in the chart
     - Select a portion of the chart with the mouse to zoom in
+- Added a support tab that redirects to Discord
+- Added the ability to show/hide the chart
+- Added the ability to show/hide the item table
+##### Changed
+- Changed position of the Patreon logo, to allow for more space
+- No longer persists snapshots on server (temporarily) to decrease load
 ##### Fixed
 - Fixed a bug where auto snapshotting would stop working
 - Fixed a bug where magic maps weren't priced
