@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.12] - NOT RELEASED
+##### Fixed
+- Fixed a bug where normal and magic maps were priced as red maps
+
 ## [0.2.11] - 2020-03-12
 ##### Added
 - Added the ability to zoom in the chart
