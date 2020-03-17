@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.12] - NOT RELEASED
+##### Added
+- Added support for storing up to 5000 snapshots, up from 100
 ##### Fixed
 - Fixed a bug where normal and magic maps were priced as red maps
 
