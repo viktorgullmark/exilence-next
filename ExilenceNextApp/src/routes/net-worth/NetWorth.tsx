@@ -25,6 +25,7 @@ import {
 } from '../../components/expansion-panel/ExpansionPanel';
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
+import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -139,11 +140,11 @@ const NetWorth: React.FC<NetWorthProps> = ({
         <Grid item xs={6} md={3} lg={3} xl={2}>
           <Widget backgroundColor={cardColors.third}>
             <OverviewWidgetContent
-              value={
+              value={getSnapshotCardValue(
                 activeGroup
                   ? activeGroup.groupSnapshots.length
                   : snapshots().length
-              }
+              )}
               title="label.total_snapshots"
               secondaryValue={uiStateStore!.timeSinceLastSnapshotLabel}
               secondaryValueStyles={{
