@@ -1,9 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.12] - NOT RELEASED
+## [0.2.12] - 2020-03-17
 ##### Added
-- Added support for storing up to 5000 snapshots, up from 100
+- Added support for storing up to 1000 snapshots, up from 100
 ##### Fixed
 - Fixed a bug where normal and magic maps were priced as red maps
 

@@ -66,7 +66,7 @@ export const mapSnapshotsToStashTabPricedItems = (
 };
 
 export const getSnapshotCardValue = (snapshotCount: number) => {
-  let label = `${snapshotCount}${snapshotCount >= 5000 ? '+' : ''}`;
+  let label = `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
   return label;
 }
 
