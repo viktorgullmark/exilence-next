@@ -1,0 +1,114 @@
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Net worth</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            /* Styles here  */
+
+            body {
+                margin: 0;
+                font-size: 14px;
+                color: #fff;
+                font-family: Roboto;
+                background: linear-gradient(rgba(16, 16, 16, .9), rgba(16, 16, 16, .88));
+                overflow: hidden;
+            }
+
+            header,
+            main {
+                padding: 5px;
+            }
+
+            header {
+                -webkit-app-region: drag;
+                height: 15px;
+                color: #e91e63;
+                background-color: #0a0a0a;
+                display: flex;
+            }
+
+            header .right-area {
+                -webkit-app-region: no-drag;
+                justify-content: end;
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+            }
+
+            .label {
+                margin: 5px;
+            }
+
+            #gain,
+            #networth {
+                color: #f0cc00;
+            }
+
+            .material-icons {
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            @media screen and (min-width: 220px) {
+                body {
+                    font-size: 16px;
+                }
+            }
+
+            @media screen and (max-width: 199px) {
+                body {
+                    font-size: 12px;
+                }
+            }
+
+            @media screen and (max-width: 170px) {
+                body {
+                    font-size: 10px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            Net worth
+            <div class="right-area">
+                <i class="material-icons" onclick="closeWindow()">close</i>
+            </div>
+        </header>
+        <main>
+            <p class="label">Current net worth:
+                <span id="networth">
+                    <i>loading...</i>
+                </span>
+            </p>
+            <p class="label">Gain per hour:
+                <span id="gain">
+                    <i>loading...</i>
+                </span>
+            </p>
+        </main>
+        <script>
+            const { ipcRenderer, remote } = require('electron')
+
+            const gainElement = document.getElementById('gain');
+            const networthElement = document.getElementById('networth');
+
+            ipcRenderer.on('overlayUpdate', (event, window) => {
+                if (window.event === 'netWorth') {
+                    networthElement.innerText = +window.data.networth.toFixed(2) + 'c';
+                    gainElement.innerText = +window.data.gain.toFixed(2) + 'c';
+                }
+            })
+
+            function closeWindow() {
+                remote.getCurrentWindow().close();
+            }
+
+        </script>
+    </body>
+</html>

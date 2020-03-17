@@ -10,6 +10,7 @@ import Toolbar from './Toolbar';
 import { SignalrStore } from '../../store/signalrStore';
 import { PriceStore } from '../../store/priceStore';
 import { SettingStore } from '../../store/settingStore';
+import { OverlayStore } from '../../store/overlayStore';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -19,6 +20,7 @@ interface ToolbarContainerProps {
   signalrStore?: SignalrStore;
   priceStore?: PriceStore;
   settingStore?: SettingStore;
+  overlayStore?: OverlayStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
@@ -27,7 +29,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   signalrStore,
   notificationStore,
   priceStore,
-  settingStore
+  settingStore,
+  overlayStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -46,6 +49,11 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   const handleClearSnapshots = () => {
     accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
   };
+
+  const handleOverlay = () => {
+    // todo: rework to toggle modal instead, with buttons for each overlay
+    overlayStore!.createOverlay({ event: 'netWorth', data: {}})
+  }
 
   const handleRemoveProfile = () => {
     accountStore!.getSelectedAccount.removeActiveProfile();
@@ -111,6 +119,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
+        handleOverlay={handleOverlay}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
@@ -135,5 +144,6 @@ export default inject(
   'notificationStore',
   'signalrStore',
   'priceStore',
-  'settingStore'
+  'settingStore',
+  'overlayStore'
 )(observer(ToolbarContainer));

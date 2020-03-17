@@ -69,6 +69,7 @@ interface Props {
     event: ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => void;
   handleSnapshot: () => void;
+  handleOverlay: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
@@ -100,7 +101,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
     handleNotificationsOpen,
     handleAccountMenuOpen,
     handleClearSnapshots,
-    handleRemoveProfile
+    handleRemoveProfile,
+    handleOverlay
   } = props;
 
   const classes = useStyles();
@@ -326,7 +328,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
                 <span>
                   <IconButton
-                    onClick={() => {}}
+                    onClick={() => handleOverlay()}
                     aria-label="overlay"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
