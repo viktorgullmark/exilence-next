@@ -46,7 +46,6 @@ ipcMain.on('notify', function(event) {
 });
 
 ipcMain.on('createOverlay', (event, data) => {
-
   const window = data.event;
 
   if (windows[window] !== undefined && windows[window] !== null) {
@@ -67,17 +66,17 @@ ipcMain.on('createOverlay', (event, data) => {
     resizable: true
   });
 
-  windows[window].loadURL(url.format({
-    pathname: path.join(__dirname, '../overlays/netWorth.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+  windows[window].loadURL(
+    isDev
+      ? `file://${path.join(__dirname, `../public/overlays/${window}.html`)}`
+      : `file://${path.join(__dirname, `../build/overlays/${window}.html`)}`
+  );
 
   windows[window].once('ready-to-show', () => {
     windows[window].show();
   });
 
-  windows[window].on('closed', (e) => {
+  windows[window].on('closed', e => {
     windows[window] = null;
   });
 });
