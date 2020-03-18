@@ -75,12 +75,12 @@ const SnapshotHistoryChart: React.FC<Props> = ({
           ]
         },
         marker: {
-          radius: 2
+          radius: 1
         },
         lineWidth: 2,
         states: {
           hover: {
-            lineWidth: 1
+            lineWidth: 2
           }
         },
         threshold: null

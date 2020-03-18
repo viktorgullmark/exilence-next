@@ -65,6 +65,11 @@ export const mapSnapshotsToStashTabPricedItems = (
     });
 };
 
+export const getSnapshotCardValue = (snapshotCount: number) => {
+  let label = `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
+  return label;
+}
+
 export const getValueForSnapshot = (snapshot: IApiSnapshot) => {
   return snapshot.stashTabs.map(sts => sts.value).reduce((a, b) => a + b, 0);
 };

@@ -20,6 +20,7 @@ import HeaderContainer from './components/header/HeaderContainer';
 import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
 import Notifier from './components/notifier/Notifier';
 import ReactionContainer from './components/reaction-container/ReactionContainer';
+import SupportButton from './components/support-button/SupportButton';
 import ToastWrapper from './components/toast-wrapper/ToastWrapper';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import AppConfig from './config/app.config';
@@ -30,7 +31,6 @@ import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
-
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
@@ -69,6 +69,7 @@ const app = (
             <HeaderContainer />
             <DrawerWrapperContainer>
               <ToolbarContainer />
+              <SupportButton />
               <Route path="/net-worth" component={NetWorth} />
               <Route path="/settings" component={Settings} />
               <Route

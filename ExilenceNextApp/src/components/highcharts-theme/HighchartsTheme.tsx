@@ -14,7 +14,7 @@ const HighchartsTheme: React.FC = () => {
       theme.palette.primary.main
     ],
     chart: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.default,
       style: {
         color: theme.palette.text.primary,
         font: 'Roboto'

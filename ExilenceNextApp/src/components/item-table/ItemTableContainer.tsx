@@ -99,10 +99,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item xs={4} md={3}>
+          <Grid item md={3}>
             <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
           </Grid>
-          <Grid item xs={4} md={3} className={classes.actionArea}>
+          <Grid item className={classes.actionArea}>
             <Button
               color="primary"
               variant="contained"

@@ -36,7 +36,7 @@ namespace API.Hubs
                 Log($"Add snapshot failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
             });
 
-            snapshotModel = await retryPolicy.ExecuteAsync(() => _snapshotService.AddSnapshot(profileId, snapshotModel));
+            //snapshotModel = await retryPolicy.ExecuteAsync(() => _snapshotService.AddSnapshot(profileId, snapshotModel));
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)

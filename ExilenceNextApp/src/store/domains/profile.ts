@@ -446,7 +446,7 @@ export class Profile {
         }
         runInAction(() => {
           this.snapshots.unshift(snapshotToAdd);
-          this.snapshots = this.snapshots.slice(0, 100);
+          this.snapshots = this.snapshots.slice(0, 1000);
         });
       };
       fromStream(

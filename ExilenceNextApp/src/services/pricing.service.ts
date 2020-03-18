@@ -23,27 +23,13 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   } else {
     switch (item.frameType) {
       case 0: // normal
-        price = prices.find(p => p.name === item.name);
-        break;
       case 1: // magic
-        price = prices.find(p => p.name === item.name);
-        break;
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
           price = prices.find(
             p =>
               (p.name === item.name || item.name.indexOf(p.name) > -1) &&
               p.tier === item.tier
-          );
-        } else if (item.ilvl > 0) {
-          if (item.ilvl > 86) {
-            item.ilvl = 86;
-          }
-          price = prices.find(
-            p =>
-              p.baseType === item.typeLine &&
-              p.level === item.ilvl &&
-              p.variant === item.variant
           );
         } else {
           // other (e.g fragments, scrabs)
