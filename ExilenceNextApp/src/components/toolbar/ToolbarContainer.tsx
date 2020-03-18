@@ -52,8 +52,20 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
   const handleOverlay = () => {
     // todo: rework to toggle modal instead, with buttons for each overlay
-    overlayStore!.createOverlay({ event: 'netWorth', data: {}})
-  }
+
+    const netWorth = signalrStore!.activeGroup
+      ? signalrStore!.activeGroup.netWorthValue
+      : accountStore!.getSelectedAccount!.activeProfile!.netWorthValue;
+
+    const income = signalrStore!.activeGroup
+      ? signalrStore!.activeGroup.income
+      : accountStore!.getSelectedAccount!.activeProfile!.income;
+
+    overlayStore!.createOverlay({
+      event: 'netWorth',
+      data: { netWorth: netWorth, income: income }
+    });
+  };
 
   const handleRemoveProfile = () => {
     accountStore!.getSelectedAccount.removeActiveProfile();

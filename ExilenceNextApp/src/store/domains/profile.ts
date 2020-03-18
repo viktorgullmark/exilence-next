@@ -233,6 +233,18 @@ export class Profile {
     }
     rootStore.uiStateStore!.setIsSnapshotting(false);
     rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
+    rootStore.overlayStore.updateOverlay({
+      event: 'netWorth',
+      data: {
+        netWorth: rootStore.signalrStore.activeGroup
+          ? rootStore.signalrStore.activeGroup.netWorthValue
+          : rootStore.accountStore.getSelectedAccount.activeProfile!
+              .netWorthValue,
+        income: rootStore.signalrStore.activeGroup
+          ? rootStore.signalrStore.activeGroup.income
+          : rootStore.accountStore.getSelectedAccount.activeProfile!.income
+      }
+    });
   }
 
   @action snapshotFail(e?: AxiosError | Error) {

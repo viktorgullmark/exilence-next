@@ -74,6 +74,7 @@ ipcMain.on('createOverlay', (event, data) => {
 
   windows[window].once('ready-to-show', () => {
     windows[window].show();
+    windows[window].webContents.send('overlayUpdate', data);
   });
 
   windows[window].on('closed', e => {
