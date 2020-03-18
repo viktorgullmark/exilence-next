@@ -166,6 +166,8 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
       characterName={activeCharacter ? activeCharacter.name : ''}
+      includeEquipment={activeProfile!.includeEquipment}
+      includeInventory={activeProfile!.includeInventory}
       characters={chars}
       loading={uiStateStore!.savingProfile}
     />

@@ -22,6 +22,7 @@ import SimpleField from '../simple-field/SimpleField';
 import { generateProfileName } from '../../utils/profile.utils';
 import SelectField from '../select-field/SelectField';
 import { ISelectOption } from '../../interfaces/select-option.interface';
+import CheckboxField from '../checkbox-field/CheckboxField';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -43,6 +44,8 @@ interface ProfileDialogProps {
   stashTabs: IStashTab[];
   stashTabIds: string[];
   characters: Character[];
+  includeInventory?: boolean;
+  includeEquipment?: boolean;
   handleClickClose: () => void;
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
@@ -55,6 +58,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   isEditing,
   profile,
   leagueUuid,
+  includeInventory,
+  includeEquipment,
   priceLeagueUuid,
   leagues,
   priceLeagues,
@@ -89,7 +94,9 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
               stashTabIds: stashTabIds,
-              character: characterName
+              character: characterName,
+              includeEquipment: includeEquipment,
+              includeInventory: includeInventory
             }}
             onSubmit={(values: ProfileFormValues) => {
               handleSubmit(values);
@@ -172,6 +179,14 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                         label: c.name
                       } as ISelectOption;
                     })}
+                  />
+                  <CheckboxField
+                    name="includeEquipment"
+                    label={t('label.include_equipment')}
+                  />
+                  <CheckboxField
+                    name="includeInventory"
+                    label={t('label.include_inventory')}
                   />
                 </Box>
                 <div className={classes.dialogActions}>

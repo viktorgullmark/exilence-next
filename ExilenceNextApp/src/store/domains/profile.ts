@@ -48,6 +48,8 @@ export class Profile {
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
   @persist @observable active: boolean = false;
+  @persist @observable includeEquipment: boolean = false;
+  @persist @observable includeInventory: boolean = false;
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);

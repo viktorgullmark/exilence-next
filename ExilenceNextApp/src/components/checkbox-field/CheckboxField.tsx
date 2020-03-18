@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CheckboxField = ({ name, label, required }: Props) => {
-  const [field, meta] = useField(name);
+  const [field, meta] = useField({ name, type: 'checkbox'});
 
   return (
     <FormControl
@@ -19,7 +19,7 @@ const CheckboxField = ({ name, label, required }: Props) => {
       fullWidth
     >
       <FormControlLabel
-        checked
+        checked={field.checked}
         {...field}
         control={
           <Checkbox
