@@ -126,7 +126,6 @@
             const netWorthElement = document.getElementById('netWorth');
 
             ipcRenderer.on('overlayUpdate', (event, window) => {
-                console.log(window);
                 if (window.event === 'netWorth') {
                     netWorthElement.innerText = +window.data.netWorth.toFixed(2) + ' c';
                     incomeElement.innerText = window.data.income;
