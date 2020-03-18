@@ -49,6 +49,7 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
         variant="outlined"
         fullWidth={fullWidth}
         margin={margin}
+        required
         error={
           (touched.league && errors.league !== undefined) ||
           noCharacters.length > 0
