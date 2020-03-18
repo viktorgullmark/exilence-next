@@ -54,16 +54,14 @@ ipcMain.on('createOverlay', (event, data) => {
   windows[window] = new BrowserWindow({
     x: 200,
     y: 200,
-    height: 80,
-    width: 200,
-    minWidth: 150,
-    minHeight: 75,
+    height: 92,
+    width: 255,
     skipTaskbar: true,
     alwaysOnTop: true,
     show: false,
     frame: false,
     webPreferences: { webSecurity: false, nodeIntegration: true },
-    resizable: true
+    resizable: false
   });
 
   windows[window].loadURL(

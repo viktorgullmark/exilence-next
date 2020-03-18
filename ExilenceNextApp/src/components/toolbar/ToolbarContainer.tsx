@@ -11,6 +11,7 @@ import { SignalrStore } from '../../store/signalrStore';
 import { PriceStore } from '../../store/priceStore';
 import { SettingStore } from '../../store/settingStore';
 import { OverlayStore } from '../../store/overlayStore';
+import { formatValue } from '../../utils/snapshot.utils';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -50,16 +51,26 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
     accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
   };
 
+  const activeCurrency = () => {
+    return accountStore!.getSelectedAccount!.activeProfile!
+      ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
+      : { name: 'chaos', short: 'c' };
+  };
+
   const handleOverlay = () => {
     // todo: rework to toggle modal instead, with buttons for each overlay
+
+    const income = formatValue(
+      signalrStore!.activeGroup
+        ? signalrStore!.activeGroup.income
+        : accountStore!.getSelectedAccount!.activeProfile!.income,
+      activeCurrency().short,
+      true
+    );
 
     const netWorth = signalrStore!.activeGroup
       ? signalrStore!.activeGroup.netWorthValue
       : accountStore!.getSelectedAccount!.activeProfile!.netWorthValue;
-
-    const income = signalrStore!.activeGroup
-      ? signalrStore!.activeGroup.income
-      : accountStore!.getSelectedAccount!.activeProfile!.income;
 
     overlayStore!.createOverlay({
       event: 'netWorth',

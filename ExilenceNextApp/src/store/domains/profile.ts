@@ -24,7 +24,8 @@ import {
   formatSnapshotsForChart,
   getItemCount,
   getValueForSnapshotsTabs,
-  mapSnapshotToApiSnapshot
+  mapSnapshotToApiSnapshot,
+  formatValue
 } from '../../utils/snapshot.utils';
 import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
@@ -233,6 +234,19 @@ export class Profile {
     }
     rootStore.uiStateStore!.setIsSnapshotting(false);
     rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
+
+    const activeCurrency = rootStore.accountStore.getSelectedAccount!.activeProfile!
+      ? rootStore.accountStore.getSelectedAccount!.activeProfile!.activeCurrency
+      : { name: 'chaos', short: 'c' };
+
+    const income = formatValue(
+      rootStore.signalrStore.activeGroup
+        ? rootStore.signalrStore.activeGroup.income
+        : rootStore.accountStore.getSelectedAccount!.activeProfile!.income,
+      activeCurrency.short,
+      true
+    );
+
     rootStore.overlayStore.updateOverlay({
       event: 'netWorth',
       data: {
@@ -240,9 +254,7 @@ export class Profile {
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!
               .netWorthValue,
-        income: rootStore.signalrStore.activeGroup
-          ? rootStore.signalrStore.activeGroup.income
-          : rootStore.accountStore.getSelectedAccount.activeProfile!.income
+        income: income
       }
     });
   }

@@ -29,8 +29,8 @@
                 grid-template-areas:
                     'topLeft topLeft topLeft topRight topRight topRight'
                     'bottomLeft bottomLeft bottomLeft bottomRight bottomRight bottomRight';
-                grid-gap: 10px;
-                padding: 10px;
+                grid-gap: 0px;
+                padding: 5 10px;
             }
 
             .grid-container > div {
@@ -83,7 +83,7 @@
 
             @media screen and (min-width: 220px) {
                 body {
-                    font-size: 16px;
+                    font-size: 14px;
                 }
             }
 
@@ -124,7 +124,7 @@
                 console.log(window);
                 if (window.event === 'netWorth') {
                     netWorthElement.innerText = +window.data.netWorth.toFixed(2) + ' c';
-                    incomeElement.innerText = +window.data.income.toFixed(2) + ' c';
+                    incomeElement.innerText = window.data.income;
                 }
             })
 
