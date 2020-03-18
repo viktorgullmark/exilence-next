@@ -50,6 +50,7 @@
                 -webkit-app-region: drag;
                 font-size: 0.8rem;
                 height: 15px;
+                font-weight: 500;
                 color: #e91e63;
                 background-color: #000;
                 display: flex;
@@ -74,6 +75,10 @@
 
             .net-worth {
                 color: rgb(214, 182, 0);
+            }
+
+            .secondary-text {
+                color: #c2c2c2;
             }
 
             .material-icons {
@@ -112,7 +117,7 @@
             <div class="title1">Net worth</div>
             <div id="netWorth" class="content1 net-worth">0 c</div>
             <div class="title2">Income</div>  
-            <div id="income" class="content2 net-worth">0 c</div>
+            <div class="content2 net-worth"><div id="income">0 c</div><span class="secondary-text">&nbsp;/ h</span></div>
           </div>
         <script>
             const { ipcRenderer, remote } = require('electron')

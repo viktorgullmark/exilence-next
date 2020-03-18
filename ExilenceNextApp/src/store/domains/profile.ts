@@ -234,8 +234,13 @@ export class Profile {
     }
     rootStore.uiStateStore!.setIsSnapshotting(false);
     rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
+    rootStore.accountStore.getSelectedAccount.activeProfile!.updateNetWorthOverlay();
+  }
 
-    const activeCurrency = rootStore.accountStore.getSelectedAccount!.activeProfile!
+  @action
+  updateNetWorthOverlay() {
+    const activeCurrency = rootStore.accountStore.getSelectedAccount!
+      .activeProfile!
       ? rootStore.accountStore.getSelectedAccount!.activeProfile!.activeCurrency
       : { name: 'chaos', short: 'c' };
 

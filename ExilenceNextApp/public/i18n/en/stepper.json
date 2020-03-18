@@ -3,6 +3,7 @@
     "initial_step": "Welcome to Exilence Next!",
     "profile_step": "Profile section",
     "snapshot_step": "Snapshot section",
+    "overlay_step": "Overlay section",
     "group_step": "Group section",
     "notifications_step": "Notification list"
   },
@@ -10,6 +11,7 @@
     "initial_step": "This tour will guide you through the main functions of the app to get you started quickly.",
     "profile_step": "In this area you can manage your profiles, and create multiple ones for different setups for quick access.",
     "snapshot_step": "This is where the magic happens, take snapshots to see your current net worth status!",
+    "overlay_step": "Here you can toggle the overlay, for a slim overview while you map!",
     "group_step": "Here you can group up with your friends to see your combined net worth status.",
     "notifications_step": "Everything that happens in the app will be displayed here."
   }
