@@ -23,6 +23,7 @@ import { generateProfileName } from '../../utils/profile.utils';
 import SelectField from '../select-field/SelectField';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import CheckboxField from '../checkbox-field/CheckboxField';
+import { placeholderOption } from '../../utils/misc.utils';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -74,7 +75,6 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
 }: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   const noCharacters = t(noCharError(characters));
   return (
     <div>
@@ -183,12 +183,12 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   <CheckboxField
                     name="includeEquipment"
                     label={t('label.include_equipment')}
-                    disabled={!values.character}
+                    disabled={!values.character || values.character === placeholderOption}
                   />
                   <CheckboxField
                     name="includeInventory"
                     label={t('label.include_inventory')}
-                    disabled={!values.character}
+                    disabled={!values.character || values.character === placeholderOption}
                   />
                 </Box>
                 <div className={classes.dialogActions}>

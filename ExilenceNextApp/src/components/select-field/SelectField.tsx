@@ -5,11 +5,12 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import React from 'react';
 import useLabelWidth from '../../hooks/use-label-width';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import useStyles from './SelectField.styles';
+import { placeholderOption } from '../../utils/misc.utils';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -40,7 +41,7 @@ const SelectField: React.FC<Props> = ({
       <InputLabel ref={ref}>{label}</InputLabel>
       <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
         {options
-          ? options.map(opt => (
+          ? [{ id: '', value: placeholderOption, label: placeholderOption } as ISelectOption].concat(options).map(opt => (
               <MenuItem key={opt.value} value={opt.value}>
                 {opt.label}
               </MenuItem>

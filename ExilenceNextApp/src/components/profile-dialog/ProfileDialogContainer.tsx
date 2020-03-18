@@ -14,6 +14,7 @@ import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 import { UiStateStore } from '../../store/uiStateStore';
 import uuid from 'uuid';
+import { placeholderOption } from '../../utils/misc.utils';
 
 interface Props {
   accountStore?: AccountStore;
@@ -165,7 +166,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
       leagues={leagues}
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
-      characterName={activeCharacter ? activeCharacter.name : ''}
+      characterName={activeCharacter ? activeCharacter.name : placeholderOption}
       includeEquipment={activeProfile!.includeEquipment}
       includeInventory={activeProfile!.includeInventory}
       characters={chars}
