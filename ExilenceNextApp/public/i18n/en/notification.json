@@ -64,6 +64,7 @@
     }
   },
   "error": {
+    "unknown_error": "Unknown error occurred",
     "title": {
       "init_session": "Initialize session failed",
       "validate_session": "Validate session failed",
