@@ -37,7 +37,7 @@ export let visitor: Visitor | undefined = undefined;
 initSentry();
 configureI18n();
 enableLogging({
-  action: true,
+  action: false,
   reaction: false,
   transaction: false,
   compute: false
