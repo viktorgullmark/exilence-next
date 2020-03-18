@@ -6,9 +6,10 @@ interface Props {
   name: string;
   label: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
-const CheckboxField = ({ name, label, required }: Props) => {
+const CheckboxField = ({ name, label, required, disabled }: Props) => {
   const [field, meta] = useField({ name, type: 'checkbox'});
 
   return (
@@ -16,6 +17,7 @@ const CheckboxField = ({ name, label, required }: Props) => {
       id={name}
       error={meta.touched && !!meta.error}
       required={required}
+      disabled={disabled}
       fullWidth
     >
       <FormControlLabel

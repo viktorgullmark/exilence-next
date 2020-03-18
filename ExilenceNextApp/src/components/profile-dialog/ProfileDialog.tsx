@@ -183,10 +183,12 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   <CheckboxField
                     name="includeEquipment"
                     label={t('label.include_equipment')}
+                    disabled={!values.character}
                   />
                   <CheckboxField
                     name="includeInventory"
                     label={t('label.include_inventory')}
+                    disabled={!values.character}
                   />
                 </Box>
                 <div className={classes.dialogActions}>
