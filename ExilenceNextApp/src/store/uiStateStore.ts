@@ -88,7 +88,11 @@ export class UiStateStore {
 
   @action
   incrementStatusMessageCount() {
-    if (this.statusMessage?.currentCount) {
+    if (
+      this.statusMessage?.currentCount &&
+      this.statusMessage?.totalCount &&
+      this.statusMessage?.totalCount >= this.statusMessage?.currentCount
+    ) {
       this.statusMessage.currentCount++;
     }
   }
