@@ -30,6 +30,9 @@ export interface ProfileFormValues {
   league?: string;
   priceLeague?: string;
   stashTabIds?: string[];
+  includeEquipment?: boolean;
+  includeInventory?: boolean;
+  character: string;
 }
 
 interface ProfileDialogProps {

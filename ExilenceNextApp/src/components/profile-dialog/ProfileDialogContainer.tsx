@@ -92,19 +92,6 @@ const ProfileDialogContainer: React.FC<Props> = ({
     return foundLeague ? foundLeague : leagues[0];
   };
 
-  // const getCharacterSelection = (edit: boolean) => {
-  //   if (!chars) {
-  //     return '';
-  //   }
-  
-  //   const name = getNameDropdownSelection(
-  //     chars,
-  //     edit && activeCharacter ? activeCharacter.name : ''
-  //   );
-
-  //   return name;
-  // };
-
   const getPriceLeagueSelection = (edit: boolean) => {
     const id = getDropdownSelection(
       priceLeagues,
@@ -140,7 +127,10 @@ const ProfileDialogContainer: React.FC<Props> = ({
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
       activeStashTabIds: stashTabIds,
-      active: true
+      active: true,
+      activeCharacterName: values.character,
+      includeEquipment: values.includeEquipment,
+      includeInventory: values.includeInventory
     };
     if (isEditing) {
       accountStore!.getSelectedAccount.activeProfile!.updateProfile(

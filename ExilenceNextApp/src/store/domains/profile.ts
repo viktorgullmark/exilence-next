@@ -187,6 +187,9 @@ export class Profile {
     this.activeLeagueId = apiProfile.activeLeagueId;
     this.activePriceLeagueId = apiProfile.activePriceLeagueId;
     this.activeStashTabIds = apiProfile.activeStashTabIds;
+    this.includeInventory = apiProfile.includeInventory;
+    this.includeEquipment = apiProfile.includeEquipment;
+    this.activeCharacterName = apiProfile.activeCharacterName;
     this.name = apiProfile.name;
   }
 
