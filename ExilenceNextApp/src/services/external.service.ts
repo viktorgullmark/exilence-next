@@ -22,6 +22,7 @@ import {
   getItemVariant
 } from '../utils/item.utils';
 import { rootStore } from '..';
+import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = 'https://www.pathofexile.com';
@@ -34,6 +35,7 @@ export const externalService = {
   getItemsForTabs,
   getLeagues,
   getCharacters,
+  getCharacterItems,
   getProfile,
   loginWithOAuth
 };
@@ -148,6 +150,17 @@ function getLeagues(
 function getCharacters(): Observable<AxiosResponse<ICharacter[]>> {
   return rateLimiter.limit(
     axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters')
+  );
+}
+
+function getCharacterItems(
+  account: string,
+  character: string
+): Observable<AxiosResponse<ICharacterWithItems>> {
+  const parameters = `?accountName=${account}&character=${character}`;
+
+  return rateLimiter.limit(
+    axios.get<ICharacterWithItems>(poeUrl + '/character-window/get-items' + parameters)
   );
 }
 
