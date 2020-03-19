@@ -2,7 +2,8 @@ import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
   mapDomainToDropdown,
-  getDropdownSelection
+  getDropdownSelection,
+  getNameDropdownSelection
 } from '../../utils/dropdown.utils';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -13,6 +14,7 @@ import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 import { UiStateStore } from '../../store/uiStateStore';
 import uuid from 'uuid';
+import { placeholderOption } from '../../utils/misc.utils';
 
 interface Props {
   accountStore?: AccountStore;
@@ -38,12 +40,14 @@ const ProfileDialogContainer: React.FC<Props> = ({
   const {
     activeLeague,
     activePriceLeague,
+    activeCharacter,
     accountLeagues,
-    activeProfile
+    activeProfile,
+    characters
   } = account;
   const { leagues, priceLeagues } = leagueStore!;
 
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [chars, setCharacters] = useState<Character[]>(characters ? characters : []);
   const [league, setLeague] = useState('');
   const [priceLeague, setPriceLeague] = useState('');
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
@@ -104,15 +108,11 @@ const ProfileDialogContainer: React.FC<Props> = ({
     let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       l => l.leagueId === id
     );
-
-    let characters: Character[] = [];
-
     setStashTabIds([]);
 
     if (accountLeague) {
-      characters = accountLeague.characters;
       setStashTabs(accountLeague.stashtabs);
-      setCharacters(characters);
+      setCharacters(accountLeague.characters);
     } else {
       setStashTabs([]);
       setCharacters([]);
@@ -127,7 +127,10 @@ const ProfileDialogContainer: React.FC<Props> = ({
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
       activeStashTabIds: stashTabIds,
-      active: true
+      active: true,
+      activeCharacterName: values.character,
+      includeEquipment: values.includeEquipment,
+      includeInventory: values.includeInventory
     };
     if (isEditing) {
       accountStore!.getSelectedAccount.activeProfile!.updateProfile(
@@ -153,7 +156,10 @@ const ProfileDialogContainer: React.FC<Props> = ({
       leagues={leagues}
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
-      characters={characters}
+      characterName={isEditing && activeCharacter ? activeCharacter.name : placeholderOption}
+      includeEquipment={isEditing && activeProfile ? activeProfile!.includeEquipment : false}
+      includeInventory={isEditing && activeProfile ? activeProfile!.includeInventory : false}
+      characters={chars}
       loading={uiStateStore!.savingProfile}
     />
   );

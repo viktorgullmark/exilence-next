@@ -65,6 +65,8 @@
     "total_income": "Income",
     "total_snapshots": "Snapshots",
     "session_id_link": "How to find your session id",
+    "include_inventory": "Include inventory",
+    "include_equipment": "Include equipment",
     "sign_out": "Sign out",
     "join_group": "Join group",
     "overlay_icon_title": "Open overlay",

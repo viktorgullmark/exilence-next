@@ -24,4 +24,5 @@ export interface IPricedItem {
   sockets: number;
   variant: string;
   tier: number;
+  inventoryId: string;
 }

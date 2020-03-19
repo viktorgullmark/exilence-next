@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added a game overlay for the net worth component
     - Very basic right now, but will be improved with time
 - Added fallback for error messages in case message is missing
+##### Fixed
+- Fixed a bug where the status messages would sometimes display an incorrect stash tab count
 
 ## [0.2.12] - 2020-03-17
 ##### Added

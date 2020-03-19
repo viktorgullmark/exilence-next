@@ -7,5 +7,8 @@ export interface IProfile {
   activePriceLeagueId?: string;
   activeCurrency?: ICurrency;
   activeStashTabIds?: string[];
+  activeCharacterName?: string;
   active?: boolean;
+  includeEquipment?: boolean;
+  includeInventory?: boolean;
 }

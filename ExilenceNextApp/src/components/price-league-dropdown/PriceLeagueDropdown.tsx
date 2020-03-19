@@ -37,6 +37,7 @@ const PriceLeagueDropdown: React.FC<PriceLeagueDropdownProps> = ({
         fullWidth
         variant="outlined"
         margin="normal"
+        required
         error={touched.priceLeague && errors.priceLeague !== undefined}
       >
         <InputLabel ref={ref} htmlFor="price-league-dd">

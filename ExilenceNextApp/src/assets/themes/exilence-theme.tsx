@@ -93,7 +93,7 @@ export default function exilenceTheme() {
       },
       MuiFormControlLabel: {
         root: {
-          color: secondary.light
+          color: '#c2c2c2'
         }
       }
     },

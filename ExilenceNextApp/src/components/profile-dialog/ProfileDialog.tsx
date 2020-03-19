@@ -1,4 +1,4 @@
-import { TextField, IconButton } from '@material-ui/core';
+import { TextField, IconButton, Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -20,12 +20,19 @@ import { Profile } from './../../store/domains/profile';
 import useStyles from './ProfileDialog.styles';
 import SimpleField from '../simple-field/SimpleField';
 import { generateProfileName } from '../../utils/profile.utils';
+import SelectField from '../select-field/SelectField';
+import { ISelectOption } from '../../interfaces/select-option.interface';
+import CheckboxField from '../checkbox-field/CheckboxField';
+import { placeholderOption } from '../../utils/misc.utils';
 
 export interface ProfileFormValues {
   profileName: string;
   league?: string;
   priceLeague?: string;
   stashTabIds?: string[];
+  includeEquipment?: boolean;
+  includeInventory?: boolean;
+  character: string;
 }
 
 interface ProfileDialogProps {
@@ -33,6 +40,7 @@ interface ProfileDialogProps {
   loading: boolean;
   isEditing?: boolean;
   profile?: Profile;
+  characterName: string;
   leagueUuid: string;
   priceLeagueUuid: string;
   leagues: League[];
@@ -40,6 +48,8 @@ interface ProfileDialogProps {
   stashTabs: IStashTab[];
   stashTabIds: string[];
   characters: Character[];
+  includeInventory?: boolean;
+  includeEquipment?: boolean;
   handleClickClose: () => void;
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
@@ -52,6 +62,8 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   isEditing,
   profile,
   leagueUuid,
+  includeInventory,
+  includeEquipment,
   priceLeagueUuid,
   leagues,
   priceLeagues,
@@ -61,11 +73,11 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   handleClickClose,
   handleLeagueChange,
   handleSubmit,
+  characterName,
   handleStashTabChange
 }: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   const noCharacters = t(noCharError(characters));
   return (
     <div>
@@ -80,10 +92,14 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: isEditing && profile ? profile.name : generateProfileName(),
+              profileName:
+                isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
-              stashTabIds: stashTabIds
+              stashTabIds: stashTabIds,
+              character: characterName,
+              includeEquipment: includeEquipment,
+              includeInventory: includeInventory
             }}
             onSubmit={(values: ProfileFormValues) => {
               handleSubmit(values);
@@ -155,6 +171,29 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   handleStashTabChange={handleStashTabChange}
                   handleChange={handleChange}
                 />
+                <Box mt={2}>
+                  <SelectField
+                    name="character"
+                    label={t('label.select_character')}
+                    options={characters?.map(c => {
+                      return {
+                        id: c.name,
+                        value: c.name,
+                        label: c.name
+                      } as ISelectOption;
+                    })}
+                  />
+                  <CheckboxField
+                    name="includeEquipment"
+                    label={t('label.include_equipment')}
+                    disabled={!values.character || values.character === placeholderOption}
+                  />
+                  <CheckboxField
+                    name="includeInventory"
+                    label={t('label.include_inventory')}
+                    disabled={!values.character || values.character === placeholderOption}
+                  />
+                </Box>
                 <div className={classes.dialogActions}>
                   <Button onClick={() => handleClickClose()}>
                     {t('action.cancel')}
