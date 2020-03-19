@@ -14,6 +14,10 @@ export function getToolbarSteps(): IStepDescriptor[] {
       selector: '[data-tour-elem="snapshotArea"]'
     },
     {
+      key: 'overlay_step',
+      selector: '[data-tour-elem="overlayArea"]'
+    },
+    {
       key: 'group_step',
       selector: '[data-tour-elem="groupArea"]'
     },

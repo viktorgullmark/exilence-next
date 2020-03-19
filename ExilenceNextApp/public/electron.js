@@ -22,11 +22,11 @@ if (!isDev) {
   });
 }
 
-let mainWindow;
+const windows = [];
 
 function sendStatusToWindow(text) {
   log.info(text);
-  mainWindow.webContents.send('message', text);
+  windows['main'].webContents.send('message', text);
 }
 
 ipcMain.on('checkForUpdates', function(event) {
@@ -42,7 +42,48 @@ ipcMain.on('quitAndInstall', function(event) {
 });
 
 ipcMain.on('notify', function(event) {
-  mainWindow.flashFrame(true);
+  windows['main'].flashFrame(true);
+});
+
+ipcMain.on('createOverlay', (event, data) => {
+  const window = data.event;
+
+  if (windows[window] !== undefined && windows[window] !== null) {
+    windows[window].destroy();
+  }
+  windows[window] = new BrowserWindow({
+    x: 200,
+    y: 200,
+    height: 92,
+    width: 255,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    show: false,
+    frame: false,
+    webPreferences: { webSecurity: false, nodeIntegration: true },
+    resizable: false
+  });
+
+  windows[window].loadURL(
+    isDev
+      ? `file://${path.join(__dirname, `../public/overlays/${window}.html`)}`
+      : `file://${path.join(__dirname, `../build/overlays/${window}.html`)}`
+  );
+
+  windows[window].once('ready-to-show', () => {
+    windows[window].show();
+    windows[window].webContents.send('overlayUpdate', data);
+  });
+
+  windows[window].on('closed', e => {
+    windows[window] = null;
+  });
+});
+
+ipcMain.on('overlayUpdate', (event, window) => {
+  if (windows[window.event] && !windows[window.event].isDestroyed()) {
+    windows[window.event].webContents.send('overlayUpdate', window);
+  }
 });
 
 autoUpdater.on('checking-for-update', () => {
@@ -72,7 +113,7 @@ autoUpdater.on('download-progress', progressObj => {
 
 autoUpdater.on('update-downloaded', (event, releaseName, releaseNotes) => {
   sendStatusToWindow('Update downloaded');
-  mainWindow.webContents.send('updateDownloaded');
+  windows['main'].webContents.send('updateDownloaded');
   shouldNotify = false;
 });
 
@@ -84,7 +125,7 @@ function createWindow() {
     defaultHeight: size.height
   });
 
-  mainWindow = new BrowserWindow({
+  windows['main'] = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,
@@ -95,16 +136,19 @@ function createWindow() {
     frame: false
   });
 
-  mainWindowState.manage(mainWindow);
+  mainWindowState.manage(windows['main']);
 
-  mainWindow.loadURL(
+  windows['main'].loadURL(
     isDev
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  windows['main'].on('closed', () => {
+    windows['main'] = null;
+    if (windows['netWorth'] !== undefined && windows['netWorth'] !== null) {
+      windows['netWorth'].destroy();
+    }
   });
 }
 
@@ -120,7 +164,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (windows['main'] === null) {
     createWindow();
   }
 });
