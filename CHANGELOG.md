@@ -1,10 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.13] - NOT RELEASED
+## [0.3.0] - NOT RELEASED
 ##### Added
 - Added a game overlay for the net worth component
-    - Very basic right now, but will be improved with time
+- Added optional character selection to profiles
+    - Added an option to include equipment in profiles
+    - Added an option to include inventory in profiles
 - Added fallback for error messages in case message is missing
 ##### Fixed
 - Fixed a bug where the status messages would sometimes display an incorrect stash tab count
