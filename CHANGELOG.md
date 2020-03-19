@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.13] - NOT RELEASED
 ##### Added
+- Added a game overlay for the net worth component
+    - Very basic right now, but will be improved with time
 - Added fallback for error messages in case message is missing
 
 ## [0.2.12] - 2020-03-17
