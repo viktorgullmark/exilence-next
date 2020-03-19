@@ -157,8 +157,8 @@ const ProfileDialogContainer: React.FC<Props> = ({
       priceLeagues={leagueStore!.priceLeagues}
       stashTabs={stashTabs}
       characterName={isEditing && activeCharacter ? activeCharacter.name : placeholderOption}
-      includeEquipment={isEditing ? activeProfile!.includeEquipment : false}
-      includeInventory={isEditing ? activeProfile!.includeInventory : false}
+      includeEquipment={isEditing && activeProfile ? activeProfile!.includeEquipment : false}
+      includeInventory={isEditing && activeProfile ? activeProfile!.includeInventory : false}
       characters={chars}
       loading={uiStateStore!.savingProfile}
     />
