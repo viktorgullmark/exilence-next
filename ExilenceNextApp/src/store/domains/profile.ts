@@ -513,6 +513,8 @@ export class Profile {
       'remove_all_snapshots',
       'success'
     );
+
+    this.updateNetWorthOverlay();
   }
 
   @action

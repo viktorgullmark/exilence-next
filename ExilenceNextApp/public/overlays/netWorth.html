@@ -128,7 +128,7 @@
             ipcRenderer.on('overlayUpdate', (event, window) => {
                 if (window.event === 'netWorth') {
                     netWorthElement.innerText = +window.data.netWorth.toFixed(2) + ' c';
-                    incomeElement.innerText = window.data.income;
+                    incomeElement.innerText = window.data.income ? window.data.income : '0 c';
                 }
             })
 
