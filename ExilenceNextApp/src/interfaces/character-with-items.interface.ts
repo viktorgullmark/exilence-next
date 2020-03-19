@@ -3,5 +3,5 @@ import { IItem } from './item.interface';
 
 export interface ICharacterWithItems {
   character: ICharacter;
-  items: IItem;
+  items: IItem[];
 }

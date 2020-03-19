@@ -91,7 +91,7 @@ export class UiStateStore {
     if (
       this.statusMessage?.currentCount &&
       this.statusMessage?.totalCount &&
-      this.statusMessage?.totalCount >= this.statusMessage?.currentCount
+      this.statusMessage?.totalCount > this.statusMessage?.currentCount
     ) {
       this.statusMessage.currentCount++;
     }

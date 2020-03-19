@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.2.13] - NOT RELEASED
 ##### Added
 - Added fallback for error messages in case message is missing
+##### Fixed
+- Fixed a bug where the status messages would sometimes display an incorrect stash tab count
 
 ## [0.2.12] - 2020-03-17
 ##### Added

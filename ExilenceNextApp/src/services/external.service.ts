@@ -19,7 +19,8 @@ import {
   getLinks,
   getQuality,
   getLevel,
-  getItemVariant
+  getItemVariant,
+  mapItemsToPricedItems
 } from '../utils/item.utils';
 import { rootStore } from '..';
 import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
@@ -87,48 +88,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
         map((stash: AxiosResponse<IStash>) => {
           rootStore.uiStateStore.incrementStatusMessageCount();
           const items = {
-            pricedItems: stash.data.items.map((item: IItem) => {
-              return {
-                uuid: uuid.v4(),
-                itemId: item.id,
-                name: getItemName(item.typeLine, item.name),
-                typeLine: item.typeLine,
-                frameType: item.frameType,
-                calculated: 0,
-                elder: item.elder !== undefined ? item.elder : false,
-                shaper: item.shaper !== undefined ? item.shaper : false,
-                icon: item.icon,
-                ilvl: item.ilvl,
-                tier:
-                  item.properties !== null && item.properties !== undefined
-                    ? getMapTier(item.properties)
-                    : 0,
-                corrupted: item.corrupted || false,
-                links:
-                  item.sockets !== undefined && item.sockets !== null
-                    ? getLinks(item.sockets.map(t => t.group))
-                    : 0,
-                sockets:
-                  item.sockets !== undefined && item.sockets !== null
-                    ? item.sockets.length
-                    : 0,
-                quality:
-                  item.properties !== null && item.properties !== undefined
-                    ? getQuality(item.properties)
-                    : 0,
-                level:
-                  item.properties !== null && item.properties !== undefined
-                    ? getLevel(item.properties)
-                    : 0,
-                stackSize: item.stackSize || 1,
-                totalStacksize: item.maxStackSize || 1,
-                variant: getItemVariant(
-                  item.sockets,
-                  item.explicitMods,
-                  getItemName(item.typeLine, item.name)
-                )
-              } as IPricedItem;
-            })
+            pricedItems: mapItemsToPricedItems(stash.data.items)
           };
           return <IStashTabSnapshot>{ ...{ stashTabId: tab.id }, ...items };
         })
@@ -160,7 +120,9 @@ function getCharacterItems(
   const parameters = `?accountName=${account}&character=${character}`;
 
   return rateLimiter.limit(
-    axios.get<ICharacterWithItems>(poeUrl + '/character-window/get-items' + parameters)
+    axios.get<ICharacterWithItems>(
+      poeUrl + '/character-window/get-items' + parameters
+    )
   );
 }
 

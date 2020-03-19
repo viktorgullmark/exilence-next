@@ -3,6 +3,8 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IProperty } from '../interfaces/property.interface';
 import { ISocket } from '../interfaces/socket.interface';
 import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
+import { IItem } from '../interfaces/item.interface';
+import uuid from 'uuid';
 
 export function mergeItemStacks(items: IPricedItem[]) {
   const mergedItems: IPricedItem[] = [];
@@ -35,6 +37,52 @@ export function formatSnapshotsForTable(
   });
 
   return mergeItemStacks(mergedStashTabs);
+}
+
+export function mapItemsToPricedItems(items: IItem[]) {
+  return items.map((item: IItem) => {
+    return {
+      uuid: uuid.v4(),
+      itemId: item.id,
+      name: getItemName(item.typeLine, item.name),
+      typeLine: item.typeLine,
+      frameType: item.frameType,
+      calculated: 0,
+      inventoryId: item.inventoryId,
+      elder: item.elder !== undefined ? item.elder : false,
+      shaper: item.shaper !== undefined ? item.shaper : false,
+      icon: item.icon,
+      ilvl: item.ilvl,
+      tier:
+        item.properties !== null && item.properties !== undefined
+          ? getMapTier(item.properties)
+          : 0,
+      corrupted: item.corrupted || false,
+      links:
+        item.sockets !== undefined && item.sockets !== null
+          ? getLinks(item.sockets.map(t => t.group))
+          : 0,
+      sockets:
+        item.sockets !== undefined && item.sockets !== null
+          ? item.sockets.length
+          : 0,
+      quality:
+        item.properties !== null && item.properties !== undefined
+          ? getQuality(item.properties)
+          : 0,
+      level:
+        item.properties !== null && item.properties !== undefined
+          ? getLevel(item.properties)
+          : 0,
+      stackSize: item.stackSize || 1,
+      totalStacksize: item.maxStackSize || 1,
+      variant: getItemVariant(
+        item.sockets,
+        item.explicitMods,
+        getItemName(item.typeLine, item.name)
+      )
+    } as IPricedItem;
+  });
 }
 
 export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {

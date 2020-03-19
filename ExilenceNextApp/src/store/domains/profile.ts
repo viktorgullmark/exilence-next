@@ -3,7 +3,7 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
@@ -15,7 +15,7 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { mergeItemStacks } from '../../utils/item.utils';
+import { mergeItemStacks, mapItemsToPricedItems } from '../../utils/item.utils';
 import { excludeLegacyMaps } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
@@ -289,26 +289,56 @@ export class Profile {
     );
 
     fromStream(
-      externalService
-        .getItemsForTabs( // todo: forkjoin and fetch char items here, and create a stash tab from it
+      forkJoin(
+        externalService.getItemsForTabs(
           selectedStashTabs,
           rootStore.accountStore.getSelectedAccount.name!,
           league.id
-        )
-        .pipe(
-          map(stashTabsWithItems => {
-            return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.pricedItems = mergeItemStacks(
-                stashTabWithItems.pricedItems
+        ),
+        this.activeCharacterName !== ''
+          ? externalService.getCharacterItems(
+              rootStore.accountStore.getSelectedAccount.name!,
+              this.activeCharacterName
+            )
+          : of(null)
+      ).pipe(
+        map(result => {
+          const stashTabsWithItems = result[0];
+          const characterWithItems = result[1];
+          if (characterWithItems?.data) {
+            const characterItems = mapItemsToPricedItems(
+              characterWithItems?.data?.items
+            );
+            let includedCharacterItems: IPricedItem[] = [];
+            if (this.includeInventory) {
+              includedCharacterItems = includedCharacterItems.concat(
+                characterItems.filter(ci => ci.inventoryId === 'MainInventory')
               );
-              return stashTabWithItems;
-            });
-          }),
-          mergeMap(stashTabsWithItems =>
-            of(this.getItemsSuccess(stashTabsWithItems, league.id))
-          ),
-          catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
-        )
+            }
+            if (this.includeEquipment) {
+              includedCharacterItems = includedCharacterItems.concat(
+                characterItems.filter(ci => ci.inventoryId !== 'MainInventory')
+              );
+            }
+            const characterTab: IStashTabSnapshot = {
+              stashTabId: 'Character',
+              value: 0,
+              pricedItems: includedCharacterItems
+            };
+            stashTabsWithItems.push(characterTab);
+          }
+          return stashTabsWithItems.map(stashTabWithItems => {
+            stashTabWithItems.pricedItems = mergeItemStacks(
+              stashTabWithItems.pricedItems
+            );
+            return stashTabWithItems;
+          });
+        }),
+        mergeMap(stashTabsWithItems =>
+          of(this.getItemsSuccess(stashTabsWithItems, league.id))
+        ),
+        catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
+      )
     );
   }
 
