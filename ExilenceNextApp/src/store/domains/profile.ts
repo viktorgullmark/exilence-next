@@ -290,7 +290,7 @@ export class Profile {
 
     fromStream(
       externalService
-        .getItemsForTabs(
+        .getItemsForTabs( // todo: forkjoin and fetch char items here, and create a stash tab from it
           selectedStashTabs,
           rootStore.accountStore.getSelectedAccount.name!,
           league.id
