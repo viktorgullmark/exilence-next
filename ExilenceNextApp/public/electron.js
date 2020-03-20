@@ -70,6 +70,8 @@ ipcMain.on('createOverlay', (event, data) => {
       : `file://${path.join(__dirname, `../build/overlays/${window}.html`)}`
   );
 
+  windows[window].setAlwaysOnTop(true, 'screen-saver');
+
   windows[window].once('ready-to-show', () => {
     windows[window].show();
     windows[window].webContents.send('overlayUpdate', data);
