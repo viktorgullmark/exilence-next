@@ -1,5 +1,14 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import { grey, green, red, amber } from '@material-ui/core/colors';
+import {
+  grey,
+  green,
+  red,
+  amber,
+  blue,
+  cyan,
+  lime,
+  orange
+} from '@material-ui/core/colors';
 
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
 
@@ -12,19 +21,28 @@ export const primaryDarker = '#4a091f';
 
 export const fontColors = {
   hintDarker: 'rgba(255, 255, 255, 0.2)'
-}
+};
+
+export const highchartsColors = [
+  primaryMain,
+  orange[300],
+  cyan[300],
+  lime[300],
+  amber[300],
+  blue[300]
+];
 
 export const secondary = {
   light: '#696969',
   main: '#282828',
   dark: '#000'
-}
+};
 
 export const gridSpacing = 2;
 
 export const cardColors = {
   primary: 'linear-gradient(90deg, #273238 0%, #1c262b 100%)',
-  secondary: 'linear-gradient(90deg, #1d3e3b 0%, #192f2d 100%)', 
+  secondary: 'linear-gradient(90deg, #1d3e3b 0%, #192f2d 100%)',
   third: 'linear-gradient(90deg, #14384a 0%, #082533 100%)'
 };
 
@@ -54,7 +72,7 @@ export const statusColors = {
 export const currencyChangeColors = {
   positive: green[600],
   negative: red[700]
-}
+};
 
 export const background = {
   default: '#191919',
