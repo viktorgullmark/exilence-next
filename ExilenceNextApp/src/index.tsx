@@ -39,7 +39,7 @@ initSentry();
 configureI18n();
 configureAxios();
 enableLogging({
-  action: true,
+  action: false,
   reaction: false,
   transaction: false,
   compute: false

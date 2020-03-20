@@ -45,6 +45,8 @@ ipcMain.on('notify', function(event) {
   windows['main'].flashFrame(true);
 });
 
+/*    OVERLAY    */
+
 ipcMain.on('createOverlay', (event, data) => {
   const window = data.event;
 
@@ -82,11 +84,62 @@ ipcMain.on('createOverlay', (event, data) => {
   });
 });
 
-ipcMain.on('overlayUpdate', (event, window) => {
+ipcMain.on('overlayUpdate', (event, args) => {
   if (windows[window.event] && !windows[window.event].isDestroyed()) {
-    windows[window.event].webContents.send('overlayUpdate', window);
+    windows[window.event].webContents.send('overlayUpdate', args);
   }
 });
+
+/*   LOG MONITOR   */
+
+ipcMain.on('log-create', (event, data) => {
+  if (windows['log-monitor'] !== undefined && windows['log-monitor'] !== null) {
+    windows['log-monitor'].destroy();
+  }
+  windows['log-monitor'] = new BrowserWindow({
+    skipTaskbar: true,
+    show: false,
+    webPreferences: { webSecurity: false, nodeIntegration: true }
+  });
+  windows['log-monitor'].loadURL(
+    isDev
+      ? `file://${path.join(
+          __dirname,
+          `../public/background-tasks/log-monitor.html`
+        )}`
+      : `file://${path.join(
+          __dirname,
+          `../build/background-tasks/log-monitor.html`
+        )}`
+  );
+
+  windows['log-monitor'].on('closed', e => {
+    windows['log-monitor'] = null;
+  });
+
+  windows['log-monitor'].webContents.openDevTools();
+});
+
+ipcMain.on('log-start', (event, args) => {
+  if (windows['log-monitor'] && !windows['log-monitor'].isDestroyed()) {
+    windows['log-monitor'].webContents.send('log-start', args);
+  }
+});
+ipcMain.on('log-stop', (event, args) => {
+  if (windows['log-monitor'] && !windows['log-monitor'].isDestroyed()) {
+    windows['log-monitor'].webContents.send('log-stop', args);
+  }
+});
+ipcMain.on('log-path', (event, args) => {
+  if (windows['log-monitor'] && !windows['log-monitor'].isDestroyed()) {
+    windows['log-monitor'].webContents.send('log-path', args);
+  }
+});
+ipcMain.on('log-event', (event, args) => {
+  windows['main'].webContents.send('log-event', args);
+});
+
+/*   UPDATE LOGIC   */
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');

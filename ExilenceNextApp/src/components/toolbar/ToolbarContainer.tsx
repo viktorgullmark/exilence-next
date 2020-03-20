@@ -12,6 +12,9 @@ import { PriceStore } from '../../store/priceStore';
 import { SettingStore } from '../../store/settingStore';
 import { OverlayStore } from '../../store/overlayStore';
 import { formatValue } from '../../utils/snapshot.utils';
+import { LogStore } from '../../store/logStore';
+import { Observable, from, of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -22,6 +25,7 @@ interface ToolbarContainerProps {
   priceStore?: PriceStore;
   settingStore?: SettingStore;
   overlayStore?: OverlayStore;
+  logStore?: LogStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
@@ -31,7 +35,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   notificationStore,
   priceStore,
   settingStore,
-  overlayStore
+  overlayStore,
+  logStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -58,7 +63,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleOverlay = () => {
-    // todo: rework to toggle modal instead, with buttons for each overlay
+    //todo: rework to toggle modal instead, with buttons for each overlay
 
     const income = formatValue(
       signalrStore!.activeGroup
@@ -76,6 +81,27 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
       event: 'netWorth',
       data: { netWorth: netWorth, income: income }
     });
+  };
+
+  const handleLogMonitor = () => {
+    of(true)
+      .pipe(
+        delay(500),
+        tap(() => {
+          logStore!.createLogMonitor();
+        }),
+        delay(1000),
+        tap(() => {
+          logStore!.setLogMonitorPath(
+            'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt'
+          );
+        }),
+        delay(1500),
+        tap(() => {
+          logStore!.startLogMonitor();
+        })
+      )
+      .subscribe();
   };
 
   const handleRemoveProfile = () => {
@@ -143,6 +169,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
         handleOverlay={handleOverlay}
+        handleLogMonitor={handleLogMonitor}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
@@ -168,5 +195,6 @@ export default inject(
   'signalrStore',
   'priceStore',
   'settingStore',
-  'overlayStore'
+  'overlayStore',
+  'logStore'
 )(observer(ToolbarContainer));

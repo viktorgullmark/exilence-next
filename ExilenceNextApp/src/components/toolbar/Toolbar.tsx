@@ -19,6 +19,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
+import DescriptionIcon from '@material-ui/icons/Description';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -70,6 +71,7 @@ interface Props {
   ) => void;
   handleSnapshot: () => void;
   handleOverlay: () => void;
+  handleLogMonitor: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
@@ -102,7 +104,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
     handleAccountMenuOpen,
     handleClearSnapshots,
     handleRemoveProfile,
-    handleOverlay
+    handleOverlay,
+    handleLogMonitor
   } = props;
 
   const classes = useStyles();
@@ -324,7 +327,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               </Tooltip>
             </Grid>
             <Grid item className={classes.divider}></Grid>
-            <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
+            <Grid
+              item
+              className={classes.overlayArea}
+              data-tour-elem="overlayArea"
+            >
               <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
                 <span>
                   <IconButton
@@ -337,6 +344,17 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                   </IconButton>
                 </span>
               </Tooltip>
+            </Grid>
+            <Grid item className={classes.logMonitorArea}>
+              <span>
+                <IconButton
+                  onClick={() => handleLogMonitor()}
+                  aria-haspopup="true"
+                  className={clsx(classes.iconButton)}
+                >
+                  <DescriptionIcon fontSize="small" />
+                </IconButton>
+              </span>
             </Grid>
             <Grid item className={classes.divider}></Grid>
             <Grid item className={classes.groupArea} data-tour-elem="groupArea">
