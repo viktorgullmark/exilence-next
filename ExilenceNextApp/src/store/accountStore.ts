@@ -2,13 +2,14 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, throwError, timer } from 'rxjs';
+import { forkJoin, of, throwError, timer, Subject } from 'rxjs';
 import {
   catchError,
   concatMap,
   map,
   mergeMap,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs/operators';
 import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
@@ -30,12 +31,19 @@ export class AccountStore {
   @observable code: string = '';
   @observable sessionId: string = '';
 
+  cancelledRetry: Subject<boolean> = new Subject();
+
   constructor(private rootStore: RootStore) {}
 
   @computed
   get getSelectedAccount(): Account {
     const account = this.accounts.find(a => a.uuid === this.activeAccount);
     return account ? account : new Account();
+  }
+
+  @action
+  cancelRetries() {
+    this.cancelledRetry.next(true);
   }
 
   @action
@@ -229,8 +237,11 @@ export class AccountStore {
     }
 
     if (new Date().getTime() >= new Date(this.token.expires).getTime()) {
-      this.initSessionFail(new Error('error:token_expired'));
-      return this.rootStore.routeStore.redirect('/login');
+      this.initSessionFail(new Error('error:token_expired_meta'));
+      return this.rootStore.routeStore.redirect(
+        '/login',
+        'error:token_expired'
+      );
     }
 
     fromStream(
@@ -344,7 +355,12 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
+    fromStream(
+      timer(45 * 1000).pipe(
+        takeUntil(this.cancelledRetry),
+        switchMap(() => of(this.initSession()))
+      )
+    );
 
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
@@ -422,7 +438,10 @@ export class AccountStore {
   validateSessionFail(e: AxiosError | Error, sender: string) {
     if (sender !== '/login') {
       fromStream(
-        timer(45 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
+        timer(45 * 1000).pipe(
+          takeUntil(this.cancelledRetry),
+          switchMap(() => of(this.validateSession(sender)))
+        )
       );
     }
 

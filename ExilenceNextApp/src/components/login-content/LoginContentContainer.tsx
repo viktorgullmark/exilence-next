@@ -22,6 +22,7 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
   const location = useLocation();
 
   const handleValidate = (details: IAccount) => {
+    uiStateStore!.setLoginError(undefined);
     if (uiStateStore!.validated) {
       accountStore!.loadAuthWindow();
     } else {
@@ -35,6 +36,7 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       isSubmitting={uiStateStore!.isSubmitting}
       isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
+      errorMessage={uiStateStore!.loginError}
     ></LoginContent>
   );
 };

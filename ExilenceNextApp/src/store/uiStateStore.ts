@@ -51,12 +51,18 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
   @persist @observable itemTableOrderBy: keyof IPricedItem = 'total';
+  @observable loginError: string | undefined = undefined;
 
   constructor(private rootStore: RootStore) {}
 
   @action
   resetStatusMessage() {
     this.statusMessage = undefined;
+  }
+
+  @action
+  setLoginError(error: string | undefined) {
+    this.loginError = error;
   }
 
   @action
