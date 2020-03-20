@@ -324,7 +324,7 @@ export class Profile {
           rootStore.accountStore.getSelectedAccount.name!,
           league.id
         ),
-        this.activeCharacterName !== ''
+        this.activeCharacterName && this.activeCharacterName !== '' && this.activeCharacterName !== 'None'
           ? externalService.getCharacterItems(
               rootStore.accountStore.getSelectedAccount.name!,
               this.activeCharacterName

@@ -14,7 +14,7 @@ export class RouteStore {
     }
     if (this.redirectedTo !== path) {
       if (loginError) {
-        this.rootStore.uiStateStore.setLoginError('error:session_expired');
+        this.rootStore.uiStateStore.setLoginError('error:token_expired');
       }
       this.redirectedTo = path;
     }
