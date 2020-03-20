@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
     - Added an option to include equipment in profiles
     - Added an option to include inventory in profiles
 - Added fallback for error messages in case message is missing
+- Added separate colors in the net worth chart for each group member
 ##### Fixed
 - Fixed a bug where the status messages would sometimes display an incorrect stash tab count
 
