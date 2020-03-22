@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - NOT RELEASED
+##### Fixed
+- Fixed a bug where the overlay sometimes would not stay on top of the game
+
 ## [0.3.1] - 2020-03-20
 ##### Fixed
 - Fixed a bug with the new character selection that would interrupt the snapshot chain
