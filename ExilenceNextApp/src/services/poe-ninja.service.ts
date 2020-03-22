@@ -46,7 +46,9 @@ function getItemCategories() {
     'UniqueArmour',
     'Watchstone',
     'UniqueAccessory',
-    'Beast'
+    'DeliriumOrb',
+    'Beast',
+    'Vial'
   ];
   return categories;
 }
