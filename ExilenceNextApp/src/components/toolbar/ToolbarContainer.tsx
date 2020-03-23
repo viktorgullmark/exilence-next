@@ -84,24 +84,24 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleLogMonitor = () => {
-    of(true)
-      .pipe(
-        delay(500),
-        tap(() => {
-          logStore!.createLogMonitor();
-        }),
-        delay(1000),
-        tap(() => {
-          logStore!.setLogMonitorPath(
-            'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt'
-          );
-        }),
-        delay(1500),
-        tap(() => {
-          logStore!.startLogMonitor();
-        })
-      )
-      .subscribe();
+    logStore!.running
+      ? logStore!.stopLogMonitor()
+      : of(true)
+          .pipe(
+            delay(250),
+            tap(() => {
+              logStore!.createLogMonitor();
+            }),
+            delay(500),
+            tap(() => {
+              logStore!.setLogMonitorPath(settingStore!.logPath);
+            }),
+            delay(750),
+            tap(() => {
+              logStore!.startLogMonitor();
+            })
+          )
+          .subscribe();
   };
 
   const handleRemoveProfile = () => {

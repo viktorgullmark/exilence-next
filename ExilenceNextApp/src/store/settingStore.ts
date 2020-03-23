@@ -13,7 +13,8 @@ export class SettingStore {
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
-  @persist @observable logPath: string = '';
+  @persist @observable logPath: string =
+    'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';
 
   priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
 

@@ -1,15 +1,31 @@
 import { action, observable } from 'mobx';
-import * as pkg from '../../package.json';
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore.js';
 
 export class LogStore {
-  @observable currentVersion: string = pkg['version'];
-  @observable updateAvailable: boolean = false;
+  @observable event: any = null;
+  @observable running: boolean = false;
 
   constructor(private rootStore: RootStore) {
     electronService.ipcRenderer.on('log-event', (event: any, args: any) => {
       console.log('args: ', args);
+
+      switch (args.event) {
+        case 'start':
+          this.running = true;
+          this.rootStore.notificationStore.createNotification(
+            'log_monitor_started',
+            'success'
+          );
+          break;
+        case 'stop':
+          this.running = false;
+          this.rootStore.notificationStore.createNotification(
+            'log_monitor_stopped',
+            'success'
+          );
+          break;
+      }
     });
   }
 

@@ -126,9 +126,8 @@ ipcMain.on('log-start', (event, args) => {
   }
 });
 ipcMain.on('log-stop', (event, args) => {
-  if (windows['log-monitor'] && !windows['log-monitor'].isDestroyed()) {
-    windows['log-monitor'].webContents.send('log-stop', args);
-  }
+  windows['log-monitor'].destroy();
+  windows['main'].webContents.send('log-event', { event: 'stop' });
 });
 ipcMain.on('log-path', (event, args) => {
   if (windows['log-monitor'] && !windows['log-monitor'].isDestroyed()) {

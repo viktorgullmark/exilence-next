@@ -12,8 +12,6 @@
             
             ipcRenderer.on('log-path', (event, args) => {
 
-                console.log('Setting path to: ', args);
-
                 poeLog = new PoELogMonitor({
                     logfile: args.path,
                     interval: 200
@@ -87,10 +85,6 @@
 
             ipcRenderer.on('log-start', (event, arg) => {
                 poeLog.start();
-            });  
-
-            ipcRenderer.on('log-stop', (event, arg) => {
-                poeLog.stop();
             });  
 
         </script>
