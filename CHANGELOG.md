@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added support for pricing delirium orbs
 - Added support for pricing vials
+- Added a small cross for clearing the search field in the item table
 ##### Fixed
 - Fixed a bug where the overlay sometimes would not stay on top of the game
 
