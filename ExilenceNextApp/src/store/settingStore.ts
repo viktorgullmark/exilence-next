@@ -13,6 +13,7 @@ export class SettingStore {
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
+  @persist @observable logPath: string = '';
 
   priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
 
@@ -55,5 +56,10 @@ export class SettingStore {
     this.autoSnapshotInterval = value * 60 * 1000;
     this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
     this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
+  }
+
+  @action
+  setLogPath(path: string) {
+    this.logPath = path;
   }
 }
