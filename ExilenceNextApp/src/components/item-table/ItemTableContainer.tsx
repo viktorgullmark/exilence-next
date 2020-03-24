@@ -21,8 +21,7 @@ interface ItemTableContainerProps {
 export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  itemTableFilter: {
-  },
+  itemTableFilter: {},
   actionArea: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -100,7 +99,11 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           alignItems="center"
         >
           <Grid item md={3}>
-            <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
+            <ItemTableFilter
+              array={getItems()}
+              handleFilter={handleFilter}
+              clearFilter={() => handleFilter(undefined, '')}
+            />
           </Grid>
           <Grid item className={classes.actionArea}>
             <Button
