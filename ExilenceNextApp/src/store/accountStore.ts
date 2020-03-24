@@ -327,13 +327,6 @@ export class AccountStore {
             })
           );
         }),
-        switchMap(() => {
-          if (this.rootStore.settingStore.autoSnapshotting) {
-            return of(this.getSelectedAccount.queueSnapshot());
-          } else {
-            return of({});
-          }
-        }),
         switchMap(() => of(this.initSessionSuccess())),
         catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
@@ -351,6 +344,14 @@ export class AccountStore {
     );
     this.rootStore.uiStateStore.setIsInitiating(false);
     this.rootStore.uiStateStore.setInitiated(true);
+
+    if (
+      this.rootStore.settingStore.autoSnapshotting &&
+      this.getSelectedAccount.activeProfile &&
+      this.getSelectedAccount.activeProfile.readyToSnapshot
+    ) {
+      this.getSelectedAccount.activeProfile.snapshot();
+    }
   }
 
   @action

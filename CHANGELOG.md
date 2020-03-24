@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [0.3.2] - NOT RELEASED
 ##### Fixed
 - Fixed a bug where the overlay sometimes would not stay on top of the game
+##### Changed
+- Changed the default setting for auto snapshotting
+    - Now enabled by default
 
 ## [0.3.1] - 2020-03-20
 ##### Fixed
