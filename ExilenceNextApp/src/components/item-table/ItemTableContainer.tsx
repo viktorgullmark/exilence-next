@@ -1,4 +1,11 @@
-import { Box, Button, Grid, makeStyles, Theme } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Grid,
+  makeStyles,
+  Theme,
+  Divider
+} from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
 import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
@@ -11,6 +18,7 @@ import { exportData } from '../../utils/export.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTable, { Order } from './ItemTable';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
+import SplitButton from '../split-button/SplitButton';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -22,11 +30,6 @@ export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {},
-  actionArea: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end'
-  },
   placeholder: {
     display: 'flex',
     alignSelf: 'flex-end'
@@ -98,14 +101,14 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item md={3}>
+          <Grid item md={4}>
             <ItemTableFilter
               array={getItems()}
               handleFilter={handleFilter}
               clearFilter={() => handleFilter(undefined, '')}
             />
           </Grid>
-          <Grid item className={classes.actionArea}>
+          <Grid item>
             <Button
               color="primary"
               variant="contained"
