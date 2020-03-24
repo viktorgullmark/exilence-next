@@ -6,11 +6,11 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing delirium orbs
 - Added support for pricing vials
 - Added a small cross for clearing the search field in the item table
-##### Fixed
-- Fixed a bug where the overlay sometimes would not stay on top of the game
 ##### Changed
 - Changed the default setting for auto snapshotting
     - Now enabled by default
+##### Fixed
+- Fixed a bug where the overlay sometimes would not stay on top of the game
 
 ## [0.3.1] - 2020-03-20
 ##### Fixed
