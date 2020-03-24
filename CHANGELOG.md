@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.2] - NOT RELEASED
+## [0.3.2] - 2020-03-24
 ##### Added
 - Added support for pricing delirium orbs
 - Added support for pricing vials
