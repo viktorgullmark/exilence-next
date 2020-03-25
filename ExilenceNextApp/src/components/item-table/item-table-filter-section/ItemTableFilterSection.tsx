@@ -41,7 +41,11 @@ const ItemTableFilterSection: React.FC<IProps> = ({
         al => al.leagueId === activeProfile.activeLeagueId
       );
       if (foundLeague) {
-        setStashTabs(foundLeague.stashtabs);
+        setStashTabs(
+          foundLeague.stashtabs.filter(st =>
+            activeProfile.activeStashTabIds.includes(st.id)
+          )
+        );
         setSelectedStashTabs(
           foundLeague.stashtabs.filter(st =>
             activeProfile.activeStashTabIds.includes(st.id)
