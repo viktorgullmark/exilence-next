@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - NOT RELEASED
+##### Added
+- Added a new column that displays the tab names an item exists in
+##### Fixed
+- Fixed a bug where some jewels and jewellry without value were listed in the item table
+- Fixed a bug where the support button would be placed on top of the scrollbar
+
 ## [0.3.2] - 2020-03-24
 ##### Added
 - Added support for pricing delirium orbs

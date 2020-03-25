@@ -11,6 +11,7 @@ import { Order } from '../components/item-table/ItemTable';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
 import { IStatusMessage } from '../interfaces/status-message.interface';
+import { ITableItem } from '../interfaces/table-item.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -50,7 +51,7 @@ export class UiStateStore {
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
-  @persist @observable itemTableOrderBy: keyof IPricedItem = 'total';
+  @persist @observable itemTableOrderBy: keyof ITableItem = 'total';
   @observable loginError: string | undefined = undefined;
 
   constructor(private rootStore: RootStore) {}
@@ -114,7 +115,7 @@ export class UiStateStore {
   }
 
   @action
-  setItemTableOrderBy(orderBy: keyof IPricedItem) {
+  setItemTableOrderBy(orderBy: keyof ITableItem) {
     this.itemTableOrderBy = orderBy;
   }
 

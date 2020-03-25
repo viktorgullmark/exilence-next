@@ -11,6 +11,8 @@ import { exportData } from '../../utils/export.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTable, { Order } from './ItemTable';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { ITableItem } from '../../interfaces/table-item.interface';
+import { mapPricedItemToTableItem } from '../../utils/item.utils';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -118,13 +120,13 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={getItems()}
+        items={getItems().map(i => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
         orderBy={uiStateStore!.itemTableOrderBy}
         setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
-        setOrderBy={(col: keyof IPricedItem) =>
+        setOrderBy={(col: keyof ITableItem) =>
           uiStateStore!.setItemTableOrderBy(col)
         }
       />

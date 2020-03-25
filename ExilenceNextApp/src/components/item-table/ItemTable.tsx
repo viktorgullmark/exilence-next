@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { ITableItem } from '../../interfaces/table-item.interface';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { useStyles } from './ItemTable.styles';
@@ -19,12 +19,12 @@ export type Order = 'asc' | 'desc';
 export const tableFooterHeight = 52;
 
 interface ItemTableProps {
-  items: IPricedItem[];
+  items: ITableItem[];
   pageIndex: number;
   changePage: (i: number) => void;
   order: Order;
-  orderBy: keyof IPricedItem;
-  setOrderBy: (col: keyof IPricedItem) => void;
+  orderBy: keyof ITableItem;
+  setOrderBy: (col: keyof ITableItem) => void;
   setOrder: (order: Order) => void;
 }
 
@@ -48,6 +48,12 @@ const ItemTable: React.FC<ItemTableProps> = ({
       maxWidth: 140
     },
     { id: 'name', label: t('tables:header.name'), minWidth: 50, maxWidth: 220 },
+    {
+      id: 'tabNames',
+      label: t('tables:header.tab_names'),
+      minWidth: 60,
+      maxWidth: 100
+    },
     {
       id: 'corrupted',
       label: t('tables:header.corrupted'),
@@ -94,7 +100,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
     }
   ];
 
-  const rows: IPricedItem[] = items;
+  const rows: ITableItem[] = items;
 
   rows.forEach(item => {
     const img = new Image();
@@ -141,7 +147,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof IPricedItem
+    property: keyof ITableItem
   ) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
@@ -170,7 +176,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
               columns={columns}
             />
             <TableBody>
-              {stableSort<IPricedItem>(rows, getSorting(order, orderBy))
+              {stableSort<ITableItem>(rows, getSorting(order, orderBy))
                 .slice(
                   pageIndex * rowsPerPage,
                   pageIndex * rowsPerPage + rowsPerPage

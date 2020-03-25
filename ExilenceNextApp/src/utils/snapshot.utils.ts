@@ -68,7 +68,7 @@ export const mapSnapshotsToStashTabPricedItems = (
 export const getSnapshotCardValue = (snapshotCount: number) => {
   let label = `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
   return label;
-}
+};
 
 export const getValueForSnapshot = (snapshot: IApiSnapshot) => {
   return snapshot.stashTabs.map(sts => sts.value).reduce((a, b) => a + b, 0);
@@ -143,10 +143,19 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
       .flatMap(sts =>
         sts.pricedItems.filter(
           i =>
-            i.calculated > 0 &&
-            i.name
+            (i.calculated > 0 &&
+              i.name
+                .toLowerCase()
+                .includes(
+                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
+                )) ||
+            i.tab
+              .map(t => t.n)
+              .join(', ')
               .toLowerCase()
-              .includes(rootStore.uiStateStore.itemTableFilterText.toLowerCase())
+              .includes(
+                rootStore.uiStateStore.itemTableFilterText.toLowerCase()
+              )
         )
       )
   );

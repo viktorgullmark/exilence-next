@@ -324,7 +324,9 @@ export class Profile {
           rootStore.accountStore.getSelectedAccount.name!,
           league.id
         ),
-        this.activeCharacterName && this.activeCharacterName !== '' && this.activeCharacterName !== 'None'
+        this.activeCharacterName &&
+          this.activeCharacterName !== '' &&
+          this.activeCharacterName !== 'None'
           ? externalService.getCharacterItems(
               rootStore.accountStore.getSelectedAccount.name!,
               this.activeCharacterName
@@ -443,11 +445,13 @@ export class Profile {
           }
         );
 
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(pi => pi.calculated > 0);
+
         stashTabWithItems.value = stashTabWithItems.pricedItems
           .filter(
             item =>
               item.calculated * item.stackSize >=
-              rootStore.settingStore.priceTreshold
+                rootStore.settingStore.priceTreshold
           )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);

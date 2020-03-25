@@ -88,7 +88,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
         map((stash: AxiosResponse<IStash>) => {
           rootStore.uiStateStore.incrementStatusMessageCount();
           const items = {
-            pricedItems: mapItemsToPricedItems(stash.data.items)
+            pricedItems: mapItemsToPricedItems(stash.data.items, tab)
           };
           return <IStashTabSnapshot>{ ...{ stashTabId: tab.id }, ...items };
         })

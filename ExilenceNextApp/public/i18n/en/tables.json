@@ -8,7 +8,8 @@
     "corrupted": "Corrupted",
     "stacksize": "Quantity",
     "calculated": "Price",
-    "total": "Total"
+    "total": "Total",
+    "tab_names": "Tabs"
   },
   "label": {
     "item_table_placeholder": "No items found for the selected profile, take a snapshot to begin (top right)",

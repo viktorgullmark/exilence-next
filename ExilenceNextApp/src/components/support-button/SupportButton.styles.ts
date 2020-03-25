@@ -4,7 +4,8 @@ export const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       top: '52vh',
-      right: 0,
+      zIndex: 10,
+      right: 16,
       position: 'fixed',
       width: 0,
       height: 0
