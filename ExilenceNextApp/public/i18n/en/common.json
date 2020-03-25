@@ -14,7 +14,8 @@
     "create_group": "Create group",
     "join_group": "Join group",
     "leave_group": "Leave group",
-    "lets_begin": "Lets begin!"
+    "lets_begin": "Lets begin!",
+    "apply_filter": "Apply filter"
   },
   "title": {
     "login": "Login",

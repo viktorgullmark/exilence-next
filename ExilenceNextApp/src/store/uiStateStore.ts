@@ -45,6 +45,7 @@ export class UiStateStore {
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
+  @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
   @persist @observable netWorthChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
@@ -117,6 +118,11 @@ export class UiStateStore {
   @action
   setItemTableOrderBy(orderBy: keyof ITableItem) {
     this.itemTableOrderBy = orderBy;
+  }
+
+  @action
+  setShowItemTableFilter(show: boolean) {
+    this.showItemTableFilter = show;
   }
 
   @action

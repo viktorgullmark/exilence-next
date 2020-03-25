@@ -1,4 +1,4 @@
-import { Grid, useTheme, Box, Typography } from '@material-ui/core';
+import { Grid, useTheme, Box, Typography, Divider } from '@material-ui/core';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -26,6 +26,7 @@ import {
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
+import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -234,6 +235,9 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 display: 'block'
               }}
             >
+              {uiStateStore!.showItemTableFilter && (
+                <ItemTableFilterSection />
+              )}
               <ItemTableContainer />
             </ExpansionPanelDetails>
           </ExpansionPanel>

@@ -6,7 +6,9 @@ import {
   Select,
   Theme,
   Typography,
-  useTheme
+  useTheme,
+  Checkbox,
+  TextField
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
@@ -18,14 +20,20 @@ import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
 import { useWindowSize } from '../../hooks/use-window-size';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 interface StashTabDropdownProps {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   stashTabs: IStashTab[];
-  stashTabIds: string[];
-  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  selectedStashTabs: IStashTab[];
+  handleChange: (event: ChangeEvent<{}>) => void;
+  handleStashTabChange: (value: IStashTab[]) => void;
 }
 
 const ITEM_HEIGHT = 48;
@@ -42,7 +50,7 @@ function getStyles(name: string, stashTabIds: string[], theme: Theme) {
 
 const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   stashTabs,
-  stashTabIds,
+  selectedStashTabs,
   handleChange,
   handleStashTabChange
 }: StashTabDropdownProps) => {
@@ -63,13 +71,46 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
       : '';
   };
   const { labelWidth, ref } = useLabelWidth(0);
-  
+
   const windowSize = useWindowSize();
   const offsetProps = useOffset(windowSize);
 
   return (
     <div ref={offsetProps.ref}>
-      <FormControl
+      <Autocomplete
+        multiple
+        id="checkboxes-tags-demo"
+        options={stashTabs}
+        disableCloseOnSelect
+        defaultValue={selectedStashTabs}
+        getOptionLabel={option => option.n}
+        onChange={(e, value) => {
+          handleChange(e);
+          handleStashTabChange(value);
+          setTouched(true);
+        }}
+        renderOption={(option, { selected }) => (
+          <React.Fragment>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option.n}
+          </React.Fragment>
+        )}
+        style={{ width: 500 }}
+        renderInput={params => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Checkboxes"
+            placeholder="Favorites"
+          />
+        )}
+      />
+      {/* <FormControl
         variant="outlined"
         className={classes.formControl}
         fullWidth
@@ -135,7 +176,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             </Typography>
           )}
         </Select>
-      </FormControl>
+      </FormControl> */}
     </div>
   );
 };

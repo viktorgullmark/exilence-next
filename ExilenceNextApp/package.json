@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.5.2",
     "@material-ui/icons": "^4.5.1",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "@material-ui/styles": "^4.5.2",
     "@microsoft/signalr": "^3.1.0",
     "@microsoft/signalr-protocol-msgpack": "^3.1.0",
