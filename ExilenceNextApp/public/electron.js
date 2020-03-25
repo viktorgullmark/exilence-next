@@ -116,8 +116,6 @@ ipcMain.on('log-create', (event, data) => {
   windows['log-monitor'].on('closed', e => {
     windows['log-monitor'] = null;
   });
-
-  windows['log-monitor'].webContents.openDevTools();
 });
 
 ipcMain.on('log-start', (event, args) => {
