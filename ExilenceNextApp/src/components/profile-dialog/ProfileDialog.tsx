@@ -206,7 +206,6 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     disabled={
                       loading ||
                       noCharacters.length > 0 ||
-                      selectedStashTabs.length === 0 ||
                       (dirty && !isValid)
                     }
                   >

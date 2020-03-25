@@ -41,6 +41,7 @@
     "general": "General"
   },
   "label": {
+    "stash_tabs": "Stash tabs",
     "support": "Support",
     "required": "Required",
     "optional": "Optional",
