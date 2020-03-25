@@ -1,5 +1,5 @@
-import { observer } from 'mobx-react';
-import React from 'react';
+import { observer, inject } from 'mobx-react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UiStateStore } from '../../../store/uiStateStore';
 import useStyles from './ItemTableFilterSection.styles';
@@ -14,24 +14,80 @@ import {
   Radio,
   Button
 } from '@material-ui/core';
+import StashTabDropdown from '../../stash-tab-dropdown/StashTabDropdown';
+import { IStashTab } from '../../../interfaces/stash.interface';
+import { AccountStore } from '../../../store/accountStore';
 
 export interface IProps {
   uiStateStore?: UiStateStore;
+  accountStore?: AccountStore;
 }
 
-const ItemTableFilterSection: React.FC<IProps> = ({ uiStateStore }: IProps) => {
+const ItemTableFilterSection: React.FC<IProps> = ({
+  uiStateStore,
+  accountStore
+}: IProps) => {
+  const [selectedStashTabs, setSelectedStashTabs] = useState<IStashTab[]>([]);
+  const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
+
+  const account = accountStore!.getSelectedAccount;
+  const { accountLeagues, activeProfile } = account;
+
+  useEffect(() => {
+    setStashTabs([]);
+    setSelectedStashTabs([]);
+    if (activeProfile) {
+      const foundLeague = accountLeagues.find(
+        al => al.leagueId === activeProfile.activeLeagueId
+      );
+      if (foundLeague) {
+        setStashTabs(foundLeague.stashtabs);
+        setSelectedStashTabs(
+          foundLeague.stashtabs.filter(st =>
+            activeProfile.activeStashTabIds.includes(st.id)
+          )
+        );
+      }
+    }
+  }, [activeProfile]);
+
   const { t } = useTranslation();
   const classes = useStyles();
   const applyFilter = (event: React.FormEvent<HTMLButtonElement>) => {
     // apply
   };
+
+  const handleStashTabChange = (value: IStashTab[]) => {
+    setSelectedStashTabs(value);
+  };
+
   return (
     <Box mb={1}>
-      <Box height={75}>
-        <Grid container direction="row" justify="space-between">
-          <Grid item>filter</Grid>
+      <Box>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
           <Grid item>
-            <Button size="small" variant="contained" color="primary" onClick={applyFilter}>
+            {stashTabs.length > 0 && (
+              <StashTabDropdown
+                width={400}
+                size="small"
+                stashTabs={stashTabs}
+                selectedStashTabs={selectedStashTabs}
+                handleStashTabChange={handleStashTabChange}
+              />
+            )}
+          </Grid>
+          <Grid item>
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={applyFilter}
+            >
               {t('action.apply_filter')}
             </Button>
           </Grid>
@@ -42,4 +98,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({ uiStateStore }: IProps) => {
   );
 };
 
-export default observer(ItemTableFilterSection);
+export default inject(
+  'uiStateStore',
+  'accountStore'
+)(observer(ItemTableFilterSection));

@@ -165,11 +165,11 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                 />
                 <StashTabDropdown
                   stashTabs={stashTabs}
-                  touched={touched}
-                  errors={errors}
                   selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
                   handleChange={handleChange}
+                  marginBottom={3}
+                  marginTop={2}
                 />
                 <Box mt={2}>
                   <SelectField
