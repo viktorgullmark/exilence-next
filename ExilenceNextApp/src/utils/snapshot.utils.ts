@@ -149,13 +149,14 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
                 .includes(
                   rootStore.uiStateStore.itemTableFilterText.toLowerCase()
                 )) ||
-            i.tab
-              .map(t => t.n)
-              .join(', ')
-              .toLowerCase()
-              .includes(
-                rootStore.uiStateStore.itemTableFilterText.toLowerCase()
-              )
+            (i.tab &&
+              i.tab
+                .map(t => t.n)
+                .join(', ')
+                .toLowerCase()
+                .includes(
+                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
+                ))
         )
       )
   );

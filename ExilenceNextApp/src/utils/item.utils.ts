@@ -56,7 +56,7 @@ export function formatSnapshotsForTable(
 export function mapPricedItemToTableItem(pricedItem: IPricedItem) {
   return {
     ...pricedItem,
-    tabNames: pricedItem.tab.map(t => t.n).join(', ')
+    tabNames: pricedItem.tab ? pricedItem.tab.map(t => t.n).join(', ') : ''
   } as ITableItem;
 }
 
