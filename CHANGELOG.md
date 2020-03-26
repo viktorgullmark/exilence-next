@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - Minor style tweaks across the app
 ##### Changed
 - Reworked the stash tab dropdown entirely in the profile dialog
+    - Better positioning of the popup
+    - Ability to clear all in the selection
+    - Ability to remove individual stash tabs without opening the popup
 - Reduced the padding on rows in the item table, to fit more items per page
 ##### Fixed
 - Fixed a bug where some jewels and jewellry without value were listed in the item table
