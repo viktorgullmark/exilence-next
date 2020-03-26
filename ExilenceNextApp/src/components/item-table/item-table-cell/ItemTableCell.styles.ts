@@ -1,16 +1,18 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
+  iconCellInner: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   tableCell: {
-    padding: theme.spacing(0.5),
+    padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   },
   iconCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: theme.spacing(0.5)
   },
   lastCell: {
