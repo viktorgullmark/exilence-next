@@ -63,7 +63,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
             [
               0,
               HC.color(theme.palette.primary.main)
-                .setOpacity(0.5)
+                .setOpacity(0.25)
                 .get('rgba')
             ],
             [
