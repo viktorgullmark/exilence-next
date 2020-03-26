@@ -53,7 +53,7 @@ interface ProfileDialogProps {
   handleClickClose: () => void;
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
-  handleStashTabChange: (value: IStashTab[]) => void;
+  handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
 const ProfileDialog: React.FC<ProfileDialogProps> = ({

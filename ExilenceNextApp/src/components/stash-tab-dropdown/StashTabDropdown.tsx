@@ -3,7 +3,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
@@ -23,7 +23,7 @@ interface StashTabDropdownProps {
   placeholderKey?: string;
   hideLabel?: boolean;
   handleChange?: (event: ChangeEvent<{}>) => void;
-  handleStashTabChange: (value: IStashTab[]) => void;
+  handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
 const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
@@ -42,6 +42,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   const { t } = useTranslation(['tables']);
   const classes = useStyles();
   const theme = useTheme();
+  let defaultValue: IStashTab[] = [];
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find(st => st.id === id);
@@ -50,6 +51,10 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
       : '';
   };
 
+  useEffect(() => {
+    defaultValue = [...selectedStashTabs];
+  }, [])
+  
   return (
     <Box mt={marginTop ? marginTop : 1} mb={marginBottom ? marginBottom : 2}>
       <Autocomplete
@@ -60,13 +65,13 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
         disableCloseOnSelect
         style={{ width: width ? width : 'auto' }}
         value={selectedStashTabs}
-        defaultValue={selectedStashTabs}
+        defaultValue={defaultValue}
         getOptionLabel={option => option.n}
         onChange={(e, value) => {
           if (handleChange) {
             handleChange(e);
           }
-          handleStashTabChange(value);
+          handleStashTabChange(e, value);
         }}
         renderOption={(option, { selected }) => (
           <React.Fragment>

@@ -83,7 +83,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
     []
   );
 
-  const handleStashTabChange = (value: IStashTab[]) => {
+  const handleStashTabChange = (event: ChangeEvent<{}>, value: IStashTab[]) => {
     setSelectedStashTabs(value);
   };
 

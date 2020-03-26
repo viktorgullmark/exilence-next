@@ -1,6 +1,6 @@
 import { Box, Divider, Grid } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../../interfaces/stash.interface';
 import { AccountStore } from '../../../store/accountStore';
@@ -51,7 +51,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
 
   const { t } = useTranslation();
 
-  const handleStashTabChange = (value: IStashTab[]) => {
+  const handleStashTabChange = (e: ChangeEvent<{}>, value: IStashTab[]) => {
     setSelectedStashTabs(value);
     uiStateStore!.setFilteredStashTabs(value);
   };
