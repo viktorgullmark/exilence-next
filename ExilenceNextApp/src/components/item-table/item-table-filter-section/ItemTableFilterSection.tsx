@@ -74,6 +74,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
                   stashTabs={stashTabs}
                   selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
+                  labelKey="common:label.filter_stash_tabs"
                 />
               </Grid>
             </Grid>

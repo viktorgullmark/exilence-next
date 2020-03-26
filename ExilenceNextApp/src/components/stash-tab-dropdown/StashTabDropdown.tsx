@@ -20,6 +20,7 @@ interface StashTabDropdownProps {
   size?: 'small' | 'medium';
   marginTop?: number;
   marginBottom?: number;
+  labelKey?: string;
   handleChange?: (event: ChangeEvent<{}>) => void;
   handleStashTabChange: (value: IStashTab[]) => void;
 }
@@ -31,6 +32,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   width,
   marginTop,
   marginBottom,
+  labelKey = 'common:label.select_stash_tabs',
   size = 'medium',
   handleStashTabChange
 }: StashTabDropdownProps) => {
@@ -90,8 +92,8 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           <TextField
             {...params}
             variant="outlined"
-            label={t('common:label.select_stash_tabs')}
-            placeholder={t('common:label.stash_tabs')}
+            label={t(labelKey)}
+            placeholder={t('common:label.add_stash_tabs')}
           />
         )}
       />
