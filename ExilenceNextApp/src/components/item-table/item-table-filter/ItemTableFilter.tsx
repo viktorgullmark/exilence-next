@@ -49,7 +49,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
                 handleFilter(e);
               }}
               name="searchText"
-              // label={t('tables:label.search_text')}
+              placeholder={t('tables:label.search_text')}
               className={classes.searchField}
               value={values.searchText}
               InputProps={{
