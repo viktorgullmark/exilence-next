@@ -29,7 +29,8 @@ export const ExpansionPanelSummary = withStyles(theme => ({
     marginBottom: -1,
     '&$expanded': {
       minHeight: 56
-    }
+    },
+    padding: '0 16px 0 16px'
   },
   content: {
     '&$expanded': {
