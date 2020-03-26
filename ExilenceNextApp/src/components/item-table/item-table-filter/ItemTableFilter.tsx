@@ -1,4 +1,4 @@
-import { TextField, IconButton } from '@material-ui/core';
+import { TextField, IconButton, Box } from '@material-ui/core';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './ItemTableFilter.styles';
 import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
 
 export interface TableFilterProps<T> {
   array: T[];
@@ -48,10 +49,15 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
                 handleFilter(e);
               }}
               name="searchText"
-              label={t('tables:label.search_text')}
+              // label={t('tables:label.search_text')}
               className={classes.searchField}
               value={values.searchText}
               InputProps={{
+                startAdornment: (
+                  <Box mr={1} display="flex" justifyContent="center" alignItems="center">
+                    <SearchIcon />
+                  </Box>
+                ),
                 endAdornment: (
                   <>
                     {values.searchText !== '' && (
