@@ -1,10 +1,9 @@
-import { Checkbox, Chip, TextField, useTheme, Box } from '@material-ui/core';
+import { Box, Checkbox, Chip, TextField, useTheme } from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
@@ -21,6 +20,8 @@ interface StashTabDropdownProps {
   marginTop?: number;
   marginBottom?: number;
   labelKey?: string;
+  placeholderKey?: string;
+  hideLabel?: boolean;
   handleChange?: (event: ChangeEvent<{}>) => void;
   handleStashTabChange: (value: IStashTab[]) => void;
 }
@@ -33,6 +34,8 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   marginTop,
   marginBottom,
   labelKey = 'common:label.select_stash_tabs',
+  placeholderKey = 'common:label.add_stash_tabs',
+  hideLabel,
   size = 'medium',
   handleStashTabChange
 }: StashTabDropdownProps) => {
@@ -92,8 +95,8 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           <TextField
             {...params}
             variant="outlined"
-            label={t(labelKey)}
-            placeholder={t('common:label.add_stash_tabs')}
+            label={!hideLabel ? t(labelKey) : undefined}
+            placeholder={t(placeholderKey)}
           />
         )}
       />
