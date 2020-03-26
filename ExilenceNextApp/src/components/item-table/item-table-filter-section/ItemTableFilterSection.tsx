@@ -51,18 +51,20 @@ const ItemTableFilterSection: React.FC<IProps> = ({
             activeProfile.activeStashTabIds.includes(st.id)
           )
         );
+        uiStateStore!.setFilteredStashTabs(
+          foundLeague.stashtabs.filter(st =>
+            activeProfile.activeStashTabIds.includes(st.id)
+          )
+        );
       }
     }
   }, [activeProfile]);
 
   const { t } = useTranslation();
-  const classes = useStyles();
-  const applyFilter = (event: React.FormEvent<HTMLButtonElement>) => {
-    // apply
-  };
 
   const handleStashTabChange = (value: IStashTab[]) => {
     setSelectedStashTabs(value);
+    uiStateStore!.setFilteredStashTabs(value);
   };
 
   return (
@@ -84,16 +86,6 @@ const ItemTableFilterSection: React.FC<IProps> = ({
                 handleStashTabChange={handleStashTabChange}
               />
             )}
-          </Grid>
-          <Grid item>
-            <Button
-              size="small"
-              variant="contained"
-              color="primary"
-              onClick={applyFilter}
-            >
-              {t('action.apply_filter')}
-            </Button>
           </Grid>
         </Grid>
       </Box>

@@ -12,6 +12,7 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { ITableItem } from '../interfaces/table-item.interface';
+import { IStashTab } from '../interfaces/stash.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -45,6 +46,7 @@ export class UiStateStore {
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
+  @observable filteredStashTabs: IStashTab[] | undefined = undefined;
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
   @persist @observable netWorthChartExpanded: boolean = false;
@@ -65,6 +67,11 @@ export class UiStateStore {
   @action
   setLoginError(error: string | undefined) {
     this.loginError = error;
+  }
+
+  @action
+  setFilteredStashTabs(stashTabs: IStashTab[]) {
+    this.filteredStashTabs = stashTabs;
   }
 
   @action
