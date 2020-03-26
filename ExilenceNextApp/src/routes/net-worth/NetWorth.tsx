@@ -223,7 +223,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
                         onClick={e => openLink(e)}
                       >
                         https://poe.ninja
-                      </a>
+                      </a>&nbsp;{t('label.prices_fetched_from_interval')}
                     </Typography>
                   </Box>
                 </Grid>
