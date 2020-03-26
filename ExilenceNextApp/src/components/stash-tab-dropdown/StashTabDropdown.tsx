@@ -54,6 +54,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
         size={size}
         disableCloseOnSelect
         style={{ width: width ? width : 'auto' }}
+        value={selectedStashTabs}
         defaultValue={selectedStashTabs}
         getOptionLabel={option => option.n}
         onChange={(e, value) => {

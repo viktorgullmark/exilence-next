@@ -34,6 +34,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
   const { accountLeagues, activeProfile } = account;
 
   useEffect(() => {
+    console.log('effect triggered');
     setStashTabs([]);
     setSelectedStashTabs([]);
     if (activeProfile) {
@@ -41,7 +42,14 @@ const ItemTableFilterSection: React.FC<IProps> = ({
         al => al.leagueId === activeProfile.activeLeagueId
       );
       if (foundLeague) {
+        console.log('league found');
         setStashTabs(
+          foundLeague.stashtabs.filter(st =>
+            activeProfile.activeStashTabIds.includes(st.id)
+          )
+        );
+        console.log(
+          'set selected',
           foundLeague.stashtabs.filter(st =>
             activeProfile.activeStashTabIds.includes(st.id)
           )
@@ -58,7 +66,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
         );
       }
     }
-  }, [activeProfile]);
+  }, [activeProfile, activeProfile?.activeStashTabIds]);
 
   const { t } = useTranslation();
 
