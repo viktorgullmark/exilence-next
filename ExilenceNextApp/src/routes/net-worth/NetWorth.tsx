@@ -27,6 +27,8 @@ import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import ListIcon from '@material-ui/icons/List';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -174,9 +176,14 @@ const NetWorth: React.FC<NetWorthProps> = ({
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography variant="overline">
-                {t('label.net_worth_chart')}
-              </Typography>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <EqualizerIcon fontSize="small" />
+                <Box ml={1}>
+                  <Typography variant="overline">
+                    {t('label.net_worth_chart')}
+                  </Typography>
+                </Box>
+              </Box>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
               style={{
@@ -205,9 +212,18 @@ const NetWorth: React.FC<NetWorthProps> = ({
             >
               <Grid container justify="space-between">
                 <Grid item>
-                  <Typography variant="overline">
-                    {t('label.item_table')}
-                  </Typography>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <ListIcon />
+                    <Box ml={1}>
+                      <Typography variant="overline">
+                        {t('label.item_table')}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Grid>
                 <Grid item className={classes.secondaryHeader}>
                   <Box
@@ -223,7 +239,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
                         onClick={e => openLink(e)}
                       >
                         https://poe.ninja
-                      </a>&nbsp;{t('label.prices_fetched_from_interval')}
+                      </a>
+                      &nbsp;{t('label.prices_fetched_from_interval')}
                     </Typography>
                   </Box>
                 </Grid>
@@ -235,9 +252,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 display: 'block'
               }}
             >
-              {uiStateStore!.showItemTableFilter && (
-                <ItemTableFilterSection />
-              )}
+              {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
               <ItemTableContainer />
             </ExpansionPanelDetails>
           </ExpansionPanel>
