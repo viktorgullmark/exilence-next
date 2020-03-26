@@ -6,7 +6,7 @@ import {
   Theme,
   useTheme
 } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -142,7 +142,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
               className={classes.inlineIcon}
               onClick={handleItemTableMenuOpen}
             >
-              <MoreHorizIcon />
+              <MoreVertIcon />
             </IconButton>
           </Grid>
         </Grid>
