@@ -68,29 +68,31 @@ const ItemTableFilterSection: React.FC<IProps> = ({
   };
 
   return (
-    <Box mb={1}>
-      <Box>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
-          <Grid item>
-            {stashTabs.length > 0 && (
-              <StashTabDropdown
-                width={400}
-                size="small"
-                stashTabs={stashTabs}
-                selectedStashTabs={selectedStashTabs}
-                handleStashTabChange={handleStashTabChange}
-              />
-            )}
-          </Grid>
-        </Grid>
-      </Box>
-      <Divider />
-    </Box>
+    <>
+      {stashTabs.length > 0 && (
+        <Box mb={1}>
+          <Box>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item>
+                <StashTabDropdown
+                  width={400}
+                  size="small"
+                  stashTabs={stashTabs}
+                  selectedStashTabs={selectedStashTabs}
+                  handleStashTabChange={handleStashTabChange}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+          <Divider />
+        </Box>
+      )}
+    </>
   );
 };
 
