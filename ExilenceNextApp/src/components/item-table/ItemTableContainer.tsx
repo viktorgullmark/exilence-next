@@ -117,7 +117,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item md={4}>
+          <Grid item md={5}>
             <ItemTableFilter
               array={getItems()}
               handleFilter={handleFilter}
