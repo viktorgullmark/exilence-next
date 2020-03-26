@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.3] - NOT RELEASED
 ##### Added
+- Added a filter section for the item table
+    - Added a multiselect which lets you filter based on stash tabs
 - Added a new column that displays the tab names an item exists in
 ##### Changed
 - Reworked the stash tab dropdown entirely in the profile dialog
