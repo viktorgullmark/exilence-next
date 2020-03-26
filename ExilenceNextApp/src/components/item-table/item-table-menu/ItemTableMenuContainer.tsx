@@ -44,6 +44,7 @@ const ItemTableMenuContainer: React.FC<Props> = ({
       anchorEl={uiStateStore!.itemTableMenuAnchor}
       handleMenuClose={handleMenuClose}
       handleExport={handleExport}
+      exportDisabled={getItems().length === 0}
     />
   );
 };
