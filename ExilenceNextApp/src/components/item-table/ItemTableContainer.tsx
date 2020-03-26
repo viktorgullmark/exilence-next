@@ -22,6 +22,7 @@ import { mapPricedItemToTableItem } from '../../utils/item.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTable, { Order } from './ItemTable';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -104,8 +105,8 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     }
   };
 
-  const toggleMore = () => {
-    console.log('more');
+  const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
 
   return (
@@ -133,18 +134,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             </IconButton>
             <IconButton
               className={classes.inlineIcon}
-              onClick={() => toggleMore()}
+              onClick={handleItemTableMenuOpen}
             >
               <MoreHorizIcon />
             </IconButton>
-            {/* <Button
-              color="primary"
-              variant="contained"
-              disabled={getItems().length === 0}
-              onClick={() => exportData(getItems())}
-            >
-              {t('label.net_worth_export')}
-            </Button> */}
           </Grid>
         </Grid>
       </Box>
@@ -159,6 +152,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           uiStateStore!.setItemTableOrderBy(col)
         }
       />
+      <ItemTableMenuContainer />
     </>
   );
 };

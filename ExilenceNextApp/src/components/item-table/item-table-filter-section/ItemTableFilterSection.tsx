@@ -1,22 +1,11 @@
-import { observer, inject } from 'mobx-react';
-import React, { useState, useEffect } from 'react';
+import { Box, Divider, Grid } from '@material-ui/core';
+import { inject, observer } from 'mobx-react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UiStateStore } from '../../../store/uiStateStore';
-import useStyles from './ItemTableFilterSection.styles';
-import {
-  Box,
-  Grid,
-  Divider,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Button
-} from '@material-ui/core';
-import StashTabDropdown from '../../stash-tab-dropdown/StashTabDropdown';
 import { IStashTab } from '../../../interfaces/stash.interface';
 import { AccountStore } from '../../../store/accountStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import StashTabDropdown from '../../stash-tab-dropdown/StashTabDropdown';
 
 export interface IProps {
   uiStateStore?: UiStateStore;
