@@ -127,12 +127,18 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           </Grid>
           <Grid item className={classes.actionArea}>
             <IconButton
+              size="small"
               className={classes.inlineIcon}
-              onClick={() => uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)}
+              onClick={() =>
+                uiStateStore!.setShowItemTableFilter(
+                  !uiStateStore!.showItemTableFilter
+                )
+              }
             >
               <FilterListIcon />
             </IconButton>
             <IconButton
+              size="small"
               className={classes.inlineIcon}
               onClick={handleItemTableMenuOpen}
             >
