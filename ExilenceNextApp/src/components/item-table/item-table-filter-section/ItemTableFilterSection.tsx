@@ -71,6 +71,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
                 <StashTabDropdown
                   width={450}
                   size="small"
+                  marginBottom={1.5}
                   stashTabs={stashTabs}
                   selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
