@@ -7,20 +7,20 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   tableCell: {
-    padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   },
   iconCell: {
-    padding: theme.spacing(0.5)
+    padding: theme.spacing(0.75)
   },
   lastCell: {
     paddingRight: theme.spacing(1)
   },
   iconImg: {
-    minHeight: 35,
-    maxHeight: 35,
+    minHeight: 26,
+    maxHeight: 26,
     maxWidth: 120
   },
   noLinks: {
