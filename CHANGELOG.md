@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.3] - NOT RELEASED
+## [0.3.3] - 2020-03-26
 ##### Added
 - Added a filter section for the item table
     - Added a multiselect which lets you filter based on stash tabs
