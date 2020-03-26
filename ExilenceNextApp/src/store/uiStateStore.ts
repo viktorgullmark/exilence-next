@@ -12,6 +12,7 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { ITableItem } from '../interfaces/table-item.interface';
+import { IStashTab } from '../interfaces/stash.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -26,6 +27,7 @@ export class UiStateStore {
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
   @observable accountMenuAnchor: null | HTMLElement = null;
+  @observable itemTableMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
@@ -45,6 +47,8 @@ export class UiStateStore {
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
+  @observable filteredStashTabs: IStashTab[] | undefined = undefined;
+  @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
   @persist @observable netWorthChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
@@ -64,6 +68,11 @@ export class UiStateStore {
   @action
   setLoginError(error: string | undefined) {
     this.loginError = error;
+  }
+
+  @action
+  setFilteredStashTabs(stashTabs: IStashTab[]) {
+    this.filteredStashTabs = stashTabs;
   }
 
   @action
@@ -117,6 +126,11 @@ export class UiStateStore {
   @action
   setItemTableOrderBy(orderBy: keyof ITableItem) {
     this.itemTableOrderBy = orderBy;
+  }
+
+  @action
+  setShowItemTableFilter(show: boolean) {
+    this.showItemTableFilter = show;
   }
 
   @action
@@ -197,6 +211,11 @@ export class UiStateStore {
   @action
   setAccountMenuAnchor(el: HTMLElement | null) {
     this.accountMenuAnchor = el;
+  }
+
+  @action
+  setItemTableMenuAnchor(el: HTMLElement | null) {
+    this.itemTableMenuAnchor = el;
   }
 
   @action

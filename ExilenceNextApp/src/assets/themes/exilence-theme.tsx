@@ -34,7 +34,7 @@ export const highchartsColors = [
 
 export const secondary = {
   light: '#696969',
-  main: '#282828',
+  main: '#252525',
   dark: '#000'
 };
 
@@ -59,7 +59,7 @@ export const rarityColors = {
 
 export const itemColors = {
   chaosOrb: '#d6b600',
-  corrupted: '#A40000'
+  corrupted: '#d80404'
 };
 
 export const statusColors = {

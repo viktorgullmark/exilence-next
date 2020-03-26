@@ -46,14 +46,14 @@ interface ProfileDialogProps {
   leagues: League[];
   priceLeagues: League[];
   stashTabs: IStashTab[];
-  stashTabIds: string[];
+  selectedStashTabs: IStashTab[];
   characters: Character[];
   includeInventory?: boolean;
   includeEquipment?: boolean;
   handleClickClose: () => void;
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleStashTabChange: (value: IStashTab[]) => void;
 }
 
 const ProfileDialog: React.FC<ProfileDialogProps> = ({
@@ -68,7 +68,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   leagues,
   priceLeagues,
   stashTabs,
-  stashTabIds,
+  selectedStashTabs,
   characters,
   handleClickClose,
   handleLeagueChange,
@@ -96,7 +96,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                 isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
-              stashTabIds: stashTabIds,
+              selectedStashTabs: selectedStashTabs,
               character: characterName,
               includeEquipment: includeEquipment,
               includeInventory: includeInventory
@@ -165,11 +165,11 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                 />
                 <StashTabDropdown
                   stashTabs={stashTabs}
-                  touched={touched}
-                  errors={errors}
-                  stashTabIds={stashTabIds}
+                  selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
                   handleChange={handleChange}
+                  marginBottom={3}
+                  marginTop={2}
                 />
                 <Box mt={2}>
                   <SelectField
@@ -206,7 +206,6 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     disabled={
                       loading ||
                       noCharacters.length > 0 ||
-                      stashTabIds.length === 0 ||
                       (dirty && !isValid)
                     }
                   >

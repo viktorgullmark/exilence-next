@@ -139,7 +139,15 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   }
   const mergedItems = mergeItemStacks(
     snapshots
-      .flatMap(sts => sts.stashTabs)
+      .flatMap(sts =>
+        sts.stashTabs.filter(
+          st =>
+            !rootStore.uiStateStore.filteredStashTabs ||
+            rootStore.uiStateStore.filteredStashTabs
+              .map(fst => fst.id)
+              .includes(st.stashTabId)
+        )
+      )
       .flatMap(sts =>
         sts.pricedItems.filter(
           i =>

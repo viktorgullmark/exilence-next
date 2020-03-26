@@ -3,7 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.3] - NOT RELEASED
 ##### Added
+- Added a filter section for the item table
+    - Added a multiselect which lets you filter based on stash tabs
 - Added a new column that displays the tab names an item exists in
+- Added a search icon to the search field
+- Minor style tweaks across the app
+##### Changed
+- Reworked the stash tab dropdown entirely in the profile dialog
+    - Better positioning of the popup
+    - Ability to clear all in the selection
+    - Ability to remove individual stash tabs without opening the popup
+- Reduced the padding on rows in the item table, to fit more items per page
 ##### Fixed
 - Fixed a bug where some jewels and jewellry without value were listed in the item table
 - Fixed a bug where the support button would be placed on top of the scrollbar

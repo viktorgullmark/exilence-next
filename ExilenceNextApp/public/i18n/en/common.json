@@ -14,7 +14,8 @@
     "create_group": "Create group",
     "join_group": "Join group",
     "leave_group": "Leave group",
-    "lets_begin": "Lets begin!"
+    "lets_begin": "Lets begin!",
+    "apply_filter": "Apply filter"
   },
   "title": {
     "login": "Login",
@@ -40,6 +41,8 @@
     "general": "General"
   },
   "label": {
+    "stash_tabs": "Stash tabs",
+    "add_stash_tabs": "Add tabs",
     "support": "Support",
     "required": "Required",
     "optional": "Optional",
@@ -51,6 +54,7 @@
     "select_profile": "Select profile",
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
+    "filter_stash_tabs": "Filter stash tabs",
     "profile_placeholder": "Select a profile",
     "group_name": "Group name",
     "group_name_placeholder": "Enter a group name",
@@ -90,6 +94,7 @@
     "here": "here",
     "to_update_now": "to update now!",
     "prices_fetched_from": "Prices fetched from ",
+    "prices_fetched_from_interval": "every 20 min",
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",

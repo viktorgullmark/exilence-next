@@ -22,13 +22,15 @@ export const ExpansionPanel = withStyles({
 
 export const ExpansionPanelSummary = withStyles(theme => ({
   root: {
+    maxHeight: 40,
+    minHeight: '40px !important',
     backgroundColor: theme.palette.secondary.main,
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
-    minHeight: 56,
     '&$expanded': {
       minHeight: 56
-    }
+    },
+    padding: '0 16px 0 16px'
   },
   content: {
     '&$expanded': {

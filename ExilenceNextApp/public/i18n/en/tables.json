@@ -8,13 +8,13 @@
     "corrupted": "Corrupted",
     "stacksize": "Quantity",
     "calculated": "Price",
-    "total": "Total",
+    "total": "Total value",
     "tab_names": "Tabs"
   },
   "label": {
     "item_table_placeholder": "No items found for the selected profile, take a snapshot to begin (top right)",
     "stash_tab_dropdown_placeholder": "No stash tabs found",
-    "search_text": "Search items"
+    "search_text": "Type something here to filter items"
   },
   "value": {
     "true": "Yes",
