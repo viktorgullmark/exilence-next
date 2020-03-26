@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   tableCell: {
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1.75)}px ${theme.spacing(2)}px`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'

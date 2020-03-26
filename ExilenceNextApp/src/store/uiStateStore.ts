@@ -71,7 +71,7 @@ export class UiStateStore {
   }
 
   @action
-  setFilteredStashTabs(stashTabs: IStashTab[]) {
+  setFilteredStashTabs(stashTabs: IStashTab[] | undefined) {
     this.filteredStashTabs = stashTabs;
   }
 
@@ -130,6 +130,9 @@ export class UiStateStore {
 
   @action
   setShowItemTableFilter(show: boolean) {
+    if(!show) {
+      this.setFilteredStashTabs(undefined);
+    }
     this.showItemTableFilter = show;
   }
 

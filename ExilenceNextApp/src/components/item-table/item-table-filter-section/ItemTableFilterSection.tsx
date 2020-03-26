@@ -69,7 +69,7 @@ const ItemTableFilterSection: React.FC<IProps> = ({
             >
               <Grid item>
                 <StashTabDropdown
-                  width={450}
+                  width={600}
                   size="small"
                   marginBottom={1.5}
                   stashTabs={stashTabs}

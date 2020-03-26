@@ -86,6 +86,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
               key={index}
               className={classes.chip}
               label={option.n}
+              classes={{ label: classes.chipLabel }}
               style={{ background: getColour(option.id) }}
               {...getTagProps({ index })}
             />
