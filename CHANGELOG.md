@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added a filter section for the item table
     - Added a multiselect which lets you filter based on stash tabs
 - Added a new column that displays the tab names an item exists in
+- Added a search icon to the search field
 - Minor style tweaks across the app
 ##### Changed
 - Reworked the stash tab dropdown entirely in the profile dialog
