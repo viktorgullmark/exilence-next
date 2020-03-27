@@ -1,4 +1,11 @@
-import { Grid, useTheme, Box, Typography, Divider } from '@material-ui/core';
+import {
+  Grid,
+  useTheme,
+  Box,
+  Typography,
+  Divider,
+  Tooltip
+} from '@material-ui/core';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -231,17 +238,24 @@ const NetWorth: React.FC<NetWorthProps> = ({
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Typography variant="body2" className={classes.creditText}>
-                      {t('label.prices_fetched_from')}
-                      <a
-                        className={classes.inlineLink}
-                        href="https://poe.ninja"
-                        onClick={e => openLink(e)}
+                    <Tooltip
+                      title={t('label.prices_fetched_from_interval')}
+                      placement="bottom"
+                    >
+                      <Typography
+                        variant="body2"
+                        className={classes.creditText}
                       >
-                        https://poe.ninja
-                      </a>
-                      &nbsp;{t('label.prices_fetched_from_interval')}
-                    </Typography>
+                        {t('label.prices_fetched_from')}
+                        <a
+                          className={classes.inlineLink}
+                          href="https://poe.ninja"
+                          onClick={e => openLink(e)}
+                        >
+                          https://poe.ninja
+                        </a>
+                      </Typography>
+                    </Tooltip>
                   </Box>
                 </Grid>
               </Grid>
