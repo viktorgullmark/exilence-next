@@ -1,4 +1,12 @@
-import { Box, Checkbox, Chip, TextField, useTheme } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  Chip,
+  TextField,
+  useTheme,
+  Popper,
+  PopperProps
+} from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -53,8 +61,8 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 
   useEffect(() => {
     defaultValue = [...selectedStashTabs];
-  }, [])
-  
+  }, []);
+
   return (
     <Box mt={marginTop ? marginTop : 1} mb={marginBottom ? marginBottom : 2}>
       <Autocomplete
@@ -62,7 +70,6 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
         id="stash"
         options={stashTabs}
         size={size}
-        disableCloseOnSelect
         style={{ width: width ? width : 'auto' }}
         value={selectedStashTabs}
         defaultValue={defaultValue}
@@ -73,17 +80,17 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           }
           handleStashTabChange(e, value);
         }}
-        renderOption={(option, { selected }) => (
-          <React.Fragment>
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
-              checked={selected}
-            />
-            {option.n}
-          </React.Fragment>
-        )}
+        // renderOption={(option, { selected }) => (
+        //   <React.Fragment>
+        //     <Checkbox
+        //       icon={icon}
+        //       checkedIcon={checkedIcon}
+        //       style={{ marginRight: 8 }}
+        //       checked={selected}
+        //     />
+        //     {option.n}
+        //   </React.Fragment>
+        // )}
         renderTags={(value: IStashTab[], getTagProps) =>
           value.map((option: IStashTab, index: number) => (
             <Chip
@@ -105,9 +112,14 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
             placeholder={t(placeholderKey)}
           />
         )}
+        PopperComponent={CustomPopper}
       />
     </Box>
   );
 };
+
+const CustomPopper: React.FC<PopperProps> = ({ children, ...other }) => (
+  <Popper {...other}>{children}</Popper>
+);
 
 export default observer(StashTabDropdown);
