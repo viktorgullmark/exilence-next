@@ -80,17 +80,6 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
           }
           handleStashTabChange(e, value);
         }}
-        // renderOption={(option, { selected }) => (
-        //   <React.Fragment>
-        //     <Checkbox
-        //       icon={icon}
-        //       checkedIcon={checkedIcon}
-        //       style={{ marginRight: 8 }}
-        //       checked={selected}
-        //     />
-        //     {option.n}
-        //   </React.Fragment>
-        // )}
         renderTags={(value: IStashTab[], getTagProps) =>
           value.map((option: IStashTab, index: number) => (
             <Chip
