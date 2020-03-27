@@ -36,6 +36,7 @@ import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ListIcon from '@material-ui/icons/List';
+import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -169,38 +170,97 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={12}>
-          {/* todo: this block should be refactored to its own component */}
-          <ExpansionPanel
-            expanded={uiStateStore!.netWorthChartExpanded}
-            onChange={() =>
-              uiStateStore!.setNetWorthChartExpanded(
-                !uiStateStore!.netWorthChartExpanded
-              )
-            }
-          >
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <EqualizerIcon fontSize="small" />
-                <Box ml={1}>
-                  <Typography variant="overline">
-                    {t('label.net_worth_chart')}
-                  </Typography>
-                </Box>
-              </Box>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails
-              style={{
-                height: chartHeight,
-                background: theme.palette.background.default
-              }}
-            >
-              <SnapshotHistoryChartContainer />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+          <Grid container spacing={2}>
+            <Grid item xs={7}>
+              {/* todo: this block should be refactored to its own component */}
+              <ExpansionPanel
+                expanded={uiStateStore!.netWorthChartExpanded}
+                onChange={() =>
+                  uiStateStore!.setNetWorthChartExpanded(
+                    !uiStateStore!.netWorthChartExpanded
+                  )
+                }
+              >
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <EqualizerIcon fontSize="small" />
+                    <Box ml={1}>
+                      <Typography variant="overline">
+                        {t('label.net_worth_chart')}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails
+                  style={{
+                    height: chartHeight,
+                    background: theme.palette.background.default
+                  }}
+                >
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <SnapshotHistoryChartContainer />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <ChartToolboxContainer />
+                    </Grid>
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item xs={5}>
+              <ExpansionPanel
+                expanded={uiStateStore!.tabChartExpanded}
+                onChange={() =>
+                  uiStateStore!.setTabChartExpanded(
+                    !uiStateStore!.tabChartExpanded
+                  )
+                }
+              >
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <EqualizerIcon fontSize="small" />
+                    <Box ml={1}>
+                      <Typography variant="overline">
+                        {t('label.tab_chart')}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails
+                  style={{
+                    height: chartHeight,
+                    background: theme.palette.background.default
+                  }}
+                >
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <SnapshotHistoryChartContainer showIndividualTabs/>
+                    </Grid>
+                    {/* <Grid item xs={12}>
+                      <ChartToolboxContainer />
+                    </Grid> */}
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {/* todo: this block should be refactored to its own component */}

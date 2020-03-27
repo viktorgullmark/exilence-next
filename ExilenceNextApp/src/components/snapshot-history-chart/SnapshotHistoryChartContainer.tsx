@@ -8,13 +8,15 @@ import SnapshotHistoryChart from './SnapshotHistoryChart';
 import useComponentSize from '@rehooks/component-size';
 
 interface Props {
+  showIndividualTabs?: boolean;
   accountStore?: AccountStore;
   signalrStore?: SignalrStore;
 }
 
 const SnapshotHistoryChartContainer: React.FC<Props> = ({
   accountStore,
-  signalrStore
+  signalrStore,
+  showIndividualTabs
 }: Props) => {
   const { t } = useTranslation();
 
@@ -32,6 +34,7 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
         height={size.height}
         groupData={activeGroup?.chartData}
         playerData={activeProfile?.chartData}
+        showIndividualTabs={showIndividualTabs}
       />
     </div>
   );

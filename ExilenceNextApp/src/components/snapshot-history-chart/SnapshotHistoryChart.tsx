@@ -13,6 +13,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   height: number;
   playerData?: IConnectionChartSeries;
   groupData?: IGroupChartSeries;
+  showIndividualTabs?: boolean;
 }
 
 const SnapshotHistoryChart: React.FC<Props> = ({
@@ -49,6 +50,9 @@ const SnapshotHistoryChart: React.FC<Props> = ({
     },
     xAxis: {
       type: 'datetime'
+    },
+    legend: {
+      enabled: false
     },
     plotOptions: {
       area: {

@@ -51,6 +51,7 @@ export class UiStateStore {
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
   @persist @observable netWorthChartExpanded: boolean = false;
+  @persist @observable tabChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
@@ -100,6 +101,11 @@ export class UiStateStore {
   @action
   setNetWorthChartExpanded(expanded: boolean) {
     this.netWorthChartExpanded = expanded;
+  }
+
+  @action
+  setTabChartExpanded(expanded: boolean) {
+    this.tabChartExpanded = expanded;
   }
 
   @action

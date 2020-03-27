@@ -10,6 +10,9 @@ const HighchartsTheme: React.FC = () => {
     time: {
       timezoneOffset: new Date().getTimezoneOffset()
     },
+    credits: {
+      enabled: false
+    },
     colors: highchartsColors,
     chart: {
       backgroundColor: theme.palette.background.default,
