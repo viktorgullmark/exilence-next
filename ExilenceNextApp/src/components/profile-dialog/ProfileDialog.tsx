@@ -146,6 +146,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   required
                   autoFocus
                 />
+                <PriceLeagueDropdown
+                  priceLeagues={priceLeagues}
+                  touched={touched}
+                  errors={errors}
+                  handleChange={handleChange}
+                  values={values}
+                />
                 <LeagueDropdown
                   leagues={leagues}
                   touched={touched}
@@ -153,13 +160,6 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   fullWidth
                   noCharacters={noCharacters}
                   handleLeagueChange={handleLeagueChange}
-                  handleChange={handleChange}
-                  values={values}
-                />
-                <PriceLeagueDropdown
-                  priceLeagues={priceLeagues}
-                  touched={touched}
-                  errors={errors}
                   handleChange={handleChange}
                   values={values}
                 />
@@ -186,12 +186,18 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   <CheckboxField
                     name="includeEquipment"
                     label={t('label.include_equipment')}
-                    disabled={!values.character || values.character === placeholderOption}
+                    disabled={
+                      !values.character ||
+                      values.character === placeholderOption
+                    }
                   />
                   <CheckboxField
                     name="includeInventory"
                     label={t('label.include_inventory')}
-                    disabled={!values.character || values.character === placeholderOption}
+                    disabled={
+                      !values.character ||
+                      values.character === placeholderOption
+                    }
                   />
                 </Box>
                 <div className={classes.dialogActions}>
@@ -204,9 +210,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     color="primary"
                     loading={loading}
                     disabled={
-                      loading ||
-                      noCharacters.length > 0 ||
-                      (dirty && !isValid)
+                      loading || noCharacters.length > 0 || (dirty && !isValid)
                     }
                   >
                     {isEditing

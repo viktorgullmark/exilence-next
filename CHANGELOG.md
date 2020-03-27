@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
     - Ability to clear all in the selection
     - Ability to remove individual stash tabs without opening the popup
 - Reduced the padding on rows in the item table, to fit more items per page
+- Changed position of the pricing league dropdown in the profile dialog
 ##### Fixed
 - Fixed a bug where some jewels and jewellry without value were listed in the item table
 - Fixed a bug where the support button would be placed on top of the scrollbar
