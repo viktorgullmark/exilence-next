@@ -6,7 +6,6 @@ const useStyles = makeStyles(theme =>
       background: theme.palette.secondary.light,
     },
     chipLabel: {
-      textShadow: '-1px -1px 0 #303030, 1px -1px 0 #303030, -1px 1px 0 #303030, 1px 1px 0 #303030'
     }
   })
 );
