@@ -121,6 +121,19 @@ export class Profile {
   }
 
   @computed
+  get tabChartData() {
+    if (this.snapshots.length === 0) {
+      return undefined;
+    }
+
+    const series: IConnectionChartSeries[] = [];
+
+    // todo: create one series per stash tab in profile
+
+    return series;
+  }
+
+  @computed
   get itemCount() {
     if (this.snapshots.length === 0) {
       return 0;
@@ -445,13 +458,15 @@ export class Profile {
           }
         );
 
-        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(pi => pi.calculated > 0);
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(
+          pi => pi.calculated > 0
+        );
 
         stashTabWithItems.value = stashTabWithItems.pricedItems
           .filter(
             item =>
               item.calculated * item.stackSize >=
-                rootStore.settingStore.priceTreshold
+              rootStore.settingStore.priceTreshold
           )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);

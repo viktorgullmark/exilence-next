@@ -133,6 +133,20 @@ export const formatSnapshotsForChart = (
     .sort((n1, n2) => n1[0] - n2[0]);
 };
 
+export const formatStashTabSnapshotsForChart = (
+  stashTabSnapshots: IApiStashTabSnapshot[]
+): number[][] => {
+  return stashTabSnapshots
+    .map(s => {
+      const values: number[] = [
+        moment(new Date(s.created).getTime()).valueOf(),
+        +s.value.toFixed(2)
+      ];
+      return values;
+    })
+    .sort((n1, n2) => n1[0] - n2[0]);
+};
+
 export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
