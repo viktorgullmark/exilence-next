@@ -157,6 +157,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         setOrderBy={(col: keyof ITableItem) =>
           uiStateStore!.setItemTableOrderBy(col)
         }
+        activeGroup={activeGroup}
       />
       <ItemTableMenuContainer />
     </>

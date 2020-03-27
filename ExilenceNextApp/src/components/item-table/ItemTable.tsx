@@ -13,6 +13,7 @@ import { ITableItem } from '../../interfaces/table-item.interface';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { useStyles } from './ItemTable.styles';
+import { Group } from '../../store/domains/group';
 
 export type Order = 'asc' | 'desc';
 
@@ -26,6 +27,7 @@ interface ItemTableProps {
   orderBy: keyof ITableItem;
   setOrderBy: (col: keyof ITableItem) => void;
   setOrder: (order: Order) => void;
+  activeGroup?: Group;
 }
 
 const ItemTable: React.FC<ItemTableProps> = ({
@@ -35,7 +37,8 @@ const ItemTable: React.FC<ItemTableProps> = ({
   order,
   orderBy,
   setOrder,
-  setOrderBy
+  setOrderBy,
+  activeGroup
 }: ItemTableProps) => {
   const classes = useStyles();
   const { t } = useTranslation(['tables']);
@@ -145,6 +148,10 @@ const ItemTable: React.FC<ItemTableProps> = ({
       : (a, b) => -desc(a, b, orderBy);
   }
 
+  const getColumns = () => {
+    return activeGroup ? columns.filter(c => c.id !== 'tabNames') : columns;
+  }
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ITableItem
@@ -173,7 +180,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              columns={columns}
+              columns={getColumns()}
             />
             <TableBody>
               {stableSort<ITableItem>(rows, getSorting(order, orderBy))
@@ -189,7 +196,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
                       tabIndex={-1}
                       key={uuid.v4()}
                     >
-                      {columns.map(column => {
+                      {getColumns().map(column => {
                         return (
                           <ItemTableCell
                             key={uuid.v4()}
