@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.4] - NOT RELEASED
+## [0.3.4] - 2020-03-28
 ##### Added
 - Added a new chart for breakdown per tab
 - Added a chart toolbox to the net worth chart, for selecting different timespans
