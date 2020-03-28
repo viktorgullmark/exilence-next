@@ -35,14 +35,14 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   let seriesData: ChartSeries[] = playerData
     ? playerData.map(pd => {
         return {
-          type: 'area',
+          type: showIndividualTabs ? 'spline' : 'area',
           name: pd.seriesName,
           data: pd.series,
         };
       })
     : [
         {
-          type: 'area',
+          type: showIndividualTabs ? 'spline' : 'area',
           name: 'No data',
           data: []
         }
@@ -54,7 +54,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
     groupData.map(gd => {
       gd.connections.map(player => {
         const playerData = {
-          type: 'area',
+          type: showIndividualTabs ? 'spline' : 'area',
           name: player.seriesName,
           data: player.series
         };
@@ -104,6 +104,18 @@ const SnapshotHistoryChart: React.FC<Props> = ({
                 ]
               ]
         },
+        marker: {
+          radius: 1
+        },
+        lineWidth: 2,
+        states: {
+          hover: {
+            lineWidth: 2
+          }
+        },
+        threshold: null
+      },
+      spline: {
         marker: {
           radius: 1
         },
