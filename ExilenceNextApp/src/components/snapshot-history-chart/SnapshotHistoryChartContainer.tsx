@@ -32,7 +32,7 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
       <SnapshotHistoryChart
         width={size.width}
         height={size.height}
-        groupData={showIndividualTabs ? activeGroup?.chartData : activeGroup?.chartData} // todo: add tab chart data to groups?
+        groupData={showIndividualTabs ? undefined : activeGroup?.chartData}
         playerData={showIndividualTabs ? activeProfile?.tabChartData : activeProfile?.chartData}
         showIndividualTabs={showIndividualTabs}
         stashTabColors={accountStore!.getSelectedAccount.stashTabColors}
