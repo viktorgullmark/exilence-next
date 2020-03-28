@@ -119,10 +119,10 @@ const SnapshotHistoryChart: React.FC<Props> = ({
         marker: {
           radius: 1
         },
-        lineWidth: 2,
+        lineWidth: 1,
         states: {
           hover: {
-            lineWidth: 2
+            lineWidth: 1
           }
         },
         threshold: null
@@ -134,7 +134,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   return (
     <Box className={classes.root}>
       <Highcharts
-        colors={showIndividualTabs ? stashTabColors : undefined}
+        colors={undefined} //showIndividualTabs ? stashTabColors : undefined
         options={options}
         containerProps={{
           style: {
