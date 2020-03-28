@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-import HC from 'highcharts';
+import HC, { ChartOptions } from 'highcharts';
 import React from 'react';
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
@@ -11,34 +11,58 @@ import useStyles from './SnapshotHistoryChart.styles';
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
-  playerData?: IConnectionChartSeries;
-  groupData?: IGroupChartSeries;
+  playerData?: IConnectionChartSeries[];
+  groupData?: IGroupChartSeries[];
   showIndividualTabs?: boolean;
+  stashTabColors?: string[];
+}
+
+interface ChartSeries {
+  type: string;
+  name: string;
+  data: number[][];
 }
 
 const SnapshotHistoryChart: React.FC<Props> = ({
   playerData,
-  groupData
+  groupData,
+  showIndividualTabs,
+  stashTabColors
 }: Props) => {
   const theme = useTheme();
   const classes = useStyles();
 
-  let seriesData = [
-    {
-      type: 'area',
-      name: playerData ? playerData.seriesName : 'No data',
-      data: playerData ? playerData.series : []
-    }
-  ];
+  let seriesData: ChartSeries[] = playerData
+    ? playerData.map(pd => {
+        return {
+          type: 'area',
+          name: pd.seriesName,
+          data: pd.series,
+        };
+      })
+    : [
+        {
+          type: 'area',
+          name: 'No data',
+          data: []
+        }
+      ];
 
   if (groupData) {
-    seriesData = groupData.connections.map(player => {
-      return {
-        type: 'area',
-        name: player.seriesName,
-        data: player.series
-      };
+    const data: ChartSeries[] = [];
+
+    groupData.map(gd => {
+      gd.connections.map(player => {
+        const playerData = {
+          type: 'area',
+          name: player.seriesName,
+          data: player.series
+        };
+        data.push(playerData);
+      });
     });
+
+    seriesData = data;
   }
 
   const options = {
@@ -63,20 +87,22 @@ const SnapshotHistoryChart: React.FC<Props> = ({
             x2: 0,
             y2: 1
           },
-          stops: [
-            [
-              0,
-              HC.color(theme.palette.primary.main)
-                .setOpacity(0.25)
-                .get('rgba')
-            ],
-            [
-              1,
-              HC.color(primaryDarker)
-                .setOpacity(0)
-                .get('rgba')
-            ]
-          ]
+          stops: showIndividualTabs
+            ? []
+            : [
+                [
+                  0,
+                  HC.color(theme.palette.primary.main)
+                    .setOpacity(0.25)
+                    .get('rgba')
+                ],
+                [
+                  1,
+                  HC.color(primaryDarker)
+                    .setOpacity(0)
+                    .get('rgba')
+                ]
+              ]
         },
         marker: {
           radius: 1
@@ -96,6 +122,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   return (
     <Box className={classes.root}>
       <Highcharts
+        colors={showIndividualTabs ? stashTabColors : undefined}
         options={options}
         containerProps={{
           style: {

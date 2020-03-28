@@ -251,7 +251,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 >
                   <Grid container>
                     <Grid item xs={12}>
-                      <SnapshotHistoryChartContainer showIndividualTabs/>
+                      <SnapshotHistoryChartContainer showIndividualTabs />
                     </Grid>
                     {/* <Grid item xs={12}>
                       <ChartToolboxContainer />
