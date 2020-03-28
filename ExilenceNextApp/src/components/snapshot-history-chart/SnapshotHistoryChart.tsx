@@ -76,7 +76,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
       type: 'datetime'
     },
     legend: {
-      enabled: false
+      enabled: showIndividualTabs ? true : false
     },
     plotOptions: {
       area: {

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.5] - NOT RELEASED
+##### Added
+- Added the ability to filter stash tabs in the tab breakdown chart
+
 ## [0.3.4] - 2020-03-28
 ##### Added
 - Added a new chart for breakdown per tab
