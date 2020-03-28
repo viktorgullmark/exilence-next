@@ -7,7 +7,11 @@ import {
   blue,
   cyan,
   lime,
-  orange
+  orange,
+  pink,
+  deepPurple,
+  teal,
+  deepOrange
 } from '@material-ui/core/colors';
 
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
@@ -25,10 +29,13 @@ export const fontColors = {
 
 export const highchartsColors = [
   primaryMain,
+  deepOrange[300],
   orange[300],
-  cyan[300],
   lime[300],
+  teal[300],
   amber[300],
+  deepPurple[300],
+  pink[300],
   blue[300]
 ];
 

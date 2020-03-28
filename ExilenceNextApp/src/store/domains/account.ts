@@ -23,6 +23,7 @@ import { visitor, rootStore } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
+import { rgbToHex } from '../../utils/colour.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -40,6 +41,24 @@ export class Account implements IAccount {
 
   constructor(obj?: IAccount) {
     Object.assign(this, obj);
+  }
+
+  @computed
+  get stashTabColors() {
+    const profile = this.activeProfile;
+    if (profile) {
+      const league = rootStore.leagueStore.leagues.find(
+        l => l.id === profile.activeLeagueId
+      );
+      const accountLeague = this.accountLeagues.find(
+        l => l.leagueId === league?.id
+      );
+      return accountLeague?.stashtabs
+        .filter(s => this.activeProfile?.activeStashTabIds.includes(s.id))
+        .map(s => rgbToHex(s.colour.r, s.colour.g, s.colour.b));
+    } else {
+      return undefined;
+    }
   }
 
   @computed

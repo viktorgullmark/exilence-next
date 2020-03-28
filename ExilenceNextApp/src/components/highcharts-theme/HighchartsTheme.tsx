@@ -10,6 +10,9 @@ const HighchartsTheme: React.FC = () => {
     time: {
       timezoneOffset: new Date().getTimezoneOffset()
     },
+    credits: {
+      enabled: false
+    },
     colors: highchartsColors,
     chart: {
       backgroundColor: theme.palette.background.default,
@@ -40,9 +43,9 @@ const HighchartsTheme: React.FC = () => {
       }
     },
     yAxis: {
-      gridLineColor: theme.palette.text.hint,
+      gridLineColor: theme.palette.secondary.light,
       lineColor: theme.palette.text.hint,
-      minorGridLineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.secondary.light,
       title: {
         text: '',
         style: {
@@ -56,9 +59,9 @@ const HighchartsTheme: React.FC = () => {
       }
     },
     xAxis: {
-      gridLineColor: theme.palette.text.hint,
+      gridLineColor: theme.palette.secondary.light,
       lineColor: theme.palette.text.hint,
-      minorGridLineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.secondary.light,
       labels: {
         style: {
           color: theme.palette.text.primary

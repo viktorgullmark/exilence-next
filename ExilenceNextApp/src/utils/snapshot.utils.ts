@@ -8,6 +8,8 @@ import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';
 import { mergeItemStacks } from './item.utils';
 import { rootStore } from '..';
+import { StashTabSnapshot } from '../store/domains/stashtab-snapshot';
+import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
@@ -127,6 +129,20 @@ export const formatSnapshotsForChart = (
       const values: number[] = [
         moment(new Date(s.created).getTime()).valueOf(),
         +getValueForSnapshot(s).toFixed(2)
+      ];
+      return values;
+    })
+    .sort((n1, n2) => n1[0] - n2[0]);
+};
+
+export const formatStashTabSnapshotsForChart = (
+  stashTabSnapshots: IChartStashTabSnapshot[]
+): number[][] => {
+  return stashTabSnapshots
+    .map(s => {
+      const values: number[] = [
+        moment(new Date(s.created).getTime()).valueOf(),
+        +s.value.toFixed(2)
       ];
       return values;
     })

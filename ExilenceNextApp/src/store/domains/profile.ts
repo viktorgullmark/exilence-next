@@ -25,12 +25,14 @@ import {
   getItemCount,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
-  formatValue
+  formatValue,
+  formatStashTabSnapshotsForChart
 } from '../../utils/snapshot.utils';
 import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
+import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -106,18 +108,104 @@ export class Profile {
 
   @computed
   get chartData() {
-    if (this.snapshots.length === 0) {
+    let snapshots = [...this.snapshots];
+
+    if (snapshots.length === 0) {
       return undefined;
+    }
+
+    switch (rootStore.uiStateStore.chartTimeSpan) {
+      case '1 day': {
+        snapshots = snapshots.filter(s => {
+          return moment()
+            .subtract(24, 'h')
+            .isBefore(moment(s.created));
+        });
+        break;
+      }
+      case '1 week': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(7, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      case '1 month': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(30, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      default: {
+        // all time
+        break;
+      }
     }
 
     const connectionSeries: IConnectionChartSeries = {
       seriesName: this.name,
       series: formatSnapshotsForChart(
-        this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
+        snapshots.map(s => mapSnapshotToApiSnapshot(s))
       )
     };
 
-    return connectionSeries;
+    return [connectionSeries];
+  }
+
+  @computed
+  get tabChartData() {
+    const league = rootStore.leagueStore.leagues.find(
+      l => l.id === this.activeLeagueId
+    );
+
+    if (this.snapshots.length === 0 || !league) {
+      return undefined;
+    }
+
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
+      l => l.leagueId === league.id
+    );
+
+    if (!accountLeague) {
+      return undefined;
+    }
+
+    const series: IConnectionChartSeries[] = [];
+
+    let stashTabSnapshots: IChartStashTabSnapshot[] = [];
+
+    this.snapshots.map(s => {
+      const data = s.stashTabSnapshots.map(sts => {
+        return {
+          value: sts.value,
+          stashTabId: sts.stashTabId,
+          created: s.created
+        } as IChartStashTabSnapshot;
+      });
+      stashTabSnapshots = stashTabSnapshots.concat(data);
+    });
+
+    const groupedStashTabSnapshots = stashTabSnapshots.reduce(function(r, a) {
+      r[a.stashTabId] = r[a.stashTabId] || [];
+      r[a.stashTabId].push(a);
+      return r;
+    }, Object.create(null));
+
+    this.activeStashTabIds.map(id => {
+      const stashTabName = accountLeague.stashtabs.find(s => s.id === id)?.n;
+      const serie: IConnectionChartSeries = {
+        seriesName: stashTabName ?? '',
+        series: formatStashTabSnapshotsForChart(
+          groupedStashTabSnapshots[id] ? groupedStashTabSnapshots[id] : []
+        )
+      };
+      series.push(serie);
+    });
+
+    return series;
   }
 
   @computed
@@ -445,13 +533,15 @@ export class Profile {
           }
         );
 
-        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(pi => pi.calculated > 0);
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(
+          pi => pi.calculated > 0
+        );
 
         stashTabWithItems.value = stashTabWithItems.pricedItems
           .filter(
             item =>
               item.calculated * item.stackSize >=
-                rootStore.settingStore.priceTreshold
+              rootStore.settingStore.priceTreshold
           )
           .map(ts => ts.total)
           .reduce((a, b) => a + b, 0);

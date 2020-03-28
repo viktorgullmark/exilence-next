@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] - NOT RELEASED
+##### Added
+- Added a new chart for breakdown per tab
+- Added a chart toolbox to the net worth chart
+- Minor chart improvements
+
 ## [0.3.3] - 2020-03-27
 ##### Added
 - Added a filter section for the item table
