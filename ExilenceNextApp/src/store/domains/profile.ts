@@ -108,14 +108,47 @@ export class Profile {
 
   @computed
   get chartData() {
-    if (this.snapshots.length === 0) {
+    let snapshots = [...this.snapshots];
+
+    if (snapshots.length === 0) {
       return undefined;
+    }
+
+    switch (rootStore.uiStateStore.chartTimeSpan) {
+      case '1 day': {
+        snapshots = snapshots.filter(s => {
+          return moment()
+            .subtract(24, 'h')
+            .isBefore(moment(s.created));
+        });
+        break;
+      }
+      case '1 week': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(7, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      case '1 month': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(30, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      default: {
+        // all time
+        break;
+      }
     }
 
     const connectionSeries: IConnectionChartSeries = {
       seriesName: this.name,
       series: formatSnapshotsForChart(
-        this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
+        snapshots.map(s => mapSnapshotToApiSnapshot(s))
       )
     };
 
@@ -124,15 +157,19 @@ export class Profile {
 
   @computed
   get tabChartData() {
-    const league = rootStore.leagueStore.leagues.find(l => l.id === this.activeLeagueId);
+    const league = rootStore.leagueStore.leagues.find(
+      l => l.id === this.activeLeagueId
+    );
 
     if (this.snapshots.length === 0 || !league) {
       return undefined;
     }
 
-    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(l => l.leagueId === league.id);
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
+      l => l.leagueId === league.id
+    );
 
-    if(!accountLeague) {
+    if (!accountLeague) {
       return undefined;
     }
 
@@ -161,10 +198,12 @@ export class Profile {
       const stashTabName = accountLeague.stashtabs.find(s => s.id === id)?.n;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
-        series: formatStashTabSnapshotsForChart(groupedStashTabSnapshots[id] ? groupedStashTabSnapshots[id] : [])
-      }
+        series: formatStashTabSnapshotsForChart(
+          groupedStashTabSnapshots[id] ? groupedStashTabSnapshots[id] : []
+        )
+      };
       series.push(serie);
-    })
+    });
 
     return series;
   }

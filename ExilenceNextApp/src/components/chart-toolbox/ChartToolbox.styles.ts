@@ -7,8 +7,7 @@ const useStyles = makeStyles(theme =>
       flexGrow: 1,
       height: '100%'
     },
-    grid: {
-    },
+    grid: {},
     option: {
       background: theme.palette.secondary.main,
       textAlign: 'center',
@@ -25,7 +24,8 @@ const useStyles = makeStyles(theme =>
     },
     selected: {
       borderBottom: `2px solid ${primaryLighter}`,
-      backgroundColor: `rgba(255, 255, 255, 0.04) !important`
+      backgroundColor: `rgba(255, 255, 255, 0.04) !important`,
+      paddingTop: 10
     },
     primaryText: {
       fontSize: '0.875rem'

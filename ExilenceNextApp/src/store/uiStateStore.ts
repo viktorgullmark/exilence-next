@@ -13,6 +13,7 @@ import { RootStore } from './rootStore';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { ITableItem } from '../interfaces/table-item.interface';
 import { IStashTab } from '../interfaces/stash.interface';
+import { TimespanType } from '../types/timespan.type';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -58,6 +59,7 @@ export class UiStateStore {
   @persist @observable itemTableOrder: Order = 'desc';
   @persist @observable itemTableOrderBy: keyof ITableItem = 'total';
   @observable loginError: string | undefined = undefined;
+  @persist @observable chartTimeSpan: TimespanType = 'All time';
 
   constructor(private rootStore: RootStore) {}
 
@@ -74,6 +76,11 @@ export class UiStateStore {
   @action
   setFilteredStashTabs(stashTabs: IStashTab[] | undefined) {
     this.filteredStashTabs = stashTabs;
+  }
+
+  @action
+  setChartTimeSpan(timespan: TimespanType) {
+    this.chartTimeSpan = timespan;
   }
 
   @action
