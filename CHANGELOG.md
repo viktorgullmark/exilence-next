@@ -1,9 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.5] - NOT RELEASED
+## [0.3.5] - 2020-03-29
 ##### Added
 - Added the ability to filter stash tabs in the tab breakdown chart
+##### Fixed
+- Fixed a performance issue introduced with the last update
+    - We now limit the snapshots to a count of 50 in the tab breakdown chart
 
 ## [0.3.4] - 2020-03-28
 ##### Added

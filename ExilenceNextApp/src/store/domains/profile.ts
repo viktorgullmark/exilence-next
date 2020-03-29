@@ -157,11 +157,13 @@ export class Profile {
 
   @computed
   get tabChartData() {
+    let snapshots = [...this.snapshots.slice(0, 50)];
+  
     const league = rootStore.leagueStore.leagues.find(
       l => l.id === this.activeLeagueId
     );
 
-    if (this.snapshots.length === 0 || !league) {
+    if (snapshots.length === 0 || !league) {
       return undefined;
     }
 
@@ -177,7 +179,7 @@ export class Profile {
 
     let stashTabSnapshots: IChartStashTabSnapshot[] = [];
 
-    this.snapshots.map(s => {
+    snapshots.map(s => {
       const data = s.stashTabSnapshots.map(sts => {
         return {
           value: sts.value,
