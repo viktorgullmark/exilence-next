@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.6] - NOT RELEASED
+##### Changed
+- Changed position of the "Reset zoom" button in the charts
+
 ## [0.3.5] - 2020-03-29
 ##### Added
 - Added the ability to filter stash tabs in the tab breakdown chart
