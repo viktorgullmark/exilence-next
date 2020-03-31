@@ -343,7 +343,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
               <Tooltip title={t('label.group_icon_title')} placement="bottom">
                 <span>
                   <IconButton
-                    disabled={!signalrOnline}
+                    disabled={
+                      isSnapshotting ||
+                      !signalrOnline
+                    }
                     onClick={() => toggleGroupOverview()}
                     aria-label="group"
                     aria-haspopup="true"
