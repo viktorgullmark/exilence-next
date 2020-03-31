@@ -10,7 +10,10 @@ export function mapProfileToApiProfile(p: Profile) {
     activeCurrency: p.activeCurrency,
     activeStashTabIds: p.activeStashTabIds,
     snapshots: [],
-    active: p.active
+    active: p.active,
+    activeCharacterName: p.activeCharacterName,
+    includeEquipment: p.includeEquipment,
+    includeInventory: p.includeInventory
   };
 }
 

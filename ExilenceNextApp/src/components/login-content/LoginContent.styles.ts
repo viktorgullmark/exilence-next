@@ -11,6 +11,9 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 0,
     padding: theme.spacing(5, 5)
   },
+  infoWell: {
+    marginBottom: theme.spacing(2)
+  },
   loginTitle: {
     marginTop: 0,
     textAlign: 'center',
@@ -18,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase',
     paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.primary.main}`
+  },
+  errorMessage: {
+    color: theme.palette.error.main
   },
   loginFooter: {
     marginTop: theme.spacing(2),

@@ -3,7 +3,7 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
@@ -15,7 +15,7 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { mergeItemStacks } from '../../utils/item.utils';
+import { mergeItemStacks, mapItemsToPricedItems } from '../../utils/item.utils';
 import { excludeLegacyMaps } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
@@ -24,12 +24,15 @@ import {
   formatSnapshotsForChart,
   getItemCount,
   getValueForSnapshotsTabs,
-  mapSnapshotToApiSnapshot
+  mapSnapshotToApiSnapshot,
+  formatValue,
+  formatStashTabSnapshotsForChart
 } from '../../utils/snapshot.utils';
 import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
+import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 
 export class Profile {
   @persist uuid: string = uuid.v4();
@@ -37,6 +40,7 @@ export class Profile {
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
+  @persist @observable activeCharacterName: string = '';
   @persist('object') @observable activeCurrency: ICurrency = {
     name: 'chaos',
     short: 'c'
@@ -47,6 +51,8 @@ export class Profile {
   @persist('list', Snapshot) @observable snapshots: Snapshot[] = [];
 
   @persist @observable active: boolean = false;
+  @persist @observable includeEquipment: boolean = false;
+  @persist @observable includeInventory: boolean = false;
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -102,18 +108,106 @@ export class Profile {
 
   @computed
   get chartData() {
-    if (this.snapshots.length === 0) {
+    let snapshots = [...this.snapshots];
+
+    if (snapshots.length === 0) {
       return undefined;
+    }
+
+    switch (rootStore.uiStateStore.chartTimeSpan) {
+      case '1 day': {
+        snapshots = snapshots.filter(s => {
+          return moment()
+            .subtract(24, 'h')
+            .isBefore(moment(s.created));
+        });
+        break;
+      }
+      case '1 week': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(7, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      case '1 month': {
+        snapshots = snapshots.filter(s =>
+          moment()
+            .subtract(30, 'd')
+            .isBefore(moment(s.created))
+        );
+        break;
+      }
+      default: {
+        // all time
+        break;
+      }
     }
 
     const connectionSeries: IConnectionChartSeries = {
       seriesName: this.name,
       series: formatSnapshotsForChart(
-        this.snapshots.map(s => mapSnapshotToApiSnapshot(s))
+        snapshots.map(s => mapSnapshotToApiSnapshot(s))
       )
     };
 
-    return connectionSeries;
+    return [connectionSeries];
+  }
+
+  @computed
+  get tabChartData() {
+    let snapshots = [...this.snapshots.slice(0, 50)];
+  
+    const league = rootStore.leagueStore.leagues.find(
+      l => l.id === this.activeLeagueId
+    );
+
+    if (snapshots.length === 0 || !league) {
+      return undefined;
+    }
+
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
+      l => l.leagueId === league.id
+    );
+
+    if (!accountLeague) {
+      return undefined;
+    }
+
+    const series: IConnectionChartSeries[] = [];
+
+    let stashTabSnapshots: IChartStashTabSnapshot[] = [];
+
+    snapshots.map(s => {
+      const data = s.stashTabSnapshots.map(sts => {
+        return {
+          value: sts.value,
+          stashTabId: sts.stashTabId,
+          created: s.created
+        } as IChartStashTabSnapshot;
+      });
+      stashTabSnapshots = stashTabSnapshots.concat(data);
+    });
+
+    const groupedStashTabSnapshots = stashTabSnapshots.reduce(function(r, a) {
+      r[a.stashTabId] = r[a.stashTabId] || [];
+      r[a.stashTabId].push(a);
+      return r;
+    }, Object.create(null));
+
+    this.activeStashTabIds.map(id => {
+      const stashTabName = accountLeague.stashtabs.find(s => s.id === id)?.n;
+      const serie: IConnectionChartSeries = {
+        seriesName: stashTabName ?? '',
+        series: formatStashTabSnapshotsForChart(
+          groupedStashTabSnapshots[id] ? groupedStashTabSnapshots[id] : []
+        )
+      };
+      series.push(serie);
+    });
+
+    return series;
   }
 
   @computed
@@ -170,6 +264,11 @@ export class Profile {
   }
 
   @action
+  setActiveCharacterName(name: string) {
+    this.activeCharacterName = name;
+  }
+
+  @action
   setActiveStashTabs(stashTabIds: string[]) {
     this.activeStashTabIds = stashTabIds;
   }
@@ -179,6 +278,9 @@ export class Profile {
     this.activeLeagueId = apiProfile.activeLeagueId;
     this.activePriceLeagueId = apiProfile.activePriceLeagueId;
     this.activeStashTabIds = apiProfile.activeStashTabIds;
+    this.includeInventory = apiProfile.includeInventory;
+    this.includeEquipment = apiProfile.includeEquipment;
+    this.activeCharacterName = apiProfile.activeCharacterName;
     this.name = apiProfile.name;
   }
 
@@ -233,6 +335,34 @@ export class Profile {
     }
     rootStore.uiStateStore!.setIsSnapshotting(false);
     rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(undefined);
+    rootStore.accountStore.getSelectedAccount.activeProfile!.updateNetWorthOverlay();
+  }
+
+  @action
+  updateNetWorthOverlay() {
+    const activeCurrency = rootStore.accountStore.getSelectedAccount!
+      .activeProfile!
+      ? rootStore.accountStore.getSelectedAccount!.activeProfile!.activeCurrency
+      : { name: 'chaos', short: 'c' };
+
+    const income = formatValue(
+      rootStore.signalrStore.activeGroup
+        ? rootStore.signalrStore.activeGroup.income
+        : rootStore.accountStore.getSelectedAccount!.activeProfile!.income,
+      activeCurrency.short,
+      true
+    );
+
+    rootStore.overlayStore.updateOverlay({
+      event: 'netWorth',
+      data: {
+        netWorth: rootStore.signalrStore.activeGroup
+          ? rootStore.signalrStore.activeGroup.netWorthValue
+          : rootStore.accountStore.getSelectedAccount.activeProfile!
+              .netWorthValue,
+        income: income
+      }
+    });
   }
 
   @action snapshotFail(e?: AxiosError | Error) {
@@ -278,26 +408,58 @@ export class Profile {
     );
 
     fromStream(
-      externalService
-        .getItemsForTabs(
+      forkJoin(
+        externalService.getItemsForTabs(
           selectedStashTabs,
           rootStore.accountStore.getSelectedAccount.name!,
           league.id
-        )
-        .pipe(
-          map(stashTabsWithItems => {
-            return stashTabsWithItems.map(stashTabWithItems => {
-              stashTabWithItems.pricedItems = mergeItemStacks(
-                stashTabWithItems.pricedItems
+        ),
+        this.activeCharacterName &&
+          this.activeCharacterName !== '' &&
+          this.activeCharacterName !== 'None'
+          ? externalService.getCharacterItems(
+              rootStore.accountStore.getSelectedAccount.name!,
+              this.activeCharacterName
+            )
+          : of(null)
+      ).pipe(
+        map(result => {
+          const stashTabsWithItems = result[0];
+          const characterWithItems = result[1];
+          if (characterWithItems?.data) {
+            const characterItems = mapItemsToPricedItems(
+              characterWithItems?.data?.items
+            );
+            let includedCharacterItems: IPricedItem[] = [];
+            if (this.includeInventory) {
+              includedCharacterItems = includedCharacterItems.concat(
+                characterItems.filter(ci => ci.inventoryId === 'MainInventory')
               );
-              return stashTabWithItems;
-            });
-          }),
-          mergeMap(stashTabsWithItems =>
-            of(this.getItemsSuccess(stashTabsWithItems, league.id))
-          ),
-          catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
-        )
+            }
+            if (this.includeEquipment) {
+              includedCharacterItems = includedCharacterItems.concat(
+                characterItems.filter(ci => ci.inventoryId !== 'MainInventory')
+              );
+            }
+            const characterTab: IStashTabSnapshot = {
+              stashTabId: 'Character',
+              value: 0,
+              pricedItems: includedCharacterItems
+            };
+            stashTabsWithItems.push(characterTab);
+          }
+          return stashTabsWithItems.map(stashTabWithItems => {
+            stashTabWithItems.pricedItems = mergeItemStacks(
+              stashTabWithItems.pricedItems
+            );
+            return stashTabWithItems;
+          });
+        }),
+        mergeMap(stashTabsWithItems =>
+          of(this.getItemsSuccess(stashTabsWithItems, league.id))
+        ),
+        catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
+      )
     );
   }
 
@@ -373,6 +535,10 @@ export class Profile {
           }
         );
 
+        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(
+          pi => pi.calculated > 0
+        );
+
         stashTabWithItems.value = stashTabWithItems.pricedItems
           .filter(
             item =>
@@ -440,7 +606,7 @@ export class Profile {
         }
         runInAction(() => {
           this.snapshots.unshift(snapshotToAdd);
-          this.snapshots = this.snapshots.slice(0, 100);
+          this.snapshots = this.snapshots.slice(0, 1000);
         });
       };
       fromStream(
@@ -484,6 +650,8 @@ export class Profile {
       'remove_all_snapshots',
       'success'
     );
+
+    this.updateNetWorthOverlay();
   }
 
   @action

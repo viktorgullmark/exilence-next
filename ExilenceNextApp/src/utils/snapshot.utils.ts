@@ -8,6 +8,8 @@ import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';
 import { mergeItemStacks } from './item.utils';
 import { rootStore } from '..';
+import { StashTabSnapshot } from '../store/domains/stashtab-snapshot';
+import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
@@ -63,6 +65,11 @@ export const mapSnapshotsToStashTabPricedItems = (
         })
       };
     });
+};
+
+export const getSnapshotCardValue = (snapshotCount: number) => {
+  let label = `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
+  return label;
 };
 
 export const getValueForSnapshot = (snapshot: IApiSnapshot) => {
@@ -128,20 +135,52 @@ export const formatSnapshotsForChart = (
     .sort((n1, n2) => n1[0] - n2[0]);
 };
 
+export const formatStashTabSnapshotsForChart = (
+  stashTabSnapshots: IChartStashTabSnapshot[]
+): number[][] => {
+  return stashTabSnapshots
+    .map(s => {
+      const values: number[] = [
+        moment(new Date(s.created).getTime()).valueOf(),
+        +s.value.toFixed(2)
+      ];
+      return values;
+    })
+    .sort((n1, n2) => n1[0] - n2[0]);
+};
+
 export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
   const mergedItems = mergeItemStacks(
     snapshots
-      .flatMap(sts => sts.stashTabs)
+      .flatMap(sts =>
+        sts.stashTabs.filter(
+          st =>
+            !rootStore.uiStateStore.filteredStashTabs ||
+            rootStore.uiStateStore.filteredStashTabs
+              .map(fst => fst.id)
+              .includes(st.stashTabId)
+        )
+      )
       .flatMap(sts =>
         sts.pricedItems.filter(
           i =>
-            i.calculated > 0 &&
-            i.name
-              .toLowerCase()
-              .includes(rootStore.uiStateStore.itemTableFilterText.toLowerCase())
+            (i.calculated > 0 &&
+              i.name
+                .toLowerCase()
+                .includes(
+                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
+                )) ||
+            (i.tab &&
+              i.tab
+                .map(t => t.n)
+                .join(', ')
+                .toLowerCase()
+                .includes(
+                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
+                ))
         )
       )
   );

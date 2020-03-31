@@ -18,6 +18,7 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import GroupIcon from '@material-ui/icons/Group';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -68,6 +69,7 @@ interface Props {
     event: ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => void;
   handleSnapshot: () => void;
+  handleOverlay: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
@@ -99,7 +101,8 @@ const Toolbar: React.FC<Props> = (props: Props) => {
     handleNotificationsOpen,
     handleAccountMenuOpen,
     handleClearSnapshots,
-    handleRemoveProfile
+    handleRemoveProfile,
+    handleOverlay
   } = props;
 
   const classes = useStyles();
@@ -316,6 +319,21 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     className={classes.iconButton}
                   >
                     <DeleteSweepIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
+              <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
+                <span>
+                  <IconButton
+                    onClick={() => handleOverlay()}
+                    aria-label="overlay"
+                    aria-haspopup="true"
+                    className={clsx(classes.iconButton)}
+                  >
+                    <AddToPhotosIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>

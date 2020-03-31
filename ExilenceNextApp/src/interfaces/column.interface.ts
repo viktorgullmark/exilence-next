@@ -3,6 +3,7 @@ export interface IColumn {
     | 'icon'
     | 'name'
     | 'links'
+    | 'tabNames'
     | 'quality'
     | 'level'
     | 'corrupted'

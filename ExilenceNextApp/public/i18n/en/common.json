@@ -14,7 +14,8 @@
     "create_group": "Create group",
     "join_group": "Join group",
     "leave_group": "Leave group",
-    "lets_begin": "Lets begin!"
+    "lets_begin": "Lets begin!",
+    "apply_filter": "Apply filter"
   },
   "title": {
     "login": "Login",
@@ -40,6 +41,8 @@
     "general": "General"
   },
   "label": {
+    "stash_tabs": "Stash tabs",
+    "add_stash_tabs": "Add tabs",
     "support": "Support",
     "required": "Required",
     "optional": "Optional",
@@ -51,6 +54,7 @@
     "select_profile": "Select profile",
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
+    "filter_stash_tabs": "Filter stash tabs",
     "profile_placeholder": "Select a profile",
     "group_name": "Group name",
     "group_name_placeholder": "Enter a group name",
@@ -65,8 +69,11 @@
     "total_income": "Income",
     "total_snapshots": "Snapshots",
     "session_id_link": "How to find your session id",
+    "include_inventory": "Include inventory",
+    "include_equipment": "Include equipment",
     "sign_out": "Sign out",
     "join_group": "Join group",
+    "overlay_icon_title": "Open overlay",
     "create_group": "Create group",
     "toggle_menu_title": "Toggle menu",
     "edit_profile_icon_title": "Edit profile",
@@ -81,12 +88,14 @@
     "toggle_visibility_icon_title": "Show/hide",
     "net_worth_export": "Export data",
     "net_worth_chart": "Net worth chart",
+    "tab_chart": "Tab breakdown chart",
     "these_terms_inline": "these terms",
     "update_available": "Update available, ",
     "click": "click",
     "here": "here",
     "to_update_now": "to update now!",
     "prices_fetched_from": "Prices fetched from ",
+    "prices_fetched_from_interval": "Updated every 20 minutes",
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",

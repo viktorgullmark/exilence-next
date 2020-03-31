@@ -1,16 +1,28 @@
-import { Box, Button, Grid, makeStyles, Theme } from '@material-ui/core';
-import WarningIcon from '@material-ui/icons/Warning';
+import {
+  Box,
+  Grid,
+  IconButton,
+  makeStyles,
+  Theme,
+  useTheme
+} from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { statusColors } from '../../assets/themes/exilence-theme';
+import {
+  statusColors,
+  primaryLighter
+} from '../../assets/themes/exilence-theme';
+import { ITableItem } from '../../interfaces/table-item.interface';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import { exportData } from '../../utils/export.utils';
+import { mapPricedItemToTableItem } from '../../utils/item.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTable, { Order } from './ItemTable';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -21,8 +33,7 @@ interface ItemTableContainerProps {
 export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  itemTableFilter: {
-  },
+  itemTableFilter: {},
   actionArea: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -31,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   placeholder: {
     display: 'flex',
     alignSelf: 'flex-end'
+  },
+  inlineIcon: {
+    color: primaryLighter
   },
   warning: {
     color: statusColors.warning
@@ -53,6 +67,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
   const classes = useStyles();
+  const theme = useTheme();
 
   let timer: NodeJS.Timeout | undefined = undefined;
 
@@ -90,6 +105,10 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     }
   };
 
+  const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
+  };
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -99,32 +118,48 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item md={3}>
-            <ItemTableFilter array={getItems()} handleFilter={handleFilter} />
+          <Grid item md={4}>
+            <ItemTableFilter
+              array={getItems()}
+              handleFilter={handleFilter}
+              clearFilter={() => handleFilter(undefined, '')}
+            />
           </Grid>
           <Grid item className={classes.actionArea}>
-            <Button
-              color="primary"
-              variant="contained"
-              disabled={getItems().length === 0}
-              onClick={() => exportData(getItems())}
+            <IconButton
+              size="small"
+              className={classes.inlineIcon}
+              onClick={() =>
+                uiStateStore!.setShowItemTableFilter(
+                  !uiStateStore!.showItemTableFilter
+                )
+              }
             >
-              {t('label.net_worth_export')}
-            </Button>
+              <FilterListIcon />
+            </IconButton>
+            <IconButton
+              size="small"
+              className={classes.inlineIcon}
+              onClick={handleItemTableMenuOpen}
+            >
+              <MoreVertIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </Box>
       <ItemTable
-        items={getItems()}
+        items={getItems().map(i => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
         orderBy={uiStateStore!.itemTableOrderBy}
         setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
-        setOrderBy={(col: keyof IPricedItem) =>
+        setOrderBy={(col: keyof ITableItem) =>
           uiStateStore!.setItemTableOrderBy(col)
         }
+        activeGroup={activeGroup}
       />
+      <ItemTableMenuContainer />
     </>
   );
 };

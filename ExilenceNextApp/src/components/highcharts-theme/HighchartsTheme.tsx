@@ -1,7 +1,7 @@
-import React from 'react';
 import { useTheme } from '@material-ui/core';
 import Highcharts from 'highcharts';
-import { cyan, amber, lightBlue, deepPurple, pink } from '@material-ui/core/colors';
+import React from 'react';
+import { highchartsColors } from '../../assets/themes/exilence-theme';
 
 const HighchartsTheme: React.FC = () => {
   const theme = useTheme();
@@ -10,9 +10,10 @@ const HighchartsTheme: React.FC = () => {
     time: {
       timezoneOffset: new Date().getTimezoneOffset()
     },
-    colors: [
-      theme.palette.primary.main
-    ],
+    credits: {
+      enabled: false
+    },
+    colors: highchartsColors,
     chart: {
       backgroundColor: theme.palette.background.default,
       style: {
@@ -42,9 +43,9 @@ const HighchartsTheme: React.FC = () => {
       }
     },
     yAxis: {
-      gridLineColor: theme.palette.text.hint,
+      gridLineColor: theme.palette.secondary.light,
       lineColor: theme.palette.text.hint,
-      minorGridLineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.secondary.light,
       title: {
         text: '',
         style: {
@@ -58,9 +59,9 @@ const HighchartsTheme: React.FC = () => {
       }
     },
     xAxis: {
-      gridLineColor: theme.palette.text.hint,
+      gridLineColor: theme.palette.secondary.light,
       lineColor: theme.palette.text.hint,
-      minorGridLineColor: theme.palette.text.hint,
+      minorGridLineColor: theme.palette.secondary.light,
       labels: {
         style: {
           color: theme.palette.text.primary

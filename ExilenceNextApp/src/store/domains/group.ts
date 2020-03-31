@@ -170,7 +170,7 @@ export class Group implements IApiGroup {
       }
     });
 
-    return groupChartSeries;
+    return [groupChartSeries];
   }
 
   @action

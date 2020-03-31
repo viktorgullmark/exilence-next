@@ -14,6 +14,7 @@ namespace Shared.Entities
         public string ClientId { get; set; }
         [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
         public string ItemId { get; set; }
+        public string InventoryId { get; set; }
         public string Name { get; set; }
         public string TypeLine { get; set; }
         public int FrameType { get; set; }

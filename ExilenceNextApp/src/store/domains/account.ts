@@ -23,6 +23,7 @@ import { visitor, rootStore } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
+import { rgbToHex } from '../../utils/colour.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -43,12 +44,52 @@ export class Account implements IAccount {
   }
 
   @computed
+  get stashTabColors() {
+    const profile = this.activeProfile;
+    if (profile) {
+      const league = rootStore.leagueStore.leagues.find(
+        l => l.id === profile.activeLeagueId
+      );
+      const accountLeague = this.accountLeagues.find(
+        l => l.leagueId === league?.id
+      );
+      return accountLeague?.stashtabs
+        .filter(s => this.activeProfile?.activeStashTabIds.includes(s.id))
+        .map(s => rgbToHex(s.colour.r, s.colour.g, s.colour.b));
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed
   get activeLeague() {
     const profile = this.activeProfile;
     if (profile) {
       return rootStore.leagueStore.leagues.find(
         l => l.id === profile.activeLeagueId
       );
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed
+  get activeCharacter() {
+    const profile = this.activeProfile;
+    const accountLeague = this.accountLeagues.find(
+      l => l.leagueId === profile?.activeLeagueId
+    );
+    return accountLeague?.characters?.find(
+      ac => ac.name === profile?.activeCharacterName
+    );
+  }
+
+  get characters() {
+    const profile = this.activeProfile;
+    if (profile) {
+      return this.accountLeagues.find(
+        l => l.leagueId === profile.activeLeagueId
+      )?.characters;
     } else {
       return undefined;
     }

@@ -509,7 +509,7 @@ export class SignalrStore {
           });
           return ps;
         })
-        .slice(0, 100);
+        .slice(0, 1000);
       activeGroupProfile.snapshots.unshift(mapSnapshotToApiSnapshot(snapshot));
     }
   }

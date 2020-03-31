@@ -8,10 +8,15 @@ export class RouteStore {
   constructor(private rootStore: RootStore) {}
 
   @action
-  redirect(path: string) {
+  redirect(path: string, loginError?: string) {
     if (path === '/login') {
       fromStream(this.rootStore.signalrHub.stopConnection());
     }
-    this.redirectedTo = path;
+    if (this.redirectedTo !== path) {
+      if (loginError) {
+        this.rootStore.uiStateStore.setLoginError('error:token_expired');
+      }
+      this.redirectedTo = path;
+    }
   }
 }

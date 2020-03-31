@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { IColumn } from '../../../interfaces/column.interface';
-import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import { ITableItem } from '../../../interfaces/table-item.interface';
 import { Order } from '../ItemTable';
 import { useStyles } from '../ItemTable.styles';
 
@@ -15,7 +15,7 @@ interface ItemTableHeaderProps {
   classes: ReturnType<typeof useStyles>;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof IPricedItem
+    property: keyof ITableItem
   ) => void;
   order: Order;
   orderBy: string;
@@ -26,7 +26,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
   props: ItemTableHeaderProps
 ) => {
   const { classes, order, orderBy, onRequestSort, columns } = props;
-  const createSortHandler = (property: keyof IPricedItem) => (
+  const createSortHandler = (property: keyof ITableItem) => (
     event: React.MouseEvent<unknown>
   ) => {
     onRequestSort(event, property);

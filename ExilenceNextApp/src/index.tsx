@@ -31,14 +31,16 @@ import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
+import configureAxios from './config/axios';
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
 initSentry();
 configureI18n();
+configureAxios();
 enableLogging({
-  action: true,
-  reaction: false,
+  action: false,
+  reaction: true,
   transaction: false,
   compute: false
 });

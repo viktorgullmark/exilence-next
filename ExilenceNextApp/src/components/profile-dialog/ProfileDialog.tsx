@@ -1,4 +1,4 @@
-import { TextField, IconButton } from '@material-ui/core';
+import { TextField, IconButton, Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -20,12 +20,19 @@ import { Profile } from './../../store/domains/profile';
 import useStyles from './ProfileDialog.styles';
 import SimpleField from '../simple-field/SimpleField';
 import { generateProfileName } from '../../utils/profile.utils';
+import SelectField from '../select-field/SelectField';
+import { ISelectOption } from '../../interfaces/select-option.interface';
+import CheckboxField from '../checkbox-field/CheckboxField';
+import { placeholderOption } from '../../utils/misc.utils';
 
 export interface ProfileFormValues {
   profileName: string;
   league?: string;
   priceLeague?: string;
   stashTabIds?: string[];
+  includeEquipment?: boolean;
+  includeInventory?: boolean;
+  character: string;
 }
 
 interface ProfileDialogProps {
@@ -33,17 +40,20 @@ interface ProfileDialogProps {
   loading: boolean;
   isEditing?: boolean;
   profile?: Profile;
+  characterName: string;
   leagueUuid: string;
   priceLeagueUuid: string;
   leagues: League[];
   priceLeagues: League[];
   stashTabs: IStashTab[];
-  stashTabIds: string[];
+  selectedStashTabs: IStashTab[];
   characters: Character[];
+  includeInventory?: boolean;
+  includeEquipment?: boolean;
   handleClickClose: () => void;
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
 const ProfileDialog: React.FC<ProfileDialogProps> = ({
@@ -52,20 +62,22 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   isEditing,
   profile,
   leagueUuid,
+  includeInventory,
+  includeEquipment,
   priceLeagueUuid,
   leagues,
   priceLeagues,
   stashTabs,
-  stashTabIds,
+  selectedStashTabs,
   characters,
   handleClickClose,
   handleLeagueChange,
   handleSubmit,
+  characterName,
   handleStashTabChange
 }: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
   const noCharacters = t(noCharError(characters));
   return (
     <div>
@@ -80,10 +92,14 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName: isEditing && profile ? profile.name : generateProfileName(),
+              profileName:
+                isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
-              stashTabIds: stashTabIds
+              selectedStashTabs: selectedStashTabs,
+              character: characterName,
+              includeEquipment: includeEquipment,
+              includeInventory: includeInventory
             }}
             onSubmit={(values: ProfileFormValues) => {
               handleSubmit(values);
@@ -130,6 +146,13 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   required
                   autoFocus
                 />
+                <PriceLeagueDropdown
+                  priceLeagues={priceLeagues}
+                  touched={touched}
+                  errors={errors}
+                  handleChange={handleChange}
+                  values={values}
+                />
                 <LeagueDropdown
                   leagues={leagues}
                   touched={touched}
@@ -140,21 +163,43 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   handleChange={handleChange}
                   values={values}
                 />
-                <PriceLeagueDropdown
-                  priceLeagues={priceLeagues}
-                  touched={touched}
-                  errors={errors}
-                  handleChange={handleChange}
-                  values={values}
-                />
                 <StashTabDropdown
                   stashTabs={stashTabs}
-                  touched={touched}
-                  errors={errors}
-                  stashTabIds={stashTabIds}
+                  selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
                   handleChange={handleChange}
+                  marginBottom={3}
+                  marginTop={2}
                 />
+                <Box mt={2}>
+                  <SelectField
+                    name="character"
+                    label={t('label.select_character')}
+                    options={characters?.map(c => {
+                      return {
+                        id: c.name,
+                        value: c.name,
+                        label: c.name
+                      } as ISelectOption;
+                    })}
+                  />
+                  <CheckboxField
+                    name="includeEquipment"
+                    label={t('label.include_equipment')}
+                    disabled={
+                      !values.character ||
+                      values.character === placeholderOption
+                    }
+                  />
+                  <CheckboxField
+                    name="includeInventory"
+                    label={t('label.include_inventory')}
+                    disabled={
+                      !values.character ||
+                      values.character === placeholderOption
+                    }
+                  />
+                </Box>
                 <div className={classes.dialogActions}>
                   <Button onClick={() => handleClickClose()}>
                     {t('action.cancel')}
@@ -165,10 +210,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     color="primary"
                     loading={loading}
                     disabled={
-                      loading ||
-                      noCharacters.length > 0 ||
-                      stashTabIds.length === 0 ||
-                      (dirty && !isValid)
+                      loading || noCharacters.length > 0 || (dirty && !isValid)
                     }
                   >
                     {isEditing

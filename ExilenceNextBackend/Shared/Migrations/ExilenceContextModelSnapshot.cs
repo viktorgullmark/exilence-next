@@ -226,6 +226,9 @@ namespace Shared.Migrations
                     b.Property<int>("Ilvl")
                         .HasColumnType("int");
 
+                    b.Property<string>("InventoryId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ItemId")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -334,6 +337,9 @@ namespace Shared.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ActiveCharacterName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ActiveLeagueId")
                         .HasColumnType("nvarchar(max)");
 
@@ -350,6 +356,12 @@ namespace Shared.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IncludeEquipment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IncludeInventory")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

@@ -12,6 +12,8 @@ namespace Shared.Models
         [JsonPropertyName("uuid")]
         [Key("uuid")]
         public string ClientId { get; set; }
+        [Key("inventoryId")]
+        public string InventoryId { get; set; }
         [Key("itemId")]
         public string ItemId { get; set; }
         [Key("name")]
