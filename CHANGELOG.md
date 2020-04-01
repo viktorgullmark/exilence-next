@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [0.3.6] - NOT RELEASED
 ##### Changed
 - Changed position of the "Reset zoom" button in the charts
+- Disable group actions while snapshotting (thanks to PezeM)
+##### Removed
+- Removed the unique- and map stash tabs from the stash tab dropdown (thanks to M-Schiller)
 
 ## [0.3.5] - 2020-03-29
 ##### Added
