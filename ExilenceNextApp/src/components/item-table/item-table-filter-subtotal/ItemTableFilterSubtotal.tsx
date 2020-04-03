@@ -8,29 +8,29 @@ import { itemColors, cardColors } from "../../../assets/themes/exilence-theme";
 import clsx from "clsx";
 
 interface ItemTableFilterSubtotalProps {
-  items: IPricedItem[];
+  array: IPricedItem[];
 }
 
 const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
-  items
+  array: array
 }: ItemTableFilterSubtotalProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  // Sum up all priced Items and format
-  const sumString = items
-    .map(i => i.total)
-    .reduce((a, b) => a + b, 0)
-    .toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2
-    });
+  const sumString =
+    " " +
+    array
+      .map(i => i.total)
+      .reduce((a, b) => a + b, 0)
+      .toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      });
 
-  // show the sum in a simple Paper component
   return (
     <Paper className={clsx(classes.paper)}>
-      {t("label.filter_total")}{" "}
-      <span style={{ color: itemColors.chaosOrb }}> {sumString} c </span>
+      {t("label.filter_total")}
+      <span style={{ color: itemColors.chaosOrb }}>{sumString} c </span>
     </Paper>
   );
 };

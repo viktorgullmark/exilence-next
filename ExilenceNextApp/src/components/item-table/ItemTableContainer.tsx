@@ -35,9 +35,6 @@ export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {},
-  filterSubtotal: {
-    justifySelf: "flex-start"
-  },
   actionArea: {
     display: "flex",
     justifyContent: "flex-end",
@@ -113,7 +110,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
 
-  const items = getItems();
+  const itemArray = getItems();
 
   return (
     <>
@@ -128,13 +125,13 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
-                  array={items}
+                  array={itemArray}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, "")}
                 />
               </Grid>
               <Grid item>
-                <ItemTableFilterSubtotal items={items} />
+                <ItemTableFilterSubtotal array={itemArray} />
               </Grid>
             </Grid>
           </Grid>
@@ -161,7 +158,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={items.map(i => mapPricedItemToTableItem(i))}
+        items={itemArray.map(i => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
