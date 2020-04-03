@@ -5,25 +5,25 @@ import {
   makeStyles,
   Theme,
   useTheme
-} from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { inject, observer } from "mobx-react";
-import React, { ChangeEvent, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { inject, observer } from 'mobx-react';
+import React, { ChangeEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   statusColors,
   primaryLighter
-} from "../../assets/themes/exilence-theme";
-import { ITableItem } from "../../interfaces/table-item.interface";
-import { AccountStore } from "../../store/accountStore";
-import { SignalrStore } from "../../store/signalrStore";
-import { UiStateStore } from "../../store/uiStateStore";
-import { mapPricedItemToTableItem } from "../../utils/item.utils";
-import ItemTableFilter from "./item-table-filter/ItemTableFilter";
-import ItemTableFilterSubtotal from "./item-table-filter-subtotal/ItemTableFilterSubtotal";
-import ItemTable, { Order } from "./ItemTable";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import ItemTableMenuContainer from "./item-table-menu/ItemTableMenuContainer";
+} from '../../assets/themes/exilence-theme';
+import { ITableItem } from '../../interfaces/table-item.interface';
+import { AccountStore } from '../../store/accountStore';
+import { SignalrStore } from '../../store/signalrStore';
+import { UiStateStore } from '../../store/uiStateStore';
+import { mapPricedItemToTableItem } from '../../utils/item.utils';
+import ItemTableFilter from './item-table-filter/ItemTableFilter';
+import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
+import ItemTable, { Order } from './ItemTable';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -36,13 +36,13 @@ export const itemTableFilterSpacing = 2;
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {},
   actionArea: {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignSelf: "flex-end"
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end'
   },
   placeholder: {
-    display: "flex",
-    alignSelf: "flex-end"
+    display: 'flex',
+    alignSelf: 'flex-end'
   },
   inlineIcon: {
     color: primaryLighter
@@ -82,7 +82,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     }
     timer = setTimeout(
       () => {
-        let text = "";
+        let text = '';
 
         if (event) {
           text = event.target.value.toLowerCase();
@@ -127,7 +127,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
                 <ItemTableFilter
                   array={itemArray}
                   handleFilter={handleFilter}
-                  clearFilter={() => handleFilter(undefined, "")}
+                  clearFilter={() => handleFilter(undefined, '')}
                 />
               </Grid>
               <Grid item>
@@ -175,7 +175,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
 };
 
 export default inject(
-  "uiStateStore",
-  "signalrStore",
-  "accountStore"
+  'uiStateStore',
+  'signalrStore',
+  'accountStore'
 )(observer(ItemTableContainer));
