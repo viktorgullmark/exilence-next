@@ -20,6 +20,7 @@ import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { mapPricedItemToTableItem } from '../../utils/item.utils';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
+import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTable, { Order } from './ItemTable';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
@@ -109,6 +110,8 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
 
+  const itemArray = getItems();
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -118,12 +121,19 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item md={4}>
-            <ItemTableFilter
-              array={getItems()}
-              handleFilter={handleFilter}
-              clearFilter={() => handleFilter(undefined, '')}
-            />
+          <Grid item md={7}>
+            <Grid container direction="row" spacing={2} alignItems="center">
+              <Grid item md={5}>
+                <ItemTableFilter
+                  array={itemArray}
+                  handleFilter={handleFilter}
+                  clearFilter={() => handleFilter(undefined, '')}
+                />
+              </Grid>
+              <Grid item>
+                <ItemTableFilterSubtotal array={itemArray} />
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item className={classes.actionArea}>
             <IconButton
@@ -148,7 +158,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={getItems().map(i => mapPricedItemToTableItem(i))}
+        items={itemArray.map(i => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
