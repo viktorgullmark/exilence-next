@@ -109,7 +109,8 @@
     "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots",
     "auto_snapshotting": "Activate auto snapshotting",
     "auto_snapshot_interval": "Set auto snapshot interval",
-    "ui_scale": "Interface scale (%)"
+    "ui_scale": "Interface scale (%)",
+    "filter_total": "Filter Total:"
   },
   "value": {
     "none": "None",

@@ -5,24 +5,25 @@ import {
   makeStyles,
   Theme,
   useTheme
-} from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { inject, observer } from "mobx-react";
+import React, { ChangeEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   statusColors,
   primaryLighter
-} from '../../assets/themes/exilence-theme';
-import { ITableItem } from '../../interfaces/table-item.interface';
-import { AccountStore } from '../../store/accountStore';
-import { SignalrStore } from '../../store/signalrStore';
-import { UiStateStore } from '../../store/uiStateStore';
-import { mapPricedItemToTableItem } from '../../utils/item.utils';
-import ItemTableFilter from './item-table-filter/ItemTableFilter';
-import ItemTable, { Order } from './ItemTable';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
+} from "../../assets/themes/exilence-theme";
+import { ITableItem } from "../../interfaces/table-item.interface";
+import { AccountStore } from "../../store/accountStore";
+import { SignalrStore } from "../../store/signalrStore";
+import { UiStateStore } from "../../store/uiStateStore";
+import { mapPricedItemToTableItem } from "../../utils/item.utils";
+import ItemTableFilter from "./item-table-filter/ItemTableFilter";
+import ItemTableFilterSubtotal from "./item-table-filter-subtotal/ItemTableFilterSubtotal";
+import ItemTable, { Order } from "./ItemTable";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import ItemTableMenuContainer from "./item-table-menu/ItemTableMenuContainer";
 
 interface ItemTableContainerProps {
   uiStateStore?: UiStateStore;
@@ -34,14 +35,17 @@ export const itemTableFilterSpacing = 2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   itemTableFilter: {},
+  filterSubtotal: {
+    justifySelf: "flex-start"
+  },
   actionArea: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end'
+    display: "flex",
+    justifyContent: "flex-end",
+    alignSelf: "flex-end"
   },
   placeholder: {
-    display: 'flex',
-    alignSelf: 'flex-end'
+    display: "flex",
+    alignSelf: "flex-end"
   },
   inlineIcon: {
     color: primaryLighter
@@ -81,7 +85,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     }
     timer = setTimeout(
       () => {
-        let text = '';
+        let text = "";
 
         if (event) {
           text = event.target.value.toLowerCase();
@@ -109,6 +113,8 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
 
+  const items = getItems();
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -118,12 +124,19 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
           justify="space-between"
           alignItems="center"
         >
-          <Grid item md={4}>
-            <ItemTableFilter
-              array={getItems()}
-              handleFilter={handleFilter}
-              clearFilter={() => handleFilter(undefined, '')}
-            />
+          <Grid item md={7}>
+            <Grid container direction="row" spacing={2} alignItems="center">
+              <Grid item md={5}>
+                <ItemTableFilter
+                  array={items}
+                  handleFilter={handleFilter}
+                  clearFilter={() => handleFilter(undefined, "")}
+                />
+              </Grid>
+              <Grid item>
+                <ItemTableFilterSubtotal items={items} />
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item className={classes.actionArea}>
             <IconButton
@@ -148,7 +161,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
         </Grid>
       </Box>
       <ItemTable
-        items={getItems().map(i => mapPricedItemToTableItem(i))}
+        items={items.map(i => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
@@ -165,7 +178,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
 };
 
 export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore'
+  "uiStateStore",
+  "signalrStore",
+  "accountStore"
 )(observer(ItemTableContainer));
