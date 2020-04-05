@@ -145,38 +145,27 @@ export function getLinks(array: any[]) {
   return greatestFreq;
 }
 
-export function getRarity(identifier: number) {
-  let rarity: keyof Rarity = 'normal';
-  switch (identifier) {
-    case 0:
-      rarity = 'normal';
-      break;
-    case 1:
-      rarity = 'magic';
-      break;
-    case 2:
-      rarity = 'rare';
-      break;
-    case 3:
-      rarity = 'unique';
-      break;
-    case 4:
-      rarity = 'gem';
-      break;
-    case 5:
-      rarity = 'currency';
-      break;
-    case 6:
-      rarity = 'divination';
-      break;
-    case 7:
-      rarity = 'quest';
-      break;
-    default:
-      break;
-  }
+const rarities: (keyof Rarity)[] = [
+  'normal', //0
+  'magic',//1
+  'rare',//2
+  'unique',//3
+  'gem', //4
+  'currency', //5
+  'divination', //6
+  'quest' //7
+];
 
-  return rarity;
+export function getRarity(identifier: number) : keyof Rarity {
+  if(identifier < rarities.length) {
+    return rarities[identifier];
+  } else {
+    return rarities[0];
+  }
+}
+
+export function getRarityIdentifier(name: string) : number {
+    return rarities.indexOf(name as keyof Rarity);
 }
 
 export function getQuality(props: IProperty[]) {

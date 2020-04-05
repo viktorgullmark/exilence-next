@@ -6,7 +6,7 @@ import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-pricedite
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';
-import { mergeItemStacks } from './item.utils';
+import { mergeItemStacks, getRarityIdentifier } from './item.utils';
 import { rootStore } from '..';
 import { StashTabSnapshot } from '../store/domains/stashtab-snapshot';
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
@@ -20,14 +20,14 @@ export const mapSnapshotToApiSnapshot = (
     created: snapshot.created,
     stashTabs: stashTabs
       ? stashTabs
-          .filter(st =>
+          .filter((st) =>
             snapshot.stashTabSnapshots
-              .map(sts => sts.stashTabId)
+              .map((sts) => sts.stashTabId)
               .includes(st.id)
           )
-          .map(st => {
+          .map((st) => {
             const foundTab = snapshot.stashTabSnapshots.find(
-              sts => sts.stashTabId === st.id
+              (sts) => sts.stashTabId === st.id
             )!;
 
             return <IApiStashTabSnapshot>{
@@ -37,10 +37,10 @@ export const mapSnapshotToApiSnapshot = (
               index: st.i,
               value: +foundTab.value.toFixed(4),
               color: rgbToHex(st.colour.r, st.colour.g, st.colour.b),
-              name: st.n
+              name: st.n,
             };
           })
-      : snapshot.stashTabSnapshots
+      : snapshot.stashTabSnapshots,
   };
 };
 
@@ -49,20 +49,20 @@ export const mapSnapshotsToStashTabPricedItems = (
   stashTabs: IStashTab[]
 ) => {
   return stashTabs
-    .filter(st =>
-      snapshot.stashTabSnapshots.map(sts => sts.stashTabId).includes(st.id)
+    .filter((st) =>
+      snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id)
     )
-    .map(st => {
+    .map((st) => {
       const foundTab = snapshot.stashTabSnapshots.find(
-        sts => sts.stashTabId === st.id
+        (sts) => sts.stashTabId === st.id
       )!;
 
       return <IApiStashTabPricedItem>{
         uuid: foundTab.uuid,
         stashTabId: st.id,
-        pricedItems: foundTab.pricedItems.map(i => {
+        pricedItems: foundTab.pricedItems.map((i) => {
           return <IPricedItem>{ ...i, uuid: i.uuid, itemId: i.itemId };
-        })
+        }),
       };
     });
 };
@@ -73,21 +73,21 @@ export const getSnapshotCardValue = (snapshotCount: number) => {
 };
 
 export const getValueForSnapshot = (snapshot: IApiSnapshot) => {
-  return snapshot.stashTabs.map(sts => sts.value).reduce((a, b) => a + b, 0);
+  return snapshot.stashTabs.map((sts) => sts.value).reduce((a, b) => a + b, 0);
 };
 
 export const getValueForSnapshotsTabs = (snapshots: IApiSnapshot[]) => {
   return snapshots
-    .flatMap(sts => sts.stashTabs)
-    .flatMap(sts => sts.value)
+    .flatMap((sts) => sts.stashTabs)
+    .flatMap((sts) => sts.value)
     .reduce((a, b) => a + b, 0);
 };
 
 export const getValueForSnapshotsTabsItems = (snapshots: IApiSnapshot[]) => {
   return snapshots
-    .flatMap(sts => sts.stashTabs)
-    .flatMap(sts => sts.pricedItems)
-    .flatMap(item => item.total)
+    .flatMap((sts) => sts.stashTabs)
+    .flatMap((sts) => sts.pricedItems)
+    .flatMap((item) => item.total)
     .reduce((a, b) => a + b, 0);
 };
 
@@ -109,7 +109,7 @@ export const formatValue = (
   let valueString = value > 0 && change ? '+ ' : '';
   valueString += value.toLocaleString(undefined, {
     maximumFractionDigits: 2,
-    minimumFractionDigits: 2
+    minimumFractionDigits: 2,
   });
 
   valueString = valueString.replace('-', '- ').replace('−', '− ');
@@ -125,10 +125,10 @@ export const formatSnapshotsForChart = (
   snapshots: IApiSnapshot[]
 ): number[][] => {
   return snapshots
-    .map(s => {
+    .map((s) => {
       const values: number[] = [
         moment(new Date(s.created).getTime()).valueOf(),
-        +getValueForSnapshot(s).toFixed(2)
+        +getValueForSnapshot(s).toFixed(2),
       ];
       return values;
     })
@@ -139,10 +139,10 @@ export const formatStashTabSnapshotsForChart = (
   stashTabSnapshots: IChartStashTabSnapshot[]
 ): number[][] => {
   return stashTabSnapshots
-    .map(s => {
+    .map((s) => {
       const values: number[] = [
         moment(new Date(s.created).getTime()).valueOf(),
-        +s.value.toFixed(2)
+        +s.value.toFixed(2),
       ];
       return values;
     })
@@ -153,34 +153,33 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
+
+  const filterText = rootStore.uiStateStore.itemTableFilterText.toLowerCase();
+
+  const rarity = getRarityIdentifier(filterText);
+
   const mergedItems = mergeItemStacks(
     snapshots
-      .flatMap(sts =>
+      .flatMap((sts) =>
         sts.stashTabs.filter(
-          st =>
+          (st) =>
             !rootStore.uiStateStore.filteredStashTabs ||
             rootStore.uiStateStore.filteredStashTabs
-              .map(fst => fst.id)
+              .map((fst) => fst.id)
               .includes(st.stashTabId)
         )
       )
-      .flatMap(sts =>
+      .flatMap((sts) =>
         sts.pricedItems.filter(
-          i =>
-            (i.calculated > 0 &&
-              i.name
-                .toLowerCase()
-                .includes(
-                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
-                )) ||
+          (i) =>
+            (i.calculated > 0 && i.name.toLowerCase().includes(filterText)) || 
             (i.tab &&
               i.tab
-                .map(t => t.n)
+                .map((t) => t.n)
                 .join(', ')
                 .toLowerCase()
-                .includes(
-                  rootStore.uiStateStore.itemTableFilterText.toLowerCase()
-                ))
+                .includes(filterText)) || 
+            (i.calculated > 0 && rarity >= 0 && i.frameType == rarity)
         )
       )
   );
@@ -191,7 +190,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 export const getItemCount = (snapshots: IApiSnapshot[]) => {
   return mergeItemStacks(
     snapshots
-      .flatMap(sts => sts.stashTabs)
-      .flatMap(sts => sts.pricedItems.filter(i => i.calculated > 0))
+      .flatMap((sts) => sts.stashTabs)
+      .flatMap((sts) => sts.pricedItems.filter((i) => i.calculated > 0))
   ).length;
 };
