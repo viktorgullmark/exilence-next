@@ -1,14 +1,12 @@
 import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { ISelectOption } from '../../../interfaces/select-option.interface';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
-import SelectSetting from '../select-setting/SelectSetting';
+import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
 interface Props {
   lowConfidencePricing: boolean;
   priceTreshold: number;
-  priceTresholdOptions: ISelectOption[];
   setLowConfidencePricing: (value: boolean) => void;
   setPriceTreshold: (value: number) => void;
 }
@@ -18,7 +16,6 @@ const NetWorthSettings: React.FC<Props> = ({
   priceTreshold,
   setLowConfidencePricing,
   setPriceTreshold,
-  priceTresholdOptions
 }: Props) => {
   return (
     <Grid container spacing={2}>
@@ -31,11 +28,13 @@ const NetWorthSettings: React.FC<Props> = ({
         />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <SelectSetting
-          options={priceTresholdOptions}
+        <NumberInputSetting
           value={priceTreshold}
           handleChange={(value: number) => setPriceTreshold(value)}
           translationKey="price_treshold"
+          minimum={0}
+          maximum={100}
+          suffixKey="unit.chaos"
           requiresSnapshot
         />
       </Grid>
