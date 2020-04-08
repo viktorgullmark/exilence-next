@@ -30,7 +30,7 @@ const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
   return (
     <Paper className={clsx(classes.paper)}>
       {t('label.filter_total')}
-      <span style={{ color: itemColors.chaosOrb }}>{sumString} c </span>
+      <span style={{ color: itemColors.chaosOrb }}>&nbsp;{sumString} c </span>
     </Paper>
   );
 };
