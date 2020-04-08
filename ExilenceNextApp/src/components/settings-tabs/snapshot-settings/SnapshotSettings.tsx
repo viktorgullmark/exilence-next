@@ -35,7 +35,9 @@ const SnapshotSettings: React.FC<Props> = ({
           handleChange={setAutoSnapshotInterval}
           translationKey="auto_snapshot_interval"
           disabled={!autoSnapshotting}
-          minutes
+          minimum={2}
+          maximum={1000}
+          suffixKey="unit.minute"
         />
       </Grid>
     </Grid>
