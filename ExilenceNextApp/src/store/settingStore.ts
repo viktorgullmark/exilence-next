@@ -1,8 +1,6 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { ISelectOption } from '../interfaces/select-option.interface';
 import { electronService } from '../services/electron.service';
-import { getPriceTresholdOptions } from '../utils/setting.utils';
 import { RootStore } from './rootStore';
 
 export class SettingStore {
@@ -13,8 +11,6 @@ export class SettingStore {
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
-
-  priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
 
   constructor(private rootStore: RootStore) {}
 
