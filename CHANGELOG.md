@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.3.6] - NOT RELEASED
+##### Added
+- Added a label which shows the current selection net worth value (e.g after searching/filtering) (thanks to kryo4096)
+- Added the ability to search on rarities/pseudorarities in the search bar (thanks to kryo4096)
 ##### Changed
 - Changed position of the "Reset zoom" button in the charts
 - Disable group actions while snapshotting (thanks to PezeM)
