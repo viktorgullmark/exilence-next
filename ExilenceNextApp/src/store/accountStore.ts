@@ -23,6 +23,7 @@ import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
+import AppConfig from "../config/app.config";
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -107,7 +108,7 @@ export class AccountStore {
     var options = {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
-      redirectUrl: 'http://localhost',
+      redirectUrl: AppConfig.redirectUrl,
       state: 'yourstate',
       responseType: 'code'
     };
@@ -125,7 +126,7 @@ export class AccountStore {
       alwaysOnTop: true
     });
 
-    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+    var authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     authWindow.webContents.on('will-redirect', (event: any, url: any) => {
       this.handleAuthCallback(url, authWindow);

@@ -7,7 +7,7 @@ function initSentry() {
       dsn: AppConfig.sentryBrowserDsn,
       ignoreErrors: [
         '/(?<=^|\\s)net::\\w+/',
-        'https://www.pathofexile.com',
+        AppConfig.pathOfExileUrl,
         'Network Error',
         'NetworkError',
       ]
