@@ -153,7 +153,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
           uiStateStore!.setConfirmRemoveProfileDialogOpen(true)
         }
         isSnapshotting={uiStateStore!.isSnapshotting}
-        isInitiating={uiStateStore!.isInitiating}
+        isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}
         isUpdatingPrices={priceStore!.isUpdatingPrices}
         profilesLoaded={uiStateStore!.profilesLoaded}
       />

@@ -12,7 +12,7 @@ interface ItemTableFilterSubtotalProps {
 }
 
 const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
-  array: array
+  array: array,
 }: ItemTableFilterSubtotalProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -20,13 +20,17 @@ const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
   const sumString =
     ' ' +
     array
-      .map(i => i.total)
+      .map((i) => i.total)
       .reduce((a, b) => a + b, 0)
       .toLocaleString(undefined, {
         maximumFractionDigits: 2,
-        minimumFractionDigits: 2
+        minimumFractionDigits: 2,
       });
 
+  console.log(
+    'SUBTOTAL COMPONENT:',
+    array.map((i) => i.total).reduce((a, b) => a + b, 0)
+  );
   return (
     <Paper className={clsx(classes.paper)}>
       {t('label.filter_total')}

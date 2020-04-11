@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.6] - NOT RELEASED
+## [0.3.6] - 2020-04-11
 ##### Added
 - Added a label which shows the current selection net worth value (e.g after searching/filtering) (thanks to kryo4096)
 - Added the ability to set a custom price treshold interval between 1c and 100c (thanks to kryo4096)
@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 ##### Changed
 - Changed position of the "Reset zoom" button in the charts
 - Disable group actions while snapshotting (thanks to PezeM)
+##### Fixed
+- Fixed a bug where the loading indicator would not appear when validating a session
+- Fixed a bug where the total net worth would sometimes differ slightly from the item table total value
 ##### Removed
 - Removed the unique- and map stash tabs from the stash tab dropdown (thanks to M-Schiller)
 

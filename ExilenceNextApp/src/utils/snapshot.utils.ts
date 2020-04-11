@@ -158,6 +158,11 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 
   const rarity = getRarityIdentifier(filterText);
 
+  console.log(
+    'FILTER COMPONENT:',
+    snapshots.flatMap(s => s.stashTabs).flatMap(s => s.pricedItems).map((i) => i.total).reduce((a, b) => a + b, 0)
+  );
+
   const mergedItems = mergeItemStacks(
     snapshots
       .flatMap((sts) =>

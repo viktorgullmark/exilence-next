@@ -26,7 +26,7 @@ import {
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
   formatValue,
-  formatStashTabSnapshotsForChart
+  formatStashTabSnapshotsForChart,
 } from '../../utils/snapshot.utils';
 import { visitor, rootStore } from './../../index';
 import { externalService } from './../../services/external.service';
@@ -43,7 +43,7 @@ export class Profile {
   @persist @observable activeCharacterName: string = '';
   @persist('object') @observable activeCurrency: ICurrency = {
     name: 'chaos',
-    short: 'c'
+    short: 'c',
   };
 
   @persist('list') @observable activeStashTabIds: string[] = [];
@@ -62,7 +62,7 @@ export class Profile {
   get readyToSnapshot() {
     const account = rootStore.accountStore.getSelectedAccount;
     const league = account.accountLeagues.find(
-      al => account.activeLeague && al.leagueId === account.activeLeague.id
+      (al) => account.activeLeague && al.leagueId === account.activeLeague.id
     );
 
     return (
@@ -88,6 +88,10 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
+    console.log(
+      'TOTAL NETWORHT',
+      calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])])
+    );
     return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
@@ -97,10 +101,10 @@ export class Profile {
       return 0;
     }
     const lastSnapshotNetWorth = getValueForSnapshotsTabs([
-      mapSnapshotToApiSnapshot(this.snapshots[0])
+      mapSnapshotToApiSnapshot(this.snapshots[0]),
     ]);
     const previousSnapshotNetWorth = getValueForSnapshotsTabs([
-      mapSnapshotToApiSnapshot(this.snapshots[1])
+      mapSnapshotToApiSnapshot(this.snapshots[1]),
     ]);
 
     return lastSnapshotNetWorth - previousSnapshotNetWorth;
@@ -116,26 +120,20 @@ export class Profile {
 
     switch (rootStore.uiStateStore.chartTimeSpan) {
       case '1 day': {
-        snapshots = snapshots.filter(s => {
-          return moment()
-            .subtract(24, 'h')
-            .isBefore(moment(s.created));
+        snapshots = snapshots.filter((s) => {
+          return moment().subtract(24, 'h').isBefore(moment(s.created));
         });
         break;
       }
       case '1 week': {
-        snapshots = snapshots.filter(s =>
-          moment()
-            .subtract(7, 'd')
-            .isBefore(moment(s.created))
+        snapshots = snapshots.filter((s) =>
+          moment().subtract(7, 'd').isBefore(moment(s.created))
         );
         break;
       }
       case '1 month': {
-        snapshots = snapshots.filter(s =>
-          moment()
-            .subtract(30, 'd')
-            .isBefore(moment(s.created))
+        snapshots = snapshots.filter((s) =>
+          moment().subtract(30, 'd').isBefore(moment(s.created))
         );
         break;
       }
@@ -148,8 +146,8 @@ export class Profile {
     const connectionSeries: IConnectionChartSeries = {
       seriesName: this.name,
       series: formatSnapshotsForChart(
-        snapshots.map(s => mapSnapshotToApiSnapshot(s))
-      )
+        snapshots.map((s) => mapSnapshotToApiSnapshot(s))
+      ),
     };
 
     return [connectionSeries];
@@ -158,9 +156,9 @@ export class Profile {
   @computed
   get tabChartData() {
     let snapshots = [...this.snapshots.slice(0, 50)];
-  
+
     const league = rootStore.leagueStore.leagues.find(
-      l => l.id === this.activeLeagueId
+      (l) => l.id === this.activeLeagueId
     );
 
     if (snapshots.length === 0 || !league) {
@@ -168,7 +166,7 @@ export class Profile {
     }
 
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
-      l => l.leagueId === league.id
+      (l) => l.leagueId === league.id
     );
 
     if (!accountLeague) {
@@ -179,30 +177,30 @@ export class Profile {
 
     let stashTabSnapshots: IChartStashTabSnapshot[] = [];
 
-    snapshots.map(s => {
-      const data = s.stashTabSnapshots.map(sts => {
+    snapshots.map((s) => {
+      const data = s.stashTabSnapshots.map((sts) => {
         return {
           value: sts.value,
           stashTabId: sts.stashTabId,
-          created: s.created
+          created: s.created,
         } as IChartStashTabSnapshot;
       });
       stashTabSnapshots = stashTabSnapshots.concat(data);
     });
 
-    const groupedStashTabSnapshots = stashTabSnapshots.reduce(function(r, a) {
+    const groupedStashTabSnapshots = stashTabSnapshots.reduce(function (r, a) {
       r[a.stashTabId] = r[a.stashTabId] || [];
       r[a.stashTabId].push(a);
       return r;
     }, Object.create(null));
 
-    this.activeStashTabIds.map(id => {
-      const stashTabName = accountLeague.stashtabs.find(s => s.id === id)?.n;
+    this.activeStashTabIds.map((id) => {
+      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.n;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
         series: formatStashTabSnapshotsForChart(
           groupedStashTabSnapshots[id] ? groupedStashTabSnapshots[id] : []
-        )
+        ),
       };
       series.push(serie);
     });
@@ -221,13 +219,9 @@ export class Profile {
   @computed
   get income() {
     const hours = 1;
-    const hoursAgo = moment()
-      .utc()
-      .subtract(hours, 'hours');
-    const snapshots = this.snapshots.filter(s =>
-      moment(s.created)
-        .utc()
-        .isAfter(hoursAgo)
+    const hoursAgo = moment().utc().subtract(hours, 'hours');
+    const snapshots = this.snapshots.filter((s) =>
+      moment(s.created).utc().isAfter(hoursAgo)
     );
 
     if (snapshots.length > 1) {
@@ -360,8 +354,8 @@ export class Profile {
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!
               .netWorthValue,
-        income: income
-      }
+        income: income,
+      },
     });
   }
 
@@ -382,11 +376,11 @@ export class Profile {
 
   @action getItems() {
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
-      al => al.leagueId === this.activeLeagueId
+      (al) => al.leagueId === this.activeLeagueId
     );
 
     const league = rootStore.leagueStore.leagues.find(
-      l => l.id === this.activeLeagueId
+      (l) => l.id === this.activeLeagueId
     );
 
     if (!accountLeague || !league) {
@@ -397,7 +391,7 @@ export class Profile {
     }
 
     const selectedStashTabs = accountLeague.stashtabs.filter(
-      st => this.activeStashTabIds.find(ast => ast === st.id) !== undefined
+      (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
 
     rootStore.uiStateStore.setStatusMessage(
@@ -423,7 +417,7 @@ export class Profile {
             )
           : of(null)
       ).pipe(
-        map(result => {
+        map((result) => {
           const stashTabsWithItems = result[0];
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
@@ -433,29 +427,33 @@ export class Profile {
             let includedCharacterItems: IPricedItem[] = [];
             if (this.includeInventory) {
               includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter(ci => ci.inventoryId === 'MainInventory')
+                characterItems.filter(
+                  (ci) => ci.inventoryId === 'MainInventory'
+                )
               );
             }
             if (this.includeEquipment) {
               includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter(ci => ci.inventoryId !== 'MainInventory')
+                characterItems.filter(
+                  (ci) => ci.inventoryId !== 'MainInventory'
+                )
               );
             }
             const characterTab: IStashTabSnapshot = {
               stashTabId: 'Character',
               value: 0,
-              pricedItems: includedCharacterItems
+              pricedItems: includedCharacterItems,
             };
             stashTabsWithItems.push(characterTab);
           }
-          return stashTabsWithItems.map(stashTabWithItems => {
+          return stashTabsWithItems.map((stashTabWithItems) => {
             stashTabWithItems.pricedItems = mergeItemStacks(
               stashTabWithItems.pricedItems
             );
             return stashTabWithItems;
           });
         }),
-        mergeMap(stashTabsWithItems =>
+        mergeMap((stashTabsWithItems) =>
           of(this.getItemsSuccess(stashTabsWithItems, league.id))
         ),
         catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
@@ -502,7 +500,7 @@ export class Profile {
     }
 
     const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
-      l => l.leagueId === activePriceLeague.id
+      (l) => l.leagueId === activePriceLeague.id
     );
 
     if (!activePriceDetails) {
@@ -514,11 +512,12 @@ export class Profile {
     let prices = activePriceDetails.leaguePriceSources[0].prices;
 
     if (!rootStore.settingStore.lowConfidencePricing) {
-      prices = prices.filter(p => p.count > 10);
+      prices = prices.filter((p) => p.count > 10);
     }
 
     prices = prices.filter(
-      p => p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
+      (p) =>
+        p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
     );
 
     prices = excludeLegacyMaps(prices);
@@ -536,20 +535,29 @@ export class Profile {
         );
 
         stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(
-          pi => pi.calculated > 0
+          (pi) =>
+            pi.calculated > 0 &&
+            pi.total >= rootStore.settingStore.priceTreshold
         );
 
         stashTabWithItems.value = stashTabWithItems.pricedItems
-          .filter(
-            item =>
-              item.calculated * item.stackSize >=
-              rootStore.settingStore.priceTreshold
-          )
-          .map(ts => ts.total)
+          .map((ts) => ts.total)
           .reduce((a, b) => a + b, 0);
 
         return stashTabWithItems;
       }
+    );
+
+    console.log(
+      'STASHTAB ITEMS VALUE:',
+      pricedStashTabs
+        .flatMap((s) => s.pricedItems)
+        .map((i) => i.total)
+        .reduce((a, b) => a + b, 0)
+    );
+    console.log(
+      'STASHTAB VALUE:',
+      pricedStashTabs.flatMap((s) => s.value).reduce((a, b) => a + b, 0)
     );
 
     return this.priceItemsForStashTabsSuccess(pricedStashTabs);
@@ -579,13 +587,13 @@ export class Profile {
   saveSnapshot(pricedStashTabs: IStashTabSnapshot[]) {
     rootStore.uiStateStore.setStatusMessage('saving_snapshot');
     const snapshot: ISnapshot = {
-      stashTabSnapshots: pricedStashTabs.map(p => new StashTabSnapshot(p))
+      stashTabSnapshots: pricedStashTabs.map((p) => new StashTabSnapshot(p)),
     };
 
     const snapshotToAdd = new Snapshot(snapshot);
 
     const activeAccountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
-      al => al.leagueId === this.activeLeagueId
+      (al) => al.leagueId === this.activeLeagueId
     );
 
     if (activeAccountLeague) {
@@ -596,7 +604,7 @@ export class Profile {
       const callback = () => {
         // clear items from previous snapshot
         if (this.snapshots.length > 1) {
-          this.snapshots[0].stashTabSnapshots.forEach(stss => {
+          this.snapshots[0].stashTabSnapshots.forEach((stss) => {
             stss.pricedItems = [];
           });
         }
