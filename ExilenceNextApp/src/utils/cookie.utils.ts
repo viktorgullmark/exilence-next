@@ -1,11 +1,12 @@
 import { ICookie } from '../interfaces/cookie.interface';
+import AppConfig from './../config/app.config';
 
 export function constructCookie(sessionId: string): ICookie {
   const cookie: ICookie = {
-    url: 'https://www.pathofexile.com',
+    url: AppConfig.pathOfExileUrl,
     name: 'POESESSID',
     value: sessionId,
-    domain: '.pathofexile.com',
+    domain: AppConfig.pathOfExileCookieDomain,
     path: '/',
     secure: true,
     expirationDate: 2550873600
