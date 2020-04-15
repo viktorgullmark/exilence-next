@@ -26,8 +26,8 @@ import { rootStore } from '..';
 import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
-const poeUrl = 'https://www.pathofexile.com';
-const apiUrl = 'https://api.pathofexile.com';
+const poeUrl = AppConfig.pathOfExileUrl;
+const apiUrl = AppConfig.pathOfExileApiUrl;
 
 export const externalService = {
   getLatestRelease,
