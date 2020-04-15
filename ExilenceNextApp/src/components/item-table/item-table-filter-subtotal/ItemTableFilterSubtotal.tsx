@@ -27,10 +27,6 @@ const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
         minimumFractionDigits: 2,
       });
 
-  console.log(
-    'SUBTOTAL COMPONENT:',
-    array.map((i) => i.total).reduce((a, b) => a + b, 0)
-  );
   return (
     <Paper className={clsx(classes.paper)}>
       {t('label.filter_total')}

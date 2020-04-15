@@ -88,10 +88,6 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    console.log(
-      'TOTAL NETWORHT',
-      calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])])
-    );
     return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
@@ -546,18 +542,6 @@ export class Profile {
 
         return stashTabWithItems;
       }
-    );
-
-    console.log(
-      'STASHTAB ITEMS VALUE:',
-      pricedStashTabs
-        .flatMap((s) => s.pricedItems)
-        .map((i) => i.total)
-        .reduce((a, b) => a + b, 0)
-    );
-    console.log(
-      'STASHTAB VALUE:',
-      pricedStashTabs.flatMap((s) => s.value).reduce((a, b) => a + b, 0)
     );
 
     return this.priceItemsForStashTabsSuccess(pricedStashTabs);
