@@ -1,11 +1,9 @@
-import { Box, Typography } from '@material-ui/core';
+import useComponentSize from '@rehooks/component-size';
 import { inject, observer } from 'mobx-react';
 import React, { useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
-import useComponentSize from '@rehooks/component-size';
 
 interface Props {
   showIndividualTabs?: boolean;
@@ -16,10 +14,8 @@ interface Props {
 const SnapshotHistoryChartContainer: React.FC<Props> = ({
   accountStore,
   signalrStore,
-  showIndividualTabs
+  showIndividualTabs,
 }: Props) => {
-  const { t } = useTranslation();
-
   let ref = useRef(null);
   let size = useComponentSize(ref);
 
@@ -33,7 +29,11 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
         width={size.width}
         height={size.height}
         groupData={showIndividualTabs ? undefined : activeGroup?.chartData}
-        playerData={showIndividualTabs ? activeProfile?.tabChartData : activeProfile?.chartData}
+        playerData={
+          showIndividualTabs
+            ? activeProfile?.tabChartData
+            : activeProfile?.chartData
+        }
         showIndividualTabs={showIndividualTabs}
         stashTabColors={accountStore!.getSelectedAccount.stashTabColors}
       />

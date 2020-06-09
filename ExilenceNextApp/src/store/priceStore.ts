@@ -15,8 +15,8 @@ export class PriceStore {
   @observable priceSources: PriceSource[] = [
     new PriceSource({
       name: 'poe-ninja',
-      url: 'https://poe.ninja'
-    })
+      url: 'https://poe.ninja',
+    }),
   ];
 
   @observable
@@ -47,7 +47,7 @@ export class PriceStore {
   @action
   getLeaguePriceDetails(leagueId: string) {
     let leaguePriceDetails = this.leaguePriceDetails.find(
-      l => l.leagueId === leagueId
+      (l) => l.leagueId === leagueId
     );
 
     if (!leaguePriceDetails) {
@@ -63,13 +63,13 @@ export class PriceStore {
   getLeaguePriceSource(leaguePriceDetails: LeaguePriceDetails) {
     // todo: remove hardcoded check for poeninja
     let leaguePriceSource = leaguePriceDetails.leaguePriceSources.find(
-      lps => lps.priceSourceUuid === this.priceSources[0].uuid
+      (lps) => lps.priceSourceUuid === this.priceSources[0].uuid
     );
 
     if (!leaguePriceSource) {
-      leaguePriceSource = new LeaguePriceSource(<ILeaguePriceSource>{
-        priceSourceUuid: this.priceSources[0].uuid
-      });
+      leaguePriceSource = new LeaguePriceSource({
+        priceSourceUuid: this.priceSources[0].uuid,
+      } as ILeaguePriceSource);
       leaguePriceDetails.addLeaguePriceSource(leaguePriceSource);
     }
 
@@ -78,14 +78,14 @@ export class PriceStore {
 
   @action
   getPricesForLeagues() {
-    const leagueIds = this.rootStore.leagueStore.priceLeagues.map(l => l.id);
+    const leagueIds = this.rootStore.leagueStore.priceLeagues.map((l) => l.id);
     this.isUpdatingPrices = true;
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
             const league = this.rootStore.leagueStore.priceLeagues.find(
-              l => l.id === leagueId
+              (l) => l.id === leagueId
             );
 
             const leaguePriceDetails = this.getLeaguePriceDetails(leagueId);
@@ -98,13 +98,13 @@ export class PriceStore {
               poeninjaService.getCurrencyPrices(league.id),
               poeninjaService.getItemPrices(league.id)
             ).pipe(
-              map(prices => {
+              map((prices) => {
                 const combinedPrices: IExternalPrice[] = ([] as any).concat.apply(
                   [],
                   [prices[0], prices[1]]
                 );
                 const ninjaPrices: IExternalPrice[] = [];
-                combinedPrices.forEach(p => {
+                combinedPrices.forEach((p) => {
                   ninjaPrices.push(p);
                 });
 

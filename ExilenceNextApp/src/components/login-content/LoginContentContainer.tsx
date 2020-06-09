@@ -1,12 +1,11 @@
-import { reaction } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import React, { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import React from 'react';
+import { useLocation } from 'react-router';
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import LoginContent from './LoginContent';
 import { LeagueStore } from './../../store/leagueStore';
+import LoginContent from './LoginContent';
 
 interface LoginContentProps {
   accountStore?: AccountStore;
@@ -16,9 +15,8 @@ interface LoginContentProps {
 
 const LoginContentContainer: React.FC<LoginContentProps> = ({
   accountStore,
-  uiStateStore
+  uiStateStore,
 }: LoginContentProps) => {
-  const history = useHistory();
   const location = useLocation();
 
   const handleValidate = (details: IAccount) => {

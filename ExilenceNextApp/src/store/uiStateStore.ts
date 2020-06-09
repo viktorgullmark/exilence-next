@@ -1,19 +1,18 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction, toJS } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
+import { Order } from '../components/item-table/ItemTable';
+import { IStashTab } from '../interfaces/stash.interface';
+import { IStatusMessage } from '../interfaces/status-message.interface';
+import { ITableItem } from '../interfaces/table-item.interface';
+import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
-import { Order } from '../components/item-table/ItemTable';
-import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
-import { IStatusMessage } from '../interfaces/status-message.interface';
-import { ITableItem } from '../interfaces/table-item.interface';
-import { IStashTab } from '../interfaces/stash.interface';
-import { TimespanType } from '../types/timespan.type';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -94,7 +93,7 @@ export class UiStateStore {
       message: message,
       translateParam: translateParam,
       currentCount: currentCount,
-      totalCount: totalCount
+      totalCount: totalCount,
     };
 
     this.statusMessage = { ...statusMessage };
@@ -143,7 +142,7 @@ export class UiStateStore {
 
   @action
   setShowItemTableFilter(show: boolean) {
-    if(!show) {
+    if (!show) {
       this.setFilteredStashTabs(undefined);
     }
     this.showItemTableFilter = show;

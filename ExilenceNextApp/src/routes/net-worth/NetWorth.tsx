@@ -1,11 +1,7 @@
-import {
-  Grid,
-  useTheme,
-  Box,
-  Typography,
-  Divider,
-  Tooltip
-} from '@material-ui/core';
+import { Box, Grid, Tooltip, Typography, useTheme } from '@material-ui/core';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ListIcon from '@material-ui/icons/List';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -15,28 +11,24 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
 import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
+import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
+import {
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from '../../components/expansion-panel/ExpansionPanel';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
-import NetWorthTabGroup from '../../components/net-worth-tab-group/NetWorthTabGroup';
+import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
+import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 import Widget from '../../components/widget/Widget';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useStyles } from './NetWorth.styles';
-import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails
-} from '../../components/expansion-panel/ExpansionPanel';
-import ItemTableContainer from '../../components/item-table/ItemTableContainer';
-import { openLink } from '../../utils/window.utils';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
-import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ListIcon from '@material-ui/icons/List';
-import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
+import { openLink } from '../../utils/window.utils';
+import { useStyles } from './NetWorth.styles';
 
 interface NetWorthProps {
   accountStore?: AccountStore;
@@ -51,7 +43,7 @@ export const chartHeight = 240;
 const NetWorth: React.FC<NetWorthProps> = ({
   accountStore,
   signalrStore,
-  uiStateStore
+  uiStateStore,
 }: NetWorthProps) => {
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
@@ -125,12 +117,12 @@ const NetWorth: React.FC<NetWorthProps> = ({
               }
               secondaryValueIsDiff
               secondaryValueStyles={{ fontSize: '0.8rem' }}
-              title="label.total_value"
+              title='label.total_value'
               valueColor={itemColors.chaosOrb}
               currencyShort={activeCurrency().short}
-              icon={<MonetizationOnIcon fontSize="default" />}
+              icon={<MonetizationOnIcon fontSize='default' />}
               currency
-              tooltip="Change in value between the two latest snapshots"
+              tooltip='Change in value between the two latest snapshots'
             />
           </Widget>
         </Grid>
@@ -140,9 +132,9 @@ const NetWorth: React.FC<NetWorthProps> = ({
               value={activeGroup ? activeGroup.income : income()}
               valueIsDiff
               valueSuffix={` ${t('label.hour_suffix')}`}
-              title="label.total_income"
+              title='label.total_income'
               valueColor={itemColors.chaosOrb}
-              icon={<TrendingUpIcon fontSize="default" />}
+              icon={<TrendingUpIcon fontSize='default' />}
               currencyShort={activeCurrency().short}
               currency
             />
@@ -156,16 +148,16 @@ const NetWorth: React.FC<NetWorthProps> = ({
                   ? activeGroup.groupSnapshots.length
                   : snapshots().length
               )}
-              title="label.total_snapshots"
+              title='label.total_snapshots'
               secondaryValue={uiStateStore!.timeSinceLastSnapshotLabel}
               secondaryValueStyles={{
                 color: theme.palette.text.primary,
                 fontSize: '0.8rem',
-                fontWeight: 'normal'
+                fontWeight: 'normal',
               }}
               valueColor={theme.palette.text.primary}
-              icon={<UpdateIcon fontSize="default" />}
-              tooltip="Time since last snapshot"
+              icon={<UpdateIcon fontSize='default' />}
+              tooltip='Time since last snapshot'
             />
           </Widget>
         </Grid>
@@ -183,17 +175,17 @@ const NetWorth: React.FC<NetWorthProps> = ({
               >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'
                 >
                   <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
                   >
-                    <EqualizerIcon fontSize="small" />
+                    <EqualizerIcon fontSize='small' />
                     <Box ml={1}>
-                      <Typography variant="overline">
+                      <Typography variant='overline'>
                         {t('label.net_worth_chart')}
                       </Typography>
                     </Box>
@@ -202,7 +194,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 <ExpansionPanelDetails
                   style={{
                     height: chartHeight,
-                    background: theme.palette.background.default
+                    background: theme.palette.background.default,
                   }}
                 >
                   <Grid container>
@@ -227,17 +219,17 @@ const NetWorth: React.FC<NetWorthProps> = ({
               >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'
                 >
                   <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
                   >
-                    <EqualizerIcon fontSize="small" />
+                    <EqualizerIcon fontSize='small' />
                     <Box ml={1}>
-                      <Typography variant="overline">
+                      <Typography variant='overline'>
                         {t('label.tab_chart')}
                       </Typography>
                     </Box>
@@ -246,7 +238,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 <ExpansionPanelDetails
                   style={{
                     height: chartHeight,
-                    background: theme.palette.background.default
+                    background: theme.palette.background.default,
                   }}
                 >
                   <Grid container>
@@ -274,19 +266,19 @@ const NetWorth: React.FC<NetWorthProps> = ({
           >
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              aria-controls='panel1a-content'
+              id='panel1a-header'
             >
-              <Grid container justify="space-between">
+              <Grid container justify='space-between'>
                 <Grid item>
                   <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
                   >
                     <ListIcon />
                     <Box ml={1}>
-                      <Typography variant="overline">
+                      <Typography variant='overline'>
                         {t('label.item_table')}
                       </Typography>
                     </Box>
@@ -294,23 +286,23 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 </Grid>
                 <Grid item className={classes.secondaryHeader}>
                   <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
                   >
                     <Tooltip
                       title={t('label.prices_fetched_from_interval')}
-                      placement="bottom"
+                      placement='bottom'
                     >
                       <Typography
-                        variant="body2"
+                        variant='body2'
                         className={classes.creditText}
                       >
                         {t('label.prices_fetched_from')}
                         <a
                           className={classes.inlineLink}
-                          href="https://poe.ninja"
-                          onClick={e => openLink(e)}
+                          href='https://poe.ninja'
+                          onClick={(e) => openLink(e)}
                         >
                           https://poe.ninja
                         </a>
@@ -323,7 +315,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
             <ExpansionPanelDetails
               style={{
                 background: theme.palette.background.default,
-                display: 'block'
+                display: 'block',
               }}
             >
               {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}

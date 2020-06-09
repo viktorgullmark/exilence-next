@@ -10,9 +10,6 @@ import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import WarningIcon from '@material-ui/icons/Warning';
 
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
@@ -27,7 +24,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
   isSubmitting,
   isInitiating,
   account,
-  errorMessage
+  errorMessage,
 }: LoginContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -36,9 +33,9 @@ const LoginContent: React.FC<LoginContentProps> = ({
     <>
       <Grid
         container
-        direction="row"
-        justify="center"
-        alignItems="center"
+        direction='row'
+        justify='center'
+        alignItems='center'
         className={classes.content}
       >
         <Grid item sm={9} md={5} lg={4} xl={3}>
@@ -50,9 +47,9 @@ const LoginContent: React.FC<LoginContentProps> = ({
                 classes.infoWell
               )}
             >
-              <Box display="flex" justifyContent="center" alignItems="center">
+              <Box display='flex' justifyContent='center' alignItems='center'>
                 <Typography
-                  variant="subtitle2"
+                  variant='subtitle2'
                   className={classes.errorMessage}
                 >
                   {t(errorMessage)}
@@ -61,7 +58,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
             </Paper>
           )}
           <Paper className={clsx('paper', classes.loginContentContainer)}>
-            <Typography variant="h5" className={classes.loginTitle}>
+            <Typography variant='h5' className={classes.loginTitle}>
               {t('title.login')}
             </Typography>
             <Box>

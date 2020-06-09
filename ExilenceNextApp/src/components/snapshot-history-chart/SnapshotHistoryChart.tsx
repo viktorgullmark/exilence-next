@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-import HC, { ChartOptions } from 'highcharts';
+import HC from 'highcharts';
 import React from 'react';
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
@@ -27,13 +27,13 @@ const SnapshotHistoryChart: React.FC<Props> = ({
   playerData,
   groupData,
   showIndividualTabs,
-  stashTabColors
+  stashTabColors,
 }: Props) => {
   const theme = useTheme();
   const classes = useStyles();
 
   let seriesData: ChartSeries[] = playerData
-    ? playerData.map(pd => {
+    ? playerData.map((pd) => {
         return {
           type: showIndividualTabs ? 'spline' : 'area',
           name: pd.seriesName,
@@ -44,19 +44,19 @@ const SnapshotHistoryChart: React.FC<Props> = ({
         {
           type: showIndividualTabs ? 'spline' : 'area',
           name: 'No data',
-          data: []
-        }
+          data: [],
+        },
       ];
 
   if (groupData) {
     const data: ChartSeries[] = [];
 
-    groupData.map(gd => {
-      gd.connections.map(player => {
+    groupData.map((gd) => {
+      gd.connections.map((player) => {
         const playerData = {
           type: showIndividualTabs ? 'spline' : 'area',
           name: player.seriesName,
-          data: player.series
+          data: player.series,
         };
         data.push(playerData);
       });
@@ -70,20 +70,20 @@ const SnapshotHistoryChart: React.FC<Props> = ({
       zoomType: 'x',
       resetZoomButton: {
         position: {
-            align: 'left',
-            verticalAlign: 'top',
-            x: 15,
-        }
-    }
+          align: 'left',
+          verticalAlign: 'top',
+          x: 15,
+        },
+      },
     },
     title: {
-      text: ''
+      text: '',
     },
     xAxis: {
-      type: 'datetime'
+      type: 'datetime',
     },
     legend: {
-      enabled: showIndividualTabs ? true : false
+      enabled: showIndividualTabs ? true : false,
     },
     plotOptions: {
       area: {
@@ -92,7 +92,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
             x1: 0,
             y1: 0,
             x2: 0,
-            y2: 1
+            y2: 1,
           },
           stops: showIndividualTabs
             ? []
@@ -101,41 +101,36 @@ const SnapshotHistoryChart: React.FC<Props> = ({
                   0,
                   HC.color(theme.palette.primary.main)
                     .setOpacity(0.25)
-                    .get('rgba')
+                    .get('rgba'),
                 ],
-                [
-                  1,
-                  HC.color(primaryDarker)
-                    .setOpacity(0)
-                    .get('rgba')
-                ]
-              ]
+                [1, HC.color(primaryDarker).setOpacity(0).get('rgba')],
+              ],
         },
         marker: {
-          radius: 1
+          radius: 1,
         },
         lineWidth: 2,
         states: {
           hover: {
-            lineWidth: 2
-          }
+            lineWidth: 2,
+          },
         },
-        threshold: null
+        threshold: null,
       },
       spline: {
         marker: {
-          radius: 1
+          radius: 1,
         },
         lineWidth: 1,
         states: {
           hover: {
-            lineWidth: 1
-          }
+            lineWidth: 1,
+          },
         },
-        threshold: null
-      }
+        threshold: null,
+      },
     },
-    series: seriesData
+    series: seriesData,
   };
 
   return (
@@ -147,8 +142,8 @@ const SnapshotHistoryChart: React.FC<Props> = ({
           style: {
             height: '100%',
             width: '100%',
-            borderRadius: theme.spacing(0.5)
-          }
+            borderRadius: theme.spacing(0.5),
+          },
         }}
       />
     </Box>

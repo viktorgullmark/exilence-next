@@ -1,11 +1,11 @@
-import { TextField, IconButton, Box, Paper, Card } from '@material-ui/core';
-import { observer, inject } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import { Paper } from '@material-ui/core';
+import clsx from 'clsx';
+import { observer } from 'mobx-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { itemColors } from '../../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './ItemTableFilterSubtotal.styles';
-import { itemColors, cardColors } from '../../../assets/themes/exilence-theme';
-import clsx from 'clsx';
 
 interface ItemTableFilterSubtotalProps {
   array: IPricedItem[];

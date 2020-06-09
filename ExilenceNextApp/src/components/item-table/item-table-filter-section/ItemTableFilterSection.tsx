@@ -1,7 +1,6 @@
 import { Box, Divider, Grid } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { IStashTab } from '../../../interfaces/stash.interface';
 import { AccountStore } from '../../../store/accountStore';
 import { UiStateStore } from '../../../store/uiStateStore';
@@ -14,7 +13,7 @@ export interface IProps {
 
 const ItemTableFilterSection: React.FC<IProps> = ({
   uiStateStore,
-  accountStore
+  accountStore,
 }: IProps) => {
   const [selectedStashTabs, setSelectedStashTabs] = useState<IStashTab[]>([]);
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
@@ -27,29 +26,27 @@ const ItemTableFilterSection: React.FC<IProps> = ({
     setSelectedStashTabs([]);
     if (activeProfile) {
       const foundLeague = accountLeagues.find(
-        al => al.leagueId === activeProfile.activeLeagueId
+        (al) => al.leagueId === activeProfile.activeLeagueId
       );
       if (foundLeague) {
         setStashTabs(
-          foundLeague.stashtabs.filter(st =>
+          foundLeague.stashtabs.filter((st) =>
             activeProfile.activeStashTabIds.includes(st.id)
           )
         );
         setSelectedStashTabs(
-          foundLeague.stashtabs.filter(st =>
+          foundLeague.stashtabs.filter((st) =>
             activeProfile.activeStashTabIds.includes(st.id)
           )
         );
         uiStateStore!.setFilteredStashTabs(
-          foundLeague.stashtabs.filter(st =>
+          foundLeague.stashtabs.filter((st) =>
             activeProfile.activeStashTabIds.includes(st.id)
           )
         );
       }
     }
   }, [activeProfile, activeProfile?.activeStashTabIds]);
-
-  const { t } = useTranslation();
 
   const handleStashTabChange = (e: ChangeEvent<{}>, value: IStashTab[]) => {
     setSelectedStashTabs(value);
@@ -63,20 +60,20 @@ const ItemTableFilterSection: React.FC<IProps> = ({
           <Box>
             <Grid
               container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
+              direction='row'
+              justify='space-between'
+              alignItems='center'
             >
               <Grid item>
                 <StashTabDropdown
                   width={600}
-                  size="small"
+                  size='small'
                   marginBottom={1.5}
                   stashTabs={stashTabs}
                   selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
                   hideLabel
-                  placeholderKey="common:label.filter_stash_tabs"
+                  placeholderKey='common:label.filter_stash_tabs'
                 />
               </Grid>
             </Grid>

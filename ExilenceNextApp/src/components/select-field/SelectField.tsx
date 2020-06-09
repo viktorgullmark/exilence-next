@@ -3,14 +3,14 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from '@material-ui/core';
-import { useField, useFormikContext } from 'formik';
+import { useField } from 'formik';
 import React from 'react';
 import useLabelWidth from '../../hooks/use-label-width';
 import { ISelectOption } from '../../interfaces/select-option.interface';
-import useStyles from './SelectField.styles';
 import { placeholderOption } from '../../utils/misc.utils';
+import useStyles from './SelectField.styles';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -24,7 +24,7 @@ const SelectField: React.FC<Props> = ({
   label,
   options,
   required,
-  children
+  children,
 }) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
@@ -32,7 +32,7 @@ const SelectField: React.FC<Props> = ({
 
   return (
     <FormControl
-      variant="outlined"
+      variant='outlined'
       error={meta.touched && !!meta.error}
       required={required}
       className={classes.root}
@@ -41,11 +41,19 @@ const SelectField: React.FC<Props> = ({
       <InputLabel ref={ref}>{label}</InputLabel>
       <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
         {options
-          ? [{ id: '', value: placeholderOption, label: placeholderOption } as ISelectOption].concat(options).map(opt => (
-              <MenuItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </MenuItem>
-            ))
+          ? [
+              {
+                id: '',
+                value: placeholderOption,
+                label: placeholderOption,
+              } as ISelectOption,
+            ]
+              .concat(options)
+              .map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))
           : children}
       </Select>
       {meta.touched && meta.error && (

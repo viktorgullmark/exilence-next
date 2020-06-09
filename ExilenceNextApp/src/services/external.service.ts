@@ -3,27 +3,16 @@ import axios from 'axios-observable';
 import { forkJoin, Observable, throwError } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-import { ICharacter } from '../interfaces/character.interface';
-import { IItem } from '../interfaces/item.interface';
-import { ILeague } from '../interfaces/league.interface';
-import { IPricedItem } from '../interfaces/priced-item.interface';
-import { IStash, IStashTab } from '../interfaces/stash.interface';
-import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
-import { IGithubRelease } from '../interfaces/github/github-release.interface';
-import uuid from 'uuid';
-import AppConfig from './../config/app.config';
-import { IPoeProfile } from '../interfaces/poe-profile.interface';
-import {
-  getItemName,
-  getMapTier,
-  getLinks,
-  getQuality,
-  getLevel,
-  getItemVariant,
-  mapItemsToPricedItems
-} from '../utils/item.utils';
 import { rootStore } from '..';
 import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
+import { ICharacter } from '../interfaces/character.interface';
+import { IGithubRelease } from '../interfaces/github/github-release.interface';
+import { ILeague } from '../interfaces/league.interface';
+import { IPoeProfile } from '../interfaces/poe-profile.interface';
+import { IStash, IStashTab } from '../interfaces/stash.interface';
+import { mapItemsToPricedItems } from '../utils/item.utils';
+import AppConfig from './../config/app.config';
+import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
 const poeUrl = AppConfig.pathOfExileUrl;
@@ -38,7 +27,7 @@ export const externalService = {
   getCharacters,
   getCharacterItems,
   getProfile,
-  loginWithOAuth
+  loginWithOAuth,
 };
 
 /* #region github.com */
@@ -88,9 +77,9 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
         map((stash: AxiosResponse<IStash>) => {
           rootStore.uiStateStore.incrementStatusMessageCount();
           const items = {
-            pricedItems: mapItemsToPricedItems(stash.data.items, tab)
+            pricedItems: mapItemsToPricedItems(stash.data.items, tab),
           };
-          return <IStashTabSnapshot>{ ...{ stashTabId: tab.id }, ...items };
+          return { ...{ stashTabId: tab.id }, ...items } as IStashTabSnapshot;
         })
       );
     })

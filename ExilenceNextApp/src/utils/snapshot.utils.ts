@@ -1,21 +1,20 @@
 import moment from 'moment';
+import { rootStore } from '..';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
+import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';
-import { mergeItemStacks, getRarityIdentifier } from './item.utils';
-import { rootStore } from '..';
-import { StashTabSnapshot } from '../store/domains/stashtab-snapshot';
-import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
+import { getRarityIdentifier, mergeItemStacks } from './item.utils';
 
 export const mapSnapshotToApiSnapshot = (
   snapshot: Snapshot,
   stashTabs?: IStashTab[]
 ) => {
-  return <IApiSnapshot>{
+  return {
     uuid: snapshot.uuid,
     created: snapshot.created,
     stashTabs: stashTabs
@@ -30,7 +29,7 @@ export const mapSnapshotToApiSnapshot = (
               (sts) => sts.stashTabId === st.id
             )!;
 
-            return <IApiStashTabSnapshot>{
+            return {
               uuid: foundTab.uuid,
               stashTabId: st.id,
               pricedItems: foundTab.pricedItems,
@@ -38,10 +37,10 @@ export const mapSnapshotToApiSnapshot = (
               value: +foundTab.value.toFixed(4),
               color: rgbToHex(st.colour.r, st.colour.g, st.colour.b),
               name: st.n,
-            };
+            } as IApiStashTabSnapshot;
           })
       : snapshot.stashTabSnapshots,
-  };
+  } as IApiSnapshot;
 };
 
 export const mapSnapshotsToStashTabPricedItems = (
@@ -57,13 +56,13 @@ export const mapSnapshotsToStashTabPricedItems = (
         (sts) => sts.stashTabId === st.id
       )!;
 
-      return <IApiStashTabPricedItem>{
+      return {
         uuid: foundTab.uuid,
         stashTabId: st.id,
         pricedItems: foundTab.pricedItems.map((i) => {
-          return <IPricedItem>{ ...i, uuid: i.uuid, itemId: i.itemId };
+          return { ...i, uuid: i.uuid, itemId: i.itemId } as IPricedItem;
         }),
-      };
+      } as IApiStashTabPricedItem;
     });
 };
 
@@ -172,14 +171,14 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
       .flatMap((sts) =>
         sts.pricedItems.filter(
           (i) =>
-            (i.calculated > 0 && i.name.toLowerCase().includes(filterText)) || 
+            (i.calculated > 0 && i.name.toLowerCase().includes(filterText)) ||
             (i.tab &&
               i.tab
                 .map((t) => t.n)
                 .join(', ')
                 .toLowerCase()
-                .includes(filterText)) || 
-            (i.calculated > 0 && rarity >= 0 && i.frameType == rarity)
+                .includes(filterText)) ||
+            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity)
         )
       )
   );

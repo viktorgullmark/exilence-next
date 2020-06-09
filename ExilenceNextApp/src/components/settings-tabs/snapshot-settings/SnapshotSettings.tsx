@@ -1,9 +1,8 @@
 import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
-import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
-import { useTranslation } from 'react-i18next';
+import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
 interface Props {
   autoSnapshotting: boolean;
@@ -16,28 +15,26 @@ const SnapshotSettings: React.FC<Props> = ({
   autoSnapshotting,
   setAutoSnapshotting,
   autoSnapshotInterval,
-  setAutoSnapshotInterval
+  setAutoSnapshotInterval,
 }: Props) => {
-  const { t } = useTranslation();
-  
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={4}>
         <CheckboxSetting
           value={autoSnapshotting}
           handleChange={setAutoSnapshotting}
-          translationKey="auto_snapshotting"
+          translationKey='auto_snapshotting'
         />
       </Grid>
       <Grid item xs={12} sm={4}>
         <NumberInputSetting
           value={autoSnapshotInterval / 1000 / 60}
           handleChange={setAutoSnapshotInterval}
-          translationKey="auto_snapshot_interval"
+          translationKey='auto_snapshot_interval'
           disabled={!autoSnapshotting}
           minimum={2}
           maximum={1000}
-          suffixKey="unit.minute"
+          suffixKey='unit.minute'
         />
       </Grid>
     </Grid>

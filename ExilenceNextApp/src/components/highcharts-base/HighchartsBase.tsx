@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
-import Highcharts, { SeriesOptionsType } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import React, { useRef } from 'react';
 
 type Props = Omit<HighchartsReact.Props, 'highcharts'>;
 
@@ -15,7 +15,7 @@ const HighchartsBase: React.FC<IProps> = (props: IProps) => {
   const afterChartCreated = (chart: any) => {
     chart.reflow();
     if (colors) {
-      chart.update({ colors: colors })
+      chart.update({ colors: colors });
     }
   };
 

@@ -1,29 +1,29 @@
-import { TextField, IconButton, Box } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import { Formik } from 'formik';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
+import { ISelectOption } from '../../interfaces/select-option.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { League } from '../../store/domains/league';
+import { placeholderOption } from '../../utils/misc.utils';
+import { generateProfileName } from '../../utils/profile.utils';
 import { noCharError } from '../../utils/validation.utils';
+import CheckboxField from '../checkbox-field/CheckboxField';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
 import RequestButton from '../request-button/RequestButton';
+import SelectField from '../select-field/SelectField';
+import SimpleField from '../simple-field/SimpleField';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './ProfileDialog.styles';
-import SimpleField from '../simple-field/SimpleField';
-import { generateProfileName } from '../../utils/profile.utils';
-import SelectField from '../select-field/SelectField';
-import { ISelectOption } from '../../interfaces/select-option.interface';
-import CheckboxField from '../checkbox-field/CheckboxField';
-import { placeholderOption } from '../../utils/misc.utils';
 
 export interface ProfileFormValues {
   profileName: string;
@@ -74,7 +74,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
   handleLeagueChange,
   handleSubmit,
   characterName,
-  handleStashTabChange
+  handleStashTabChange,
 }: ProfileDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -84,9 +84,9 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
       <Dialog
         open={isOpen}
         onClose={() => handleClickClose()}
-        aria-labelledby="profile-dialog-title"
+        aria-labelledby='profile-dialog-title'
       >
-        <DialogTitle id="profile-dialog-title">
+        <DialogTitle id='profile-dialog-title'>
           {isEditing ? t('title.save_profile') : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
@@ -99,7 +99,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
               selectedStashTabs: selectedStashTabs,
               character: characterName,
               includeEquipment: includeEquipment,
-              includeInventory: includeInventory
+              includeInventory: includeInventory,
             }}
             onSubmit={(values: ProfileFormValues) => {
               handleSubmit(values);
@@ -107,7 +107,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
             validationSchema={Yup.object().shape({
               profileName: Yup.string().required('Required'),
               league: Yup.string().required('Required'),
-              priceLeague: Yup.string().required('Required')
+              priceLeague: Yup.string().required('Required'),
             })}
           >
             {/* todo: refactor and use new formik */}
@@ -121,20 +121,20 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
               handleBlur,
               dirty,
               isValid,
-              setFieldValue
+              setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 <SimpleField
-                  name="profileName"
-                  type="text"
+                  name='profileName'
+                  type='text'
                   label={t('label.profile_name')}
                   placeholder={t('label.profile_name_placeholder')}
                   endIcon={
                     <IconButton
-                      aria-label="generate"
+                      aria-label='generate'
                       title={t('label.generate_name_icon_title')}
-                      edge="start"
-                      size="small"
+                      edge='start'
+                      size='small'
                       onClick={() => {
                         const name = generateProfileName();
                         setFieldValue('profileName', name);
@@ -173,18 +173,18 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                 />
                 <Box mt={2}>
                   <SelectField
-                    name="character"
+                    name='character'
                     label={t('label.select_character')}
-                    options={characters?.map(c => {
+                    options={characters?.map((c) => {
                       return {
                         id: c.name,
                         value: c.name,
-                        label: c.name
+                        label: c.name,
                       } as ISelectOption;
                     })}
                   />
                   <CheckboxField
-                    name="includeEquipment"
+                    name='includeEquipment'
                     label={t('label.include_equipment')}
                     disabled={
                       !values.character ||
@@ -192,7 +192,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     }
                   />
                   <CheckboxField
-                    name="includeInventory"
+                    name='includeInventory'
                     label={t('label.include_inventory')}
                     disabled={
                       !values.character ||
@@ -205,9 +205,9 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                     {t('action.cancel')}
                   </Button>
                   <RequestButton
-                    variant="contained"
-                    type="submit"
-                    color="primary"
+                    variant='contained'
+                    type='submit'
+                    color='primary'
                     loading={loading}
                     disabled={
                       loading || noCharacters.length > 0 || (dirty && !isValid)

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import GroupDialog from './GroupDialog';
 import { inject, observer } from 'mobx-react';
+import React from 'react';
+import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { generateGroupName } from '../../utils/group.utils';
-import { SignalrStore } from '../../store/signalrStore';
+import GroupDialog from './GroupDialog';
 
 interface Props {
   uiStateStore?: UiStateStore;
@@ -17,11 +17,11 @@ export interface IGroupForm {
 
 const CreateGroupDialogContainer: React.FC<Props> = ({
   uiStateStore,
-  signalrStore
+  signalrStore,
 }: Props) => {
   const initialValues: IGroupForm = {
     name: uiStateStore!.groupDialogType === 'create' ? generateGroupName() : '',
-    password: ''
+    password: '',
   };
 
   const onSubmit = (group: IGroupForm) => {

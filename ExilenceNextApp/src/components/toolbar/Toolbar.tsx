@@ -1,24 +1,24 @@
 import {
   AppBar,
   Badge,
+  Box,
   FormControl,
   Grid,
   MenuItem,
   Select,
   Tooltip,
-  Box
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AddIcon from '@material-ui/icons/Add';
+import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import GroupIcon from '@material-ui/icons/Group';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -26,21 +26,21 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Notification } from '../../store/domains/notification';
 import PatreonLogo from '../../assets/img/patreon-white.png';
+import { Notification } from '../../store/domains/notification';
 import {
   getDropdownSelection,
-  mapDomainToDropdown
+  mapDomainToDropdown,
 } from '../../utils/dropdown.utils';
+import { openLink } from '../../utils/window.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
+import StatusMessageContainer from '../status-message/StatusMessageContainer';
 import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
-import StatusMessageContainer from '../status-message/StatusMessageContainer';
-import { openLink } from '../../utils/window.utils';
 
 export const innerToolbarHeight = 50;
 export const patreonLogoHeight = 35;
@@ -80,7 +80,6 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   const {
     signalrOnline,
     sidenavOpened,
-    autoSnapshotting,
     groupOverviewOpened,
     activeProfile,
     profiles,
@@ -102,7 +101,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
     handleAccountMenuOpen,
     handleClearSnapshots,
     handleRemoveProfile,
-    handleOverlay
+    handleOverlay,
   } = props;
 
   const classes = useStyles();
@@ -111,22 +110,22 @@ const Toolbar: React.FC<Props> = (props: Props) => {
   return (
     <>
       <AppBar
-        position="fixed"
+        position='fixed'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: sidenavOpened || groupOverviewOpened,
           [classes.fromLeft]: sidenavOpened,
-          [classes.fromRight]: groupOverviewOpened
+          [classes.fromRight]: groupOverviewOpened,
         })}
       >
         <ToolbarStepperContainer />
         <MuiToolbar className={classes.toolbar}>
-          <Tooltip title={t('label.toggle_menu_title')} placement="bottom">
+          <Tooltip title={t('label.toggle_menu_title')} placement='bottom'>
             <span>
               <IconButton
-                color="inherit"
-                aria-label="open drawer"
+                color='inherit'
+                aria-label='open drawer'
                 onClick={() => toggleSidenav()}
-                edge="start"
+                edge='start'
                 className={clsx(sidenavOpened && classes.hide)}
               >
                 <MenuIcon />
@@ -134,15 +133,15 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </span>
           </Tooltip>
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="1"
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            height='1'
             mr={1.5}
             className={clsx({ [classes.marginLeft]: sidenavOpened })}
           >
-            <a href="https://patreon.com/exilence" onClick={e => openLink(e)}>
-              <Box display="flex" alignItems="center" height={1}>
+            <a href='https://patreon.com/exilence' onClick={(e) => openLink(e)}>
+              <Box display='flex' alignItems='center' height={1}>
                 <img className={classes.patreonLogo} src={PatreonLogo} />
               </Box>
             </a>
@@ -159,9 +158,9 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             isSnapshotting) && (
             <Box
               ml={1}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
             >
               <CircularProgress
                 className={classes.leftSpinner}
@@ -171,23 +170,23 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             </Box>
           )}
 
-          <Box ml={2} display="flex" whiteSpace="nowrap">
+          <Box ml={2} display='flex' whiteSpace='nowrap'>
             <StatusMessageContainer />
           </Box>
           <Grid
             container
-            alignItems="center"
-            justify="flex-end"
+            alignItems='center'
+            justify='flex-end'
             className={classes.toolbarGrid}
           >
             <Grid
               item
               className={classes.profileArea}
-              data-tour-elem="profileArea"
+              data-tour-elem='profileArea'
             >
               <Tooltip
                 title={t('label.edit_profile_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
@@ -198,11 +197,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       !profilesLoaded ||
                       !signalrOnline
                     }
-                    aria-label="edit"
+                    aria-label='edit'
                     className={classes.iconButton}
                     onClick={() => handleProfileOpen(true)}
                   >
-                    <SettingsIcon fontSize="small" />
+                    <SettingsIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -219,10 +218,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                     mapDomainToDropdown(profiles),
                     activeProfile ? activeProfile.uuid : ''
                   )}
-                  onChange={e => handleProfileChange(e)}
+                  onChange={(e) => handleProfileChange(e)}
                   inputProps={{
                     name: 'profile',
-                    id: 'profile-dd'
+                    id: 'profile-dd',
                   }}
                 >
                   {profiles.map((profile: Profile) => {
@@ -237,7 +236,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
 
               <Tooltip
                 title={t('label.create_profile_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
@@ -248,16 +247,16 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       !signalrOnline
                     }
                     onClick={() => handleProfileOpen()}
-                    aria-label="create"
+                    aria-label='create'
                     className={classes.iconButton}
                   >
-                    <AddIcon fontSize="small" />
+                    <AddIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
               <Tooltip
                 title={t('label.remove_profile_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
@@ -269,10 +268,10 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       !signalrOnline
                     }
                     onClick={() => handleRemoveProfile()}
-                    aria-label="remove profile"
+                    aria-label='remove profile'
                     className={classes.iconButton}
                   >
-                    <DeleteIcon fontSize="small" />
+                    <DeleteIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -281,11 +280,11 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             <Grid
               item
               className={classes.snapshotArea}
-              data-tour-elem="snapshotArea"
+              data-tour-elem='snapshotArea'
             >
               <Tooltip
                 title={t('label.fetch_snapshot_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
@@ -295,16 +294,16 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       !signalrOnline
                     }
                     onClick={() => handleSnapshot()}
-                    aria-label="snapshot"
+                    aria-label='snapshot'
                     className={classes.iconButton}
                   >
-                    <UpdateIcon fontSize="small" />
+                    <UpdateIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
               <Tooltip
                 title={t('label.remove_snapshot_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
@@ -315,44 +314,45 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       activeProfile.snapshots.length === 0
                     }
                     onClick={() => handleClearSnapshots()}
-                    aria-label="clear snapshots"
+                    aria-label='clear snapshots'
                     className={classes.iconButton}
                   >
-                    <DeleteSweepIcon fontSize="small" />
+                    <DeleteSweepIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
             </Grid>
             <Grid item className={classes.divider}></Grid>
-            <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
-              <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
+            <Grid
+              item
+              className={classes.overlayArea}
+              data-tour-elem='overlayArea'
+            >
+              <Tooltip title={t('label.overlay_icon_title')} placement='bottom'>
                 <span>
                   <IconButton
                     onClick={() => handleOverlay()}
-                    aria-label="overlay"
-                    aria-haspopup="true"
+                    aria-label='overlay'
+                    aria-haspopup='true'
                     className={clsx(classes.iconButton)}
                   >
-                    <AddToPhotosIcon fontSize="small" />
+                    <AddToPhotosIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
             </Grid>
             <Grid item className={classes.divider}></Grid>
-            <Grid item className={classes.groupArea} data-tour-elem="groupArea">
-              <Tooltip title={t('label.group_icon_title')} placement="bottom">
+            <Grid item className={classes.groupArea} data-tour-elem='groupArea'>
+              <Tooltip title={t('label.group_icon_title')} placement='bottom'>
                 <span>
                   <IconButton
-                    disabled={
-                      isSnapshotting ||
-                      !signalrOnline
-                    }
+                    disabled={isSnapshotting || !signalrOnline}
                     onClick={() => toggleGroupOverview()}
-                    aria-label="group"
-                    aria-haspopup="true"
+                    aria-label='group'
+                    aria-haspopup='true'
                     className={clsx(classes.iconButton)}
                   >
-                    <GroupIcon fontSize="small" />
+                    <GroupIcon fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -361,14 +361,14 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             <Grid item className={classes.miscArea}>
               <Tooltip
                 title={t('label.notification_icon_title')}
-                placement="bottom"
+                placement='bottom'
               >
                 <span>
                   <IconButton
-                    data-tour-elem="notificationList"
-                    onClick={e => handleNotificationsOpen(e)}
-                    aria-label="show new notifications"
-                    color="inherit"
+                    data-tour-elem='notificationList'
+                    onClick={(e) => handleNotificationsOpen(e)}
+                    aria-label='show new notifications'
+                    color='inherit'
                     className={clsx(classes.iconButton)}
                   >
                     <Badge
@@ -380,20 +380,20 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                       }
                       classes={{ badge: classes.badge }}
                     >
-                      <NotificationsIcon fontSize="small" />
+                      <NotificationsIcon fontSize='small' />
                     </Badge>
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title={t('label.account_icon_title')} placement="bottom">
+              <Tooltip title={t('label.account_icon_title')} placement='bottom'>
                 <span>
                   <IconButton
-                    onClick={e => handleAccountMenuOpen(e)}
-                    aria-label="account"
-                    aria-haspopup="true"
+                    onClick={(e) => handleAccountMenuOpen(e)}
+                    aria-label='account'
+                    aria-haspopup='true'
                     className={clsx(classes.iconButton)}
                   >
-                    <AccountCircle fontSize="small" />
+                    <AccountCircle fontSize='small' />
                   </IconButton>
                 </span>
               </Tooltip>
