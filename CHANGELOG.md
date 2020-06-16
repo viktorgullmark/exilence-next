@@ -9,8 +9,9 @@ All notable changes to this project will be documented in this file.
     - Previously we didnt update these profiles, so they would fail when snapshotting
 - Added missing translations
 ##### Changed
-- Minor improvements to the layout of the settings page
+- Reduced the minimum width of the main window to 800, down from 1000px
 - Changed the session id link to redirect to our Discord instead of the old wiki page
+- Minor improvements to the layout of the settings page
 ##### Fixed
 - Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
 ##### Removed
