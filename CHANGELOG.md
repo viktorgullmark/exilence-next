@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Minor improvements to the layout of the settings page
 ##### Fixed
 - Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
+##### Removed
+- Removed some leftover console logs
 
 ## [0.3.6] - 2020-04-11
 ##### Added
