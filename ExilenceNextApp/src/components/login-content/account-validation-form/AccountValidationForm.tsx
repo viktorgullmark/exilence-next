@@ -96,7 +96,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
                         edge="start"
                         size="small"
                         onClick={e => openLink(e)}
-                        href="https://code.google.com/archive/p/procurement/wikis/LoginWithSessionID.wiki"
+                        href="https://discord.gg/yxuBrPY"
                       >
                         <HelpIcon />
                       </IconButton>
