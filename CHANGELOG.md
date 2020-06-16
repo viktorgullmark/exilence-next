@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.3.7] - NOT RELEASED
 ##### Added
 - Added missing translations
+- Added a fallback to 'Standard' league for profiles where the pricing league was outdated
+    - Previously we didnt update these profiles, so they would fail when snapshotting
 ##### Fixed
 - Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
 

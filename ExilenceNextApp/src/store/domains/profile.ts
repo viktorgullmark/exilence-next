@@ -486,17 +486,17 @@ export class Profile {
   @action
   priceItemsForStashTabs(stashTabsWithItems: IStashTabSnapshot[]) {
     rootStore.uiStateStore.setStatusMessage('pricing_items');
-    const activePriceLeague =
+    let activePriceLeague =
       rootStore.accountStore.getSelectedAccount.activePriceLeague;
 
     if (!activePriceLeague) {
-      return this.priceItemsForStashTabsFail(
-        new Error('error:no_active_price_league')
-      );
+      this.setActivePriceLeague('Standard');
+      activePriceLeague =
+        rootStore.accountStore.getSelectedAccount.activePriceLeague;
     }
 
     const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
-      (l) => l.leagueId === activePriceLeague.id
+      (l) => l.leagueId === activePriceLeague!.id
     );
 
     if (!activePriceDetails) {
