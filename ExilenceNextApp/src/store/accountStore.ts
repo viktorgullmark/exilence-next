@@ -273,7 +273,7 @@ export class AccountStore {
                 leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
               this.getSelectedAccount.updateAccountLeagues(characters);
-              this.getSelectedAccount.updateLeaguesForProfiles(leagues.map(l => l.id));
+              this.getSelectedAccount.updateLeaguesForProfiles(leagues.concat(getCharacterLeagues(characters)).map(l => l.id));
               this.rootStore.priceStore.getPricesForLeagues();
 
               return forkJoin(
