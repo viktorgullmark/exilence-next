@@ -102,6 +102,7 @@
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",
     "price_treshold": "Select price treshold",
+    "total_price_treshold": "Select total price treshold",
     "requires_snapshot_info": "* = requires a new snapshot to take effect",
     "fetch_snapshot_spinner_title": "Fetching snapshots",
     "initiating_session_spinner_title": "Initiating session",
@@ -118,12 +119,14 @@
     "none": "None",
     "low_confidence_pricing": "Low confidence",
     "price_treshold": "Price treshold",
+    "total_price_treshold": "Total price treshold",
     "auto_snapshotting": "Auto snapshotting",
     "auto_snapshot_interval": "Snapshotting interval"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
     "price_treshold": "Sets the cutoff for including items",
+    "total_price_treshold": "Sets the cutoff for including stacks of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
     "ui_scale": "Sets the UI scale"
