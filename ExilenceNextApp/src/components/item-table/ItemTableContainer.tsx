@@ -150,10 +150,12 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
       <ItemTable
         items={itemArray.map((i) => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
+        pageSize={uiStateStore!.itemTablePageSize}
         changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
         order={uiStateStore!.itemTableOrder}
         orderBy={uiStateStore!.itemTableOrderBy}
         setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
+        setPageSize={(size: number) => uiStateStore!.setItemTablePageSize(size)}
         setOrderBy={(col: keyof ITableItem) =>
           uiStateStore!.setItemTableOrderBy(col)
         }

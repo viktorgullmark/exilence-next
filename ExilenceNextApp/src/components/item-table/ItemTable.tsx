@@ -23,6 +23,8 @@ export const tableFooterHeight = 52;
 interface ItemTableProps {
   items: ITableItem[];
   pageIndex: number;
+  pageSize: number;
+  setPageSize: (pageSize: number) => void;
   changePage: (i: number) => void;
   order: Order;
   orderBy: keyof ITableItem;
@@ -34,6 +36,8 @@ interface ItemTableProps {
 const ItemTable: React.FC<ItemTableProps> = ({
   items,
   pageIndex,
+  pageSize,
+  setPageSize,
   changePage,
   order,
   orderBy,
@@ -111,8 +115,6 @@ const ItemTable: React.FC<ItemTableProps> = ({
     img.src = item.icon;
   });
 
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-
   const handleChangePage = (event: unknown, newPage: number) => {
     changePage(newPage);
   };
@@ -166,7 +168,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
+    setPageSize(+event.target.value);
     handleChangePage(event, 0);
   };
   return (
@@ -186,8 +188,8 @@ const ItemTable: React.FC<ItemTableProps> = ({
             <TableBody>
               {stableSort<ITableItem>(rows, getSorting(order, orderBy))
                 .slice(
-                  pageIndex * rowsPerPage,
-                  pageIndex * rowsPerPage + rowsPerPage
+                  pageIndex * pageSize,
+                  pageIndex * pageSize + pageSize
                 )
                 .map(row => {
                   return (
@@ -218,7 +220,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
           count={rows.length}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={pageSize}
           page={pageIndex}
           backIconButtonProps={{
             'aria-label': 'previous page'

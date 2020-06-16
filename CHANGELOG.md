@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Minor improvements to the layout of the settings page
 ##### Fixed
 - Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
+- Fixed a bug where the page size for the item table would not persist through restarts
 ##### Removed
 - Removed some leftover console logs
 

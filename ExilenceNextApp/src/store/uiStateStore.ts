@@ -57,6 +57,7 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
   @persist @observable itemTableOrderBy: keyof ITableItem = 'total';
+  @persist @observable itemTablePageSize: number = 25;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
 
@@ -138,6 +139,11 @@ export class UiStateStore {
   @action
   setItemTableOrderBy(orderBy: keyof ITableItem) {
     this.itemTableOrderBy = orderBy;
+  }
+
+  @action
+  setItemTablePageSize(pageSize: number) {
+    this.itemTablePageSize = pageSize;
   }
 
   @action
