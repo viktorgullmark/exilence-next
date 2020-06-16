@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.7] - NOT RELEASED
+## [0.3.7] - 2020-06-16
 ##### Added
 - Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
     - Maximum value for the setting is capped at 5000 c
