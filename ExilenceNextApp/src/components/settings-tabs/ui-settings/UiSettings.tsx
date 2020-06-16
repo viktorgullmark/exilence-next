@@ -14,8 +14,8 @@ const UiSettings: React.FC<Props> = ({
 }: Props) => {
 
   return (
-    <Grid container spacing={2}>   
-      <Grid item xs={12} sm={3}>
+    <Grid container spacing={5}>   
+      <Grid item>
         <SliderSetting value={uiScale} handleChange={setUiScale} waitForMouseUp translationKey={'ui_scale'} />
       </Grid>
     </Grid>

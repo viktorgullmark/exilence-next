@@ -3,9 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.7] - NOT RELEASED
 ##### Added
-- Added missing translations
+- Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
+    - Maximum value for the setting is capped at 5000 c
 - Added a fallback to 'Standard' league for profiles where the pricing league was outdated
     - Previously we didnt update these profiles, so they would fail when snapshotting
+- Added missing translations
+##### Changed
+- Minor improvements to the layout of the settings page
 ##### Fixed
 - Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
 

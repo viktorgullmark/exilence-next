@@ -15,7 +15,11 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { mergeItemStacks, mapItemsToPricedItems } from '../../utils/item.utils';
+import {
+  mergeItemStacks,
+  mapItemsToPricedItems,
+  findItem,
+} from '../../utils/item.utils';
 import { excludeLegacyMaps } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
@@ -529,22 +533,23 @@ export class Profile {
             );
           }
         );
-
-        stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.filter(
-          (pi) =>
-            pi.calculated > 0 &&
-            pi.total >= rootStore.settingStore.priceTreshold
-        );
-
-        stashTabWithItems.value = stashTabWithItems.pricedItems
-          .map((ts) => ts.total)
-          .reduce((a, b) => a + b, 0);
-
         return stashTabWithItems;
       }
     );
 
-    return this.priceItemsForStashTabsSuccess(pricedStashTabs);
+    const mergedItems = mergeItemStacks(
+      pricedStashTabs.flatMap((s) => s.pricedItems)
+    ).filter((pi) => pi.total >= rootStore.settingStore.totalPriceTreshold);
+
+    const filteredTabs = pricedStashTabs.map((pst) => {
+      pst.pricedItems = pst.pricedItems.filter((pi) => findItem(mergedItems, pi));
+      pst.value = pst.pricedItems
+        .map((ts) => ts.total)
+        .reduce((a, b) => a + b, 0);
+      return pst;
+    });
+
+    return this.priceItemsForStashTabsSuccess(filteredTabs);
   }
 
   @action
