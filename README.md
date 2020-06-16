@@ -53,7 +53,6 @@ If you feel like chiming in with something, here's our Patreon: https://www.patr
 ## Acknowledgements
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
-- https://poe.watch for providing in-depth pricing data for items
 
 ## License
 
