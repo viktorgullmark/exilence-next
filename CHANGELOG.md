@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
     - Maximum value for the setting is capped at 5000 c
 - Added a fallback to 'Standard' league for profiles where the pricing league was outdated
     - Previously we didnt update these profiles, so they would fail when snapshotting
+- Added the ability to go to the first page in the item table
+- Added the ability to go to the last page in the item table
 - Added missing translations
 ##### Changed
 - Reduced the minimum width of the main window to 800, down from 1000px

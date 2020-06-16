@@ -14,6 +14,7 @@ import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { useStyles } from './ItemTable.styles';
 import { Group } from '../../store/domains/group';
+import ItemTablePaginationActions from './item-table-pagination-actions/ItemTablePaginationActions';
 
 export type Order = 'asc' | 'desc';
 
@@ -227,6 +228,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
           }}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          ActionsComponent={ItemTablePaginationActions}
         />
       </Paper>
     </>
