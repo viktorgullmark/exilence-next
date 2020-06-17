@@ -10,6 +10,7 @@ import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
+import SupportButton from '../support-button/SupportButton';
 
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
@@ -73,6 +74,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
           </Paper>
         </Grid>
       </Grid>
+      <SupportButton noMargin />
     </>
   );
 };

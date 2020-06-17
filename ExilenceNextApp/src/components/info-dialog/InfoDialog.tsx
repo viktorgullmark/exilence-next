@@ -1,39 +1,30 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  Typography
+  DialogTitle
 } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import useStyles from './ConsentDialog.styles';
+import useStyles from './InfoDialog.styles';
 
 interface Props {
   show: boolean;
+  title: string;
+  content: JSX.Element;
   onClose: () => void;
 }
 
-const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
+const InfoDialog: React.FC<Props> = ({ show, title, content, onClose }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   return (
     <Dialog open={show} onClose={onClose}>
-      <DialogTitle>{t('title.ga_consent_dialog_title')}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <Box width={1} mb={1}>
-          <Typography variant="body2">
-            {t('body.ga_consent_main_text')}
-          </Typography>
-        </Box>
-        <Box width={1} mb={2}>
-          <Typography variant="body2">
-            {t('body.ga_consent_sub_text')}
-          </Typography>
-        </Box>
+        {content}
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button onClick={onClose} color="primary" variant="contained">
@@ -44,4 +35,4 @@ const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
   );
 };
 
-export default ConsentDialog;
+export default InfoDialog;

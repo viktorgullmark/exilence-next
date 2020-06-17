@@ -38,7 +38,8 @@
     "snapshot_settings": "Snapshot settings",
     "snapshot_history_chart": "Snapshot history",
     "ui_settings": "Interface",
-    "general": "General"
+    "general": "General",
+    "session_id_dialog": "How to find your session Id"
   },
   "label": {
     "stash_tabs": "Stash tabs",
@@ -113,7 +114,10 @@
     "auto_snapshotting": "Activate auto snapshotting",
     "auto_snapshot_interval": "Set auto snapshot interval",
     "ui_scale": "Interface scale (%)",
-    "filter_total": "Filter Total:"
+    "filter_total": "Filter Total:",
+    "google_chrome": "Google Chrome",
+    "mozilla_firefox": "Mozilla Firefox",
+    "microsoft_edge": "Microsoft Edge"
   },
   "value": {
     "none": "None",
@@ -140,7 +144,9 @@
     "leave_group": "Are you sure you want to leave your current group?",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
     "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
-    "ga_consent_short_text": "By proceeding below, you agree to "
+    "ga_consent_short_text": "By proceeding below, you agree to ",
+    "session_id_dialog_prefix": "The session Id is located in a cookie from the",
+    "session_id_dialog_suffix": "website under the name POESESSID. Use the appropriate link below to find how you inspect cookies using your browser."
   },
   "unit":{
     "chaos": "c",

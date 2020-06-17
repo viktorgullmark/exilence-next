@@ -3,7 +3,8 @@ import {
   IconButton,
   Link,
   TextField,
-  Typography
+  Typography,
+  Box,
 } from '@material-ui/core';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
@@ -18,6 +19,7 @@ import { openLink } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
 import RequestButton from '../../request-button/RequestButton';
 import useStyles from './AccountValidationForm.styles';
+import InfoDialog from '../../info-dialog/InfoDialog';
 
 interface AccountFormValues {
   sessionId: string;
@@ -36,26 +38,27 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
   styles,
   isSubmitting,
   isInitiating,
-  account
+  account,
 }: AccountValidationFormProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
   const [showConsent, setShowConsent] = useState(false);
+  const [showSessionIdInfo, setShowSessionIdInfo] = useState(false);
 
   return (
     <>
       <Formik
         initialValues={{
-          sessionId: account.sessionId
+          sessionId: account.sessionId,
         }}
         onSubmit={(values: AccountFormValues) => {
           handleValidate({
-            sessionId: values.sessionId
+            sessionId: values.sessionId,
           });
         }}
         validationSchema={Yup.object().shape({
-          sessionId: Yup.string().required('Required')
+          sessionId: Yup.string().required('Required'),
         })}
       >
         {/* todo: refactor and use new formik */}
@@ -68,16 +71,16 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
             handleChange,
             handleBlur,
             handleSubmit,
-            isValid
+            isValid,
           } = formProps;
           return (
             <form onSubmit={handleSubmit}>
               <div>
                 <TextField
                   label={t('label.session_id')}
-                  name="sessionId"
-                  type="password"
-                  variant="outlined"
+                  name='sessionId'
+                  type='password'
+                  variant='outlined'
                   value={values.sessionId}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -85,34 +88,33 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
                     errors.sessionId && touched.sessionId && errors.sessionId
                   }
                   error={touched.sessionId && errors.sessionId !== undefined}
-                  margin="normal"
+                  margin='normal'
                   fullWidth
                   InputProps={{
                     endAdornment: (
                       <IconButton
-                        aria-label="help"
+                        aria-label='help'
                         title={t('label.session_id_icon_title')}
                         className={classes.helperIcon}
-                        edge="start"
-                        size="small"
-                        onClick={e => openLink(e)}
-                        href="https://discord.gg/yxuBrPY"
+                        edge='start'
+                        size='small'
+                        onClick={() => setShowSessionIdInfo(true)}
                       >
                         <HelpIcon />
                       </IconButton>
-                    )
+                    ),
                   }}
                 ></TextField>
               </div>
               <div className={styles.loginFooter}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography variant="subtitle2">
+                    <Typography variant='subtitle2'>
                       {t('body.ga_consent_short_text')}
                       <Link
-                        component="button"
-                        variant="subtitle2"
-                        type="button"
+                        component='button'
+                        variant='subtitle2'
+                        type='button'
                         className={classes.inlineLink}
                         onClick={() => setShowConsent(true)}
                       >
@@ -122,10 +124,10 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <RequestButton
-                      variant="contained"
-                      color="primary"
+                      variant='contained'
+                      color='primary'
                       fullWidth
-                      type="submit"
+                      type='submit'
                       loading={isSubmitting || isInitiating}
                       disabled={
                         !touched ||
@@ -145,6 +147,65 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
         }}
       </Formik>
       <ConsentDialog show={showConsent} onClose={() => setShowConsent(false)} />
+      <InfoDialog
+        show={showSessionIdInfo}
+        onClose={() => setShowSessionIdInfo(false)}
+        title={t('title.session_id_dialog')}
+        content={
+          <>
+            <Box width={1} mb={2}>
+              <Typography variant='body2'>
+                {t('body.session_id_dialog_prefix')}&nbsp;
+                <a
+                  className={classes.inlineLink}
+                  href='https://www.pathofexile.com'
+                  onClick={(e) => openLink(e)}
+                >
+                  https://www.pathofexile.com
+                </a>
+                &nbsp;
+                {t('body.session_id_dialog_suffix')}
+              </Typography>
+            </Box>
+            <Box width={1} mb={2} className={classes.linkBlock}>
+              <Typography variant='subtitle2'>
+                {t('label.google_chrome')}
+              </Typography>
+              <a
+                className={classes.inlineLink}
+                href='https://developers.google.com/web/tools/chrome-devtools/storage/cookies'
+                onClick={(e) => openLink(e)}
+              >
+                https://developers.google.com/web/tools/chrome-devtools/storage/cookies
+              </a>
+            </Box>
+            <Box width={1} mb={2} className={classes.linkBlock}>
+              <Typography variant='subtitle2'>
+                {t('label.mozilla_firefox')}
+              </Typography>
+              <a
+                className={classes.inlineLink}
+                href='https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector'
+                onClick={(e) => openLink(e)}
+              >
+                https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector
+              </a>
+            </Box>
+            <Box width={1} mb={2} className={classes.linkBlock}>
+              <Typography variant='subtitle2'>
+                {t('label.microsoft_edge')}
+              </Typography>
+              <a
+                className={classes.inlineLink}
+                href='https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/storage/cookies'
+                onClick={(e) => openLink(e)}
+              >
+                https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/storage/cookies
+              </a>
+            </Box>
+          </>
+        }
+      />
     </>
   );
 };

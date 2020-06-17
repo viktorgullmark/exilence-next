@@ -23,6 +23,9 @@ export const useStyles = makeStyles(theme =>
       '&:hover': {
         background: theme.palette.primary.light
       }
+    },
+    noMargin: {
+      right: -16
     }
   })
 );

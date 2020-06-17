@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.8] - 2020-06-17
+##### Added
+- Added the support button to the login page
+- Added an in app modal which explains how to find your session Id, instead of redirecting to the Discord
+
 ## [0.3.7] - 2020-06-16
 ##### Added
 - Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
