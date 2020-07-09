@@ -517,7 +517,7 @@ export class Profile {
 
     prices = prices.filter(
       (p) =>
-        p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
+        p.calculated
     );
 
     prices = excludeLegacyMaps(prices);
@@ -539,7 +539,7 @@ export class Profile {
 
     const mergedItems = mergeItemStacks(
       pricedStashTabs.flatMap((s) => s.pricedItems)
-    ).filter((pi) => pi.total >= rootStore.settingStore.totalPriceTreshold);
+    ).filter((pi) => pi.total >= rootStore.settingStore.totalPriceTreshold || pi.calculated >= rootStore.settingStore.priceTreshold);
 
     const filteredTabs = pricedStashTabs.map((pst) => {
       pst.pricedItems = pst.pricedItems.filter((pi) => findItem(mergedItems, pi));
