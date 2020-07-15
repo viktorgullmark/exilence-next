@@ -22,7 +22,6 @@ namespace API.Services
             _mapper = mapper;
         }
 
-        #region Snapshot
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
@@ -73,11 +72,7 @@ namespace API.Services
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-
-
             await _mongoRepository.RemoveAllSnapshots(profileClientId);
         }
-        #endregion
-
     }
 }
