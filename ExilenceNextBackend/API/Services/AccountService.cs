@@ -14,10 +14,10 @@ namespace API.Services
     public class AccountService : IAccountService
     {
         IAccountRepository _accountRepository;
-        IMongoRepository _mongoRepository;
+        ISnapshotRepository _mongoRepository;
         readonly IMapper _mapper;
 
-        public AccountService(IAccountRepository accountRepository, IMongoRepository mongoRepository, IMapper mapper)
+        public AccountService(IAccountRepository accountRepository, ISnapshotRepository mongoRepository, IMapper mapper)
         {
             _mongoRepository = mongoRepository;
             _accountRepository = accountRepository;

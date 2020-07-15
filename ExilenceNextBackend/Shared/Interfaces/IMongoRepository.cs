@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Interfaces
 {
-    public interface IMongoRepository
+    public interface ISnapshotRepository
     {
         Task<bool> SnapshotExists(string clientId);
         IMongoQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate);

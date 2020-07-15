@@ -14,7 +14,7 @@ namespace Shared.Repositories
 {
 
 
-    public class MongoRepository : IMongoRepository
+    public class SnapshotRepository : ISnapshotRepository
     {
         private readonly IMongoClient _client;
         private readonly IMongoDatabase _database;
@@ -23,7 +23,7 @@ namespace Shared.Repositories
         private readonly IMongoCollection<Snapshot> _snapshots;
         private readonly IMongoCollection<PricedItem> _pricedItems;
 
-        public MongoRepository(IConfiguration configuration)
+        public SnapshotRepository(IConfiguration configuration)
         {
             _client = new MongoClient(configuration.GetSection("ConnectionStrings")["Mongo"]);
             _database = _client.GetDatabase(configuration.GetSection("Mongo")["Database"]);

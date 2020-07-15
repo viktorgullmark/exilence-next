@@ -13,10 +13,10 @@ namespace API.Services
 {
     public class SnapshotService : ISnapshotService
     {
-        IMongoRepository _mongoRepository;
+        ISnapshotRepository _mongoRepository;
         readonly IMapper _mapper;
 
-        public SnapshotService(IMongoRepository mongoRepository, IMapper mapper)
+        public SnapshotService(ISnapshotRepository mongoRepository, IMapper mapper)
         {
             _mongoRepository = mongoRepository;
             _mapper = mapper;
