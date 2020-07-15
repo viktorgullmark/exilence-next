@@ -14,12 +14,12 @@ namespace API.Services
     public class AccountService : IAccountService
     {
         IAccountRepository _accountRepository;
-        ISnapshotRepository _mongoRepository;
+        ISnapshotRepository _snapshotRepository;
         readonly IMapper _mapper;
 
-        public AccountService(IAccountRepository accountRepository, ISnapshotRepository mongoRepository, IMapper mapper)
+        public AccountService(IAccountRepository accountRepository, ISnapshotRepository snapshotRepository, IMapper mapper)
         {
-            _mongoRepository = mongoRepository;
+            _snapshotRepository = snapshotRepository;
             _accountRepository = accountRepository;
             _mapper = mapper;
         }
@@ -87,7 +87,7 @@ namespace API.Services
         public async Task<SnapshotProfileModel> GetActiveProfileWithSnapshots(string accountId)
         {
             var profile = await _accountRepository.GetProfiles(profile => profile.Account.ClientId == accountId && profile.Active).FirstOrDefaultAsync();
-            var snapshots = await _mongoRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
+            var snapshots = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
             
             var profileModel = _mapper.Map<SnapshotProfileModel>(profile);
             profileModel.Snapshots = _mapper.Map<List<SnapshotModel>>(snapshots);
@@ -97,7 +97,7 @@ namespace API.Services
         public async Task<SnapshotProfileModel> GetProfileWithSnapshots(string profileId)
         {
             var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileId).FirstOrDefaultAsync();
-            var snapshots = await _mongoRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
+            var snapshots = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profile.ClientId).ToListAsync();
 
             var profileModel = _mapper.Map<SnapshotProfileModel>(profile);
             profileModel.Snapshots = _mapper.Map<List<SnapshotModel>>(snapshots);
