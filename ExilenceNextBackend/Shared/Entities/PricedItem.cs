@@ -43,5 +43,6 @@ namespace Shared.Entities
         public int Count { get; set; }
 
         public  string StashtabClientId { get; set; }
+        public string SnapshotProfileClientId { get; set; } //For easy deletion
     }
 }

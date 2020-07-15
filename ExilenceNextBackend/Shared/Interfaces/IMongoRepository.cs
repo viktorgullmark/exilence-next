@@ -1,4 +1,5 @@
-﻿using Shared.Entities;
+﻿using MongoDB.Driver.Linq;
+using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace Shared.Interfaces
     public interface IMongoRepository
     {
         Task<bool> SnapshotExists(string clientId);
-        IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate);
-        IQueryable<StashTab> GetStashtabs(Expression<Func<StashTab, bool>> predicate);
-        IQueryable<PricedItem> GetPricedItems(Expression<Func<PricedItem, bool>> predicate);
+        IMongoQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate);
+        IMongoQueryable<StashTab> GetStashtabs(Expression<Func<StashTab, bool>> predicate);
+        IMongoQueryable<PricedItem> GetPricedItems(Expression<Func<PricedItem, bool>> predicate);
         Task AddSnapshots(List<Snapshot> snapshots);
         Task AddStashtabs(List<StashTab> stashTabs);
         Task AddPricedItems(List<PricedItem> pricedItems);

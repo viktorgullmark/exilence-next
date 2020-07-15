@@ -14,7 +14,7 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
-            var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
+            var snapshotModel = await _snapshotService.GetSnapshotWithItems(snapshotId);
             Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
@@ -40,6 +40,8 @@ namespace API.Hubs
             }
 
             Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+                       
+            
             return snapshotModel;
         }
 
@@ -59,13 +61,7 @@ namespace API.Hubs
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-
-            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
-            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
-                Log($"Remove all snapshots failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
-            });
-
-            await retryPolicy.ExecuteAsync(() => _snapshotService.RemoveAllSnapshots(profileClientId));
+            await _snapshotService.RemoveAllSnapshots(profileClientId);
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)

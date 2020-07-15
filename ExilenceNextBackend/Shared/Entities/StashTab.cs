@@ -20,5 +20,6 @@ namespace Shared.Entities
         public List<PricedItem> PricedItems { get; set; }
 
         public string SnapshotClientId { get; set; }
+        public string SnapshotProfileClientId { get; set; }  //For easy deletion
     }
 }

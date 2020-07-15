@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Shared.Entities;
 using Shared.Interfaces;
 using System;
@@ -26,9 +27,9 @@ namespace Shared.Repositories
         {
             _client = new MongoClient(configuration.GetSection("ConnectionStrings")["Mongo"]);
             _database = _client.GetDatabase(configuration.GetSection("Mongo")["Database"]);
-            _snapshots = _database.GetCollection<Snapshot>("Snapshots");
-            _stashtabs = _database.GetCollection<StashTab>("Stashtabs");
-            _pricedItems = _database.GetCollection<PricedItem>("Stashtabs");
+            _snapshots = _database.GetCollection<Snapshot>("SnapShots");
+            _stashtabs = _database.GetCollection<StashTab>("StashTabs");
+            _pricedItems = _database.GetCollection<PricedItem>("PricedItems");
         }
 
         public async Task<bool> SnapshotExists(string clientId)
@@ -37,18 +38,18 @@ namespace Shared.Repositories
             return count > 0;
         }
 
-        public IQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate)
+        public IMongoQueryable<Snapshot> GetSnapshots(Expression<Func<Snapshot, bool>> predicate)
         {
-            return _snapshots.AsQueryable();
+            return _snapshots.AsQueryable().Where(predicate);
         }
 
-        public IQueryable<StashTab> GetStashtabs(Expression<Func<StashTab, bool>> predicate)
+        public IMongoQueryable<StashTab> GetStashtabs(Expression<Func<StashTab, bool>> predicate)
         {
-            return _stashtabs.AsQueryable();
+            return _stashtabs.AsQueryable().Where(predicate);
         }
-        public IQueryable<PricedItem> GetPricedItems(Expression<Func<PricedItem, bool>> predicate)
+        public IMongoQueryable<PricedItem> GetPricedItems(Expression<Func<PricedItem, bool>> predicate)
         {
-            return _pricedItems.AsQueryable();
+            return _pricedItems.AsQueryable().Where(predicate);
         }
 
         public async Task RemoveSnapshot(Snapshot snapshot)
@@ -81,6 +82,8 @@ namespace Shared.Repositories
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
+            await _pricedItems.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
+            await _stashtabs.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
             await _snapshots.DeleteManyAsync(s => s.ProfileClientId == profileClientId);
         }
 

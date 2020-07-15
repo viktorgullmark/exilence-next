@@ -14,7 +14,7 @@ namespace API.Profiles
         {
             CreateMap<StashtabModel, StashTab>();
             CreateMap<StashTab, StashtabModel>()
-                .ForMember(o => o.PricedItems, opt => opt.Ignore());
+                .ForMember(o => o.Id, opt => opt.Ignore());
         }
     }
 }
