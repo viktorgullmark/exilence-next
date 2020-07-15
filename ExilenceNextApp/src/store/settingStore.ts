@@ -1,20 +1,17 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { ISelectOption } from '../interfaces/select-option.interface';
 import { electronService } from '../services/electron.service';
-import { getPriceTresholdOptions } from '../utils/setting.utils';
 import { RootStore } from './rootStore';
 
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
-  @persist @observable autoSnapshotting: boolean = false;
+  @persist @observable autoSnapshotting: boolean = true;
   @persist @observable priceTreshold: number = 0;
+  @persist @observable totalPriceTreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
-
-  priceTresholdOptions: ISelectOption[] = getPriceTresholdOptions();
 
   constructor(private rootStore: RootStore) {}
 
@@ -48,6 +45,11 @@ export class SettingStore {
   @action
   setPriceTreshold(value: number) {
     this.priceTreshold = value;
+  }
+
+  @action
+  setTotalPriceTreshold(value: number) {
+    this.totalPriceTreshold = value;
   }
 
   @action

@@ -15,7 +15,10 @@ namespace Shared.Entities
         public string Name { get; set; }
         public string ActiveLeagueId { get; set; }
         public string ActivePriceLeagueId { get; set; }
+        public string ActiveCharacterName { get; set; }
         public bool Active { get; set; }
+        public bool IncludeInventory { get; set; }
+        public bool IncludeEquipment { get; set; }
         public DateTime Created { get; set; }
         public ICollection<string> ActiveStashTabIds { get; set; }
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Computed)]

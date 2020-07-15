@@ -65,6 +65,14 @@ namespace Shared.Repositories
         {
             await _snapshots.InsertManyAsync(snapshots);
         }
+        public async Task AddStashtabs(List<StashTab> snapshots)
+        {
+            await _stashtabs.InsertManyAsync(snapshots);
+        }
+        public async Task AddPricedItems(List<PricedItem> pricedItems)
+        {
+            await _pricedItems.InsertManyAsync(pricedItems);
+        }
 
         public async Task RemovePricedItems(string stashtabId)
         {

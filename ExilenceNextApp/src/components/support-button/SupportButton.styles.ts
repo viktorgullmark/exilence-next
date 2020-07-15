@@ -4,7 +4,8 @@ export const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       top: '52vh',
-      right: 0,
+      zIndex: 10,
+      right: 16,
       position: 'fixed',
       width: 0,
       height: 0
@@ -22,6 +23,9 @@ export const useStyles = makeStyles(theme =>
       '&:hover': {
         background: theme.palette.primary.light
       }
+    },
+    noMargin: {
+      right: -16
     }
   })
 );

@@ -6,8 +6,11 @@ export interface IApiProfile {
     name: string;
     activeLeagueId: string;
     activePriceLeagueId: string;
+    activeCharacterName: string;
     activeCurrency: ICurrency;
     activeStashTabIds: string[];
     snapshots: IApiSnapshot[];
     active: boolean;
+    includeEquipment: boolean;
+    includeInventory: boolean;
 }

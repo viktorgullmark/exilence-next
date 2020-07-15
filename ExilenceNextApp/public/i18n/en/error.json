@@ -6,5 +6,6 @@
     "profile_not_found": "Profile not found",
     "connection_not_found": "Connection not found",
     "no_token_set": "No token set",
-    "token_expired": "Token expired"
+    "token_expired_meta": "Session expired",
+    "token_expired": "Session expired, please login again using a new session Id"
 }

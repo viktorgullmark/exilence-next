@@ -464,13 +464,13 @@ export class SignalrStore {
     if (this.online) {
       fromStream(
         this.rootStore.signalrHub
-          .sendEvent<IApiGroup>('JoinGroup', <IApiGroup>{
+          .sendEvent<IApiGroup>('JoinGroup', {
             uuid: uuid.v4(),
             name: groupName,
             password: password,
             created: moment.utc().toDate(),
             connections: []
-          })
+          } as IApiGroup)
           .pipe(
             retryWhen(
               genericRetryStrategy({
@@ -509,7 +509,7 @@ export class SignalrStore {
           });
           return ps;
         })
-        .slice(0, 100);
+        .slice(0, 1000);
       activeGroupProfile.snapshots.unshift(mapSnapshotToApiSnapshot(snapshot));
     }
   }

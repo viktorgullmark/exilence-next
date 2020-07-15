@@ -15,6 +15,8 @@ namespace Shared.Interfaces
         IQueryable<StashTab> GetStashtabs(Expression<Func<StashTab, bool>> predicate);
         IQueryable<PricedItem> GetPricedItems(Expression<Func<PricedItem, bool>> predicate);
         Task AddSnapshots(List<Snapshot> snapshots);
+        Task AddStashtabs(List<StashTab> stashTabs);
+        Task AddPricedItems(List<PricedItem> pricedItems);
         Task RemoveSnapshot(Snapshot snapshot);
         Task RemoveStashtab(StashTab stashtab);
         Task RemovePricedItems(string stashtabId);

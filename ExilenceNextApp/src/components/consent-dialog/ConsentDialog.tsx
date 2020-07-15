@@ -25,12 +25,12 @@ const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
       <DialogTitle>{t('title.ga_consent_dialog_title')}</DialogTitle>
       <DialogContent>
         <Box width={1} mb={1}>
-          <Typography className={classes.consent} variant="subtitle2">
+          <Typography variant="body2">
             {t('body.ga_consent_main_text')}
           </Typography>
         </Box>
         <Box width={1} mb={2}>
-          <Typography className={classes.consent} variant="subtitle2">
+          <Typography variant="body2">
             {t('body.ga_consent_sub_text')}
           </Typography>
         </Box>

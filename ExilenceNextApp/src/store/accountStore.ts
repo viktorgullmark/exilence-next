@@ -2,13 +2,14 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
-import { forkJoin, of, throwError, timer } from 'rxjs';
+import { forkJoin, of, throwError, timer, Subject } from 'rxjs';
 import {
   catchError,
   concatMap,
   map,
   mergeMap,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs/operators';
 import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
@@ -22,6 +23,7 @@ import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
+import AppConfig from "../config/app.config";
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -30,12 +32,19 @@ export class AccountStore {
   @observable code: string = '';
   @observable sessionId: string = '';
 
+  cancelledRetry: Subject<boolean> = new Subject();
+
   constructor(private rootStore: RootStore) {}
 
   @computed
   get getSelectedAccount(): Account {
     const account = this.accounts.find(a => a.uuid === this.activeAccount);
     return account ? account : new Account();
+  }
+
+  @action
+  cancelRetries() {
+    this.cancelledRetry.next(true);
   }
 
   @action
@@ -99,7 +108,7 @@ export class AccountStore {
     var options = {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
-      redirectUrl: 'http://localhost',
+      redirectUrl: AppConfig.redirectUrl,
       state: 'yourstate',
       responseType: 'code'
     };
@@ -117,7 +126,7 @@ export class AccountStore {
       alwaysOnTop: true
     });
 
-    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+    var authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     authWindow.webContents.on('will-redirect', (event: any, url: any) => {
       this.handleAuthCallback(url, authWindow);
@@ -229,8 +238,11 @@ export class AccountStore {
     }
 
     if (new Date().getTime() >= new Date(this.token.expires).getTime()) {
-      this.initSessionFail(new Error('error:token_expired'));
-      return this.rootStore.routeStore.redirect('/login');
+      this.initSessionFail(new Error('error:token_expired_meta'));
+      return this.rootStore.routeStore.redirect(
+        '/login',
+        'error:token_expired'
+      );
     }
 
     fromStream(
@@ -261,6 +273,7 @@ export class AccountStore {
                 leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
               this.getSelectedAccount.updateAccountLeagues(characters);
+              this.getSelectedAccount.updateLeaguesForProfiles(leagues.concat(getCharacterLeagues(characters)).map(l => l.id));
               this.rootStore.priceStore.getPricesForLeagues();
 
               return forkJoin(
@@ -316,13 +329,6 @@ export class AccountStore {
             })
           );
         }),
-        switchMap(() => {
-          if (this.rootStore.settingStore.autoSnapshotting) {
-            return of(this.getSelectedAccount.queueSnapshot());
-          } else {
-            return of({});
-          }
-        }),
         switchMap(() => of(this.initSessionSuccess())),
         catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
@@ -340,11 +346,24 @@ export class AccountStore {
     );
     this.rootStore.uiStateStore.setIsInitiating(false);
     this.rootStore.uiStateStore.setInitiated(true);
+
+    if (
+      this.rootStore.settingStore.autoSnapshotting &&
+      this.getSelectedAccount.activeProfile &&
+      this.getSelectedAccount.activeProfile.readyToSnapshot
+    ) {
+      this.getSelectedAccount.activeProfile.snapshot();
+    }
   }
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    fromStream(timer(45 * 1000).pipe(switchMap(() => of(this.initSession()))));
+    fromStream(
+      timer(45 * 1000).pipe(
+        takeUntil(this.cancelledRetry),
+        switchMap(() => of(this.initSession()))
+      )
+    );
 
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification(
@@ -422,7 +441,10 @@ export class AccountStore {
   validateSessionFail(e: AxiosError | Error, sender: string) {
     if (sender !== '/login') {
       fromStream(
-        timer(45 * 1000).pipe(switchMap(() => of(this.validateSession(sender))))
+        timer(45 * 1000).pipe(
+          takeUntil(this.cancelledRetry),
+          switchMap(() => of(this.validateSession(sender)))
+        )
       );
     }
 

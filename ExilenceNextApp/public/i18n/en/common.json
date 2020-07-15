@@ -14,7 +14,8 @@
     "create_group": "Create group",
     "join_group": "Join group",
     "leave_group": "Leave group",
-    "lets_begin": "Lets begin!"
+    "lets_begin": "Lets begin!",
+    "apply_filter": "Apply filter"
   },
   "title": {
     "login": "Login",
@@ -37,9 +38,12 @@
     "snapshot_settings": "Snapshot settings",
     "snapshot_history_chart": "Snapshot history",
     "ui_settings": "Interface",
-    "general": "General"
+    "general": "General",
+    "session_id_dialog": "How to find your session Id"
   },
   "label": {
+    "stash_tabs": "Stash tabs",
+    "add_stash_tabs": "Add tabs",
     "support": "Support",
     "required": "Required",
     "optional": "Optional",
@@ -51,6 +55,7 @@
     "select_profile": "Select profile",
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
+    "filter_stash_tabs": "Filter stash tabs",
     "profile_placeholder": "Select a profile",
     "group_name": "Group name",
     "group_name_placeholder": "Enter a group name",
@@ -65,9 +70,13 @@
     "total_income": "Income",
     "total_snapshots": "Snapshots",
     "session_id_link": "How to find your session id",
+    "include_inventory": "Include inventory",
+    "include_equipment": "Include equipment",
     "sign_out": "Sign out",
     "join_group": "Join group",
+    "overlay_icon_title": "Open overlay",
     "create_group": "Create group",
+    "loading_title": "Loading",
     "toggle_menu_title": "Toggle menu",
     "edit_profile_icon_title": "Edit profile",
     "create_profile_icon_title": "Create profile",
@@ -79,18 +88,22 @@
     "account_icon_title": "My account",
     "group_icon_title": "Groups",
     "toggle_visibility_icon_title": "Show/hide",
+    "clear_search_icon_title": "Clear search field",
     "net_worth_export": "Export data",
     "net_worth_chart": "Net worth chart",
+    "tab_chart": "Tab breakdown chart",
     "these_terms_inline": "these terms",
     "update_available": "Update available, ",
     "click": "click",
     "here": "here",
     "to_update_now": "to update now!",
     "prices_fetched_from": "Prices fetched from ",
+    "prices_fetched_from_interval": "Updated every 20 minutes",
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",
     "price_treshold": "Select price treshold",
+    "total_price_treshold": "Select total price treshold",
     "requires_snapshot_info": "* = requires a new snapshot to take effect",
     "fetch_snapshot_spinner_title": "Fetching snapshots",
     "initiating_session_spinner_title": "Initiating session",
@@ -100,18 +113,24 @@
     "snapshot_length_requirement_text": "The chart will be displayed when there are at least 10 snapshots",
     "auto_snapshotting": "Activate auto snapshotting",
     "auto_snapshot_interval": "Set auto snapshot interval",
-    "ui_scale": "Interface scale (%)"
+    "ui_scale": "Interface scale (%)",
+    "filter_total": "Filter Total:",
+    "google_chrome": "Google Chrome",
+    "mozilla_firefox": "Mozilla Firefox",
+    "microsoft_edge": "Microsoft Edge"
   },
   "value": {
     "none": "None",
     "low_confidence_pricing": "Low confidence",
     "price_treshold": "Price treshold",
+    "total_price_treshold": "Total price treshold",
     "auto_snapshotting": "Auto snapshotting",
     "auto_snapshot_interval": "Snapshotting interval"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
     "price_treshold": "Sets the cutoff for including items",
+    "total_price_treshold": "Sets the cutoff for including stacks of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
     "ui_scale": "Sets the UI scale"
@@ -125,6 +144,12 @@
     "leave_group": "Are you sure you want to leave your current group?",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
     "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
-    "ga_consent_short_text": "By proceeding below, you agree to "
+    "ga_consent_short_text": "By proceeding below, you agree to ",
+    "session_id_dialog_prefix": "The session Id is located in a cookie from the",
+    "session_id_dialog_suffix": "website under the name POESESSID. Use the appropriate link below to find how you inspect cookies using your browser."
+  },
+  "unit":{
+    "chaos": "c",
+    "minute": "min"
   }
 }

@@ -1,6 +1,110 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.8] - 2020-06-17
+##### Added
+- Added the support button to the login page
+- Added an in app modal which explains how to find your session Id, instead of redirecting to the Discord
+
+## [0.3.7] - 2020-06-16
+##### Added
+- Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
+    - Maximum value for the setting is capped at 5000 c
+- Added a fallback to 'Standard' league for profiles where the pricing league was outdated
+    - Previously we didnt update these profiles, so they would fail when snapshotting
+- Added the ability to go to the first page in the item table
+- Added the ability to go to the last page in the item table
+- Added missing translations
+##### Changed
+- Reduced the minimum width of the main window to 800, down from 1000px
+- Changed the session id link to redirect to our Discord instead of the old wiki page
+- Minor improvements to the layout of the settings page
+##### Fixed
+- Fixed a bug where the app would crash if you pressed enter while having the search bar in focus (thanks to romankrru)
+- Fixed a bug where the page size for the item table would not persist through restarts
+##### Removed
+- Removed some leftover console logs
+
+## [0.3.6] - 2020-04-11
+##### Added
+- Added a label which shows the current selection net worth value (e.g after searching/filtering) (thanks to kryo4096)
+- Added the ability to set a custom price treshold interval between 1c and 100c (thanks to kryo4096)
+- Added the ability to search for rarities/categories in the search bar (thanks to kryo4096)
+    - You can now typ 'currency' to list only currency for example
+##### Changed
+- Changed position of the "Reset zoom" button in the charts
+- Disable group actions while snapshotting (thanks to PezeM)
+##### Fixed
+- Fixed a bug where the loading indicator would not appear when validating a session
+- Fixed a bug where the total net worth would sometimes differ slightly from the item table total value
+##### Removed
+- Removed the unique- and map stash tabs from the stash tab dropdown (thanks to M-Schiller)
+
+## [0.3.5] - 2020-03-29
+##### Added
+- Added the ability to filter stash tabs in the tab breakdown chart
+##### Fixed
+- Fixed a performance issue introduced with the last update
+    - We now limit the snapshots to a count of 50 in the tab breakdown chart
+
+## [0.3.4] - 2020-03-28
+##### Added
+- Added a new chart for breakdown per tab
+- Added a chart toolbox to the net worth chart, for selecting different timespans
+- Minor chart improvements
+
+## [0.3.3] - 2020-03-27
+##### Added
+- Added a filter section for the item table
+    - Added a multiselect which lets you filter based on stash tabs
+- Added a new column that displays the tab names an item exists in (solo only)
+- Added a search icon to the search field
+- Minor style tweaks across the app
+##### Changed
+- Reworked the stash tab dropdown entirely in the profile dialog
+    - Better positioning of the popup
+    - Ability to clear all in the selection
+    - Ability to remove individual stash tabs without opening the popup
+- Reduced the padding on rows in the item table, to fit more items per page
+- Changed position of the pricing league dropdown in the profile dialog
+##### Fixed
+- Fixed a bug where some jewels and jewellry without value were listed in the item table
+- Fixed a bug where the support button would be placed on top of the scrollbar
+
+## [0.3.2] - 2020-03-24
+##### Added
+- Added support for pricing delirium orbs
+- Added support for pricing vials
+- Added a small cross for clearing the search field in the item table
+##### Changed
+- Changed the default setting for auto snapshotting
+    - Now enabled by default
+##### Fixed
+- Fixed a bug where the overlay sometimes would not stay on top of the game
+
+## [0.3.1] - 2020-03-20
+##### Fixed
+- Fixed a bug with the new character selection that would interrupt the snapshot chain
+- Fixed a missing translation for the new error handling
+
+## [0.3.0] - 2020-03-20
+##### Added
+- Added a game overlay for the net worth component
+- Added optional character selection to profiles
+    - Added an option to include equipment in profiles
+    - Added an option to include inventory in profiles
+- Added fallback for error messages in case message is missing
+- Added separate colors in the net worth chart for each group member
+- Added redirection to login when the current session has expired
+##### Fixed
+- Fixed a bug where the status messages would sometimes display an incorrect stash tab count
+
+## [0.2.12] - 2020-03-17
+##### Added
+- Added support for storing up to 1000 snapshots, up from 100
+##### Fixed
+- Fixed a bug where normal and magic maps were priced as red maps
+
 ## [0.2.11] - 2020-03-12
 ##### Added
 - Added the ability to zoom in the chart

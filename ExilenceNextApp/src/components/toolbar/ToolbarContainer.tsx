@@ -10,6 +10,8 @@ import Toolbar from './Toolbar';
 import { SignalrStore } from '../../store/signalrStore';
 import { PriceStore } from '../../store/priceStore';
 import { SettingStore } from '../../store/settingStore';
+import { OverlayStore } from '../../store/overlayStore';
+import { formatValue } from '../../utils/snapshot.utils';
 
 interface ToolbarContainerProps {
   uiStateStore?: UiStateStore;
@@ -19,6 +21,7 @@ interface ToolbarContainerProps {
   signalrStore?: SignalrStore;
   priceStore?: PriceStore;
   settingStore?: SettingStore;
+  overlayStore?: OverlayStore;
 }
 
 const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
@@ -27,7 +30,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   signalrStore,
   notificationStore,
   priceStore,
-  settingStore
+  settingStore,
+  overlayStore
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -45,6 +49,33 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
   const handleClearSnapshots = () => {
     accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
+  };
+
+  const activeCurrency = () => {
+    return accountStore!.getSelectedAccount!.activeProfile!
+      ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
+      : { name: 'chaos', short: 'c' };
+  };
+
+  const handleOverlay = () => {
+    // todo: rework to toggle modal instead, with buttons for each overlay
+
+    const income = formatValue(
+      signalrStore!.activeGroup
+        ? signalrStore!.activeGroup.income
+        : accountStore!.getSelectedAccount!.activeProfile!.income,
+      activeCurrency().short,
+      true
+    );
+
+    const netWorth = signalrStore!.activeGroup
+      ? signalrStore!.activeGroup.netWorthValue
+      : accountStore!.getSelectedAccount!.activeProfile!.netWorthValue;
+
+    overlayStore!.createOverlay({
+      event: 'netWorth',
+      data: { netWorth: netWorth, income: income }
+    });
   };
 
   const handleRemoveProfile = () => {
@@ -111,6 +142,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
+        handleOverlay={handleOverlay}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
@@ -121,7 +153,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
           uiStateStore!.setConfirmRemoveProfileDialogOpen(true)
         }
         isSnapshotting={uiStateStore!.isSnapshotting}
-        isInitiating={uiStateStore!.isInitiating}
+        isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}
         isUpdatingPrices={priceStore!.isUpdatingPrices}
         profilesLoaded={uiStateStore!.profilesLoaded}
       />
@@ -135,5 +167,6 @@ export default inject(
   'notificationStore',
   'signalrStore',
   'priceStore',
-  'settingStore'
+  'settingStore',
+  'overlayStore'
 )(observer(ToolbarContainer));

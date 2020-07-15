@@ -9,7 +9,7 @@ import {
   mergeMap,
   retryWhen,
   switchMap,
-  takeUntil
+  takeUntil,
 } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IAccount } from '../../interfaces/account.interface';
@@ -23,6 +23,7 @@ import { visitor, rootStore } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
+import { rgbToHex } from '../../utils/colour.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -33,7 +34,7 @@ export class Account implements IAccount {
   @observable
   accountLeagues: AccountLeague[] = [];
   @persist('list', Profile) @observable profiles: Profile[] = [
-    new Profile({ name: 'profile 1' })
+    new Profile({ name: 'profile 1' }),
   ];
 
   cancelled: Subject<boolean> = new Subject();
@@ -43,12 +44,52 @@ export class Account implements IAccount {
   }
 
   @computed
+  get stashTabColors() {
+    const profile = this.activeProfile;
+    if (profile) {
+      const league = rootStore.leagueStore.leagues.find(
+        (l) => l.id === profile.activeLeagueId
+      );
+      const accountLeague = this.accountLeagues.find(
+        (l) => l.leagueId === league?.id
+      );
+      return accountLeague?.stashtabs
+        .filter((s) => this.activeProfile?.activeStashTabIds.includes(s.id))
+        .map((s) => rgbToHex(s.colour.r, s.colour.g, s.colour.b));
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed
   get activeLeague() {
     const profile = this.activeProfile;
     if (profile) {
       return rootStore.leagueStore.leagues.find(
-        l => l.id === profile.activeLeagueId
+        (l) => l.id === profile.activeLeagueId
       );
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed
+  get activeCharacter() {
+    const profile = this.activeProfile;
+    const accountLeague = this.accountLeagues.find(
+      (l) => l.leagueId === profile?.activeLeagueId
+    );
+    return accountLeague?.characters?.find(
+      (ac) => ac.name === profile?.activeCharacterName
+    );
+  }
+
+  get characters() {
+    const profile = this.activeProfile;
+    if (profile) {
+      return this.accountLeagues.find(
+        (l) => l.leagueId === profile.activeLeagueId
+      )?.characters;
     } else {
       return undefined;
     }
@@ -59,7 +100,7 @@ export class Account implements IAccount {
     const profile = this.activeProfile;
     if (profile) {
       return rootStore.leagueStore.priceLeagues.find(
-        l => l.id === profile.activePriceLeagueId
+        (l) => l.id === profile.activePriceLeagueId
       );
     } else {
       return undefined;
@@ -92,9 +133,22 @@ export class Account implements IAccount {
   }
 
   @action
+  updateLeaguesForProfiles(leagues: string[]) {
+    this.profiles = this.profiles.map((p) => {
+      if (!leagues.find(l => l === p.activeLeagueId)) {
+        p.activeLeagueId = 'Standard';
+      }
+      if (!leagues.find(l => l === p.activePriceLeagueId)) {
+        p.activePriceLeagueId = 'Standard';
+      }
+      return p;
+    });
+  }
+
+  @action
   updateProfiles(profiles: IApiProfile[]) {
-    const mappedProfiles = profiles.map(p => {
-      const currentProfile = this.profiles.find(cp => cp.uuid === p.uuid);
+    const mappedProfiles = profiles.map((p) => {
+      const currentProfile = this.profiles.find((cp) => cp.uuid === p.uuid);
       const newProfile = new Profile(p);
       if (currentProfile) {
         newProfile.snapshots = currentProfile.snapshots;
@@ -102,7 +156,7 @@ export class Account implements IAccount {
       return newProfile;
     });
     // if no active profile, set first profile in array to active
-    const activeProfile = profiles.find(p => p.active);
+    const activeProfile = profiles.find((p) => p.active);
     if (!activeProfile && profiles.length > 0) {
       profiles[0].active = true;
     }
@@ -121,7 +175,7 @@ export class Account implements IAccount {
         retryWhen(
           genericRetryStrategy({
             maxRetryAttempts: 5,
-            scalingDuration: 5000
+            scalingDuration: 5000,
           })
         ),
         catchError((e: Error) => {
@@ -156,10 +210,10 @@ export class Account implements IAccount {
         uuid: this.uuid,
         name: this.name!,
         accessToken: rootStore.accountStore.token!.accessToken,
-        profiles: []
+        profiles: [],
       })
       .pipe(
-        mergeMap(account => {
+        mergeMap((account) => {
           this.updateAccountFromApi(account.data);
           return !rootStore.signalrHub.connection
             ? rootStore.signalrHub.startConnection(account.data.accessToken)
@@ -178,7 +232,7 @@ export class Account implements IAccount {
         switchMap(() => {
           return of(this.authorizeSuccess());
         }),
-        catchError(e => {
+        catchError((e) => {
           this.authorizeFail(e);
           return throwError(e);
         })
@@ -202,7 +256,7 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    let active = this.profiles.find(p => p.active);
+    let active = this.profiles.find((p) => p.active);
     return active;
   }
 
@@ -219,12 +273,12 @@ export class Account implements IAccount {
     return rootStore.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
       map((uuid: string) => {
         runInAction(() => {
-          this.profiles = this.profiles.map(p => {
+          this.profiles = this.profiles.map((p) => {
             p.active = false;
             return p;
           });
         });
-        const foundProfile = this.profiles.find(p => p.uuid === uuid);
+        const foundProfile = this.profiles.find((p) => p.uuid === uuid);
         if (!foundProfile) {
           return throwError('error:no_profile_found');
         }
@@ -242,7 +296,7 @@ export class Account implements IAccount {
       retryWhen(
         genericRetryStrategy({
           maxRetryAttempts: 5,
-          scalingDuration: 5000
+          scalingDuration: 5000,
         })
       ),
       catchError((e: AxiosError) => of(this.setActiveProfileFail(e)))
@@ -251,9 +305,9 @@ export class Account implements IAccount {
 
   @action
   updateAccountLeagues(characters: ICharacter[]) {
-    rootStore.leagueStore.leagues.forEach(l => {
-      let accLeague = this.accountLeagues.find(al => al.leagueId === l.id);
-      const leagueCharacters = characters.filter(c => c.league === l.id);
+    rootStore.leagueStore.leagues.forEach((l) => {
+      let accLeague = this.accountLeagues.find((al) => al.leagueId === l.id);
+      const leagueCharacters = characters.filter((c) => c.league === l.id);
 
       if (accLeague) {
         accLeague.updateCharacters(leagueCharacters);
@@ -272,8 +326,8 @@ export class Account implements IAccount {
     rootStore.uiStateStore.setRemovingProfile(true);
     visitor!.event('Profile', 'Remove profile').send();
 
-    const profileIndex = this.profiles.findIndex(p => p.active);
-    const newActiveProfile = this.profiles.find(p => !p.active);
+    const profileIndex = this.profiles.findIndex((p) => p.active);
+    const newActiveProfile = this.profiles.find((p) => !p.active);
 
     if (profileIndex === -1) {
       this.removeActiveProfileFail(new Error('profile_not_found'));
@@ -295,7 +349,7 @@ export class Account implements IAccount {
         retryWhen(
           genericRetryStrategy({
             maxRetryAttempts: 5,
-            scalingDuration: 5000
+            scalingDuration: 5000,
           })
         ),
         catchError((e: AxiosError) => of(this.removeActiveProfileFail(e)))
@@ -377,7 +431,7 @@ export class Account implements IAccount {
         retryWhen(
           genericRetryStrategy({
             maxRetryAttempts: 5,
-            scalingDuration: 5000
+            scalingDuration: 5000,
           })
         ),
         catchError((e: AxiosError) => of(this.createProfileFail(e)))

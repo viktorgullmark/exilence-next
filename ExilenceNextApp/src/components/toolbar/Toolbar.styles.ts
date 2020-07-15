@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   miscArea: {
     padding: `0 ${theme.spacing(1)}px`
   },
+  overlayArea: {
+    padding: `0 ${theme.spacing(1)}px`
+  },
   groupArea: {
     padding: `0 ${theme.spacing(1)}px`
   },

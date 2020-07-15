@@ -31,12 +31,7 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
-            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
-            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
-                Log($"Add snapshot failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
-            });
-
-            //snapshotModel = await retryPolicy.ExecuteAsync(() => _snapshotService.AddSnapshot(profileId, snapshotModel));
+            snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)

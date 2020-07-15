@@ -81,7 +81,7 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
 }
 
 export function mapApiPricedItemToPricedItem(item: IPricedItem) {
-  return <IPricedItem>{ id: item.itemId, ...item };
+  return { id: item.itemId, ...item } as IPricedItem;
 }
 
 export function excludeLegacyMaps(prices: IExternalPrice[]) {

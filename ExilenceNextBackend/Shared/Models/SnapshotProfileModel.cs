@@ -21,6 +21,12 @@ namespace Shared.Models
         public string ActiveLeagueId { get; set; }
         [Key("activePriceLeagueId")]
         public string ActivePriceLeagueId { get; set; }
+        [Key("includeInventory")]
+        public bool IncludeInventory { get; set; }
+        [Key("includeEquipment")]
+        public bool IncludeEquipment { get; set; }
+        [Key("activeCharacterName")]
+        public string ActiveCharacterName { get; set; }
         [Key("activeStashTabIds")]
         public List<string> ActiveStashTabIds { get; set; }
         [Key("snapshots")]

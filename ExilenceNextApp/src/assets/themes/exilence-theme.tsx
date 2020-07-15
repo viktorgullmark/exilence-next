@@ -1,5 +1,17 @@
+import {
+  amber,
+  blue,
+  deepOrange,
+  deepPurple,
+  green,
+  grey,
+  lime,
+  orange,
+  pink,
+  red,
+  teal,
+} from '@material-ui/core/colors';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import { grey, green, red, amber } from '@material-ui/core/colors';
 
 const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
 
@@ -11,21 +23,33 @@ export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
 
 export const fontColors = {
-  hintDarker: 'rgba(255, 255, 255, 0.2)'
-}
+  hintDarker: 'rgba(255, 255, 255, 0.2)',
+};
+
+export const highchartsColors = [
+  primaryMain,
+  deepOrange[300],
+  orange[300],
+  lime[300],
+  teal[300],
+  amber[300],
+  deepPurple[300],
+  pink[300],
+  blue[300],
+];
 
 export const secondary = {
   light: '#696969',
-  main: '#282828',
-  dark: '#000'
-}
+  main: '#252525',
+  dark: '#000',
+};
 
 export const gridSpacing = 2;
 
 export const cardColors = {
   primary: 'linear-gradient(90deg, #273238 0%, #1c262b 100%)',
-  secondary: 'linear-gradient(90deg, #1d3e3b 0%, #192f2d 100%)', 
-  third: 'linear-gradient(90deg, #14384a 0%, #082533 100%)'
+  secondary: 'linear-gradient(90deg, #1d3e3b 0%, #192f2d 100%)',
+  third: 'linear-gradient(90deg, #14384a 0%, #082533 100%)',
 };
 
 export const rarityColors = {
@@ -36,30 +60,30 @@ export const rarityColors = {
   gem: '#1ba29b',
   currency: '#AD904B',
   divination: '#c0c0c0',
-  quest: '#6eb930'
+  quest: '#6eb930',
 };
 
 export const itemColors = {
   chaosOrb: '#d6b600',
-  corrupted: '#A40000'
+  corrupted: '#d80404',
 };
 
 export const statusColors = {
   success: green[800],
   warning: amber[900],
   info: grey[900],
-  error: red[900]
+  error: red[900],
 };
 
 export const currencyChangeColors = {
   positive: green[600],
-  negative: red[700]
-}
+  negative: red[700],
+};
 
 export const background = {
   default: '#191919',
   paper: '#202020',
-  darker: '#101010'
+  darker: '#101010',
 };
 
 export type Rarity = typeof rarityColors;
@@ -75,46 +99,46 @@ export default function exilenceTheme() {
         gutters: {
           [defaultTheme.breakpoints.up('xs')]: {
             paddingLeft: '8px',
-            paddingRight: 0
-          }
-        }
+            paddingRight: 0,
+          },
+        },
       },
       MuiTableRow: {
         root: {
           '&$hover:hover': {
-            backgroundColor: defaultTheme.palette.background.default
-          }
-        }
+            backgroundColor: defaultTheme.palette.background.default,
+          },
+        },
       },
       MuiTableCell: {
         root: {
-          fontSize: '0.75rem'
-        }
+          fontSize: '0.75rem',
+        },
       },
       MuiFormControlLabel: {
         root: {
-          color: secondary.light
-        }
-      }
+          color: '#c2c2c2',
+        },
+      },
     },
     palette: {
       text: {
-        secondary: '#c2c2c2'
+        secondary: '#c2c2c2',
       },
       primary: {
         light: primaryLight,
         main: primaryMain,
-        dark: primaryDark
+        dark: primaryDark,
       },
       secondary: secondary,
       background: background,
-      type: 'dark'
+      type: 'dark',
     },
     typography: {
       h6: {
         fontWeight: 400,
-        fontSize: '1.15rem'
-      }
-    }
+        fontSize: '1.15rem',
+      },
+    },
   });
 }

@@ -28,7 +28,8 @@
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
       "add_profile_to_connection": "Successfully added profile to connection",
-      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection"
+      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection",
+      "leave_group": "Sucessfully left group"
     },
     "description": {
       "init_session": "A new session was successfully initiated",
@@ -58,13 +59,16 @@
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
       "add_profile_to_connection": "Successfully added profile to connection",
-      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection"
+      "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection",
+      "leave_group": "Sucessfully left the group"
     }
   },
   "error": {
+    "unknown_error": "Unknown error occurred",
     "title": {
       "init_session": "Initialize session failed",
       "validate_session": "Validate session failed",
+      "league_settings_outdated": "League settings outdated",
       "remove_profile": "Remove profile failed",
       "get_stash_tabs": "Failed retrieving stash tabs for {{param}}",
       "get_items": "Failed retrieving items for {{param}}",

@@ -2,18 +2,10 @@ import { createStyles, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    formControl: {
-      minWidth: 120
-    },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap'
-    },
     chip: {
-      margin: 2
+      background: theme.palette.secondary.light,
     },
-    noLabel: {
-      marginTop: theme.spacing(3)
+    chipLabel: {
     }
   })
 );

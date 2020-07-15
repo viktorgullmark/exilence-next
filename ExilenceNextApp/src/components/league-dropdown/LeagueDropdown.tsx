@@ -1,19 +1,17 @@
 import {
   FormControl,
   FormHelperText,
+  InputLabel,
   MenuItem,
   Select,
-  InputLabel,
-  makeStyles,
-  Theme
 } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { League } from '../../store/domains/league';
-import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import useLabelWidth from '../../hooks/use-label-width';
+import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
+import { League } from '../../store/domains/league';
 
 interface LeagueDropdownProps {
   touched: FormikTouched<any>;
@@ -38,7 +36,7 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   leagues,
   handleChange,
   handleLeagueChange,
-  values
+  values,
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
   const { labelWidth, ref } = useLabelWidth(0);
@@ -46,16 +44,17 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   return (
     <>
       <FormControl
-        variant="outlined"
+        variant='outlined'
         fullWidth={fullWidth}
         margin={margin}
+        required
         error={
           (touched.league && errors.league !== undefined) ||
           noCharacters.length > 0
         }
       >
         {!hideLabel && (
-          <InputLabel ref={ref} htmlFor="league-dd">
+          <InputLabel ref={ref} htmlFor='league-dd'>
             {t('label.select_main_league')}
           </InputLabel>
         )}
@@ -63,13 +62,13 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
           labelWidth={labelWidth}
           fullWidth
           value={values.league}
-          onChange={e => {
+          onChange={(e) => {
             handleChange(e);
             handleLeagueChange(e);
           }}
           inputProps={{
             name: 'league',
-            id: 'league-dd'
+            id: 'league-dd',
           }}
         >
           {leagues.map((league: League) => {

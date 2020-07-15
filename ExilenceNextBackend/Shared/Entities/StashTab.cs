@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Entities
@@ -15,8 +16,9 @@ namespace Shared.Entities
         public int Index { get; set; }
         public string Color { get; set; }
         public decimal Value { get; set; }
+        [BsonIgnore]
+        public List<PricedItem> PricedItems { get; set; }
 
         public string SnapshotClientId { get; set; }
-
     }
 }

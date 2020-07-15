@@ -13,7 +13,8 @@ namespace API.Profiles
         public StashtabProfileMapper()
         {
             CreateMap<StashtabModel, StashTab>();
-            CreateMap<StashTab, StashtabModel>();
+            CreateMap<StashTab, StashtabModel>()
+                .ForMember(o => o.PricedItems, opt => opt.Ignore());
         }
     }
 }

@@ -1,7 +1,6 @@
 import { TextField } from '@material-ui/core';
 import { useField } from 'formik';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import useStyles from './SimpleField.styles';
 
 interface Props {
@@ -25,9 +24,8 @@ const SimpleField: React.FC<Props> = ({
   autoFocus,
   endIcon,
   customError,
-  handleBlur
+  handleBlur,
 }) => {
-  const { t } = useTranslation();
   const classes = useStyles();
   const [field, meta] = useField(name);
 
@@ -35,10 +33,10 @@ const SimpleField: React.FC<Props> = ({
     <TextField
       {...field}
       id={name}
-      margin="normal"
+      margin='normal'
       type={type}
       label={label}
-      variant="outlined"
+      variant='outlined'
       placeholder={placeholder}
       autoFocus={autoFocus}
       error={meta.touched && (!!meta.error || !!customError)}
@@ -47,7 +45,7 @@ const SimpleField: React.FC<Props> = ({
       className={classes.root}
       InputProps={{ endAdornment: endIcon }}
       fullWidth
-      onBlur={e => {
+      onBlur={(e) => {
         field.onBlur(e);
         if (handleBlur) {
           handleBlur(field.value);

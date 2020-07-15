@@ -3,29 +3,20 @@ import axios from 'axios-observable';
 import { forkJoin, Observable, throwError } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-import { ICharacter } from '../interfaces/character.interface';
-import { IItem } from '../interfaces/item.interface';
-import { ILeague } from '../interfaces/league.interface';
-import { IPricedItem } from '../interfaces/priced-item.interface';
-import { IStash, IStashTab } from '../interfaces/stash.interface';
-import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
-import { IGithubRelease } from '../interfaces/github/github-release.interface';
-import uuid from 'uuid';
-import AppConfig from './../config/app.config';
-import { IPoeProfile } from '../interfaces/poe-profile.interface';
-import {
-  getItemName,
-  getMapTier,
-  getLinks,
-  getQuality,
-  getLevel,
-  getItemVariant
-} from '../utils/item.utils';
 import { rootStore } from '..';
+import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
+import { ICharacter } from '../interfaces/character.interface';
+import { IGithubRelease } from '../interfaces/github/github-release.interface';
+import { ILeague } from '../interfaces/league.interface';
+import { IPoeProfile } from '../interfaces/poe-profile.interface';
+import { IStash, IStashTab } from '../interfaces/stash.interface';
+import { mapItemsToPricedItems } from '../utils/item.utils';
+import AppConfig from './../config/app.config';
+import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
-const poeUrl = 'https://www.pathofexile.com';
-const apiUrl = 'https://api.pathofexile.com';
+const poeUrl = AppConfig.pathOfExileUrl;
+const apiUrl = AppConfig.pathOfExileApiUrl;
 
 export const externalService = {
   getLatestRelease,
@@ -34,8 +25,9 @@ export const externalService = {
   getItemsForTabs,
   getLeagues,
   getCharacters,
+  getCharacterItems,
   getProfile,
-  loginWithOAuth
+  loginWithOAuth,
 };
 
 /* #region github.com */
@@ -85,50 +77,9 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string) {
         map((stash: AxiosResponse<IStash>) => {
           rootStore.uiStateStore.incrementStatusMessageCount();
           const items = {
-            pricedItems: stash.data.items.map((item: IItem) => {
-              return {
-                uuid: uuid.v4(),
-                itemId: item.id,
-                name: getItemName(item.typeLine, item.name),
-                typeLine: item.typeLine,
-                frameType: item.frameType,
-                calculated: 0,
-                elder: item.elder !== undefined ? item.elder : false,
-                shaper: item.shaper !== undefined ? item.shaper : false,
-                icon: item.icon,
-                ilvl: item.ilvl,
-                tier:
-                  item.properties !== null && item.properties !== undefined
-                    ? getMapTier(item.properties)
-                    : 0,
-                corrupted: item.corrupted || false,
-                links:
-                  item.sockets !== undefined && item.sockets !== null
-                    ? getLinks(item.sockets.map(t => t.group))
-                    : 0,
-                sockets:
-                  item.sockets !== undefined && item.sockets !== null
-                    ? item.sockets.length
-                    : 0,
-                quality:
-                  item.properties !== null && item.properties !== undefined
-                    ? getQuality(item.properties)
-                    : 0,
-                level:
-                  item.properties !== null && item.properties !== undefined
-                    ? getLevel(item.properties)
-                    : 0,
-                stackSize: item.stackSize || 1,
-                totalStacksize: item.maxStackSize || 1,
-                variant: getItemVariant(
-                  item.sockets,
-                  item.explicitMods,
-                  getItemName(item.typeLine, item.name)
-                )
-              } as IPricedItem;
-            })
+            pricedItems: mapItemsToPricedItems(stash.data.items, tab),
           };
-          return <IStashTabSnapshot>{ ...{ stashTabId: tab.id }, ...items };
+          return { ...{ stashTabId: tab.id }, ...items } as IStashTabSnapshot;
         })
       );
     })
@@ -148,6 +99,19 @@ function getLeagues(
 function getCharacters(): Observable<AxiosResponse<ICharacter[]>> {
   return rateLimiter.limit(
     axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters')
+  );
+}
+
+function getCharacterItems(
+  account: string,
+  character: string
+): Observable<AxiosResponse<ICharacterWithItems>> {
+  const parameters = `?accountName=${account}&character=${character}`;
+
+  return rateLimiter.limit(
+    axios.get<ICharacterWithItems>(
+      poeUrl + '/character-window/get-items' + parameters
+    )
   );
 }
 

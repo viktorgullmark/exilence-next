@@ -11,44 +11,79 @@ import useStyles from './SnapshotHistoryChart.styles';
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
-  playerData?: IConnectionChartSeries;
-  groupData?: IGroupChartSeries;
+  playerData?: IConnectionChartSeries[];
+  groupData?: IGroupChartSeries[];
+  showIndividualTabs?: boolean;
+  stashTabColors?: string[];
+}
+
+interface ChartSeries {
+  type: string;
+  name: string;
+  data: number[][];
 }
 
 const SnapshotHistoryChart: React.FC<Props> = ({
   playerData,
-  groupData
+  groupData,
+  showIndividualTabs,
+  stashTabColors,
 }: Props) => {
   const theme = useTheme();
   const classes = useStyles();
 
-  let seriesData = [
-    {
-      type: 'area',
-      name: playerData ? playerData.seriesName : 'No data',
-      data: playerData ? playerData.series : []
-    }
-  ];
+  let seriesData: ChartSeries[] = playerData
+    ? playerData.map((pd) => {
+        return {
+          type: showIndividualTabs ? 'spline' : 'area',
+          name: pd.seriesName,
+          data: pd.series,
+        };
+      })
+    : [
+        {
+          type: showIndividualTabs ? 'spline' : 'area',
+          name: 'No data',
+          data: [],
+        },
+      ];
 
   if (groupData) {
-    seriesData = groupData.connections.map(player => {
-      return {
-        type: 'area',
-        name: player.seriesName,
-        data: player.series
-      };
+    const data: ChartSeries[] = [];
+
+    groupData.map((gd) => {
+      gd.connections.map((player) => {
+        const playerData = {
+          type: showIndividualTabs ? 'spline' : 'area',
+          name: player.seriesName,
+          data: player.series,
+        };
+        data.push(playerData);
+      });
     });
+
+    seriesData = data;
   }
 
   const options = {
     chart: {
-      zoomType: 'x'
+      zoomType: 'x',
+      resetZoomButton: {
+        position: {
+          align: 'left',
+          verticalAlign: 'top',
+          x: 15,
+        },
+      },
     },
     title: {
-      text: ''
+      text: '',
     },
     xAxis: {
-      type: 'datetime'
+      type: 'datetime',
+    },
+    legend: {
+      enabled: showIndividualTabs ? true : false,
     },
     plotOptions: {
       area: {
@@ -57,48 +92,58 @@ const SnapshotHistoryChart: React.FC<Props> = ({
             x1: 0,
             y1: 0,
             x2: 0,
-            y2: 1
+            y2: 1,
           },
-          stops: [
-            [
-              0,
-              HC.color(theme.palette.primary.main)
-                .setOpacity(0.5)
-                .get('rgba')
-            ],
-            [
-              1,
-              HC.color(primaryDarker)
-                .setOpacity(0)
-                .get('rgba')
-            ]
-          ]
+          stops: showIndividualTabs
+            ? []
+            : [
+                [
+                  0,
+                  HC.color(theme.palette.primary.main)
+                    .setOpacity(0.25)
+                    .get('rgba'),
+                ],
+                [1, HC.color(primaryDarker).setOpacity(0).get('rgba')],
+              ],
         },
         marker: {
-          radius: 1
+          radius: 1,
         },
         lineWidth: 2,
         states: {
           hover: {
-            lineWidth: 2
-          }
+            lineWidth: 2,
+          },
         },
-        threshold: null
-      }
+        threshold: null,
+      },
+      spline: {
+        marker: {
+          radius: 1,
+        },
+        lineWidth: 1,
+        states: {
+          hover: {
+            lineWidth: 1,
+          },
+        },
+        threshold: null,
+      },
     },
-    series: seriesData
+    series: seriesData,
   };
 
   return (
     <Box className={classes.root}>
       <Highcharts
+        colors={undefined} //showIndividualTabs ? stashTabColors : undefined
         options={options}
         containerProps={{
           style: {
             height: '100%',
             width: '100%',
-            borderRadius: theme.spacing(0.5)
-          }
+            borderRadius: theme.spacing(0.5),
+          },
         }}
       />
     </Box>

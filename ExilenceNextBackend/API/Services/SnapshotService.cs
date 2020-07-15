@@ -52,13 +52,19 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            await _mongoRepository.RemovePricedItems(profileClientId);
+            await _mongoRepository.RemovePricedItems(profileClientId); //Clean up priced items from last snapshot based on StashtabClientId
 
             var profile = await _accountRepository.GetProfiles(profile => profile.ClientId == profileClientId).AsNoTracking().FirstAsync();
 
             snapshot.ProfileClientId = profile.ClientId;
 
             await _mongoRepository.AddSnapshots(new List<Snapshot>() { snapshot });
+
+            snapshot.StashTabs.Select(stashtab => { stashtab.SnapshotClientId = snapshot.ClientId; return stashtab; }).ToList();
+
+            await _mongoRepository.AddStashtabs(snapshot.StashTabs.ToList());
+            await _mongoRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
+
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }

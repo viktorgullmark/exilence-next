@@ -9,6 +9,7 @@ import { LeagueStore } from './leagueStore';
 import { NotificationStore } from './notificationStore';
 import { SignalrStore } from './signalrStore';
 import { PriceStore } from './priceStore';
+import { OverlayStore } from './overlayStore';
 
 export class RootStore {
   uiStateStore: UiStateStore;
@@ -22,6 +23,7 @@ export class RootStore {
   notificationStore: NotificationStore;
   signalrStore: SignalrStore;
   priceStore: PriceStore;
+  overlayStore: OverlayStore;
 
   constructor() {
     this.uiStateStore = new UiStateStore(this);
@@ -35,5 +37,6 @@ export class RootStore {
     this.notificationStore = new NotificationStore(this);
     this.signalrStore = new SignalrStore(this);
     this.priceStore = new PriceStore(this);
+    this.overlayStore = new OverlayStore(this);
   }
 }
