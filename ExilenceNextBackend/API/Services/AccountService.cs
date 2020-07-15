@@ -13,7 +13,6 @@ namespace API.Services
 {
     public class AccountService : IAccountService
     {
-        ISnapshotRepository _snapshotRepository;
         IAccountRepository _accountRepository;
         IMongoRepository _mongoRepository;
         readonly IMapper _mapper;

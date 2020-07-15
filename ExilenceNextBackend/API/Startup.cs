@@ -53,7 +53,6 @@ namespace API
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped<IMongoRepository, MongoRepository>();
 
             //services.AddSignalR().AddMessagePackProtocol();
