@@ -14,7 +14,7 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
-            var snapshotModel = await _snapshotService.GetSnapshotWithItems(snapshotId);
+            var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
             Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
@@ -23,7 +23,7 @@ namespace API.Hubs
         {
             var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
+            var snapshotModelWithItems = await _snapshotService.GetSnapshot(latestSnapshot.ClientId);
 
             Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModelWithItems;
