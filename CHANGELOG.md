@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.3.9] - NOT RELEASED
+##### Added
+- Added support for pricing seeds
 ##### Changed
 - Changed the behavior of the menu drawers, to reduce client lag
 
