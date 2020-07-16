@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.9] - NOT RELEASED
+##### Changed
+- Changed the behavior of the menu drawers, to reduce client lag
+
 ## [0.3.8] - 2020-06-17
 ##### Added
 - Added the support button to the login page
