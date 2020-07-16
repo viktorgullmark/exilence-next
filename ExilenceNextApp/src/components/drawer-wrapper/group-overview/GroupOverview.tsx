@@ -48,6 +48,7 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
       anchor="right"
       color="secondary"
       open={open}
+      transitionDuration={0}
       classes={{
         paper: classes.drawerPaper
       }}

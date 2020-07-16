@@ -140,5 +140,11 @@ export default function exilenceTheme() {
         fontSize: '1.15rem',
       },
     },
+    transitions: {
+      duration: {
+        enteringScreen: 0,
+        leavingScreen: 0
+      }
+    }
   });
 }
