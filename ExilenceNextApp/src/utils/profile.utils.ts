@@ -2,7 +2,7 @@ import { IApiProfile } from '../interfaces/api/api-profile.interface';
 import { Profile } from '../store/domains/profile';
 
 export function mapProfileToApiProfile(p: Profile) {
-  return <IApiProfile>{
+  return {
     uuid: p.uuid,
     name: p.name,
     activeLeagueId: p.activeLeagueId,
@@ -14,7 +14,7 @@ export function mapProfileToApiProfile(p: Profile) {
     activeCharacterName: p.activeCharacterName,
     includeEquipment: p.includeEquipment,
     includeInventory: p.includeInventory
-  };
+  } as IApiProfile;
 }
 
 export const generateProfileName = () => {

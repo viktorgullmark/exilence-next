@@ -1,16 +1,18 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction, toJS } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
+import { Order } from '../components/item-table/ItemTable';
+import { IStashTab } from '../interfaces/stash.interface';
+import { IStatusMessage } from '../interfaces/status-message.interface';
+import { ITableItem } from '../interfaces/table-item.interface';
+import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
-import { Order } from '../components/item-table/ItemTable';
-import { IPricedItem } from '../interfaces/priced-item.interface';
 import { RootStore } from './rootStore';
-import { IStatusMessage } from '../interfaces/status-message.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -25,6 +27,7 @@ export class UiStateStore {
   @observable itemTablePageIndex: number = 0;
   @observable notificationListAnchor: null | HTMLElement = null;
   @observable accountMenuAnchor: null | HTMLElement = null;
+  @observable itemTableMenuAnchor: null | HTMLElement = null;
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
@@ -44,14 +47,19 @@ export class UiStateStore {
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
+  @observable filteredStashTabs: IStashTab[] | undefined = undefined;
+  @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
   @persist @observable netWorthChartExpanded: boolean = false;
+  @persist @observable tabChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @persist @observable itemTableOrder: Order = 'desc';
-  @persist @observable itemTableOrderBy: keyof IPricedItem = 'total';
+  @persist @observable itemTableOrderBy: keyof ITableItem = 'total';
+  @persist @observable itemTablePageSize: number = 25;
   @observable loginError: string | undefined = undefined;
+  @persist @observable chartTimeSpan: TimespanType = 'All time';
 
   constructor(private rootStore: RootStore) {}
 
@@ -66,6 +74,16 @@ export class UiStateStore {
   }
 
   @action
+  setFilteredStashTabs(stashTabs: IStashTab[] | undefined) {
+    this.filteredStashTabs = stashTabs;
+  }
+
+  @action
+  setChartTimeSpan(timespan: TimespanType) {
+    this.chartTimeSpan = timespan;
+  }
+
+  @action
   setStatusMessage(
     message: string,
     translateParam?: string | number,
@@ -76,7 +94,7 @@ export class UiStateStore {
       message: message,
       translateParam: translateParam,
       currentCount: currentCount,
-      totalCount: totalCount
+      totalCount: totalCount,
     };
 
     this.statusMessage = { ...statusMessage };
@@ -90,6 +108,11 @@ export class UiStateStore {
   @action
   setNetWorthChartExpanded(expanded: boolean) {
     this.netWorthChartExpanded = expanded;
+  }
+
+  @action
+  setTabChartExpanded(expanded: boolean) {
+    this.tabChartExpanded = expanded;
   }
 
   @action
@@ -114,8 +137,21 @@ export class UiStateStore {
   }
 
   @action
-  setItemTableOrderBy(orderBy: keyof IPricedItem) {
+  setItemTableOrderBy(orderBy: keyof ITableItem) {
     this.itemTableOrderBy = orderBy;
+  }
+
+  @action
+  setItemTablePageSize(pageSize: number) {
+    this.itemTablePageSize = pageSize;
+  }
+
+  @action
+  setShowItemTableFilter(show: boolean) {
+    if (!show) {
+      this.setFilteredStashTabs(undefined);
+    }
+    this.showItemTableFilter = show;
   }
 
   @action
@@ -196,6 +232,11 @@ export class UiStateStore {
   @action
   setAccountMenuAnchor(el: HTMLElement | null) {
     this.accountMenuAnchor = el;
+  }
+
+  @action
+  setItemTableMenuAnchor(el: HTMLElement | null) {
+    this.itemTableMenuAnchor = el;
   }
 
   @action

@@ -1,7 +1,6 @@
 import { Grid } from '@material-ui/core';
-import { observer, inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import SettingsTabs from '../../components/settings-tabs/SettingsTabs';
@@ -12,8 +11,6 @@ interface Props {
 }
 
 const Settings: React.FC<Props> = (props: Props) => {
-  const { t } = useTranslation();
-
   useEffect(() => {
     visitor!.pageview('/settings', appName).send();
   });
@@ -30,4 +27,3 @@ const Settings: React.FC<Props> = (props: Props) => {
 };
 
 export default inject('settingStore')(observer(Settings));
-

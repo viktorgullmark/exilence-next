@@ -46,7 +46,9 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
   return (
     <>
       <TableCell
-        className={classes.tableCell}
+        className={clsx(classes.tableCell, {
+          [classes.iconCell]: column.id === 'icon'
+        })}
         key={column.id}
         align={column.numeric ? 'right' : 'left'}
       >
@@ -61,7 +63,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                       background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(0,0,0,0) 100%)`
                     }}
                     className={clsx({
-                      [classes.iconCell]: column.id === 'icon'
+                      [classes.iconCellInner]: column.id === 'icon'
                     })}
                   >
                     <Box

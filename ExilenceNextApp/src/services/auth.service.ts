@@ -42,7 +42,7 @@ function getAuthCookie(): Observable<any> {
 function removeAuthCookie(): Observable<any> {
   return from(
     electronService.remote.session.defaultSession!.cookies.remove(
-      'https://www.pathofexile.com',
+      AppConfig.pathOfExileUrl,
       'POESESSID'
     )
   );

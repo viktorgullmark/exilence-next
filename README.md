@@ -1,9 +1,11 @@
 Exilence Next
 [![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exilence)
 ===
-Complete rewrite of Exilence, with performance and user experience in focus
+Exilence Next is a desktop application that helps you calculate how valuable your character, inventory and stash tabs are. The data is broken down and summarized over time, to see how much you earn on an hourly basis. To add to this, you can also group up with friends directly within the app to see your combined net worth.
 
-![Preview image](https://i.imgur.com/udJJobW.png)
+The app is a successor to our old application named Exilence, previously known as ExileParty.
+
+![Preview image](https://i.imgur.com/CT476S2.png)
 
 ## Contents
 
@@ -53,7 +55,6 @@ If you feel like chiming in with something, here's our Patreon: https://www.patr
 ## Acknowledgements
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
-- https://poe.watch for providing in-depth pricing data for items
 
 ## License
 

@@ -1,143 +1,100 @@
-import {
-  Chip,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Theme,
-  Typography,
-  useTheme
-} from '@material-ui/core';
-import { FormikErrors, FormikTouched } from 'formik';
+import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { observer } from 'mobx-react';
-import React, { ChangeEvent, CSSProperties, useState } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import useLabelWidth from '../../hooks/use-label-width';
-import useOffset from '../../hooks/use-popover-offset';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
-import { useWindowSize } from '../../hooks/use-window-size';
 
 interface StashTabDropdownProps {
-  touched: FormikTouched<any>;
-  errors: FormikErrors<any>;
   stashTabs: IStashTab[];
-  stashTabIds: string[];
-  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
-  handleStashTabChange: (event: ChangeEvent<{ value: unknown }>) => void;
-}
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-function getStyles(name: string, stashTabIds: string[], theme: Theme) {
-  return {
-    fontWeight:
-      stashTabIds.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium
-  };
+  selectedStashTabs: IStashTab[];
+  width?: number;
+  size?: 'small' | 'medium';
+  marginTop?: number;
+  marginBottom?: number;
+  labelKey?: string;
+  placeholderKey?: string;
+  hideLabel?: boolean;
+  handleChange?: (event: ChangeEvent<{}>) => void;
+  handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
 const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   stashTabs,
-  stashTabIds,
+  selectedStashTabs,
   handleChange,
-  handleStashTabChange
+  width,
+  marginTop,
+  marginBottom,
+  labelKey = 'common:label.select_stash_tabs',
+  placeholderKey = 'common:label.add_stash_tabs',
+  hideLabel,
+  size = 'medium',
+  handleStashTabChange,
 }: StashTabDropdownProps) => {
-  const theme = useTheme();
   const { t } = useTranslation(['tables']);
   const classes = useStyles();
-  const [touched, setTouched] = useState(false);
-
-  const getStashTabName = (id: string) => {
-    const foundTab = stashTabs.find(st => st.id === id);
-    return foundTab ? foundTab.n : '';
-  };
+  let defaultValue: IStashTab[] = [];
 
   const getColour = (id: string) => {
-    const foundTab = stashTabs.find(st => st.id === id);
+    const foundTab = stashTabs.find((st) => st.id === id);
     return foundTab
       ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
       : '';
   };
-  const { labelWidth, ref } = useLabelWidth(0);
-  
-  const windowSize = useWindowSize();
-  const offsetProps = useOffset(windowSize);
+
+  useEffect(() => {
+    defaultValue = [...selectedStashTabs];
+  }, []);
 
   return (
-    <div ref={offsetProps.ref}>
-      <FormControl
-        variant="outlined"
-        className={classes.formControl}
-        fullWidth
-        required
-        margin="normal"
-        error={touched && stashTabIds.length === 0}
-      >
-        <InputLabel ref={ref} id="mutiple-chip-label">
-          {t('common:label.select_stash_tabs')}
-        </InputLabel>
-        <Select
-          labelWidth={labelWidth}
-          fullWidth
-          labelId="mutiple-chip-label"
-          id="mutiple-chip"
-          multiple
-          required
-          value={stashTabIds}
-          onChange={e => {
+    <Box mt={marginTop ? marginTop : 1} mb={marginBottom ? marginBottom : 2}>
+      <Autocomplete
+        multiple
+        id='stash'
+        options={stashTabs}
+        size={size}
+        style={{ width: width ? width : 'auto' }}
+        value={selectedStashTabs}
+        defaultValue={defaultValue}
+        getOptionLabel={(option) => option.n}
+        onChange={(e, value) => {
+          if (handleChange) {
             handleChange(e);
-            handleStashTabChange(e);
-            setTouched(true);
-          }}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {(selected as string[]).map(value => (
-                <Chip
-                  key={value}
-                  label={getStashTabName(value)}
-                  className={classes.chip}
-                  style={{ border: `3px solid ${getColour(value)}` }}
-                />
-              ))}
-            </div>
-          )}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250
-              }
-            },
-            anchorPosition: {
-              top: offsetProps.offset.top,
-              left: offsetProps.offset.left
-            },
-            anchorReference: 'anchorPosition'
-          }}
-        >
-          {stashTabs.length != 0 ? (
-            stashTabs.map((stashTab: IStashTab) => (
-              <MenuItem
-                key={stashTab.id}
-                value={stashTab.id}
-                style={getStyles(stashTab.id, stashTabIds, theme)}
-              >
-                {stashTab.n}
-              </MenuItem>
-            ))
-          ) : (
-            <Typography component="h4">
-              {t('label.stash_tab_dropdown_placeholder')}
-            </Typography>
-          )}
-        </Select>
-      </FormControl>
-    </div>
+          }
+          handleStashTabChange(e, value);
+        }}
+        renderTags={(value: IStashTab[], getTagProps) =>
+          value.map((option: IStashTab, index: number) => (
+            <Chip
+              variant='outlined'
+              key={index}
+              className={classes.chip}
+              label={option.n}
+              classes={{ label: classes.chipLabel }}
+              style={{ border: `2px solid ${getColour(option.id)}` }}
+              {...getTagProps({ index })}
+            />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant='outlined'
+            label={!hideLabel ? t(labelKey) : undefined}
+            placeholder={t(placeholderKey)}
+          />
+        )}
+        PopperComponent={CustomPopper}
+      />
+    </Box>
   );
 };
+
+const CustomPopper: React.FC<PopperProps> = ({ children, ...other }) => (
+  <Popper {...other}>{children}</Popper>
+);
 
 export default observer(StashTabDropdown);

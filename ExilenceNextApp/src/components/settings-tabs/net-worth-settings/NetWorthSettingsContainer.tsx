@@ -14,9 +14,10 @@ const NetWorthSettingsContainer: React.FC<Props> = ({
     <NetWorthSettings
       lowConfidencePricing={settingStore!.lowConfidencePricing}
       priceTreshold={settingStore!.priceTreshold}
+      totalPriceTreshold={settingStore!.totalPriceTreshold}
       setPriceTreshold={(value: number) => settingStore!.setPriceTreshold(value)}
+      setTotalPriceTreshold={(value: number) => settingStore!.setTotalPriceTreshold(value)}
       setLowConfidencePricing={(value: boolean) => settingStore!.setLowConfidencePricing(value)}
-      priceTresholdOptions={settingStore!.priceTresholdOptions}
     />
   );
 };

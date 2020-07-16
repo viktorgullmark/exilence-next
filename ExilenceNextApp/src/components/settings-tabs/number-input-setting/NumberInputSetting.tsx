@@ -7,28 +7,59 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import MinuteFormat from '../../minute-format/MinuteFormat';
 import useStyles from './NumberInputSetting.styles';
+import NumberFormat from 'react-number-format';
 
 interface Props {
   value: number;
   handleChange: (value: number) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
-  minutes?: boolean;
+  suffixKey?: string,
+  minimum: number,
+  maximum: number,
   disabled?: boolean;
 }
+
+const NumberInputFormat = (props: any) => {
+  const { inputRef, onChange, suffix, minimum, maximum, ...other} = props;
+  
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      isNumericString
+      thousandSeparator
+      suffix={suffix}
+      isAllowed={values => {
+        const { floatValue } = values;
+        return floatValue >= minimum && floatValue <= maximum;
+      }}
+    />
+  );
+};
 
 const NumberInputSetting: React.FC<Props> = ({
   value,
   handleChange,
   translationKey,
   requiresSnapshot,
-  minutes,
+  suffixKey,
+  minimum,
+  maximum,
   disabled
 }: Props) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const suffix = suffixKey ? ' '+t(suffixKey) : '';
 
   return (
     <FormControl component="fieldset">
@@ -42,7 +73,12 @@ const NumberInputSetting: React.FC<Props> = ({
           value={value}
           onChange={e => handleChange(+e.target.value)}
           InputProps={{
-            inputComponent: MinuteFormat ? MinuteFormat : undefined
+            inputComponent: NumberInputFormat,
+            inputProps: {
+              suffix,
+              minimum,
+              maximum,
+            }
           }}
           disabled={disabled}
         ></TextField>

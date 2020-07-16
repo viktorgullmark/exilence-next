@@ -15,6 +15,8 @@ export class AccountLeague {
   @persist('list', Character) @observable characters: Character[] = [];
   @persist('list') @observable stashtabs: IStashTab[] = [];
 
+  private static readonly excludedStashTypes: string[] = ['UniqueStash', 'MapStash'];
+
   constructor(id: string) {
     this.leagueId = id;
   }
@@ -39,7 +41,9 @@ export class AccountLeague {
         map((response: AxiosResponse<IStash>) => {
           runInAction(() => {
             if (response.data.tabs.length > 0) {
-              this.stashtabs = response.data.tabs;
+              this.stashtabs = response.data.tabs.filter(
+                (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type) 
+              );
             }
             this.getStashTabsSuccess();
           });

@@ -1,28 +1,29 @@
 import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { ISelectOption } from '../../../interfaces/select-option.interface';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
-import SelectSetting from '../select-setting/SelectSetting';
+import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
 interface Props {
   lowConfidencePricing: boolean;
   priceTreshold: number;
-  priceTresholdOptions: ISelectOption[];
+  totalPriceTreshold: number;
   setLowConfidencePricing: (value: boolean) => void;
   setPriceTreshold: (value: number) => void;
+  setTotalPriceTreshold: (value: number) => void;
 }
 
 const NetWorthSettings: React.FC<Props> = ({
   lowConfidencePricing,
   priceTreshold,
+  totalPriceTreshold,
   setLowConfidencePricing,
   setPriceTreshold,
-  priceTresholdOptions
+  setTotalPriceTreshold
 }: Props) => {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={4}>
+    <Grid container spacing={5}>
+      <Grid item>
         <CheckboxSetting
           value={lowConfidencePricing}
           handleChange={setLowConfidencePricing}
@@ -30,12 +31,25 @@ const NetWorthSettings: React.FC<Props> = ({
           requiresSnapshot
         />
       </Grid>
-      <Grid item xs={12} sm={4}>
-        <SelectSetting
-          options={priceTresholdOptions}
+      <Grid item>
+        <NumberInputSetting
           value={priceTreshold}
           handleChange={(value: number) => setPriceTreshold(value)}
           translationKey="price_treshold"
+          minimum={0}
+          maximum={100}
+          suffixKey="unit.chaos"
+          requiresSnapshot
+        />
+      </Grid>
+      <Grid item>
+        <NumberInputSetting
+          value={totalPriceTreshold}
+          handleChange={(value: number) => setTotalPriceTreshold(value)}
+          translationKey="total_price_treshold"
+          minimum={0}
+          maximum={5000}
+          suffixKey="unit.chaos"
           requiresSnapshot
         />
       </Grid>

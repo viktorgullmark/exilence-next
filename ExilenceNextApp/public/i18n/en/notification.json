@@ -68,6 +68,7 @@
     "title": {
       "init_session": "Initialize session failed",
       "validate_session": "Validate session failed",
+      "league_settings_outdated": "League settings outdated",
       "remove_profile": "Remove profile failed",
       "get_stash_tabs": "Failed retrieving stash tabs for {{param}}",
       "get_items": "Failed retrieving items for {{param}}",

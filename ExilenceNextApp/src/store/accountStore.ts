@@ -23,6 +23,7 @@ import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
+import AppConfig from "../config/app.config";
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -107,7 +108,7 @@ export class AccountStore {
     var options = {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
-      redirectUrl: 'http://localhost',
+      redirectUrl: AppConfig.redirectUrl,
       state: 'yourstate',
       responseType: 'code'
     };
@@ -125,7 +126,7 @@ export class AccountStore {
       alwaysOnTop: true
     });
 
-    var authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+    var authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     authWindow.webContents.on('will-redirect', (event: any, url: any) => {
       this.handleAuthCallback(url, authWindow);
@@ -272,6 +273,7 @@ export class AccountStore {
                 leagues.filter(l => l.id.indexOf('SSF') === -1)
               );
               this.getSelectedAccount.updateAccountLeagues(characters);
+              this.getSelectedAccount.updateLeaguesForProfiles(leagues.concat(getCharacterLeagues(characters)).map(l => l.id));
               this.rootStore.priceStore.getPricesForLeagues();
 
               return forkJoin(
@@ -327,13 +329,6 @@ export class AccountStore {
             })
           );
         }),
-        switchMap(() => {
-          if (this.rootStore.settingStore.autoSnapshotting) {
-            return of(this.getSelectedAccount.queueSnapshot());
-          } else {
-            return of({});
-          }
-        }),
         switchMap(() => of(this.initSessionSuccess())),
         catchError((e: AxiosError) => {
           return of(this.initSessionFail(e));
@@ -351,6 +346,14 @@ export class AccountStore {
     );
     this.rootStore.uiStateStore.setIsInitiating(false);
     this.rootStore.uiStateStore.setInitiated(true);
+
+    if (
+      this.rootStore.settingStore.autoSnapshotting &&
+      this.getSelectedAccount.activeProfile &&
+      this.getSelectedAccount.activeProfile.readyToSnapshot
+    ) {
+      this.getSelectedAccount.activeProfile.snapshot();
+    }
   }
 
   @action

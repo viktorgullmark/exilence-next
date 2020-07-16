@@ -9,33 +9,41 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import uuid from 'uuid';
 import { IColumn } from '../../interfaces/column.interface';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { ITableItem } from '../../interfaces/table-item.interface';
 import ItemTableCell from './item-table-cell/ItemTableCell';
 import ItemTableHeader from './item-table-header/ItemTableHeader';
 import { useStyles } from './ItemTable.styles';
+import { Group } from '../../store/domains/group';
+import ItemTablePaginationActions from './item-table-pagination-actions/ItemTablePaginationActions';
 
 export type Order = 'asc' | 'desc';
 
 export const tableFooterHeight = 52;
 
 interface ItemTableProps {
-  items: IPricedItem[];
+  items: ITableItem[];
   pageIndex: number;
+  pageSize: number;
+  setPageSize: (pageSize: number) => void;
   changePage: (i: number) => void;
   order: Order;
-  orderBy: keyof IPricedItem;
-  setOrderBy: (col: keyof IPricedItem) => void;
+  orderBy: keyof ITableItem;
+  setOrderBy: (col: keyof ITableItem) => void;
   setOrder: (order: Order) => void;
+  activeGroup?: Group;
 }
 
 const ItemTable: React.FC<ItemTableProps> = ({
   items,
   pageIndex,
+  pageSize,
+  setPageSize,
   changePage,
   order,
   orderBy,
   setOrder,
-  setOrderBy
+  setOrderBy,
+  activeGroup
 }: ItemTableProps) => {
   const classes = useStyles();
   const { t } = useTranslation(['tables']);
@@ -48,6 +56,12 @@ const ItemTable: React.FC<ItemTableProps> = ({
       maxWidth: 140
     },
     { id: 'name', label: t('tables:header.name'), minWidth: 50, maxWidth: 220 },
+    {
+      id: 'tabNames',
+      label: t('tables:header.tab_names'),
+      minWidth: 60,
+      maxWidth: 100
+    },
     {
       id: 'corrupted',
       label: t('tables:header.corrupted'),
@@ -94,14 +108,12 @@ const ItemTable: React.FC<ItemTableProps> = ({
     }
   ];
 
-  const rows: IPricedItem[] = items;
+  const rows: ITableItem[] = items;
 
   rows.forEach(item => {
     const img = new Image();
     img.src = item.icon;
   });
-
-  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     changePage(newPage);
@@ -139,9 +151,13 @@ const ItemTable: React.FC<ItemTableProps> = ({
       : (a, b) => -desc(a, b, orderBy);
   }
 
+  const getColumns = () => {
+    return activeGroup ? columns.filter(c => c.id !== 'tabNames') : columns;
+  }
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof IPricedItem
+    property: keyof ITableItem
   ) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
@@ -152,7 +168,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
+    setPageSize(+event.target.value);
     handleChangePage(event, 0);
   };
   return (
@@ -167,13 +183,13 @@ const ItemTable: React.FC<ItemTableProps> = ({
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              columns={columns}
+              columns={getColumns()}
             />
             <TableBody>
-              {stableSort<IPricedItem>(rows, getSorting(order, orderBy))
+              {stableSort<ITableItem>(rows, getSorting(order, orderBy))
                 .slice(
-                  pageIndex * rowsPerPage,
-                  pageIndex * rowsPerPage + rowsPerPage
+                  pageIndex * pageSize,
+                  pageIndex * pageSize + pageSize
                 )
                 .map(row => {
                   return (
@@ -183,7 +199,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
                       tabIndex={-1}
                       key={uuid.v4()}
                     >
-                      {columns.map(column => {
+                      {getColumns().map(column => {
                         return (
                           <ItemTableCell
                             key={uuid.v4()}
@@ -204,7 +220,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
           count={rows.length}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={pageSize}
           page={pageIndex}
           backIconButtonProps={{
             'aria-label': 'previous page'
@@ -214,6 +230,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
           }}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          ActionsComponent={ItemTablePaginationActions}
         />
       </Paper>
     </>

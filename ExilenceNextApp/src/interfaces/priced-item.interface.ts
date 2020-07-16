@@ -1,3 +1,5 @@
+import { ICompactTab } from './stash.interface';
+
 export interface IPricedItem {
   uuid: string;
   name: string;
@@ -25,4 +27,5 @@ export interface IPricedItem {
   variant: string;
   tier: number;
   inventoryId: string;
+  tab: ICompactTab[];
 }
