@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added support for pricing seeds
 ##### Changed
+- Changed how the price tresholds work (thanks to kryo4096)
+    - The total treshold now overrides the individual treshold, not the other way around
+    - Note that this may affect your net worth substantially depending on settings
 - Changed the behavior of the menu drawers, to reduce client lag
 ##### Fixed
 - Fixed a bug where items with no value would be listed, e.g common/rare items
