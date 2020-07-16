@@ -13,7 +13,8 @@ namespace API.Profiles
         public PricedItemProfileMapper()
         {
             CreateMap<PricedItemModel, PricedItem>();
-            CreateMap<PricedItem, PricedItemModel>();
+            CreateMap<PricedItem, PricedItemModel>()
+                .ForMember(o => o.Id, opt => opt.Ignore());
         }
     }
 }

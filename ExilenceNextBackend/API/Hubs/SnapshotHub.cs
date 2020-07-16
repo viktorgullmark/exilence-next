@@ -23,7 +23,7 @@ namespace API.Hubs
         {
             var profileModel = await _accountService.GetProfileWithSnapshots(profileId);
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
-            var snapshotModelWithItems = await _snapshotService.GetSnapshotWithItems(latestSnapshot.ClientId);
+            var snapshotModelWithItems = await _snapshotService.GetSnapshot(latestSnapshot.ClientId);
 
             Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModelWithItems;
@@ -31,12 +31,7 @@ namespace API.Hubs
 
         public async Task<SnapshotModel> AddSnapshot(SnapshotModel snapshotModel, string profileId)
         {
-            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
-            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
-                Log($"Add snapshot failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
-            });
-
-            //snapshotModel = await retryPolicy.ExecuteAsync(() => _snapshotService.AddSnapshot(profileId, snapshotModel));
+            snapshotModel = await _snapshotService.AddSnapshot(profileId, snapshotModel);
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -45,6 +40,8 @@ namespace API.Hubs
             }
 
             Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+                       
+            
             return snapshotModel;
         }
 
@@ -64,13 +61,7 @@ namespace API.Hubs
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-
-            var delay = Backoff.DecorrelatedJitterBackoffV2(medianFirstRetryDelay: TimeSpan.FromMilliseconds(250), retryCount: 5);
-            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(delay, (exception, timeSpan, retryCount, context) => {
-                Log($"Remove all snapshots failed: {exception.Message}, retrying in {Math.Round(timeSpan.TotalMilliseconds, 0)} ms. Retry count: {retryCount} of 5.");
-            });
-
-            await retryPolicy.ExecuteAsync(() => _snapshotService.RemoveAllSnapshots(profileClientId));
+            await _snapshotService.RemoveAllSnapshots(profileClientId);
 
             var group = await _groupService.GetGroupForConnection(ConnectionId);
             if (group != null)
@@ -80,21 +71,6 @@ namespace API.Hubs
             Log($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
         
-        public async Task<StashtabModel> AddPricedItems(UpdatePricedItemsModel updateModel)
-        {
-            var stashTabModel = await _snapshotService.AddPricedItems(updateModel.StashTabId, updateModel.PricedItems);
-
-            var group = await _groupService.GetGroupForConnection(ConnectionId);
-            if (group != null)
-            {
-                updateModel.ConnectionId = ConnectionId;
-                await Clients.OthersInGroup(group.Name).SendAsync("OnAddPricedItems", updateModel);
-            }
-
-            Log($"Added {updateModel.PricedItems.Count} pricedItems to StashTabId: {updateModel.StashTabId} in " + _timer.ElapsedMilliseconds + " ms.");
-            return stashTabModel;
-        }
-
         #region Streams
         //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
         //{

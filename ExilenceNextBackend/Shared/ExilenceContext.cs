@@ -17,14 +17,16 @@ namespace Shared
         public DbSet<Connection> Connections { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<League> Leagues { get; set; }
-        public DbSet<PricedItem> PricedItems { get; set; }
-        public DbSet<Snapshot> Snapshots { get; set; }
-        public DbSet<Stashtab> StashTabs { get; set; }
         public DbSet<SnapshotProfile> SnapshotProfiles { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Ignore<Snapshot>();
+            modelBuilder.Ignore<StashTab>();
+            modelBuilder.Ignore<PricedItem>();
+
             modelBuilder.Entity<SnapshotProfile>()
             .Property(e => e.ActiveStashTabIds)
             .HasConversion(
@@ -41,13 +43,7 @@ namespace Shared
                 .HasIndex(x => x.ClientId);
             modelBuilder.Entity<League>()
                 .HasIndex(x => x.ClientId);
-            modelBuilder.Entity<PricedItem>()
-                .HasIndex(x => x.ClientId);
-            modelBuilder.Entity<Snapshot>()
-                .HasIndex(x => x.ClientId);
             modelBuilder.Entity<SnapshotProfile>()
-                .HasIndex(x => x.ClientId);
-            modelBuilder.Entity<Stashtab>()
                 .HasIndex(x => x.ClientId);
 
 

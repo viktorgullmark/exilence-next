@@ -21,7 +21,6 @@ namespace Shared.Entities
         public bool IncludeEquipment { get; set; }
         public DateTime Created { get; set; }
         public ICollection<string> ActiveStashTabIds { get; set; }
-        public virtual ICollection<Snapshot> Snapshots { get; set; }
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
 
         [Required]
