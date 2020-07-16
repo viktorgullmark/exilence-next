@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing seeds
 ##### Changed
 - Changed the behavior of the menu drawers, to reduce client lag
+##### Fixed
+- Fixed a bug where items with no value would be listed, e.g common/rare items
 
 ## [0.3.8] - 2020-06-17
 ##### Added
