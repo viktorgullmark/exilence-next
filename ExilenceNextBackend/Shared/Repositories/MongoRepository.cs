@@ -75,9 +75,9 @@ namespace Shared.Repositories
             await _pricedItems.InsertManyAsync(pricedItems);
         }
 
-        public async Task RemovePricedItems(string stashtabId)
+        public async Task RemovePricedItems(string profileClientId)
         {
-            await _pricedItems.DeleteManyAsync(s => s.StashtabClientId == stashtabId);
+            await _pricedItems.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
         }
 
         public async Task RemoveAllSnapshots(string profileClientId)
@@ -86,7 +86,5 @@ namespace Shared.Repositories
             await _stashtabs.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
             await _snapshots.DeleteManyAsync(s => s.ProfileClientId == profileClientId);
         }
-
-
     }
 }

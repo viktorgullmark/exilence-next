@@ -40,6 +40,8 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
+            await _snapshotRepository.RemovePricedItems(profileClientId);
+
             snapshot.ProfileClientId = profileClientId;
 
             await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
