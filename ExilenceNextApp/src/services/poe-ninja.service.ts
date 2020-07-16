@@ -48,7 +48,8 @@ function getItemCategories() {
     'UniqueAccessory',
     'DeliriumOrb',
     'Beast',
-    'Vial'
+    'Vial',
+    'Seed'
   ];
   return categories;
 }
