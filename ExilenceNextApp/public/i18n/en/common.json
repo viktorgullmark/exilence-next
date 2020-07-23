@@ -117,7 +117,8 @@
     "filter_total": "Filter Total:",
     "google_chrome": "Google Chrome",
     "mozilla_firefox": "Mozilla Firefox",
-    "microsoft_edge": "Microsoft Edge"
+    "microsoft_edge": "Microsoft Edge",
+    "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly"
   },
   "value": {
     "none": "None",
