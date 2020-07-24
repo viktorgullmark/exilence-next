@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added support for pricing seeds
 - Added a warning text if more than 10 tabs are selected in the profile
+- Added translations for "no_characters" string
 ##### Changed
 - Changed how the price tresholds work (thanks to kryo4096)
     - The total treshold now overrides the individual treshold, not the other way around
