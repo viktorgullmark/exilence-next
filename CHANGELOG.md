@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.9] - NOT RELEASED
 ##### Added
 - Added support for pricing seeds
+- Added a new column "Item level" in the item table
 - Added a warning text if more than 10 tabs are selected in the profile
 - Added translations for "no_characters" string
 ##### Changed
