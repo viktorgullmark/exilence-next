@@ -73,7 +73,10 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
       elder: item.elder !== undefined ? item.elder : false,
       shaper: item.shaper !== undefined ? item.shaper : false,
       icon: item.icon,
-      ilvl: item.ilvl,
+      ilvl:
+        item.typeLine.indexOf(' Seed') > -1 && item.frameType === 5
+          ? getSeedTier(item.properties)
+          : item.ilvl,
       tier:
         item.properties !== null && item.properties !== undefined
           ? getMapTier(item.properties)
@@ -124,6 +127,7 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
       x.links === itemToFind.links &&
       x.level === itemToFind.level &&
       x.corrupted === itemToFind.corrupted &&
+      (x.typeLine.indexOf(' Seed') === -1 || x.ilvl === itemToFind.ilvl) &&
       // ignore frameType for all maps except unique ones
       (x.frameType === itemToFind.frameType ||
         (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
@@ -173,6 +177,13 @@ export function getQuality(props: IProperty[]) {
     ? props.find((t) => t.name === 'Quality')!.values[0][0]
     : '0';
   return parseInt(quality, 10);
+}
+
+export function getSeedTier(props: IProperty[]) {
+  const seedTier = props.find((t) => t.name.indexOf('Spawns a Level') > -1)
+    ? props.find((t) => t.name.indexOf('Spawns a Level') > -1)!.values[0][0]
+    : '0';
+  return parseInt(seedTier, 10);
 }
 
 export function getLevel(props: IProperty[]) {

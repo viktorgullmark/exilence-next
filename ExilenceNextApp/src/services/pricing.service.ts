@@ -72,14 +72,14 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         );
         break;
       case 5: // currency, including seeds
-        if (item.name.indexOf('Seed') > -1) {
+        if (item.name.indexOf(' Seed') > -1) {
           if (item.ilvl > 0 && item.ilvl < 76) {
             price = prices.find(
               (p) => p.name === item.name && p.ilvl && p.ilvl > 0 && p.ilvl < 76
             );
           } else {
             price = prices.find(
-              (p) => p.name === item.name && p.ilvl && p.ilvl > 76
+              (p) => p.name === item.name && p.ilvl && (p.ilvl === 76 || p.ilvl > 76)
             );
           }
         } else {
