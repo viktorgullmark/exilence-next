@@ -104,7 +104,6 @@ const ItemTable: React.FC<ItemTableProps> = ({
       id: 'total',
       label: t('tables:header.total'),
       minWidth: 60,
-      format: (value: number) => value.toFixed(2),
       numeric: true
     }
   ];
@@ -172,6 +171,16 @@ const ItemTable: React.FC<ItemTableProps> = ({
     setPageSize(+event.target.value);
     handleChangePage(event, 0);
   };
+
+  const formatTotalAndCumulativeValue = (totalValue: number, cumulativeValue: number): string => {
+    return `${totalValue.toFixed(2)} (${cumulativeValue.toFixed(2)})`;
+  }
+
+  const annotateTableItemWithCumulativeValue = (item: ITableItem, idx: number, items: ITableItem[]): ITableItem => ({
+    ...item,
+    cumulative: items.slice(0, idx + 1).reduce((acc, item) => acc + item.total, 0)
+  });
+
   return (
     <>
       <Paper
@@ -188,6 +197,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
             />
             <TableBody>
               {stableSort<ITableItem>(rows, getSorting(order, orderBy))
+                .map(annotateTableItemWithCumulativeValue)
                 .slice(
                   pageIndex * pageSize,
                   pageIndex * pageSize + pageSize
@@ -205,7 +215,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
                           <ItemTableCell
                             key={uuid.v4()}
                             column={column}
-                            value={row[column.id]}
+                            value={column.id === "total" ? formatTotalAndCumulativeValue(row.total, row.cumulative) : row[column.id]}
                             frameType={row['frameType']}
                           />
                         );

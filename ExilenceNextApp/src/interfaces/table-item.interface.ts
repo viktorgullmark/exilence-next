@@ -6,6 +6,7 @@ export interface ITableItem {
   frameType: number;
   total: number;
   calculated: number;
+  cumulative: number;
   max: number;
   elder: boolean;
   shaper: boolean;
