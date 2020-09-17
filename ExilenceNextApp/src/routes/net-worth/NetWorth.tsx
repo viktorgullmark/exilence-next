@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
-import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
+import { cardColors, itemColors, secondary } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   ExpansionPanel,
@@ -107,7 +107,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.primary}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
               secondaryValue={
@@ -127,7 +127,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.secondary}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.income : income()}
               valueIsDiff
@@ -141,7 +141,7 @@ const NetWorth: React.FC<NetWorthProps> = ({
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.third}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={getSnapshotCardValue(
                 activeGroup

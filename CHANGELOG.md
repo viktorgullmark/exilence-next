@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.10] - 2020-09-17
+##### Changed
+- Minor style tweaks
+
 ## [0.3.9] - 2020-07-29
 ##### Added
 - Added support for pricing seeds
