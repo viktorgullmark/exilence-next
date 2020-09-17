@@ -6,7 +6,7 @@ import {
   Grid,
   MenuItem,
   Select,
-  Tooltip,
+  Tooltip
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,7 +30,7 @@ import PatreonLogo from '../../assets/img/patreon-white.png';
 import { Notification } from '../../store/domains/notification';
 import {
   getDropdownSelection,
-  mapDomainToDropdown,
+  mapDomainToDropdown
 } from '../../utils/dropdown.utils';
 import { openLink } from '../../utils/window.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
@@ -157,19 +157,19 @@ const Toolbar: React.FC<Props> = (props: Props) => {
             changingProfile ||
             isUpdatingPrices ||
             isSnapshotting) && (
-            <Box
-              ml={1}
-              display='flex'
-              alignItems='center'
-              justifyContent='center'
-            >
-              <CircularProgress
-                className={classes.leftSpinner}
-                title={t('label.loading_title')}
-                size={20}
-              />
-            </Box>
-          )}
+              <Box
+                ml={1}
+                display='flex'
+                alignItems='center'
+                justifyContent='center'
+              >
+                <CircularProgress
+                  className={classes.leftSpinner}
+                  title={t('label.loading_title')}
+                  size={20}
+                />
+              </Box>
+            )}
 
           <Box ml={2} display='flex' whiteSpace='nowrap'>
             <StatusMessageContainer />
