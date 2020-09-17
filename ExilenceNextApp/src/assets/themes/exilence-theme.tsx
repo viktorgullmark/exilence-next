@@ -40,7 +40,7 @@ export const highchartsColors = [
 
 export const secondary = {
   light: '#696969',
-  main: '#252525',
+  main: '#202020',
   dark: '#000',
 };
 
@@ -81,9 +81,9 @@ export const currencyChangeColors = {
 };
 
 export const background = {
-  default: '#191919',
+  default: '#151515',
   paper: '#202020',
-  darker: '#101010',
+  darker: '#0e0e0e',
 };
 
 export type Rarity = typeof rarityColors;
