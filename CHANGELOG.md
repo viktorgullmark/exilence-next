@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.10] - 2020-09-19
 ##### Changed
 - Minor style tweaks
+##### Removed
 - Removed seed as a item category
 
 ## [0.3.9] - 2020-07-29
