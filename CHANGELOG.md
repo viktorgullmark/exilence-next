@@ -1,9 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.10] - 2020-09-17
+## [0.3.10] - 2020-09-19
 ##### Changed
 - Minor style tweaks
+- Removed seed as a item category
 
 ## [0.3.9] - 2020-07-29
 ##### Added
