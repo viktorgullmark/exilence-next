@@ -49,7 +49,6 @@ function getItemCategories() {
     'DeliriumOrb',
     'Beast',
     'Vial',
-    'Seed'
   ];
   return categories;
 }
