@@ -32,7 +32,8 @@ export function getExternalPriceFromWatchItem(
   } as IExternalPrice;
 }
 
-export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine) {
+export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine, type: string, league: string) {
+  console.log(`${league}/${type}/${item.detailsId}`);
   return {
     name: item.name,
     icon: item.icon,
@@ -50,8 +51,10 @@ export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine) {
     totalStacksize: item.stackSize,
     tier: item.mapTier,
     count: item.count,
-    quality: item.gemQuality
+    quality: item.gemQuality,
+    detailsUrl: `${league}/${type}/${item.detailsId}` // todo: add baseurl
   } as IExternalPrice;
+
 }
 
 export function getExternalPriceFromNinjaCurrencyItem(

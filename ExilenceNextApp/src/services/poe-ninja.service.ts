@@ -80,7 +80,7 @@ function getItemPrices(league: string) {
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
           if (response.data) {
             return response.data.lines.map(lines => {
-              return getExternalPriceFromNinjaItem(lines) as IExternalPrice;
+              return getExternalPriceFromNinjaItem(lines, type, league) as IExternalPrice;
             });
           } else {
             return []; // no prices found on ninja
