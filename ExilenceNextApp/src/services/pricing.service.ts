@@ -19,6 +19,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       name: item.name,
       icon: item.icon,
       count: 0,
+      detailsUrl: undefined
     };
   } else {
     switch (item.frameType) {

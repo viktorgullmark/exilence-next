@@ -4,6 +4,8 @@ import { IPoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja
 import { IPoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-item-overview-line.interface';
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { getNinjaLeagueUrl, getNinjaTypeUrl } from './ninja.utils';
+import AppConfig from './../config/app.config';
 
 export function getExternalPriceFromWatchItem(
   item: IPoeWatchCombinedPriceItemData
@@ -33,7 +35,7 @@ export function getExternalPriceFromWatchItem(
 }
 
 export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine, type: string, league: string) {
-  console.log(`${league}/${type}/${item.detailsId}`);
+  const detailsUrl = `${AppConfig.poeNinjaBaseUrl}/${getNinjaLeagueUrl(league.toLowerCase())}/${getNinjaTypeUrl(type)}/${item.detailsId}`;
   return {
     name: item.name,
     icon: item.icon,
@@ -52,9 +54,8 @@ export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine, t
     tier: item.mapTier,
     count: item.count,
     quality: item.gemQuality,
-    detailsUrl: `${league}/${type}/${item.detailsId}` // todo: add baseurl
+    detailsUrl: detailsUrl
   } as IExternalPrice;
-
 }
 
 export function getExternalPriceFromNinjaCurrencyItem(
@@ -79,6 +80,7 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
     item.mode = price.mode || 0;
     item.min = price.min || 0;
     item.median = price.median || 0;
+    item.detailsUrl = price.detailsUrl;
   }
   return item;
 }
