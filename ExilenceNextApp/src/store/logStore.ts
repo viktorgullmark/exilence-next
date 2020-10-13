@@ -8,8 +8,6 @@ export class LogStore {
 
   constructor(private rootStore: RootStore) {
     electronService.ipcRenderer.on('log-event', (event: any, args: any) => {
-      console.log('args: ', args);
-
       switch (args.event) {
         case 'start':
           this.running = true;

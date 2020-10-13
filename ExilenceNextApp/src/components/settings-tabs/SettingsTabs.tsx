@@ -81,14 +81,14 @@ const SettingsTabs: React.FC = () => {
           </Box>
         </Box>
       </SettingsTab>
-      <SettingsTab value={value} index={2}>
+      {/* <SettingsTab value={value} index={2}>
         <Box className={classes.subSection}>
           <Typography variant="overline">{t('title.general')}</Typography>
           <Box my={2}>
             <LogSettingsContainer />
           </Box>
         </Box>
-      </SettingsTab>
+      </SettingsTab> */}
     </div>
   );
 };
