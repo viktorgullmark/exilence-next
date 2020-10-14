@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.11] - NOT RELEASED
+##### Added
+- Added a link to view the price history on poe.ninja for each item
+
 ## [0.3.10] - 2020-09-19
 ##### Changed
 - Minor style tweaks
