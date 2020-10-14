@@ -2,7 +2,6 @@
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Shared.Models;
-using Shared.TemporaryModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
