@@ -1,5 +1,6 @@
 {
     "no_characters_in_league": "You have no characters in the selected league",
+    "no_characters": "No characters found for the current account",
     "group_not_found": "Group not found",
     "group_already_exists": "Group already exists",
     "not_connected": "Not connected to server",

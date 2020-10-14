@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shared;
 
 namespace Shared.Migrations
 {
     [DbContext(typeof(ExilenceContext))]
-    partial class ExilenceContextModelSnapshot : ModelSnapshot
+    [Migration("20200309220834_SnapshotsToMongoDB")]
+    partial class SnapshotsToMongoDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,140 +192,6 @@ namespace Shared.Migrations
                     b.ToTable("Leagues");
                 });
 
-            modelBuilder.Entity("Shared.Entities.PricedItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BaseType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Calculated")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<bool>("Corrupted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Elder")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("FrameType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Ilvl")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InventoryId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Links")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Max")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<decimal>("Mean")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<decimal>("Median")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<decimal>("Min")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<decimal>("Mode")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quality")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Shaper")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Sockets")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StackSize")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StashtabId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tier")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(13,4)");
-
-                    b.Property<int>("TotalStacksize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TypeLine")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Variant")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("StashtabId");
-
-                    b.ToTable("PricedItems");
-                });
-
-            modelBuilder.Entity("Shared.Entities.Snapshot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Snapshots");
-                });
-
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -336,9 +204,6 @@ namespace Shared.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ActiveCharacterName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ActiveLeagueId")
                         .HasColumnType("nvarchar(max)");
@@ -356,12 +221,6 @@ namespace Shared.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IncludeEquipment")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IncludeInventory")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

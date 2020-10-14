@@ -13,7 +13,8 @@ const prodConfig = {
   oauthUrl: 'https://www.pathofexile.com',
   pathOfExileUrl: 'https://www.pathofexile.com',
   pathOfExileApiUrl: 'https://api.pathofexile.com',
-  pathOfExileCookieDomain: '.pathofexile.com'
+  pathOfExileCookieDomain: '.pathofexile.com',
+  poeNinjaBaseUrl: 'https://poe.ninja'
 };
 
 export default prodConfig;

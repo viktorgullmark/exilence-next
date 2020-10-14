@@ -1,22 +1,21 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Shared.Entities
 {
     public class Snapshot
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [Required, StringLength(50)]
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public string ClientId { get; set; }
         public DateTime Created { get; set; }
-        public virtual ICollection<Stashtab> StashTabs { get; set; }
-        [Required]
-        public virtual SnapshotProfile Profile { get; set; }
-        public virtual int ProfileId { get; set; }
+        [BsonIgnore]
+        public List<StashTab> StashTabs { get; set; }
+        public string ProfileClientId { get; set; } //stored in SQL
 
     }
 }

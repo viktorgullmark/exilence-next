@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   loginTitle: {
     marginTop: 0,
     textAlign: 'center',
-    marginBottom: theme.spacing(5),
+    marginBottom: theme.spacing(3),
     textTransform: 'uppercase',
     paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.primary.main}`

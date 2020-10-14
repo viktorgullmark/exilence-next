@@ -1,6 +1,6 @@
-import { IExternalPrice } from "../interfaces/external-price.interface";
-import { IPricedItem } from "../interfaces/priced-item.interface";
-import { mapPriceToItem } from "../utils/price.utils";
+import { IExternalPrice } from '../interfaces/external-price.interface';
+import { IPricedItem } from '../interfaces/priced-item.interface';
+import { mapPriceToItem } from '../utils/price.utils';
 
 export const pricingService = {
   priceItem,
@@ -9,7 +9,7 @@ export const pricingService = {
 function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
   let price: IExternalPrice | undefined;
   item.total = 0;
-  if (item.name === "Chaos Orb") {
+  if (item.name === 'Chaos Orb') {
     price = {
       max: 1,
       min: 1,
@@ -19,13 +19,14 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       name: item.name,
       icon: item.icon,
       count: 0,
+      detailsUrl: undefined
     };
   } else {
     switch (item.frameType) {
       case 0: // normal
       case 1: // magic
       case 2: // rare
-        if (item.name.indexOf(" Map") > -1) {
+        if (item.name.indexOf(' Map') > -1) {
           price = prices.find(
             (p) =>
               (p.name === item.name || item.name.indexOf(p.name) > -1) &&
@@ -46,7 +47,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
             p.frameType === 3 &&
             (p.variant === item.variant ||
               p.variant === undefined ||
-              p.variant === "" ||
+              p.variant === '' ||
               p.variant === null)
         );
 
@@ -71,17 +72,29 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
             p.quality === item.quality
         );
         break;
-      case 5: // currency
-        price = prices.find((p) => p.name === item.name);
+      case 5: // currency, including seeds
+        if (item.name.indexOf(' Seed') > -1) {
+          if (item.ilvl > 0 && item.ilvl < 76) {
+            price = prices.find(
+              (p) => p.name === item.name && p.ilvl && p.ilvl > 0 && p.ilvl < 76
+            );
+          } else {
+            price = prices.find(
+              (p) => p.name === item.name && p.ilvl && (p.ilvl === 76 || p.ilvl > 76)
+            );
+          }
+        } else {
+          price = prices.find((p) => p.name === item.name);
+        }
         break;
       case 6: // divination card
         price = prices.find(
-          (p) => p.name === item.name && p.icon.indexOf("Divination") > -1
+          (p) => p.name === item.name && p.icon.indexOf('Divination') > -1
         );
         break;
       case 8: // prophecy
         price = prices.find(
-          (p) => p.name === item.name && p.icon.indexOf("Prophecy") > -1
+          (p) => p.name === item.name && p.icon.indexOf('Prophecy') > -1
         );
         break;
       case 9: // relic

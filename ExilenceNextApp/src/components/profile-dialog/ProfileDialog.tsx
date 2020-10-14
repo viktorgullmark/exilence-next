@@ -170,6 +170,7 @@ const ProfileDialog: React.FC<ProfileDialogProps> = ({
                   handleChange={handleChange}
                   marginBottom={3}
                   marginTop={2}
+                  displayCountWarning
                 />
                 <Box mt={2}>
                   <SelectField

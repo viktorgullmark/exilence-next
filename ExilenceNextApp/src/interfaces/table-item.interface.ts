@@ -26,4 +26,5 @@ export interface ITableItem {
   tier: number;
   inventoryId: string;
   tabNames: string;
+  detailsUrl: string;
 }

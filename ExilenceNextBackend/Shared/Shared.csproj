@@ -8,6 +8,10 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200123184057_test.cs" />
     <Compile Remove="Migrations\20200123184057_test.Designer.cs" />
+    <Compile Remove="Migrations\20200309205017_SnapshotsToMongoDB.cs" />
+    <Compile Remove="Migrations\20200309205017_SnapshotsToMongoDB.Designer.cs" />
+    <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.cs" />
+    <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

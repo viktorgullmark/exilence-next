@@ -2,6 +2,7 @@
   "header": {
     "icon": "Icon",
     "name": "Name",
+    "ilvl": "Item level",
     "links": "Links",
     "level": "Level",
     "quality": "Quality",

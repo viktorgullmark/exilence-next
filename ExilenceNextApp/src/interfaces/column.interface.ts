@@ -2,6 +2,7 @@ export interface IColumn {
   id:
     | 'icon'
     | 'name'
+    | 'ilvl'
     | 'links'
     | 'tabNames'
     | 'quality'

@@ -14,9 +14,9 @@ namespace Shared.Models
         [JsonPropertyName("uuid")]
         [Key("uuid")]
         public string ClientId { get; set; }
-        [Key("stashTabs")]
-        public List<StashtabModel> StashTabs { get; set; }
         [Key("created")]
         public DateTime? Created { get; set; }
+        [Key("stashTabs")]
+        public List<StashtabModel> StashTabs { get; set; }
     }
 }

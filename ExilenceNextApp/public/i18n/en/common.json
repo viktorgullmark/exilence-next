@@ -103,8 +103,8 @@
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",
-    "price_treshold": "Select price treshold",
-    "total_price_treshold": "Select total price treshold",
+    "price_treshold": "Price treshold",
+    "total_price_treshold": "Total price treshold",
     "requires_snapshot_info": "* = requires a new snapshot to take effect",
     "fetch_snapshot_spinner_title": "Fetching snapshots",
     "initiating_session_spinner_title": "Initiating session",
@@ -118,7 +118,9 @@
     "filter_total": "Filter Total:",
     "google_chrome": "Google Chrome",
     "mozilla_firefox": "Mozilla Firefox",
-    "microsoft_edge": "Microsoft Edge"
+    "microsoft_edge": "Microsoft Edge",
+    "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly",
+    "open_on_ninja": "View on poe.ninja"
   },
   "value": {
     "none": "None",
@@ -131,7 +133,7 @@
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
     "price_treshold": "Sets the cutoff for including items",
-    "total_price_treshold": "Sets the cutoff for including stacks of items",
+    "total_price_treshold": "Sets the cutoff for including total stack of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
     "ui_scale": "Sets the UI scale"

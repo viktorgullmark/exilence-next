@@ -1,26 +1,36 @@
-import { Box, CircularProgress, TableCell } from '@material-ui/core';
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  TableCell,
+  Tooltip,
+} from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   itemColors,
-  rarityColors
+  rarityColors,
 } from '../../../assets/themes/exilence-theme';
 import { IColumn } from '../../../interfaces/column.interface';
 import { getRarity } from '../../../utils/item.utils';
 import useStyles from './ItemTableCell.styles';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import { openCustomLink, openLink } from '../../../utils/window.utils';
 
 interface ItemTableCellProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string | number | boolean;
+  secondaryValue?: string;
   column: IColumn;
   frameType: number;
 }
 
 const ItemTableCell: React.FC<ItemTableCellProps> = ({
   value,
+  secondaryValue,
   column,
-  frameType
+  frameType,
 }: ItemTableCellProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -47,7 +57,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
     <>
       <TableCell
         className={clsx(classes.tableCell, {
-          [classes.iconCell]: column.id === 'icon'
+          [classes.iconCell]: column.id === 'icon',
         })}
         key={column.id}
         align={column.numeric ? 'right' : 'left'}
@@ -60,17 +70,17 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                   <div
                     style={{
                       borderLeft: `5px solid ${rarityColor}`,
-                      background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(0,0,0,0) 100%)`
+                      background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(0,0,0,0) 100%)`,
                     }}
                     className={clsx({
-                      [classes.iconCellInner]: column.id === 'icon'
+                      [classes.iconCellInner]: column.id === 'icon',
                     })}
                   >
                     <Box
-                      position="relative"
-                      alignItems="center"
-                      justifyContent="center"
-                      display="flex"
+                      position='relative'
+                      alignItems='center'
+                      justifyContent='center'
+                      display='flex'
                       className={classes.iconImg}
                     >
                       {!iconLoaded && <CircularProgress size={20} />}
@@ -87,13 +97,33 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                 );
               case 'name':
                 return (
-                  <span
-                    style={{
-                      color: rarityColor
-                    }}
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'
                   >
-                    {value}
-                  </span>
+                    <span
+                      style={{
+                        color: rarityColor,
+                      }}
+                    >
+                      {value}
+                    </span>
+                    {secondaryValue && (
+                      <Tooltip
+                        title={t('label.open_on_ninja')}
+                        placement='bottom'
+                      >
+                        <IconButton
+                          size='small'
+                          className={classes.inlineIcon}
+                          onClick={() => openCustomLink(secondaryValue)}
+                        >
+                          <TimelineIcon classes={{ root: classes.iconRoot }} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </Box>
                 );
               case 'links':
                 return (
@@ -101,7 +131,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                     {typeof value === 'number' && (
                       <span
                         className={clsx({
-                          [classes.noLinks]: noLinks(value)
+                          [classes.noLinks]: noLinks(value),
                         })}
                       >
                         {noLinks(value) ? t('label.not_available') : value}
@@ -113,13 +143,13 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                 return (
                   <span
                     style={{
-                      color: itemColors.corrupted
+                      color: itemColors.corrupted,
                     }}
                   >
                     {value ? (
                       <span
                         style={{
-                          color: itemColors.corrupted
+                          color: itemColors.corrupted,
                         }}
                       >
                         {t(`tables:value.${value.toString()}`)}
@@ -127,7 +157,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                     ) : (
                       <span
                         style={{
-                          color: theme.palette.primary.contrastText
+                          color: theme.palette.primary.contrastText,
                         }}
                       >
                         {t(`tables:value.${value.toString()}`)}
@@ -140,7 +170,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                   <span
                     className={classes.lastCell}
                     style={{
-                      color: itemColors.chaosOrb
+                      color: itemColors.chaosOrb,
                     }}
                   >
                     {tryParseNumber(value)}
@@ -150,7 +180,7 @@ const ItemTableCell: React.FC<ItemTableCellProps> = ({
                 return (
                   <span
                     style={{
-                      color: itemColors.chaosOrb
+                      color: itemColors.chaosOrb,
                     }}
                   >
                     {tryParseNumber(value)}

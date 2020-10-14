@@ -1,28 +1,25 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Shared.Entities
 {
-    public class Stashtab
+    public class StashTab
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [Required, StringLength(50)] // This is our own id.
-        public string ClientId { get; set; }
-        [Required, StringLength(100)] // This is GGG's Id so it's 64 chars by default.
-        public string StashTabId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public string ClientId { get; set; } // This is our own id.
+        public string StashTabId { get; set; } // This is GGG's Id so it's 64 chars by default.
         public string Name { get; set; }
         public int Index { get; set; }
         public string Color { get; set; }
-        [Column(TypeName = "decimal(13,4)")]
         public decimal Value { get; set; }
-        public virtual ICollection<PricedItem> PricedItems { get; set; }
-        [Required]
-        public virtual Snapshot Snapshot { get; set; }
-        public virtual int SnapshotId { get; set; }
+        [BsonIgnore]
+        public List<PricedItem> PricedItems { get; set; }
 
+        public string SnapshotClientId { get; set; }
+        public string SnapshotProfileClientId { get; set; }  //For easy deletion
     }
 }

@@ -56,6 +56,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
       maxWidth: 140
     },
     { id: 'name', label: t('tables:header.name'), minWidth: 50, maxWidth: 220 },
+    { id: 'ilvl', label: t('tables:header.ilvl'), minWidth: 50, maxWidth: 120 },
     {
       id: 'tabNames',
       label: t('tables:header.tab_names'),
@@ -205,6 +206,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
                             key={uuid.v4()}
                             column={column}
                             value={row[column.id]}
+                            secondaryValue={row.detailsUrl}
                             frameType={row['frameType']}
                           />
                         );

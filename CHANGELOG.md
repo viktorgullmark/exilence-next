@@ -1,11 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.9] - NOT RELEASED
+## [0.3.11] - NOT RELEASED
+##### Added
+- Added a link to view the price history on poe.ninja for each item
+
+## [0.3.10] - 2020-09-19
+##### Changed
+- Minor style tweaks
+##### Removed
+- Removed seed as a item category
+
+## [0.3.9] - 2020-07-29
 ##### Added
 - Added support for pricing seeds
+- Added a new column "Item level" in the item table
+- Added a warning text if more than 10 tabs are selected in the profile
+- Added translations for "no_characters" string
 ##### Changed
+- Changed how the price tresholds work (thanks to kryo4096)
+    - The total treshold now overrides the individual treshold, not the other way around
+    - Note that this may affect your net worth substantially depending on settings
 - Changed the behavior of the menu drawers, to reduce client lag
+- Changed the visual display of the expired session error on the login screen
+##### Fixed
+- Fixed a bug where items with no value would be listed, e.g common/rare items
 
 ## [0.3.8] - 2020-06-17
 ##### Added

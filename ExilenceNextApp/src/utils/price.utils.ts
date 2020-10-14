@@ -4,6 +4,8 @@ import { IPoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja
 import { IPoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-item-overview-line.interface';
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { getNinjaLeagueUrl, getNinjaTypeUrl } from './ninja.utils';
+import AppConfig from './../config/app.config';
 
 export function getExternalPriceFromWatchItem(
   item: IPoeWatchCombinedPriceItemData
@@ -32,7 +34,8 @@ export function getExternalPriceFromWatchItem(
   } as IExternalPrice;
 }
 
-export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine) {
+export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine, type: string, league: string) {
+  const detailsUrl = `${AppConfig.poeNinjaBaseUrl}/${getNinjaLeagueUrl(league.toLowerCase())}/${getNinjaTypeUrl(type)}/${item.detailsId}`;
   return {
     name: item.name,
     icon: item.icon,
@@ -50,21 +53,26 @@ export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine) {
     totalStacksize: item.stackSize,
     tier: item.mapTier,
     count: item.count,
-    quality: item.gemQuality
+    quality: item.gemQuality,
+    detailsUrl: detailsUrl
   } as IExternalPrice;
 }
 
 export function getExternalPriceFromNinjaCurrencyItem(
   item: IPoeNinjaCurrencyOverviewLine,
-  details: IPoeNinjaCurrencyOverviewCurrencyDetail | undefined
+  details: IPoeNinjaCurrencyOverviewCurrencyDetail | undefined,
+  type: string,
+  league: string
 ) {
+  const detailsUrl = `${AppConfig.poeNinjaBaseUrl}/${getNinjaLeagueUrl(league.toLowerCase())}/${getNinjaTypeUrl(type)}/${item.detailsId}`;
   const calculated = item.receive ? item.receive.value : 0;
 
   return {
     name: item.currencyTypeName,
     calculated: calculated,
     icon: details !== undefined ? details.icon : undefined,
-    count: item.receive ? item.receive.count : 0
+    count: item.receive ? item.receive.count : 0,
+    detailsUrl: detailsUrl
   } as IExternalPrice;
 }
 
@@ -76,6 +84,7 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
     item.mode = price.mode || 0;
     item.min = price.min || 0;
     item.median = price.median || 0;
+    item.detailsUrl = price.detailsUrl;
   }
   return item;
 }

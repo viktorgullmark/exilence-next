@@ -11,6 +11,7 @@ import { Account } from '../../store/domains/account';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
 import SupportButton from '../support-button/SupportButton';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 interface LoginContentProps {
   handleValidate: (account: IAccount) => void;
@@ -34,34 +35,24 @@ const LoginContent: React.FC<LoginContentProps> = ({
     <>
       <Grid
         container
-        direction='row'
-        justify='center'
-        alignItems='center'
+        direction="row"
+        justify="center"
+        alignItems="center"
         className={classes.content}
       >
         <Grid item sm={9} md={5} lg={4} xl={3}>
-          {errorMessage && (
-            <Paper
-              className={clsx(
-                'paper',
-                classes.loginContentContainer,
-                classes.infoWell
-              )}
-            >
-              <Box display='flex' justifyContent='center' alignItems='center'>
-                <Typography
-                  variant='subtitle2'
-                  className={classes.errorMessage}
-                >
-                  {t(errorMessage)}
-                </Typography>
-              </Box>
-            </Paper>
-          )}
           <Paper className={clsx('paper', classes.loginContentContainer)}>
-            <Typography variant='h5' className={classes.loginTitle}>
+            <Typography variant="h5" className={classes.loginTitle}>
               {t('title.login')}
             </Typography>
+            {errorMessage && (
+              <Box mb={2}>
+                <Alert severity="error">
+                  <AlertTitle>Error</AlertTitle>
+                  {t(errorMessage)}
+                </Alert>
+              </Box>
+            )}
             <Box>
               <AccountValidationForm
                 handleValidate={(details: IAccount) => handleValidate(details)}
