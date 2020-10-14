@@ -6,7 +6,7 @@ import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import {
   getExternalPriceFromNinjaCurrencyItem,
-  getExternalPriceFromNinjaItem
+  getExternalPriceFromNinjaItem,
 } from '../utils/price.utils';
 import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-currency-overview.interface';
 
@@ -19,7 +19,7 @@ export const poeninjaService = {
   getItemCategoryOverview,
   getCurrencyCategoryOverview,
   getItemPrices,
-  getCurrencyPrices
+  getCurrencyPrices,
 };
 
 function getCurrencyCategories() {
@@ -75,35 +75,15 @@ function getCurrencyCategoryOverview(league: string, type: string) {
 
 function getItemPrices(league: string) {
   return forkJoin(
-    getItemCategories().map(type => {
+    getItemCategories().map((type) => {
       return getItemCategoryOverview(league, type).pipe(
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
           if (response.data) {
-            return response.data.lines.map(lines => {
-              return getExternalPriceFromNinjaItem(lines, type, league) as IExternalPrice;
-            });
-          } else {
-            return []; // no prices found on ninja
-          }
-        })
-      );
-    })
-  ).pipe(map(arrays => arrays.reduce((acc, array) => [...acc, ...array], [])));
-}
-
-function getCurrencyPrices(league: string) {
-  return forkJoin(
-    getCurrencyCategories().map(type => {
-      return getCurrencyCategoryOverview(league, type).pipe(
-        map((response: AxiosResponse<IPoeNinjaCurrencyOverview>) => {
-          if (response.data) {
-            return response.data.lines.map(lines => {
-              const currencyDetail = response.data.currencyDetails.find(
-                detail => detail.name === lines.currencyTypeName
-              );
-              return getExternalPriceFromNinjaCurrencyItem(
+            return response.data.lines.map((lines) => {
+              return getExternalPriceFromNinjaItem(
                 lines,
-                currencyDetail
+                type,
+                league
               ) as IExternalPrice;
             });
           } else {
@@ -112,5 +92,35 @@ function getCurrencyPrices(league: string) {
         })
       );
     })
-  ).pipe(map(arrays => arrays.reduce((acc, array) => [...acc, ...array], [])));
+  ).pipe(
+    map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], []))
+  );
+}
+
+function getCurrencyPrices(league: string) {
+  return forkJoin(
+    getCurrencyCategories().map((type) => {
+      return getCurrencyCategoryOverview(league, type).pipe(
+        map((response: AxiosResponse<IPoeNinjaCurrencyOverview>) => {
+          if (response.data) {
+            return response.data.lines.map((lines) => {
+              const currencyDetail = response.data.currencyDetails.find(
+                (detail) => detail.name === lines.currencyTypeName
+              );
+              return getExternalPriceFromNinjaCurrencyItem(
+                lines,
+                currencyDetail,
+                type,
+                league
+              ) as IExternalPrice;
+            });
+          } else {
+            return []; // no prices found on ninja
+          }
+        })
+      );
+    })
+  ).pipe(
+    map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], []))
+  );
 }

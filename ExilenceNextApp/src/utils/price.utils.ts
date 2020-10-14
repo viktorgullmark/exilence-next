@@ -60,15 +60,19 @@ export function getExternalPriceFromNinjaItem(item: IPoeNinjaItemOverviewLine, t
 
 export function getExternalPriceFromNinjaCurrencyItem(
   item: IPoeNinjaCurrencyOverviewLine,
-  details: IPoeNinjaCurrencyOverviewCurrencyDetail | undefined
+  details: IPoeNinjaCurrencyOverviewCurrencyDetail | undefined,
+  type: string,
+  league: string
 ) {
+  const detailsUrl = `${AppConfig.poeNinjaBaseUrl}/${getNinjaLeagueUrl(league.toLowerCase())}/${getNinjaTypeUrl(type)}/${item.detailsId}`;
   const calculated = item.receive ? item.receive.value : 0;
 
   return {
     name: item.currencyTypeName,
     calculated: calculated,
     icon: details !== undefined ? details.icon : undefined,
-    count: item.receive ? item.receive.count : 0
+    count: item.receive ? item.receive.count : 0,
+    detailsUrl: detailsUrl
   } as IExternalPrice;
 }
 

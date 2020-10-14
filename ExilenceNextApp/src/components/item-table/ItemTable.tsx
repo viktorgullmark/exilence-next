@@ -206,6 +206,7 @@ const ItemTable: React.FC<ItemTableProps> = ({
                             key={uuid.v4()}
                             column={column}
                             value={row[column.id]}
+                            secondaryValue={row.detailsUrl}
                             frameType={row['frameType']}
                           />
                         );

@@ -13,5 +13,7 @@ export function getNinjaLeagueUrl(league: string) {
 export function getNinjaTypeUrl(type: string) {
   return `${type.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()}s`
     .replace('prophecys', 'prophecies')
-    .replace('accessorys', 'accessories');
+    .replace('accessorys', 'accessories')
+    .replace('currencys', 'currency')
+    .replace('fragmentss', 'fragments');
 }

@@ -22,3 +22,7 @@ export function openLink(event: MouseEvent<HTMLAnchorElement>) {
   let link = event.currentTarget.href;
   electronService.shell.openExternal(link);
 }
+
+export function openCustomLink(link: string) {
+  electronService.shell.openExternal(link);
+}

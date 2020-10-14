@@ -118,7 +118,8 @@
     "google_chrome": "Google Chrome",
     "mozilla_firefox": "Mozilla Firefox",
     "microsoft_edge": "Microsoft Edge",
-    "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly"
+    "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly",
+    "open_on_ninja": "View on poe.ninja"
   },
   "value": {
     "none": "None",
