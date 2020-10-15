@@ -1,9 +1,10 @@
 import {
+  Box,
   TableCell,
   TableHead,
   TableRow,
   TableSortLabel,
-  useTheme
+  useTheme,
 } from '@material-ui/core';
 import React from 'react';
 import { IColumn } from '../../../interfaces/column.interface';
@@ -37,7 +38,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
   return (
     <TableHead>
       <TableRow>
-        {columns.map(headCell => (
+        {columns.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -46,7 +47,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
               minWidth: headCell.minWidth,
               backgroundColor: theme.palette.secondary.main,
               maxWidth: headCell.maxWidth,
-              width: headCell.maxWidth
+              width: headCell.maxWidth,
             }}
           >
             {(() => {
@@ -55,7 +56,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
                   return <>{headCell.label}</>;
                 default:
                   return (
-                    <>
+                    <Box height='58'>
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={order}
@@ -70,7 +71,7 @@ const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
                           </span>
                         ) : null}
                       </TableSortLabel>
-                    </>
+                    </Box>
                   );
               }
             })()}

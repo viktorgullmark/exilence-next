@@ -20,7 +20,7 @@ export interface TableFilterProps<T> {
 const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
   array,
   handleFilter,
-  clearFilter
+  clearFilter,
 }: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -30,29 +30,39 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
       searchText: '',
     },
 
-    onSubmit: (): void => { /* do nothing */ },
+    onSubmit: (): void => {
+      /* do nothing */
+    },
 
     validationSchema: Yup.object().shape({
-      searchText: Yup.string().max(20)
+      searchText: Yup.string().max(20),
     }),
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <TextField
-        margin="dense"
-        variant="outlined"
-        onChange={e => {
+        margin='dense'
+        variant='outlined'
+        onChange={(e) => {
           formik.handleChange(e);
           handleFilter(e);
         }}
-        name="searchText"
+        name='searchText'
         placeholder={t('tables:label.search_text')}
         className={classes.searchField}
         value={formik.values.searchText}
         InputProps={{
+          classes: {
+            input: classes.inputField,
+          },
           startAdornment: (
-            <Box mr={1} display="flex" justifyContent="center" alignItems="center">
+            <Box
+              mr={1}
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+            >
               <SearchIcon />
             </Box>
           ),
@@ -60,11 +70,11 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
             <>
               {formik.values.searchText !== '' && (
                 <IconButton
-                  aria-label="help"
+                  aria-label='help'
                   title={t('label.clear_search_icon_title')}
                   className={classes.clearIcon}
-                  edge="start"
-                  size="small"
+                  edge='start'
+                  size='small'
                   onClick={() => {
                     formik.setFieldValue('searchText', '');
                     clearFilter();
@@ -74,7 +84,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
                 </IconButton>
               )}
             </>
-          )
+          ),
         }}
       />
     </form>
