@@ -57,6 +57,8 @@ export class Profile {
   @persist @observable active: boolean = false;
   @persist @observable includeEquipment: boolean = false;
   @persist @observable includeInventory: boolean = false;
+  @observable income: number = 0;
+  @observable incomeResetAt: moment.Moment = moment().utc();
 
   constructor(obj?: IProfile) {
     Object.assign(this, obj);
@@ -216,13 +218,14 @@ export class Profile {
     return getItemCount([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
-  @computed
-  get income() {
-    const hours = 1;
-    const hoursAgo = moment().utc().subtract(hours, 'hours');
+  @action
+  calculateIncome() {
     const snapshots = this.snapshots.filter((s) =>
-      moment(s.created).utc().isAfter(hoursAgo)
+      moment(s.created).utc().isAfter(this.incomeResetAt)
     );
+
+    const hoursAgo = moment().utc().hours() - this.incomeResetAt.hours();
+    const hours = hoursAgo > 0 ? hoursAgo : 1;
 
     if (snapshots.length > 1) {
       const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
@@ -233,10 +236,11 @@ export class Profile {
         (calculateNetWorth([lastSnapshot]) -
           calculateNetWorth([firstSnapshot])) /
         hours;
-      return incomePerHour;
+      this.income = incomePerHour;
+      return;
     }
 
-    return 0;
+    this.income = 0;
   }
 
   @computed
@@ -318,6 +322,11 @@ export class Profile {
 
     rootStore.uiStateStore!.setIsSnapshotting(true);
     this.getItems();
+  }
+
+  @action clearIncome() {
+    this.income = 0;
+    this.incomeResetAt = moment().utc();
   }
 
   @action snapshotSuccess() {
@@ -612,6 +621,7 @@ export class Profile {
           this.snapshots.unshift(snapshotToAdd);
           this.snapshots = this.snapshots.slice(0, 1000);
         });
+        this.calculateIncome();
       };
       fromStream(
         this.sendSnapshot(

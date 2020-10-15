@@ -1,10 +1,19 @@
-import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Link,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
+import ClearIcon from '@material-ui/icons/Clear';
 
 interface OverviewWidgetContentProps {
   value: number | string;
@@ -13,6 +22,7 @@ interface OverviewWidgetContentProps {
   secondaryValue?: number | string;
   secondaryValueIsDiff?: boolean;
   secondaryValueStyles?: React.CSSProperties;
+  clearFn?: () => void;
   title: string;
   icon: JSX.Element;
   valueColor?: string;
@@ -30,10 +40,11 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
   secondaryValue,
   secondaryValueIsDiff,
   secondaryValueStyles,
+  clearFn,
   valueColor,
   currency,
   currencyShort,
-  tooltip = ''
+  tooltip = '',
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -46,8 +57,8 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
         <Grid item sm={9}>
           <div className={classes.ellipsis}>
             <Typography
-              variant="h6"
-              align="right"
+              variant='h6'
+              align='right'
               style={{ color: valueColor }}
             >
               {currency
@@ -61,7 +72,7 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
       <Box mt={1}>
         <Grid container spacing={1}>
           <Grid item sm={6}>
-            <Typography component="span" style={{}} className={classes.title}>
+            <Typography component='span' style={{}} className={classes.title}>
               {t(title)}
             </Typography>
           </Grid>
@@ -69,33 +80,40 @@ const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
             <Tooltip
               title={tooltip}
               classes={{ tooltip: classes.tooltip }}
-              placement="bottom-end"
+              placement='bottom-end'
             >
               <div className={classes.ellipsis}>
                 {secondaryValue && secondaryValueIsDiff ? (
                   <Typography
-                    component="span"
+                    component='span'
                     noWrap
                     style={secondaryValueStyles}
                     className={clsx(classes.secondary, {
                       [classes.currencyChange]: currency,
                       [classes.positiveChange]: secondaryValue > 0,
-                      [classes.negativeChange]: secondaryValue < 0
+                      [classes.negativeChange]: secondaryValue < 0,
                     })}
                   >
                     {formatValue(secondaryValue, currencyShort, true)}
                   </Typography>
                 ) : (
-                  <Typography
-                    component="span"
-                    noWrap
-                    style={secondaryValueStyles}
-                    className={clsx(classes.secondary, {
-                      [classes.currencyChange]: currency
-                    })}
-                  >
-                    {secondaryValue !== 0 ? secondaryValue : ''}
-                  </Typography>
+                  <>
+                    <Typography
+                      component='span'
+                      noWrap
+                      style={secondaryValueStyles}
+                      className={clsx(classes.secondary, {
+                        [classes.currencyChange]: currency,
+                      })}
+                    >
+                      {secondaryValue !== 0 ? secondaryValue : ''}
+                    </Typography>
+                    {!secondaryValue && clearFn && (
+                      <a className={classes.inlineLink} onClick={clearFn}>
+                        {t('label.reset')}
+                      </a>
+                    )}
+                  </>
                 )}
               </div>
             </Tooltip>

@@ -40,7 +40,7 @@ configureI18n();
 configureAxios();
 enableLogging({
   action: false,
-  reaction: true,
+  reaction: false,
   transaction: false,
   compute: false
 });

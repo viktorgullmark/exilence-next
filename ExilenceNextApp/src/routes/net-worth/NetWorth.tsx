@@ -10,7 +10,11 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
-import { cardColors, itemColors, secondary } from '../../assets/themes/exilence-theme';
+import {
+  cardColors,
+  itemColors,
+  secondary,
+} from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   ExpansionPanel,
@@ -137,6 +141,9 @@ const NetWorth: React.FC<NetWorthProps> = ({
               icon={<TrendingUpIcon fontSize='default' />}
               currencyShort={activeCurrency().short}
               currency
+              clearFn={
+                activeGroup ? undefined : () => activeProfile?.clearIncome()
+              }
             />
           </Widget>
         </Grid>

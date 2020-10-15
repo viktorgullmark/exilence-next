@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 ## [0.3.11] - NOT RELEASED
 ##### Added
 - Added a link to view the price history on poe.ninja for each item
+- Added a reset button to the income widget
+##### Changed
+- Reworked how income is calculated
+    - Now calculates over every hour since the session started, instead of only the past hour
+- Minor style tweaks
 
 ## [0.3.10] - 2020-09-19
 ##### Changed
