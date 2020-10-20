@@ -9,7 +9,7 @@ import useStyles from './ItemTableFilter.styles';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 
-export interface TableFilterProps<T> {
+export type TableFilterProps<T> = {
   array: T[];
   handleFilter: (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -17,7 +17,7 @@ export interface TableFilterProps<T> {
   clearFilter: () => void;
 }
 
-const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
+const ItemTableFilter = ({
   array,
   handleFilter,
   clearFilter,
