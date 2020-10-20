@@ -5,17 +5,17 @@ import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
 
-interface Props {
+type SnapshotHistoryChartContainerProps = {
   showIndividualTabs?: boolean;
   accountStore?: AccountStore;
   signalrStore?: SignalrStore;
 }
 
-const SnapshotHistoryChartContainer: React.FC<Props> = ({
+const SnapshotHistoryChartContainer = ({
   accountStore,
   signalrStore,
   showIndividualTabs,
-}: Props) => {
+}: SnapshotHistoryChartContainerProps) => {
   let ref = useRef(null);
   let size = useComponentSize(ref);
 
