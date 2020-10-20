@@ -12,7 +12,7 @@ import { placeholderOption } from '../../utils/misc.utils';
 import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 
-interface Props {
+type ProfileDialogContainerProps = {
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
   uiStateStore?: UiStateStore;
@@ -23,7 +23,7 @@ interface Props {
   handleClickClose: () => void;
 }
 
-const ProfileDialogContainer: React.FC<Props> = ({
+const ProfileDialogContainer = ({
   accountStore,
   leagueStore,
   uiStateStore,
@@ -31,7 +31,7 @@ const ProfileDialogContainer: React.FC<Props> = ({
   isOpen,
   isEditing,
   handleClickClose,
-}: Props) => {
+}: ProfileDialogContainerProps) => {
   const account = accountStore!.getSelectedAccount;
   const {
     activeLeague,
