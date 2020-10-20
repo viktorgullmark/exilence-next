@@ -6,15 +6,15 @@ import { AccountStore } from '../../../store/accountStore';
 import { UiStateStore } from '../../../store/uiStateStore';
 import StashTabDropdown from '../../stash-tab-dropdown/StashTabDropdown';
 
-export interface IProps {
+export interface ItemTableFilterSectionProps {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
 }
 
-const ItemTableFilterSection: React.FC<IProps> = ({
+const ItemTableFilterSection = ({
   uiStateStore,
   accountStore,
-}: IProps) => {
+}: ItemTableFilterSectionProps) => {
   const [selectedStashTabs, setSelectedStashTabs] = useState<IStashTab[]>([]);
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
 
