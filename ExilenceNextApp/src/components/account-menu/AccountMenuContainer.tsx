@@ -4,12 +4,12 @@ import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import AccountMenu from './AccountMenu';
 
-interface Props {
+type AccountMenuContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
 }
 
-const AccountMenuContainer: React.FC<Props> = ({ uiStateStore, signalrStore }: Props) => {
+const AccountMenuContainer = ({ uiStateStore, signalrStore }: AccountMenuContainerProps) => {
   const open = Boolean(uiStateStore!.accountMenuAnchor);
 
   const handleMenuClose = () => {
