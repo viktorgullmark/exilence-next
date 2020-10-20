@@ -19,14 +19,14 @@ import useStyles from './ItemTableCell.styles';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import { openCustomLink, openLink } from '../../../utils/window.utils';
 
-interface ItemTableCellProps extends React.HTMLAttributes<HTMLDivElement> {
+type ItemTableCellProps = {
   value: string | number | boolean;
   secondaryValue?: string;
   column: IColumn;
   frameType: number;
 }
 
-const ItemTableCell: React.FC<ItemTableCellProps> = ({
+const ItemTableCell = ({
   value,
   secondaryValue,
   column,
