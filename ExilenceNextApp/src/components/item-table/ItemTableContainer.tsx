@@ -17,7 +17,7 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import ItemTable, { Order } from './ItemTable';
 
-interface ItemTableContainerProps {
+type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
+const ItemTableContainer = ({
   accountStore,
   signalrStore,
   uiStateStore,
@@ -60,6 +60,7 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
 
+  // FIXME: add useEffect() to clear timeout on dismounting
   let timer: NodeJS.Timeout | undefined = undefined;
 
   const handleFilter = (
