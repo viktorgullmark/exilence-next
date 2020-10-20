@@ -46,7 +46,7 @@ export const innerToolbarHeight = 50;
 export const patreonLogoHeight = 35;
 export const patreonLogoWidth = 86;
 
-interface Props {
+type ToolbarProps = {
   signalrOnline: boolean;
   sidenavOpened: boolean;
   autoSnapshotting: boolean;
@@ -76,33 +76,32 @@ interface Props {
   handleRemoveProfile: () => void;
 }
 
-const Toolbar: React.FC<Props> = (props: Props) => {
-  const {
-    signalrOnline,
-    sidenavOpened,
-    groupOverviewOpened,
-    activeProfile,
-    profiles,
-    profileOpen,
-    isEditing,
-    isInitiating,
-    unreadNotifications,
-    isSnapshotting,
-    isUpdatingPrices,
-    profilesLoaded,
-    changingProfile,
-    toggleSidenav,
-    toggleGroupOverview,
-    handleProfileOpen,
-    handleProfileClose,
-    handleProfileChange,
-    handleSnapshot,
-    handleNotificationsOpen,
-    handleAccountMenuOpen,
-    handleClearSnapshots,
-    handleRemoveProfile,
-    handleOverlay,
-  } = props;
+const Toolbar = ({
+  signalrOnline,
+  sidenavOpened,
+  groupOverviewOpened,
+  activeProfile,
+  profiles,
+  profileOpen,
+  isEditing,
+  isInitiating,
+  unreadNotifications,
+  isSnapshotting,
+  isUpdatingPrices,
+  profilesLoaded,
+  changingProfile,
+  toggleSidenav,
+  toggleGroupOverview,
+  handleProfileOpen,
+  handleProfileClose,
+  handleProfileChange,
+  handleSnapshot,
+  handleNotificationsOpen,
+  handleAccountMenuOpen,
+  handleClearSnapshots,
+  handleRemoveProfile,
+  handleOverlay,
+}: ToolbarProps) => {
 
   const classes = useStyles();
   const { t } = useTranslation();
@@ -142,7 +141,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
           >
             <a href='https://patreon.com/exilence' onClick={(e) => openLink(e)}>
               <Box display='flex' alignItems='center' height={1}>
-                <img className={classes.patreonLogo} src={PatreonLogo} />
+                <img className={classes.patreonLogo} src={PatreonLogo} alt="patreon" />
               </Box>
             </a>
           </Box>
@@ -276,7 +275,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 </span>
               </Tooltip>
             </Grid>
-            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.divider} />
             <Grid
               item
               className={classes.snapshotArea}
@@ -322,7 +321,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 </span>
               </Tooltip>
             </Grid>
-            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.divider} />
             <Grid
               item
               className={classes.overlayArea}
@@ -341,7 +340,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 </span>
               </Tooltip>
             </Grid>
-            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.divider} />
             <Grid item className={classes.groupArea} data-tour-elem='groupArea'>
               <Tooltip title={t('label.group_icon_title')} placement='bottom'>
                 <span>
@@ -357,7 +356,7 @@ const Toolbar: React.FC<Props> = (props: Props) => {
                 </span>
               </Tooltip>
             </Grid>
-            <Grid item className={classes.divider}></Grid>
+            <Grid item className={classes.divider} />
             <Grid item className={classes.miscArea}>
               <Tooltip
                 title={t('label.notification_icon_title')}

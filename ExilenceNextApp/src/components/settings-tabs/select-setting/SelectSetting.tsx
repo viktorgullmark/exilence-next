@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { ISelectOption } from '../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
 
-interface Props {
+type SelectSettingProps = {
   value: number;
   options: ISelectOption[];
   handleChange: (value: number) => void;
@@ -19,13 +19,13 @@ interface Props {
   requiresSnapshot?: boolean;
 }
 
-const SelectSetting: React.FC<Props> = ({
+const SelectSetting = ({
   value,
   options,
   handleChange,
   translationKey,
   requiresSnapshot
-}: Props) => {
+}: SelectSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (

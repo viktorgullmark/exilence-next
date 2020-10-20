@@ -3,11 +3,11 @@ import React from 'react';
 import { UiStateStore } from '../../store/uiStateStore';
 import StatusMessage from './StatusMessage';
 
-interface Props {
+type StatusMessageContainerProps = {
   uiStateStore?: UiStateStore;
 }
 
-const StatusMessageContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
+const StatusMessageContainer = ({ uiStateStore }: StatusMessageContainerProps) => {
   return <StatusMessage statusMessage={uiStateStore!.statusMessage}/>
 };
 

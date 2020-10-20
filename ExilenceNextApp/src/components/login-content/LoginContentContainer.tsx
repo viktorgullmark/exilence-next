@@ -7,13 +7,13 @@ import { UiStateStore } from '../../store/uiStateStore';
 import { LeagueStore } from './../../store/leagueStore';
 import LoginContent from './LoginContent';
 
-interface LoginContentProps {
+type LoginContentProps = {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
   leagueStore?: LeagueStore;
 }
 
-const LoginContentContainer: React.FC<LoginContentProps> = ({
+const LoginContentContainer = ({
   accountStore,
   uiStateStore,
 }: LoginContentProps) => {
@@ -35,7 +35,7 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
       errorMessage={uiStateStore!.loginError}
-    ></LoginContent>
+    />
   );
 };
 

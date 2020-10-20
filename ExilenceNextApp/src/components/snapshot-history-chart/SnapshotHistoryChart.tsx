@@ -8,7 +8,7 @@ import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface
 import Highcharts from './../highcharts-base/HighchartsBase';
 import useStyles from './SnapshotHistoryChart.styles';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+type SnapshotHistoryChartProps = {
   width: number;
   height: number;
   playerData?: IConnectionChartSeries[];
@@ -17,18 +17,18 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stashTabColors?: string[];
 }
 
-interface ChartSeries {
+type ChartSeries = {
   type: string;
   name: string;
   data: number[][];
 }
 
-const SnapshotHistoryChart: React.FC<Props> = ({
+const SnapshotHistoryChart = ({
   playerData,
   groupData,
   showIndividualTabs,
   stashTabColors,
-}: Props) => {
+}: SnapshotHistoryChartProps) => {
   const theme = useTheme();
   const classes = useStyles();
 

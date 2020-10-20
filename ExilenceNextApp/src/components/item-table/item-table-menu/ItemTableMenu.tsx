@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-interface Props {
+type ItemTableMenuProps = {
   open: boolean;
   anchorEl: HTMLElement | null;
   exportDisabled?: boolean;
@@ -10,13 +10,13 @@ interface Props {
   handleExport: () => void;
 }
 
-const ItemTableMenu: React.FC<Props> = ({
+const ItemTableMenu = ({
   anchorEl,
   open,
   exportDisabled,
   handleMenuClose,
   handleExport
-}: Props) => {
+}: ItemTableMenuProps) => {
   const { t } = useTranslation();
   return (
     <Menu

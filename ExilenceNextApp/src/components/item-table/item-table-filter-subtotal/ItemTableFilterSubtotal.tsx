@@ -7,16 +7,15 @@ import { itemColors } from '../../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './ItemTableFilterSubtotal.styles';
 
-interface ItemTableFilterSubtotalProps {
+type ItemTableFilterSubtotalProps = {
   array: IPricedItem[];
 }
 
-const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
-  array: array,
-}: ItemTableFilterSubtotalProps) => {
+const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
+  // FIXME: remove unnecessary .map()
   const sumString =
     ' ' +
     array

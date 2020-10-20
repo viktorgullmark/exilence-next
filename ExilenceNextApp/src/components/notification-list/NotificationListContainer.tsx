@@ -4,15 +4,15 @@ import { NotificationStore } from '../../store/notificationStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import NotificationList from './NotificationList';
 
-interface Props {
+type NotificationListContainerProps = {
   notificationStore?: NotificationStore;
   uiStateStore?: UiStateStore;
 }
 
-const NotificationListContainer: React.FC<Props> = ({
+const NotificationListContainer = ({
   uiStateStore,
   notificationStore
-}: Props) => {
+}: NotificationListContainerProps) => {
   const listOpen = Boolean(uiStateStore!.notificationListAnchor);
 
   const handleListClose = () => {

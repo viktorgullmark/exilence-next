@@ -6,12 +6,12 @@ import StepContent from './StepContent/StepContent';
 import { getToolbarSteps } from '../../utils/stepper.utils';
 import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
 
-interface Props {
+type ToolbarStepperProps = {
   isOpen: boolean;
   handleClose: () => void;
 }
 
-const ToolbarStepper: React.FC<Props> = ({ isOpen, handleClose }: Props) => {
+const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
 

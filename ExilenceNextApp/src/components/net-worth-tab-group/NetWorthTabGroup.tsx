@@ -11,14 +11,14 @@ import useStyles from './NetWorthTabGroup.styles';
 
 export const netWorthTabGroupHeight = 48;
 
-function a11yProps(index: any) {
+function a11yProps(index: number) {
   return {
     id: `net-worth-tab-${index}`,
     'aria-controls': `net-worth-tabpanel-${index}`
   };
 }
 
-const NetWorthTabGroup: React.FC = () => {
+const NetWorthTabGroup = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Login: React.FC = () => {
+const Login = () => {
   useEffect(() => {
     visitor!.pageview('/login', appName).send();
   });

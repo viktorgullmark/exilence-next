@@ -3,13 +3,13 @@ import React from 'react';
 import { SettingStore } from '../../../store/settingStore';
 import NetWorthSettings from './NetWorthSettings';
 
-interface Props {
+type NetWorthSettingsContainerProps = {
   settingStore?: SettingStore;
 }
 
-const NetWorthSettingsContainer: React.FC<Props> = ({
+const NetWorthSettingsContainer = ({
   settingStore
-}: Props) => {
+}: NetWorthSettingsContainerProps) => {
   return (
     <NetWorthSettings
       lowConfidencePricing={settingStore!.lowConfidencePricing}

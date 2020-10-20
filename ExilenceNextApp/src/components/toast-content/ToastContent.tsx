@@ -2,17 +2,17 @@ import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import useStyles from './ToastContent.styles';
 
-interface Props {
+type ToastContentProps = {
   message: string;
   description: string;
   stackTrace?: string;
 }
 
-const ToastContent: React.FC<Props> = ({
+const ToastContent = ({
   message,
   description,
   stackTrace
-}: Props) => {
+}: ToastContentProps) => {
   const classes = useStyles();
 
   return (

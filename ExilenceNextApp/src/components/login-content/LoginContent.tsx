@@ -13,7 +13,7 @@ import useStyles from './LoginContent.styles';
 import SupportButton from '../support-button/SupportButton';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
-interface LoginContentProps {
+type LoginContentProps = {
   handleValidate: (account: IAccount) => void;
   isSubmitting: boolean;
   isInitiating: boolean;
@@ -21,7 +21,7 @@ interface LoginContentProps {
   errorMessage?: string;
 }
 
-const LoginContent: React.FC<LoginContentProps> = ({
+const LoginContent = ({
   handleValidate,
   isSubmitting,
   isInitiating,

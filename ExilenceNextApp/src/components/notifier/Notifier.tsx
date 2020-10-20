@@ -7,12 +7,12 @@ import ToastContent from '../toast-content/ToastContent';
 import { UiStateStore } from './../../store/uiStateStore';
 import useStyles from './Notifier.styles';
 
-interface NotifierProps {
+type NotifierProps = {
   uiStateStore?: UiStateStore;
   notificationStore?: NotificationStore;
 }
 
-const Notifier: React.FC<NotifierProps> = ({
+const Notifier = ({
   notificationStore
 }: NotifierProps) => {
   const { t } = useTranslation();

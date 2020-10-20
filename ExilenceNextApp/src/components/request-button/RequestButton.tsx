@@ -3,11 +3,11 @@ import { ButtonProps } from '@material-ui/core/Button';
 import React from 'react';
 import useStyles from './RequestButton.styles';
 
-type Props = ButtonProps & {
+type RequestButtonProps = ButtonProps & {
   loading: boolean;
 };
 
-const RequestButton: React.FC<Props> = ({ loading, children, ...props }) => {
+const RequestButton = ({ loading, children, ...props }: RequestButtonProps) => {
   const classes = useStyles();
 
   return (

@@ -6,11 +6,11 @@ import { ToastContainer } from 'react-toastify';
 import { UiStateStore } from '../../store/uiStateStore';
 import useStyles from './ToastWrapper.styles';
 
-interface Props {
+type ToastWrapperProps = {
   uiStateStore?: UiStateStore;
 }
 
-const ToastWrapper: React.FC<Props> = ({ uiStateStore }: Props) => {
+const ToastWrapper = ({ uiStateStore }: ToastWrapperProps) => {
   const classes = useStyles();
   const location = useLocation();
 

@@ -11,19 +11,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './CheckboxSetting.styles';
 
-interface Props {
+type CheckboxSettingProps = {
   value: boolean;
   handleChange: (value: boolean) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
 }
 
-const CheckboxSetting: React.FC<Props> = ({
+const CheckboxSetting = ({
   value,
   handleChange,
   translationKey,
   requiresSnapshot
-}: Props) => {
+}: CheckboxSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
