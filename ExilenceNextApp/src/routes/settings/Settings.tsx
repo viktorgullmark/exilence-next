@@ -6,11 +6,11 @@ import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import SettingsTabs from '../../components/settings-tabs/SettingsTabs';
 import { SettingStore } from '../../store/settingStore';
 
-interface Props {
+type SettingsProps = {
   settingStore?: SettingStore;
 }
 
-const Settings: React.FC<Props> = (props: Props) => {
+const Settings = (props: SettingsProps) => {
   useEffect(() => {
     visitor!.pageview('/settings', appName).send();
   });
