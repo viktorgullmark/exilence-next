@@ -3,19 +3,19 @@ import React from 'react';
 import { Notification } from '../../store/domains/notification';
 import NotificationListItem from './notification-list-item/NotificationListItem';
 
-interface Props {
+type NotificationListProps =  {
   notificationList: Notification[];
   open: boolean;
   notificationListAnchor: HTMLElement | null;
   handleListClose: () => void;
 }
 
-const NotificationList: React.FC<Props> = ({
+const NotificationList = ({
   notificationList,
   open,
   handleListClose,
   notificationListAnchor,
-}: Props) => {
+}: NotificationListProps) => {
   return (
     <Menu
       anchorEl={notificationListAnchor}
