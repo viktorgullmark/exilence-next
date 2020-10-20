@@ -68,7 +68,9 @@
     "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder",
     "build": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -101,6 +103,7 @@
     "cross-env": "^6.0.3",
     "electron": "^7.1.11",
     "electron-builder": "^22.3.2",
+    "prettier": "^2.1.2",
     "wait-on": "^3.3.0"
   },
   "build": {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const electron = require('electron');
 const ipcMain = require('electron').ipcMain;
 const app = electron.app;
