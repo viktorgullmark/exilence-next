@@ -18,13 +18,13 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import useStyles from './NavigationMenu.styles';
 
-interface NavigationMenuProps {
+type NavigationMenuProps = {
   open: boolean;
   toggleSidenav: () => void;
   handleRedirect: (path: string) => void;
 }
 
-const NavigationMenu: React.FC<NavigationMenuProps> = ({
+const NavigationMenu = ({
   open,
   toggleSidenav,
   handleRedirect

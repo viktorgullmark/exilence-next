@@ -11,12 +11,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './ConsentDialog.styles';
 
-interface Props {
+type ConsentDialogProps = {
   show: boolean;
   onClose: () => void;
 }
 
-const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
+const ConsentDialog = ({ show, onClose }: ConsentDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 

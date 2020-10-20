@@ -4,27 +4,21 @@ import { observer, inject } from 'mobx-react';
 import { UiStateStore } from '../../../store/uiStateStore';
 import { RouteStore } from '../../../store/routeStore';
 
-interface NavigationMenuContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+type NavigationMenuContainerProps = {
   uiStateStore?: UiStateStore;
   routeStore?: RouteStore;
 }
 
-const NavigationMenuContainer: React.FC<NavigationMenuContainerProps> = ({
+const NavigationMenuContainer = ({
   uiStateStore,
   routeStore,
-  children
-}: NavigationMenuContainerProps) => {
-  return (
-    <NavigationMenu
-      open={uiStateStore!.sidenavOpen}
-      toggleSidenav={() => uiStateStore!.toggleSidenav()}
-      handleRedirect={(path: string) => routeStore!.redirect(path)}
-    >
-      {children}
-    </NavigationMenu>
-  );
-};
+}: NavigationMenuContainerProps) => (
+  <NavigationMenu
+    open={uiStateStore!.sidenavOpen}
+    toggleSidenav={() => uiStateStore!.toggleSidenav()}
+    handleRedirect={(path) => routeStore!.redirect(path)}
+  />
+);
 
 export default inject(
   'uiStateStore',

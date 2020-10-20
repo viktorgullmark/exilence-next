@@ -2,13 +2,11 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { useRef } from 'react';
 
-type Props = Omit<HighchartsReact.Props, 'highcharts'>;
-
-interface IProps extends Props {
+type HighchartsBaseProps = {
   colors?: string[];
-}
+} & Omit<HighchartsReact.Props, 'highcharts'>
 
-const HighchartsBase: React.FC<IProps> = (props: IProps) => {
+const HighchartsBase = (props: HighchartsBaseProps) => {
   const chartRef = useRef(null);
   const { colors } = props;
 

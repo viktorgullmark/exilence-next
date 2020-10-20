@@ -17,7 +17,7 @@ function a11yProps(index: any) {
   };
 }
 
-const SettingsTabs: React.FC = () => {
+const SettingsTabs = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);

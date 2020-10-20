@@ -3,18 +3,14 @@ import React, { ChangeEvent } from 'react';
 import { SettingStore } from '../../../store/settingStore';
 import UiSettings from './UiSettings';
 
-interface Props {
+type UiSettingsContainerProps = {
   settingStore?: SettingStore;
 }
-const UiSettingsContainer: React.FC<Props> = ({
-  settingStore
-}: Props) => {
-  return (
-    <UiSettings
-      uiScale={settingStore!.uiScale}
-      setUiScale={(event: ChangeEvent<{}> | MouseEvent, value: number | string | number[]) => settingStore!.setUiScale(value)}
-    />
-  );
-};
+const UiSettingsContainer = ({ settingStore }: UiSettingsContainerProps) => (
+  <UiSettings
+    uiScale={settingStore!.uiScale}
+    setUiScale={(event: ChangeEvent<{}> | MouseEvent, value: number | string | number[]) => settingStore!.setUiScale(value)}
+  />
+);
 
 export default inject('settingStore')(observer(UiSettingsContainer));

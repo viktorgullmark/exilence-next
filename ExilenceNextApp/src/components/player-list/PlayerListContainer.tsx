@@ -4,16 +4,16 @@ import { UiStateStore } from '../../store/uiStateStore';
 import PlayerList from './PlayerList';
 import { SignalrStore } from '../../store/signalrStore';
 
-interface Props {
+type PlayerListContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
 }
 
-const PlayerListContainer: React.FC<Props> = ({
+const PlayerListContainer = ({
   uiStateStore,
   signalrStore
-}: Props) => {
-  
+}: PlayerListContainerProps) => {
+
   return (
     <>
       {signalrStore!.activeGroup && (

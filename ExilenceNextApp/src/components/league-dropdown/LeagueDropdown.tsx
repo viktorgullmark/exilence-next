@@ -13,7 +13,7 @@ import useLabelWidth from '../../hooks/use-label-width';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
 
-interface LeagueDropdownProps {
+type LeagueDropdownProps = {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   noCharacters: string;
@@ -26,7 +26,7 @@ interface LeagueDropdownProps {
   hideLabel?: boolean;
 }
 
-const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
+const LeagueDropdown = ({
   margin = 'normal',
   hideLabel = false,
   fullWidth,

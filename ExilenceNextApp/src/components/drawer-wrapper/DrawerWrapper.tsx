@@ -1,7 +1,7 @@
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
@@ -47,12 +47,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface DrawerWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+type DrawerWrapperProps = {
   navMenuOpen: boolean;
   groupOverviewOpen: boolean;
+  children: ReactNode;
 }
 
-const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
+const DrawerWrapper = ({
   navMenuOpen,
   groupOverviewOpen,
   children
@@ -92,7 +93,7 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
             bottom="0"
             left="0"
             position="fixed"
-          ></Box>
+          />
         </main>
       )}
     </>

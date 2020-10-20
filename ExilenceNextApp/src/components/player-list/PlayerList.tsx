@@ -4,11 +4,11 @@ import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import PlayerListItemContainer from './player-list-item/PlayerListItemContainer';
 import useStyles from './PlayerList.styles';
 
-interface Props {
+type PlayerListProps = {
   connections: IApiConnection[];
 }
 
-const PlayerList: React.FC<Props> = ({ connections }: Props) => {
+const PlayerList = ({ connections }: PlayerListProps) => {
   const classes = useStyles();
   return (
     <List dense className={classes.root}>

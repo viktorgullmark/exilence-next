@@ -9,14 +9,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './InfoDialog.styles';
 
-interface Props {
+type InfoDialogProps = {
   show: boolean;
   title: string;
   content: JSX.Element;
   onClose: () => void;
 }
 
-const InfoDialog: React.FC<Props> = ({ show, title, content, onClose }: Props) => {
+const InfoDialog = ({ show, title, content, onClose }: InfoDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 

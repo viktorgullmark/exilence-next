@@ -4,19 +4,19 @@ import React from 'react';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
 import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
-interface Props {
+type SnapshotSettingsProps = {
   autoSnapshotting: boolean;
   autoSnapshotInterval: number;
   setAutoSnapshotInterval: (value: number) => void;
   setAutoSnapshotting: (value: boolean) => void;
 }
 
-const SnapshotSettings: React.FC<Props> = ({
+const SnapshotSettings = ({
   autoSnapshotting,
   setAutoSnapshotting,
   autoSnapshotInterval,
   setAutoSnapshotInterval,
-}: Props) => {
+}: SnapshotSettingsProps) => {
   return (
     <Grid container spacing={5}>
       <Grid item>

@@ -6,17 +6,17 @@ import { SignalrStore } from '../../../store/signalrStore';
 import { AccountStore } from '../../../store/accountStore';
 import { exportData } from '../../../utils/export.utils';
 
-interface Props {
+type ItemTableMenuContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
 }
 
-const ItemTableMenuContainer: React.FC<Props> = ({
+const ItemTableMenuContainer = ({
   uiStateStore,
   signalrStore,
   accountStore
-}: Props) => {
+}: ItemTableMenuContainerProps) => {
   const open = Boolean(uiStateStore!.itemTableMenuAnchor);
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;

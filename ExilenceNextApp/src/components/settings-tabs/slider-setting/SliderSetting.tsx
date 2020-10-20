@@ -13,7 +13,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './SliderSetting.styles';
 
-interface Props {
+type SliderSettingProps = {
   value: number;
   handleChange: (
     event: ChangeEvent<{}> | MouseEvent,
@@ -25,14 +25,14 @@ interface Props {
   requiresSnapshot?: boolean;
 }
 
-const SliderSetting: React.FC<Props> = ({
+const SliderSetting = ({
   value,
   handleChange,
   translationKey,
   step,
   requiresSnapshot,
   waitForMouseUp
-}: Props) => {
+}: SliderSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [localValue, setLocalValue] = useState<number | string | number[]>(

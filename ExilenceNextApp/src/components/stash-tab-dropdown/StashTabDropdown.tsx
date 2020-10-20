@@ -8,7 +8,7 @@ import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
-interface StashTabDropdownProps {
+type StashTabDropdownProps = {
   stashTabs: IStashTab[];
   selectedStashTabs: IStashTab[];
   width?: number;
@@ -23,7 +23,7 @@ interface StashTabDropdownProps {
   handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
-const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
+const StashTabDropdown = ({
   stashTabs,
   selectedStashTabs,
   handleChange,
@@ -101,7 +101,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   );
 };
 
-const CustomPopper: React.FC<PopperProps> = ({ children, ...other }) => (
+const CustomPopper = ({ children, ...other }: PopperProps) => (
   <Popper {...other}>{children}</Popper>
 );
 

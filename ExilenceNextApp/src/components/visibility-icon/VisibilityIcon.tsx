@@ -4,19 +4,19 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useTranslation } from 'react-i18next';
 
-interface Props {
+type VisibilityIconProps = {
   visible: boolean;
   position: 'start' | 'end';
   handleClickShowIcon: () => void;
   handleMouseDownIcon: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const VisibilityIcon: React.FC<Props> = ({
+const VisibilityIcon = ({
   visible,
   position,
   handleClickShowIcon,
   handleMouseDownIcon
-}: Props) => {
+}: VisibilityIconProps) => {
   const { t } = useTranslation();
 
   return (

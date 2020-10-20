@@ -13,7 +13,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ItemTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
+type ButtonEvent = React.MouseEvent<HTMLButtonElement, MouseEvent> | null;
+
+const ItemTablePaginationActions = ({
   count,
   onChangePage,
   page,
@@ -22,27 +24,13 @@ const ItemTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const handleFirstPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
-  ) => {
-    onChangePage(event, 0);
-  };
+  const handleFirstPageButtonClick = (event: ButtonEvent) => onChangePage(event, 0);
 
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
-  ) => {
-    onChangePage(event, page - 1);
-  };
+  const handleBackButtonClick = (event: ButtonEvent) => onChangePage(event, page - 1);
 
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
-  ) => {
-    onChangePage(event, page + 1);
-  };
+  const handleNextButtonClick = (event: ButtonEvent) => onChangePage(event, page + 1);
 
-  const handleLastPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
-  ) => {
+  const handleLastPageButtonClick = (event: ButtonEvent) => {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 

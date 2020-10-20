@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const GlobalStyles: React.FC = () => {
+const GlobalStyles = () => {
   useStyles();
   return null;
 };

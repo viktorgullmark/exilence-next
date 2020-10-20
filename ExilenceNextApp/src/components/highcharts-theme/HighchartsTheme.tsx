@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import React from 'react';
 import { highchartsColors } from '../../assets/themes/exilence-theme';
 
-const HighchartsTheme: React.FC = () => {
+const HighchartsTheme = () => {
   const theme = useTheme();
 
   const highchartsTheme: Highcharts.Options = {
