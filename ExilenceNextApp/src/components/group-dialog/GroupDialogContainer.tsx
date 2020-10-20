@@ -5,7 +5,7 @@ import { UiStateStore } from '../../store/uiStateStore';
 import { generateGroupName } from '../../utils/group.utils';
 import GroupDialog from './GroupDialog';
 
-interface Props {
+type CreateGroupDialogContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
 }
@@ -15,10 +15,10 @@ export interface IGroupForm {
   password: string;
 }
 
-const CreateGroupDialogContainer: React.FC<Props> = ({
+const CreateGroupDialogContainer = ({
   uiStateStore,
   signalrStore,
-}: Props) => {
+}: CreateGroupDialogContainerProps) => {
   const initialValues: IGroupForm = {
     name: uiStateStore!.groupDialogType === 'create' ? generateGroupName() : '',
     password: '',

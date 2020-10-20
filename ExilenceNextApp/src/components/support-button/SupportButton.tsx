@@ -5,11 +5,11 @@ import { useStyles } from './SupportButton.styles';
 import { openLink } from '../../utils/window.utils';
 import clsx from 'clsx';
 
-interface IProps {
+type SupportButtonProps = {
   noMargin?: boolean;
 }
 
-const SupportButton: React.FC<IProps> = ({ noMargin }) => {
+const SupportButton = ({ noMargin }: SupportButtonProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 

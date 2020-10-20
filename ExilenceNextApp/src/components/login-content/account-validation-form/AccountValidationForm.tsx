@@ -21,11 +21,11 @@ import RequestButton from '../../request-button/RequestButton';
 import useStyles from './AccountValidationForm.styles';
 import InfoDialog from '../../info-dialog/InfoDialog';
 
-interface AccountFormValues {
+type AccountFormValues = {
   sessionId: string;
 }
 
-interface AccountValidationFormProps {
+type AccountValidationFormProps = {
   handleValidate: (account: IAccount) => void;
   styles: Record<string, string>;
   isSubmitting: boolean;
@@ -33,7 +33,7 @@ interface AccountValidationFormProps {
   account: Account;
 }
 
-const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
+const AccountValidationForm = ({
   handleValidate,
   styles,
   isSubmitting,
@@ -104,7 +104,7 @@ const AccountValidationForm: React.FC<AccountValidationFormProps> = ({
                       </IconButton>
                     ),
                   }}
-                ></TextField>
+                />
               </div>
               <div className={styles.loginFooter}>
                 <Grid container spacing={2}>

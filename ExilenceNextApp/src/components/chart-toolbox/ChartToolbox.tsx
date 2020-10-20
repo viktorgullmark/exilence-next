@@ -3,15 +3,15 @@ import React from 'react';
 import { TimespanType } from '../../types/timespan.type';
 import useStyles from './ChartToolbox.styles';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+type ChartToolboxProps = {
   selectedChartTimeSpan: TimespanType;
   handleChangeTimeSpan: (value: TimespanType) => void;
 }
 
-const ChartToolbox: React.FC<Props> = ({
+const ChartToolbox = ({
   selectedChartTimeSpan,
   handleChangeTimeSpan,
-}: Props) => {
+}: ChartToolboxProps) => {
   const classes = useStyles();
 
   const options: TimespanType[] = ['1 day', '1 week', '1 month', 'All time'];
@@ -37,7 +37,7 @@ const ChartToolbox: React.FC<Props> = ({
                 primary={o}
                 className={classes.optionText}
                 classes={{ primary: classes.primaryText }}
-              ></ListItemText>
+              />
             </ListItem>
           </Grid>
         ))}

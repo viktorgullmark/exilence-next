@@ -13,7 +13,7 @@ import SimpleField from '../simple-field/SimpleField';
 import useStyles from './GroupDialog.styles';
 import { IGroupForm } from './GroupDialogContainer';
 
-interface Props {
+type GroupDialogProps = {
   show: boolean;
   initialValues: IGroupForm;
   dialogType: 'create' | 'join' | undefined;
@@ -26,7 +26,7 @@ interface Props {
   groupExists?: boolean;
 }
 
-const GroupDialog: React.FC<Props> = ({
+const GroupDialog = ({
   show,
   onClose,
   onSubmit,
@@ -37,7 +37,7 @@ const GroupDialog: React.FC<Props> = ({
   handleGroupExists,
   handleClearError,
   loading
-}: Props) => {
+}: GroupDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 

@@ -20,7 +20,7 @@ export type Order = 'asc' | 'desc';
 
 export const tableFooterHeight = 52;
 
-interface ItemTableProps {
+type ItemTableProps = {
   items: ITableItem[];
   pageIndex: number;
   pageSize: number;
@@ -33,7 +33,7 @@ interface ItemTableProps {
   activeGroup?: Group;
 }
 
-const ItemTable: React.FC<ItemTableProps> = ({
+const ItemTable = ({
   items,
   pageIndex,
   pageSize,

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import useStyles from './NumberInputSetting.styles';
 import NumberFormat from 'react-number-format';
 
-interface Props {
+type NumberInputSettingProps = {
   value: number;
   handleChange: (value: number) => void;
   translationKey: string;
@@ -23,7 +23,7 @@ interface Props {
 
 const NumberInputFormat = (props: any) => {
   const { inputRef, onChange, suffix, minimum, maximum, ...other} = props;
-  
+
   return (
     <NumberFormat
       {...other}
@@ -46,7 +46,7 @@ const NumberInputFormat = (props: any) => {
   );
 };
 
-const NumberInputSetting: React.FC<Props> = ({
+const NumberInputSetting = ({
   value,
   handleChange,
   translationKey,
@@ -55,11 +55,11 @@ const NumberInputSetting: React.FC<Props> = ({
   minimum,
   maximum,
   disabled
-}: Props) => {
+}: NumberInputSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const suffix = suffixKey ? ' '+t(suffixKey) : '';
+  const suffix = suffixKey ? `${+t(suffixKey)}` : '';
 
   return (
     <FormControl component="fieldset">
@@ -81,7 +81,7 @@ const NumberInputSetting: React.FC<Props> = ({
             }
           }}
           disabled={disabled}
-        ></TextField>
+        />
         <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
       </FormGroup>
     </FormControl>

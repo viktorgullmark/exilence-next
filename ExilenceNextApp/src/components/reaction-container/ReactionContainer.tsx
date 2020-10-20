@@ -3,11 +3,11 @@ import React from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { RouteStore } from '../../store/routeStore';
 
-interface Props {
+type ReactionContainerProps = {
   routeStore?: RouteStore;
 }
 
-const ReactionContainer: React.FC<Props> = ({ routeStore }: Props) => {
+const ReactionContainer = ({ routeStore }: ReactionContainerProps) => {
   const history = useHistory();
   const location = useLocation();
 

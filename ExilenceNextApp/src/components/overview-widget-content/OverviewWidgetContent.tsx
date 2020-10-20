@@ -1,9 +1,6 @@
 import {
   Box,
-  Button,
   Grid,
-  IconButton,
-  Link,
   Tooltip,
   Typography,
 } from '@material-ui/core';
@@ -13,9 +10,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
-import ClearIcon from '@material-ui/icons/Clear';
 
-interface OverviewWidgetContentProps {
+type OverviewWidgetContentProps = {
   value: number | string;
   valueIsDiff?: boolean;
   valueSuffix?: string;
@@ -31,7 +27,7 @@ interface OverviewWidgetContentProps {
   tooltip?: string;
 }
 
-const OverviewWidgetContent: React.FC<OverviewWidgetContentProps> = ({
+const OverviewWidgetContent = ({
   icon,
   title,
   value,

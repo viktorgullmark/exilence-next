@@ -35,7 +35,7 @@ export interface ProfileFormValues {
   character: string;
 }
 
-interface ProfileDialogProps {
+type ProfileDialogProps = {
   isOpen: boolean;
   loading: boolean;
   isEditing?: boolean;
@@ -56,7 +56,7 @@ interface ProfileDialogProps {
   handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 }
 
-const ProfileDialog: React.FC<ProfileDialogProps> = ({
+const ProfileDialog = ({
   isOpen,
   loading,
   isEditing,

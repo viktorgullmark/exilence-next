@@ -4,15 +4,15 @@ import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import { SignalrStore } from '../../../store/signalrStore';
 import PlayerListItem from './PlayerListItem';
 
-interface Props {
+type PlayerListItemContainerProps = {
   account: IApiAccount;
   signalrStore?: SignalrStore;
 }
 
-const PlayerListItemContainer: React.FC<Props> = ({
+const PlayerListItemContainer = ({
   signalrStore,
   account
-}: Props) => {
+}: PlayerListItemContainerProps) => {
   const { activeAccounts } = signalrStore!.activeGroup!;
 
   const handleToggle = (uuid: string) => {

@@ -1,19 +1,20 @@
 import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, {ReactNode} from 'react';
 import { cardHeight } from '../../routes/net-worth/NetWorth';
 import useStyles from './Widget.styles';
 
-interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
+type WidgetProps =  {
   backgroundColor?: string;
   textColor?: string;
   height?: number;
   compact?: boolean;
   center?: boolean;
+  children: ReactNode;
 }
 
-const Widget: React.FC<WidgetProps> = ({
+const Widget = ({
   children,
   backgroundColor,
   textColor,

@@ -12,7 +12,7 @@ import { ITableItem } from '../../../interfaces/table-item.interface';
 import { Order } from '../ItemTable';
 import { useStyles } from '../ItemTable.styles';
 
-interface ItemTableHeaderProps {
+type ItemTableHeaderProps = {
   classes: ReturnType<typeof useStyles>;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -23,10 +23,13 @@ interface ItemTableHeaderProps {
   columns: IColumn[];
 }
 
-const ItemTableHeader: React.FC<ItemTableHeaderProps> = (
-  props: ItemTableHeaderProps
-) => {
-  const { classes, order, orderBy, onRequestSort, columns } = props;
+const ItemTableHeader = ({
+  classes,
+  order,
+  orderBy,
+  onRequestSort,
+  columns
+}: ItemTableHeaderProps) => {
   const createSortHandler = (property: keyof ITableItem) => (
     event: React.MouseEvent<unknown>
   ) => {

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import { observer, inject } from 'mobx-react';
 import { UiStateStore } from '../../store/uiStateStore';
 import DrawerWrapper from './DrawerWrapper';
 import { useTheme } from '@material-ui/core';
 
-interface DrawerWrapperContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+type DrawerWrapperContainerProps = {
   uiStateStore?: UiStateStore;
+  children: ReactNode;
 }
 
-const DrawerWrapperContainer: React.FC<DrawerWrapperContainerProps> = ({
+const DrawerWrapperContainer = ({
   uiStateStore,
   children
 }: DrawerWrapperContainerProps) => {

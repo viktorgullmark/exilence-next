@@ -4,7 +4,7 @@ import React from 'react';
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
 import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
-interface Props {
+type NetWorthSettingsProps = {
   lowConfidencePricing: boolean;
   priceTreshold: number;
   totalPriceTreshold: number;
@@ -13,14 +13,14 @@ interface Props {
   setTotalPriceTreshold: (value: number) => void;
 }
 
-const NetWorthSettings: React.FC<Props> = ({
+const NetWorthSettings = ({
   lowConfidencePricing,
   priceTreshold,
   totalPriceTreshold,
   setLowConfidencePricing,
   setPriceTreshold,
   setTotalPriceTreshold
-}: Props) => {
+}: NetWorthSettingsProps) => {
   return (
     <Grid container spacing={5}>
       <Grid item>

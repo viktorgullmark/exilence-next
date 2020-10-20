@@ -6,7 +6,7 @@ import useLabelWidth from '../../hooks/use-label-width';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useStyles from './PasswordField.styles';
 
-interface Props {
+type PasswordFieldProps = {
   name: string;
   label: string;
   handleOnChange: (e: React.FormEvent<HTMLDivElement>) => void;
@@ -17,7 +17,7 @@ interface Props {
   customError?: string;
 }
 
-const PasswordField: React.FC<Props> = ({
+const PasswordField = ({
   name,
   label,
   placeholder,
@@ -26,7 +26,7 @@ const PasswordField: React.FC<Props> = ({
   helperText,
   customError,
   handleOnChange
-}) => {
+}: PasswordFieldProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const [field, meta] = useField(name);

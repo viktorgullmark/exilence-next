@@ -13,7 +13,7 @@ import { League } from '../../store/domains/league';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import useLabelWidth from '../../hooks/use-label-width';
 
-interface PriceLeagueDropdownProps {
+type PriceLeagueDropdownProps = {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   priceLeagues: League[];
@@ -21,7 +21,7 @@ interface PriceLeagueDropdownProps {
   values: ILeagueFormValues;
 }
 
-const PriceLeagueDropdown: React.FC<PriceLeagueDropdownProps> = ({
+const PriceLeagueDropdown = ({
   touched,
   errors,
   priceLeagues,

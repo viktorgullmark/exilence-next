@@ -1,21 +1,21 @@
 import { TextField } from '@material-ui/core';
 import { useField } from 'formik';
-import React from 'react';
+import React, {ReactElement} from 'react';
 import useStyles from './SimpleField.styles';
 
-interface Props {
+type SimpleFieldProps = {
   name: string;
   label: string;
   required?: boolean;
   autoFocus?: boolean;
   type?: 'text' | 'number';
   placeholder?: string;
-  endIcon?: JSX.Element;
+  endIcon?: ReactElement;
   customError?: string;
   handleBlur?: (value: string) => void;
 }
 
-const SimpleField: React.FC<Props> = ({
+const SimpleField = ({
   name,
   label,
   placeholder,
@@ -25,7 +25,7 @@ const SimpleField: React.FC<Props> = ({
   endIcon,
   customError,
   handleBlur,
-}) => {
+}: SimpleFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
 
