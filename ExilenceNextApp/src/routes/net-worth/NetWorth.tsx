@@ -34,7 +34,7 @@ import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
 
-interface NetWorthProps {
+type NetWorthProps = {
   accountStore?: AccountStore;
   signalrStore?: SignalrStore;
   uiStateStore?: UiStateStore;
@@ -44,7 +44,7 @@ export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
 
-const NetWorth: React.FC<NetWorthProps> = ({
+const NetWorth = ({
   accountStore,
   signalrStore,
   uiStateStore,
