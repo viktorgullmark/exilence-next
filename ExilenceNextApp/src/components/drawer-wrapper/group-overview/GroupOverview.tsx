@@ -11,24 +11,26 @@ import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
 import RequestButton from '../../request-button/RequestButton';
 import useStyles from './GroupOverview.styles';
 
-interface GroupOverviewProps {
+type Handler = (event: MouseEvent<HTMLElement>) => void
+
+type GroupOverviewProps = {
   open: boolean;
   leavingGroup: boolean;
   toggleGroupOverview: () => void;
-  handleJoinGroup: (event: React.MouseEvent<HTMLElement>) => void;
-  handleCreateGroup: (event: React.MouseEvent<HTMLElement>) => void;
-  handleLeaveGroup: (event: React.MouseEvent<HTMLElement>) => void;
+  handleJoinGroup: Handler;
+  handleCreateGroup: Handler;
+  handleLeaveGroup: Handler;
   activeGroup?: Group;
 }
 
-const GroupOverview: React.FC<GroupOverviewProps> = ({
+const GroupOverview = ({
   open,
   leavingGroup,
   toggleGroupOverview,
