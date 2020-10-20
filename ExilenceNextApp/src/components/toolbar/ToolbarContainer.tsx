@@ -13,7 +13,7 @@ import { SettingStore } from '../../store/settingStore';
 import { OverlayStore } from '../../store/overlayStore';
 import { formatValue } from '../../utils/snapshot.utils';
 
-interface ToolbarContainerProps {
+type ToolbarContainerProps = {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
@@ -24,7 +24,7 @@ interface ToolbarContainerProps {
   overlayStore?: OverlayStore;
 }
 
-const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
+const ToolbarContainer = ({
   uiStateStore,
   accountStore,
   signalrStore,
