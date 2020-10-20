@@ -1,16 +1,16 @@
 import { Box, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import useStyles from './TabPanel.styles';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
+type TabPanelProps = {
+  children?: ReactNode;
   index: any;
   value: any;
 }
 
 export const tabPanelSpacing = 2;
 
-const TabPanel: React.FC<TabPanelProps> = ({
+const TabPanel = ({
   children,
   index,
   value
