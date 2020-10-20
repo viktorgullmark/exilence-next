@@ -1,19 +1,14 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { UiStateStore } from '../../store/uiStateStore';
-import PlayerList from './PlayerList';
+import { inject, observer } from 'mobx-react';
+
 import { SignalrStore } from '../../store/signalrStore';
+import PlayerList from './PlayerList';
 
 type PlayerListContainerProps = {
-  uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
-}
+};
 
-const PlayerListContainer = ({
-  uiStateStore,
-  signalrStore
-}: PlayerListContainerProps) => {
-
+const PlayerListContainer = ({ signalrStore }: PlayerListContainerProps) => {
   return (
     <>
       {signalrStore!.activeGroup && (
@@ -23,7 +18,4 @@ const PlayerListContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore'
-)(observer(PlayerListContainer));
+export default inject('uiStateStore', 'signalrStore')(observer(PlayerListContainer));

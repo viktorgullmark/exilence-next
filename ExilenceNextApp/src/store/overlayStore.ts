@@ -1,4 +1,5 @@
 import { action } from 'mobx';
+
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore.js';
 

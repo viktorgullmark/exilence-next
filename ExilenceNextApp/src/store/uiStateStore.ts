@@ -3,6 +3,7 @@ import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
+
 import { Order } from '../components/item-table/ItemTable';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
@@ -283,8 +284,7 @@ export class UiStateStore {
   @action
   toggleGroupOverview(open?: boolean) {
     this.sidenavOpen = false;
-    this.groupOverviewOpen =
-      open !== undefined ? open : !this.groupOverviewOpen;
+    this.groupOverviewOpen = open !== undefined ? open : !this.groupOverviewOpen;
   }
 
   @action

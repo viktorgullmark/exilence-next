@@ -1,5 +1,6 @@
-import { electronService } from '../services/electron.service';
 import { MouseEvent } from 'react';
+
+import { electronService } from '../services/electron.service';
 
 export function maximize() {
   electronService.remote.getCurrentWindow().maximize();

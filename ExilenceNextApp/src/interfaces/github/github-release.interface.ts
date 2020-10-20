@@ -1,5 +1,5 @@
-import { IGithubAuthor } from './github-author.interface';
 import { IGithubAsset } from './github-asset.interface';
+import { IGithubAuthor } from './github-author.interface';
 
 export interface IGithubRelease {
   url: string;

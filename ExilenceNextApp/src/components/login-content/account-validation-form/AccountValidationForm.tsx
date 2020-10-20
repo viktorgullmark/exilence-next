@@ -1,29 +1,23 @@
-import {
-  Grid,
-  IconButton,
-  Link,
-  TextField,
-  Typography,
-  Box,
-} from '@material-ui/core';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Box, Grid, IconButton, Link, TextField, Typography } from '@material-ui/core';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
+
 import { IAccount } from '../../../interfaces/account.interface';
 import { Account } from '../../../store/domains/account';
 import { openLink } from '../../../utils/window.utils';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
+import InfoDialog from '../../info-dialog/InfoDialog';
 import RequestButton from '../../request-button/RequestButton';
 import useStyles from './AccountValidationForm.styles';
-import InfoDialog from '../../info-dialog/InfoDialog';
 
 type AccountFormValues = {
   sessionId: string;
-}
+};
 
 type AccountValidationFormProps = {
   handleValidate: (account: IAccount) => void;
@@ -31,7 +25,7 @@ type AccountValidationFormProps = {
   isSubmitting: boolean;
   isInitiating: boolean;
   account: Account;
-}
+};
 
 const AccountValidationForm = ({
   handleValidate,
@@ -78,26 +72,24 @@ const AccountValidationForm = ({
               <div>
                 <TextField
                   label={t('label.session_id')}
-                  name='sessionId'
-                  type='password'
-                  variant='outlined'
+                  name="sessionId"
+                  type="password"
+                  variant="outlined"
                   value={values.sessionId}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  helperText={
-                    errors.sessionId && touched.sessionId && errors.sessionId
-                  }
+                  helperText={errors.sessionId && touched.sessionId && errors.sessionId}
                   error={touched.sessionId && errors.sessionId !== undefined}
-                  margin='normal'
+                  margin="normal"
                   fullWidth
                   InputProps={{
                     endAdornment: (
                       <IconButton
-                        aria-label='help'
+                        aria-label="help"
                         title={t('label.session_id_icon_title')}
                         className={classes.helperIcon}
-                        edge='start'
-                        size='small'
+                        edge="start"
+                        size="small"
                         onClick={() => setShowSessionIdInfo(true)}
                       >
                         <HelpIcon />
@@ -109,12 +101,12 @@ const AccountValidationForm = ({
               <div className={styles.loginFooter}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography variant='subtitle2'>
+                    <Typography variant="subtitle2">
                       {t('body.ga_consent_short_text')}
                       <Link
-                        component='button'
-                        variant='subtitle2'
-                        type='button'
+                        component="button"
+                        variant="subtitle2"
+                        type="button"
                         className={classes.inlineLink}
                         onClick={() => setShowConsent(true)}
                       >
@@ -124,17 +116,12 @@ const AccountValidationForm = ({
                   </Grid>
                   <Grid item xs={12}>
                     <RequestButton
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       fullWidth
-                      type='submit'
+                      type="submit"
                       loading={isSubmitting || isInitiating}
-                      disabled={
-                        !touched ||
-                        isSubmitting ||
-                        isInitiating ||
-                        (dirty && !isValid)
-                      }
+                      disabled={!touched || isSubmitting || isInitiating || (dirty && !isValid)}
                       endIcon={<ExitToApp />}
                     >
                       {t('action.authorize')}
@@ -154,11 +141,11 @@ const AccountValidationForm = ({
         content={
           <>
             <Box width={1} mb={2}>
-              <Typography variant='body2'>
+              <Typography variant="body2">
                 {t('body.session_id_dialog_prefix')}&nbsp;
                 <a
                   className={classes.inlineLink}
-                  href='https://www.pathofexile.com'
+                  href="https://www.pathofexile.com"
                   onClick={(e) => openLink(e)}
                 >
                   https://www.pathofexile.com
@@ -168,36 +155,30 @@ const AccountValidationForm = ({
               </Typography>
             </Box>
             <Box width={1} mb={2} className={classes.linkBlock}>
-              <Typography variant='subtitle2'>
-                {t('label.google_chrome')}
-              </Typography>
+              <Typography variant="subtitle2">{t('label.google_chrome')}</Typography>
               <a
                 className={classes.inlineLink}
-                href='https://developers.google.com/web/tools/chrome-devtools/storage/cookies'
+                href="https://developers.google.com/web/tools/chrome-devtools/storage/cookies"
                 onClick={(e) => openLink(e)}
               >
                 https://developers.google.com/web/tools/chrome-devtools/storage/cookies
               </a>
             </Box>
             <Box width={1} mb={2} className={classes.linkBlock}>
-              <Typography variant='subtitle2'>
-                {t('label.mozilla_firefox')}
-              </Typography>
+              <Typography variant="subtitle2">{t('label.mozilla_firefox')}</Typography>
               <a
                 className={classes.inlineLink}
-                href='https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector'
+                href="https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector"
                 onClick={(e) => openLink(e)}
               >
                 https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector
               </a>
             </Box>
             <Box width={1} mb={2} className={classes.linkBlock}>
-              <Typography variant='subtitle2'>
-                {t('label.microsoft_edge')}
-              </Typography>
+              <Typography variant="subtitle2">{t('label.microsoft_edge')}</Typography>
               <a
                 className={classes.inlineLink}
-                href='https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/storage/cookies'
+                href="https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/storage/cookies"
                 onClick={(e) => openLink(e)}
               >
                 https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/storage/cookies

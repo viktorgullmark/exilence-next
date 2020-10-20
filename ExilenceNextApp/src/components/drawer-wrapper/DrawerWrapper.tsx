@@ -1,14 +1,15 @@
+import React, { ReactNode } from 'react';
+import { useLocation } from 'react-router';
+import { Box } from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React, { ReactNode } from 'react';
-import { useLocation } from 'react-router';
+
+import { background } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 import { innerToolbarHeight } from '../toolbar/Toolbar';
 import GroupOverviewContainer from './group-overview/GroupOverviewContainer';
 import NavigationMenuContainer from './navigation-menu/NavigationMenuContainer';
-import { Box } from '@material-ui/core';
-import { background } from '../../assets/themes/exilence-theme';
 
 export const drawerWidth = 300;
 
@@ -26,38 +27,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: 0
+    marginLeft: 0,
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   fromRight: {
-    marginRight: drawerWidth
+    marginRight: drawerWidth,
   },
   fromLeft: {
-    marginLeft: drawerWidth
+    marginLeft: drawerWidth,
   },
   windowBottomBorder: {
-    background: background.darker
-  }
+    background: background.darker,
+  },
 }));
 
 type DrawerWrapperProps = {
   navMenuOpen: boolean;
   groupOverviewOpen: boolean;
   children: ReactNode;
-}
+};
 
-const DrawerWrapper = ({
-  navMenuOpen,
-  groupOverviewOpen,
-  children
-}: DrawerWrapperProps) => {
+const DrawerWrapper = ({ navMenuOpen, groupOverviewOpen, children }: DrawerWrapperProps) => {
   const classes = useStyles();
   const location = useLocation();
   const theme = useTheme();
@@ -77,10 +74,9 @@ const DrawerWrapper = ({
       {!atLoginRoute() && (
         <main
           className={clsx(classes.content, {
-            [classes.contentShift]:
-              navMenuOpen || (groupOverviewOpen && !atLoginRoute()),
+            [classes.contentShift]: navMenuOpen || (groupOverviewOpen && !atLoginRoute()),
             [classes.fromLeft]: navMenuOpen,
-            [classes.fromRight]: groupOverviewOpen
+            [classes.fromRight]: groupOverviewOpen,
           })}
         >
           {children}

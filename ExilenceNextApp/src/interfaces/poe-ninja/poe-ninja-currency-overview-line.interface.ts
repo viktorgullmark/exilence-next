@@ -1,5 +1,5 @@
-import { IPoeNinjaCurrencyOverviewLineSparkLine } from './poe-ninja-currency-overview-line-spark-line.interface';
 import { IPoeNinjaCurrencyOverviewLinePayOrReceive } from './poe-ninja-currency-overview-line-pay-or-receive.interface';
+import { IPoeNinjaCurrencyOverviewLineSparkLine } from './poe-ninja-currency-overview-line-spark-line.interface';
 
 export interface IPoeNinjaCurrencyOverviewLine {
   detailsId: string;

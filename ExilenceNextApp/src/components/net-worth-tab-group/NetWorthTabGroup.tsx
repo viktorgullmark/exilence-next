@@ -1,9 +1,10 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { openLink } from '../../utils/window.utils';
 import ItemTableContainer from '../item-table/ItemTableContainer';
 import TabPanel from './../tab-panel/TabPanel';
@@ -14,7 +15,7 @@ export const netWorthTabGroupHeight = 48;
 function a11yProps(index: number) {
   return {
     id: `net-worth-tab-${index}`,
-    'aria-controls': `net-worth-tabpanel-${index}`
+    'aria-controls': `net-worth-tabpanel-${index}`,
   };
 }
 
@@ -23,23 +24,15 @@ const NetWorthTabGroup = () => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
   return (
     <>
       <AppBar position="static" className={classes.tabHeader}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          classes={{ indicator: classes.indicator }}
-        >
-          <Tab
-            label={t('label.item_table')}
-            className={classes.tab}
-            {...a11yProps(0)}
-          />
+        <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.indicator }}>
+          <Tab label={t('label.item_table')} className={classes.tab} {...a11yProps(0)} />
         </Tabs>
         <Box
           position="absolute"
@@ -50,11 +43,7 @@ const NetWorthTabGroup = () => {
         >
           <Typography className={classes.creditText}>
             {t('label.prices_fetched_from')}
-            <a
-              className={classes.inlineLink}
-              href="https://poe.ninja"
-              onClick={e => openLink(e)}
-            >
+            <a className={classes.inlineLink} href="https://poe.ninja" onClick={(e) => openLink(e)}>
               https://poe.ninja
             </a>
           </Typography>

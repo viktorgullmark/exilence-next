@@ -1,3 +1,5 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Checkbox,
   FormControl,
@@ -5,10 +7,9 @@ import {
   FormGroup,
   FormHelperText,
   FormLabel,
-  Typography
+  Typography,
 } from '@material-ui/core';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import useStyles from './CheckboxSetting.styles';
 
 type CheckboxSettingProps = {
@@ -16,13 +17,13 @@ type CheckboxSettingProps = {
   handleChange: (value: boolean) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
-}
+};
 
 const CheckboxSetting = ({
   value,
   handleChange,
   translationKey,
-  requiresSnapshot
+  requiresSnapshot,
 }: CheckboxSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();

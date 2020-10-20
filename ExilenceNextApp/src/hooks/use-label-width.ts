@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function useLabelWidth(initialWidth: number) {
   const [labelWidth, setLabelWidth] = useState(initialWidth);

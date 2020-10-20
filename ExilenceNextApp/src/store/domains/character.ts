@@ -1,8 +1,9 @@
 import { observable } from 'mobx';
-import { ICharacter } from '../../interfaces/character.interface';
-import { IItem } from '../../interfaces/item.interface';
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
+
+import { ICharacter } from '../../interfaces/character.interface';
+import { IItem } from '../../interfaces/item.interface';
 
 export class Character implements ICharacter {
   @persist uuid: string = uuid.v4();

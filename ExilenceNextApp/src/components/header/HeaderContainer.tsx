@@ -1,15 +1,14 @@
-import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { UpdateStore } from '../../store/updateStore';
 import Header from './Header';
 
 type HeaderContainerProps = {
   updateStore?: UpdateStore;
-}
+};
 
-const HeaderContainer = ({
-  updateStore
-}: HeaderContainerProps) => {
+const HeaderContainer = ({ updateStore }: HeaderContainerProps) => {
   const [maximized, setMaximized] = useState(false);
   return (
     <Header

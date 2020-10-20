@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { action, computed, observable } from 'mobx';
+
 import { NotificationType } from '../interfaces/notification.interface';
 import { translateError } from '../utils/error.utils';
 import { Notification } from './domains/notification';
@@ -13,13 +14,13 @@ export class NotificationStore {
 
   @computed
   get alertNotifications() {
-    const alerts = this.notifications.filter(n => n.displayAlert);
+    const alerts = this.notifications.filter((n) => n.displayAlert);
     return alerts;
   }
 
   @computed
   get unreadNotifications() {
-    const alerts = this.notifications.filter(n => !n.read);
+    const alerts = this.notifications.filter((n) => !n.read);
     return alerts;
   }
 
@@ -39,9 +40,7 @@ export class NotificationStore {
   ) {
     const prefix = `notification:${type}`;
     const title = `${prefix}.title.${key}`;
-    const description = error
-      ? translateError(error)
-      : `${prefix}.description.${key}`;
+    const description = error ? translateError(error) : `${prefix}.description.${key}`;
 
     const notification = new Notification({
       title,
@@ -49,7 +48,7 @@ export class NotificationStore {
       type,
       displayAlert,
       stackTrace: error ? error.message : undefined,
-      translateParam
+      translateParam,
     });
 
     this.notifications.unshift(notification);
@@ -61,14 +60,14 @@ export class NotificationStore {
 
   @action
   markAsRead(uuid: string) {
-    const notification = this.notifications.find(n => n.uuid === uuid);
+    const notification = this.notifications.find((n) => n.uuid === uuid);
     notification!.read = true;
     return notification;
   }
 
   @action
   markAllAsRead() {
-    this.notifications = this.notifications.map(n => {
+    this.notifications = this.notifications.map((n) => {
       n.read = true;
       return n;
     });

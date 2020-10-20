@@ -1,3 +1,5 @@
+import React, { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -5,9 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import { Formik } from 'formik';
-import React, { ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
+
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
@@ -54,7 +55,7 @@ type ProfileDialogProps = {
   handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
   handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
-}
+};
 
 const ProfileDialog = ({
   isOpen,
@@ -84,16 +85,15 @@ const ProfileDialog = ({
       <Dialog
         open={isOpen}
         onClose={() => handleClickClose()}
-        aria-labelledby='profile-dialog-title'
+        aria-labelledby="profile-dialog-title"
       >
-        <DialogTitle id='profile-dialog-title'>
+        <DialogTitle id="profile-dialog-title">
           {isEditing ? t('title.save_profile') : t('title.create_profile')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Formik
             initialValues={{
-              profileName:
-                isEditing && profile ? profile.name : generateProfileName(),
+              profileName: isEditing && profile ? profile.name : generateProfileName(),
               league: leagueUuid,
               priceLeague: priceLeagueUuid,
               selectedStashTabs: selectedStashTabs,
@@ -115,26 +115,24 @@ const ProfileDialog = ({
               values,
               touched,
               errors,
-              isSubmitting,
               handleChange,
               handleSubmit,
-              handleBlur,
               dirty,
               isValid,
               setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 <SimpleField
-                  name='profileName'
-                  type='text'
+                  name="profileName"
+                  type="text"
                   label={t('label.profile_name')}
                   placeholder={t('label.profile_name_placeholder')}
                   endIcon={
                     <IconButton
-                      aria-label='generate'
+                      aria-label="generate"
                       title={t('label.generate_name_icon_title')}
-                      edge='start'
-                      size='small'
+                      edge="start"
+                      size="small"
                       onClick={() => {
                         const name = generateProfileName();
                         setFieldValue('profileName', name);
@@ -174,7 +172,7 @@ const ProfileDialog = ({
                 />
                 <Box mt={2}>
                   <SelectField
-                    name='character'
+                    name="character"
                     label={t('label.select_character')}
                     options={characters?.map((c) => {
                       return {
@@ -185,38 +183,26 @@ const ProfileDialog = ({
                     })}
                   />
                   <CheckboxField
-                    name='includeEquipment'
+                    name="includeEquipment"
                     label={t('label.include_equipment')}
-                    disabled={
-                      !values.character ||
-                      values.character === placeholderOption
-                    }
+                    disabled={!values.character || values.character === placeholderOption}
                   />
                   <CheckboxField
-                    name='includeInventory'
+                    name="includeInventory"
                     label={t('label.include_inventory')}
-                    disabled={
-                      !values.character ||
-                      values.character === placeholderOption
-                    }
+                    disabled={!values.character || values.character === placeholderOption}
                   />
                 </Box>
                 <div className={classes.dialogActions}>
-                  <Button onClick={() => handleClickClose()}>
-                    {t('action.cancel')}
-                  </Button>
+                  <Button onClick={() => handleClickClose()}>{t('action.cancel')}</Button>
                   <RequestButton
-                    variant='contained'
-                    type='submit'
-                    color='primary'
+                    variant="contained"
+                    type="submit"
+                    color="primary"
                     loading={loading}
-                    disabled={
-                      loading || noCharacters.length > 0 || (dirty && !isValid)
-                    }
+                    disabled={loading || noCharacters.length > 0 || (dirty && !isValid)}
                   >
-                    {isEditing
-                      ? t('action.save_profile')
-                      : t('action.create_profile')}
+                    {isEditing ? t('action.save_profile') : t('action.create_profile')}
                   </RequestButton>
                 </div>
               </form>

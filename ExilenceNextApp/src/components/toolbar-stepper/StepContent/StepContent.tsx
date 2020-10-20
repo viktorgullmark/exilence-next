@@ -4,7 +4,7 @@ import { Box, Typography } from '@material-ui/core';
 type StepContentProps = {
   title: string;
   body: string;
-}
+};
 
 const StepContent = ({ title, body }: StepContentProps) => {
   return (

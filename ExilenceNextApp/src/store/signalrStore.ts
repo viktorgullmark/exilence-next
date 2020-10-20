@@ -5,6 +5,7 @@ import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
 import uuid from 'uuid';
+
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
@@ -37,33 +38,25 @@ export class SignalrStore {
       fromStream(
         this.rootStore.signalrHub.stopConnection().pipe(
           map(() => of(this.stopConnectionSuccess())),
-          catchError(e => of(this.stopConnectionFail(e)))
+          catchError((e) => of(this.stopConnectionFail(e)))
         )
       );
     });
-    this.rootStore.signalrHub.onEvent<IApiGroup>('OnGroupEntered', group => {
+    this.rootStore.signalrHub.onEvent<IApiGroup>('OnGroupEntered', (group) => {
       this.setActiveGroup(new Group(group));
-      this.activeGroup!.setActiveAccounts(
-        group.connections.map(c => c.account.uuid)
-      );
+      this.activeGroup!.setActiveAccounts(group.connections.map((c) => c.account.uuid));
       this.joinGroupSuccess();
     });
     this.rootStore.signalrHub.onEvent('OnGroupLeft', () => {
       this.setActiveGroup(undefined);
       this.leaveGroupSuccess();
     });
-    this.rootStore.signalrHub.onEvent<IApiConnection>(
-      'OnJoinGroup',
-      connection => {
-        this.activeGroup!.addConnection(connection);
-      }
-    );
-    this.rootStore.signalrHub.onEvent<IApiConnection>(
-      'OnLeaveGroup',
-      connection => {
-        this.activeGroup!.removeConnection(connection.connectionId);
-      }
-    );
+    this.rootStore.signalrHub.onEvent<IApiConnection>('OnJoinGroup', (connection) => {
+      this.activeGroup!.addConnection(connection);
+    });
+    this.rootStore.signalrHub.onEvent<IApiConnection>('OnLeaveGroup', (connection) => {
+      this.activeGroup!.removeConnection(connection.connectionId);
+    });
     this.rootStore.signalrHub.onEvent<string, string, IApiSnapshot>(
       'OnAddSnapshot',
       (connectionId, profileId, snapshot) => {
@@ -109,8 +102,7 @@ export class SignalrStore {
   @computed
   get ownConnection() {
     return this.activeGroup!.connections.find(
-      c =>
-        c.account.name === this.rootStore.accountStore.getSelectedAccount.name
+      (c) => c.account.name === this.rootStore.accountStore.getSelectedAccount.name
     )!;
   }
 
@@ -123,7 +115,7 @@ export class SignalrStore {
           this.rootStore.routeStore.redirect('/login');
           this.signOutSuccess();
         }),
-        catchError(e => {
+        catchError((e) => {
           // connection probably doesnt exist
           this.stopConnectionFail(e);
           this.rootStore.routeStore.redirect('/login');
@@ -135,12 +127,7 @@ export class SignalrStore {
 
   @action
   signOutFail(e: Error) {
-    this.rootStore.notificationStore.createNotification(
-      'sign_out',
-      'error',
-      true,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('sign_out', 'error', true, e);
   }
 
   @action
@@ -150,20 +137,16 @@ export class SignalrStore {
 
   @action
   changeProfileForConnection(connectionId: string, profile: IApiProfile) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === connectionId
-    );
+    const connection = this.activeGroup!.connections.find((c) => c.connectionId === connectionId);
 
     if (connection) {
       runInAction(() => {
-        connection.account.profiles = connection.account.profiles.map(p => {
+        connection.account.profiles = connection.account.profiles.map((p) => {
           p.active = false;
           return p;
         });
       });
-      let foundProfile = connection.account.profiles.find(
-        p => p.uuid === profile.uuid
-      );
+      let foundProfile = connection.account.profiles.find((p) => p.uuid === profile.uuid);
       if (foundProfile) {
         const index = connection.account.profiles.indexOf(foundProfile);
         profile.snapshots = foundProfile.snapshots;
@@ -175,9 +158,7 @@ export class SignalrStore {
       }
       this.changeProfileForConnectionSuccess();
     } else {
-      this.changeProfileForConnectionFail(
-        new Error('error:connection_not_found')
-      );
+      this.changeProfileForConnectionFail(new Error('error:connection_not_found'));
     }
   }
 
@@ -193,46 +174,31 @@ export class SignalrStore {
 
   @action
   changeProfileForConnectionSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'change_profile_for_connection',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('change_profile_for_connection', 'success');
   }
 
   @action
   stopConnectionFail(e: Error) {
-    this.rootStore.notificationStore.createNotification(
-      'stop_connection',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('stop_connection', 'error', false, e);
   }
 
   @action
   stopConnectionSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'stop_connection',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('stop_connection', 'success');
   }
 
   @action
   addProfileToConnection(connectionId: string, profile: IApiProfile) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === connectionId
-    );
+    const connection = this.activeGroup!.connections.find((c) => c.connectionId === connectionId);
 
     if (connection) {
-      if (!connection.account.profiles.find(p => p.uuid === profile.uuid)) {
+      if (!connection.account.profiles.find((p) => p.uuid === profile.uuid)) {
         runInAction(() => {
           connection.account.profiles.push(profile);
         });
         this.addProfileToConnectionSuccess();
       } else {
-        this.addProfileToConnectionFail(
-          new Error('error:profile_already_exists')
-        );
+        this.addProfileToConnectionFail(new Error('error:profile_already_exists'));
       }
     } else {
       this.addProfileToConnectionFail(new Error('error:connection_not_found'));
@@ -251,22 +217,15 @@ export class SignalrStore {
 
   @action
   addProfileToConnectionSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'add_profile_to_connection',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('add_profile_to_connection', 'success');
   }
 
   @action
   removeAllSnapshotsForConnection(connectionId: string, profileId: string) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === connectionId
-    );
+    const connection = this.activeGroup!.connections.find((c) => c.connectionId === connectionId);
 
     if (connection) {
-      const profile = connection.account.profiles.find(
-        p => p.uuid === profileId
-      );
+      const profile = connection.account.profiles.find((p) => p.uuid === profileId);
 
       if (profile) {
         runInAction(() => {
@@ -275,14 +234,10 @@ export class SignalrStore {
 
         this.removeProfileFromConnectionSuccess();
       } else {
-        this.removeProfileFromConnectionFail(
-          new Error('error:profile_not_found')
-        );
+        this.removeProfileFromConnectionFail(new Error('error:profile_not_found'));
       }
     } else {
-      this.removeAllSnapshotsForConnectionFail(
-        new Error('error:connection_not_found')
-      );
+      this.removeAllSnapshotsForConnectionFail(new Error('error:connection_not_found'));
     }
   }
 
@@ -306,14 +261,10 @@ export class SignalrStore {
 
   @action
   removeProfileFromConnection(connectionId: string, profileId: string) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === connectionId
-    );
+    const connection = this.activeGroup!.connections.find((c) => c.connectionId === connectionId);
 
     if (connection) {
-      const profile = connection.account.profiles.find(
-        p => p.uuid === profileId
-      );
+      const profile = connection.account.profiles.find((p) => p.uuid === profileId);
 
       if (profile) {
         const index = connection.account.profiles.indexOf(profile);
@@ -324,14 +275,10 @@ export class SignalrStore {
 
         this.removeProfileFromConnectionSuccess();
       } else {
-        this.removeProfileFromConnectionFail(
-          new Error('error:profile_not_found')
-        );
+        this.removeProfileFromConnectionFail(new Error('error:profile_not_found'));
       }
     } else {
-      this.removeProfileFromConnectionFail(
-        new Error('error:connection_not_found')
-      );
+      this.removeProfileFromConnectionFail(new Error('error:connection_not_found'));
     }
   }
 
@@ -357,23 +304,19 @@ export class SignalrStore {
   getLatestSnapshotForProfile(connectionId: string, profileUuid: string) {
     if (this.online) {
       fromStream(
-        this.rootStore.signalrHub
-          .invokeEvent('GetLatestSnapshotForProfile', profileUuid)
-          .pipe(
-            map((snapshot: IApiSnapshot) => {
-              this.addSnapshotToConnection(snapshot, connectionId, profileUuid);
-              this.getLatestSnapshotForProfileSuccess();
-            }),
-            retryWhen(
-              genericRetryStrategy({
-                maxRetryAttempts: 5,
-                scalingDuration: 5000
-              })
-            ),
-            catchError((e: AxiosError) =>
-              of(this.getLatestSnapshotForProfileFail(e))
-            )
-          )
+        this.rootStore.signalrHub.invokeEvent('GetLatestSnapshotForProfile', profileUuid).pipe(
+          map((snapshot: IApiSnapshot) => {
+            this.addSnapshotToConnection(snapshot, connectionId, profileUuid);
+            this.getLatestSnapshotForProfileSuccess();
+          }),
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 5000,
+            })
+          ),
+          catchError((e: AxiosError) => of(this.getLatestSnapshotForProfileFail(e)))
+        )
       );
     }
   }
@@ -390,38 +333,25 @@ export class SignalrStore {
 
   @action
   getLatestSnapshotForProfileSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'retrieve_latest_snapshot',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('retrieve_latest_snapshot', 'success');
   }
 
   @action
-  addSnapshotToConnection(
-    snapshot: IApiSnapshot,
-    connectionId: string,
-    profileId: string
-  ) {
-    const connection = this.activeGroup!.connections.find(
-      c => c.connectionId === connectionId
-    );
+  addSnapshotToConnection(snapshot: IApiSnapshot, connectionId: string, profileId: string) {
+    const connection = this.activeGroup!.connections.find((c) => c.connectionId === connectionId);
 
     if (connection) {
       const connIndex = this.activeGroup!.connections.indexOf(connection);
-      const profile = connection.account.profiles.find(
-        p => p.uuid === profileId
-      );
+      const profile = connection.account.profiles.find((p) => p.uuid === profileId);
       if (profile) {
-        if (!profile.snapshots.find(s => s.uuid === snapshot.uuid)) {
+        if (!profile.snapshots.find((s) => s.uuid === snapshot.uuid)) {
           runInAction(() => {
             profile.snapshots.unshift(snapshot);
             this.activeGroup!.connections[connIndex] = connection;
           });
           this.addSnapshotToConnectionSuccess();
         } else {
-          this.addSnapshotToConnectionFail(
-            new Error('error:snapshot_already_received')
-          );
+          this.addSnapshotToConnectionFail(new Error('error:snapshot_already_received'));
         }
       } else {
         this.addSnapshotToConnectionFail(new Error('error:profile_not_found'));
@@ -433,20 +363,12 @@ export class SignalrStore {
 
   @action
   addSnapshotToConnectionFail(e: Error) {
-    this.rootStore.notificationStore.createNotification(
-      'retrieve_snapshot',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('retrieve_snapshot', 'error', false, e);
   }
 
   @action
   addSnapshotToConnectionSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'retrieve_snapshot',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('retrieve_snapshot', 'success');
   }
 
   @action
@@ -469,13 +391,13 @@ export class SignalrStore {
             name: groupName,
             password: password,
             created: moment.utc().toDate(),
-            connections: []
+            connections: [],
           } as IApiGroup)
           .pipe(
             retryWhen(
               genericRetryStrategy({
                 maxRetryAttempts: 5,
-                scalingDuration: 5000
+                scalingDuration: 5000,
               })
             ),
             catchError((e: AxiosError) => of(this.joinGroupFail(e)))
@@ -487,23 +409,22 @@ export class SignalrStore {
   }
 
   @action addOwnSnapshotToActiveGroup(snapshot: Snapshot) {
-    const activeProfile = this.rootStore.accountStore.getSelectedAccount
-      .activeProfile;
+    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
 
     if (!activeProfile) {
       throw new Error('error:no_active_profile');
     }
 
     const activeGroupProfile = this.ownConnection.account.profiles.find(
-      p => p.uuid === activeProfile.uuid
+      (p) => p.uuid === activeProfile.uuid
     );
     if (!activeGroupProfile) {
       throw new Error('error:profile_not_found_on_server');
     } else {
       // clear items from other snapshots
       activeGroupProfile.snapshots = activeGroupProfile.snapshots
-        .map(ps => {
-          ps.stashTabs.map(psst => {
+        .map((ps) => {
+          ps.stashTabs.map((psst) => {
             psst.pricedItems = [];
             return psst;
           });
@@ -522,31 +443,18 @@ export class SignalrStore {
   @action
   joinGroupFail(e: Error | AxiosError) {
     this.rootStore.uiStateStore.setJoiningGroup(false);
-    this.rootStore.notificationStore.createNotification(
-      'join_group',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('join_group', 'error', false, e);
 
     if (e.message.includes('password')) {
       this.rootStore.uiStateStore.setGroupError(e);
     } else {
-      this.rootStore.notificationStore.createNotification(
-        'join_group',
-        'error',
-        true,
-        e
-      );
+      this.rootStore.notificationStore.createNotification('join_group', 'error', true, e);
     }
   }
 
   @action
   sendSnapshotToGroupSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'send_snapshot_to_group',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('send_snapshot_to_group', 'success');
   }
 
   @action
@@ -562,10 +470,7 @@ export class SignalrStore {
   @action
   joinGroupSuccess() {
     this.rootStore.uiStateStore.setJoiningGroup(false);
-    this.rootStore.notificationStore.createNotification(
-      'join_group',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('join_group', 'success');
     this.rootStore.uiStateStore!.setTimeSinceLastSnapshotLabel(
       this.activeGroup?.timeSinceLastSnapshot
     );
@@ -581,17 +486,15 @@ export class SignalrStore {
     }
     if (this.online) {
       fromStream(
-        this.rootStore.signalrHub
-          .sendEvent<string>('LeaveGroup', this.activeGroup.name)
-          .pipe(
-            retryWhen(
-              genericRetryStrategy({
-                maxRetryAttempts: 5,
-                scalingDuration: 5000
-              })
-            ),
-            catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
-          )
+        this.rootStore.signalrHub.sendEvent<string>('LeaveGroup', this.activeGroup.name).pipe(
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 5000,
+            })
+          ),
+          catchError((e: AxiosError) => of(this.leaveGroupFail(e)))
+        )
       );
     } else {
       this.leaveGroupFail(new Error('error:not_connected'));
@@ -601,46 +504,36 @@ export class SignalrStore {
   @action
   leaveGroupFail(e: AxiosError | Error) {
     this.rootStore.uiStateStore.setLeavingGroup(false);
-    this.rootStore.notificationStore.createNotification(
-      'leave_group',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('leave_group', 'error', false, e);
   }
 
   @action
   leaveGroupSuccess() {
     this.rootStore.uiStateStore.setLeavingGroup(false);
-    this.rootStore.notificationStore.createNotification(
-      'leave_group',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('leave_group', 'success');
   }
 
   @action
   groupExists(groupName: string) {
     if (this.online) {
       fromStream(
-        this.rootStore.signalrHub
-          .invokeEvent<string>('GroupExists', groupName)
-          .pipe(
-            map((name: string) => {
-              if (name) {
-                this.rootStore.uiStateStore.setGroupExists(true);
-              } else {
-                this.rootStore.uiStateStore.setGroupExists(false);
-              }
-              return this.groupExistsSuccess();
-            }),
-            retryWhen(
-              genericRetryStrategy({
-                maxRetryAttempts: 5,
-                scalingDuration: 5000
-              })
-            ),
-            catchError((e: AxiosError) => of(this.groupExistsFail(e)))
-          )
+        this.rootStore.signalrHub.invokeEvent<string>('GroupExists', groupName).pipe(
+          map((name: string) => {
+            if (name) {
+              this.rootStore.uiStateStore.setGroupExists(true);
+            } else {
+              this.rootStore.uiStateStore.setGroupExists(false);
+            }
+            return this.groupExistsSuccess();
+          }),
+          retryWhen(
+            genericRetryStrategy({
+              maxRetryAttempts: 5,
+              scalingDuration: 5000,
+            })
+          ),
+          catchError((e: AxiosError) => of(this.groupExistsFail(e)))
+        )
       );
     } else {
       this.groupExistsFail(new Error('error:not_connected'));
@@ -652,28 +545,19 @@ export class SignalrStore {
 
   @action
   groupExistsFail(e: AxiosError | Error) {
-    this.rootStore.notificationStore.createNotification(
-      'group_exists',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('group_exists', 'error', false, e);
   }
 
   @action
-  uploadItems(
-    stashtabs: IApiStashTabPricedItem[],
-    profileId: string,
-    snapshotId: string
-  ) {
+  uploadItems(stashtabs: IApiStashTabPricedItem[], profileId: string, snapshotId: string) {
     return forkJoin(
       from(stashtabs).pipe(
-        concatMap(st => {
+        concatMap((st) => {
           const items: IApiPricedItemsUpdate = {
             profileId: profileId,
             stashTabId: st.uuid,
             snapshotId: snapshotId,
-            pricedItems: st.pricedItems
+            pricedItems: st.pricedItems,
           } as IApiPricedItemsUpdate;
 
           return this.rootStore.signalrHub
@@ -683,7 +567,7 @@ export class SignalrStore {
               retryWhen(
                 genericRetryStrategy({
                   maxRetryAttempts: 5,
-                  scalingDuration: 5000
+                  scalingDuration: 5000,
                 })
               ),
               catchError((e: Error) => of(this.uploadItemsFail(e)))
@@ -695,19 +579,11 @@ export class SignalrStore {
 
   @action
   uploadItemsFail(e: Error) {
-    this.rootStore.notificationStore.createNotification(
-      'upload_items',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('upload_items', 'error', false, e);
   }
 
   @action
   uploadItemsSuccess() {
-    this.rootStore.notificationStore.createNotification(
-      'upload_items',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('upload_items', 'success');
   }
 }

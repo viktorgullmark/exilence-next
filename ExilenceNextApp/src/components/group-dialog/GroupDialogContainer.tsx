@@ -1,5 +1,6 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { generateGroupName } from '../../utils/group.utils';
@@ -8,7 +9,7 @@ import GroupDialog from './GroupDialog';
 type CreateGroupDialogContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
-}
+};
 
 export interface IGroupForm {
   name: string;
@@ -35,22 +36,15 @@ const CreateGroupDialogContainer = ({
       groupError={uiStateStore!.groupError}
       dialogType={uiStateStore!.groupDialogType}
       handleClearError={() => uiStateStore!.setGroupError(undefined)}
-      handleGroupExists={(groupName: string) =>
-        signalrStore!.groupExists(groupName)
-      }
+      handleGroupExists={(groupName: string) => signalrStore!.groupExists(groupName)}
       initialValues={initialValues}
       onClose={() => uiStateStore!.setGroupDialogOpen(false)}
       onSubmit={(group: IGroupForm) => onSubmit(group)}
       loading={
-        uiStateStore!.joiningGroup ||
-        uiStateStore!.leavingGroup ||
-        uiStateStore!.creatingGroup
+        uiStateStore!.joiningGroup || uiStateStore!.leavingGroup || uiStateStore!.creatingGroup
       }
     />
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore'
-)(observer(CreateGroupDialogContainer));
+export default inject('uiStateStore', 'signalrStore')(observer(CreateGroupDialogContainer));

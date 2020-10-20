@@ -1,9 +1,10 @@
-import { observer } from 'mobx-react';
 import React, { ReactNode } from 'react';
+import { observer } from 'mobx-react';
+
 import useStyles from './FeatureWrapper.styles';
 
 type FeatureWrapperProps = {
-  children: ReactNode
+  children: ReactNode;
 };
 
 const FeatureWrapper = ({ children }: FeatureWrapperProps) => {

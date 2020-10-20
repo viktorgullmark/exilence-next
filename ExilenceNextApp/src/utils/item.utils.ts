@@ -1,4 +1,5 @@
 import uuid from 'uuid';
+
 import { Rarity } from '../assets/themes/exilence-theme';
 import { IItem } from '../interfaces/item.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
@@ -21,19 +22,12 @@ export function mergeItemStacks(items: IPricedItem[]) {
       const foundStackIndex = mergedItems.indexOf(foundItem);
       mergedItems[foundStackIndex].stackSize += item.stackSize;
       mergedItems[foundStackIndex].total =
-        mergedItems[foundStackIndex].stackSize *
-        mergedItems[foundStackIndex].calculated;
-      if (
-        mergedItems[foundStackIndex].tab !== undefined &&
-        item.tab !== undefined
-      ) {
-        mergedItems[foundStackIndex].tab = [
-          ...mergedItems[foundStackIndex].tab,
-          ...item.tab,
-        ];
-        mergedItems[foundStackIndex].tab = mergedItems[
-          foundStackIndex
-        ].tab.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
+        mergedItems[foundStackIndex].stackSize * mergedItems[foundStackIndex].calculated;
+      if (mergedItems[foundStackIndex].tab !== undefined && item.tab !== undefined) {
+        mergedItems[foundStackIndex].tab = [...mergedItems[foundStackIndex].tab, ...item.tab];
+        mergedItems[foundStackIndex].tab = mergedItems[foundStackIndex].tab.filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+        );
       }
     }
   });
@@ -41,9 +35,7 @@ export function mergeItemStacks(items: IPricedItem[]) {
   return mergedItems;
 }
 
-export function formatSnapshotsForTable(
-  stashTabSnapshots: IStashTabSnapshot[]
-) {
+export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) {
   let mergedStashTabs: IPricedItem[] = [];
 
   stashTabSnapshots.forEach((snapshot) => {
@@ -78,26 +70,17 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
           ? getSeedTier(item.properties)
           : item.ilvl,
       tier:
-        item.properties !== null && item.properties !== undefined
-          ? getMapTier(item.properties)
-          : 0,
+        item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0,
       corrupted: item.corrupted || false,
       links:
         item.sockets !== undefined && item.sockets !== null
           ? getLinks(item.sockets.map((t) => t.group))
           : 0,
-      sockets:
-        item.sockets !== undefined && item.sockets !== null
-          ? item.sockets.length
-          : 0,
+      sockets: item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0,
       quality:
-        item.properties !== null && item.properties !== undefined
-          ? getQuality(item.properties)
-          : 0,
+        item.properties !== null && item.properties !== undefined ? getQuality(item.properties) : 0,
       level:
-        item.properties !== null && item.properties !== undefined
-          ? getLevel(item.properties)
-          : 0,
+        item.properties !== null && item.properties !== undefined ? getLevel(item.properties) : 0,
       stackSize: item.stackSize || 1,
       totalStacksize: item.maxStackSize || 1,
       variant: getItemVariant(
@@ -129,8 +112,7 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
       x.corrupted === itemToFind.corrupted &&
       (x.typeLine.indexOf(' Seed') === -1 || x.ilvl === itemToFind.ilvl) &&
       // ignore frameType for all maps except unique ones
-      (x.frameType === itemToFind.frameType ||
-        (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
+      (x.frameType === itemToFind.frameType || (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
   );
 }
 export function isDivinationCard(icon: string) {
@@ -214,15 +196,9 @@ export function getItemName(typeline: string, name: string) {
   return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
 }
 
-export function getItemVariant(
-  sockets: ISocket[],
-  explicitMods: string[],
-  name: string
-): string {
+export function getItemVariant(sockets: ISocket[], explicitMods: string[], name: string): string {
   if (explicitMods) {
-    const watchStoneUsesMod = explicitMods.find((em) =>
-      em.includes('uses remaining')
-    );
+    const watchStoneUsesMod = explicitMods.find((em) => em.includes('uses remaining'));
     if (watchStoneUsesMod) {
       return watchStoneUsesMod.split(' ')[0];
     }
@@ -248,33 +224,27 @@ export function getItemVariant(
 
   // Abyssal
   if (name === 'Lightpoacher') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
   if (name === 'Shroud of the Lightless') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
   if (name === 'Bubonic Trail') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
   if (name === 'Tombfist') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
   if (name === 'Hale Negator') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
   if (name === 'Command of the Pit') {
-    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a')
-      .length;
+    const count = sockets.filter((x) => x.sColour === 'A' || x.sColour === 'a').length;
     return count === 1 ? count + ' Jewel' : count + ' Jewels';
   }
 

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { forkJoin, from } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
+
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import {
@@ -56,20 +57,14 @@ function getItemCategories() {
 function getItemCategoryOverview(league: string, type: string) {
   const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(
-      axios.get<IPoeNinjaItemOverview>(`${apiUrl}/itemoverview${parameters}`)
-    )
+    from(axios.get<IPoeNinjaItemOverview>(`${apiUrl}/itemoverview${parameters}`))
   );
 }
 
 function getCurrencyCategoryOverview(league: string, type: string) {
   const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(
-      axios.get<IPoeNinjaCurrencyOverview>(
-        `${apiUrl}/currencyoverview${parameters}`
-      )
-    )
+    from(axios.get<IPoeNinjaCurrencyOverview>(`${apiUrl}/currencyoverview${parameters}`))
   );
 }
 
@@ -80,11 +75,7 @@ function getItemPrices(league: string) {
         map((response: AxiosResponse<IPoeNinjaItemOverview>) => {
           if (response.data) {
             return response.data.lines.map((lines) => {
-              return getExternalPriceFromNinjaItem(
-                lines,
-                type,
-                league
-              ) as IExternalPrice;
+              return getExternalPriceFromNinjaItem(lines, type, league) as IExternalPrice;
             });
           } else {
             return []; // no prices found on ninja
@@ -92,9 +83,7 @@ function getItemPrices(league: string) {
         })
       );
     })
-  ).pipe(
-    map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], []))
-  );
+  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }
 
 function getCurrencyPrices(league: string) {
@@ -120,7 +109,5 @@ function getCurrencyPrices(league: string) {
         })
       );
     })
-  ).pipe(
-    map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], []))
-  );
+  ).pipe(map((arrays) => arrays.reduce((acc, array) => [...acc, ...array], [])));
 }

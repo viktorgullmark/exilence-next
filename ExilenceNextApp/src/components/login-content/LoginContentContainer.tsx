@@ -1,6 +1,7 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useLocation } from 'react-router';
+import { inject, observer } from 'mobx-react';
+
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
@@ -11,12 +12,9 @@ type LoginContentProps = {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
   leagueStore?: LeagueStore;
-}
+};
 
-const LoginContentContainer = ({
-  accountStore,
-  uiStateStore,
-}: LoginContentProps) => {
+const LoginContentContainer = ({ accountStore, uiStateStore }: LoginContentProps) => {
   const location = useLocation();
 
   const handleValidate = (details: IAccount) => {
@@ -39,7 +37,4 @@ const LoginContentContainer = ({
   );
 };
 
-export default inject(
-  'accountStore',
-  'uiStateStore'
-)(observer(LoginContentContainer));
+export default inject('accountStore', 'uiStateStore')(observer(LoginContentContainer));

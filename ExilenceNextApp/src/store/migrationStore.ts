@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
+
 import { RootStore } from './rootStore';
 
 export class MigrationStore {
@@ -25,7 +26,7 @@ export class MigrationStore {
   clearStorage() {
     const itemsToRemove: string[] = [];
     return from(
-      localForage.iterate((value, key, iterationNumber) => {
+      localForage.iterate((_value, key) => {
         if (!key.includes('migration')) {
           itemsToRemove.push(key);
         }
@@ -38,7 +39,7 @@ export class MigrationStore {
 
         return forkJoin(
           from(itemsToRemove).pipe(
-            concatMap(key => {
+            concatMap((key) => {
               return from(localForage.removeItem(key));
             })
           )
@@ -66,6 +67,6 @@ export class MigrationStore {
           return observable;
         })
       )
-      .pipe(catchError((e: Error) => of(this.decrement())));
+      .pipe(catchError(() => of(this.decrement())));
   }
 }

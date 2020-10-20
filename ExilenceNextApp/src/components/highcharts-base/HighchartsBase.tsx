@@ -1,10 +1,10 @@
+import React, { useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React, { useRef } from 'react';
 
 type HighchartsBaseProps = {
   colors?: string[];
-} & Omit<HighchartsReact.Props, 'highcharts'>
+} & Omit<HighchartsReact.Props, 'highcharts'>;
 
 const HighchartsBase = (props: HighchartsBaseProps) => {
   const chartRef = useRef(null);

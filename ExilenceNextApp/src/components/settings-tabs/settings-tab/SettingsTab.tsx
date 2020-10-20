@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography, Box, useTheme } from '@material-ui/core';
-import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
+import { Box, Typography, useTheme } from '@material-ui/core';
+import { observer } from 'mobx-react';
 
 interface Props {
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ function SettingsTab(props: Props) {
     <Typography
       component="div"
       role="tabpanel"
-      style={{ width: '100%', position: 'relative'}}
+      style={{ width: '100%', position: 'relative' }}
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
@@ -26,7 +26,9 @@ function SettingsTab(props: Props) {
     >
       <Box p={2}>
         <Box position="absolute" top={theme.spacing(2)} right={theme.spacing(2)}>
-          <Typography variant="subtitle2" color="textSecondary">{t('label.requires_snapshot_info')}</Typography>
+          <Typography variant="subtitle2" color="textSecondary">
+            {t('label.requires_snapshot_info')}
+          </Typography>
         </Box>
         {children}
       </Box>

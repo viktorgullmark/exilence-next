@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/browser';
+
 import AppConfig from './app.config';
 
 function initSentry() {
@@ -10,7 +11,7 @@ function initSentry() {
         AppConfig.pathOfExileUrl,
         'Network Error',
         'NetworkError',
-      ]
+      ],
     });
   }
 }

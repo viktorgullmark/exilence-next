@@ -1,17 +1,12 @@
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select
-} from '@material-ui/core';
-import { FormikErrors, FormikTouched } from 'formik';
-import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { League } from '../../store/domains/league';
-import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormikErrors, FormikTouched } from 'formik';
+import { observer } from 'mobx-react';
+
 import useLabelWidth from '../../hooks/use-label-width';
+import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
+import { League } from '../../store/domains/league';
 
 type PriceLeagueDropdownProps = {
   touched: FormikTouched<any>;
@@ -19,14 +14,14 @@ type PriceLeagueDropdownProps = {
   priceLeagues: League[];
   handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
   values: ILeagueFormValues;
-}
+};
 
 const PriceLeagueDropdown = ({
   touched,
   errors,
   priceLeagues,
   handleChange,
-  values
+  values,
 }: PriceLeagueDropdownProps) => {
   const { t } = useTranslation();
   const { labelWidth, ref } = useLabelWidth(0);
@@ -47,10 +42,10 @@ const PriceLeagueDropdown = ({
           fullWidth
           labelWidth={labelWidth}
           value={values.priceLeague}
-          onChange={e => handleChange(e)}
+          onChange={(e) => handleChange(e)}
           inputProps={{
             name: 'priceLeague',
-            id: 'price-league-dd'
+            id: 'price-league-dd',
           }}
         >
           {priceLeagues.map((priceLeague: League) => {

@@ -1,14 +1,15 @@
-import { Menu } from '@material-ui/core';
 import React from 'react';
+import { Menu } from '@material-ui/core';
+
 import { Notification } from '../../store/domains/notification';
 import NotificationListItem from './notification-list-item/NotificationListItem';
 
-type NotificationListProps =  {
+type NotificationListProps = {
   notificationList: Notification[];
   open: boolean;
   notificationListAnchor: HTMLElement | null;
   handleListClose: () => void;
-}
+};
 
 const NotificationList = ({
   notificationList,
@@ -20,7 +21,7 @@ const NotificationList = ({
     <Menu
       anchorEl={notificationListAnchor}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id='notifications-menu'
+      id="notifications-menu"
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={open}

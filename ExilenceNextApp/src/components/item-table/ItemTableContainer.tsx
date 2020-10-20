@@ -1,12 +1,10 @@
+import React, { ChangeEvent } from 'react';
 import { Box, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
-import {
-  primaryLighter,
-  statusColors,
-} from '../../assets/themes/exilence-theme';
+
+import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { ITableItem } from '../../interfaces/table-item.interface';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
@@ -21,7 +19,7 @@ type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
-}
+};
 
 export const itemTableFilterSpacing = 2;
 
@@ -106,14 +104,9 @@ const ItemTableContainer = ({
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid
-          container
-          direction='row'
-          justify='space-between'
-          alignItems='center'
-        >
+        <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item md={7}>
-            <Grid container direction='row' spacing={2} alignItems='center'>
+            <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
                   array={itemArray}
@@ -128,18 +121,16 @@ const ItemTableContainer = ({
           </Grid>
           <Grid item className={classes.actionArea}>
             <IconButton
-              size='small'
+              size="small"
               className={classes.inlineIcon}
               onClick={() =>
-                uiStateStore!.setShowItemTableFilter(
-                  !uiStateStore!.showItemTableFilter
-                )
+                uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
               }
             >
               <FilterListIcon />
             </IconButton>
             <IconButton
-              size='small'
+              size="small"
               className={classes.inlineIcon}
               onClick={handleItemTableMenuOpen}
             >
@@ -157,9 +148,7 @@ const ItemTableContainer = ({
         orderBy={uiStateStore!.itemTableOrderBy}
         setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
         setPageSize={(size: number) => uiStateStore!.setItemTablePageSize(size)}
-        setOrderBy={(col: keyof ITableItem) =>
-          uiStateStore!.setItemTableOrderBy(col)
-        }
+        setOrderBy={(col: keyof ITableItem) => uiStateStore!.setItemTableOrderBy(col)}
         activeGroup={activeGroup}
       />
       <ItemTableMenuContainer />
@@ -167,8 +156,4 @@ const ItemTableContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore'
-)(observer(ItemTableContainer));
+export default inject('uiStateStore', 'signalrStore', 'accountStore')(observer(ItemTableContainer));

@@ -1,16 +1,12 @@
+import React, { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
-import React, { useEffect } from 'react';
+
 import { appName, visitor } from '../..';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import SettingsTabs from '../../components/settings-tabs/SettingsTabs';
-import { SettingStore } from '../../store/settingStore';
 
-type SettingsProps = {
-  settingStore?: SettingStore;
-}
-
-const Settings = (props: SettingsProps) => {
+const Settings = () => {
   useEffect(() => {
     visitor!.pageview('/settings', appName).send();
   });

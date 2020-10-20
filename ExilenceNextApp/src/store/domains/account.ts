@@ -3,27 +3,21 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, Subject, throwError, timer } from 'rxjs';
-import {
-  catchError,
-  map,
-  mergeMap,
-  retryWhen,
-  switchMap,
-  takeUntil,
-} from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, switchMap, takeUntil } from 'rxjs/operators';
 import uuid from 'uuid';
+
 import { IAccount } from '../../interfaces/account.interface';
 import { IApiAccount } from '../../interfaces/api/api-account.interface';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { ICharacter } from '../../interfaces/character.interface';
 import { authService } from '../../services/auth.service';
+import { rgbToHex } from '../../utils/colour.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import { genericRetryStrategy } from '../../utils/rxjs.utils';
-import { visitor, rootStore } from './../../index';
+import { rootStore, visitor } from './../../index';
 import { IProfile } from './../../interfaces/profile.interface';
 import { AccountLeague } from './account-league';
 import { Profile } from './profile';
-import { rgbToHex } from '../../utils/colour.utils';
 
 export class Account implements IAccount {
   @persist uuid: string = uuid.v4();
@@ -33,9 +27,7 @@ export class Account implements IAccount {
   @persist('list', AccountLeague)
   @observable
   accountLeagues: AccountLeague[] = [];
-  @persist('list', Profile) @observable profiles: Profile[] = [
-    new Profile({ name: 'profile 1' }),
-  ];
+  @persist('list', Profile) @observable profiles: Profile[] = [new Profile({ name: 'profile 1' })];
 
   cancelled: Subject<boolean> = new Subject();
 
@@ -47,12 +39,8 @@ export class Account implements IAccount {
   get stashTabColors() {
     const profile = this.activeProfile;
     if (profile) {
-      const league = rootStore.leagueStore.leagues.find(
-        (l) => l.id === profile.activeLeagueId
-      );
-      const accountLeague = this.accountLeagues.find(
-        (l) => l.leagueId === league?.id
-      );
+      const league = rootStore.leagueStore.leagues.find((l) => l.id === profile.activeLeagueId);
+      const accountLeague = this.accountLeagues.find((l) => l.leagueId === league?.id);
       return accountLeague?.stashtabs
         .filter((s) => this.activeProfile?.activeStashTabIds.includes(s.id))
         .map((s) => rgbToHex(s.colour.r, s.colour.g, s.colour.b));
@@ -65,9 +53,7 @@ export class Account implements IAccount {
   get activeLeague() {
     const profile = this.activeProfile;
     if (profile) {
-      return rootStore.leagueStore.leagues.find(
-        (l) => l.id === profile.activeLeagueId
-      );
+      return rootStore.leagueStore.leagues.find((l) => l.id === profile.activeLeagueId);
     } else {
       return undefined;
     }
@@ -76,20 +62,14 @@ export class Account implements IAccount {
   @computed
   get activeCharacter() {
     const profile = this.activeProfile;
-    const accountLeague = this.accountLeagues.find(
-      (l) => l.leagueId === profile?.activeLeagueId
-    );
-    return accountLeague?.characters?.find(
-      (ac) => ac.name === profile?.activeCharacterName
-    );
+    const accountLeague = this.accountLeagues.find((l) => l.leagueId === profile?.activeLeagueId);
+    return accountLeague?.characters?.find((ac) => ac.name === profile?.activeCharacterName);
   }
 
   get characters() {
     const profile = this.activeProfile;
     if (profile) {
-      return this.accountLeagues.find(
-        (l) => l.leagueId === profile.activeLeagueId
-      )?.characters;
+      return this.accountLeagues.find((l) => l.leagueId === profile.activeLeagueId)?.characters;
     } else {
       return undefined;
     }
@@ -99,9 +79,7 @@ export class Account implements IAccount {
   get activePriceLeague() {
     const profile = this.activeProfile;
     if (profile) {
-      return rootStore.leagueStore.priceLeagues.find(
-        (l) => l.id === profile.activePriceLeagueId
-      );
+      return rootStore.leagueStore.priceLeagues.find((l) => l.id === profile.activePriceLeagueId);
     } else {
       return undefined;
     }
@@ -135,10 +113,10 @@ export class Account implements IAccount {
   @action
   updateLeaguesForProfiles(leagues: string[]) {
     this.profiles = this.profiles.map((p) => {
-      if (!leagues.find(l => l === p.activeLeagueId)) {
+      if (!leagues.find((l) => l === p.activeLeagueId)) {
         p.activeLeagueId = 'Standard';
       }
-      if (!leagues.find(l => l === p.activePriceLeagueId)) {
+      if (!leagues.find((l) => l === p.activePriceLeagueId)) {
         p.activePriceLeagueId = 'Standard';
       }
       return p;
@@ -165,42 +143,32 @@ export class Account implements IAccount {
 
   @action
   getProfilesForAccount(accountUuid: string) {
-    return rootStore.signalrHub
-      .invokeEvent<string>('GetAllProfiles', accountUuid)
-      .pipe(
-        map((profiles: IApiProfile[]) => {
-          this.getProfilesForAccountSuccess();
-          return profiles;
-        }),
-        retryWhen(
-          genericRetryStrategy({
-            maxRetryAttempts: 5,
-            scalingDuration: 5000,
-          })
-        ),
-        catchError((e: Error) => {
-          this.getProfilesForAccountFail(e);
-          return throwError(e);
+    return rootStore.signalrHub.invokeEvent<string>('GetAllProfiles', accountUuid).pipe(
+      map((profiles: IApiProfile[]) => {
+        this.getProfilesForAccountSuccess();
+        return profiles;
+      }),
+      retryWhen(
+        genericRetryStrategy({
+          maxRetryAttempts: 5,
+          scalingDuration: 5000,
         })
-      );
+      ),
+      catchError((e: Error) => {
+        this.getProfilesForAccountFail(e);
+        return throwError(e);
+      })
+    );
   }
 
   @action
   getProfilesForAccountSuccess() {
-    rootStore.notificationStore.createNotification(
-      'get_profiles_for_account',
-      'success'
-    );
+    rootStore.notificationStore.createNotification('get_profiles_for_account', 'success');
   }
 
   @action
   getProfilesForAccountFail(e: AxiosError | Error) {
-    rootStore.notificationStore.createNotification(
-      'get_profiles_for_account',
-      'error',
-      true,
-      e
-    );
+    rootStore.notificationStore.createNotification('get_profiles_for_account', 'error', true, e);
   }
 
   @action
@@ -246,12 +214,7 @@ export class Account implements IAccount {
 
   @action
   authorizeFail(e: Error) {
-    rootStore.notificationStore.createNotification(
-      'authorize',
-      'error',
-      true,
-      e
-    );
+    rootStore.notificationStore.createNotification('authorize', 'error', true, e);
   }
 
   @computed
@@ -341,7 +304,7 @@ export class Account implements IAccount {
             this.profiles[profileIndex].uuid
           );
         }),
-        map((uuid: string) => {
+        map(() => {
           this.deleteProfiles(profileIndex, 1);
           rootStore.uiStateStore.setConfirmRemoveProfileDialogOpen(false);
           return this.removeActiveProfileSuccess();
@@ -371,31 +334,18 @@ export class Account implements IAccount {
   @action
   removeActiveProfileFail(e: Error) {
     rootStore.uiStateStore.setRemovingProfile(false);
-    rootStore.notificationStore.createNotification(
-      'remove_profile',
-      'error',
-      true,
-      e
-    );
+    rootStore.notificationStore.createNotification('remove_profile', 'error', true, e);
   }
 
   @action
   setActiveProfileSuccess() {
-    rootStore.notificationStore.createNotification(
-      'set_active_profile',
-      'success'
-    );
+    rootStore.notificationStore.createNotification('set_active_profile', 'success');
     rootStore.uiStateStore.setChangingProfile(false);
   }
 
   @action
   setActiveProfileFail(e: Error) {
-    rootStore.notificationStore.createNotification(
-      'set_active_profile',
-      'error',
-      true,
-      e
-    );
+    rootStore.notificationStore.createNotification('set_active_profile', 'error', true, e);
     rootStore.uiStateStore.setChangingProfile(false);
   }
 
@@ -418,35 +368,28 @@ export class Account implements IAccount {
 
     const apiProfile = mapProfileToApiProfile(newProfile);
 
-    return rootStore.signalrHub
-      .invokeEvent<IApiProfile>('AddProfile', apiProfile)
-      .pipe(
-        map((p: IApiProfile) => {
-          this.addProfile(newProfile);
-          this.setActiveProfile(newProfile.uuid);
-          callback();
-          this.createProfileSuccess();
-          return p;
-        }),
-        retryWhen(
-          genericRetryStrategy({
-            maxRetryAttempts: 5,
-            scalingDuration: 5000,
-          })
-        ),
-        catchError((e: AxiosError) => of(this.createProfileFail(e)))
-      );
+    return rootStore.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
+      map((p: IApiProfile) => {
+        this.addProfile(newProfile);
+        this.setActiveProfile(newProfile.uuid);
+        callback();
+        this.createProfileSuccess();
+        return p;
+      }),
+      retryWhen(
+        genericRetryStrategy({
+          maxRetryAttempts: 5,
+          scalingDuration: 5000,
+        })
+      ),
+      catchError((e: AxiosError) => of(this.createProfileFail(e)))
+    );
   }
 
   @action
   createProfileFail(e: Error) {
     rootStore.uiStateStore.setSavingProfile(false);
-    rootStore.notificationStore.createNotification(
-      'create_profile',
-      'error',
-      false,
-      e
-    );
+    rootStore.notificationStore.createNotification('create_profile', 'error', false, e);
   }
 
   @action

@@ -3,11 +3,12 @@ import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+
+import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
 import { externalService } from '../../services/external.service';
 import { Character } from './character';
-import { rootStore } from '../..';
 
 export class AccountLeague {
   @persist uuid: string = '';
@@ -24,10 +25,10 @@ export class AccountLeague {
   @action
   updateCharacters(characters: ICharacter[]) {
     const newCharacters = characters.filter(
-      c => this.characters.find(ec => ec.name === c.name) === undefined
+      (c) => this.characters.find((ec) => ec.name === c.name) === undefined
     );
     this.characters = this.characters.concat(
-      newCharacters.map(c => {
+      newCharacters.map((c) => {
         return new Character(c);
       })
     );
@@ -42,7 +43,7 @@ export class AccountLeague {
           runInAction(() => {
             if (response.data.tabs.length > 0) {
               this.stashtabs = response.data.tabs.filter(
-                (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type) 
+                (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type)
               );
             }
             this.getStashTabsSuccess();
