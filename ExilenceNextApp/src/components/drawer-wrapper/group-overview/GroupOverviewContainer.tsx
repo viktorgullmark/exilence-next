@@ -6,16 +6,14 @@ import { SignalrStore } from '../../../store/signalrStore';
 import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
 import { useTranslation } from 'react-i18next';
 
-interface GroupOverviewContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+type GroupOverviewContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
 }
 
-const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
+const GroupOverviewContainer = ({
   uiStateStore,
   signalrStore,
-  children
 }: GroupOverviewContainerProps) => {
   const { t } = useTranslation();
   const [showLeaveGroupDialog, setShowLeaveGroupDialog] = useState(false);
@@ -37,9 +35,7 @@ const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
         }
         handleJoinGroup={() => uiStateStore!.setGroupDialogOpen(true, 'join')}
         handleLeaveGroup={() => setShowLeaveGroupDialog(true)}
-      >
-        {children}
-      </GroupOverview>
+      />
       <ConfirmationDialog
         show={showLeaveGroupDialog}
         onClose={() => setShowLeaveGroupDialog(false)}
