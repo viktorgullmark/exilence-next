@@ -20,7 +20,7 @@ import useStyles from './Header.styles';
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
 
-interface HeaderProps {
+type HeaderProps = {
   maximized: boolean;
   setMaximized: (maximized: boolean) => void;
   currentVersion: string;
@@ -28,7 +28,7 @@ interface HeaderProps {
   quitAndInstall: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
+const Header = ({
   maximized,
   setMaximized,
   currentVersion,
@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({
     <AppBar position="fixed" color="secondary" className={classes.header}>
       <div
         className={clsx(classes.noDrag, classes.resizeHandleContainer)}
-      ></div>
+      />
       <Toolbar className={classes.toolbar}>
         <Grid
           container
