@@ -3,11 +3,11 @@ import { UiStateStore } from '../../store/uiStateStore';
 import { observer, inject } from 'mobx-react';
 import ToolbarStepper from './ToolbarStepper';
 
-interface Props {
+type ToolbarStepperContainerProps = {
   uiStateStore?: UiStateStore;
 }
 
-const ToolbarStepperContainer: React.FC<Props> = ({ uiStateStore }) => {
+const ToolbarStepperContainer = ({ uiStateStore }: ToolbarStepperContainerProps) => {
   const handleClose = () => {
     uiStateStore!.setToolbarTourOpen(false);
   };
