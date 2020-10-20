@@ -4,15 +4,15 @@ import { AccountStore } from '../../store/accountStore';
 import ChartToolbox from './ChartToolbox';
 import { UiStateStore } from '../../store/uiStateStore';
 
-interface Props {
+type SnapshotHistoryChartContainerProps = {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
 }
 
-const SnapshotHistoryChartContainer: React.FC<Props> = ({
+const SnapshotHistoryChartContainer = ({
   accountStore,
   uiStateStore
-}: Props) => {
+}: SnapshotHistoryChartContainerProps) => {
   return (
     <ChartToolbox
       handleChangeTimeSpan={val => uiStateStore!.setChartTimeSpan(val)}
