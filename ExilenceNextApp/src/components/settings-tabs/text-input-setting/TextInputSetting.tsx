@@ -9,19 +9,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './TextInputSetting.styles';
 
-interface Props {
+type TextInputSettingProps = {
   value: string;
   handleChange: (value: string) => void;
   translationKey: string;
   disabled?: boolean;
 }
 
-const TextInputSetting: React.FC<Props> = ({
+const TextInputSetting = ({
   value,
   handleChange,
   translationKey,
   disabled
-}: Props) => {
+}: TextInputSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 

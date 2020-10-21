@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Client.txt background log reader</title>        
+        <title>Client.txt background log reader</title>
     </head>
     <body>
         <h1>Client.txt background log reader</h1>
@@ -8,8 +8,8 @@
             const { ipcRenderer } = require('electron');
             const PoELogMonitor = require("poe-log-monitor");
 
-            var poeLog = null;
-            
+            let poeLog = null;
+
             ipcRenderer.on('log-path', (event, args) => {
 
                 poeLog = new PoELogMonitor({
@@ -81,11 +81,11 @@
                     ipcRenderer.send('log-event', { event: 'pause', data: message });
                 });
 
-            });   
+            });
 
             ipcRenderer.on('log-start', (event, arg) => {
                 poeLog.start();
-            });  
+            });
 
         </script>
     </body>
