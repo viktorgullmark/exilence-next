@@ -13,6 +13,9 @@ import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
+import { LogStore } from '../../store/logStore';
+import { Observable, from, of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 type ToolbarContainerProps = {
   uiStateStore?: UiStateStore;
@@ -23,6 +26,7 @@ type ToolbarContainerProps = {
   priceStore?: PriceStore;
   settingStore?: SettingStore;
   overlayStore?: OverlayStore;
+  logStore?: LogStore;
 };
 
 const ToolbarContainer = ({
@@ -33,6 +37,7 @@ const ToolbarContainer = ({
   priceStore,
   settingStore,
   overlayStore,
+  logStore,
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -59,7 +64,7 @@ const ToolbarContainer = ({
   };
 
   const handleOverlay = () => {
-    // todo: rework to toggle modal instead, with buttons for each overlay
+    //todo: rework to toggle modal instead, with buttons for each overlay
 
     const income = formatValue(
       signalrStore!.activeGroup
@@ -77,6 +82,27 @@ const ToolbarContainer = ({
       event: 'netWorth',
       data: { netWorth: netWorth, income: income },
     });
+  };
+
+  const handleLogMonitor = () => {
+    logStore!.running
+      ? logStore!.stopLogMonitor()
+      : of(true)
+          .pipe(
+            delay(250),
+            tap(() => {
+              logStore!.createLogMonitor();
+            }),
+            delay(500),
+            tap(() => {
+              logStore!.setLogMonitorPath(settingStore!.logPath);
+            }),
+            delay(750),
+            tap(() => {
+              logStore!.startLogMonitor();
+            })
+          )
+          .subscribe();
   };
 
   const handleRemoveProfile = () => {
@@ -142,6 +168,7 @@ const ToolbarContainer = ({
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
         handleOverlay={handleOverlay}
+        handleLogMonitor={handleLogMonitor}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
@@ -163,5 +190,6 @@ export default inject(
   'signalrStore',
   'priceStore',
   'settingStore',
-  'overlayStore'
+  'overlayStore',
+  'logStore'
 )(observer(ToolbarContainer));
