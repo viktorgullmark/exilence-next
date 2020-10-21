@@ -1,21 +1,19 @@
 import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import clsx from 'clsx';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { getRarity } from '../../utils/item.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import { useTranslation } from 'react-i18next';
-import { ITableItem } from '../../interfaces/table-item.interface';
-import clsx from 'clsx';
 
 export function itemIcon<T>(options: {
   accessor: string;
   header: string;
-  defaultShow?: boolean;
 }): Column<object> {
-  const { header, accessor, defaultShow: show = true } = options;
+  const { header, accessor } = options;
 
   return {
     Header: header,
@@ -32,9 +30,8 @@ export function itemIcon<T>(options: {
 export function itemName<T>(options: {
   accessor: string;
   header: string;
-  defaultShow?: boolean;
 }): Column<object> {
-  const { header, accessor, defaultShow: show = true } = options;
+  const { header, accessor } = options;
 
   return {
     Header: header,
@@ -57,9 +54,8 @@ export function itemName<T>(options: {
 export function itemLinks<T>(options: {
   accessor: string;
   header: string;
-  defaultShow?: boolean;
 }): Column<object> {
-  const { header, accessor, defaultShow: show = true } = options;
+  const { header, accessor } = options;
 
   return {
     Header: header,
@@ -75,9 +71,8 @@ export function itemLinks<T>(options: {
 export function itemCorrupted<T>(options: {
   accessor: string;
   header: string;
-  defaultShow?: boolean;
 }): Column<object> {
-  const { header, accessor, defaultShow: show = true } = options;
+  const { header, accessor } = options;
 
   return {
     Header: header,
@@ -93,9 +88,8 @@ export function itemCorrupted<T>(options: {
 export function itemValue<T>(options: {
   accessor: string;
   header: string;
-  defaultShow?: boolean;
 }): Column<object> {
-  const { header, accessor, defaultShow: show = true } = options;
+  const { header, accessor } = options;
 
   return {
     Header: header,

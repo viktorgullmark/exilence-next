@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import React, { CSSProperties, useEffect } from 'react';
 import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import { useDebounce } from '../../hooks/use-debounce';
-import { ResizeHandle } from './ResizeHandle';
-import { TablePagination } from './TablePagination';
+import { ResizeHandle } from '../resize-handle/ResizeHandle';
+import { TablePagination } from '../table-pagination/TablePagination';
 import { useStyles } from './TableWrapper.styles';
 
 interface ITableWrapperProps {

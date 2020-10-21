@@ -1,22 +1,8 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import {
-  TableInstance,
-  useColumnOrder,
-  useExpanded,
-  useFilters,
-  useFlexLayout,
-  useGroupBy,
-  usePagination,
-  useResizeColumns,
-  useRowSelect,
-  useSortBy,
-  useTable,
-} from 'react-table';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
-import { Order } from '../components/item-table/ItemTable';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { ITableItem } from '../interfaces/table-item.interface';
@@ -26,8 +12,6 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
-import itemTableColumns from '../components/item-table/itemTableColumns';
-import { defaultColumn } from '../components/table-wrapper/DefaultColumn';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -70,9 +54,6 @@ export class UiStateStore {
   @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
-  @persist @observable itemTableOrder: Order = 'desc';
-  @persist @observable itemTableOrderBy: keyof ITableItem = 'total';
-  @persist @observable itemTablePageSize: number = 25;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
 
@@ -144,21 +125,6 @@ export class UiStateStore {
   @action
   setTimeSinceLastSnapshotLabel(label: string | undefined) {
     this.timeSinceLastSnapshotLabel = label;
-  }
-
-  @action
-  setItemTableOrder(order: Order) {
-    this.itemTableOrder = order;
-  }
-
-  @action
-  setItemTableOrderBy(orderBy: keyof ITableItem) {
-    this.itemTableOrderBy = orderBy;
-  }
-
-  @action
-  setItemTablePageSize(pageSize: number) {
-    this.itemTablePageSize = pageSize;
   }
 
   @action

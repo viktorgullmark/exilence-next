@@ -38,7 +38,6 @@
     "mobx-react": "^6.1.4",
     "mobx-utils": "^5.5.1",
     "moment": "^2.24.0",
-    "namor": "^2.0.2",
     "node-sass": "^4.13.1",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",

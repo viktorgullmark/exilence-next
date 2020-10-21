@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added a link to view the price history on poe.ninja for each item
 - Added a reset button to the income widget
+- Added support for resizing columns in the item table
+- Added support for toggling which columns are visible in the item table
 ##### Changed
+- Reworked the entire table structure and should now be more performant
 - Reworked how income is calculated
     - Now calculates over every hour since the session started, instead of only the past hour
 - Minor style tweaks

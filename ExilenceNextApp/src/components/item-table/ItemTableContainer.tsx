@@ -1,11 +1,10 @@
-import { Box, Button, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
+import { Box, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
 import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
-  CellProps,
-  Column,
   TableInstance,
   useColumnOrder,
   useExpanded,
@@ -19,22 +18,18 @@ import {
   useTable,
 } from 'react-table';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
-import { ITableItem } from '../../interfaces/table-item.interface';
+import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { mapPricedItemToTableItem } from '../../utils/item.utils';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { makeData, PersonData } from '../../utils/makeData.utils';
-import { ColumnHidePage } from '../table-wrapper/ColumnHidePage';
+import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
+import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
-import ItemTable, { Order } from './ItemTable';
-import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import itemTableColumns from './itemTableColumns';
-import { useLocalStorage } from '../../hooks/use-local-storage';
 
 type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
@@ -94,7 +89,7 @@ const ItemTableContainer = ({
   const tableName = 'item-table';
   const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
 
-  const [instance, setInstance] = useState<TableInstance<object>>(
+  const [instance] = useState<TableInstance<object>>(
     useTable(
       {
         columns: itemTableColumns,
@@ -210,7 +205,7 @@ const ItemTableContainer = ({
               className={classes.inlineIcon}
               onClick={handleItemTableMenuOpen}
             >
-              <MoreVertIcon />
+              <GetAppIcon />
             </IconButton>
           </Grid>
         </Grid>

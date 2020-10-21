@@ -7,6 +7,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles(
@@ -50,7 +51,7 @@ export function ColumnHidePage({
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'));
   const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
-
+  const { t } = useTranslation();
   const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length;
 
   return hideableColumns.length > 1 ? (
@@ -71,7 +72,7 @@ export function ColumnHidePage({
         }}
       >
         <div className={classes.columnsPopOver}>
-          <Typography className={classes.popoverTitle}>Visible Columns</Typography>
+          <Typography className={classes.popoverTitle}>{t('label.visible_columns')}</Typography>
           <div className={classes.grid}>
             {hideableColumns.map((column) => {
               return (

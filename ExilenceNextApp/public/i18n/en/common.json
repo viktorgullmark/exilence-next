@@ -42,6 +42,7 @@
     "session_id_dialog": "How to find your session Id"
   },
   "label": {
+    "visible_columns": "Visible columns",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
     "add_stash_tabs": "Add tabs",
