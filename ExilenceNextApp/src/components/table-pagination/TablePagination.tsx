@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme) => ({
 export function TablePagination<T extends object>({
   instance,
 }: PropsWithChildren<{ instance: TableInstance<T> }>): ReactElement | null {
-  const classes = useStyles();
-  const theme = useTheme();
-
   const {
     state: { pageIndex, pageSize, rowCount = instance.rows.length },
     gotoPage,
@@ -48,16 +45,6 @@ export function TablePagination<T extends object>({
     previousPage,
     setPageSize,
   } = instance;
-
-  const handleLastPageButtonClick = (event: ButtonEvent) => {
-    gotoPage(Math.max(0, Math.ceil(rowCount / pageSize) - 1));
-  };
-
-  const handleFirstPageButtonClick = (event: ButtonEvent) => handleChangePage(event, 0);
-
-  const handleBackButtonClick = (event: ButtonEvent) => handleChangePage(event, pageIndex - 1);
-
-  const handleNextButtonClick = (event: ButtonEvent) => handleChangePage(event, pageIndex + 1);
 
   const handleChangePage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
