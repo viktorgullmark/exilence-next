@@ -70,6 +70,7 @@ type ToolbarProps = {
   ) => void;
   handleSnapshot: () => void;
   handleOverlay: () => void;
+  handleLogMonitor: () => void;
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
