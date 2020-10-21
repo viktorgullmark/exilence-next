@@ -39,7 +39,8 @@
     "snapshot_history_chart": "Snapshot history",
     "ui_settings": "Interface",
     "general": "General",
-    "session_id_dialog": "How to find your session Id"
+    "session_id_dialog": "How to find your session Id",
+    "log_settings": "Log"
   },
   "label": {
     "visible_columns": "Visible columns",

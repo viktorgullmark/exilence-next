@@ -10,6 +10,7 @@ import { NotificationStore } from './notificationStore';
 import { SignalrStore } from './signalrStore';
 import { PriceStore } from './priceStore';
 import { OverlayStore } from './overlayStore';
+import { LogStore } from './logStore';
 
 export class RootStore {
   uiStateStore: UiStateStore;
@@ -24,6 +25,7 @@ export class RootStore {
   signalrStore: SignalrStore;
   priceStore: PriceStore;
   overlayStore: OverlayStore;
+  logStore: LogStore;
 
   constructor() {
     this.uiStateStore = new UiStateStore(this);
@@ -38,5 +40,6 @@ export class RootStore {
     this.signalrStore = new SignalrStore(this);
     this.priceStore = new PriceStore(this);
     this.overlayStore = new OverlayStore(this);
+    this.logStore = new LogStore(this);
   }
 }
