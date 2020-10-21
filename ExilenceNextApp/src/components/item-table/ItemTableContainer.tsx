@@ -3,13 +3,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
 import { inject, observer } from 'mobx-react';
-import {
-  ChangeEvent,
-  default as React,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import {
   TableInstance,
   useColumnOrder,
@@ -80,17 +74,17 @@ const ItemTableContainer = ({
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
 
-  const getItems = () => {
+  const getItems = useMemo(() => {
     if (activeProfile) {
       return activeGroup ? activeGroup.items : activeProfile.items;
     } else {
       return [];
     }
-  };
+  }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
   const data = useMemo(() => {
-    return getItems().map((i) => mapPricedItemToTableItem(i));
-  }, [getItems()]);
+    return getItems.map((i) => mapPricedItemToTableItem(i));
+  }, [getItems]);
 
   const tableName = 'item-table';
   const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
@@ -175,13 +169,13 @@ const ItemTableContainer = ({
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
-                  array={getItems()}
+                  array={getItems}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, '')}
                 />
               </Grid>
               <Grid item>
-                <ItemTableFilterSubtotal array={getItems()} />
+                <ItemTableFilterSubtotal array={getItems} />
               </Grid>
             </Grid>
           </Grid>
