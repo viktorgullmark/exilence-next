@@ -3,15 +3,13 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
-import {
-  primaryLighter,
-  statusColors,
-} from '../../assets/themes/exilence-theme';
+import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { ITableItem } from '../../interfaces/table-item.interface';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { mapPricedItemToTableItem } from '../../utils/item.utils';
+import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
@@ -21,7 +19,7 @@ type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
-}
+};
 
 export const itemTableFilterSpacing = 2;
 
@@ -103,17 +101,128 @@ const ItemTableContainer = ({
 
   const itemArray = getItems();
 
+  const data = React.useMemo(
+    () => [
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+    ],
+    []
+  );
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Column 1',
+        accessor: 'col1', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Column 2',
+        accessor: 'col2',
+      },
+    ],
+    []
+  );
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid
-          container
-          direction='row'
-          justify='space-between'
-          alignItems='center'
-        >
+        <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item md={7}>
-            <Grid container direction='row' spacing={2} alignItems='center'>
+            <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
                   array={itemArray}
@@ -128,18 +237,16 @@ const ItemTableContainer = ({
           </Grid>
           <Grid item className={classes.actionArea}>
             <IconButton
-              size='small'
+              size="small"
               className={classes.inlineIcon}
               onClick={() =>
-                uiStateStore!.setShowItemTableFilter(
-                  !uiStateStore!.showItemTableFilter
-                )
+                uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
               }
             >
               <FilterListIcon />
             </IconButton>
             <IconButton
-              size='small'
+              size="small"
               className={classes.inlineIcon}
               onClick={handleItemTableMenuOpen}
             >
@@ -148,6 +255,7 @@ const ItemTableContainer = ({
           </Grid>
         </Grid>
       </Box>
+      <TableWrapper data={data} columns={columns} />
       <ItemTable
         items={itemArray.map((i) => mapPricedItemToTableItem(i))}
         pageIndex={uiStateStore!.itemTablePageIndex}
@@ -157,9 +265,7 @@ const ItemTableContainer = ({
         orderBy={uiStateStore!.itemTableOrderBy}
         setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
         setPageSize={(size: number) => uiStateStore!.setItemTablePageSize(size)}
-        setOrderBy={(col: keyof ITableItem) =>
-          uiStateStore!.setItemTableOrderBy(col)
-        }
+        setOrderBy={(col: keyof ITableItem) => uiStateStore!.setItemTableOrderBy(col)}
         activeGroup={activeGroup}
       />
       <ItemTableMenuContainer />
@@ -167,8 +273,4 @@ const ItemTableContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore'
-)(observer(ItemTableContainer));
+export default inject('uiStateStore', 'signalrStore', 'accountStore')(observer(ItemTableContainer));
