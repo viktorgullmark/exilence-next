@@ -143,8 +143,8 @@ export default function exilenceTheme() {
     transitions: {
       duration: {
         enteringScreen: 0,
-        leavingScreen: 0
-      }
-    }
+        leavingScreen: 0,
+      },
+    },
   });
 }

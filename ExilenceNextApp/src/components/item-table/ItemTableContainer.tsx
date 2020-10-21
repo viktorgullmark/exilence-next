@@ -3,7 +3,13 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  default as React,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   TableInstance,
   useColumnOrder,

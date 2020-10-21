@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 
 const useStyles = makeStyles((theme) => ({

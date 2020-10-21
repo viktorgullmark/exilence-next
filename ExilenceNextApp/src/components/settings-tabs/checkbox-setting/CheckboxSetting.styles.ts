@@ -1,13 +1,13 @@
 import { createStyles, makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     checkBox: {
-      marginTop: theme.spacing(0.75)
+      marginTop: theme.spacing(0.75),
     },
     checkBoxValue: {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   })
 );
 

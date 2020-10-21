@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 

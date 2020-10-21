@@ -1,6 +1,6 @@
-import { Checkbox, FormControlLabel, FormControl } from '@material-ui/core';
-import { useField } from 'formik';
 import React from 'react';
+import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
+import { useField } from 'formik';
 
 interface Props {
   name: string;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CheckboxField = ({ name, label, required, disabled }: Props) => {
-  const [field, meta] = useField({ name, type: 'checkbox'});
+  const [field, meta] = useField({ name, type: 'checkbox' });
 
   return (
     <FormControl

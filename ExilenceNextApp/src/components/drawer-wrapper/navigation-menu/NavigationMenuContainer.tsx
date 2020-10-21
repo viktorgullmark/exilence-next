@@ -1,18 +1,16 @@
 import React from 'react';
-import NavigationMenu from './NavigationMenu';
-import { observer, inject } from 'mobx-react';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { inject, observer } from 'mobx-react';
+
 import { RouteStore } from '../../../store/routeStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import NavigationMenu from './NavigationMenu';
 
 type NavigationMenuContainerProps = {
   uiStateStore?: UiStateStore;
   routeStore?: RouteStore;
-}
+};
 
-const NavigationMenuContainer = ({
-  uiStateStore,
-  routeStore,
-}: NavigationMenuContainerProps) => (
+const NavigationMenuContainer = ({ uiStateStore, routeStore }: NavigationMenuContainerProps) => (
   <NavigationMenu
     open={uiStateStore!.sidenavOpen}
     toggleSidenav={() => uiStateStore!.toggleSidenav()}
@@ -20,7 +18,4 @@ const NavigationMenuContainer = ({
   />
 );
 
-export default inject(
-  'uiStateStore',
-  'routeStore'
-)(observer(NavigationMenuContainer));
+export default inject('uiStateStore', 'routeStore')(observer(NavigationMenuContainer));

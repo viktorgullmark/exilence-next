@@ -1,11 +1,12 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { SettingStore } from '../../../store/settingStore';
 import SnapshotSettings from './SnapshotSettings';
 
 type SnapshotSettingsContainerProps = {
   settingStore?: SettingStore;
-}
+};
 
 const SnapshotSettingsContainer = ({ settingStore }: SnapshotSettingsContainerProps) => (
   <SnapshotSettings

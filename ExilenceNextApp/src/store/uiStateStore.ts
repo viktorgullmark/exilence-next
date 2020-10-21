@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 import uuid from 'uuid';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
-import { ITableItem } from '../interfaces/table-item.interface';
 import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';

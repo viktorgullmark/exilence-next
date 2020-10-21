@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 import { rootStore } from '..';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
@@ -10,24 +11,15 @@ import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';
 import { getRarityIdentifier, mergeItemStacks } from './item.utils';
 
-export const mapSnapshotToApiSnapshot = (
-  snapshot: Snapshot,
-  stashTabs?: IStashTab[]
-) => {
+export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashTab[]) => {
   return {
     uuid: snapshot.uuid,
     created: snapshot.created,
     stashTabs: stashTabs
       ? stashTabs
-          .filter((st) =>
-            snapshot.stashTabSnapshots
-              .map((sts) => sts.stashTabId)
-              .includes(st.id)
-          )
+          .filter((st) => snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id))
           .map((st) => {
-            const foundTab = snapshot.stashTabSnapshots.find(
-              (sts) => sts.stashTabId === st.id
-            )!;
+            const foundTab = snapshot.stashTabSnapshots.find((sts) => sts.stashTabId === st.id)!;
 
             return {
               uuid: foundTab.uuid,
@@ -43,18 +35,11 @@ export const mapSnapshotToApiSnapshot = (
   } as IApiSnapshot;
 };
 
-export const mapSnapshotsToStashTabPricedItems = (
-  snapshot: Snapshot,
-  stashTabs: IStashTab[]
-) => {
+export const mapSnapshotsToStashTabPricedItems = (snapshot: Snapshot, stashTabs: IStashTab[]) => {
   return stashTabs
-    .filter((st) =>
-      snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id)
-    )
+    .filter((st) => snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id))
     .map((st) => {
-      const foundTab = snapshot.stashTabSnapshots.find(
-        (sts) => sts.stashTabId === st.id
-      )!;
+      const foundTab = snapshot.stashTabSnapshots.find((sts) => sts.stashTabId === st.id)!;
 
       return {
         uuid: foundTab.uuid,
@@ -120,9 +105,7 @@ export const formatValue = (
   return `${valueString} ${suffix}`;
 };
 
-export const formatSnapshotsForChart = (
-  snapshots: IApiSnapshot[]
-): number[][] => {
+export const formatSnapshotsForChart = (snapshots: IApiSnapshot[]): number[][] => {
   return snapshots
     .map((s) => {
       const values: number[] = [
@@ -163,9 +146,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
         sts.stashTabs.filter(
           (st) =>
             !rootStore.uiStateStore.filteredStashTabs ||
-            rootStore.uiStateStore.filteredStashTabs
-              .map((fst) => fst.id)
-              .includes(st.stashTabId)
+            rootStore.uiStateStore.filteredStashTabs.map((fst) => fst.id).includes(st.stashTabId)
         )
       )
       .flatMap((sts) =>

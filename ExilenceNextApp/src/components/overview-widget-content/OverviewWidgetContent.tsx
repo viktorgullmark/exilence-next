@@ -1,13 +1,9 @@
-import {
-  Box,
-  Grid,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import clsx from 'clsx';
-import { observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
+import clsx from 'clsx';
+import { observer } from 'mobx-react';
+
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
 
@@ -25,7 +21,7 @@ type OverviewWidgetContentProps = {
   currency?: boolean;
   currencyShort?: string;
   tooltip?: string;
-}
+};
 
 const OverviewWidgetContent = ({
   icon,
@@ -52,14 +48,8 @@ const OverviewWidgetContent = ({
         </Grid>
         <Grid item sm={9}>
           <div className={classes.ellipsis}>
-            <Typography
-              variant='h6'
-              align='right'
-              style={{ color: valueColor }}
-            >
-              {currency
-                ? `${formatValue(value, currencyShort, valueIsDiff, true)}`
-                : value}
+            <Typography variant="h6" align="right" style={{ color: valueColor }}>
+              {currency ? `${formatValue(value, currencyShort, valueIsDiff, true)}` : value}
               <span className={classes.valueSuffix}>{valueSuffix}</span>
             </Typography>
           </div>
@@ -68,20 +58,16 @@ const OverviewWidgetContent = ({
       <Box mt={1}>
         <Grid container spacing={1}>
           <Grid item sm={6}>
-            <Typography component='span' style={{}} className={classes.title}>
+            <Typography component="span" style={{}} className={classes.title}>
               {t(title)}
             </Typography>
           </Grid>
           <Grid item sm={6}>
-            <Tooltip
-              title={tooltip}
-              classes={{ tooltip: classes.tooltip }}
-              placement='bottom-end'
-            >
+            <Tooltip title={tooltip} classes={{ tooltip: classes.tooltip }} placement="bottom-end">
               <div className={classes.ellipsis}>
                 {secondaryValue && secondaryValueIsDiff ? (
                   <Typography
-                    component='span'
+                    component="span"
                     noWrap
                     style={secondaryValueStyles}
                     className={clsx(classes.secondary, {
@@ -95,7 +81,7 @@ const OverviewWidgetContent = ({
                 ) : (
                   <>
                     <Typography
-                      component='span'
+                      component="span"
                       noWrap
                       style={secondaryValueStyles}
                       className={clsx(classes.secondary, {

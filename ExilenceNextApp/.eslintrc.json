@@ -6,7 +6,8 @@
   "extends": [
       "eslint:recommended",
       "plugin:react/recommended",
-      "plugin:@typescript-eslint/eslint-recommended"
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:prettier/recommended"
   ],
   "globals": {
       "Atomics": "readonly",
@@ -22,10 +23,73 @@
   },
   "plugins": [
       "react",
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "simple-import-sort"
   ],
   "rules": {
     "no-unused-vars": "off",
-    "react/prop-types": "off"
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      { "args": "all", "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
+    ],
+    "prettier/prettier": 2,
+    "react/display-name": 1,
+    "react/no-children-prop": 2,
+    "react/no-danger-with-children": 2,
+    "react/no-deprecated": 1,
+    "react/no-direct-mutation-state": 2,
+    "react/no-find-dom-node": 1,
+    "react/no-is-mounted": 2,
+    "react/no-render-return-value": 2,
+    "react/no-string-refs": 2,
+    "react/no-unescaped-entities": 2,
+    "react/no-unknown-property": 2,
+    "react/no-unsafe": 0,
+    "react/react-in-jsx-scope": 2,
+    "react/require-render-return": 2,
+    "sort-imports": 0,
+    "import/order": 0,
+    "simple-import-sort/sort": [
+      2,
+      {
+        "groups": [
+          // Side effect imports.
+          ["^\\u0000"],
+          // Packages. `react` related packages come first.
+          ["^react", "^@?\\w"],
+          // Internal packages.
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything that does not start with a dot.
+          [
+            "^(__mocks__)(/.*|$)",
+            "^(actions)(/.*|$)",
+            "^(api)(/.*|$)",
+            "^(constants)(/.*|$)",
+            "^(containers)(/.*|$)",
+            "^(images)(/.*|$)",
+            "^(middlewares)(/.*|$)",
+            "^(notifications)(/.*|$)",
+            "^(pages)(/.*|$)",
+            "^(reducers)(/.*|$)",
+            "^(rootReducer)(/.*|$)",
+            "^(routes)(/.*|$)",
+            "^(sagas)(/.*|$)",
+            "^(selectors)(/.*|$)",
+            "^(shared)(/.*|$)",
+            "^(store)(/.*|$)",
+            "^(test-helpers)(/.*|$)",
+            "^(types)(/.*|$)",
+            "^(components)(/.*|$)",
+            "^(features)(/.*|$)",
+            "^[^.]"
+          ],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ["^\\."],
+          // Style imports.
+          ["^.+\\.s?css$"]
+        ]
+      }
+    ]
   }
 }

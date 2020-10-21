@@ -1,5 +1,6 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import AccountMenu from './AccountMenu';
@@ -7,7 +8,7 @@ import AccountMenu from './AccountMenu';
 type AccountMenuContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
-}
+};
 
 const AccountMenuContainer = ({ uiStateStore, signalrStore }: AccountMenuContainerProps) => {
   const open = Boolean(uiStateStore!.accountMenuAnchor);

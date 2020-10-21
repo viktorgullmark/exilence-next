@@ -1,14 +1,15 @@
-import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useLocation } from 'react-router';
 import { ToastContainer } from 'react-toastify';
+import clsx from 'clsx';
+import { inject, observer } from 'mobx-react';
+
 import { UiStateStore } from '../../store/uiStateStore';
 import useStyles from './ToastWrapper.styles';
 
 type ToastWrapperProps = {
   uiStateStore?: UiStateStore;
-}
+};
 
 const ToastWrapper = ({ uiStateStore }: ToastWrapperProps) => {
   const classes = useStyles();
@@ -18,7 +19,7 @@ const ToastWrapper = ({ uiStateStore }: ToastWrapperProps) => {
     <ToastContainer
       className={clsx(classes.root, {
         [classes.authorized]: location.pathname !== '/login',
-        [classes.rightMargin]: uiStateStore!.groupOverviewOpen
+        [classes.rightMargin]: uiStateStore!.groupOverviewOpen,
       })}
     />
   );

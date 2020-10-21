@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import GroupOverview from './GroupOverview';
-import { observer, inject } from 'mobx-react';
-import { UiStateStore } from '../../../store/uiStateStore';
-import { SignalrStore } from '../../../store/signalrStore';
-import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
 import { useTranslation } from 'react-i18next';
+import { inject, observer } from 'mobx-react';
+
+import { SignalrStore } from '../../../store/signalrStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
+import GroupOverview from './GroupOverview';
 
 type GroupOverviewContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
-}
+};
 
-const GroupOverviewContainer = ({
-  uiStateStore,
-  signalrStore,
-}: GroupOverviewContainerProps) => {
+const GroupOverviewContainer = ({ uiStateStore, signalrStore }: GroupOverviewContainerProps) => {
   const { t } = useTranslation();
   const [showLeaveGroupDialog, setShowLeaveGroupDialog] = useState(false);
 
@@ -30,9 +28,7 @@ const GroupOverviewContainer = ({
         leavingGroup={uiStateStore!.leavingGroup}
         activeGroup={signalrStore!.activeGroup}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
-        handleCreateGroup={() =>
-          uiStateStore!.setGroupDialogOpen(true, 'create')
-        }
+        handleCreateGroup={() => uiStateStore!.setGroupDialogOpen(true, 'create')}
         handleJoinGroup={() => uiStateStore!.setGroupDialogOpen(true, 'join')}
         handleLeaveGroup={() => setShowLeaveGroupDialog(true)}
       />
@@ -49,7 +45,4 @@ const GroupOverviewContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore'
-)(observer(GroupOverviewContainer));
+export default inject('uiStateStore', 'signalrStore')(observer(GroupOverviewContainer));

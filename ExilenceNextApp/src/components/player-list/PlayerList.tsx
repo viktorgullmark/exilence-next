@@ -1,21 +1,20 @@
-import { List } from '@material-ui/core';
 import React from 'react';
+import { List } from '@material-ui/core';
+
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import PlayerListItemContainer from './player-list-item/PlayerListItemContainer';
 import useStyles from './PlayerList.styles';
 
 type PlayerListProps = {
   connections: IApiConnection[];
-}
+};
 
 const PlayerList = ({ connections }: PlayerListProps) => {
   const classes = useStyles();
   return (
     <List dense className={classes.root}>
-      {connections.map(c => {
-        return (
-          <PlayerListItemContainer key={c.account.uuid} account={c.account} />
-        );
+      {connections.map((c) => {
+        return <PlayerListItemContainer key={c.account.uuid} account={c.account} />;
       })}
     </List>
   );

@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
@@ -46,9 +47,7 @@ export class PriceStore {
 
   @action
   getLeaguePriceDetails(leagueId: string) {
-    let leaguePriceDetails = this.leaguePriceDetails.find(
-      (l) => l.leagueId === leagueId
-    );
+    let leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
 
     if (!leaguePriceDetails) {
       leaguePriceDetails = new LeaguePriceDetails();
@@ -84,9 +83,7 @@ export class PriceStore {
       forkJoin(
         from(leagueIds).pipe(
           concatMap((leagueId: string) => {
-            const league = this.rootStore.leagueStore.priceLeagues.find(
-              (l) => l.id === leagueId
-            );
+            const league = this.rootStore.leagueStore.priceLeagues.find((l) => l.id === leagueId);
 
             const leaguePriceDetails = this.getLeaguePriceDetails(leagueId);
 
@@ -108,9 +105,7 @@ export class PriceStore {
                   ninjaPrices.push(p);
                 });
 
-                const leaguePriceSource = this.getLeaguePriceSource(
-                  leaguePriceDetails
-                );
+                const leaguePriceSource = this.getLeaguePriceSource(leaguePriceDetails);
                 leaguePriceSource.updatePrices(ninjaPrices);
               })
             );
@@ -128,20 +123,12 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
-    this.rootStore.notificationStore.createNotification(
-      'get_prices_for_leagues',
-      'success'
-    );
+    this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'success');
   }
 
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
-    this.rootStore.notificationStore.createNotification(
-      'get_prices_for_leagues',
-      'error',
-      true,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'error', true, e);
   }
 }

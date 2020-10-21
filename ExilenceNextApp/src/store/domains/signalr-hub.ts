@@ -2,9 +2,10 @@ import * as signalR from '@microsoft/signalr';
 import * as msgPack from '@microsoft/signalr-protocol-msgpack';
 import { action, observable, runInAction } from 'mobx';
 import { from, throwError } from 'rxjs';
-import AppConfig from './../../config/app.config';
-import { RootStore } from '../rootStore';
+
 import { randomIntFromInterval } from '../../utils/misc.utils';
+import { RootStore } from '../rootStore';
+import AppConfig from './../../config/app.config';
 
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
@@ -27,12 +28,12 @@ export class SignalrHub {
   startConnection(token: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${AppConfig.baseUrl}/hub`, {
-        accessTokenFactory: () => token
+        accessTokenFactory: () => token,
       })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => {
-          return (30 * 1000) + randomIntFromInterval(0, 10 * 1000);
-        }
+          return 30 * 1000 + randomIntFromInterval(0, 10 * 1000);
+        },
       })
       .withHubProtocol(new msgPack.MessagePackHubProtocol())
       .build();
@@ -44,20 +45,17 @@ export class SignalrHub {
         .start()
         .then(() => {
           this.connection!.onreconnected(() => {
-            this.rootStore.notificationStore.createNotification(
-              'reconnected',
-              'success'
-            );
+            this.rootStore.notificationStore.createNotification('reconnected', 'success');
             this.rootStore.signalrStore.setOnline(true);
             this.rootStore.accountStore.initSession(true);
           });
 
-          this.connection!.onreconnecting(e => {
+          this.connection!.onreconnecting((e) => {
             this.rootStore.signalrStore.setActiveGroup(undefined);
             this.connectionLost(e);
           });
 
-          this.connection!.onclose(e => {
+          this.connection!.onclose(() => {
             runInAction(() => {
               this.connection = undefined;
             });
@@ -81,9 +79,7 @@ export class SignalrHub {
       return throwError('error:not_connected');
     }
     return from(
-      id
-        ? this.connection!.invoke(event, args, id)
-        : this.connection!.invoke(event, args)
+      id ? this.connection!.invoke(event, args, id) : this.connection!.invoke(event, args)
     );
   }
 
@@ -92,9 +88,7 @@ export class SignalrHub {
       return throwError('error:not_connected');
     }
     return from(
-      id
-        ? this.connection!.send(event, params, id)
-        : this.connection!.send(event, params)
+      id ? this.connection!.send(event, params, id) : this.connection!.send(event, params)
     );
   }
 
@@ -115,11 +109,6 @@ export class SignalrHub {
 
   connectionLost(e?: Error) {
     this.rootStore.signalrStore.setOnline(false);
-    this.rootStore.notificationStore.createNotification(
-      'connection_lost',
-      'error',
-      false,
-      e
-    );
+    this.rootStore.notificationStore.createNotification('connection_lost', 'error', false, e);
   }
 }
