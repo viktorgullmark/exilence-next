@@ -1,36 +1,8 @@
-import {
-  Checkbox,
-  FormControlLabel,
-  Popover,
-  Typography,
-  createStyles,
-  makeStyles,
-} from '@material-ui/core';
+import { Checkbox, FormControlLabel, Popover, Typography } from '@material-ui/core';
 import React, { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableInstance } from 'react-table';
-
-const useStyles = makeStyles(
-  createStyles({
-    columnsPopOver: {
-      padding: 24,
-    },
-    popoverTitle: {
-      fontWeight: 500,
-      padding: '0 24px 24px 0',
-      textTransform: 'uppercase',
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 198px)',
-      '@media (max-width: 600px)': {
-        gridTemplateColumns: 'repeat(1, 160px)',
-      },
-      gridColumnGap: 6,
-      gridRowGap: 6,
-    },
-  })
-);
+import useStyles from './ColumnHidePage.styles';
 
 type ColumnHidePage = {
   instance: TableInstance;
@@ -47,7 +19,7 @@ export function ColumnHidePage({
   onClose,
   show,
 }: ColumnHidePage): ReactElement | null {
-  const classes = useStyles({});
+  const classes = useStyles();
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'));
   const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
