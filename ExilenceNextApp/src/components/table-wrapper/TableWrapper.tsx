@@ -3,11 +3,11 @@ import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import clsx from 'clsx';
-import { useDebounce } from 'use-hooks';
 
 import { ResizeHandle } from '../resize-handle/ResizeHandle';
 import { TablePagination } from '../table-pagination/TablePagination';
 import { useStyles } from './TableWrapper.styles';
+import { useDebounce } from '../../hooks/use-debounce';
 
 type TableWrapperProps = {
   instance: TableInstance<object>;
