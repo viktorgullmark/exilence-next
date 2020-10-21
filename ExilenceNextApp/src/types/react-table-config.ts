@@ -118,4 +118,4 @@ declare module 'react-table' {
       UseRowSelectRowProps<D> {}
 }
 
-export type TableMouseEventHandler = (instance: TableInstance<object>) => MouseEventHandler
+export type TableMouseEventHandler = (instance: TableInstance) => MouseEventHandler

@@ -1,129 +1,135 @@
-import MaUTable from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import React from 'react';
-import {
-  Column,
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-  useSortBy,
-  useTable,
-} from 'react-table';
-import TablePaginationActions from './TablePaginationActions';
+import clsx from 'clsx';
+import React, { CSSProperties, useEffect } from 'react';
+import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
+import { useDebounce } from '../../hooks/use-debounce';
+import { ResizeHandle } from './ResizeHandle';
+import { TablePagination } from './TablePagination';
+import { useStyles } from './TableWrapper.styles';
 
 interface ITableWrapperProps {
-  columns: Column<object>[];
-  data: object[];
+  instance: TableInstance<object>;
+  onClick?: (row: Row<object>) => void;
+  setInitialState: any;
 }
 
-const TableWrapper = ({ columns, data }: ITableWrapperProps) => {
+const getStyles = <T extends object>(props: any, disableResizing = false, align = 'left') => [
+  props,
+  {
+    style: {
+      justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+      alignItems: 'flex-start',
+      display: 'flex',
+    },
+  },
+];
+
+const headerProps = <T extends object>(
+  props: any,
+  { column }: Meta<T, { column: HeaderGroup<T> }>
+) => getStyles(props, column && column.disableResizing, column && column.align);
+
+const cellProps = <T extends object>(props: any, { cell }: Meta<T, { cell: Cell<T> }>) =>
+  getStyles(props, cell.column && cell.column.disableResizing, cell.column && cell.column.align);
+
+const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps) => {
+  const classes = useStyles();
+
   const {
     getTableProps,
     headerGroups,
     prepareRow,
-    rows,
     page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
     setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-    useRowSelect,
-    (hooks) => {
-      hooks.allColumns.push((columns) => [...columns]);
-    }
-  );
+    getTableBodyProps,
+    state,
+  } = instance;
 
-  const handleChangePage = (event: any, newPage: number) => {
-    gotoPage(newPage);
+  const debouncedState = useDebounce(state, 500);
+
+  useEffect(() => {
+    const { sortBy, filters, pageSize, columnResizing, hiddenColumns } = debouncedState;
+    const val = {
+      sortBy,
+      filters,
+      pageSize,
+      columnResizing,
+      hiddenColumns,
+    };
+    setInitialState(val);
+  }, [setInitialState, debouncedState]);
+
+  const cellClickHandler = (cell: Cell<object>) => () => {
+    onClick && cell.column.id !== '_selector' && onClick(cell.row);
   };
 
-  const handleChangeRowsPerPage = (event: any) => {
-    setPageSize(Number(event.target.value));
-  };
-
-  // Render the UI for your table
   return (
-    <TableContainer>
-      <MaUTable {...getTableProps()}>
-        <TableHead>
+    <TableContainer className={classes.container}>
+      <div className={classes.tableTable} {...getTableProps()}>
+        <div>
           {headerGroups.map((headerGroup, i) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()} key={i}>
-              {headerGroup.headers.map((column: any, j) => (
-                <TableCell
-                  {...(column.id === 'selection'
-                    ? column.getHeaderProps()
-                    : column.getHeaderProps(column.getSortByToggleProps()))}
-                  key={j}
-                >
-                  {column.render('Header')}
-                  {column.id !== 'selection' ? (
-                    <TableSortLabel
-                      active={column.isSorted}
-                      // react-table has a unsorted state which is not treated here
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                    />
-                  ) : null}
-                </TableCell>
-              ))}
-            </TableRow>
+            <div {...headerGroup.getHeaderGroupProps()} className={classes.tableHeadRow} key={i}>
+              {headerGroup.headers.map((column, j) => {
+                const style = {
+                  textAlign: column.align ? column.align : 'left ',
+                } as CSSProperties;
+                return (
+                  <div
+                    {...column.getHeaderProps(headerProps)}
+                    className={classes.tableHeadCell}
+                    key={j}
+                  >
+                    {column.canSort ? (
+                      <TableSortLabel
+                        active={column.isSorted}
+                        direction={column.isSortedDesc ? 'desc' : 'asc'}
+                        {...column.getSortByToggleProps()}
+                        className={classes.tableSortLabel}
+                        style={style}
+                      >
+                        {column.render('Header')}
+                      </TableSortLabel>
+                    ) : (
+                      <div style={style} className={classes.tableLabel}>
+                        {column.render('Header')}
+                      </div>
+                    )}
+                    {column.canResize && <ResizeHandle column={column} />}
+                  </div>
+                );
+              })}
+            </div>
           ))}
-        </TableHead>
-        <TableBody>
+        </div>
+        <div {...getTableBodyProps()} className={classes.tableBody}>
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <TableRow {...row.getRowProps()} key={i}>
+              <div
+                {...row.getRowProps()}
+                className={clsx(classes.tableRow, { [classes.rowSelected]: row.isSelected })}
+                key={i}
+              >
                 {row.cells.map((cell, j) => {
                   return (
-                    <TableCell {...cell.getCellProps()} key={j}>
+                    <div
+                      {...cell.getCellProps(cellProps)}
+                      onClick={cellClickHandler(cell)}
+                      className={classes.tableCell}
+                      key={j}
+                    >
                       {cell.render('Cell')}
-                    </TableCell>
+                    </div>
                   );
                 })}
-              </TableRow>
+              </div>
             );
           })}
-        </TableBody>
-
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: data.length }]}
-              colSpan={3}
-              count={data.length}
-              rowsPerPage={pageSize}
-              page={pageIndex}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </MaUTable>
+        </div>
+      </div>
+      <TablePagination instance={instance} />
     </TableContainer>
   );
 };

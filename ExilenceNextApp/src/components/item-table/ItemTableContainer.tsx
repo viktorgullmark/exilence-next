@@ -1,19 +1,40 @@
-import { Box, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
+import { Box, Button, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import {
+  CellProps,
+  Column,
+  TableInstance,
+  useColumnOrder,
+  useExpanded,
+  useFilters,
+  useFlexLayout,
+  useGroupBy,
+  usePagination,
+  useResizeColumns,
+  useRowSelect,
+  useSortBy,
+  useTable,
+} from 'react-table';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { ITableItem } from '../../interfaces/table-item.interface';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { mapPricedItemToTableItem } from '../../utils/item.utils';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { makeData, PersonData } from '../../utils/makeData.utils';
+import { ColumnHidePage } from '../table-wrapper/ColumnHidePage';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import ItemTable, { Order } from './ItemTable';
+import { defaultColumn } from '../table-wrapper/DefaultColumn';
+import itemTableColumns from './itemTableColumns';
+import { useLocalStorage } from '../../hooks/use-local-storage';
 
 type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
@@ -58,6 +79,44 @@ const ItemTableContainer = ({
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
 
+  const getItems = () => {
+    if (activeProfile) {
+      return activeGroup ? activeGroup.items : activeProfile.items;
+    } else {
+      return [];
+    }
+  };
+
+  const data = useMemo(() => {
+    return getItems().map((i) => mapPricedItemToTableItem(i));
+  }, [getItems()]);
+
+  const tableName = 'item-table';
+  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
+
+  const [instance, setInstance] = useState<TableInstance<object>>(
+    useTable(
+      {
+        columns: itemTableColumns,
+        defaultColumn,
+        data,
+        initialState,
+      },
+      useColumnOrder,
+      useFilters,
+      useGroupBy,
+      useSortBy,
+      useExpanded,
+      useFlexLayout,
+      usePagination,
+      useResizeColumns,
+      useRowSelect,
+      (hooks) => {
+        hooks.allColumns.push((columns) => [...columns]);
+      }
+    )
+  );
+
   // FIXME: add useEffect() to clear timeout on dismounting
   let timer: NodeJS.Timeout | undefined = undefined;
 
@@ -65,7 +124,6 @@ const ItemTableContainer = ({
     event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     searchText?: string
   ) => {
-    uiStateStore!.changeItemTablePage(0);
     if (timer) {
       clearTimeout(timer);
     }
@@ -87,135 +145,26 @@ const ItemTableContainer = ({
     );
   };
 
-  const getItems = () => {
-    if (activeProfile) {
-      return activeGroup ? activeGroup.items : activeProfile.items;
-    } else {
-      return [];
-    }
-  };
-
   const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [columnsOpen, setColumnsOpen] = useState(false);
 
-  const itemArray = getItems();
+  const hideableColumns = itemTableColumns.filter((column) => !(column.id === '_selector'));
 
-  const data = React.useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-    ],
-    []
+  const handleColumnsClick = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+      setColumnsOpen(true);
+    },
+    [setAnchorEl, setColumnsOpen]
   );
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Column 1',
-        accessor: 'col1', // accessor is the "key" in the data
-      },
-      {
-        Header: 'Column 2',
-        accessor: 'col2',
-      },
-    ],
-    []
-  );
+  const handleClose = useCallback(() => {
+    setColumnsOpen(false);
+    setAnchorEl(null);
+  }, []);
 
   return (
     <>
@@ -225,17 +174,28 @@ const ItemTableContainer = ({
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
-                  array={itemArray}
+                  array={getItems()}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, '')}
                 />
               </Grid>
               <Grid item>
-                <ItemTableFilterSubtotal array={itemArray} />
+                <ItemTableFilterSubtotal array={getItems()} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item className={classes.actionArea}>
+            <ColumnHidePage
+              instance={instance}
+              onClose={handleClose}
+              show={columnsOpen}
+              anchorEl={anchorEl}
+            />
+            {hideableColumns.length > 1 && (
+              <IconButton size="small" className={classes.inlineIcon} onClick={handleColumnsClick}>
+                <ViewColumnsIcon />
+              </IconButton>
+            )}
             <IconButton
               size="small"
               className={classes.inlineIcon}
@@ -255,19 +215,7 @@ const ItemTableContainer = ({
           </Grid>
         </Grid>
       </Box>
-      <TableWrapper data={data} columns={columns} />
-      <ItemTable
-        items={itemArray.map((i) => mapPricedItemToTableItem(i))}
-        pageIndex={uiStateStore!.itemTablePageIndex}
-        pageSize={uiStateStore!.itemTablePageSize}
-        changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
-        order={uiStateStore!.itemTableOrder}
-        orderBy={uiStateStore!.itemTableOrderBy}
-        setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
-        setPageSize={(size: number) => uiStateStore!.setItemTablePageSize(size)}
-        setOrderBy={(col: keyof ITableItem) => uiStateStore!.setItemTableOrderBy(col)}
-        activeGroup={activeGroup}
-      />
+      <TableWrapper instance={instance} setInitialState={setInitialState} />
       <ItemTableMenuContainer />
     </>
   );

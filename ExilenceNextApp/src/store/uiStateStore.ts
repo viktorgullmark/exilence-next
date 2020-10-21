@@ -1,6 +1,19 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import {
+  TableInstance,
+  useColumnOrder,
+  useExpanded,
+  useFilters,
+  useFlexLayout,
+  useGroupBy,
+  usePagination,
+  useResizeColumns,
+  useRowSelect,
+  useSortBy,
+  useTable,
+} from 'react-table';
 import { map } from 'rxjs/operators';
 import uuid from 'uuid';
 import { Order } from '../components/item-table/ItemTable';
@@ -13,6 +26,8 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
+import itemTableColumns from '../components/item-table/itemTableColumns';
+import { defaultColumn } from '../components/table-wrapper/DefaultColumn';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -283,8 +298,7 @@ export class UiStateStore {
   @action
   toggleGroupOverview(open?: boolean) {
     this.sidenavOpen = false;
-    this.groupOverviewOpen =
-      open !== undefined ? open : !this.groupOverviewOpen;
+    this.groupOverviewOpen = open !== undefined ? open : !this.groupOverviewOpen;
   }
 
   @action
