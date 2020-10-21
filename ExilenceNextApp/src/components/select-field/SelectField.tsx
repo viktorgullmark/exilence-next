@@ -1,12 +1,7 @@
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@material-ui/core';
+import React, { ReactNode } from 'react';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useField } from 'formik';
-import React, {ReactNode} from 'react';
+
 import useLabelWidth from '../../hooks/use-label-width';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { placeholderOption } from '../../utils/misc.utils';
@@ -18,22 +13,16 @@ type SelectFieldProps = {
   required?: boolean;
   options?: ISelectOption[];
   children?: ReactNode;
-}
+};
 
-const SelectField = ({
-  name,
-  label,
-  options,
-  required,
-  children,
-}: SelectFieldProps) => {
+const SelectField = ({ name, label, options, required, children }: SelectFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
   const { labelWidth, ref } = useLabelWidth(0);
 
   return (
     <FormControl
-      variant='outlined'
+      variant="outlined"
       error={meta.touched && !!meta.error}
       required={required}
       className={classes.root}
@@ -57,9 +46,7 @@ const SelectField = ({
               ))
           : children}
       </Select>
-      {meta.touched && meta.error && (
-        <FormHelperText>{meta.error}</FormHelperText>
-      )}
+      {meta.touched && meta.error && <FormHelperText>{meta.error}</FormHelperText>}
     </FormControl>
   );
 };

@@ -9,7 +9,7 @@ const devConfig = {
   pathOfExileUrl: 'https://www.pathofexile.com',
   pathOfExileApiUrl: 'https://api.pathofexile.com',
   pathOfExileCookieDomain: '.pathofexile.com',
-  poeNinjaBaseUrl: 'https://poe.ninja'
+  poeNinjaBaseUrl: 'https://poe.ninja',
 };
 
 export default devConfig;

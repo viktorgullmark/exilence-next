@@ -1,20 +1,15 @@
 import React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { Menu, MenuItem } from '@material-ui/core';
 
 type AccountMenuProps = {
   open: boolean;
   anchorEl: HTMLElement | null;
   handleMenuClose: () => void;
   handleSignOut: () => void;
-}
+};
 
-const AccountMenu = ({
-  anchorEl,
-  open,
-  handleMenuClose,
-  handleSignOut
-}: AccountMenuProps) => {
+const AccountMenu = ({ anchorEl, open, handleMenuClose, handleSignOut }: AccountMenuProps) => {
   const { t } = useTranslation();
   return (
     <Menu

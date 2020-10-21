@@ -1,18 +1,14 @@
-import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
+import { Grid, Typography } from '@material-ui/core';
+
 import useStyles from './ToastContent.styles';
 
 type ToastContentProps = {
   message: string;
   description: string;
-  stackTrace?: string;
-}
+};
 
-const ToastContent = ({
-  message,
-  description,
-  stackTrace
-}: ToastContentProps) => {
+const ToastContent = ({ message, description }: ToastContentProps) => {
   const classes = useStyles();
 
   return (

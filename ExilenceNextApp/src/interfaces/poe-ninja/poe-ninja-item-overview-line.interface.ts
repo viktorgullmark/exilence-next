@@ -1,6 +1,6 @@
-import { IPoeNinjaItemOverviewLineSparkline } from './poe-ninja-item-overview-line-spark-line.interface';
-import { IPoeNinjaItemOverviewLineLowConfidenceSparkline } from './poe-ninja-item-overview-line-low-confidence-spark-line.interface';
 import { IPoeNinjaItemOverviewLineExplicitModifier } from './poe-ninja-item-overview-line-explicit-modifier.interface';
+import { IPoeNinjaItemOverviewLineLowConfidenceSparkline } from './poe-ninja-item-overview-line-low-confidence-spark-line.interface';
+import { IPoeNinjaItemOverviewLineSparkline } from './poe-ninja-item-overview-line-spark-line.interface';
 
 export interface IPoeNinjaItemOverviewLine {
   id: number;

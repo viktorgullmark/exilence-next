@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+
 import { ILeague } from '../interfaces/league.interface';
 import { League } from './domains/league';
 import { RootStore } from './rootStore';
@@ -13,10 +14,10 @@ export class LeagueStore {
   @action
   updateLeagues(leagues: ILeague[]) {
     const newLeagues = leagues.filter(
-      l => this.leagues.find(el => el.id === l.id) === undefined
+      (l) => this.leagues.find((el) => el.id === l.id) === undefined
     );
     this.leagues = this.leagues.concat(
-      newLeagues.map(league => {
+      newLeagues.map((league) => {
         return new League(league);
       })
     );
@@ -24,7 +25,7 @@ export class LeagueStore {
 
   @action
   updatePriceLeagues(leagues: ILeague[]) {
-    this.priceLeagues = leagues.map(l => {
+    this.priceLeagues = leagues.map((l) => {
       return new League(l);
     });
   }

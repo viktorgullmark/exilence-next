@@ -1,21 +1,22 @@
 import { createStyles, makeStyles } from '@material-ui/core';
+
 import { tableFooterHeight } from './ItemTable';
 
-export const useStyles = makeStyles(theme =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     tableWrapper: {
       overflow: 'auto',
-      height: `calc(100% - ${tableFooterHeight}px)`
+      height: `calc(100% - ${tableFooterHeight}px)`,
     },
     noItems: {
-      height: 'auto'
+      height: 'auto',
     },
     pagination: {
       height: tableFooterHeight,
-      backgroundColor: theme.palette.secondary.main
+      backgroundColor: theme.palette.secondary.main,
     },
     visuallyHidden: {
       border: 0,
@@ -26,8 +27,8 @@ export const useStyles = makeStyles(theme =>
       padding: 0,
       position: 'absolute',
       top: 20,
-      width: 1
-    }
+      width: 1,
+    },
   })
 );
 

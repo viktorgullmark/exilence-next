@@ -1,6 +1,7 @@
+import React, { ReactElement } from 'react';
 import { TextField } from '@material-ui/core';
 import { useField } from 'formik';
-import React, {ReactElement} from 'react';
+
 import useStyles from './SimpleField.styles';
 
 type SimpleFieldProps = {
@@ -13,7 +14,7 @@ type SimpleFieldProps = {
   endIcon?: ReactElement;
   customError?: string;
   handleBlur?: (value: string) => void;
-}
+};
 
 const SimpleField = ({
   name,
@@ -33,10 +34,10 @@ const SimpleField = ({
     <TextField
       {...field}
       id={name}
-      margin='normal'
+      margin="normal"
       type={type}
       label={label}
-      variant='outlined'
+      variant="outlined"
       placeholder={placeholder}
       autoFocus={autoFocus}
       error={meta.touched && (!!meta.error || !!customError)}

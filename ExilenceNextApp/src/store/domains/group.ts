@@ -1,6 +1,7 @@
 import { action, computed, observable } from 'mobx';
 import moment from 'moment';
 import uuid from 'uuid';
+
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
@@ -9,7 +10,7 @@ import {
   filterItems,
   formatSnapshotsForChart,
   getItemCount,
-  getValueForSnapshotsTabs
+  getValueForSnapshotsTabs,
 } from '../../utils/snapshot.utils';
 
 export class Group implements IApiGroup {
@@ -25,23 +26,19 @@ export class Group implements IApiGroup {
 
   snapshotFlattener(onlyLatest?: boolean, excludeSnapshotId?: string) {
     return this.connections
-      .flatMap(c => c.account)
-      .filter(a => this.activeAccounts.includes(a.uuid))
-      .flatMap(a => {
+      .flatMap((c) => c.account)
+      .filter((a) => this.activeAccounts.includes(a.uuid))
+      .flatMap((a) => {
         let profileSnapshots = a.profiles
-          .filter(ap => ap.active)
-          .flatMap(p => p.snapshots)
+          .filter((ap) => ap.active)
+          .flatMap((p) => p.snapshots)
           .sort((a, b) => (moment(a.created).isBefore(b.created) ? 1 : -1));
 
         if (excludeSnapshotId) {
-          profileSnapshots = profileSnapshots.filter(
-            s => s.uuid !== excludeSnapshotId
-          );
+          profileSnapshots = profileSnapshots.filter((s) => s.uuid !== excludeSnapshotId);
         }
 
-        return onlyLatest && profileSnapshots.length > 0
-          ? [profileSnapshots[0]]
-          : profileSnapshots;
+        return onlyLatest && profileSnapshots.length > 0 ? [profileSnapshots[0]] : profileSnapshots;
       });
   }
 
@@ -52,9 +49,7 @@ export class Group implements IApiGroup {
 
   @action
   removeConnection(connectionId: string) {
-    this.connections = this.connections.filter(
-      c => c.connectionId !== connectionId
-    );
+    this.connections = this.connections.filter((c) => c.connectionId !== connectionId);
   }
 
   @computed
@@ -88,25 +83,19 @@ export class Group implements IApiGroup {
   get income() {
     let incomeForGroup = 0;
     const hours = 1;
-    const hoursAgo = moment()
-      .utc()
-      .subtract(hours, 'hours');
+    const hoursAgo = moment().utc().subtract(hours, 'hours');
 
     this.connections.forEach((c: IApiConnection) => {
-      const activeProfile = c.account.profiles.find(p => p.active);
-      const snapshots = activeProfile?.snapshots.filter(s =>
-        moment(s.created)
-          .utc()
-          .isAfter(hoursAgo)
+      const activeProfile = c.account.profiles.find((p) => p.active);
+      const snapshots = activeProfile?.snapshots.filter((s) =>
+        moment(s.created).utc().isAfter(hoursAgo)
       );
 
       if (snapshots && snapshots.length > 1) {
         const lastSnapshot = snapshots[0];
         const firstSnapshot = snapshots[snapshots.length - 1];
         const incomePerHour =
-          (calculateNetWorth([lastSnapshot]) -
-            calculateNetWorth([firstSnapshot])) /
-          hours;
+          (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
         incomeForGroup += incomePerHour;
       }
     });
@@ -155,17 +144,17 @@ export class Group implements IApiGroup {
   @computed
   get chartData() {
     let groupChartSeries: IGroupChartSeries = {
-      connections: []
+      connections: [],
     };
 
     this.connections.forEach((c: IApiConnection) => {
-      const activeProfile = c.account.profiles.find(p => p.active);
+      const activeProfile = c.account.profiles.find((p) => p.active);
 
       if (activeProfile?.snapshots && activeProfile.snapshots.length > 0) {
         const chartSeries = formatSnapshotsForChart(activeProfile?.snapshots);
         groupChartSeries.connections.push({
           seriesName: c.account.name,
-          series: chartSeries
+          series: chartSeries,
         });
       }
     });
@@ -180,7 +169,7 @@ export class Group implements IApiGroup {
 
   @action
   selectAccount(uuid: string) {
-    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
+    const foundUuid = this.activeAccounts.find((aid) => aid === uuid);
     if (!foundUuid) {
       this.activeAccounts.push(uuid);
     }
@@ -188,7 +177,7 @@ export class Group implements IApiGroup {
 
   @action
   deselectAccount(uuid: string) {
-    const foundUuid = this.activeAccounts.find(aid => aid === uuid);
+    const foundUuid = this.activeAccounts.find((aid) => aid === uuid);
     if (foundUuid) {
       const index = this.activeAccounts.indexOf(foundUuid);
       this.activeAccounts.splice(index, 1);

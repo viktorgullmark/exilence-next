@@ -1,12 +1,7 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@material-ui/core';
-import { observer } from 'mobx-react';
 import React from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { observer } from 'mobx-react';
+
 import RequestButton from '../request-button/RequestButton';
 import useStyles from './ConfirmationDialog.styles';
 
@@ -19,7 +14,7 @@ type ConfirmationDialogProps = {
   onClose: () => void;
   onConfirm: () => void;
   loading?: boolean;
-}
+};
 
 const ConfirmationDialog = ({
   show,
@@ -29,7 +24,7 @@ const ConfirmationDialog = ({
   body,
   acceptButtonText,
   cancelButtonText,
-  loading
+  loading,
 }: ConfirmationDialogProps) => {
   const classes = useStyles();
 

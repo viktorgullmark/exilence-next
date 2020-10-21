@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
+
 import { background } from '../../assets/themes/exilence-theme';
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {

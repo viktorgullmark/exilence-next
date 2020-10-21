@@ -1,6 +1,7 @@
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
-import React from 'react';
+
 import CheckboxSetting from '../checkbox-setting/CheckboxSetting';
 import NumberInputSetting from '../number-input-setting/NumberInputSetting';
 
@@ -11,7 +12,7 @@ type NetWorthSettingsProps = {
   setLowConfidencePricing: (value: boolean) => void;
   setPriceTreshold: (value: number) => void;
   setTotalPriceTreshold: (value: number) => void;
-}
+};
 
 const NetWorthSettings = ({
   lowConfidencePricing,
@@ -19,7 +20,7 @@ const NetWorthSettings = ({
   totalPriceTreshold,
   setLowConfidencePricing,
   setPriceTreshold,
-  setTotalPriceTreshold
+  setTotalPriceTreshold,
 }: NetWorthSettingsProps) => {
   return (
     <Grid container spacing={5}>

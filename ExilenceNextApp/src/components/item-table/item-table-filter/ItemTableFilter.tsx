@@ -1,27 +1,22 @@
-import { TextField, IconButton, Box } from '@material-ui/core';
-import { useFormik } from 'formik';
-import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
-import { IPricedItem } from '../../../interfaces/priced-item.interface';
-import useStyles from './ItemTableFilter.styles';
+import { Box, IconButton, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
+import { useFormik } from 'formik';
+import { observer } from 'mobx-react';
+import * as Yup from 'yup';
+
+import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import useStyles from './ItemTableFilter.styles';
 
 export type TableFilterProps<T> = {
   array: T[];
-  handleFilter: (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => void;
+  handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
-}
+};
 
-const ItemTableFilter = ({
-  array,
-  handleFilter,
-  clearFilter,
-}: TableFilterProps<IPricedItem>) => {
+const ItemTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -42,13 +37,13 @@ const ItemTableFilter = ({
   return (
     <form onSubmit={formik.handleSubmit}>
       <TextField
-        margin='dense'
-        variant='outlined'
+        margin="dense"
+        variant="outlined"
         onChange={(e) => {
           formik.handleChange(e);
           handleFilter(e);
         }}
-        name='searchText'
+        name="searchText"
         placeholder={t('tables:label.search_text')}
         className={classes.searchField}
         value={formik.values.searchText}
@@ -57,12 +52,7 @@ const ItemTableFilter = ({
             input: classes.inputField,
           },
           startAdornment: (
-            <Box
-              mr={1}
-              display='flex'
-              justifyContent='center'
-              alignItems='center'
-            >
+            <Box mr={1} display="flex" justifyContent="center" alignItems="center">
               <SearchIcon />
             </Box>
           ),
@@ -70,11 +60,11 @@ const ItemTableFilter = ({
             <>
               {formik.values.searchText !== '' && (
                 <IconButton
-                  aria-label='help'
+                  aria-label="help"
                   title={t('label.clear_search_icon_title')}
                   className={classes.clearIcon}
-                  edge='start'
-                  size='small'
+                  edge="start"
+                  size="small"
                   onClick={() => {
                     formik.setFieldValue('searchText', '');
                     clearFilter();

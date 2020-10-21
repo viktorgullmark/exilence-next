@@ -13,12 +13,23 @@ export function mapProfileToApiProfile(p: Profile) {
     active: p.active,
     activeCharacterName: p.activeCharacterName,
     includeEquipment: p.includeEquipment,
-    includeInventory: p.includeInventory
+    includeInventory: p.includeInventory,
   } as IApiProfile;
 }
 
 export const generateProfileName = () => {
-  const prefixes = ['Divine', 'Majestic', 'Strong', 'Exalted', 'Swift', 'Rich', 'Humble', 'Fine', 'Nice', 'Fiery'];
+  const prefixes = [
+    'Divine',
+    'Majestic',
+    'Strong',
+    'Exalted',
+    'Swift',
+    'Rich',
+    'Humble',
+    'Fine',
+    'Nice',
+    'Fiery',
+  ];
   const suffixes = [
     'Exile',
     'Slayer',
@@ -32,8 +43,12 @@ export const generateProfileName = () => {
     'Merchant',
     'Flipper',
     'Stash',
-    'Collection'
+    'Collection',
   ];
 
-  return prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + suffixes[Math.floor(Math.random() * suffixes.length)];
+  return (
+    prefixes[Math.floor(Math.random() * prefixes.length)] +
+    ' ' +
+    suffixes[Math.floor(Math.random() * suffixes.length)]
+  );
 };

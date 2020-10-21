@@ -1,6 +1,6 @@
 import React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { Menu, MenuItem } from '@material-ui/core';
 
 type ItemTableMenuProps = {
   open: boolean;
@@ -8,14 +8,14 @@ type ItemTableMenuProps = {
   exportDisabled?: boolean;
   handleMenuClose: () => void;
   handleExport: () => void;
-}
+};
 
 const ItemTableMenu = ({
   anchorEl,
   open,
   exportDisabled,
   handleMenuClose,
-  handleExport
+  handleExport,
 }: ItemTableMenuProps) => {
   const { t } = useTranslation();
   return (

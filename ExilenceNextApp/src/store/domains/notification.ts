@@ -1,10 +1,8 @@
 import { observable } from 'mobx';
 import moment, { Moment } from 'moment';
 import uuid from 'uuid';
-import {
-  INotification,
-  NotificationType
-} from './../../interfaces/notification.interface';
+
+import { INotification, NotificationType } from './../../interfaces/notification.interface';
 
 export class Notification implements INotification {
   uuid: string = uuid.v4();

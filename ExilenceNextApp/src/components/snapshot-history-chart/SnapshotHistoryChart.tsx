@@ -1,7 +1,8 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import HC from 'highcharts';
-import React from 'react';
+
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
@@ -14,20 +15,18 @@ type SnapshotHistoryChartProps = {
   playerData?: IConnectionChartSeries[];
   groupData?: IGroupChartSeries[];
   showIndividualTabs?: boolean;
-  stashTabColors?: string[];
-}
+};
 
 type ChartSeries = {
   type: string;
   name: string;
   data: number[][];
-}
+};
 
 const SnapshotHistoryChart = ({
   playerData,
   groupData,
   showIndividualTabs,
-  stashTabColors,
 }: SnapshotHistoryChartProps) => {
   const theme = useTheme();
   const classes = useStyles();
@@ -97,12 +96,7 @@ const SnapshotHistoryChart = ({
           stops: showIndividualTabs
             ? []
             : [
-                [
-                  0,
-                  HC.color(theme.palette.primary.main)
-                    .setOpacity(0.25)
-                    .get('rgba'),
-                ],
+                [0, HC.color(theme.palette.primary.main).setOpacity(0.25).get('rgba')],
                 [1, HC.color(primaryDarker).setOpacity(0).get('rgba')],
               ],
         },

@@ -1,9 +1,10 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Typography } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 import useStyles from './SettingsTabs.styles';
@@ -14,7 +15,7 @@ import LogSettingsContainer from './log-settings/LogSettingsContainer';
 function a11yProps(index: any) {
   return {
     id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`
+    'aria-controls': `vertical-tabpanel-${index}`,
   };
 }
 
@@ -22,7 +23,7 @@ const SettingsTabs = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
@@ -36,7 +37,7 @@ const SettingsTabs = () => {
         aria-label="settings tabs"
         className={classes.tabs}
         classes={{
-          indicator: classes.indicator
+          indicator: classes.indicator,
         }}
       >
         <Tab
@@ -57,17 +58,13 @@ const SettingsTabs = () => {
       </Tabs>
       <SettingsTab value={value} index={0}>
         <Box className={classes.subSection}>
-          <Typography variant="overline">
-            {t('title.snapshot_settings')}
-          </Typography>
+          <Typography variant="overline">{t('title.snapshot_settings')}</Typography>
           <Box my={2}>
             <SnapshotSettingsContainer />
           </Box>
         </Box>
         <Box className={classes.subSection}>
-          <Typography variant="overline">
-            {t('title.pricing_settings')}
-          </Typography>
+          <Typography variant="overline">{t('title.pricing_settings')}</Typography>
           <Box my={2}>
             <NetWorthSettingsContainer />
           </Box>

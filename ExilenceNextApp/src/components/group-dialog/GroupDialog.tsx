@@ -1,11 +1,19 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from '@material-ui/core';
 import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import { AxiosError } from 'axios';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
+
 import { generateGroupName } from '../../utils/group.utils';
 import PasswordField from '../password-field/PasswordField';
 import RequestButton from '../request-button/RequestButton';
@@ -24,7 +32,7 @@ type GroupDialogProps = {
   loading: boolean;
   groupError?: AxiosError | Error;
   groupExists?: boolean;
-}
+};
 
 const GroupDialog = ({
   show,
@@ -36,14 +44,14 @@ const GroupDialog = ({
   dialogType,
   handleGroupExists,
   handleClearError,
-  loading
+  loading,
 }: GroupDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
   const validationSchema = Yup.object<IGroupForm>().shape({
     name: Yup.string().required(t('label.required')),
-    password: Yup.string().min(6)
+    password: Yup.string().min(6),
   });
 
   const getGroupExistsError = () => {
@@ -53,9 +61,7 @@ const GroupDialog = ({
           ? t('error:group_already_exists')
           : undefined;
       case 'join':
-        return groupExists !== undefined && !groupExists
-          ? t('error:group_not_found')
-          : undefined;
+        return groupExists !== undefined && !groupExists ? t('error:group_not_found') : undefined;
       default:
         return undefined;
     }
@@ -65,14 +71,12 @@ const GroupDialog = ({
     <Dialog open={show} onClose={onClose}>
       <Formik
         initialValues={initialValues}
-        onSubmit={values => onSubmit(values)}
+        onSubmit={(values) => onSubmit(values)}
         validationSchema={validationSchema}
       >
-        {({ isValid, dirty, handleSubmit, setFieldValue }) => (
+        {({ isValid, handleSubmit, setFieldValue }) => (
           <form onSubmit={handleSubmit}>
-            <DialogTitle>
-              {t(`title.${dialogType}_group_dialog_title`)}
-            </DialogTitle>
+            <DialogTitle>{t(`title.${dialogType}_group_dialog_title`)}</DialogTitle>
             <DialogContent>
               <SimpleField
                 name="name"
@@ -95,9 +99,7 @@ const GroupDialog = ({
                     >
                       <CasinoIcon />
                     </IconButton>
-                  ) : (
-                    undefined
-                  )
+                  ) : undefined
                 }
                 customError={getGroupExistsError()}
                 handleBlur={handleGroupExists}
@@ -117,9 +119,7 @@ const GroupDialog = ({
               <Button onClick={onClose}>{t('action.close')}</Button>
               <RequestButton
                 type="submit"
-                disabled={
-                  loading || !isValid || getGroupExistsError() !== undefined
-                }
+                disabled={loading || !isValid || getGroupExistsError() !== undefined}
                 color="primary"
                 variant="contained"
                 loading={loading}

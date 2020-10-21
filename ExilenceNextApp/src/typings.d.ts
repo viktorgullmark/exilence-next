@@ -1,5 +1,4 @@
 import { ObjectOmit } from 'typelevel-ts'; // Thanks @gcanti, we <3 you all!
-import * as signalR from '@microsoft/signalr';
 
 declare module 'mobx-react' {
   export function inject<D>(

@@ -1,37 +1,24 @@
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-  TableCell,
-  Tooltip,
-} from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  itemColors,
-  rarityColors,
-} from '../../../assets/themes/exilence-theme';
+import { Box, CircularProgress, IconButton, TableCell, Tooltip } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import clsx from 'clsx';
+
+import { itemColors, rarityColors } from '../../../assets/themes/exilence-theme';
 import { IColumn } from '../../../interfaces/column.interface';
 import { getRarity } from '../../../utils/item.utils';
+import { openCustomLink } from '../../../utils/window.utils';
 import useStyles from './ItemTableCell.styles';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import { openCustomLink, openLink } from '../../../utils/window.utils';
 
 type ItemTableCellProps = {
   value: string | number | boolean;
   secondaryValue?: string;
   column: IColumn;
   frameType: number;
-}
+};
 
-const ItemTableCell = ({
-  value,
-  secondaryValue,
-  column,
-  frameType,
-}: ItemTableCellProps) => {
+const ItemTableCell = ({ value, secondaryValue, column, frameType }: ItemTableCellProps) => {
   const classes = useStyles();
   const theme = useTheme();
   const [iconLoaded, setIconLoaded] = useState(false);
@@ -42,9 +29,7 @@ const ItemTableCell = ({
   };
 
   const tryParseNumber = (value: boolean | string | number) => {
-    return column.format && typeof value === 'number'
-      ? column.format(value)
-      : value;
+    return column.format && typeof value === 'number' ? column.format(value) : value;
   };
 
   const noLinks = (value: number) => {
@@ -77,10 +62,10 @@ const ItemTableCell = ({
                     })}
                   >
                     <Box
-                      position='relative'
-                      alignItems='center'
-                      justifyContent='center'
-                      display='flex'
+                      position="relative"
+                      alignItems="center"
+                      justifyContent="center"
+                      display="flex"
                       className={classes.iconImg}
                     >
                       {!iconLoaded && <CircularProgress size={20} />}
@@ -97,11 +82,7 @@ const ItemTableCell = ({
                 );
               case 'name':
                 return (
-                  <Box
-                    display='flex'
-                    alignItems='center'
-                    justifyContent='space-between'
-                  >
+                  <Box display="flex" alignItems="center" justifyContent="space-between">
                     <span
                       style={{
                         color: rarityColor,
@@ -110,12 +91,9 @@ const ItemTableCell = ({
                       {value}
                     </span>
                     {secondaryValue && (
-                      <Tooltip
-                        title={t('label.open_on_ninja')}
-                        placement='bottom'
-                      >
+                      <Tooltip title={t('label.open_on_ninja')} placement="bottom">
                         <IconButton
-                          size='small'
+                          size="small"
                           className={classes.inlineIcon}
                           onClick={() => openCustomLink(secondaryValue)}
                         >

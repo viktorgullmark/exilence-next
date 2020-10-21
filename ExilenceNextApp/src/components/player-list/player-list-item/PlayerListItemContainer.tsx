@@ -1,5 +1,6 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import { SignalrStore } from '../../../store/signalrStore';
 import PlayerListItem from './PlayerListItem';
@@ -7,12 +8,9 @@ import PlayerListItem from './PlayerListItem';
 type PlayerListItemContainerProps = {
   account: IApiAccount;
   signalrStore?: SignalrStore;
-}
+};
 
-const PlayerListItemContainer = ({
-  signalrStore,
-  account
-}: PlayerListItemContainerProps) => {
+const PlayerListItemContainer = ({ signalrStore, account }: PlayerListItemContainerProps) => {
   const { activeAccounts } = signalrStore!.activeGroup!;
 
   const handleToggle = (uuid: string) => {

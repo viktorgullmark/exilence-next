@@ -1,16 +1,11 @@
-import {
-  Avatar,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Typography
-} from '@material-ui/core';
+import React, { forwardRef, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import WarningIcon from '@material-ui/icons/Warning';
 import moment from 'moment';
-import React, { forwardRef, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { Notification } from '../../../store/domains/notification';
 import useStyles from './NotificationListItem.styles';
 
@@ -35,36 +30,24 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
     }
   };
   return (
-    <ListItem
-      key={notification.uuid}
-      className={classes.notification}
-      innerRef={ref}
-    >
+    <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
       <ListItemAvatar>
         <Avatar>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
         classes={{
           primary: classes.notificationItem,
-          secondary: classes.secondary
+          secondary: classes.secondary,
         }}
         primary={t(notification.title, { param: notification.translateParam })}
         secondary={
           <>
-            <Typography
-              component="span"
-              variant="body2"
-              className={classes.timestamp}
-            >
+            <Typography component="span" variant="body2" className={classes.timestamp}>
               {moment(notification.timestamp).fromNow()}
             </Typography>
-            <Typography
-              component="span"
-              variant="body2"
-              className={classes.description}
-            >
+            <Typography component="span" variant="body2" className={classes.description}>
               {` — ${t(notification.description, {
-                param: notification.translateParam
+                param: notification.translateParam,
               })}`}
             </Typography>
           </>

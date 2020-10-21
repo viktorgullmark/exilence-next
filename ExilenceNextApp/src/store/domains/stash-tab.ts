@@ -1,5 +1,6 @@
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
+
 import { IColour, IStashTab } from '../../interfaces/stash.interface';
 
 export class StashTab implements IStashTab {
