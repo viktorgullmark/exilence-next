@@ -17,8 +17,8 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
+import { useLocalStorage } from 'use-hooks';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
-import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';

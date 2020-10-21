@@ -1,20 +1,21 @@
+import React, { CSSProperties, useEffect } from 'react';
+import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import clsx from 'clsx';
-import React, { CSSProperties, useEffect } from 'react';
-import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
-import { useDebounce } from '../../hooks/use-debounce';
+import { useDebounce } from 'use-hooks';
+
 import { ResizeHandle } from '../resize-handle/ResizeHandle';
 import { TablePagination } from '../table-pagination/TablePagination';
 import { useStyles } from './TableWrapper.styles';
 
-interface ITableWrapperProps {
+type TableWrapperProps = {
   instance: TableInstance<object>;
   onClick?: (row: Row<object>) => void;
   setInitialState: any;
-}
+};
 
-const getStyles = <T extends object>(props: any, disableResizing = false, align = 'left') => [
+const getStyles = <T extends object>(props: any, _disableResizing = false, align = 'left') => [
   props,
   {
     style: {
@@ -33,19 +34,10 @@ const headerProps = <T extends object>(
 const cellProps = <T extends object>(props: any, { cell }: Meta<T, { cell: Cell<T> }>) =>
   getStyles(props, cell.column && cell.column.disableResizing, cell.column && cell.column.align);
 
-const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps) => {
+const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps) => {
   const classes = useStyles();
 
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    page,
-    gotoPage,
-    setPageSize,
-    getTableBodyProps,
-    state,
-  } = instance;
+  const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state } = instance;
 
   const debouncedState = useDebounce(state, 500);
 
@@ -70,7 +62,11 @@ const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps
       <div className={classes.tableTable} {...getTableProps()}>
         <div>
           {headerGroups.map((headerGroup, i) => (
-            <div {...headerGroup.getHeaderGroupProps()} className={classes.tableHeadRow} key={i}>
+            <div
+              {...headerGroup.getHeaderGroupProps()}
+              className={classes.tableHeadRow}
+              key={`headersGroup_${i}`}
+            >
               {headerGroup.headers.map((column, j) => {
                 const style = {
                   textAlign: column.align ? column.align : 'left ',
@@ -79,7 +75,7 @@ const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps
                   <div
                     {...column.getHeaderProps(headerProps)}
                     className={classes.tableHeadCell}
-                    key={j}
+                    key={`column_${j}`}
                   >
                     {column.canSort ? (
                       <TableSortLabel
@@ -110,7 +106,7 @@ const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps
               <div
                 {...row.getRowProps()}
                 className={clsx(classes.tableRow, { [classes.rowSelected]: row.isSelected })}
-                key={i}
+                key={`row_${i}`}
               >
                 {row.cells.map((cell, j) => {
                   return (
@@ -118,7 +114,7 @@ const TableWrapper = ({ instance, onClick, setInitialState }: ITableWrapperProps
                       {...cell.getCellProps(cellProps)}
                       onClick={cellClickHandler(cell)}
                       className={classes.tableCell}
-                      key={j}
+                      key={`cell_${j}`}
                     >
                       {cell.render('Cell')}
                     </div>
