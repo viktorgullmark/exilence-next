@@ -44,6 +44,9 @@
   },
   "label": {
     "visible_columns": "Visible columns",
+    "toggle_visible_columns": "Customize columns",
+    "toggle_stash_tab_filter": "Show filter",
+    "toggle_export_menu": "Export data",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
     "add_stash_tabs": "Add tabs",

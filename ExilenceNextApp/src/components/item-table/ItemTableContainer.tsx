@@ -1,23 +1,21 @@
-import { Box, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
+import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
 import { inject, observer } from 'mobx-react';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   TableInstance,
   useColumnOrder,
-  useExpanded,
   useFilters,
   useFlexLayout,
-  useGroupBy,
   usePagination,
   useResizeColumns,
   useRowSelect,
   useSortBy,
   useTable,
 } from 'react-table';
-
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
@@ -74,7 +72,7 @@ const ItemTableContainer = ({
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
-
+  const { t } = useTranslation();
   const getItems = useMemo(() => {
     if (activeProfile) {
       return activeGroup ? activeGroup.items : activeProfile.items;
@@ -186,26 +184,36 @@ const ItemTableContainer = ({
               anchorEl={anchorEl}
             />
             {hideableColumns.length > 1 && (
-              <IconButton size="small" className={classes.inlineIcon} onClick={handleColumnsClick}>
-                <ViewColumnsIcon />
-              </IconButton>
+              <Tooltip title={t('label.toggle_visible_columns')} placement="bottom">
+                <IconButton
+                  size="small"
+                  className={classes.inlineIcon}
+                  onClick={handleColumnsClick}
+                >
+                  <ViewColumnsIcon />
+                </IconButton>
+              </Tooltip>
             )}
-            <IconButton
-              size="small"
-              className={classes.inlineIcon}
-              onClick={() =>
-                uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
-              }
-            >
-              <FilterListIcon />
-            </IconButton>
-            <IconButton
-              size="small"
-              className={classes.inlineIcon}
-              onClick={handleItemTableMenuOpen}
-            >
-              <GetAppIcon />
-            </IconButton>
+            <Tooltip title={t('label.toggle_stash_tab_filter')} placement="bottom">
+              <IconButton
+                size="small"
+                className={classes.inlineIcon}
+                onClick={() =>
+                  uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
+                }
+              >
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('label.toggle_export_menu')} placement="bottom">
+              <IconButton
+                size="small"
+                className={classes.inlineIcon}
+                onClick={handleItemTableMenuOpen}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>

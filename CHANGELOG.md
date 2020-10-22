@@ -1,9 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.14] - NOT RELEASED
+## [0.3.14] - 2020-10-23
+##### Added
+- Added tooltips to the icon buttons in the table toolbar
 ##### Fixed
 - Fixed a bug where the app would not open correctly from tray when relaunching it
+- Fixed a bug where some settings had a trailing NaN value
+##### Updated
+- Updated libraries for the table component (react-table)
 
 ## [0.3.13] - 2020-10-22
 ##### Fixed

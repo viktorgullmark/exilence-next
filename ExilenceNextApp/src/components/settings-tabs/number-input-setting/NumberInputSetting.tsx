@@ -54,7 +54,7 @@ const NumberInputSetting = ({
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const suffix = suffixKey ? `${+t(suffixKey)}` : '';
+  const suffix = suffixKey ? ` ${t(suffixKey)}` : '';
 
   return (
     <FormControl component="fieldset">
