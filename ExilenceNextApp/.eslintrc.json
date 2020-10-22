@@ -1,31 +1,27 @@
 {
   "env": {
-      "browser": true,
-      "es6": true
+    "browser": true,
+    "es6": true
   },
   "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:prettier/recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:prettier/recommended"
   ],
   "globals": {
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "ecmaFeatures": {
-          "jsx": true
-      },
-      "ecmaVersion": 2018,
-      "sourceType": "module"
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
-  "plugins": [
-      "react",
-      "@typescript-eslint",
-      "simple-import-sort"
-  ],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -47,49 +43,6 @@
     "react/no-unsafe": 0,
     "react/react-in-jsx-scope": 2,
     "react/require-render-return": 2,
-    "sort-imports": 0,
-    "import/order": 0,
-    "simple-import-sort/sort": [
-      2,
-      {
-        "groups": [
-          // Side effect imports.
-          ["^\\u0000"],
-          // Packages. `react` related packages come first.
-          ["^react", "^@?\\w"],
-          // Internal packages.
-          // Absolute imports and other imports such as Vue-style `@/foo`.
-          // Anything that does not start with a dot.
-          [
-            "^(__mocks__)(/.*|$)",
-            "^(actions)(/.*|$)",
-            "^(api)(/.*|$)",
-            "^(constants)(/.*|$)",
-            "^(containers)(/.*|$)",
-            "^(images)(/.*|$)",
-            "^(middlewares)(/.*|$)",
-            "^(notifications)(/.*|$)",
-            "^(pages)(/.*|$)",
-            "^(reducers)(/.*|$)",
-            "^(rootReducer)(/.*|$)",
-            "^(routes)(/.*|$)",
-            "^(sagas)(/.*|$)",
-            "^(selectors)(/.*|$)",
-            "^(shared)(/.*|$)",
-            "^(store)(/.*|$)",
-            "^(test-helpers)(/.*|$)",
-            "^(types)(/.*|$)",
-            "^(components)(/.*|$)",
-            "^(features)(/.*|$)",
-            "^[^.]"
-          ],
-          // Relative imports.
-          // Anything that starts with a dot.
-          ["^\\."],
-          // Style imports.
-          ["^.+\\.s?css$"]
-        ]
-      }
-    ]
+    "import/order": 0
   }
 }
