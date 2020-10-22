@@ -16,14 +16,6 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
       label: 'Show Exilence Next',
       click: () => mainWindow.show(),
     },
-    {
-      label: 'Open Overlay',
-      sublabel: 'Work in Progress',
-      enabled: false,
-      click: () => {
-        createOverlay();
-      },
-    },
     separator,
     {
       label: 'Check for Updates...',
