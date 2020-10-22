@@ -22,6 +22,7 @@ if (!isDev) {
  * Initial Declarations
  */
 const mainWindow = 'main';
+const gotTheLock = app.requestSingleInstanceLock()
 let windows = [];
 let isQuitting;
 let updateAvailable;
@@ -96,19 +97,33 @@ function createWindow() {
 /**
  * App Listeners
  */
-app.whenReady().then(async () => {
-  await createWindow();
-  await createTray(trayProps);
-  await checkForUpdates();
-});
 
-app.on('activate', async () => {
-  if (windows[mainWindow] === null) {
+if(!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (windows[mainWindow]) {
+      if (windows[mainWindow].isMinimized()) windows[mainWindow].restore()
+      windows[mainWindow].focus()
+    }
+  })
+
+
+  app.whenReady().then(async () => {
     await createWindow();
     await createTray(trayProps);
-  }
-});
+    await checkForUpdates();
+  });
 
-app.on('before-quit', () => {
-  isQuitting = true;
-});
+  app.on('activate', async () => {
+    if (windows[mainWindow] === null) {
+      await createWindow();
+      await createTray(trayProps);
+    }
+  });
+
+  app.on('before-quit', () => {
+    isQuitting = true;
+  });
+}
