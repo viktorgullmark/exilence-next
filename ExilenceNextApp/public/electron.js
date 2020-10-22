@@ -9,7 +9,7 @@ const {
   logMonitor: { createLogMonitor },
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
-  netWorthOverlay: { createNetWorthOverlay }
+  netWorthOverlay: { createNetWorthOverlay },
 } = require('./main');
 
 if (!isDev) {
@@ -22,7 +22,7 @@ if (!isDev) {
  * Initial Declarations
  */
 const mainWindow = 'main';
-const gotTheLock = app.requestSingleInstanceLock()
+const gotTheLock = app.requestSingleInstanceLock();
 let windows = [];
 let isQuitting;
 let updateAvailable;
@@ -98,17 +98,20 @@ function createWindow() {
  * App Listeners
  */
 
-if(!gotTheLock) {
+if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', () => {
     // Someone tried to run a second instance, we should focus our window.
     if (windows[mainWindow]) {
-      if (windows[mainWindow].isMinimized()) windows[mainWindow].restore()
-      windows[mainWindow].focus()
+      if (windows[mainWindow].isMinimized()) {
+        windows[mainWindow].restore();
+        windows[mainWindow].focus();
+      } else {
+        windows[mainWindow].show();
+      }
     }
-  })
-
+  });
 
   app.whenReady().then(async () => {
     await createWindow();

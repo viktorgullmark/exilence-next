@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.14] - NOT RELEASED
+##### Fixed
+- Fixed a bug where the app would not open correctly from tray when relaunching it
+
 ## [0.3.13] - 2020-10-22
 ##### Fixed
 - Fixed a bug where the auto updater stopped working
