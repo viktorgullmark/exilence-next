@@ -1,5 +1,5 @@
 const { checkForUpdates } = require('./autoUpdater');
-const { createOverlay, destroyNetWorthOverlayWindow } = require('./overlays/netWorthOverlay');
+const { destroyNetWorthOverlayWindow } = require('./overlays/netWorthOverlay');
 
 const path = require('path');
 
