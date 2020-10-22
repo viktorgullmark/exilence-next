@@ -44,14 +44,6 @@ createLogMonitor({ mainWindow: windows[mainWindow] });
 createNetWorthOverlay();
 
 /**
- * Auto Updater
- */
-createAutoUpdater({
-  mainWindow: windows[mainWindow],
-  callbackUpdateAvailable: (status) => (updateAvailable = status),
-});
-
-/**
  * Main Window
  */
 function createWindow() {
@@ -92,6 +84,14 @@ function createWindow() {
     updateAvailable,
     isQuittingCallback: (status) => (isQuitting = status),
   };
+
+  /**
+   * Auto Updater
+   */
+  createAutoUpdater({
+    mainWindow: windows[mainWindow],
+    callbackUpdateAvailable: (status) => (updateAvailable = status),
+  });
 }
 
 /**
