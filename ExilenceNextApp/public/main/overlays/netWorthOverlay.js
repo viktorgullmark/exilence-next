@@ -30,7 +30,7 @@ function createOverlay() {
 
   netWorthOverlayWindow.setAlwaysOnTop(true, 'screen-saver');
 
-  netWorthOverlayWindow.on('closed', (e) => {
+  netWorthOverlayWindow.on('closed', () => {
     netWorthOverlayWindow = null;
   });
 }
@@ -39,8 +39,6 @@ function destroyNetWorthOverlayWindow() {
   if (netWorthOverlayWindow !== undefined && netWorthOverlayWindow !== null) {
     netWorthOverlayWindow.destroy();
   }
-
-  netWorthOverlayWindow.destroy();
 }
 
 function createNetWorthOverlay() {
@@ -58,7 +56,7 @@ function createNetWorthOverlay() {
       netWorthOverlayWindow.webContents.send('overlayUpdate', args);
     }
   });
-};
+}
 
 module.exports = {
   createOverlay,
