@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.11] - NOT RELEASED
+## [0.3.11] - 2020-10-22
 ##### Added
 - Added a link to view the price history on poe.ninja for each item
 - Added a reset button to the income widget
