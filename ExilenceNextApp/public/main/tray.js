@@ -41,7 +41,7 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
       },
     },
     {
-      label: 'Discord / Support',
+      label: 'Discord / Help',
       type: 'normal',
       click: async () => {
         await shell.openExternal('https://discord.gg/yxuBrPY');
