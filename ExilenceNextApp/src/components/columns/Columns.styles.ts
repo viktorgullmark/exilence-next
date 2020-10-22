@@ -1,12 +1,14 @@
 import { makeStyles } from '@material-ui/core';
 
-import { primaryLighter } from '../../../assets/themes/exilence-theme';
+import { primaryLighter } from '../../assets/themes/exilence-theme';
 
 const useStyles = makeStyles((theme) => ({
   iconCellInner: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
+    width: '100%',
   },
   tableCell: {
     padding: `${theme.spacing(1.75)}px ${theme.spacing(2)}px`,

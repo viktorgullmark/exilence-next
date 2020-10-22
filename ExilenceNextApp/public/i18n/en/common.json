@@ -43,6 +43,7 @@
     "log_settings": "Log"
   },
   "label": {
+    "visible_columns": "Visible columns",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
     "add_stash_tabs": "Add tabs",

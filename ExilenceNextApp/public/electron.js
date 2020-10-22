@@ -86,8 +86,8 @@ ipcMain.on('createOverlay', (event, data) => {
 });
 
 ipcMain.on('overlayUpdate', (event, args) => {
-  if (windows[window.event] && !windows[window.event].isDestroyed()) {
-    windows[window.event].webContents.send('overlayUpdate', args);
+  if (windows[args.event] && !windows[args.event].isDestroyed()) {
+    windows[args.event].webContents.send('overlayUpdate', args);
   }
 });
 
