@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 - Added a reset button to the income widget
 - Added support for resizing columns in the item table
 - Added support for toggling which columns are visible in the item table
+- Added support for minimizing the app to the system tray
+    - Will be put in tray when you close the app
 ##### Changed
 - Reworked the entire table structure and should now be more performant
 - Reworked how income is calculated
