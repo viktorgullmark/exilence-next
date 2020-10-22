@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.12] - 2020-10-22
+##### Fixed
+- Fixed a bug where the app would not close
+- Fixed a bug where the app would be stuck on white screen when launched a second time
+
 ## [0.3.11] - 2020-10-22
 ##### Added
 - Added a link to view the price history on poe.ninja for each item
