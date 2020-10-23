@@ -2,9 +2,13 @@ const { BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 
+const checkForMissingWindow = require('../util');
+
 let logMonitorWindow = 'log-monitor';
 
 const createLogMonitor = ({ mainWindow }) => {
+  checkForMissingWindow({category: 'logMonitor', mainWindow});
+
   const logCreate = 'log-create';
   const logStart = 'log-start';
   const logStop = 'log-stop';
