@@ -4,7 +4,7 @@ import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, Subject, throwError, timer } from 'rxjs';
 import { catchError, map, mergeMap, retryWhen, switchMap, takeUntil } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IAccount } from '../../interfaces/account.interface';
 import { IApiAccount } from '../../interfaces/api/api-account.interface';
@@ -20,7 +20,7 @@ import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 
 export class Account implements IAccount {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
   @persist name: string | undefined = undefined;
   @persist @observable sessionId: string = '';
 

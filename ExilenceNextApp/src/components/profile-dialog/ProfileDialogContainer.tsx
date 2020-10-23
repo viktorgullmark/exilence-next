@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -114,7 +114,7 @@ const ProfileDialogContainer = ({
 
   const handleSubmit = (values: ProfileFormValues) => {
     const profile: IProfile = {
-      uuid: isEditing ? activeProfile!.uuid : uuid.v4(),
+      uuid: isEditing ? activeProfile!.uuid : uuidv4(),
       name: values.profileName,
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,

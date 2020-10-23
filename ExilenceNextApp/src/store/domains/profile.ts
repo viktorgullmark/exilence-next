@@ -5,7 +5,7 @@ import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -36,7 +36,7 @@ import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Profile {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
 
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';

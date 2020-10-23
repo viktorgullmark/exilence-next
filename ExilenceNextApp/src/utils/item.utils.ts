@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Rarity } from '../assets/themes/exilence-theme';
 import { IItem } from '../interfaces/item.interface';
@@ -55,7 +55,7 @@ export function mapPricedItemToTableItem(pricedItem: IPricedItem) {
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
   return items.map((item: IItem) => {
     return {
-      uuid: uuid.v4(),
+      uuid: uuidv4(),
       itemId: item.id,
       name: getItemName(item.typeLine, item.name),
       typeLine: item.typeLine,

@@ -4,7 +4,7 @@ import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
@@ -387,7 +387,7 @@ export class SignalrStore {
       fromStream(
         this.rootStore.signalrHub
           .sendEvent<IApiGroup>('JoinGroup', {
-            uuid: uuid.v4(),
+            uuid: uuidv4(),
             name: groupName,
             password: password,
             created: moment.utc().toDate(),
