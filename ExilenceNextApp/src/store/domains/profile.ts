@@ -354,6 +354,51 @@ export class Profile {
     rootStore.uiStateStore!.setIsSnapshotting(false);
   }
 
+  @action refreshStashTabs() {
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
+      (al) => al.leagueId === this.activeLeagueId
+    );
+
+    const league = rootStore.leagueStore.leagues.find((l) => l.id === this.activeLeagueId);
+
+    if (!accountLeague || !league) {
+      return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
+    }
+
+    rootStore.uiStateStore.setStatusMessage(
+      'refreshing_stash_tabs' // todo: add translation
+    );
+
+    fromStream(
+      accountLeague.getStashTabs().pipe(
+        mergeMap(() => of(this.refreshStashTabsSuccess(league.id))),
+        catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
+      )
+    );
+  }
+
+  @action refreshStashTabsSuccess(leagueId: string) {
+    rootStore.notificationStore.createNotification(
+      'refreshing_stash_tabs', // todo: add translation
+      'success',
+      undefined,
+      undefined,
+      leagueId
+    );
+    this.getItems();
+  }
+
+  @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
+    rootStore.notificationStore.createNotification(
+      'refreshing_stash_tabs', // todo: add translation
+      'error',
+      true,
+      e,
+      leagueId
+    );
+    this.snapshotFail();
+  }
+
   @action getItems() {
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       (al) => al.leagueId === this.activeLeagueId
