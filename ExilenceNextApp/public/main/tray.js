@@ -1,14 +1,16 @@
 const { checkForUpdates } = require('./autoUpdater');
 const { destroyNetWorthOverlayWindow } = require('./overlays/netWorthOverlay');
-
 const path = require('path');
-
 const { app, Tray, Menu, shell } = require('electron');
+
 const trayIconPath = path.join(__dirname, `../tray.jpg`);
+const checkForMissingWindow = require('../util');
 
 let tray;
 
 const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
+  checkForMissingWindow({category: 'tray', mainWindow})
+
   tray = new Tray(trayIconPath);
   const separator = { type: 'separator' };
   const contextMenu = Menu.buildFromTemplate([
@@ -16,7 +18,6 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
       label: 'Show Exilence Next',
       click: () => mainWindow.show(),
     },
-    separator,
     {
       label: 'Check for Updates...',
       sublabel: updateAvailable ? 'Update available!' : 'No updates available',

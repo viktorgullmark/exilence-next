@@ -2,8 +2,14 @@ const { app, BrowserWindow, screen } = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS,
+} = require('electron-devtools-installer');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
+const contextMenu = require('electron-context-menu');
+
 const {
   flashFrame: { createFlashFrame },
   logMonitor: { createLogMonitor },
@@ -27,16 +33,6 @@ let windows = [];
 let isQuitting;
 let updateAvailable;
 let trayProps;
-
-/**
- * Flash Frames
- */
-createFlashFrame({ event: 'notify', mainWindow: windows[mainWindow] });
-
-/**
- * Log Monitors
- */
-createLogMonitor({ mainWindow: windows[mainWindow] });
 
 /**
  * Overlays
@@ -86,18 +82,40 @@ function createWindow() {
   };
 
   /**
+   * Flash Frames
+   */
+  createFlashFrame({ event: 'notify', mainWindow: windows[mainWindow] });
+
+  /**
+   * Log Monitors
+   */
+  createLogMonitor({ mainWindow: windows[mainWindow] });
+
+  /**
    * Auto Updater
    */
   createAutoUpdater({
     mainWindow: windows[mainWindow],
     callbackUpdateAvailable: (status) => (updateAvailable = status),
   });
+
+  if (isDev) {
+    // Provide Inspect Element option on right click
+    contextMenu();
+
+    // Devtools
+    [REACT_DEVELOPER_TOOLS].forEach((extension) =>
+      installExtension(extension)
+        .then((name) => console.log(`Added Extension: ${name}`))
+        .catch((err) => console.log('An error occurred: ', err))
+    );
+
+  }
 }
 
 /**
  * App Listeners
  */
-
 if (!gotTheLock) {
   app.quit();
 } else {

@@ -2,6 +2,8 @@ const { ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 
+const checkForMissingWindow = require('../util');
+
 let shouldNotify = true;
 
 function checkForUpdates() {
@@ -13,6 +15,8 @@ function checkForUpdates() {
 }
 
 const createAutoUpdater = ({ mainWindow, callbackUpdateAvailable }) => {
+  checkForMissingWindow({category: 'autoUpdater', mainWindow})
+
   autoUpdater.logger = log;
   autoUpdater.logger.transports.file.level = 'info';
   log.info('App starting...');
