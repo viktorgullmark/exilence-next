@@ -315,12 +315,8 @@ export class AccountStore {
     this.rootStore.uiStateStore.setIsInitiating(false);
     this.rootStore.uiStateStore.setInitiated(true);
 
-    if (
-      this.rootStore.settingStore.autoSnapshotting &&
-      this.getSelectedAccount.activeProfile &&
-      this.getSelectedAccount.activeProfile.readyToSnapshot
-    ) {
-      this.getSelectedAccount.activeProfile.snapshot();
+    if (this.rootStore.settingStore.autoSnapshotting) {
+      this.getSelectedAccount.queueSnapshot(1);
     }
   }
 

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added style tweaks to the item table
 - Added persistence of position/size for the overlay
 ##### Fixed
+- Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the net worth overlay would not update when income was reset
 ##### Changed
 - Reworked how income is calculated
