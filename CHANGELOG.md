@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.15] - NOT RELEASED
 ##### Added
 - Added persistence of position/size for the overlay
+- Added reindexing of stash tabs before every snapshot, to support moving tabs around
 ##### Fixed
 - Fixed a bug where the net worth overlay would not update when income was reset
 ##### Changed
