@@ -299,7 +299,7 @@ export class Profile {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
     rootStore.uiStateStore!.setIsSnapshotting(true);
-    this.getItems();
+    this.refreshStashTabs();
   }
 
   @action clearIncome() {
