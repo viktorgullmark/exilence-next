@@ -51,10 +51,8 @@ export const mapSnapshotsToStashTabPricedItems = (snapshot: Snapshot, stashTabs:
     });
 };
 
-export const getSnapshotCardValue = (snapshotCount: number) => {
-  let label = `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
-  return label;
-};
+export const getSnapshotCardValue = (snapshotCount: number) =>
+  `${snapshotCount}${snapshotCount >= 1000 ? '+' : ''}`;
 
 export const getValueForSnapshot = (snapshot: IApiSnapshot) => {
   return snapshot.stashTabs.map((sts) => sts.value).reduce((a, b) => a + b, 0);
@@ -75,11 +73,7 @@ export const getValueForSnapshotsTabsItems = (snapshots: IApiSnapshot[]) => {
     .reduce((a, b) => a + b, 0);
 };
 
-export const calculateNetWorth = (snapshots: IApiSnapshot[]) => {
-  const values = getValueForSnapshotsTabs(snapshots);
-
-  return values;
-};
+export const calculateNetWorth = (snapshots: IApiSnapshot[]) => getValueForSnapshotsTabs(snapshots);
 
 export const formatValue = (
   value: number | string | undefined,
@@ -105,29 +99,19 @@ export const formatValue = (
   return `${valueString} ${suffix}`;
 };
 
-export const formatSnapshotsForChart = (snapshots: IApiSnapshot[]): number[][] => {
-  return snapshots
-    .map((s) => {
-      const values: number[] = [
-        moment(new Date(s.created).getTime()).valueOf(),
-        +getValueForSnapshot(s).toFixed(2),
-      ];
-      return values;
-    })
+export const formatSnapshotsForChart = (snapshots: IApiSnapshot[]): number[][] =>
+  snapshots
+    .map((s) => [
+      moment(new Date(s.created).getTime()).valueOf(),
+      +getValueForSnapshot(s).toFixed(2),
+    ])
     .sort((n1, n2) => n1[0] - n2[0]);
-};
 
 export const formatStashTabSnapshotsForChart = (
   stashTabSnapshots: IChartStashTabSnapshot[]
 ): number[][] => {
   return stashTabSnapshots
-    .map((s) => {
-      const values: number[] = [
-        moment(new Date(s.created).getTime()).valueOf(),
-        +s.value.toFixed(2),
-      ];
-      return values;
-    })
+    .map((s) => [moment(new Date(s.created).getTime()).valueOf(), +s.value.toFixed(2)])
     .sort((n1, n2) => n1[0] - n2[0]);
 };
 
@@ -140,7 +124,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 
   const rarity = getRarityIdentifier(filterText);
 
-  const mergedItems = mergeItemStacks(
+  return mergeItemStacks(
     snapshots
       .flatMap((sts) =>
         sts.stashTabs.filter(
@@ -163,8 +147,6 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
         )
       )
   );
-
-  return mergedItems;
 };
 
 export const getItemCount = (snapshots: IApiSnapshot[]) => {

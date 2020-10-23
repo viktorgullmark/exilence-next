@@ -219,8 +219,7 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    let active = this.profiles.find((p) => p.active);
-    return active;
+    return this.profiles.find((p) => p.active);
   }
 
   @action

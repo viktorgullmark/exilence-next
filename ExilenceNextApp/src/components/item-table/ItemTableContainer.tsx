@@ -184,7 +184,7 @@ const ItemTableContainer = ({
               anchorEl={anchorEl}
             />
             {hideableColumns.length > 1 && (
-              <Tooltip title={t('label.toggle_visible_columns')} placement="bottom">
+              <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
                   size="small"
                   className={classes.inlineIcon}
@@ -194,7 +194,7 @@ const ItemTableContainer = ({
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title={t('label.toggle_stash_tab_filter')} placement="bottom">
+            <Tooltip title={t('label.toggle_stash_tab_filter') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}
@@ -205,7 +205,7 @@ const ItemTableContainer = ({
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('label.toggle_export_menu')} placement="bottom">
+            <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}

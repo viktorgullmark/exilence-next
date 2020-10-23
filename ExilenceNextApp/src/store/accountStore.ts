@@ -60,7 +60,7 @@ export class AccountStore {
 
   @action
   addOrUpdateAccount(name: string, sessionId: string) {
-    let foundAccount = this.findAccountByName(name);
+    const foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
       foundAccount.sessionId = sessionId;
@@ -74,9 +74,9 @@ export class AccountStore {
 
   @action
   handleAuthCallback(url: string, window: any) {
-    var raw_code = /code=([^&]*)/.exec(url) || null;
-    var code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-    var error = /\?error=(.+)$/.exec(url);
+    const raw_code = /code=([^&]*)/.exec(url) || null;
+    const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+    const error = /\?error=(.+)$/.exec(url);
 
     if (code || error) {
       // Close the browser if code found or error
@@ -99,7 +99,7 @@ export class AccountStore {
 
   @action
   loadAuthWindow() {
-    var options = {
+    const options = {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
@@ -107,7 +107,7 @@ export class AccountStore {
       responseType: 'code',
     };
 
-    var authWindow = new electronService.remote.BrowserWindow({
+    let authWindow = new electronService.remote.BrowserWindow({
       width: 500,
       height: 750,
       show: false,
@@ -120,7 +120,7 @@ export class AccountStore {
       alwaysOnTop: true,
     });
 
-    var authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+    const authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     authWindow.webContents.on('will-redirect', (_event: any, url: any) => {
       this.handleAuthCallback(url, authWindow);

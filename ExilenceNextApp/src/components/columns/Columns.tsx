@@ -9,10 +9,7 @@ import { getRarity } from '../../utils/item.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
 
-export function itemIcon<T>(options: {
-  accessor: string;
-  header: string;
-}): Column<object> {
+export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -27,10 +24,7 @@ export function itemIcon<T>(options: {
   };
 }
 
-export function itemName<T>(options: {
-  accessor: string;
-  header: string;
-}): Column<object> {
+export function itemName<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -51,10 +45,7 @@ export function itemName<T>(options: {
   };
 }
 
-export function itemLinks<T>(options: {
-  accessor: string;
-  header: string;
-}): Column<object> {
+export function itemLinks<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -68,10 +59,7 @@ export function itemLinks<T>(options: {
   };
 }
 
-export function itemCorrupted<T>(options: {
-  accessor: string;
-  header: string;
-}): Column<object> {
+export function itemCorrupted<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -85,10 +73,7 @@ export function itemCorrupted<T>(options: {
   };
 }
 
-export function itemValue<T>(options: {
-  accessor: string;
-  header: string;
-}): Column<object> {
+export function itemValue<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -160,7 +145,7 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
         {value}
       </span>
       {poeNinjaUrl && (
-        <Tooltip title={t('label.open_on_ninja')} placement="bottom">
+        <Tooltip title={t('label.open_on_ninja') || ''} placement="bottom">
           <IconButton
             size="small"
             className={classes.inlineIcon}

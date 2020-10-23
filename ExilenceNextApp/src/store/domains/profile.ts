@@ -148,7 +148,7 @@ export class Profile {
 
   @computed
   get tabChartData() {
-    let snapshots = [...this.snapshots.slice(0, 50)];
+    const snapshots = [...this.snapshots.slice(0, 50)];
 
     const league = rootStore.leagueStore.leagues.find((l) => l.id === this.activeLeagueId);
 

@@ -97,7 +97,7 @@ const ProfileDialogContainer = ({
 
   const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
     const id = event.target.value;
-    let accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
+    const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       (l) => l.leagueId === id
     );
     setSelectedStashTabs([]);

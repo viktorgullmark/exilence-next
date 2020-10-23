@@ -143,7 +143,7 @@ export class Group implements IApiGroup {
 
   @computed
   get chartData() {
-    let groupChartSeries: IGroupChartSeries = {
+    const groupChartSeries: IGroupChartSeries = {
       connections: [],
     };
 

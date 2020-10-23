@@ -20,7 +20,7 @@ export function close() {
 
 export function openLink(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault();
-  let link = event.currentTarget.href;
+  const link = event.currentTarget.href;
   electronService.shell.openExternal(link);
 }
 

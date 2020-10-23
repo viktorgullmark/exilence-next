@@ -246,7 +246,10 @@ const NetWorth = ({ accountStore, signalrStore, uiStateStore }: NetWorthProps) =
                 </Grid>
                 <Grid item className={classes.secondaryHeader}>
                   <Box display="flex" justifyContent="center" alignItems="center">
-                    <Tooltip title={t('label.prices_fetched_from_interval')} placement="bottom">
+                    <Tooltip
+                      title={t('label.prices_fetched_from_interval') || ''}
+                      placement="bottom"
+                    >
                       <Typography variant="body2" className={classes.creditText}>
                         {t('label.prices_fetched_from')}
                         <a

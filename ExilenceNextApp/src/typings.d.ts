@@ -9,13 +9,13 @@ declare module 'mobx-react' {
 }
 
 /* SystemJS module definition */
-declare var nodeModule: NodeModule;
+declare let nodeModule: NodeModule;
 interface NodeModule {
   id: string;
 }
 
-declare var window: Window;
-declare var Window: {
+declare let window: Window;
+declare let Window: {
   prototype: Window;
   new (): Window;
 };

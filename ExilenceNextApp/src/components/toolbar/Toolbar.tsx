@@ -114,7 +114,7 @@ const Toolbar = ({
       >
         <ToolbarStepperContainer />
         <MuiToolbar className={classes.toolbar}>
-          <Tooltip title={t('label.toggle_menu_title')} placement="bottom">
+          <Tooltip title={t('label.toggle_menu_title') || ''} placement="bottom">
             <span>
               <IconButton
                 color="inherit"
@@ -162,7 +162,7 @@ const Toolbar = ({
           </Box>
           <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
-              <Tooltip title={t('label.edit_profile_icon_title')} placement="bottom">
+              <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={
@@ -204,7 +204,7 @@ const Toolbar = ({
                 </Select>
               </FormControl>
 
-              <Tooltip title={t('label.create_profile_icon_title')} placement="bottom">
+              <Tooltip title={t('label.create_profile_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={isSnapshotting || !profilesLoaded || isInitiating || !signalrOnline}
@@ -216,7 +216,7 @@ const Toolbar = ({
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title={t('label.remove_profile_icon_title')} placement="bottom">
+              <Tooltip title={t('label.remove_profile_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={
@@ -237,7 +237,7 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
-              <Tooltip title={t('label.fetch_snapshot_icon_title')} placement="bottom">
+              <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={!activeProfile || !activeProfile.readyToSnapshot || !signalrOnline}
@@ -249,7 +249,7 @@ const Toolbar = ({
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title={t('label.remove_snapshot_icon_title')} placement="bottom">
+              <Tooltip title={t('label.remove_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={
@@ -269,7 +269,7 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
-              <Tooltip title={t('label.overlay_icon_title')} placement="bottom">
+              <Tooltip title={t('label.overlay_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     onClick={() => handleOverlay()}
@@ -284,7 +284,7 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.groupArea} data-tour-elem="groupArea">
-              <Tooltip title={t('label.group_icon_title')} placement="bottom">
+              <Tooltip title={t('label.group_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={isSnapshotting || !signalrOnline}
@@ -300,7 +300,7 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.miscArea}>
-              <Tooltip title={t('label.notification_icon_title')} placement="bottom">
+              <Tooltip title={t('label.notification_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     data-tour-elem="notificationList"
@@ -321,7 +321,7 @@ const Toolbar = ({
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title={t('label.account_icon_title')} placement="bottom">
+              <Tooltip title={t('label.account_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     onClick={(e) => handleAccountMenuOpen(e)}

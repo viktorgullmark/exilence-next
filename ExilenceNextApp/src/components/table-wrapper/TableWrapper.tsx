@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, useEffect } from 'react';
 import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
@@ -37,7 +37,7 @@ const cellProps = <T extends object>(props: any, { cell }: Meta<T, { cell: Cell<
 const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps) => {
   const classes = useStyles();
 
-  const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state } = instance;
+  const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state }: any = instance;
 
   const debouncedState = useDebounce(state, 500);
 

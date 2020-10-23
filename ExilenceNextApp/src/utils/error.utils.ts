@@ -3,7 +3,7 @@ import i18n from 'i18next';
 export function translateError(e: Error) {
   // check if error message appears to be a translation key, and translate it if so
   const prefix = 'notification:error.custom_description.';
-  var regex = /^\w+$/g;
+  const regex = /^\w+$/g;
   if (!e.message) {
     e.message = 'notification:error.unknown_error';
   }

@@ -146,7 +146,7 @@ export class SignalrStore {
           return p;
         });
       });
-      let foundProfile = connection.account.profiles.find((p) => p.uuid === profile.uuid);
+      const foundProfile = connection.account.profiles.find((p) => p.uuid === profile.uuid);
       if (foundProfile) {
         const index = connection.account.profiles.indexOf(foundProfile);
         profile.snapshots = foundProfile.snapshots;

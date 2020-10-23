@@ -11,17 +11,11 @@ export class LogStore {
       switch (args.event) {
         case 'start':
           this.running = true;
-          this.rootStore.notificationStore.createNotification(
-            'log_monitor_started',
-            'success'
-          );
+          this.rootStore.notificationStore.createNotification('log_monitor_started', 'success');
           break;
         case 'stop':
           this.running = false;
-          this.rootStore.notificationStore.createNotification(
-            'log_monitor_stopped',
-            'success'
-          );
+          this.rootStore.notificationStore.createNotification('log_monitor_stopped', 'success');
           break;
       }
     });

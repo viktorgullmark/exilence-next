@@ -17,8 +17,8 @@ const SnapshotHistoryChartContainer = ({
   signalrStore,
   showIndividualTabs,
 }: SnapshotHistoryChartContainerProps) => {
-  let ref = useRef(null);
-  let size = useComponentSize(ref);
+  const ref = useRef(null);
+  const size = useComponentSize(ref);
 
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
 
