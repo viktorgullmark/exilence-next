@@ -35,6 +35,19 @@ export function mergeItemStacks(items: IPricedItem[]) {
   return mergedItems;
 }
 
+export const formatCumulativeValue = (cumulativeValue: number): string => {
+  return `${cumulativeValue.toFixed(2)}`;
+};
+
+export const annotateTableItemWithCumulativeValue = (
+  item: ITableItem,
+  idx: number,
+  items: ITableItem[]
+): ITableItem => ({
+  ...item,
+  cumulative: items.slice(0, idx + 1).reduce((acc, item) => acc + item.total, 0),
+});
+
 export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) {
   let mergedStashTabs: IPricedItem[] = [];
 
