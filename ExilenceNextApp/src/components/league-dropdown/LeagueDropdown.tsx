@@ -1,19 +1,14 @@
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@material-ui/core';
-import { FormikErrors, FormikTouched } from 'formik';
-import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormikErrors, FormikTouched } from 'formik';
+import { observer } from 'mobx-react';
+
 import useLabelWidth from '../../hooks/use-label-width';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
 
-interface LeagueDropdownProps {
+type LeagueDropdownProps = {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   noCharacters: string;
@@ -24,9 +19,9 @@ interface LeagueDropdownProps {
   margin?: 'normal' | 'none' | 'dense' | undefined;
   fullWidth?: boolean;
   hideLabel?: boolean;
-}
+};
 
-const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
+const LeagueDropdown = ({
   margin = 'normal',
   hideLabel = false,
   fullWidth,
@@ -44,17 +39,14 @@ const LeagueDropdown: React.FC<LeagueDropdownProps> = ({
   return (
     <>
       <FormControl
-        variant='outlined'
+        variant="outlined"
         fullWidth={fullWidth}
         margin={margin}
         required
-        error={
-          (touched.league && errors.league !== undefined) ||
-          noCharacters.length > 0
-        }
+        error={(touched.league && errors.league !== undefined) || noCharacters.length > 0}
       >
         {!hideLabel && (
-          <InputLabel ref={ref} htmlFor='league-dd'>
+          <InputLabel ref={ref} htmlFor="league-dd">
             {t('label.select_main_league')}
           </InputLabel>
         )}

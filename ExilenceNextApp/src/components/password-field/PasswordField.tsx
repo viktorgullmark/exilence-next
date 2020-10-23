@@ -1,12 +1,13 @@
-import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@material-ui/core';
-import { useField } from 'formik';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@material-ui/core';
+import { useField } from 'formik';
+
 import useLabelWidth from '../../hooks/use-label-width';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useStyles from './PasswordField.styles';
 
-interface Props {
+type PasswordFieldProps = {
   name: string;
   label: string;
   handleOnChange: (e: React.FormEvent<HTMLDivElement>) => void;
@@ -15,9 +16,9 @@ interface Props {
   autoFocus?: boolean;
   helperText?: string;
   customError?: string;
-}
+};
 
-const PasswordField: React.FC<Props> = ({
+const PasswordField = ({
   name,
   label,
   placeholder,
@@ -25,8 +26,8 @@ const PasswordField: React.FC<Props> = ({
   autoFocus,
   helperText,
   customError,
-  handleOnChange
-}) => {
+  handleOnChange,
+}: PasswordFieldProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const [field, meta] = useField(name);
@@ -42,7 +43,7 @@ const PasswordField: React.FC<Props> = ({
       variant="outlined"
       className={classes.root}
       error={meta.touched && (!!meta.error || !!customError)}
-      onChange={e => {
+      onChange={(e) => {
         field.onChange(e);
         handleOnChange(e);
       }}

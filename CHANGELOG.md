@@ -1,6 +1,54 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.15] - NOT RELEASED
+##### Added
+- Added style tweaks to the item table
+- Added persistence of position/size for the overlay
+##### Fixed
+- Fixed a bug where the net worth overlay would not update when income was reset
+##### Changed
+- Reworked how income is calculated
+    - Now based on the past hour, or the latest reset timestamp if one exists
+
+## [0.3.14] - 2020-10-23
+##### Added
+- Added tooltips to the icon buttons in the table toolbar
+##### Fixed
+- Fixed a bug where the app would not open correctly from tray when relaunching it
+- Fixed a bug where some settings had a trailing NaN value
+##### Updated
+- Updated libraries for the table component (react-table)
+
+## [0.3.13] - 2020-10-22
+##### Fixed
+- Fixed a bug where the auto updater stopped working
+
+## [0.3.12] - 2020-10-22
+##### Fixed
+- Fixed a bug where the app would not close
+- Fixed a bug where the app would be stuck on white screen when launched a second time
+
+## [0.3.11] - 2020-10-22
+##### Added
+- Added a link to view the price history on poe.ninja for each item
+- Added a reset button to the income widget
+- Added support for resizing columns in the item table
+- Added support for toggling which columns are visible in the item table
+- Added support for minimizing the app to the system tray
+    - Will be put in tray when you close the app
+##### Changed
+- Reworked the entire table structure and should now be more performant
+- Reworked how income is calculated
+    - Now calculates over every hour since the session started, instead of only the past hour
+- Minor style tweaks
+
+## [0.3.10] - 2020-09-19
+##### Changed
+- Minor style tweaks
+##### Removed
+- Removed seed as a item category
+
 ## [0.3.9] - 2020-07-29
 ##### Added
 - Added support for pricing seeds

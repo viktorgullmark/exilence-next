@@ -20,4 +20,5 @@ export interface IExternalPrice {
   icon: string;
   tier?: number;
   count: number;
+  detailsUrl?: string;
 }

@@ -1,12 +1,13 @@
+import React, { ReactNode } from 'react';
 import { observer } from 'mobx-react';
-import React from 'react';
+
 import useStyles from './FeatureWrapper.styles';
 
-interface FeatureWrapperProps extends React.HTMLAttributes<HTMLDivElement> {}
+type FeatureWrapperProps = {
+  children: ReactNode;
+};
 
-const FeatureWrapper: React.FC<FeatureWrapperProps> = ({
-  children
-}: FeatureWrapperProps) => {
+const FeatureWrapper = ({ children }: FeatureWrapperProps) => {
   const classes = useStyles();
 
   return <div className={classes.Wrapper}>{children}</div>;

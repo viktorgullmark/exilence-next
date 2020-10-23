@@ -1,31 +1,48 @@
 {
   "env": {
-      "browser": true,
-      "es6": true
+    "browser": true,
+    "es6": true
   },
   "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:@typescript-eslint/eslint-recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:prettier/recommended"
   ],
   "globals": {
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "ecmaFeatures": {
-          "jsx": true
-      },
-      "ecmaVersion": 2018,
-      "sourceType": "module"
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
-  "plugins": [
-      "react",
-      "@typescript-eslint"
-  ],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "no-unused-vars": "off",
-    "react/prop-types": "off"
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      { "args": "all", "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
+    ],
+    "prettier/prettier": 2,
+    "react/display-name": 1,
+    "react/no-children-prop": 2,
+    "react/no-danger-with-children": 2,
+    "react/no-deprecated": 1,
+    "react/no-direct-mutation-state": 2,
+    "react/no-find-dom-node": 1,
+    "react/no-is-mounted": 2,
+    "react/no-render-return-value": 2,
+    "react/no-string-refs": 2,
+    "react/no-unescaped-entities": 2,
+    "react/no-unknown-property": 2,
+    "react/no-unsafe": 0,
+    "react/react-in-jsx-scope": 2,
+    "react/require-render-return": 2,
+    "import/order": 0
   }
 }

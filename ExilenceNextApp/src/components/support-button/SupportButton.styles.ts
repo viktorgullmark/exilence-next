@@ -1,6 +1,6 @@
-import { makeStyles, createStyles } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 
-export const useStyles = makeStyles(theme =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       top: '52vh',
@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme =>
       right: 16,
       position: 'fixed',
       width: 0,
-      height: 0
+      height: 0,
     },
     button: {
       transform: 'rotate(-90deg)',
@@ -21,11 +21,11 @@ export const useStyles = makeStyles(theme =>
       fontWeight: 'bold',
       fontSize: '0.8rem',
       '&:hover': {
-        background: theme.palette.primary.light
-      }
+        background: theme.palette.primary.light,
+      },
     },
     noMargin: {
-      right: -16
-    }
+      right: -16,
+    },
   })
 );

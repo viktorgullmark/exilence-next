@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
@@ -12,6 +13,8 @@ export class SettingStore {
   @persist
   @observable
   uiScale: number = electronService.webFrame.getZoomFactor() * 100;
+  @persist @observable logPath: string =
+    'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';
 
   constructor(private rootStore: RootStore) {}
 
@@ -57,5 +60,10 @@ export class SettingStore {
     this.autoSnapshotInterval = value * 60 * 1000;
     this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
     this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
+  }
+
+  @action
+  setLogPath(path: string) {
+    this.logPath = path;
   }
 }

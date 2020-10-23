@@ -1,27 +1,40 @@
-import { Box, Grid, IconButton, makeStyles, Theme } from '@material-ui/core';
+import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
 import { inject, observer } from 'mobx-react';
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  primaryLighter,
-  statusColors,
-} from '../../assets/themes/exilence-theme';
-import { ITableItem } from '../../interfaces/table-item.interface';
+  TableInstance,
+  useColumnOrder,
+  useFilters,
+  useFlexLayout,
+  usePagination,
+  useResizeColumns,
+  useRowSelect,
+  useSortBy,
+  useTable,
+} from 'react-table';
+import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
+import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { mapPricedItemToTableItem } from '../../utils/item.utils';
+import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
+import { defaultColumn } from '../table-wrapper/DefaultColumn';
+import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
-import ItemTable, { Order } from './ItemTable';
+import itemTableColumns from './itemTableColumns';
 
-interface ItemTableContainerProps {
+type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
-}
+};
 
 export const itemTableFilterSpacing = 2;
 
@@ -51,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
+const ItemTableContainer = ({
   accountStore,
   signalrStore,
   uiStateStore,
@@ -59,14 +72,50 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
+  const { t } = useTranslation();
+  const getItems = useMemo(() => {
+    if (activeProfile) {
+      return activeGroup ? activeGroup.items : activeProfile.items;
+    } else {
+      return [];
+    }
+  }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
+  const data = useMemo(() => {
+    return getItems.map((i) => mapPricedItemToTableItem(i));
+  }, [getItems]);
+
+  const tableName = 'item-table';
+  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
+
+  const [instance] = useState<TableInstance<object>>(
+    useTable(
+      {
+        columns: itemTableColumns,
+        defaultColumn,
+        data,
+        initialState,
+      },
+      useColumnOrder,
+      useFilters,
+      useSortBy,
+      useFlexLayout,
+      usePagination,
+      useResizeColumns,
+      useRowSelect,
+      (hooks) => {
+        hooks.allColumns.push((columns) => [...columns]);
+      }
+    )
+  );
+
+  // FIXME: add useEffect() to clear timeout on dismounting
   let timer: NodeJS.Timeout | undefined = undefined;
 
   const handleFilter = (
     event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     searchText?: string
   ) => {
-    uiStateStore!.changeItemTablePage(0);
     if (timer) {
       clearTimeout(timer);
     }
@@ -88,86 +137,90 @@ const ItemTableContainer: React.FC<ItemTableContainerProps> = ({
     );
   };
 
-  const getItems = () => {
-    if (activeProfile) {
-      return activeGroup ? activeGroup.items : activeProfile.items;
-    } else {
-      return [];
-    }
-  };
-
   const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [columnsOpen, setColumnsOpen] = useState(false);
 
-  const itemArray = getItems();
+  const hideableColumns = itemTableColumns.filter((column) => !(column.id === '_selector'));
+
+  const handleColumnsClick = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+      setColumnsOpen(true);
+    },
+    [setAnchorEl, setColumnsOpen]
+  );
+
+  const handleClose = useCallback(() => {
+    setColumnsOpen(false);
+    setAnchorEl(null);
+  }, []);
 
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid
-          container
-          direction='row'
-          justify='space-between'
-          alignItems='center'
-        >
+        <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item md={7}>
-            <Grid container direction='row' spacing={2} alignItems='center'>
+            <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={5}>
                 <ItemTableFilter
-                  array={itemArray}
+                  array={getItems}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, '')}
                 />
               </Grid>
               <Grid item>
-                <ItemTableFilterSubtotal array={itemArray} />
+                <ItemTableFilterSubtotal array={getItems} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item className={classes.actionArea}>
-            <IconButton
-              size='small'
-              className={classes.inlineIcon}
-              onClick={() =>
-                uiStateStore!.setShowItemTableFilter(
-                  !uiStateStore!.showItemTableFilter
-                )
-              }
-            >
-              <FilterListIcon />
-            </IconButton>
-            <IconButton
-              size='small'
-              className={classes.inlineIcon}
-              onClick={handleItemTableMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
+            <ColumnHidePage
+              instance={instance}
+              onClose={handleClose}
+              show={columnsOpen}
+              anchorEl={anchorEl}
+            />
+            {hideableColumns.length > 1 && (
+              <Tooltip title={t('label.toggle_visible_columns')} placement="bottom">
+                <IconButton
+                  size="small"
+                  className={classes.inlineIcon}
+                  onClick={handleColumnsClick}
+                >
+                  <ViewColumnsIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title={t('label.toggle_stash_tab_filter')} placement="bottom">
+              <IconButton
+                size="small"
+                className={classes.inlineIcon}
+                onClick={() =>
+                  uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
+                }
+              >
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('label.toggle_export_menu')} placement="bottom">
+              <IconButton
+                size="small"
+                className={classes.inlineIcon}
+                onClick={handleItemTableMenuOpen}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>
-      <ItemTable
-        items={itemArray.map((i) => mapPricedItemToTableItem(i))}
-        pageIndex={uiStateStore!.itemTablePageIndex}
-        pageSize={uiStateStore!.itemTablePageSize}
-        changePage={(i: number) => uiStateStore!.changeItemTablePage(i)}
-        order={uiStateStore!.itemTableOrder}
-        orderBy={uiStateStore!.itemTableOrderBy}
-        setOrder={(order: Order) => uiStateStore!.setItemTableOrder(order)}
-        setPageSize={(size: number) => uiStateStore!.setItemTablePageSize(size)}
-        setOrderBy={(col: keyof ITableItem) =>
-          uiStateStore!.setItemTableOrderBy(col)
-        }
-        activeGroup={activeGroup}
-      />
+      <TableWrapper instance={instance} setInitialState={setInitialState} />
       <ItemTableMenuContainer />
     </>
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore'
-)(observer(ItemTableContainer));
+export default inject('uiStateStore', 'signalrStore', 'accountStore')(observer(ItemTableContainer));

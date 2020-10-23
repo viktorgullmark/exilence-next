@@ -1,6 +1,6 @@
 {
   "name": "exilence-next-app",
-  "version": "0.3.9",
+  "version": "0.3.15",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.5.2",
@@ -12,6 +12,7 @@
     "@rehooks/component-size": "^1.0.3",
     "@sentry/browser": "^5.9.1",
     "@sentry/electron": "^1.0.0",
+    "@types/react-table": "^7.0.24",
     "@types/reactour": "^1.13.1",
     "@types/universal-analytics": "^0.4.3",
     "axios": "^0.19.0",
@@ -21,9 +22,6 @@
     "electron-log": "^3.0.9",
     "electron-updater": "^4.2.0",
     "electron-window-state": "^5.0.3",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-react": "^7.15.0",
     "export-to-csv": "^0.2.1",
     "formik": "^2.0.8",
     "highcharts": "^8.0.0",
@@ -38,6 +36,7 @@
     "mobx-utils": "^5.5.1",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
+    "poe-log-monitor": "^1.2.5",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-i18next": "^10.13.1",
@@ -45,6 +44,7 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
+    "react-table": "^7.6.0",
     "react-toastify": "^5.4.1",
     "reactour": "^1.16.0",
     "rxjs": "^6.5.3",
@@ -68,7 +68,9 @@
     "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder",
     "build": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -101,6 +103,13 @@
     "cross-env": "^6.0.3",
     "electron": "^7.1.11",
     "electron-builder": "^22.3.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.13.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.15.0",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "prettier": "^2.1.2",
     "wait-on": "^3.3.0"
   },
   "build": {
@@ -112,7 +121,8 @@
     ],
     "extraFiles": [
       "public/i18n/**/*",
-      "public/overlays/**/*"
+      "public/overlays/**/*",
+      "public/background-tasks/**/*"
     ],
     "directories": {
       "buildResources": "src/assets/**/*"

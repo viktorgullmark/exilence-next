@@ -28,4 +28,5 @@ export interface IPricedItem {
   tier: number;
   inventoryId: string;
   tab: ICompactTab[];
+  detailsUrl?: string;
 }

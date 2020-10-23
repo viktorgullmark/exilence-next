@@ -1,32 +1,21 @@
 import React from 'react';
-import NavigationMenu from './NavigationMenu';
-import { observer, inject } from 'mobx-react';
-import { UiStateStore } from '../../../store/uiStateStore';
-import { RouteStore } from '../../../store/routeStore';
+import { inject, observer } from 'mobx-react';
 
-interface NavigationMenuContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+import { RouteStore } from '../../../store/routeStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import NavigationMenu from './NavigationMenu';
+
+type NavigationMenuContainerProps = {
   uiStateStore?: UiStateStore;
   routeStore?: RouteStore;
-}
-
-const NavigationMenuContainer: React.FC<NavigationMenuContainerProps> = ({
-  uiStateStore,
-  routeStore,
-  children
-}: NavigationMenuContainerProps) => {
-  return (
-    <NavigationMenu
-      open={uiStateStore!.sidenavOpen}
-      toggleSidenav={() => uiStateStore!.toggleSidenav()}
-      handleRedirect={(path: string) => routeStore!.redirect(path)}
-    >
-      {children}
-    </NavigationMenu>
-  );
 };
 
-export default inject(
-  'uiStateStore',
-  'routeStore'
-)(observer(NavigationMenuContainer));
+const NavigationMenuContainer = ({ uiStateStore, routeStore }: NavigationMenuContainerProps) => (
+  <NavigationMenu
+    open={uiStateStore!.sidenavOpen}
+    toggleSidenav={() => uiStateStore!.toggleSidenav()}
+    handleRedirect={(path) => routeStore!.redirect(path)}
+  />
+);
+
+export default inject('uiStateStore', 'routeStore')(observer(NavigationMenuContainer));

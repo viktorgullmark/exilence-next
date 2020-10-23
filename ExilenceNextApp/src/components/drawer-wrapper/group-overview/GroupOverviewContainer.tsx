@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
-import GroupOverview from './GroupOverview';
-import { observer, inject } from 'mobx-react';
-import { UiStateStore } from '../../../store/uiStateStore';
-import { SignalrStore } from '../../../store/signalrStore';
-import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
 import { useTranslation } from 'react-i18next';
+import { inject, observer } from 'mobx-react';
 
-interface GroupOverviewContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+import { SignalrStore } from '../../../store/signalrStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
+import GroupOverview from './GroupOverview';
+
+type GroupOverviewContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
-}
+};
 
-const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
-  uiStateStore,
-  signalrStore,
-  children
-}: GroupOverviewContainerProps) => {
+const GroupOverviewContainer = ({ uiStateStore, signalrStore }: GroupOverviewContainerProps) => {
   const { t } = useTranslation();
   const [showLeaveGroupDialog, setShowLeaveGroupDialog] = useState(false);
 
@@ -32,14 +28,10 @@ const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
         leavingGroup={uiStateStore!.leavingGroup}
         activeGroup={signalrStore!.activeGroup}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
-        handleCreateGroup={() =>
-          uiStateStore!.setGroupDialogOpen(true, 'create')
-        }
+        handleCreateGroup={() => uiStateStore!.setGroupDialogOpen(true, 'create')}
         handleJoinGroup={() => uiStateStore!.setGroupDialogOpen(true, 'join')}
         handleLeaveGroup={() => setShowLeaveGroupDialog(true)}
-      >
-        {children}
-      </GroupOverview>
+      />
       <ConfirmationDialog
         show={showLeaveGroupDialog}
         onClose={() => setShowLeaveGroupDialog(false)}
@@ -53,7 +45,4 @@ const GroupOverviewContainer: React.FC<GroupOverviewContainerProps> = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore'
-)(observer(GroupOverviewContainer));
+export default inject('uiStateStore', 'signalrStore')(observer(GroupOverviewContainer));

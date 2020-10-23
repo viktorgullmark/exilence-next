@@ -1,27 +1,28 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
+import SupportButton from '../support-button/SupportButton';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
-import SupportButton from '../support-button/SupportButton';
-import { Alert, AlertTitle } from '@material-ui/lab';
 
-interface LoginContentProps {
+type LoginContentProps = {
   handleValidate: (account: IAccount) => void;
   isSubmitting: boolean;
   isInitiating: boolean;
   account: Account;
   errorMessage?: string;
-}
+};
 
-const LoginContent: React.FC<LoginContentProps> = ({
+const LoginContent = ({
   handleValidate,
   isSubmitting,
   isInitiating,

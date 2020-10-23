@@ -1,16 +1,11 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@material-ui/core';
-import { observer } from 'mobx-react';
 import React from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { observer } from 'mobx-react';
+
 import RequestButton from '../request-button/RequestButton';
 import useStyles from './ConfirmationDialog.styles';
 
-interface Props {
+type ConfirmationDialogProps = {
   show: boolean;
   title: string;
   body: string;
@@ -19,19 +14,18 @@ interface Props {
   onClose: () => void;
   onConfirm: () => void;
   loading?: boolean;
-}
+};
 
-const ConfirmationDialog: React.FC<Props> = props => {
-  const {
-    show,
-    onClose,
-    onConfirm,
-    title,
-    body,
-    acceptButtonText,
-    cancelButtonText,
-    loading
-  } = props;
+const ConfirmationDialog = ({
+  show,
+  onClose,
+  onConfirm,
+  title,
+  body,
+  acceptButtonText,
+  cancelButtonText,
+  loading,
+}: ConfirmationDialogProps) => {
   const classes = useStyles();
 
   return (

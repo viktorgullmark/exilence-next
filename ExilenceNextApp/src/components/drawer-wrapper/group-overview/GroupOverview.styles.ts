@@ -1,31 +1,29 @@
 import { makeStyles } from '@material-ui/core';
-import {
-  resizeHandleContainerHeight,
-  toolbarHeight
-} from '../../header/Header';
+
+import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
     height: `calc(100% - ${toolbarHeight}px)`,
     top: `calc(${toolbarHeight}px + ${resizeHandleContainerHeight}px)`,
     width: drawerWidth,
-    background: theme.palette.background.default
+    background: theme.palette.background.default,
   },
   drawerHeader: {
     background: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   groupName: {
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 }));
 
 export default useStyles;

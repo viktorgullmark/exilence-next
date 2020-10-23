@@ -1,14 +1,15 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { UiStateStore } from '../../store/uiStateStore';
 import StatusMessage from './StatusMessage';
 
-interface Props {
+type StatusMessageContainerProps = {
   uiStateStore?: UiStateStore;
-}
+};
 
-const StatusMessageContainer: React.FC<Props> = ({ uiStateStore }: Props) => {
-  return <StatusMessage statusMessage={uiStateStore!.statusMessage}/>
+const StatusMessageContainer = ({ uiStateStore }: StatusMessageContainerProps) => {
+  return <StatusMessage statusMessage={uiStateStore!.statusMessage} />;
 };
 
 export default inject('uiStateStore')(observer(StatusMessageContainer));

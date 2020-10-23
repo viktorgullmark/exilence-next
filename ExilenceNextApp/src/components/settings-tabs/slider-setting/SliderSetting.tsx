@@ -1,3 +1,5 @@
+import React, { ChangeEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   FormControl,
@@ -5,39 +7,31 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-  Input
+  Input,
 } from '@material-ui/core';
 import Slider from '@material-ui/core/Slider';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import React, { ChangeEvent, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import useStyles from './SliderSetting.styles';
 
-interface Props {
+type SliderSettingProps = {
   value: number;
-  handleChange: (
-    event: ChangeEvent<{}> | MouseEvent,
-    value: number | string | number[]
-  ) => void;
+  handleChange: (event: ChangeEvent<{}> | MouseEvent, value: number | string | number[]) => void;
   translationKey: string;
   step?: number;
-  waitForMouseUp?: boolean;
   requiresSnapshot?: boolean;
-}
+};
 
-const SliderSetting: React.FC<Props> = ({
+const SliderSetting = ({
   value,
   handleChange,
   translationKey,
   step,
   requiresSnapshot,
-  waitForMouseUp
-}: Props) => {
+}: SliderSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [localValue, setLocalValue] = useState<number | string | number[]>(
-    value
-  );
+  const [localValue, setLocalValue] = useState<number | string | number[]>(value);
 
   function valuetext(value: number) {
     return `${value} %`;
@@ -69,7 +63,7 @@ const SliderSetting: React.FC<Props> = ({
             <Grid item xs>
               <Slider
                 value={typeof localValue === 'number' ? localValue : 0}
-                getAriaValueText={val => valuetext(val)}
+                getAriaValueText={(val) => valuetext(val)}
                 aria-labelledby={`${translationKey}-label`}
                 step={step}
                 min={50}
@@ -77,7 +71,7 @@ const SliderSetting: React.FC<Props> = ({
                 onChangeCommitted={(e, v) => {
                   handleChange(e, v);
                 }}
-                onChange={(e, v) => {
+                onChange={(_e, v) => {
                   setLocalValue(v);
                 }}
                 valueLabelDisplay="auto"
@@ -95,7 +89,7 @@ const SliderSetting: React.FC<Props> = ({
                   min: 50,
                   max: 150,
                   type: 'number',
-                  'aria-labelledby': 'input-slider'
+                  'aria-labelledby': 'input-slider',
                 }}
               />
             </Grid>

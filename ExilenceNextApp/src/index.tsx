@@ -1,3 +1,6 @@
+import React, { Suspense } from 'react';
+import ReactDOM from 'react-dom';
+import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
@@ -7,12 +10,8 @@ import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import { Provider } from 'mobx-react';
 import moment from 'moment';
-import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.min.css';
 import ua, { Visitor } from 'universal-analytics';
-import './assets/styles/reactour.scss';
+
 import exilenceTheme from './assets/themes/exilence-theme';
 import DrawerWrapperContainer from './components/drawer-wrapper/DrawerWrapperContainer';
 import GlobalStyles from './components/global-styles/GlobalStyles';
@@ -24,6 +23,7 @@ import SupportButton from './components/support-button/SupportButton';
 import ToastWrapper from './components/toast-wrapper/ToastWrapper';
 import ToolbarContainer from './components/toolbar/ToolbarContainer';
 import AppConfig from './config/app.config';
+import configureAxios from './config/axios';
 import configureI18n from './config/i18n';
 import initSentry from './config/sentry';
 import Login from './routes/login/Login';
@@ -31,7 +31,9 @@ import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
-import configureAxios from './config/axios';
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import './assets/styles/reactour.scss';
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 
@@ -40,9 +42,9 @@ configureI18n();
 configureAxios();
 enableLogging({
   action: false,
-  reaction: true,
+  reaction: false,
   transaction: false,
-  compute: false
+  compute: false,
 });
 
 configure({ enforceActions: 'observed' });
@@ -54,7 +56,7 @@ export const rootStore: RootStore = new RootStore();
 
 localForage.config({
   name: 'exilence-next-db',
-  driver: localForage.INDEXEDDB
+  driver: localForage.INDEXEDDB,
 });
 
 const app = (
@@ -97,7 +99,7 @@ const app = (
 
 const hydrate = create({
   storage: localForage,
-  jsonify: true
+  jsonify: true,
 });
 
 const renderApp = () => {
@@ -105,7 +107,7 @@ const renderApp = () => {
     hydrate('account', rootStore.accountStore),
     hydrate('uiState', rootStore.uiStateStore),
     hydrate('league', rootStore.leagueStore),
-    hydrate('setting', rootStore.settingStore)
+    hydrate('setting', rootStore.settingStore),
   ]).then(() => {
     rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
     visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);

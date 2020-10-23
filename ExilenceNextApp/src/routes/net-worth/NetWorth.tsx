@@ -1,3 +1,5 @@
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip, Typography, useTheme } from '@material-ui/core';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -7,10 +9,9 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { appName, visitor } from '../..';
-import { cardColors, itemColors } from '../../assets/themes/exilence-theme';
+import { itemColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   ExpansionPanel,
@@ -30,21 +31,17 @@ import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
 
-interface NetWorthProps {
+type NetWorthProps = {
   accountStore?: AccountStore;
   signalrStore?: SignalrStore;
   uiStateStore?: UiStateStore;
-}
+};
 
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
 
-const NetWorth: React.FC<NetWorthProps> = ({
-  accountStore,
-  signalrStore,
-  uiStateStore,
-}: NetWorthProps) => {
+const NetWorth = ({ accountStore, signalrStore, uiStateStore }: NetWorthProps) => {
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -86,17 +83,11 @@ const NetWorth: React.FC<NetWorthProps> = ({
   };
 
   const activeCurrency = () => {
-    return activeProfile
-      ? activeProfile.activeCurrency
-      : { name: 'chaos', short: 'c' };
+    return activeProfile ? activeProfile.activeCurrency : { name: 'chaos', short: 'c' };
   };
 
   useEffect(() => {
-    if (
-      !uiStateStore!.validated &&
-      !uiStateStore!.initiated &&
-      !uiStateStore!.isValidating
-    ) {
+    if (!uiStateStore!.validated && !uiStateStore!.initiated && !uiStateStore!.isValidating) {
       accountStore!.validateSession('/net-worth');
     }
 
@@ -107,48 +98,43 @@ const NetWorth: React.FC<NetWorthProps> = ({
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.primary}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
-              secondaryValue={
-                activeGroup
-                  ? activeGroup.lastSnapshotChange
-                  : lastSnapshotChange()
-              }
+              secondaryValue={activeGroup ? activeGroup.lastSnapshotChange : lastSnapshotChange()}
               secondaryValueIsDiff
               secondaryValueStyles={{ fontSize: '0.8rem' }}
-              title='label.total_value'
+              title="label.total_value"
               valueColor={itemColors.chaosOrb}
               currencyShort={activeCurrency().short}
-              icon={<MonetizationOnIcon fontSize='default' />}
+              icon={<MonetizationOnIcon fontSize="default" />}
               currency
-              tooltip='Change in value between the two latest snapshots'
+              tooltip="Change in value between the two latest snapshots"
             />
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.secondary}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.income : income()}
               valueIsDiff
               valueSuffix={` ${t('label.hour_suffix')}`}
-              title='label.total_income'
+              title="label.total_income"
               valueColor={itemColors.chaosOrb}
-              icon={<TrendingUpIcon fontSize='default' />}
+              icon={<TrendingUpIcon fontSize="default" />}
               currencyShort={activeCurrency().short}
               currency
+              clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
             />
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={cardColors.third}>
+          <Widget backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={getSnapshotCardValue(
-                activeGroup
-                  ? activeGroup.groupSnapshots.length
-                  : snapshots().length
+                activeGroup ? activeGroup.groupSnapshots.length : snapshots().length
               )}
-              title='label.total_snapshots'
+              title="label.total_snapshots"
               secondaryValue={uiStateStore!.timeSinceLastSnapshotLabel}
               secondaryValueStyles={{
                 color: theme.palette.text.primary,
@@ -156,8 +142,8 @@ const NetWorth: React.FC<NetWorthProps> = ({
                 fontWeight: 'normal',
               }}
               valueColor={theme.palette.text.primary}
-              icon={<UpdateIcon fontSize='default' />}
-              tooltip='Time since last snapshot'
+              icon={<UpdateIcon fontSize="default" />}
+              tooltip="Time since last snapshot"
             />
           </Widget>
         </Grid>
@@ -168,26 +154,18 @@ const NetWorth: React.FC<NetWorthProps> = ({
               <ExpansionPanel
                 expanded={uiStateStore!.netWorthChartExpanded}
                 onChange={() =>
-                  uiStateStore!.setNetWorthChartExpanded(
-                    !uiStateStore!.netWorthChartExpanded
-                  )
+                  uiStateStore!.setNetWorthChartExpanded(!uiStateStore!.netWorthChartExpanded)
                 }
               >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls='panel1a-content'
-                  id='panel1a-header'
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                  >
-                    <EqualizerIcon fontSize='small' />
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    <EqualizerIcon fontSize="small" />
                     <Box ml={1}>
-                      <Typography variant='overline'>
-                        {t('label.net_worth_chart')}
-                      </Typography>
+                      <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
                     </Box>
                   </Box>
                 </ExpansionPanelSummary>
@@ -211,27 +189,17 @@ const NetWorth: React.FC<NetWorthProps> = ({
             <Grid item xs={5}>
               <ExpansionPanel
                 expanded={uiStateStore!.tabChartExpanded}
-                onChange={() =>
-                  uiStateStore!.setTabChartExpanded(
-                    !uiStateStore!.tabChartExpanded
-                  )
-                }
+                onChange={() => uiStateStore!.setTabChartExpanded(!uiStateStore!.tabChartExpanded)}
               >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls='panel1a-content'
-                  id='panel1a-header'
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                  >
-                    <EqualizerIcon fontSize='small' />
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    <EqualizerIcon fontSize="small" />
                     <Box ml={1}>
-                      <Typography variant='overline'>
-                        {t('label.tab_chart')}
-                      </Typography>
+                      <Typography variant="overline">{t('label.tab_chart')}</Typography>
                     </Box>
                   </Box>
                 </ExpansionPanelSummary>
@@ -259,49 +227,31 @@ const NetWorth: React.FC<NetWorthProps> = ({
           <ExpansionPanel
             expanded={uiStateStore!.netWorthItemsExpanded}
             onChange={() =>
-              uiStateStore!.setNetWorthItemsExpanded(
-                !uiStateStore!.netWorthItemsExpanded
-              )
+              uiStateStore!.setNetWorthItemsExpanded(!uiStateStore!.netWorthItemsExpanded)
             }
           >
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1a-content'
-              id='panel1a-header'
+              aria-controls="panel1a-content"
+              id="panel1a-header"
             >
-              <Grid container justify='space-between'>
+              <Grid container justify="space-between">
                 <Grid item>
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                  >
+                  <Box display="flex" justifyContent="center" alignItems="center">
                     <ListIcon />
                     <Box ml={1}>
-                      <Typography variant='overline'>
-                        {t('label.item_table')}
-                      </Typography>
+                      <Typography variant="overline">{t('label.item_table')}</Typography>
                     </Box>
                   </Box>
                 </Grid>
                 <Grid item className={classes.secondaryHeader}>
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                  >
-                    <Tooltip
-                      title={t('label.prices_fetched_from_interval')}
-                      placement='bottom'
-                    >
-                      <Typography
-                        variant='body2'
-                        className={classes.creditText}
-                      >
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    <Tooltip title={t('label.prices_fetched_from_interval')} placement="bottom">
+                      <Typography variant="body2" className={classes.creditText}>
                         {t('label.prices_fetched_from')}
                         <a
                           className={classes.inlineLink}
-                          href='https://poe.ninja'
+                          href="https://poe.ninja"
                           onClick={(e) => openLink(e)}
                         >
                           https://poe.ninja
@@ -328,8 +278,4 @@ const NetWorth: React.FC<NetWorthProps> = ({
   );
 };
 
-export default inject(
-  'accountStore',
-  'signalrStore',
-  'uiStateStore'
-)(observer(NetWorth));
+export default inject('accountStore', 'signalrStore', 'uiStateStore')(observer(NetWorth));

@@ -1,27 +1,22 @@
-import { TextField, IconButton, Box } from '@material-ui/core';
-import { useFormik } from 'formik';
-import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
-import { IPricedItem } from '../../../interfaces/priced-item.interface';
-import useStyles from './ItemTableFilter.styles';
+import { Box, IconButton, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
+import { useFormik } from 'formik';
+import { observer } from 'mobx-react';
+import * as Yup from 'yup';
 
-export interface TableFilterProps<T> {
+import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import useStyles from './ItemTableFilter.styles';
+
+export type TableFilterProps<T> = {
   array: T[];
-  handleFilter: (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => void;
+  handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
-}
+};
 
-const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
-  array,
-  handleFilter,
-  clearFilter
-}: TableFilterProps<IPricedItem>) => {
+const ItemTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -30,10 +25,12 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
       searchText: '',
     },
 
-    onSubmit: (): void => { /* do nothing */ },
+    onSubmit: (): void => {
+      /* do nothing */
+    },
 
     validationSchema: Yup.object().shape({
-      searchText: Yup.string().max(20)
+      searchText: Yup.string().max(20),
     }),
   });
 
@@ -42,7 +39,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
       <TextField
         margin="dense"
         variant="outlined"
-        onChange={e => {
+        onChange={(e) => {
           formik.handleChange(e);
           handleFilter(e);
         }}
@@ -51,6 +48,9 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
         className={classes.searchField}
         value={formik.values.searchText}
         InputProps={{
+          classes: {
+            input: classes.inputField,
+          },
           startAdornment: (
             <Box mr={1} display="flex" justifyContent="center" alignItems="center">
               <SearchIcon />
@@ -74,7 +74,7 @@ const ItemTableFilter: React.FC<TableFilterProps<IPricedItem>> = ({
                 </IconButton>
               )}
             </>
-          )
+          ),
         }}
       />
     </form>

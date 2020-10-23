@@ -1,15 +1,16 @@
-import { UiStateStore } from './uiStateStore';
 import { AccountStore } from './accountStore';
 import { SignalrHub } from './domains/signalr-hub';
-import { SettingStore } from './settingStore';
-import { RouteStore } from './routeStore';
-import { MigrationStore } from './migrationStore';
-import { UpdateStore } from './updateStore';
 import { LeagueStore } from './leagueStore';
+import { MigrationStore } from './migrationStore';
 import { NotificationStore } from './notificationStore';
-import { SignalrStore } from './signalrStore';
-import { PriceStore } from './priceStore';
 import { OverlayStore } from './overlayStore';
+import { PriceStore } from './priceStore';
+import { RouteStore } from './routeStore';
+import { SettingStore } from './settingStore';
+import { SignalrStore } from './signalrStore';
+import { UiStateStore } from './uiStateStore';
+import { UpdateStore } from './updateStore';
+import { LogStore } from './logStore';
 
 export class RootStore {
   uiStateStore: UiStateStore;
@@ -24,6 +25,7 @@ export class RootStore {
   signalrStore: SignalrStore;
   priceStore: PriceStore;
   overlayStore: OverlayStore;
+  logStore: LogStore;
 
   constructor() {
     this.uiStateStore = new UiStateStore(this);
@@ -38,5 +40,6 @@ export class RootStore {
     this.signalrStore = new SignalrStore(this);
     this.priceStore = new PriceStore(this);
     this.overlayStore = new OverlayStore(this);
+    this.logStore = new LogStore(this);
   }
 }

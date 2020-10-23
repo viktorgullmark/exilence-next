@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace Shared.Repositories
 {
-
-
     public class SnapshotRepository : ISnapshotRepository
     {
         private readonly IMongoClient _client;

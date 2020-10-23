@@ -1,21 +1,22 @@
+import React, { useRef } from 'react';
 import useComponentSize from '@rehooks/component-size';
 import { inject, observer } from 'mobx-react';
-import React, { useRef } from 'react';
+
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
 
-interface Props {
+type SnapshotHistoryChartContainerProps = {
   showIndividualTabs?: boolean;
   accountStore?: AccountStore;
   signalrStore?: SignalrStore;
-}
+};
 
-const SnapshotHistoryChartContainer: React.FC<Props> = ({
+const SnapshotHistoryChartContainer = ({
   accountStore,
   signalrStore,
   showIndividualTabs,
-}: Props) => {
+}: SnapshotHistoryChartContainerProps) => {
   let ref = useRef(null);
   let size = useComponentSize(ref);
 
@@ -29,19 +30,11 @@ const SnapshotHistoryChartContainer: React.FC<Props> = ({
         width={size.width}
         height={size.height}
         groupData={showIndividualTabs ? undefined : activeGroup?.chartData}
-        playerData={
-          showIndividualTabs
-            ? activeProfile?.tabChartData
-            : activeProfile?.chartData
-        }
+        playerData={showIndividualTabs ? activeProfile?.tabChartData : activeProfile?.chartData}
         showIndividualTabs={showIndividualTabs}
-        stashTabColors={accountStore!.getSelectedAccount.stashTabColors}
       />
     </div>
   );
 };
 
-export default inject(
-  'accountStore',
-  'signalrStore'
-)(observer(SnapshotHistoryChartContainer));
+export default inject('accountStore', 'signalrStore')(observer(SnapshotHistoryChartContainer));

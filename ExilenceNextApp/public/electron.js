@@ -1,133 +1,61 @@
-const electron = require('electron');
-const ipcMain = require('electron').ipcMain;
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const { app, BrowserWindow, screen } = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
-const log = require('electron-log');
-const { autoUpdater } = require('electron-updater');
 const windowStateKeeper = require('electron-window-state');
-
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
-log.info('App starting...');
-
-let shouldNotify = true;
+const {
+  flashFrame: { createFlashFrame },
+  logMonitor: { createLogMonitor },
+  autoUpdater: { checkForUpdates, createAutoUpdater },
+  tray: { createTray },
+  netWorthOverlay: { createNetWorthOverlay },
+} = require('./main');
 
 if (!isDev) {
   sentry.init({
-    dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797'
+    dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',
   });
 }
 
-const windows = [];
+/**
+ * Initial Declarations
+ */
+const mainWindow = 'main';
+const gotTheLock = app.requestSingleInstanceLock();
+let windows = [];
+let isQuitting;
+let updateAvailable;
+let trayProps;
 
-function sendStatusToWindow(text) {
-  log.info(text);
-  windows['main'].webContents.send('message', text);
-}
+/**
+ * Flash Frames
+ */
+createFlashFrame({ event: 'notify', mainWindow: windows[mainWindow] });
 
-ipcMain.on('checkForUpdates', function(event) {
-  if (shouldNotify) {
-    autoUpdater.checkForUpdatesAndNotify();
-  } else {
-    autoUpdater.checkForUpdates();
-  }
-});
+/**
+ * Log Monitors
+ */
+createLogMonitor({ mainWindow: windows[mainWindow] });
 
-ipcMain.on('quitAndInstall', function(event) {
-  autoUpdater.quitAndInstall();
-});
+/**
+ * Overlays
+ */
+createNetWorthOverlay();
 
-ipcMain.on('notify', function(event) {
-  windows['main'].flashFrame(true);
-});
-
-ipcMain.on('createOverlay', (event, data) => {
-  const window = data.event;
-
-  if (windows[window] !== undefined && windows[window] !== null) {
-    windows[window].destroy();
-  }
-  windows[window] = new BrowserWindow({
-    x: 200,
-    y: 200,
-    height: 92,
-    width: 255,
-    skipTaskbar: true,
-    alwaysOnTop: true,
-    show: false,
-    frame: false,
-    webPreferences: { webSecurity: false, nodeIntegration: true },
-    resizable: false
-  });
-
-  windows[window].loadURL(
-    isDev
-      ? `file://${path.join(__dirname, `../public/overlays/${window}.html`)}`
-      : `file://${path.join(__dirname, `../build/overlays/${window}.html`)}`
-  );
-
-  windows[window].setAlwaysOnTop(true, 'screen-saver');
-
-  windows[window].once('ready-to-show', () => {
-    windows[window].show();
-    windows[window].webContents.send('overlayUpdate', data);
-  });
-
-  windows[window].on('closed', e => {
-    windows[window] = null;
-  });
-});
-
-ipcMain.on('overlayUpdate', (event, window) => {
-  if (windows[window.event] && !windows[window.event].isDestroyed()) {
-    windows[window.event].webContents.send('overlayUpdate', window);
-  }
-});
-
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
-});
-autoUpdater.on('update-available', info => {
-  sendStatusToWindow('Update available.');
-});
-autoUpdater.on('update-not-available', info => {
-  sendStatusToWindow('Update not available.');
-});
-autoUpdater.on('error', err => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
-});
-autoUpdater.on('download-progress', progressObj => {
-  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message =
-    log_message +
-    ' (' +
-    progressObj.transferred +
-    '/' +
-    progressObj.total +
-    ')';
-  sendStatusToWindow(log_message);
-});
-
-autoUpdater.on('update-downloaded', (event, releaseName, releaseNotes) => {
-  sendStatusToWindow('Update downloaded');
-  windows['main'].webContents.send('updateDownloaded');
-  shouldNotify = false;
-});
-
+/**
+ * Main Window
+ */
 function createWindow() {
-  const size = electron.screen.getPrimaryDisplay().workAreaSize;
+  const size = screen.getPrimaryDisplay().workAreaSize;
 
-  let mainWindowState = windowStateKeeper({
+  const mainWindowState = windowStateKeeper({
     defaultWidth: size.width,
-    defaultHeight: size.height
+    defaultHeight: size.height,
+    file: 'main'
   });
 
-  windows['main'] = new BrowserWindow({
+  windows[mainWindow] = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,
@@ -135,38 +63,71 @@ function createWindow() {
     minWidth: 800,
     minHeight: 800,
     webPreferences: { webSecurity: false, nodeIntegration: true },
-    frame: false
+    frame: false,
   });
 
-  mainWindowState.manage(windows['main']);
+  mainWindowState.manage(windows[mainWindow]);
 
-  windows['main'].loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
+  windows[mainWindow].loadURL(
+    isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
-  windows['main'].on('closed', () => {
-    windows['main'] = null;
-    if (windows['netWorth'] !== undefined && windows['netWorth'] !== null) {
-      windows['netWorth'].destroy();
+  windows[mainWindow].on('close', (e) => {
+    if (!isQuitting) {
+      e.preventDefault();
+      windows[mainWindow].hide();
+      e.returnValue = false;
     }
+  });
+
+  trayProps = {
+    mainWindow: windows[mainWindow],
+    updateAvailable,
+    isQuittingCallback: (status) => (isQuitting = status),
+  };
+
+  /**
+   * Auto Updater
+   */
+  createAutoUpdater({
+    mainWindow: windows[mainWindow],
+    callbackUpdateAvailable: (status) => (updateAvailable = status),
   });
 }
 
-app.on('ready', async () => {
-  createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
-});
+/**
+ * App Listeners
+ */
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (windows[mainWindow]) {
+      if (windows[mainWindow].isMinimized()) {
+        windows[mainWindow].restore();
+        windows[mainWindow].focus();
+      } else {
+        windows[mainWindow].show();
+      }
+    }
+  });
 
-app.on('activate', () => {
-  if (windows['main'] === null) {
-    createWindow();
-  }
-});
+  app.whenReady().then(async () => {
+    await createWindow();
+    await createTray(trayProps);
+    await checkForUpdates();
+  });
+
+  app.on('activate', async () => {
+    if (windows[mainWindow] === null) {
+      await createWindow();
+      await createTray(trayProps);
+    }
+  });
+
+  app.on('before-quit', () => {
+    isQuitting = true;
+  });
+}

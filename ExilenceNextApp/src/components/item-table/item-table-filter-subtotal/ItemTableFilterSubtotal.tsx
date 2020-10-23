@@ -1,22 +1,22 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { itemColors } from '../../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './ItemTableFilterSubtotal.styles';
 
-interface ItemTableFilterSubtotalProps {
+type ItemTableFilterSubtotalProps = {
   array: IPricedItem[];
-}
+};
 
-const ItemTableFilterSubtotal: React.FC<ItemTableFilterSubtotalProps> = ({
-  array: array,
-}: ItemTableFilterSubtotalProps) => {
+const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
+  // FIXME: remove unnecessary .map()
   const sumString =
     ' ' +
     array

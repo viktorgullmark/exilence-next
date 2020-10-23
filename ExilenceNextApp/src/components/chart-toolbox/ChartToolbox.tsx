@@ -1,28 +1,21 @@
-import { Box, Grid, ListItem, ListItemText } from '@material-ui/core';
 import React from 'react';
+import { Box, Grid, ListItem, ListItemText } from '@material-ui/core';
+
 import { TimespanType } from '../../types/timespan.type';
 import useStyles from './ChartToolbox.styles';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+type ChartToolboxProps = {
   selectedChartTimeSpan: TimespanType;
   handleChangeTimeSpan: (value: TimespanType) => void;
-}
+};
 
-const ChartToolbox: React.FC<Props> = ({
-  selectedChartTimeSpan,
-  handleChangeTimeSpan,
-}: Props) => {
+const ChartToolbox = ({ selectedChartTimeSpan, handleChangeTimeSpan }: ChartToolboxProps) => {
   const classes = useStyles();
 
   const options: TimespanType[] = ['1 day', '1 week', '1 month', 'All time'];
 
   return (
-    <Box
-      className={classes.root}
-      display='flex'
-      justifyContent='flex-end'
-      alignItems='flex-end'
-    >
+    <Box className={classes.root} display="flex" justifyContent="flex-end" alignItems="flex-end">
       <Grid className={classes.grid} container>
         {options.map((o) => (
           <Grid xs key={o} className={classes.option} item>
@@ -37,7 +30,7 @@ const ChartToolbox: React.FC<Props> = ({
                 primary={o}
                 className={classes.optionText}
                 classes={{ primary: classes.primaryText }}
-              ></ListItemText>
+              />
             </ListItem>
           </Grid>
         ))}

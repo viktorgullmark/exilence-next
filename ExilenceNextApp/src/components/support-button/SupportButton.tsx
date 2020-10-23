@@ -1,15 +1,16 @@
-import { ButtonBase } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useStyles } from './SupportButton.styles';
-import { openLink } from '../../utils/window.utils';
+import { ButtonBase } from '@material-ui/core';
 import clsx from 'clsx';
 
-interface IProps {
-  noMargin?: boolean;
-}
+import { openLink } from '../../utils/window.utils';
+import { useStyles } from './SupportButton.styles';
 
-const SupportButton: React.FC<IProps> = ({ noMargin }) => {
+type SupportButtonProps = {
+  noMargin?: boolean;
+};
+
+const SupportButton = ({ noMargin }: SupportButtonProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -17,7 +18,7 @@ const SupportButton: React.FC<IProps> = ({ noMargin }) => {
     <div className={classes.root}>
       <ButtonBase
         className={clsx(classes.button, { [classes.noMargin]: noMargin })}
-        href='https://discord.gg/yxuBrPY'
+        href="https://discord.gg/yxuBrPY"
         onClick={(e) => openLink(e)}
       >
         {t('label.support')}

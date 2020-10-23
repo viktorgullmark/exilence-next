@@ -9,7 +9,7 @@ export function constructCookie(sessionId: string): ICookie {
     domain: AppConfig.pathOfExileCookieDomain,
     path: '/',
     secure: true,
-    expirationDate: 2550873600
+    expirationDate: 2550873600,
   };
   return cookie;
 }

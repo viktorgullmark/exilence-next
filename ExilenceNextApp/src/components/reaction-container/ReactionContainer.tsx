@@ -1,13 +1,13 @@
-import { inject, observer } from 'mobx-react';
-import React from 'react';
 import { useHistory, useLocation } from 'react-router';
+import { inject, observer } from 'mobx-react';
+
 import { RouteStore } from '../../store/routeStore';
 
-interface Props {
+type ReactionContainerProps = {
   routeStore?: RouteStore;
-}
+};
 
-const ReactionContainer: React.FC<Props> = ({ routeStore }: Props) => {
+const ReactionContainer = ({ routeStore }: ReactionContainerProps) => {
   const history = useHistory();
   const location = useLocation();
 

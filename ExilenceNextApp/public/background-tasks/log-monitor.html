@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Client.txt background log reader</title>
+    </head>
+    <body>
+        <h1>Client.txt background log reader</h1>
+        <script type="text/javascript">
+            const { ipcRenderer } = require('electron');
+            const PoELogMonitor = require("poe-log-monitor");
+
+            let poeLog = null;
+
+            ipcRenderer.on('log-path', (event, args) => {
+
+                poeLog = new PoELogMonitor({
+                    logfile: args.path,
+                    interval: 200
+                });
+
+                poeLog.on('login', message => {
+                    ipcRenderer.send('log-event', { event: 'login', data: message });
+                });
+                poeLog.on('instanceServer', message => {
+                    ipcRenderer.send('log-event', { event: 'instanceServer', data: message });
+                });
+                poeLog.on('area', message => {
+                    ipcRenderer.send('log-event', { event: 'area', data: message });
+                });
+                poeLog.on('areaJoin', message => {
+                    ipcRenderer.send('log-event', { event: 'areaJoin', data: message });
+                });
+                poeLog.on('areaLeave', message => {
+                    ipcRenderer.send('log-event', { event: 'areaLeave', data: message });
+                });
+                poeLog.on('joinChat', message => {
+                    ipcRenderer.send('log-event', { event: 'joinChat', data: message });
+                });
+                poeLog.on('message', message => {
+                    ipcRenderer.send('log-event', { event: 'message', data: message });
+                });
+                poeLog.on('whisper', message => {
+                    ipcRenderer.send('log-event', { event: 'whisper', data: message });
+                });
+                poeLog.on('death', message => {
+                    ipcRenderer.send('log-event', { event: 'death', data: message });
+                });
+                poeLog.on('level', message => {
+                    ipcRenderer.send('log-event', { event: 'level', data: message });
+                });
+                poeLog.on('trade', message => {
+                    ipcRenderer.send('log-event', { event: 'trade', data: message });
+                });
+                poeLog.on('npcEncounter', message => {
+                    ipcRenderer.send('log-event', { event: 'npcEncounter', data: message });
+                });
+                poeLog.on('masterEncounter', message => {
+                    ipcRenderer.send('log-event', { event: 'masterEncounter', data: message });
+                });
+                poeLog.on('afk', message => {
+                    ipcRenderer.send('log-event', { event: 'afk', data: message });
+                });
+                poeLog.on('dnd', message => {
+                    ipcRenderer.send('log-event', { event: 'dnd', data: message });
+                });
+                poeLog.on('deaths', message => {
+                    ipcRenderer.send('log-event', { event: 'deaths', data: message });
+                });
+                poeLog.on('remaining', message => {
+                    ipcRenderer.send('log-event', { event: 'remaining', data: message });
+                });
+                poeLog.on('age', message => {
+                    ipcRenderer.send('log-event', { event: 'age', data: message });
+                });
+                poeLog.on('played', message => {
+                    ipcRenderer.send('log-event', { event: 'played', data: message });
+                });
+                poeLog.on('start', message => {
+                    ipcRenderer.send('log-event', { event: 'start', data: message });
+                });
+                poeLog.on('pause', message => {
+                    ipcRenderer.send('log-event', { event: 'pause', data: message });
+                });
+
+            });
+
+            ipcRenderer.on('log-start', (event, arg) => {
+                poeLog.start();
+            });
+
+        </script>
+    </body>
+</html>

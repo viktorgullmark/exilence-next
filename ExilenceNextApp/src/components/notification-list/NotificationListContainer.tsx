@@ -1,18 +1,14 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { NotificationStore } from '../../store/notificationStore';
+import { inject, observer } from 'mobx-react';
+
 import { UiStateStore } from '../../store/uiStateStore';
 import NotificationList from './NotificationList';
 
-interface Props {
-  notificationStore?: NotificationStore;
+type NotificationListContainerProps = {
   uiStateStore?: UiStateStore;
-}
+};
 
-const NotificationListContainer: React.FC<Props> = ({
-  uiStateStore,
-  notificationStore
-}: Props) => {
+const NotificationListContainer = ({ uiStateStore }: NotificationListContainerProps) => {
   const listOpen = Boolean(uiStateStore!.notificationListAnchor);
 
   const handleListClose = () => {
@@ -29,7 +25,4 @@ const NotificationListContainer: React.FC<Props> = ({
   );
 };
 
-export default inject(
-  'notificationStore',
-  'uiStateStore'
-)(observer(NotificationListContainer));
+export default inject('notificationStore', 'uiStateStore')(observer(NotificationListContainer));

@@ -1,3 +1,5 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -5,18 +7,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
 } from '@material-ui/core';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import useStyles from './ConsentDialog.styles';
 
-interface Props {
+type ConsentDialogProps = {
   show: boolean;
   onClose: () => void;
-}
+};
 
-const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
+const ConsentDialog = ({ show, onClose }: ConsentDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -25,14 +26,10 @@ const ConsentDialog: React.FC<Props> = ({ show, onClose }: Props) => {
       <DialogTitle>{t('title.ga_consent_dialog_title')}</DialogTitle>
       <DialogContent>
         <Box width={1} mb={1}>
-          <Typography variant="body2">
-            {t('body.ga_consent_main_text')}
-          </Typography>
+          <Typography variant="body2">{t('body.ga_consent_main_text')}</Typography>
         </Box>
         <Box width={1} mb={2}>
-          <Typography variant="body2">
-            {t('body.ga_consent_sub_text')}
-          </Typography>
+          <Typography variant="body2">{t('body.ga_consent_sub_text')}</Typography>
         </Box>
       </DialogContent>
       <DialogActions className={classes.dialogActions}>

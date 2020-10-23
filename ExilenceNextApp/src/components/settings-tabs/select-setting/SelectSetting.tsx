@@ -1,31 +1,32 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FormControl,
   FormGroup,
   FormHelperText,
   FormLabel,
   MenuItem,
-  Select
+  Select,
 } from '@material-ui/core';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { ISelectOption } from '../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
 
-interface Props {
+type SelectSettingProps = {
   value: number;
   options: ISelectOption[];
   handleChange: (value: number) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
-}
+};
 
-const SelectSetting: React.FC<Props> = ({
+const SelectSetting = ({
   value,
   options,
   handleChange,
   translationKey,
-  requiresSnapshot
-}: Props) => {
+  requiresSnapshot,
+}: SelectSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
   return (
@@ -38,13 +39,13 @@ const SelectSetting: React.FC<Props> = ({
           labelId="price-treshold-label"
           id="price-treshold"
           value={value}
-          onChange={e => handleChange(e.target.value as number)}
+          onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
         >
           <MenuItem value={0}>
             <em>{t('value.none')}</em>
           </MenuItem>
-          {options.map(option => {
+          {options.map((option) => {
             return (
               <MenuItem key={option.id} value={option.value}>
                 {option.label ? option.label : option.value}

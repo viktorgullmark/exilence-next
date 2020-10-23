@@ -1,5 +1,6 @@
 import { persist } from 'mobx-persist';
 import uuid from 'uuid';
+
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 

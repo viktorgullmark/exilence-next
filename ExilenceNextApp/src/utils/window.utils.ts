@@ -1,5 +1,6 @@
-import { electronService } from '../services/electron.service';
 import { MouseEvent } from 'react';
+
+import { electronService } from '../services/electron.service';
 
 export function maximize() {
   electronService.remote.getCurrentWindow().maximize();
@@ -20,5 +21,9 @@ export function close() {
 export function openLink(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault();
   let link = event.currentTarget.href;
+  electronService.shell.openExternal(link);
+}
+
+export function openCustomLink(link: string) {
   electronService.shell.openExternal(link);
 }

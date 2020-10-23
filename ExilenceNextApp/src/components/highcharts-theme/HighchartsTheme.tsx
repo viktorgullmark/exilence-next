@@ -1,46 +1,46 @@
 import { useTheme } from '@material-ui/core';
 import Highcharts from 'highcharts';
-import React from 'react';
+
 import { highchartsColors } from '../../assets/themes/exilence-theme';
 
-const HighchartsTheme: React.FC = () => {
+const HighchartsTheme = () => {
   const theme = useTheme();
 
   const highchartsTheme: Highcharts.Options = {
     time: {
-      timezoneOffset: new Date().getTimezoneOffset()
+      timezoneOffset: new Date().getTimezoneOffset(),
     },
     credits: {
-      enabled: false
+      enabled: false,
     },
     colors: highchartsColors,
     chart: {
       backgroundColor: theme.palette.background.default,
       style: {
         color: theme.palette.text.primary,
-        font: 'Roboto'
-      }
+        font: 'Roboto',
+      },
     },
     title: {
       style: {
         color: theme.palette.text.primary,
-        font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-      }
+        font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+      },
     },
     subtitle: {
       style: {
         color: theme.palette.text.primary,
-        font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
-      }
+        font: 'bold 12px "Trebuchet MS", Verdana, sans-serif',
+      },
     },
     legend: {
       itemStyle: {
         font: '9pt Trebuchet MS, Verdana, sans-serif',
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
       },
       itemHoverStyle: {
-        color: 'gray'
-      }
+        color: 'gray',
+      },
     },
     yAxis: {
       gridLineColor: theme.palette.secondary.light,
@@ -49,14 +49,14 @@ const HighchartsTheme: React.FC = () => {
       title: {
         text: '',
         style: {
-          color: theme.palette.text.primary
-        }
+          color: theme.palette.text.primary,
+        },
       },
       labels: {
         style: {
-          color: theme.palette.text.primary
-        }
-      }
+          color: theme.palette.text.primary,
+        },
+      },
     },
     xAxis: {
       gridLineColor: theme.palette.secondary.light,
@@ -64,37 +64,37 @@ const HighchartsTheme: React.FC = () => {
       minorGridLineColor: theme.palette.secondary.light,
       labels: {
         style: {
-          color: theme.palette.text.primary
-        }
-      }
+          color: theme.palette.text.primary,
+        },
+      },
     },
     plotOptions: {
       line: {
         marker: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       spline: {
         marker: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       area: {
         marker: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       areaspline: {
         marker: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       arearange: {
         marker: {
-          enabled: true
-        }
-      }
-    }
+          enabled: true,
+        },
+      },
+    },
   };
 
   Highcharts.setOptions(highchartsTheme);

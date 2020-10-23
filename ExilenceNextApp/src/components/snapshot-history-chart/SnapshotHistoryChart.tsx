@@ -1,34 +1,33 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import HC from 'highcharts';
-import React from 'react';
+
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
 import Highcharts from './../highcharts-base/HighchartsBase';
 import useStyles from './SnapshotHistoryChart.styles';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+type SnapshotHistoryChartProps = {
   width: number;
   height: number;
   playerData?: IConnectionChartSeries[];
   groupData?: IGroupChartSeries[];
   showIndividualTabs?: boolean;
-  stashTabColors?: string[];
-}
+};
 
-interface ChartSeries {
+type ChartSeries = {
   type: string;
   name: string;
   data: number[][];
-}
+};
 
-const SnapshotHistoryChart: React.FC<Props> = ({
+const SnapshotHistoryChart = ({
   playerData,
   groupData,
   showIndividualTabs,
-  stashTabColors,
-}: Props) => {
+}: SnapshotHistoryChartProps) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -97,12 +96,7 @@ const SnapshotHistoryChart: React.FC<Props> = ({
           stops: showIndividualTabs
             ? []
             : [
-                [
-                  0,
-                  HC.color(theme.palette.primary.main)
-                    .setOpacity(0.25)
-                    .get('rgba'),
-                ],
+                [0, HC.color(theme.palette.primary.main).setOpacity(0.25).get('rgba')],
                 [1, HC.color(primaryDarker).setOpacity(0).get('rgba')],
               ],
         },

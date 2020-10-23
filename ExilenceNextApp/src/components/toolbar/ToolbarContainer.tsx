@@ -1,19 +1,23 @@
-import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { inject, observer } from 'mobx-react';
+
 import { AccountStore } from '../../store/accountStore';
 import { NotificationStore } from '../../store/notificationStore';
+import { OverlayStore } from '../../store/overlayStore';
+import { PriceStore } from '../../store/priceStore';
+import { SettingStore } from '../../store/settingStore';
+import { SignalrStore } from '../../store/signalrStore';
+import { formatValue } from '../../utils/snapshot.utils';
 import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
-import { SignalrStore } from '../../store/signalrStore';
-import { PriceStore } from '../../store/priceStore';
-import { SettingStore } from '../../store/settingStore';
-import { OverlayStore } from '../../store/overlayStore';
-import { formatValue } from '../../utils/snapshot.utils';
+import { LogStore } from '../../store/logStore';
+import { Observable, from, of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
-interface ToolbarContainerProps {
+type ToolbarContainerProps = {
   uiStateStore?: UiStateStore;
   accountStore?: AccountStore;
   leagueStore?: LeagueStore;
@@ -22,16 +26,18 @@ interface ToolbarContainerProps {
   priceStore?: PriceStore;
   settingStore?: SettingStore;
   overlayStore?: OverlayStore;
-}
+  logStore?: LogStore;
+};
 
-const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
+const ToolbarContainer = ({
   uiStateStore,
   accountStore,
   signalrStore,
   notificationStore,
   priceStore,
   settingStore,
-  overlayStore
+  overlayStore,
+  logStore,
 }: ToolbarContainerProps) => {
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -58,7 +64,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   };
 
   const handleOverlay = () => {
-    // todo: rework to toggle modal instead, with buttons for each overlay
+    //todo: rework to toggle modal instead, with buttons for each overlay
 
     const income = formatValue(
       signalrStore!.activeGroup
@@ -74,8 +80,29 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
     overlayStore!.createOverlay({
       event: 'netWorth',
-      data: { netWorth: netWorth, income: income }
+      data: { netWorth: netWorth, income: income },
     });
+  };
+
+  const handleLogMonitor = () => {
+    logStore!.running
+      ? logStore!.stopLogMonitor()
+      : of(true)
+          .pipe(
+            delay(250),
+            tap(() => {
+              logStore!.createLogMonitor();
+            }),
+            delay(500),
+            tap(() => {
+              logStore!.setLogMonitorPath(settingStore!.logPath);
+            }),
+            delay(750),
+            tap(() => {
+              logStore!.startLogMonitor();
+            })
+          )
+          .subscribe();
   };
 
   const handleRemoveProfile = () => {
@@ -89,9 +116,7 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
   const handleProfileChange = (
     event: ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => {
-    accountStore!.getSelectedAccount.setActiveProfile(
-      event.target.value as string
-    );
+    accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 
   const handleNotificationsOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -143,15 +168,12 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
         handleOverlay={handleOverlay}
+        handleLogMonitor={handleLogMonitor}
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() =>
-          uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)
-        }
-        handleRemoveProfile={() =>
-          uiStateStore!.setConfirmRemoveProfileDialogOpen(true)
-        }
+        handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
+        handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
         isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}
         isUpdatingPrices={priceStore!.isUpdatingPrices}
@@ -168,5 +190,6 @@ export default inject(
   'signalrStore',
   'priceStore',
   'settingStore',
-  'overlayStore'
+  'overlayStore',
+  'logStore'
 )(observer(ToolbarContainer));

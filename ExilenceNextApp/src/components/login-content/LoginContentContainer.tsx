@@ -1,22 +1,20 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useLocation } from 'react-router';
+import { inject, observer } from 'mobx-react';
+
 import { IAccount } from '../../interfaces/account.interface';
 import { AccountStore } from '../../store/accountStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { LeagueStore } from './../../store/leagueStore';
 import LoginContent from './LoginContent';
 
-interface LoginContentProps {
+type LoginContentProps = {
   accountStore?: AccountStore;
   uiStateStore?: UiStateStore;
   leagueStore?: LeagueStore;
-}
+};
 
-const LoginContentContainer: React.FC<LoginContentProps> = ({
-  accountStore,
-  uiStateStore,
-}: LoginContentProps) => {
+const LoginContentContainer = ({ accountStore, uiStateStore }: LoginContentProps) => {
   const location = useLocation();
 
   const handleValidate = (details: IAccount) => {
@@ -35,11 +33,8 @@ const LoginContentContainer: React.FC<LoginContentProps> = ({
       isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
       errorMessage={uiStateStore!.loginError}
-    ></LoginContent>
+    />
   );
 };
 
-export default inject(
-  'accountStore',
-  'uiStateStore'
-)(observer(LoginContentContainer));
+export default inject('accountStore', 'uiStateStore')(observer(LoginContentContainer));

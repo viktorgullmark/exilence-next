@@ -12,5 +12,5 @@ export interface IApiAccount {
 export enum RoleEnum {
   User = 0,
   Premium = 5,
-  Admin = 10
+  Admin = 10,
 }

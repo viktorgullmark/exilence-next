@@ -1,41 +1,36 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  Grid,
-  IconButton,
-  Typography
-} from '@material-ui/core';
+import React, { MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
 import RequestButton from '../../request-button/RequestButton';
 import useStyles from './GroupOverview.styles';
 
-interface GroupOverviewProps {
+type Handler = (event: MouseEvent<HTMLElement>) => void;
+
+type GroupOverviewProps = {
   open: boolean;
   leavingGroup: boolean;
   toggleGroupOverview: () => void;
-  handleJoinGroup: (event: React.MouseEvent<HTMLElement>) => void;
-  handleCreateGroup: (event: React.MouseEvent<HTMLElement>) => void;
-  handleLeaveGroup: (event: React.MouseEvent<HTMLElement>) => void;
+  handleJoinGroup: Handler;
+  handleCreateGroup: Handler;
+  handleLeaveGroup: Handler;
   activeGroup?: Group;
-}
+};
 
-const GroupOverview: React.FC<GroupOverviewProps> = ({
+const GroupOverview = ({
   open,
   leavingGroup,
   toggleGroupOverview,
   handleJoinGroup,
   handleCreateGroup,
   handleLeaveGroup,
-  activeGroup
+  activeGroup,
 }: GroupOverviewProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -50,16 +45,12 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
       open={open}
       transitionDuration={0}
       classes={{
-        paper: classes.drawerPaper
+        paper: classes.drawerPaper,
       }}
     >
       <div className={classes.drawerHeader}>
         <IconButton onClick={() => toggleGroupOverview()}>
-          {theme.direction !== 'ltr' ? (
-            <ChevronLeftIcon />
-          ) : (
-            <ChevronRightIcon />
-          )}
+          {theme.direction !== 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
       <Divider />
@@ -88,22 +79,12 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({
           ) : (
             <>
               <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={handleCreateGroup}
-                >
+                <Button variant="contained" color="primary" fullWidth onClick={handleCreateGroup}>
                   {t('action.create_group')}
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={handleJoinGroup}
-                >
+                <Button variant="contained" color="primary" fullWidth onClick={handleJoinGroup}>
                   {t('action.join_group')}
                 </Button>
               </Grid>

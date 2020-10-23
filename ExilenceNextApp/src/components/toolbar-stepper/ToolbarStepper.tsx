@@ -1,36 +1,34 @@
 import React from 'react';
-import Tour from 'reactour';
-import { useTheme, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import StepContent from './StepContent/StepContent';
-import { getToolbarSteps } from '../../utils/stepper.utils';
-import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
+import Tour from 'reactour';
+import { Button, useTheme } from '@material-ui/core';
 
-interface Props {
+import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
+import { getToolbarSteps } from '../../utils/stepper.utils';
+import StepContent from './StepContent/StepContent';
+
+type ToolbarStepperProps = {
   isOpen: boolean;
   handleClose: () => void;
-}
+};
 
-const ToolbarStepper: React.FC<Props> = ({ isOpen, handleClose }: Props) => {
+const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
   const style = {
-    color: '#000'
+    color: '#000',
   };
 
   const stepDescriptors: IStepDescriptor[] = getToolbarSteps();
 
-  const steps = stepDescriptors.map(sd => {
+  const steps = stepDescriptors.map((sd) => {
     return {
       selector: sd.selector,
       content: (
-        <StepContent
-          title={t(`stepper:title.${sd.key}`)}
-          body={t(`stepper:body.${sd.key}`)}
-        />
+        <StepContent title={t(`stepper:title.${sd.key}`)} body={t(`stepper:body.${sd.key}`)} />
       ),
-      style: style
+      style: style,
     };
   });
 

@@ -1,15 +1,14 @@
-import { inject, observer } from 'mobx-react';
 import React, { useState } from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { UpdateStore } from '../../store/updateStore';
 import Header from './Header';
 
-interface HeaderContainerProps {
+type HeaderContainerProps = {
   updateStore?: UpdateStore;
-}
+};
 
-const HeaderContainer: React.FC<HeaderContainerProps> = ({
-  updateStore
-}: HeaderContainerProps) => {
+const HeaderContainer = ({ updateStore }: HeaderContainerProps) => {
   const [maximized, setMaximized] = useState(false);
   return (
     <Header
@@ -18,7 +17,7 @@ const HeaderContainer: React.FC<HeaderContainerProps> = ({
       currentVersion={updateStore!.currentVersion}
       updateAvailable={updateStore!.updateAvailable}
       quitAndInstall={() => updateStore!.quitAndInstall()}
-    ></Header>
+    />
   );
 };
 

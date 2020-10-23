@@ -1,22 +1,23 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { UiStateStore } from '../../../store/uiStateStore';
-import ItemTableMenu from './ItemTableMenu';
-import { SignalrStore } from '../../../store/signalrStore';
-import { AccountStore } from '../../../store/accountStore';
-import { exportData } from '../../../utils/export.utils';
+import { inject, observer } from 'mobx-react';
 
-interface Props {
+import { AccountStore } from '../../../store/accountStore';
+import { SignalrStore } from '../../../store/signalrStore';
+import { UiStateStore } from '../../../store/uiStateStore';
+import { exportData } from '../../../utils/export.utils';
+import ItemTableMenu from './ItemTableMenu';
+
+type ItemTableMenuContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
-}
+};
 
-const ItemTableMenuContainer: React.FC<Props> = ({
+const ItemTableMenuContainer = ({
   uiStateStore,
   signalrStore,
-  accountStore
-}: Props) => {
+  accountStore,
+}: ItemTableMenuContainerProps) => {
   const open = Boolean(uiStateStore!.itemTableMenuAnchor);
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -35,7 +36,7 @@ const ItemTableMenuContainer: React.FC<Props> = ({
 
   const handleExport = () => {
     handleMenuClose();
-    exportData(getItems())
+    exportData(getItems());
   };
 
   return (

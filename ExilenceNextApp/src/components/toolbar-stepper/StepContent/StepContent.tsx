@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 
-interface Props {
+type StepContentProps = {
   title: string;
   body: string;
-}
+};
 
-const StepContent: React.FC<Props> = ({ title, body }: Props) => {
+const StepContent = ({ title, body }: StepContentProps) => {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>

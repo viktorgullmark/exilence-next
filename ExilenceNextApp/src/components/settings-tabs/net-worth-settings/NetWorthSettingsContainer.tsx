@@ -1,15 +1,14 @@
-import { inject, observer } from 'mobx-react';
 import React from 'react';
+import { inject, observer } from 'mobx-react';
+
 import { SettingStore } from '../../../store/settingStore';
 import NetWorthSettings from './NetWorthSettings';
 
-interface Props {
+type NetWorthSettingsContainerProps = {
   settingStore?: SettingStore;
-}
+};
 
-const NetWorthSettingsContainer: React.FC<Props> = ({
-  settingStore
-}: Props) => {
+const NetWorthSettingsContainer = ({ settingStore }: NetWorthSettingsContainerProps) => {
   return (
     <NetWorthSettings
       lowConfidencePricing={settingStore!.lowConfidencePricing}

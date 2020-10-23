@@ -8,19 +8,19 @@ export const ExpansionPanel = withStyles({
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
     '&:not(:last-child)': {
-      borderBottom: 0
+      borderBottom: 0,
     },
     '&:before': {
-      display: 'none'
+      display: 'none',
     },
     '&$expanded': {
-      margin: 'auto'
-    }
+      margin: 'auto',
+    },
   },
-  expanded: {}
+  expanded: {},
 })(MuiExpansionPanel);
 
-export const ExpansionPanelSummary = withStyles(theme => ({
+export const ExpansionPanelSummary = withStyles((theme) => ({
   root: {
     maxHeight: 40,
     minHeight: '40px !important',
@@ -28,20 +28,20 @@ export const ExpansionPanelSummary = withStyles(theme => ({
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
     '&$expanded': {
-      minHeight: 56
+      minHeight: 56,
     },
-    padding: '0 16px 0 16px'
+    padding: '0 16px 0 16px',
   },
   content: {
     '&$expanded': {
-      margin: '12px 0'
-    }
+      margin: '12px 0',
+    },
   },
-  expanded: {}
+  expanded: {},
 }))(MuiExpansionPanelSummary);
 
-export const ExpansionPanelDetails = withStyles(theme => ({
+export const ExpansionPanelDetails = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2)
-  }
+    padding: theme.spacing(2),
+  },
 }))(MuiExpansionPanelDetails);

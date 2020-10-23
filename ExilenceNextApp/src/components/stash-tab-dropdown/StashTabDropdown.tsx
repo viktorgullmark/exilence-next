@@ -1,14 +1,15 @@
-import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { observer } from 'mobx-react';
 import React, { ChangeEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { observer } from 'mobx-react';
+
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
-import { Alert, AlertTitle } from '@material-ui/lab';
 
-interface StashTabDropdownProps {
+type StashTabDropdownProps = {
   stashTabs: IStashTab[];
   selectedStashTabs: IStashTab[];
   width?: number;
@@ -21,9 +22,9 @@ interface StashTabDropdownProps {
   displayCountWarning?: boolean;
   handleChange?: (event: ChangeEvent<{}>) => void;
   handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
-}
+};
 
-const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
+const StashTabDropdown = ({
   stashTabs,
   selectedStashTabs,
   handleChange,
@@ -43,9 +44,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find((st) => st.id === id);
-    return foundTab
-      ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
-      : '';
+    return foundTab ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
   };
 
   useEffect(() => {
@@ -101,7 +100,7 @@ const StashTabDropdown: React.FC<StashTabDropdownProps> = ({
   );
 };
 
-const CustomPopper: React.FC<PopperProps> = ({ children, ...other }) => (
+const CustomPopper = ({ children, ...other }: PopperProps) => (
   <Popper {...other}>{children}</Popper>
 );
 
