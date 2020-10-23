@@ -252,11 +252,6 @@ export class Profile {
   }
 
   @action
-  setActiveStashTabs(stashTabIds: string[]) {
-    this.activeStashTabIds = stashTabIds;
-  }
-
-  @action
   updateFromApiProfile(apiProfile: IApiProfile) {
     this.activeLeagueId = apiProfile.activeLeagueId;
     this.activePriceLeagueId = apiProfile.activePriceLeagueId;
