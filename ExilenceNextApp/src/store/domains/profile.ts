@@ -209,23 +209,23 @@ export class Profile {
 
   @action
   calculateIncome() {
-    const snapshots = this.snapshots.filter((s) =>
-      moment(s.created).utc().isAfter(this.incomeResetAt)
-    );
-
-    const hoursAgo = moment().utc().hours() - this.incomeResetAt.hours();
-    const hours = hoursAgo > 0 ? hoursAgo : 1;
+    const oneHourAgo = moment().utc().subtract(1, 'hours');
+    const timestampToUse = this.incomeResetAt.isAfter(oneHourAgo) ? this.incomeResetAt : oneHourAgo;
+    const snapshots = this.snapshots.filter((s) => moment(s.created).utc().isAfter(timestampToUse));
+    const hoursToCalcOver = 1;
 
     if (snapshots.length > 1) {
       const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
       const firstSnapshot = mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1]);
       const incomePerHour =
-        (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
+        (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
       this.income = incomePerHour;
       return;
     }
 
     this.income = 0;
+
+    this.updateNetWorthOverlay();
   }
 
   @computed
