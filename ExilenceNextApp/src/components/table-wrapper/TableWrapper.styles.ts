@@ -55,7 +55,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: 10,
       fontSize: '0.75rem',
       textAlign: 'left',
-      fontWeight: 300,
       lineHeight: 1.43,
       verticalAlign: 'inherit',
       color: theme.palette.text.primary,
