@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.15] - NOT RELEASED
 ##### Added
+- Added style tweaks to the item table
 - Added persistence of position/size for the overlay
 ##### Fixed
 - Fixed a bug where the net worth overlay would not update when income was reset
