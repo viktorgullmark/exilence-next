@@ -20,7 +20,7 @@ const getStyles = <T extends object>(props: any, _disableResizing = false, align
   {
     style: {
       justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-      alignItems: 'flex-start',
+      alignItems: 'center',
       display: 'flex',
     },
   },

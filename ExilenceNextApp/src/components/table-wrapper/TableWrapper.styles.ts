@@ -52,7 +52,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tableCell: {
-      padding: 16,
+      padding: 10,
       fontSize: '0.75rem',
       textAlign: 'left',
       fontWeight: 300,
