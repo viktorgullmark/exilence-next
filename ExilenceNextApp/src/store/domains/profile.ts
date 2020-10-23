@@ -365,9 +365,7 @@ export class Profile {
       return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
     }
 
-    rootStore.uiStateStore.setStatusMessage(
-      'refreshing_stash_tabs' // todo: add translation
-    );
+    rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
 
     fromStream(
       accountLeague.getStashTabs().pipe(
@@ -379,7 +377,7 @@ export class Profile {
 
   @action refreshStashTabsSuccess(leagueId: string) {
     rootStore.notificationStore.createNotification(
-      'refreshing_stash_tabs', // todo: add translation
+      'refreshing_stash_tabs',
       'success',
       undefined,
       undefined,
@@ -390,7 +388,7 @@ export class Profile {
 
   @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
     rootStore.notificationStore.createNotification(
-      'refreshing_stash_tabs', // todo: add translation
+      'refreshing_stash_tabs',
       'error',
       true,
       e,
