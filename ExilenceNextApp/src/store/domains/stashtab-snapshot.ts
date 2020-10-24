@@ -1,7 +1,5 @@
-import { makeObservable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { v4 as uuidv4 } from 'uuid';
-
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 
@@ -12,7 +10,6 @@ export class StashTabSnapshot implements IStashTabSnapshot {
   @persist('list') pricedItems: IPricedItem[] = [];
 
   constructor(obj?: IStashTabSnapshot) {
-    makeObservable(this);
     Object.assign(this, obj);
   }
 }

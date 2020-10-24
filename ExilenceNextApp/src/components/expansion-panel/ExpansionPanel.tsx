@@ -1,6 +1,6 @@
-import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import MuiExpansionPanel from '@material-ui/core/Accordion';
+import MuiExpansionPanelDetails from '@material-ui/core/AccordionDetails';
+import MuiExpansionPanelSummary from '@material-ui/core/AccordionSummary';
 import { withStyles } from '@material-ui/core/styles';
 
 export const ExpansionPanel = withStyles({

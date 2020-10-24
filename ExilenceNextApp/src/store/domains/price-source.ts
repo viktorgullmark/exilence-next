@@ -1,7 +1,5 @@
-import { makeObservable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { v4 as uuidv4 } from 'uuid';
-
 import { IPriceSource } from '../../interfaces/price-source.interface';
 
 export class PriceSource implements IPriceSource {
@@ -10,7 +8,6 @@ export class PriceSource implements IPriceSource {
   @persist url: string = '';
 
   constructor(obj?: IPriceSource) {
-    makeObservable(this);
     Object.assign(this, obj);
   }
 }
