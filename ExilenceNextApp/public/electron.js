@@ -2,10 +2,7 @@ const { app, BrowserWindow, screen, session, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-} = require('electron-devtools-installer');
+const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
@@ -16,7 +13,8 @@ const {
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
   netWorthOverlay: { createNetWorthOverlay },
-  menuFunctions: { menuFunctions }
+  authWindow: { createAuthWindow },
+  menuFunctions: { menuFunctions },
 } = require('./main');
 
 if (!isDev) {
@@ -79,30 +77,38 @@ function createWindow() {
   /**
    * Expose main process variables
    */
-  ipcMain.on('app-globals',  (e) => {
+  ipcMain.on('app-globals', (e) => {
     const appPath = app.getAppPath();
     const appLocale = app.getLocale();
 
     e.returnValue = {
       appPath,
-      appLocale
-    }
+      appLocale,
+    };
   });
 
   /**
    * Session handlers
    */
   ipcMain.handle('set-cookie', (_event, arg) => {
+    debugger;
     return session.defaultSession.cookies.set(arg);
-  })
+  });
 
   ipcMain.handle('get-cookie', (_event, arg) => {
     return session.defaultSession.cookies.get(arg);
-  })
+  });
 
   ipcMain.handle('remove-cookie', (_event, url, id) => {
     return session.defaultSession.cookies.remove(url, id);
-  })
+  });
+
+  /**
+   * Authorization
+   */
+  ipcMain.on('create-auth-window', (_event, args) => {
+    createAuthWindow({ mainWindow: windows[mainWindow], options: args });
+  });
 
   /**
    * Tray
@@ -134,7 +140,7 @@ function createWindow() {
   /**
    * Menu Functions
    */
-  menuFunctions({mainWindow});
+  menuFunctions({ mainWindow });
 
   if (isDev) {
     // Provide Inspect Element option on right click
@@ -146,7 +152,6 @@ function createWindow() {
         .then((name) => console.log(`Added Extension: ${name}`))
         .catch((err) => console.log('An error occurred: ', err))
     );
-
   }
 }
 

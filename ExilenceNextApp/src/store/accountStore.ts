@@ -32,6 +32,9 @@ export class AccountStore {
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+    electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
+      this.handleAuthCallback(code, error);
+    });
   }
 
   @computed
@@ -77,18 +80,8 @@ export class AccountStore {
   }
 
   @action
-  handleAuthCallback(url: string, window: any) {
-    // todo: handle returned state
-    const raw_code = /code=([^&]*)/.exec(url) || null;
-    const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-    const error = /\?error=(.+)$/.exec(url);
-
-    if (code || error) {
-      // Close the browser if code found or error
-      window.destroy();
-    }
-
-    // If there is a code, proceed to get token from github
+  handleAuthCallback(code: string, error: string) {
+    // If there is a code, proceed to get token
     if (code) {
       this.setCode(code);
       this.loginWithOAuth(code);
@@ -112,36 +105,7 @@ export class AccountStore {
       responseType: 'code',
     };
 
-    let authWindow = new electronService.BrowserWindow({
-      width: 500,
-      height: 750,
-      show: false,
-      autoHideMenuBar: true,
-      'node-integration': false,
-      fullscreenable: false,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      alwaysOnTop: true,
-    });
-
-    const authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
-
-    authWindow.webContents.on('will-redirect', (_event: any, url: any) => {
-      this.handleAuthCallback(url, authWindow);
-    });
-
-    // Reset the authWindow on close
-    authWindow.on(
-      'close',
-      function () {
-        authWindow = null;
-      },
-      false
-    );
-
-    authWindow.loadURL(authUrl);
-    authWindow.show();
+    electronService.ipcRenderer.send('create-auth-window', options);
   }
 
   @action
