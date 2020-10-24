@@ -9,5 +9,3 @@ declare let Window: {
   prototype: Window;
   new (): Window;
 };
-
-declare module 'yup';
