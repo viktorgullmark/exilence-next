@@ -1,3 +1,5 @@
+import { default as React, PropsWithChildren, ReactElement, useCallback } from 'react';
+import { TableInstance } from 'react-table';
 import {
   IconButton,
   makeStyles,
@@ -9,8 +11,6 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { default as React, PropsWithChildren, ReactElement, useCallback } from 'react';
-import { TableInstance } from 'react-table';
 
 const rowsPerPageOptions = [5, 10, 25, 50];
 

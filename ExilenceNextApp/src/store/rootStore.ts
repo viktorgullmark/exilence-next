@@ -1,6 +1,7 @@
 import { AccountStore } from './accountStore';
 import { SignalrHub } from './domains/signalr-hub';
 import { LeagueStore } from './leagueStore';
+import { LogStore } from './logStore';
 import { MigrationStore } from './migrationStore';
 import { NotificationStore } from './notificationStore';
 import { OverlayStore } from './overlayStore';
@@ -10,7 +11,6 @@ import { SettingStore } from './settingStore';
 import { SignalrStore } from './signalrStore';
 import { UiStateStore } from './uiStateStore';
 import { UpdateStore } from './updateStore';
-import { LogStore } from './logStore';
 
 export class RootStore {
   uiStateStore: UiStateStore;

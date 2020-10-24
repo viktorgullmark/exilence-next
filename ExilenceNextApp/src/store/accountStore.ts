@@ -4,6 +4,7 @@ import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
 
 import AppConfig from '../config/app.config';
 import { ICharacter } from '../interfaces/character.interface';
@@ -18,7 +19,6 @@ import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
-import { v4 as uuidv4 } from 'uuid';
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
