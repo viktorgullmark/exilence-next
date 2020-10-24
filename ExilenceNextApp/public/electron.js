@@ -89,6 +89,21 @@ function createWindow() {
       session
     }
   });
+  
+  /**
+   * Session handlers
+   */
+  ipcMain.handle('set-cookie', (_event, arg) => {
+    return session.defaultSession.cookies.set(arg);
+  })
+
+  ipcMain.handle('get-cookie', (_event, arg) => {
+    return session.defaultSession.cookies.get(arg);
+  })
+
+  ipcMain.handle('remove-cookie', (_event, ...args) => {
+    return session.defaultSession.cookies.remove(args);
+  })
 
   /**
    * Tray
