@@ -46,20 +46,20 @@ namespace API.Services
 
             await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
 
-            snapshot.StashTabs.Select(stashtab => { 
-                stashtab.SnapshotClientId = snapshot.ClientId;
-                stashtab.SnapshotProfileClientId = profileClientId;
-                return stashtab; 
-            }).ToList();
+            //snapshot.StashTabs.Select(stashtab => { 
+            //    stashtab.SnapshotClientId = snapshot.ClientId;
+            //    stashtab.SnapshotProfileClientId = profileClientId;
+            //    return stashtab; 
+            //}).ToList();
 
-            await _snapshotRepository.AddStashtabs(snapshot.StashTabs.ToList());
+            //await _snapshotRepository.AddStashtabs(snapshot.StashTabs.ToList());
 
-            snapshot.StashTabs.ForEach( 
-                stashtab => stashtab.PricedItems.Select(pricedItem => { 
-                    pricedItem.StashtabClientId = stashtab.ClientId;
-                    pricedItem.SnapshotProfileClientId = profileClientId;
-                    return stashtab; 
-                }).ToList());
+            //snapshot.StashTabs.ForEach( 
+            //    stashtab => stashtab.PricedItems.Select(pricedItem => { 
+            //        pricedItem.StashtabClientId = stashtab.ClientId;
+            //        pricedItem.SnapshotProfileClientId = profileClientId;
+            //        return stashtab; 
+            //    }).ToList());
            
             //await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
 
