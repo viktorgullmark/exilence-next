@@ -85,11 +85,10 @@ function createWindow() {
 
     e.returnValue = {
       appPath,
-      appLocale,
-      session
+      appLocale
     }
   });
-  
+
   /**
    * Session handlers
    */
