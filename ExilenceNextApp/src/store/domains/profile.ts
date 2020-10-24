@@ -459,7 +459,7 @@ export class Profile {
     );
 
     if (!activePriceDetails) {
-      return this.priceItemsForStashTabsFail(new Error('error:no_prices_received_for_league'));
+      return this.priceItemsForStashTabsFail(new Error('no_prices_received_for_league'));
     }
 
     let prices = activePriceDetails.leaguePriceSources[0].prices;

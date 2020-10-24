@@ -28,6 +28,7 @@
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
       "add_profile_to_connection": "Successfully added profile to connection",
+      "remove_all_snapshots": "Successfully cleared snapshots",
       "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection",
       "leave_group": "Sucessfully left group"
     },
@@ -59,6 +60,7 @@
       "change_profile_for_connection": "Successfully changed profile for connection",
       "remove_profile_from_connection": "Successfully removed profile for connection",
       "add_profile_to_connection": "Successfully added profile to connection",
+      "remove_all_snapshots": "Successfully cleared snapshots",
       "remove_all_snapshots_for_connection": "Successfully cleared snapshots for connection",
       "leave_group": "Sucessfully left the group"
     }
@@ -66,6 +68,8 @@
   "error": {
     "unknown_error": "Unknown error occurred",
     "title": {
+      "no_matching_league": "No matching league found",
+      "no_prices_received_for_league": "No prices retrieved for league",
       "init_session": "Initialize session failed",
       "validate_session": "Validate session failed",
       "league_settings_outdated": "League settings outdated",
@@ -95,9 +99,12 @@
       "change_profile_for_connection": "Failed to change profile for connection",
       "remove_profile_from_connection": "Failed to remove profile for connection",
       "add_profile_to_connection": "Failed to add profile to connection",
+      "remove_all_snapshots": "Failed to clear snapshots",
       "remove_all_snapshots_for_connection": "Failed to clear snapshots for connection"
     },
     "description": {
+      "no_prices_received_for_league": "No prices retrieved for league",
+      "no_matching_league": "No matching league found",
       "init_session": "A new session could not be initiated",
       "validate_session": "Retrying in 30 seconds",
       "get_stash_tabs": "Failed in retrieving stash tabs for {{param}}",
@@ -125,6 +132,7 @@
       "change_profile_for_connection": "Failed to change profile for connection",
       "remove_profile_from_connection": "Failed to remove profile for connection",
       "add_profile_to_connection": "Failed to add profile to connection",
+      "remove_all_snapshots": "Failed to clear snapshots",
       "remove_all_snapshots_for_connection": "Failed to clear snapshots for connection"
     },
     "custom_description": {
