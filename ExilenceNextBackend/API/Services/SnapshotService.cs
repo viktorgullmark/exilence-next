@@ -61,7 +61,7 @@ namespace API.Services
                     return stashtab; 
                 }).ToList());
            
-            await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
+            //await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
