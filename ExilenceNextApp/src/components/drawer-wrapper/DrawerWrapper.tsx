@@ -13,7 +13,7 @@ import NavigationMenuContainer from './navigation-menu/NavigationMenuContainer';
 
 export const drawerWidth = 300;
 
-const topMargin = toolbarHeight + innerToolbarHeight + resizeHandleContainerHeight;
+const topMargin = toolbarHeight + (innerToolbarHeight || 0) + resizeHandleContainerHeight;
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {

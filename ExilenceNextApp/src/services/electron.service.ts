@@ -1,17 +1,15 @@
-const ipcRenderer = window.require('electron').ipcRenderer;
-const ipcMain = window.require('electron').ipcMain;
-const webFrame = window.require('electron').webFrame;
-const remote = window.require('electron').remote;
-const shell = window.require('electron').shell;
+const { webFrame, BrowserWindow, ipcRenderer, shell, remote, app, ...rest } = window.require('electron');
 const childProcess = window.require('child_process');
 const fs = window.require('fs');
 
+console.log({ remote, app, rest});
+
 export const electronService = {
+  BrowserWindow,
   ipcRenderer,
-  ipcMain,
   webFrame,
-  remote,
   childProcess,
   fs,
   shell,
+  remote,
 };

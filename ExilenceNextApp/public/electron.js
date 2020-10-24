@@ -16,6 +16,7 @@ const {
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
   netWorthOverlay: { createNetWorthOverlay },
+  menuFunctions: { menuFunctions }
 } = require('./main');
 
 if (!isDev) {
@@ -98,6 +99,11 @@ function createWindow() {
     mainWindow: windows[mainWindow],
     callbackUpdateAvailable: (status) => (updateAvailable = status),
   });
+
+  /**
+   * Menu Functions
+   */
+  menuFunctions({mainWindow});
 
   if (isDev) {
     // Provide Inspect Element option on right click

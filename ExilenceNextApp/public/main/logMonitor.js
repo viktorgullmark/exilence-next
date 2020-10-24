@@ -9,13 +9,13 @@ let logMonitorWindow = 'log-monitor';
 const createLogMonitor = ({ mainWindow }) => {
   checkForMissingWindow({category: 'logMonitor', mainWindow});
 
-  const logCreate = 'log-create';
-  const logStart = 'log-start';
-  const logStop = 'log-stop';
-  const logEvent = 'log-event';
-  const logPath = 'log-path';
+  const LOG_CREATE = 'log-create';
+  const LOG_START = 'log-start';
+  const LOG_STOP = 'log-stop';
+  const LOG_EVENT = 'log-event';
+  const LOG_PATH = 'log-path';
 
-  ipcMain.on(logCreate, () => {
+  ipcMain.on(LOG_CREATE, () => {
     if (logMonitorWindow !== undefined && logMonitorWindow !== null) {
       logMonitorWindow.destroy();
     }
@@ -35,25 +35,25 @@ const createLogMonitor = ({ mainWindow }) => {
     });
   });
 
-  ipcMain.on(logStart, (_event, args) => {
+  ipcMain.on(LOG_START, (_event, args) => {
     if (logMonitorWindow && !logMonitorWindow.isDestroyed()) {
-      logMonitorWindow.webContents.send(logStart, args);
+      logMonitorWindow.webContents.send(LOG_START, args);
     }
   });
 
-  ipcMain.on(logStop, () => {
+  ipcMain.on(LOG_STOP, () => {
     logMonitorWindow.destroy();
-    mainWindow.webContents.send(logEvent, { event: 'stop' });
+    mainWindow.webContents.send(LOG_EVENT, { event: 'stop' });
   });
 
-  ipcMain.on(logPath, (_event, args) => {
+  ipcMain.on(LOG_PATH, (_event, args) => {
     if (logMonitorWindow && !logMonitorWindow.isDestroyed()) {
-      logMonitorWindow.webContents.send(logPath, args);
+      logMonitorWindow.webContents.send(LOG_PATH, args);
     }
   });
 
-  ipcMain.on(logEvent, (_event, args) => {
-    mainWindow.webContents.send(logEvent, args);
+  ipcMain.on(LOG_EVENT, (_event, args) => {
+    mainWindow.webContents.send(LOG_EVENT, args);
   });
 };
 

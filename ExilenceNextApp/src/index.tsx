@@ -49,7 +49,7 @@ enableLogging({
 
 configure({ enforceActions: 'observed' });
 
-moment.locale(electronService.remote.app.getLocale());
+moment.locale(electronService.app.getLocale());
 
 const theme = responsiveFontSizes(exilenceTheme());
 export const rootStore: RootStore = new RootStore();

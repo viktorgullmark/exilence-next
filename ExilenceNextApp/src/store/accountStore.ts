@@ -107,7 +107,7 @@ export class AccountStore {
       responseType: 'code',
     };
 
-    let authWindow = new electronService.remote.BrowserWindow({
+    let authWindow = new electronService.BrowserWindow({
       width: 500,
       height: 750,
       show: false,

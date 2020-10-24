@@ -28,7 +28,7 @@
       1,
       { "args": "all", "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
     ],
-    "prettier/prettier": 2,
+    "prettier/prettier": 1,
     "react/display-name": 1,
     "react/no-children-prop": 2,
     "react/no-danger-with-children": 2,
