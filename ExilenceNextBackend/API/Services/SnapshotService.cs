@@ -46,6 +46,8 @@ namespace API.Services
 
             await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
 
+            // todo: readd when we want to persist stash tabs and items for historical reasons
+
             //snapshot.StashTabs.Select(stashtab => { 
             //    stashtab.SnapshotClientId = snapshot.ClientId;
             //    stashtab.SnapshotProfileClientId = profileClientId;
