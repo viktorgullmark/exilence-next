@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
@@ -28,7 +28,9 @@ export class AccountStore {
 
   cancelledRetry: Subject<boolean> = new Subject();
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @computed
   get getSelectedAccount(): Account {

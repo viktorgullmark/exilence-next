@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 
 import { electronService } from '../services/electron.service';
@@ -16,7 +16,9 @@ export class SettingStore {
   @persist @observable logPath: string =
     'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   setUiScale(factor: number | string | number[]) {

@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
@@ -58,6 +58,7 @@ export class Profile {
   @observable incomeResetAt: moment.Moment = moment().utc();
 
   constructor(obj?: IProfile) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 

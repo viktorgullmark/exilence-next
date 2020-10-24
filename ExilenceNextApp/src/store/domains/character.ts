@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,6 +18,7 @@ export class Character implements ICharacter {
   @persist('list') @observable equipment: IItem[] = [];
 
   constructor(obj?: ICharacter) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

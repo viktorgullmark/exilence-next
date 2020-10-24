@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import moment, { Moment } from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,6 +16,7 @@ export class Notification implements INotification {
   translateParam?: string;
 
   constructor(obj?: INotification) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

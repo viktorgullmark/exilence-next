@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,6 +21,7 @@ export class Group implements IApiGroup {
   @observable activeAccounts: string[] = [];
 
   constructor(obj?: IApiGroup) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 

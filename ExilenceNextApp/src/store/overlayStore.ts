@@ -1,10 +1,12 @@
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore.js';
 
 export class OverlayStore {
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   createOverlay(data: any) {
