@@ -18,6 +18,7 @@ import { getCharacterLeagues } from '../utils/league.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
+import { v4 as uuidv4 } from 'uuid';
 
 export class AccountStore {
   @persist('list', Account) @observable accounts: Account[] = [];
@@ -25,6 +26,7 @@ export class AccountStore {
   @persist('object') @observable token: IToken | undefined = undefined;
   @observable code: string = '';
   @observable sessionId: string = '';
+  @observable authState: string = uuidv4();
 
   cancelledRetry: Subject<boolean> = new Subject();
 
@@ -76,6 +78,7 @@ export class AccountStore {
 
   @action
   handleAuthCallback(url: string, window: any) {
+    // todo: handle returned state
     const raw_code = /code=([^&]*)/.exec(url) || null;
     const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
     const error = /\?error=(.+)$/.exec(url);
@@ -105,7 +108,7 @@ export class AccountStore {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
-      state: 'yourstate',
+      state: this.authState,
       responseType: 'code',
     };
 
