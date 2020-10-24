@@ -14,5 +14,5 @@ const exportMisc = ({ mainWindow }) => {
 }
 
 module.exports = {
-  menuFunctions,
+  exportMisc,
 }

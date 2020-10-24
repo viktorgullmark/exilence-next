@@ -12,7 +12,7 @@ const {
   logMonitor: { createLogMonitor },
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
-  netWorthOverlay: { createNetWorthOverlay },
+  netWorthOverlay: { createNetWorthOverlay, destroyNetWorthOverlayWindow },
   authWindow: { createAuthWindow },
   menuFunctions: { menuFunctions },
 } = require('./main');
@@ -103,6 +103,19 @@ function createWindow() {
   });
 
   /**
+   * Generic overlay helper functions
+   */
+  ipcMain.on('close-overlay', (_event, overlayName) => {
+    switch (overlayName) {
+      case 'networth':
+        destroyNetWorthOverlayWindow();
+        break;
+      default:
+        destroyNetWorthOverlayWindow();
+    }
+  });
+
+  /**
    * Authorization
    */
   ipcMain.on('create-auth-window', (_event, args) => {
@@ -139,7 +152,7 @@ function createWindow() {
   /**
    * Menu Functions
    */
-  menuFunctions({ mainWindow });
+  menuFunctions({ mainWindow: windows[mainWindow] });
 
   if (isDev) {
     // Provide Inspect Element option on right click
