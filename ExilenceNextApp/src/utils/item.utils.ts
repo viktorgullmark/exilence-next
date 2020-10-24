@@ -35,6 +35,19 @@ export function mergeItemStacks(items: IPricedItem[]) {
   return mergedItems;
 }
 
+export const formatCumulativeValue = (cumulativeValue: number): string => {
+  return `${cumulativeValue.toFixed(2)}`;
+};
+
+export const annotateTableItemWithCumulativeValue = (
+  item: ITableItem,
+  idx: number,
+  items: ITableItem[]
+): ITableItem => ({
+  ...item,
+  cumulative: items.slice(0, idx + 1).reduce((acc, item) => acc + item.total, 0),
+});
+
 export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) {
   let mergedStashTabs: IPricedItem[] = [];
 
@@ -48,6 +61,7 @@ export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) 
 export function mapPricedItemToTableItem(pricedItem: IPricedItem) {
   return {
     ...pricedItem,
+    cumulative: 0,
     tabNames: pricedItem.tab ? pricedItem.tab.map((t) => t.n).join(', ') : '',
   } as ITableItem;
 }

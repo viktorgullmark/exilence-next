@@ -9,7 +9,7 @@
     "corrupted": "Corrupted",
     "stacksize": "Quantity",
     "calculated": "Price",
-    "total": "Total value",
+    "total": "Total value (Cumulative)",
     "tab_names": "Tabs"
   },
   "label": {
