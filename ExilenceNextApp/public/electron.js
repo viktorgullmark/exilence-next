@@ -100,8 +100,8 @@ function createWindow() {
     return session.defaultSession.cookies.get(arg);
   })
 
-  ipcMain.handle('remove-cookie', (_event, ...args) => {
-    return session.defaultSession.cookies.remove(args);
+  ipcMain.handle('remove-cookie', (_event, url, id) => {
+    return session.defaultSession.cookies.remove(url, id);
   })
 
   /**
