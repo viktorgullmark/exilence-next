@@ -1,4 +1,4 @@
-const { app, BrowserWindow, screen } = require('electron');
+const { app, BrowserWindow, screen, session, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
@@ -76,6 +76,23 @@ function createWindow() {
     }
   });
 
+  /**
+   * Expose main process variables
+   */
+  ipcMain.on('app-globals',  (e) => {
+    const appPath = app.getAppPath();
+    const appLocale = app.getLocale();
+
+    e.returnValue = {
+      appPath,
+      appLocale,
+      session
+    }
+  });
+
+  /**
+   * Tray
+   */
   trayProps = {
     mainWindow: windows[mainWindow],
     updateAvailable,

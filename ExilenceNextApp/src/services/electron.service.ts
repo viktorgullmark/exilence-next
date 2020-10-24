@@ -1,8 +1,8 @@
-const { webFrame, BrowserWindow, ipcRenderer, shell, remote, app, ...rest } = window.require('electron');
+const { webFrame, ipcRenderer, shell, BrowserWindow } = window.require('electron');
 const childProcess = window.require('child_process');
 const fs = window.require('fs');
 
-console.log({ remote, app, rest});
+const { appPath, appLocale, session } = ipcRenderer.sendSync('app-globals', '');
 
 export const electronService = {
   BrowserWindow,
@@ -11,5 +11,7 @@ export const electronService = {
   childProcess,
   fs,
   shell,
-  remote,
+  appPath,
+  appLocale,
+  session,
 };
