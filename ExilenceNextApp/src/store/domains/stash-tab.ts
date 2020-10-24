@@ -1,3 +1,4 @@
+import { makeObservable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,6 +18,7 @@ export class StashTab implements IStashTab {
   @persist srcR: string = '';
 
   constructor(obj?: IStashTab) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

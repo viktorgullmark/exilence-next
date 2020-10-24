@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
@@ -27,6 +27,7 @@ export class PriceStore {
   @observable pollingInterval: number = 60 * 1000 * 20;
 
   constructor(private rootStore: RootStore) {
+    makeObservable(this);
     fromStream(
       interval(this.pollingInterval).pipe(
         switchMap(() => {

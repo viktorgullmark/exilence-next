@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, Subject, throwError, timer } from 'rxjs';
@@ -32,6 +32,7 @@ export class Account implements IAccount {
   cancelled: Subject<boolean> = new Subject();
 
   constructor(obj?: IAccount) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 

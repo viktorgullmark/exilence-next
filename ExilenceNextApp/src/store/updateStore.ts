@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { interval, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -13,6 +13,7 @@ export class UpdateStore {
   @observable updateAvailable: boolean = false;
 
   constructor(private rootStore: RootStore) {
+    makeObservable(this);
     fromStream(interval(this.pollingInterval).pipe(switchMap(() => of(this.checkForUpdate()))));
 
     electronService.ipcRenderer.on('updateDownloaded', () => {

@@ -1,3 +1,4 @@
+import { makeObservable } from 'mobx';
 import { persist } from 'mobx-persist';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,6 +12,7 @@ export class Snapshot implements ISnapshot {
   @persist('list', StashTabSnapshot) stashTabSnapshots: StashTabSnapshot[] = [];
 
   constructor(obj?: ISnapshot) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

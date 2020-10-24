@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
@@ -56,7 +56,9 @@ export class UiStateStore {
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   resetStatusMessage() {

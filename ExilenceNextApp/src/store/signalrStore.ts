@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
@@ -30,7 +30,9 @@ export class SignalrStore {
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   registerEvents() {

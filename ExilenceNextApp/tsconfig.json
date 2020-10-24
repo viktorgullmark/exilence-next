@@ -20,7 +20,8 @@
     "noEmit": true,
     "jsx": "react",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "useDefineForClassFields": true
   },
   "include": [
     "src",

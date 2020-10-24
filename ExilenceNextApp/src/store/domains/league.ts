@@ -1,3 +1,4 @@
+import { makeObservable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,6 +10,7 @@ export class League implements ILeague {
   @persist realm: string = '';
 
   constructor(obj?: ILeague) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 
 import { ILeague } from '../interfaces/league.interface';
@@ -9,7 +9,9 @@ export class LeagueStore {
   @persist('list', League) @observable leagues: League[] = [];
   @persist('list', League) @observable priceLeagues: League[] = [];
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   updateLeagues(leagues: ILeague[]) {

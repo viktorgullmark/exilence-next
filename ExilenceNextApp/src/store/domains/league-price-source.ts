@@ -1,4 +1,4 @@
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IExternalPrice } from '../../interfaces/external-price.interface';
@@ -11,6 +11,7 @@ export class LeaguePriceSource {
   prices: IExternalPrice[] = [];
 
   constructor(obj?: ILeaguePriceSource) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 
