@@ -91,7 +91,6 @@ function createWindow() {
    * Session handlers
    */
   ipcMain.handle('set-cookie', (_event, arg) => {
-    debugger;
     return session.defaultSession.cookies.set(arg);
   });
 
