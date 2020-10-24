@@ -1,7 +1,8 @@
-import { Checkbox, FormControlLabel, Popover, Typography } from '@material-ui/core';
 import React, { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableInstance } from 'react-table';
+import { Checkbox, FormControlLabel, Popover, Typography } from '@material-ui/core';
+
 import useStyles from './ColumnHidePage.styles';
 
 type ColumnHidePage = {

@@ -1,8 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { inject, observer } from 'mobx-react';
+import { from, Observable, of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 import { AccountStore } from '../../store/accountStore';
+import { LogStore } from '../../store/logStore';
 import { NotificationStore } from '../../store/notificationStore';
 import { OverlayStore } from '../../store/overlayStore';
 import { PriceStore } from '../../store/priceStore';
@@ -13,9 +16,6 @@ import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
-import { LogStore } from '../../store/logStore';
-import { Observable, from, of } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
 
 type ToolbarContainerProps = {
   uiStateStore?: UiStateStore;

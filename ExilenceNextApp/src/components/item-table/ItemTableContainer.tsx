@@ -1,8 +1,3 @@
-import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { inject, observer } from 'mobx-react';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +11,12 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
+import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { inject, observer } from 'mobx-react';
+
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';

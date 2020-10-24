@@ -1,6 +1,7 @@
 import { persist } from 'mobx-persist';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+
 import { ISnapshot } from './../../interfaces/snapshot.interface';
 import { StashTabSnapshot } from './stashtab-snapshot';
 

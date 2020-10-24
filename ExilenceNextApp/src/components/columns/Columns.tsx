@@ -1,9 +1,10 @@
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import clsx from 'clsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
+import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import clsx from 'clsx';
+
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { getRarity } from '../../utils/item.utils';
 import { openCustomLink } from '../../utils/window.utils';

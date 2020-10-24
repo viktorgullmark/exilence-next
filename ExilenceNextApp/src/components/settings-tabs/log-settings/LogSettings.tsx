@@ -1,6 +1,7 @@
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import { observer } from 'mobx-react';
-import React from 'react';
+
 import TextInputSetting from '../text-input-setting/TextInputSetting';
 
 type LogSettingsProps = {
