@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +13,7 @@ import { observer } from 'mobx-react';
 
 import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
 import useStyles from './Header.styles';
-import SupportPanel from '../support-panel/SupportPanel';
+const SupportPanel = lazy(() => import('../support-panel/SupportPanel'));
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -33,7 +33,7 @@ const Header = ({
   updateAvailable,
   quitAndInstall,
 }: HeaderProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
   const { t } = useTranslation();
@@ -47,7 +47,9 @@ const Header = ({
   return (
     <AppBar position="fixed" color="secondary" className={classes.header}>
       <div className={clsx(classes.noDrag, classes.resizeHandleContainer)} />
-      <SupportPanel isOpen={isOpen} anchorEl={anchorEl} />
+      <Suspense fallback="XDDDD">
+        <SupportPanel isOpen={isOpen} anchorEl={anchorEl} setIsOpen={setIsOpen} />
+      </Suspense>
       <Toolbar className={classes.toolbar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item>
@@ -90,6 +92,7 @@ const Header = ({
                   isOpen && classes.isActive
                 )}
                 onClick={(e) => handleClick(e)}
+                data-tour-elem="supportPanel"
               >
                 <HelpIcon className={clsx(classes.windowIcon, classes.support)} />
               </Grid>

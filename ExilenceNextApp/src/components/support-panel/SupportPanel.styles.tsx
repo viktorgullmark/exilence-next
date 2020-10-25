@@ -24,6 +24,15 @@ const useStyles = makeStyles((theme) =>
         background: theme.palette.primary.main,
       },
     },
+    optionLink: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      width: '100%',
+      textDecoration: 'none',
+      '&:active, &:hover, &:visited, &:link': {
+        color: theme.palette.text.primary,
+      },
+    },
     icon: {
       width: 18,
       height: 18,

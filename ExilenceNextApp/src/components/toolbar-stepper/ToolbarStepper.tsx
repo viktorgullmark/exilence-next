@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tour from 'reactour';
 import { Button, useTheme } from '@material-ui/core';
@@ -13,14 +13,17 @@ type ToolbarStepperProps = {
 };
 
 const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
+  const [step, setStep] = useState(0);
   const { t } = useTranslation();
   const theme = useTheme();
-
+  const stepDescriptors: IStepDescriptor[] = getToolbarSteps();
+  const supportPanelStep = stepDescriptors.length - 1; // Support Panel should be always last
+  const isOnSupportPanelStep = step === supportPanelStep;
   const style = {
     color: '#000',
+    maxWidth: 356,
+    marginTop: isOnSupportPanelStep ? 10 : 0,
   };
-
-  const stepDescriptors: IStepDescriptor[] = getToolbarSteps();
 
   const steps = stepDescriptors.map((sd) => {
     return {
@@ -39,8 +42,10 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
         isOpen={isOpen}
         onRequestClose={handleClose}
         accentColor={theme.palette.primary.main}
-        maskSpace={theme.spacing(2)}
+        maskSpace={theme.spacing(isOnSupportPanelStep ? 0 : 2)}
         closeWithMask={false}
+        getCurrentStep={(currentStep) => setStep(currentStep)}
+        startAt={0}
         lastStepNextButton={
           <Button color="primary" variant="contained">
             {t('action.lets_begin')}
