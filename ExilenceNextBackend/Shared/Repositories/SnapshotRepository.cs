@@ -80,8 +80,11 @@ namespace Shared.Repositories
 
         public async Task RemoveAllSnapshots(string profileClientId)
         {
-            await _pricedItems.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
-            await _stashtabs.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
+            // todo: readd when we want to persist stash tabs and items for historical reasons
+
+            //await _pricedItems.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
+            //await _stashtabs.DeleteManyAsync(s => s.SnapshotProfileClientId == profileClientId);
+
             await _snapshots.DeleteManyAsync(s => s.ProfileClientId == profileClientId);
         }
     }
