@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    minHeight: 800,
+    minHeight: 1000,
   },
   tabs: {
     minWidth: 160,

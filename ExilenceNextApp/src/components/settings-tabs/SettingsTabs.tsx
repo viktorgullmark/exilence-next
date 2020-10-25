@@ -42,7 +42,6 @@ const SettingsTabs = () => {
       >
         <Tab label={t('title.net_worth_settings')} className={classes.tab} {...a11yProps(0)} />
         <Tab label={t('title.ui_settings')} className={classes.tab} {...a11yProps(1)} />
-        <Tab label={t('title.log_settings')} className={classes.tab} {...a11yProps(2)} />
       </Tabs>
       <SettingsTab value={value} index={0}>
         <Box className={classes.subSection}>

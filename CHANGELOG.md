@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.15] - NOT RELEASED
+## [0.4.0] - NOT RELEASED
 ##### Added
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
