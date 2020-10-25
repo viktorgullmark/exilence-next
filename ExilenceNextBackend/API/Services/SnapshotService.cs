@@ -40,7 +40,9 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            await _snapshotRepository.RemovePricedItems(profileClientId);
+            // todo: readd when we want to persist stash tabs and items for historical reasons
+
+            //await _snapshotRepository.RemovePricedItems(profileClientId);
 
             snapshot.ProfileClientId = profileClientId;
 
