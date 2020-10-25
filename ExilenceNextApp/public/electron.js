@@ -47,7 +47,7 @@ function createWindow() {
   const mainWindowState = windowStateKeeper({
     defaultWidth: size.width,
     defaultHeight: size.height,
-    file: 'main'
+    file: 'main',
   });
 
   windows[mainWindow] = new BrowserWindow({
@@ -171,17 +171,21 @@ function createWindow() {
 /**
  * App Listeners
  */
-if (!gotTheLock) {
+if (!gotTheLock && !isDev) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (windows[mainWindow]) {
-      if (windows[mainWindow].isMinimized()) {
-        windows[mainWindow].restore();
-        windows[mainWindow].focus();
-      } else {
-        windows[mainWindow].show();
+    if (isDev) {
+      windows[mainWindow].destroy();
+    } else {
+      // Someone tried to run a second instance, we should focus our window.
+      if (windows[mainWindow]) {
+        if (windows[mainWindow].isMinimized()) {
+          windows[mainWindow].restore();
+          windows[mainWindow].focus();
+        } else {
+          windows[mainWindow].show();
+        }
       }
     }
   });
