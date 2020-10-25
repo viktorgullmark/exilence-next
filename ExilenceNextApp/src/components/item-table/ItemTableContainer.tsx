@@ -1,8 +1,3 @@
-import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { inject, observer } from 'mobx-react';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +11,12 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
+import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { inject, observer } from 'mobx-react';
+
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
@@ -184,7 +185,7 @@ const ItemTableContainer = ({
               anchorEl={anchorEl}
             />
             {hideableColumns.length > 1 && (
-              <Tooltip title={t('label.toggle_visible_columns')} placement="bottom">
+              <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
                   size="small"
                   className={classes.inlineIcon}
@@ -194,7 +195,7 @@ const ItemTableContainer = ({
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title={t('label.toggle_stash_tab_filter')} placement="bottom">
+            <Tooltip title={t('label.toggle_stash_tab_filter') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}
@@ -205,7 +206,7 @@ const ItemTableContainer = ({
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('label.toggle_export_menu')} placement="bottom">
+            <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}

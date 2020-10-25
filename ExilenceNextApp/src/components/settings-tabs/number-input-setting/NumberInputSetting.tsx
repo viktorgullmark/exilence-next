@@ -34,7 +34,7 @@ const NumberInputFormat = (props: any) => {
       thousandSeparator
       suffix={suffix}
       isAllowed={(values) => {
-        const { floatValue } = values;
+        const { floatValue = 0 } = values;
         return floatValue >= minimum && floatValue <= maximum;
       }}
     />

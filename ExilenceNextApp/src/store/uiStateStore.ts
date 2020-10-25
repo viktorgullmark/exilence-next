@@ -1,8 +1,9 @@
 import { AxiosError } from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { TimespanType } from '../types/timespan.type';
@@ -15,7 +16,7 @@ import { RootStore } from './rootStore';
 export type GroupDialogType = 'create' | 'join' | undefined;
 
 export class UiStateStore {
-  @observable @persist userId: string = uuid.v4();
+  @observable @persist userId: string = uuidv4();
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = true;
   @persist @observable toolbarTourOpen: boolean = true;
@@ -56,7 +57,9 @@ export class UiStateStore {
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   resetStatusMessage() {

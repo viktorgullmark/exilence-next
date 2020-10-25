@@ -6,4 +6,5 @@ export interface ICookie {
   path: string;
   secure: boolean;
   expirationDate?: number;
+  sameSite: string;
 }

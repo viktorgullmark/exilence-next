@@ -1,5 +1,5 @@
 import localForage from 'localforage';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
@@ -10,7 +10,9 @@ export class MigrationStore {
   @observable @persist current: number = 1;
   @observable latest: number = 2;
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   increment() {

@@ -1,12 +1,7 @@
-import {
-  FormControl,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  TextField
-} from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormControl, FormGroup, FormHelperText, FormLabel, TextField } from '@material-ui/core';
+
 import useStyles from './TextInputSetting.styles';
 
 type TextInputSettingProps = {
@@ -14,13 +9,13 @@ type TextInputSettingProps = {
   handleChange: (value: string) => void;
   translationKey: string;
   disabled?: boolean;
-}
+};
 
 const TextInputSetting = ({
   value,
   handleChange,
   translationKey,
-  disabled
+  disabled,
 }: TextInputSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -28,14 +23,12 @@ const TextInputSetting = ({
   return (
     <FormControl component="fieldset">
       <FormGroup>
-        <FormLabel id={`${translationKey}-label`}>
-          {t(`label.${translationKey}`)}
-        </FormLabel>
+        <FormLabel id={`${translationKey}-label`}>{t(`label.${translationKey}`)}</FormLabel>
         <TextField
           className={classes.root}
           id={`${translationKey}-label`}
           value={value}
-          onChange={e => handleChange(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           disabled={disabled}
         ></TextField>
         <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>

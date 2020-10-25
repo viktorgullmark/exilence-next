@@ -1,4 +1,5 @@
 import { Column } from 'react-table';
+
 import { ITableItem } from '../../interfaces/table-item.interface';
 import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
 

@@ -1,13 +1,13 @@
-import React, { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, useEffect } from 'react';
 import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import clsx from 'clsx';
 
+import { useDebounce } from '../../hooks/use-debounce';
 import { ResizeHandle } from '../resize-handle/ResizeHandle';
 import { TablePagination } from '../table-pagination/TablePagination';
 import { useStyles } from './TableWrapper.styles';
-import { useDebounce } from '../../hooks/use-debounce';
 
 type TableWrapperProps = {
   instance: TableInstance<object>;
@@ -37,7 +37,7 @@ const cellProps = <T extends object>(props: any, { cell }: Meta<T, { cell: Cell<
 const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps) => {
   const classes = useStyles();
 
-  const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state } = instance;
+  const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state }: any = instance;
 
   const debouncedState = useDebounce(state, 500);
 

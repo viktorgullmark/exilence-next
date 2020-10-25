@@ -3,11 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core';
 import { primaryGradient, statusColors } from '../../assets/themes/exilence-theme';
 import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import {
-  innerToolbarHeight,
-  patreonLogoHeight,
-  patreonLogoWidth
-} from './Toolbar';
+import { innerToolbarHeight, patreonLogoHeight, patreonLogoWidth } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -74,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `0 ${theme.spacing(1)}px`,
   },
   logMonitorArea: {
-    padding: `0 ${theme.spacing(1)}px`
+    padding: `0 ${theme.spacing(1)}px`,
   },
   groupArea: {
     padding: `0 ${theme.spacing(1)}px`,

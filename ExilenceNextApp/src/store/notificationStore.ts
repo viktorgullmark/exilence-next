@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
 import { NotificationType } from '../interfaces/notification.interface';
 import { translateError } from '../utils/error.utils';
@@ -10,7 +10,9 @@ export class NotificationStore {
   @observable notifications: Notification[] = [];
   @observable displayed: string[] = [];
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @computed
   get alertNotifications() {

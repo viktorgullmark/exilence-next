@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 
 import { RootStore } from './rootStore';
@@ -6,7 +6,9 @@ import { RootStore } from './rootStore';
 export class RouteStore {
   @observable redirectedTo: string | undefined = undefined;
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   redirect(path: string, loginError?: string) {

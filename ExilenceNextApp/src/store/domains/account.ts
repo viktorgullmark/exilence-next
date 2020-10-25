@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, Subject, throwError, timer } from 'rxjs';
 import { catchError, map, mergeMap, retryWhen, switchMap, takeUntil } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+
 import { IAccount } from '../../interfaces/account.interface';
 import { IApiAccount } from '../../interfaces/api/api-account.interface';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
@@ -19,7 +20,7 @@ import { AccountLeague } from './account-league';
 import { Profile } from './profile';
 
 export class Account implements IAccount {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
   @persist name: string | undefined = undefined;
   @persist @observable sessionId: string = '';
 
@@ -31,6 +32,7 @@ export class Account implements IAccount {
   cancelled: Subject<boolean> = new Subject();
 
   constructor(obj?: IAccount) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 
@@ -221,8 +223,7 @@ export class Account implements IAccount {
 
   @computed
   get activeProfile() {
-    let active = this.profiles.find((p) => p.active);
-    return active;
+    return this.profiles.find((p) => p.active);
   }
 
   @action

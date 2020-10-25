@@ -1,11 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -36,7 +36,7 @@ import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Profile {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
 
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
@@ -58,6 +58,7 @@ export class Profile {
   @observable incomeResetAt: moment.Moment = moment().utc();
 
   constructor(obj?: IProfile) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 
@@ -148,7 +149,7 @@ export class Profile {
 
   @computed
   get tabChartData() {
-    let snapshots = [...this.snapshots.slice(0, 50)];
+    const snapshots = [...this.snapshots.slice(0, 50)];
 
     const league = rootStore.leagueStore.leagues.find((l) => l.id === this.activeLeagueId);
 
@@ -496,7 +497,7 @@ export class Profile {
     );
 
     if (!activePriceDetails) {
-      return this.priceItemsForStashTabsFail(new Error('error:no_prices_received_for_league'));
+      return this.priceItemsForStashTabsFail(new Error('no_prices_received_for_league'));
     }
 
     let prices = activePriceDetails.leaguePriceSources[0].prices;

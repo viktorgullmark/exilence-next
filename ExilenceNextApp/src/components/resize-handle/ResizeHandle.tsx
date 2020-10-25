@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import React from 'react';
 import { ColumnInstance } from 'react-table';
+import clsx from 'clsx';
 
 import { useStyles } from './ResizeHandle.styles';
 

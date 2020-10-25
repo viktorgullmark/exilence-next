@@ -5,12 +5,12 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { observer } from 'mobx-react';
 
+import LogSettingsContainer from './log-settings/LogSettingsContainer';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 import useStyles from './SettingsTabs.styles';
 import SnapshotSettingsContainer from './snapshot-settings/SnapshotSettingsContainer';
 import UiSettingsContainer from './ui-settings/UiSettingsContainer';
-import LogSettingsContainer from './log-settings/LogSettingsContainer';
 
 function a11yProps(index: any) {
   return {

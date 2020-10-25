@@ -1,6 +1,6 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import moment from 'moment';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
@@ -14,13 +14,14 @@ import {
 } from '../../utils/snapshot.utils';
 
 export class Group implements IApiGroup {
-  uuid: string = uuid.v4();
+  uuid: string = uuidv4();
   name: string = '';
   created: Date = moment.utc().toDate();
   @observable connections: IApiConnection[] = [];
   @observable activeAccounts: string[] = [];
 
   constructor(obj?: IApiGroup) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 
@@ -143,7 +144,7 @@ export class Group implements IApiGroup {
 
   @computed
   get chartData() {
-    let groupChartSeries: IGroupChartSeries = {
+    const groupChartSeries: IGroupChartSeries = {
       connections: [],
     };
 
