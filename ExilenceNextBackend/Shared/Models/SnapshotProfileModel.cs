@@ -33,5 +33,10 @@ namespace Shared.Models
         public List<SnapshotModel> Snapshots { get; set; }
         [Key("active")]
         public bool Active { get; set; }
+
+        public SnapshotProfileModel()
+        {
+            Snapshots = new List<SnapshotModel>();
+        }
     }
 }
