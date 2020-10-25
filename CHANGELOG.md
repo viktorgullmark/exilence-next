@@ -3,16 +3,23 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.15] - NOT RELEASED
 ##### Added
-- Added style tweaks to the item table
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
 - Added a status message that shows when prices are being updated
+- Added a background process for parsing the Client.txt in preparation for upcoming features
+- Added style tweaks to the item table
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
+- Fixed a bug where the installer would sometimes get stuck halfway without any visible errors
 - Fixed a bug where the net worth overlay would not update when income was reset
 ##### Changed
-- Reworked how income is calculated
+- Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
+- Refactored code in preparation for new upcoming features
+##### Updated
+- Updated the main framework (Electron) to the latest version
+- Updated React and related dependencies to the latest version
+- Updated most other dependencies we use to the latest version
 
 ## [0.3.14] - 2020-10-23
 ##### Added
