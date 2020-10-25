@@ -39,7 +39,7 @@ Before submitting a PR, please see our [contributing guidelines](https://github.
 Run the following to get started with the client:
 
 ```
-npm install
+npm install --legacy-peer-deps (flag needed temporarily)
 npm start (to serve the project)
 npm run release (optional, to build the installer for production)
 ```
