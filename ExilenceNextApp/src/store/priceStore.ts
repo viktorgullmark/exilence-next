@@ -80,6 +80,10 @@ export class PriceStore {
   getPricesForLeagues() {
     const leagueIds = this.rootStore.leagueStore.priceLeagues.map((l) => l.id);
     this.isUpdatingPrices = true;
+    // override status message unless were snapshotting, so we can display the status to the user
+    if (!this.rootStore.uiStateStore.isSnapshotting) {
+      this.rootStore.uiStateStore.setStatusMessage('fetching_prices');
+    }
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
@@ -124,12 +128,18 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
+    if (!this.rootStore.uiStateStore.isSnapshotting) {
+      this.rootStore.uiStateStore.resetStatusMessage();
+    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'success');
   }
 
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
+    if (!this.rootStore.uiStateStore.isSnapshotting) {
+      this.rootStore.uiStateStore.resetStatusMessage();
+    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'error', true, e);
   }
 }

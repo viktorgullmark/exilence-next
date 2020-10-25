@@ -1,6 +1,7 @@
 const isDev = require('electron-is-dev');
 const path = require('path');
 const { ipcMain, BrowserWindow } = require('electron');
+const windowStateKeeper = require('electron-window-state');
 
 let netWorthOverlayWindow = null;
 
@@ -9,11 +10,17 @@ function createOverlay() {
     netWorthOverlayWindow.destroy();
   }
 
+  const overlayState = windowStateKeeper({
+    defaultWidth: 255,
+    defaultHeight: 92,
+    file: 'netWorthOverlay'
+  });
+
   netWorthOverlayWindow = new BrowserWindow({
-    x: 200,
-    y: 200,
-    height: 92,
-    width: 255,
+    x: overlayState.x,
+    y: overlayState.y,
+    height: overlayState.height,
+    width: overlayState.width,
     skipTaskbar: true,
     alwaysOnTop: true,
     show: false,
@@ -21,6 +28,8 @@ function createOverlay() {
     webPreferences: { webSecurity: false, nodeIntegration: true },
     resizable: false,
   });
+
+  overlayState.manage(netWorthOverlayWindow);
 
   netWorthOverlayWindow.loadURL(
     isDev

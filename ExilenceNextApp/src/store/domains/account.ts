@@ -87,12 +87,15 @@ export class Account implements IAccount {
   }
 
   @action
-  queueSnapshot() {
+  queueSnapshot(milliseconds?: number) {
     fromStream(
-      timer(rootStore.settingStore.autoSnapshotInterval).pipe(
+      timer(milliseconds ? milliseconds : rootStore.settingStore.autoSnapshotInterval).pipe(
         map(() => {
           if (this.activeProfile && this.activeProfile.readyToSnapshot) {
             this.activeProfile.snapshot();
+          } else {
+            this.dequeueSnapshot();
+            this.queueSnapshot(10 * 1000);
           }
         }),
         takeUntil(this.cancelled)

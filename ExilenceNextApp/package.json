@@ -1,6 +1,6 @@
 {
   "name": "exilence-next-app",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",

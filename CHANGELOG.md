@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.15] - NOT RELEASED
+##### Added
+- Added style tweaks to the item table
+- Added persistence of position/size for the overlay
+- Added reindexing of stash tabs before every snapshot, to support moving tabs around
+- Added a status message that shows when prices are being updated
+##### Fixed
+- Fixed a bug where auto snapshotting would sometimes stop working
+- Fixed a bug where the net worth overlay would not update when income was reset
+##### Changed
+- Reworked how income is calculated
+    - Now based on the past hour, or the latest reset timestamp if one exists
+
 ## [0.3.14] - 2020-10-23
 ##### Added
 - Added tooltips to the icon buttons in the table toolbar

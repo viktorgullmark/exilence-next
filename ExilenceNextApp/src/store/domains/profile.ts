@@ -210,23 +210,23 @@ export class Profile {
 
   @action
   calculateIncome() {
-    const snapshots = this.snapshots.filter((s) =>
-      moment(s.created).utc().isAfter(this.incomeResetAt)
-    );
-
-    const hoursAgo = moment().utc().hours() - this.incomeResetAt.hours();
-    const hours = hoursAgo > 0 ? hoursAgo : 1;
+    const oneHourAgo = moment().utc().subtract(1, 'hours');
+    const timestampToUse = this.incomeResetAt.isAfter(oneHourAgo) ? this.incomeResetAt : oneHourAgo;
+    const snapshots = this.snapshots.filter((s) => moment(s.created).utc().isAfter(timestampToUse));
+    const hoursToCalcOver = 1;
 
     if (snapshots.length > 1) {
       const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
       const firstSnapshot = mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1]);
       const incomePerHour =
-        (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
+        (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
       this.income = incomePerHour;
       return;
     }
 
     this.income = 0;
+
+    this.updateNetWorthOverlay();
   }
 
   @computed
@@ -250,11 +250,6 @@ export class Profile {
   @action
   setActiveCharacterName(name: string) {
     this.activeCharacterName = name;
-  }
-
-  @action
-  setActiveStashTabs(stashTabIds: string[]) {
-    this.activeStashTabIds = stashTabIds;
   }
 
   @action
@@ -300,7 +295,7 @@ export class Profile {
     visitor!.event('Profile', 'Triggered snapshot').send();
 
     rootStore.uiStateStore!.setIsSnapshotting(true);
-    this.getItems();
+    this.refreshStashTabs();
   }
 
   @action clearIncome() {
@@ -353,6 +348,49 @@ export class Profile {
       rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     rootStore.uiStateStore!.setIsSnapshotting(false);
+  }
+
+  @action refreshStashTabs() {
+    const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
+      (al) => al.leagueId === this.activeLeagueId
+    );
+
+    const league = rootStore.leagueStore.leagues.find((l) => l.id === this.activeLeagueId);
+
+    if (!accountLeague || !league) {
+      return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
+    }
+
+    rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
+
+    fromStream(
+      accountLeague.getStashTabs().pipe(
+        mergeMap(() => of(this.refreshStashTabsSuccess(league.id))),
+        catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
+      )
+    );
+  }
+
+  @action refreshStashTabsSuccess(leagueId: string) {
+    rootStore.notificationStore.createNotification(
+      'refreshing_stash_tabs',
+      'success',
+      undefined,
+      undefined,
+      leagueId
+    );
+    this.getItems();
+  }
+
+  @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
+    rootStore.notificationStore.createNotification(
+      'refreshing_stash_tabs',
+      'error',
+      true,
+      e,
+      leagueId
+    );
+    this.snapshotFail();
   }
 
   @action getItems() {

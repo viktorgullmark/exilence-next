@@ -47,6 +47,7 @@ function createWindow() {
   const mainWindowState = windowStateKeeper({
     defaultWidth: size.width,
     defaultHeight: size.height,
+    file: 'main'
   });
 
   windows[mainWindow] = new BrowserWindow({
