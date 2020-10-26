@@ -21,4 +21,5 @@ export interface IExternalPrice {
   tier?: number;
   count: number;
   detailsUrl?: string;
+  customPrice?: number;
 }

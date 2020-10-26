@@ -158,13 +158,6 @@ function createWindow() {
   if (isDev) {
     // Provide Inspect Element option on right click
     contextMenu();
-
-    // Devtools
-    [REACT_DEVELOPER_TOOLS].forEach((extension) =>
-      installExtension(extension)
-        .then((name) => console.log(`Added Extension: ${name}`))
-        .catch((err) => console.log('An error occurred: ', err))
-    );
   }
 }
 

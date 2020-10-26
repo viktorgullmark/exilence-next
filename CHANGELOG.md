@@ -3,11 +3,18 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.0] - NOT RELEASED
 ##### Added
+- Added a new section "prices" in the settings
+    - Ability to see all prices stored for each league
+    - Ability to override any price with your custom value
+    - Added a shortcut to customize prices from the item table
+- Added a new support menu in the main window toolbar with helpful links
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
 - Added a status message that shows when prices are being updated
 - Added a background process for parsing the Client.txt in preparation for upcoming features
+- Added rarity color for legacy uniques
 - Added style tweaks to the item table
+- Added persistence of selected settings tab
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the installer would sometimes get stuck halfway without any visible errors
@@ -15,6 +22,8 @@ All notable changes to this project will be documented in this file.
 ##### Changed
 - Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
+- Changed the default page size to 25, up from 10 for all tables
+- Reworked the layout of the side menu
 - Refactored code in preparation for new upcoming features
 ##### Updated
 - Updated the main framework (Electron) to the latest version

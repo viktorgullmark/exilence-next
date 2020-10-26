@@ -1,6 +1,5 @@
 import { action, makeObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-
 import { IExternalPrice } from '../../interfaces/external-price.interface';
 import { ILeaguePriceSource } from '../../interfaces/league-price-source.interface';
 

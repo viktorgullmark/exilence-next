@@ -1,15 +1,22 @@
+import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import clsx from 'clsx';
+import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import clsx from 'clsx';
-
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
-import { getRarity } from '../../utils/item.utils';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { ICompactTab } from '../../interfaces/stash.interface';
+import { AccountStore } from '../../store/accountStore';
+import { CustomPriceStore } from '../../store/customPriceStore';
+import { UiStateStore } from '../../store/uiStateStore';
+import { getRarity, parseTabNames } from '../../utils/item.utils';
+import { getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
-
 export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
@@ -55,7 +62,29 @@ export function itemLinks<T>(options: { accessor: string; header: string }): Col
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
-      return <ItemLinksCell value={value} />;
+      const noLinks = (value: number) => {
+        return !value || value === 0;
+      };
+      return <ItemCell value={value} available={!noLinks(value)} />;
+    },
+  };
+}
+
+export function itemCell(options: {
+  accessor: string;
+  header: string;
+  align?: string;
+}): Column<object> {
+  const { header, accessor, align } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.values[accessor];
+      return <ItemCell value={value} available={value} />;
     },
   };
 }
@@ -74,8 +103,27 @@ export function itemCorrupted<T>(options: { accessor: string; header: string }):
   };
 }
 
-export function itemValue<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemTabs<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.values[accessor];
+      return <ItemTabsCell tabs={value ? value : ''} />;
+    },
+  };
+}
+
+export function itemValue<T>(options: {
+  accessor: string;
+  header: string;
+  editable?: boolean;
+  placeholder?: string;
+}): Column<object> {
+  const { header, accessor, editable, placeholder } = options;
 
   return {
     Header: header,
@@ -84,7 +132,14 @@ export function itemValue<T>(options: { accessor: string; header: string }): Col
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
-      return <ItemValueCell value={value} />;
+      return (
+        <ItemValueCell
+          value={value}
+          editable={editable}
+          pricedItem={data.row.original}
+          placeholder={placeholder}
+        />
+      );
     },
   };
 }
@@ -160,49 +215,104 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
   );
 };
 
-type ItemLinksCellProps = {
-  value: number;
+type ItemCellProps = {
+  value: string | number;
+  available?: boolean;
 };
 
-const ItemLinksCell = ({ value }: ItemLinksCellProps) => {
+const ItemCell = ({ value, available }: ItemCellProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
-  const noLinks = (value: number) => {
-    return !value || value === 0;
-  };
 
   return (
     <span
       className={clsx({
-        [classes.noLinks]: noLinks(value),
+        [classes.unavailable]: !available,
       })}
     >
-      {noLinks(value) ? t('label.not_available') : value}
+      {!available ? t('label.not_available') : value}
     </span>
   );
 };
 
 type ItemValueCellProps = {
   value: number;
+  editable?: boolean;
+  pricedItem: IPricedItem;
+  placeholder?: string;
+  uiStateStore?: UiStateStore;
+  customPriceStore?: CustomPriceStore;
 };
 
-const ItemValueCell = ({ value }: ItemValueCellProps) => {
+const ItemValueCellComponent = ({
+  value,
+  editable,
+  pricedItem,
+  uiStateStore,
+  customPriceStore,
+  placeholder,
+}: ItemValueCellProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const tryParseNumber = (value: boolean | string | number) => {
     return typeof value === 'number' ? value.toFixed(2) : value;
   };
+
+  const toggleCustomPriceDialog = () => {
+    uiStateStore!.setCustomPriceDialogOpen(true, pricedItem);
+  };
+
+  const removeCustomPrice = () => {
+    const activeLeagueId = uiStateStore!.selectedPriceTableLeagueId;
+    if (activeLeagueId) {
+      customPriceStore!.removeCustomPrice(getRawPriceFromPricedItem(pricedItem), activeLeagueId);
+    }
+  };
+
   return (
-    <span
-      className={classes.lastCell}
-      style={{
-        color: itemColors.chaosOrb,
-      }}
-    >
-      {tryParseNumber(value)}
-    </span>
+    <>
+      {value ? (
+        <span
+          className={classes.lastCell}
+          style={{
+            color: itemColors.chaosOrb,
+          }}
+        >
+          {value ? tryParseNumber(value) : placeholder}
+        </span>
+      ) : (
+        <span className={classes.lastCell}>{placeholder}</span>
+      )}
+      {editable && (
+        <>
+          <Tooltip title={t('label.set_custom_price') || ''} placement="bottom">
+            <IconButton
+              size="small"
+              className={classes.inlineIcon}
+              onClick={toggleCustomPriceDialog}
+            >
+              <EditIcon classes={{ root: classes.editIconRoot }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={t('label.remove_custom_price') || ''} placement="bottom">
+            <>
+              <IconButton
+                disabled={!value}
+                size="small"
+                className={classes.inlineIcon}
+                onClick={removeCustomPrice}
+              >
+                <DeleteIcon classes={{ root: classes.editIconRoot }} />
+              </IconButton>
+            </>
+          </Tooltip>
+        </>
+      )}
+    </>
   );
 };
+
+const ItemValueCell = inject('uiStateStore', 'customPriceStore')(observer(ItemValueCellComponent));
 
 type ItemCorruptedCellProps = {
   value: boolean;
@@ -232,9 +342,17 @@ const ItemCorruptedCell = ({ value }: ItemCorruptedCellProps) => {
             color: theme.palette.primary.contrastText,
           }}
         >
-          {t(`tables:value.${value.toString()}`)}
+          {t(`tables:value.false`)}
         </span>
       )}
     </span>
   );
+};
+
+type ItemTabsCellProps = {
+  tabs: ICompactTab[];
+};
+
+const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
+  return <span>{parseTabNames(tabs)}</span>;
 };

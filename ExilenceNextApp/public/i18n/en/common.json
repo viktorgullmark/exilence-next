@@ -14,6 +14,7 @@
     "create_group": "Create group",
     "join_group": "Join group",
     "leave_group": "Leave group",
+    "save_custom_price": "Save",
     "lets_begin": "Lets begin!",
     "apply_filter": "Apply filter"
   },
@@ -30,9 +31,11 @@
     "confirm_remove_profile": "Remove profile",
     "confirm_leave_group": "Leave group",
     "ga_consent_dialog_title": "Terms and conditions",
+    "custom_price_dialog_title": "Set custom price",
     "net_worth_settings": "Net worth",
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",
+    "custom_prices_settings": "Prices",
     "create_group_dialog_title": "Create new group",
     "join_group_dialog_title": "Join existing group",
     "snapshot_settings": "Snapshot settings",
@@ -43,7 +46,11 @@
     "log_settings": "Log"
   },
   "label": {
+    "customize_prices": "Customize prices",
+    "set_custom_price": "Set custom price",
+    "remove_custom_price": "Remove custom price",
     "visible_columns": "Visible columns",
+    "custom_price": "Custom price",
     "toggle_visible_columns": "Customize columns",
     "toggle_stash_tab_filter": "Show filter",
     "toggle_export_menu": "Export data",

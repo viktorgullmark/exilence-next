@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 26,
     maxWidth: 120,
   },
-  noLinks: {
+  unavailable: {
     color: theme.palette.text.hint,
   },
   inlineIcon: {
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   iconRoot: {
     fontSize: '1.2rem',
+  },
+  editIconRoot: {
+    fontSize: '0.75rem',
   },
 }));
 

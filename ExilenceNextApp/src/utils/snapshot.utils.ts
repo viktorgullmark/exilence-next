@@ -6,6 +6,7 @@ import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
+import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
 import { rgbToHex } from './colour.utils';

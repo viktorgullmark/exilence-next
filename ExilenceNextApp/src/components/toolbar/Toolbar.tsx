@@ -1,5 +1,3 @@
-import React, { ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   AppBar,
   Badge,
@@ -19,14 +17,14 @@ import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import GroupIcon from '@material-ui/icons/Group';
-import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-
+import React, { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import PatreonLogo from '../../assets/img/patreon-white.png';
 import { Notification } from '../../store/domains/notification';
 import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
@@ -40,7 +38,6 @@ import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer'
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
 
-export const innerToolbarHeight = 50;
 export const patreonLogoHeight = 35;
 export const patreonLogoWidth = 86;
 
@@ -87,7 +84,6 @@ const Toolbar = ({
   isUpdatingPrices,
   profilesLoaded,
   changingProfile,
-  toggleSidenav,
   toggleGroupOverview,
   handleProfileOpen,
   handleProfileClose,
@@ -114,26 +110,13 @@ const Toolbar = ({
       >
         <ToolbarStepperContainer />
         <MuiToolbar className={classes.toolbar}>
-          <Tooltip title={t('label.toggle_menu_title') || ''} placement="bottom">
-            <span>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={() => toggleSidenav()}
-                edge="start"
-                className={clsx(sidenavOpened && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
           <Box
             display="flex"
             alignItems="center"
             justifyContent="center"
             height="1"
             mr={1.5}
-            className={clsx({ [classes.marginLeft]: sidenavOpened })}
+            className={clsx({ [classes.marginLeft]: !sidenavOpened })}
           >
             <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
               <Box display="flex" alignItems="center" height={1}>

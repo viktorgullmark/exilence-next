@@ -1,9 +1,12 @@
 import { makeStyles, Theme } from '@material-ui/core';
-
 import { primaryGradient, statusColors } from '../../assets/themes/exilence-theme';
-import { drawerWidth } from '../drawer-wrapper/DrawerWrapper';
+import { drawerWidth, innerToolbarHeight } from '../drawer-wrapper/DrawerWrapper';
+import {
+  collapsedNavigationMenuWidth,
+  navigationMenuWidth,
+} from '../drawer-wrapper/navigation-menu/NavigationMenu.styles';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { innerToolbarHeight, patreonLogoHeight, patreonLogoWidth } from './Toolbar';
+import { patreonLogoHeight, patreonLogoWidth } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -15,7 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }),
   },
   appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -26,13 +28,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: patreonLogoWidth,
   },
   fromLeft: {
-    marginLeft: drawerWidth,
+    width: `calc(100% - ${navigationMenuWidth}px)`,
+    marginLeft: navigationMenuWidth,
   },
   fromRight: {
+    width: `calc(100% - ${drawerWidth}px)`,
     marginRight: drawerWidth,
   },
   marginLeft: {
-    marginLeft: theme.spacing(1),
+    marginLeft: collapsedNavigationMenuWidth + theme.spacing(1),
   },
   toolbar: {
     maxHeight: innerToolbarHeight,

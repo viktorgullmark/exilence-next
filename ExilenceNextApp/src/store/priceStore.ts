@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, toJS } from 'mobx';
+import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
-
 import { IExternalPrice } from '../interfaces/external-price.interface';
+import { filterPrices, findPrice } from '../utils/price.utils';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
 import { LeaguePriceDetails } from './domains/league-price-details';
@@ -39,6 +40,40 @@ export class PriceStore {
         })
       )
     );
+  }
+
+  @computed get pricesWithCustomValues() {
+    const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
+    const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
+    const leagueId = selectedLeagueId ? selectedLeagueId : activeLeagueId;
+    const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
+      (lp) => lp.leagueId === leagueId
+    );
+    const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
+    const prices = leaguePriceDetails?.leaguePriceSources[0]?.prices;
+    if (!prices) {
+      return;
+    }
+    return filterPrices(
+      prices.filter((p) => {
+        if (customLeaguePrices) {
+          const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
+          if (foundCustomPrice) {
+            p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+          } else {
+            p.customPrice = 0;
+          }
+        }
+        return p;
+      })
+    );
+  }
+
+  @computed get activePriceDetails() {
+    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
+    if (activeProfile) {
+      return this.leaguePriceDetails.find((l) => l.leagueId === activeProfile.activePriceLeagueId);
+    } else return;
   }
 
   @action
@@ -80,10 +115,6 @@ export class PriceStore {
   getPricesForLeagues() {
     const leagueIds = this.rootStore.leagueStore.priceLeagues.map((l) => l.id);
     this.isUpdatingPrices = true;
-    // override status message unless were snapshotting, so we can display the status to the user
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.setStatusMessage('fetching_prices');
-    }
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
@@ -128,18 +159,12 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.resetStatusMessage();
-    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'success');
   }
 
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.resetStatusMessage();
-    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'error', true, e);
   }
 }
