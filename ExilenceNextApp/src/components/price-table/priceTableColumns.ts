@@ -23,6 +23,10 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'ilvl',
     align: 'right',
   }),
+  itemCell({
+    header: 'Variant',
+    accessor: 'variant',
+  }),
   itemCorrupted<IExternalPrice>({
     accessor: 'corrupted',
     header: 'Corrupted',

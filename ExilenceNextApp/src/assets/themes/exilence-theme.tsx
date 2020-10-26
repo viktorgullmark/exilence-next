@@ -61,6 +61,8 @@ export const rarityColors = {
   currency: '#AD904B',
   divination: '#c0c0c0',
   quest: '#6eb930',
+  unknown: '#fff',
+  legacy: '#82ad6a',
 };
 
 export const itemColors = {

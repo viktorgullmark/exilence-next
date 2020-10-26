@@ -145,6 +145,25 @@ export function findPriceForItem(array: IExternalPrice[], priceToFind: IPricedIt
   );
 }
 
+export function getRawPriceFromPricedItem(item: IPricedItem): IExternalPrice {
+  return {
+    calculated: item.calculated,
+    name: item.name,
+    icon: item.icon,
+    quality: item.quality,
+    links: item.links,
+    level: item.level,
+    corrupted: item.corrupted,
+    frameType: item.frameType,
+    variant: item.variant,
+    elder: item.elder,
+    shaper: item.shaper,
+    ilvl: item.ilvl,
+    tier: item.tier,
+    count: 1,
+  };
+}
+
 export function mapApiPricedItemToPricedItem(item: IPricedItem) {
   return { id: item.itemId, ...item } as IPricedItem;
 }

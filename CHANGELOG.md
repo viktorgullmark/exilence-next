@@ -3,10 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.0] - NOT RELEASED
 ##### Added
+- Added a new section "prices" in the settings
+    - Ability to see all prices stored for each league
+    - Ability to override any price with your custom value
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
 - Added a status message that shows when prices are being updated
 - Added a background process for parsing the Client.txt in preparation for upcoming features
+- Added rarity color for legacy uniques
 - Added style tweaks to the item table
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working

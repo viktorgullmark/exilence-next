@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
@@ -60,6 +60,8 @@ export class PriceStore {
           const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
           if (foundCustomPrice) {
             p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+          } else {
+            p.customPrice = 0;
           }
         }
         return p;

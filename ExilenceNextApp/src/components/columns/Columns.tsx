@@ -1,23 +1,22 @@
+import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import clsx from 'clsx';
+import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import clsx from 'clsx';
-import EditIcon from '@material-ui/icons/Edit';
-
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
+import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { ICompactTab } from '../../interfaces/stash.interface';
+import { AccountStore } from '../../store/accountStore';
+import { CustomPriceStore } from '../../store/customPriceStore';
+import { UiStateStore } from '../../store/uiStateStore';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
+import { getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
-import { inject, observer } from 'mobx-react';
-import { UiStateStore } from '../../store/uiStateStore';
-import { ICompactTab } from '../../interfaces/stash.interface';
-import { PriceStore } from '../../store/priceStore';
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import { CustomPriceStore } from '../../store/customPriceStore';
-import { AccountStore } from '../../store/accountStore';
-
 export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
@@ -74,7 +73,7 @@ export function itemLinks<T>(options: { accessor: string; header: string }): Col
 export function itemCell(options: {
   accessor: string;
   header: string;
-  align: string;
+  align?: string;
 }): Column<object> {
   const { header, accessor, align } = options;
 
@@ -243,7 +242,6 @@ type ItemValueCellProps = {
   placeholder?: string;
   uiStateStore?: UiStateStore;
   customPriceStore?: CustomPriceStore;
-  accountStore?: AccountStore;
 };
 
 const ItemValueCellComponent = ({
@@ -251,6 +249,7 @@ const ItemValueCellComponent = ({
   editable,
   pricedItem,
   uiStateStore,
+  customPriceStore,
   placeholder,
 }: ItemValueCellProps) => {
   const classes = useStyles();
@@ -260,6 +259,13 @@ const ItemValueCellComponent = ({
 
   const toggleCustomPriceDialog = () => {
     uiStateStore!.setCustomPriceDialogOpen(true, pricedItem);
+  };
+
+  const removeCustomPrice = () => {
+    const activeLeagueId = uiStateStore!.selectedPriceTableLeagueId;
+    if (activeLeagueId) {
+      customPriceStore!.removeCustomPrice(getRawPriceFromPricedItem(pricedItem), activeLeagueId);
+    }
   };
 
   return (
@@ -277,15 +283,25 @@ const ItemValueCellComponent = ({
         <span className={classes.lastCell}>{placeholder}</span>
       )}
       {editable && (
-        <IconButton size="small" className={classes.inlineIcon} onClick={toggleCustomPriceDialog}>
-          <EditIcon classes={{ root: classes.editIconRoot }} />
-        </IconButton>
+        <>
+          <IconButton size="small" className={classes.inlineIcon} onClick={toggleCustomPriceDialog}>
+            <EditIcon classes={{ root: classes.editIconRoot }} />
+          </IconButton>
+          <IconButton
+            disabled={!value}
+            size="small"
+            className={classes.inlineIcon}
+            onClick={removeCustomPrice}
+          >
+            <DeleteIcon classes={{ root: classes.editIconRoot }} />
+          </IconButton>
+        </>
       )}
     </>
   );
 };
 
-const ItemValueCell = inject('uiStateStore')(observer(ItemValueCellComponent));
+const ItemValueCell = inject('uiStateStore', 'customPriceStore')(observer(ItemValueCellComponent));
 
 type ItemCorruptedCellProps = {
   value: boolean;

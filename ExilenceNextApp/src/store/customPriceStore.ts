@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePrices } from '../interfaces/league-prices';
@@ -25,6 +25,20 @@ export class CustomPriceStore {
         leaguePrices.prices[index] = customPrice;
       } else {
         leaguePrices.prices.push(customPrice);
+      }
+    }
+  }
+
+  @action
+  removeCustomPrice(customPrice: IExternalPrice, leagueId: string) {
+    const leaguePrices = this.customLeaguePrices.find((lp) => lp.leagueId === leagueId);
+    if (!leaguePrices) {
+      return;
+    } else {
+      const foundItem = findPrice(leaguePrices.prices, customPrice);
+      if (foundItem) {
+        const index = leaguePrices.prices.indexOf(foundItem);
+        leaguePrices.prices.splice(index, 1);
       }
     }
   }

@@ -137,6 +137,8 @@ const rarities: (keyof Rarity)[] = [
   'currency', //5
   'divination', //6
   'quest', //7
+  'unknown', //8
+  'legacy', //9
 ];
 
 export function getRarity(identifier: number): keyof Rarity {
