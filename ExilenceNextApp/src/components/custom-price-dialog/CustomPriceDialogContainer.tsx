@@ -15,8 +15,9 @@ const CustomPriceDialogContainer = ({
   uiStateStore,
   customPriceStore,
 }: CustomPriceDialogContainerProps) => {
+  const value = uiStateStore!.selectedPricedItem?.calculated || 0;
   const initialValues: CustomPriceForm = {
-    price: uiStateStore!.selectedPricedItem?.calculated || 0,
+    price: +value.toFixed(2),
   };
 
   const onSubmit = (form: CustomPriceForm) => {

@@ -253,6 +253,7 @@ const ItemValueCellComponent = ({
   placeholder,
 }: ItemValueCellProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const tryParseNumber = (value: boolean | string | number) => {
     return typeof value === 'number' ? value.toFixed(2) : value;
   };
@@ -284,17 +285,25 @@ const ItemValueCellComponent = ({
       )}
       {editable && (
         <>
-          <IconButton size="small" className={classes.inlineIcon} onClick={toggleCustomPriceDialog}>
-            <EditIcon classes={{ root: classes.editIconRoot }} />
-          </IconButton>
-          <IconButton
-            disabled={!value}
-            size="small"
-            className={classes.inlineIcon}
-            onClick={removeCustomPrice}
-          >
-            <DeleteIcon classes={{ root: classes.editIconRoot }} />
-          </IconButton>
+          <Tooltip title={t('label.set_custom_price') || ''} placement="bottom">
+            <IconButton
+              size="small"
+              className={classes.inlineIcon}
+              onClick={toggleCustomPriceDialog}
+            >
+              <EditIcon classes={{ root: classes.editIconRoot }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={t('label.remove_custom_price') || ''} placement="bottom">
+            <IconButton
+              disabled={!value}
+              size="small"
+              className={classes.inlineIcon}
+              onClick={removeCustomPrice}
+            >
+              <DeleteIcon classes={{ root: classes.editIconRoot }} />
+            </IconButton>
+          </Tooltip>
         </>
       )}
     </>

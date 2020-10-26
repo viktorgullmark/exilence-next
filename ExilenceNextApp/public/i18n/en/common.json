@@ -46,6 +46,8 @@
     "log_settings": "Log"
   },
   "label": {
+    "set_custom_price": "Set custom price",
+    "remove_custom_price": "Remove custom price",
     "visible_columns": "Visible columns",
     "custom_price": "Custom price",
     "toggle_visible_columns": "Customize columns",
