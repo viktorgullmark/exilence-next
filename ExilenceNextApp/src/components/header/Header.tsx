@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -7,10 +7,12 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CloseIcon from '@material-ui/icons/Close';
 import FilterNone from '@material-ui/icons/FilterNone';
 import MinimizeIcon from '@material-ui/icons/Minimize';
+import HelpIcon from '@material-ui/icons/HelpOutline';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 
 import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
+import SupportPanel from '../support-panel/SupportPanel';
 import useStyles from './Header.styles';
 
 export const resizeHandleContainerHeight = 5;
@@ -31,12 +33,21 @@ const Header = ({
   updateAvailable,
   quitAndInstall,
 }: HeaderProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const handleClick = (event: any) => {
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+    setIsOpen((isOpen) => !isOpen);
+  };
 
   return (
     <AppBar position="fixed" color="secondary" className={classes.header}>
       <div className={clsx(classes.noDrag, classes.resizeHandleContainer)} />
+      <SupportPanel isOpen={isOpen} anchorEl={anchorEl} setIsOpen={setIsOpen} />
       <Toolbar className={classes.toolbar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item>
@@ -73,8 +84,20 @@ const Header = ({
             <Grid container alignItems="center">
               <Grid
                 item
+                className={clsx(
+                  classes.noDrag,
+                  classes.windowHandlerButton,
+                  isOpen && classes.isActive
+                )}
+                onClick={(e) => handleClick(e)}
+                data-tour-elem="supportPanel"
+              >
+                <HelpIcon className={clsx(classes.windowIcon, classes.support)} />
+              </Grid>
+              <Grid
+                item
                 className={clsx(classes.noDrag, classes.windowHandlerButton)}
-                onClick={() => minimize()}
+                onClick={minimize}
               >
                 <MinimizeIcon className={classes.windowIcon} />
               </Grid>
@@ -102,7 +125,7 @@ const Header = ({
               <Grid
                 item
                 className={clsx(classes.noDrag, classes.windowHandlerButton, classes.exit)}
-                onClick={() => close()}
+                onClick={close}
               >
                 <CloseIcon className={classes.windowIcon} />
               </Grid>

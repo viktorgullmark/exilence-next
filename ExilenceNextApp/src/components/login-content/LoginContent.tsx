@@ -10,7 +10,6 @@ import { observer } from 'mobx-react';
 
 import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';
-import SupportButton from '../support-button/SupportButton';
 import AccountValidationForm from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
 
@@ -66,7 +65,6 @@ const LoginContent = ({
           </Paper>
         </Grid>
       </Grid>
-      <SupportButton noMargin />
     </>
   );
 };
