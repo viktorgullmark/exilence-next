@@ -116,7 +116,7 @@ const Toolbar = ({
             justifyContent="center"
             height="1"
             mr={1.5}
-            className={clsx({ [classes.marginLeft]: !sidenavOpened })}
+            className={clsx(classes.baseMargin, { [classes.marginLeft]: !sidenavOpened })}
           >
             <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
               <Box display="flex" alignItems="center" height={1}>
