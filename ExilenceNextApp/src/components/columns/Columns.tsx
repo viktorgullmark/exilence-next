@@ -295,14 +295,16 @@ const ItemValueCellComponent = ({
             </IconButton>
           </Tooltip>
           <Tooltip title={t('label.remove_custom_price') || ''} placement="bottom">
-            <IconButton
-              disabled={!value}
-              size="small"
-              className={classes.inlineIcon}
-              onClick={removeCustomPrice}
-            >
-              <DeleteIcon classes={{ root: classes.editIconRoot }} />
-            </IconButton>
+            <>
+              <IconButton
+                disabled={!value}
+                size="small"
+                className={classes.inlineIcon}
+                onClick={removeCustomPrice}
+              >
+                <DeleteIcon classes={{ root: classes.editIconRoot }} />
+              </IconButton>
+            </>
           </Tooltip>
         </>
       )}
