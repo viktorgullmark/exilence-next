@@ -2,7 +2,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePrices } from '../interfaces/league-prices';
-import { findPrice } from '../utils/price.utils';
+import { IPricedItem } from '../interfaces/priced-item.interface';
+import { findPrice, findPriceForItem } from '../utils/price.utils';
 import { RootStore } from './rootStore.js';
 
 export class CustomPriceStore {
@@ -26,5 +27,14 @@ export class CustomPriceStore {
         leaguePrices.prices.push(customPrice);
       }
     }
+  }
+
+  @action
+  findCustomPriceForItem(item: IPricedItem, leagueId?: string) {
+    const leaguePrices = this.customLeaguePrices.find((lp) => lp.leagueId === leagueId);
+    if (leaguePrices) {
+      return findPriceForItem(leaguePrices.prices, item);
+    }
+    return;
   }
 }

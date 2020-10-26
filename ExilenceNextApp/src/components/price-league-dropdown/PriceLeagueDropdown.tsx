@@ -7,6 +7,8 @@ import { observer } from 'mobx-react';
 import useLabelWidth from '../../hooks/use-label-width';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
+import useStyles from './PriceLeagueDropdown.styles';
+import clsx from 'clsx';
 
 type PriceLeagueDropdownProps = {
   touched: FormikTouched<any>;
@@ -14,6 +16,9 @@ type PriceLeagueDropdownProps = {
   priceLeagues: League[];
   handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
   values: ILeagueFormValues;
+  size?: 'small' | 'medium';
+  margin?: 'dense' | 'normal';
+  required?: boolean;
 };
 
 const PriceLeagueDropdown = ({
@@ -22,30 +27,40 @@ const PriceLeagueDropdown = ({
   priceLeagues,
   handleChange,
   values,
+  size = 'medium',
+  margin = 'normal',
+  required = true,
 }: PriceLeagueDropdownProps) => {
   const { t } = useTranslation();
-  const { labelWidth, ref } = useLabelWidth(0);
+  const classes = useStyles();
 
   return (
     <>
       <FormControl
         fullWidth
         variant="outlined"
-        margin="normal"
-        required
+        margin={margin}
+        size={size}
+        required={required}
         error={touched.priceLeague && errors.priceLeague !== undefined}
       >
-        <InputLabel ref={ref} htmlFor="price-league-dd">
+        <InputLabel
+          className={clsx({ [classes.small]: size === 'small' })}
+          htmlFor="price-league-table-dd"
+        >
           {t('label.select_price_league')}
         </InputLabel>
         <Select
           fullWidth
-          labelWidth={labelWidth}
+          labelWidth={141} // FIXME not sure why labelwidth is sometimes reset to 0 when using useLabelWidth
           value={values.priceLeague}
           onChange={(e) => handleChange(e)}
+          classes={{
+            root: size === 'small' ? classes.small : undefined,
+          }}
           inputProps={{
             name: 'priceLeague',
-            id: 'price-league-dd',
+            id: 'price-league-table-dd',
           }}
         >
           {priceLeagues.map((priceLeague: League) => {

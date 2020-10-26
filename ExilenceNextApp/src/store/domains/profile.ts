@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
@@ -18,7 +18,12 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { findItem, mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
-import { excludeLegacyMaps } from '../../utils/price.utils';
+import {
+  excludeLegacyMaps,
+  findPrice,
+  findPriceForItem,
+  mapPriceToItem,
+} from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
@@ -514,13 +519,24 @@ export class Profile {
 
     prices = excludeLegacyMaps(prices);
 
+    const customPrices = rootStore.customPriceStore.customLeaguePrices.find(
+      (cpl) => cpl.leagueId === activePriceLeague?.id
+    )?.prices;
+
+    if (customPrices) {
+      customPrices.filter((x) => {
+        const foundPrice = findPrice(prices, x);
+        if (foundPrice) {
+          foundPrice.customPrice = x.customPrice;
+          const index = prices.indexOf(foundPrice);
+          prices[index] = foundPrice;
+        }
+      });
+    }
+
     const pricedStashTabs = stashTabsWithItems.map((stashTabWithItems: IStashTabSnapshot) => {
       stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.map((item: IPricedItem) => {
-        return pricingService.priceItem(
-          item,
-          // todo: add support for multiple sources
-          prices
-        );
+        return pricingService.priceItem(item, prices);
       });
       return stashTabWithItems;
     });

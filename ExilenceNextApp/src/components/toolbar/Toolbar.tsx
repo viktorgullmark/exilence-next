@@ -147,7 +147,7 @@ const Toolbar = ({
               className={classes.offlineIcon}
             />
           )}
-          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
+          {(isInitiating || changingProfile || isSnapshotting) && (
             <Box ml={1} display="flex" alignItems="center" justifyContent="center">
               <CircularProgress
                 className={classes.leftSpinner}

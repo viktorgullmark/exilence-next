@@ -66,6 +66,7 @@ export const rarityColors = {
 export const itemColors = {
   chaosOrb: '#d6b600',
   corrupted: '#d80404',
+  custom: '#38cfba',
 };
 
 export const statusColors = {

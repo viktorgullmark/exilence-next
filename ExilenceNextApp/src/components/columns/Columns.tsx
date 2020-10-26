@@ -15,6 +15,8 @@ import { UiStateStore } from '../../store/uiStateStore';
 import { ICompactTab } from '../../interfaces/stash.interface';
 import { PriceStore } from '../../store/priceStore';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
+import { CustomPriceStore } from '../../store/customPriceStore';
+import { AccountStore } from '../../store/accountStore';
 
 export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
@@ -221,6 +223,8 @@ type ItemValueCellProps = {
   pricedItem: IPricedItem;
   placeholder?: string;
   uiStateStore?: UiStateStore;
+  customPriceStore?: CustomPriceStore;
+  accountStore?: AccountStore;
 };
 
 const ItemValueCellComponent = ({
@@ -229,11 +233,18 @@ const ItemValueCellComponent = ({
   pricedItem,
   uiStateStore,
   placeholder,
+  customPriceStore,
+  accountStore,
 }: ItemValueCellProps) => {
   const classes = useStyles();
   const tryParseNumber = (value: boolean | string | number) => {
     return typeof value === 'number' ? value.toFixed(2) : value;
   };
+
+  const activeLeagueId = accountStore!.getSelectedAccount.activePriceLeague?.id;
+  const isCustom = () => false;
+  // todo: implement
+  //activeLeagueId ? customPriceStore!.findCustomPriceForItem(pricedItem, activeLeagueId) : false;
 
   const toggleCustomPriceDialog = () => {
     uiStateStore!.setCustomPriceDialogOpen(true, pricedItem);
@@ -245,7 +256,7 @@ const ItemValueCellComponent = ({
         <span
           className={classes.lastCell}
           style={{
-            color: itemColors.chaosOrb,
+            color: isCustom() ? itemColors.custom : itemColors.chaosOrb,
           }}
         >
           {value ? tryParseNumber(value) : placeholder}
@@ -262,7 +273,11 @@ const ItemValueCellComponent = ({
   );
 };
 
-const ItemValueCell = inject('uiStateStore')(observer(ItemValueCellComponent));
+const ItemValueCell = inject(
+  'uiStateStore',
+  'accountStore',
+  'customPriceStore'
+)(observer(ItemValueCellComponent));
 
 type ItemCorruptedCellProps = {
   value: boolean;

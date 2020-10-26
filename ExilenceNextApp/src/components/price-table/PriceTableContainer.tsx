@@ -20,7 +20,8 @@ import { excludeLegacyMaps } from '../../utils/price.utils';
 import CustomPriceDialogContainer from '../custom-price-dialog/CustomPriceDialogContainer';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
-import PriceTableFilter from './price-table-filter/ItemTableFilter';
+import PriceTableFilter from './price-table-filter/PriceTableFilter';
+import PriceTableLeagueDropdownContainer from './price-table-league-dropdown/PriceTableLeagueDropdownContainer';
 import priceTableColumns from './priceTableColumns';
 
 type PriceTableContainerProps = {
@@ -123,12 +124,14 @@ const PriceTableContainer = ({ priceStore, uiStateStore }: PriceTableContainerPr
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={6}>
                 <PriceTableFilter
-                  array={[]}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, '')}
                 />
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item md={2} className={classes.actionArea}>
+            <PriceTableLeagueDropdownContainer />
           </Grid>
         </Grid>
       </Box>

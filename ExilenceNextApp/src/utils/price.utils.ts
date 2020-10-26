@@ -1,3 +1,4 @@
+import { rootStore } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaCurrencyOverviewCurrencyDetail } from '../interfaces/poe-ninja/poe-ninja-currency-overview-currency-detail.interface';
 import { IPoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja-currency-overview-line.interface';
@@ -5,9 +6,7 @@ import { IPoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-ite
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import AppConfig from './../config/app.config';
-import { getRarityIdentifier } from './item.utils';
 import { getNinjaLeagueUrl, getNinjaTypeUrl } from './ninja.utils';
-import { rootStore } from '..';
 
 export function getExternalPriceFromWatchItem(
   item: IPoeWatchCombinedPriceItemData
@@ -97,9 +96,9 @@ export const filterPrices = (prices: IExternalPrice[]) => {
   });
 };
 
-export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
+export function mapPriceToItem(item: IPricedItem, price: IExternalPrice, customPrice?: number) {
   if (price !== undefined) {
-    item.calculated = price.calculated ? price.calculated : 0;
+    item.calculated = customPrice ? customPrice : price.calculated || 0;
     item.max = price.max || 0;
     item.mean = price.mean || 0;
     item.mode = price.mode || 0;
@@ -111,6 +110,24 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
 }
 
 export function findPrice<T extends IExternalPrice>(array: T[], priceToFind: T) {
+  return array.find(
+    (x) =>
+      x.name === priceToFind.name &&
+      x.quality === priceToFind.quality &&
+      x.links === priceToFind.links &&
+      x.level === priceToFind.level &&
+      x.corrupted === priceToFind.corrupted &&
+      x.frameType === priceToFind.frameType &&
+      x.variant === priceToFind.variant &&
+      x.elder === priceToFind.elder &&
+      x.shaper === priceToFind.shaper &&
+      x.ilvl === priceToFind.ilvl &&
+      x.icon === priceToFind.icon &&
+      x.tier === priceToFind.tier
+  );
+}
+
+export function findPriceForItem(array: IExternalPrice[], priceToFind: IPricedItem) {
   return array.find(
     (x) =>
       x.name === priceToFind.name &&

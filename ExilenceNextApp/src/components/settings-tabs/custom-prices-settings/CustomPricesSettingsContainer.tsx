@@ -12,7 +12,7 @@ const CustomPricesSettingsContainer = ({ uiStateStore }: CustomPricesSettingsCon
       {uiStateStore!.initiated && uiStateStore!.validated ? (
         <CustomPricesSettings />
       ) : (
-        <>No prices has been fetched yet</>
+        <>Waiting for response from price source ..</>
       )}
     </>
   );

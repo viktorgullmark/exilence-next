@@ -60,6 +60,7 @@ export class UiStateStore {
   @persist @observable chartTimeSpan: TimespanType = 'All time';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
+  @persist @observable selectedPriceTableLeagueId: string | undefined = undefined;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -68,6 +69,11 @@ export class UiStateStore {
   @action
   resetStatusMessage() {
     this.statusMessage = undefined;
+  }
+
+  @action
+  setSelectedPriceTableLeagueId(id: string) {
+    this.selectedPriceTableLeagueId = id;
   }
 
   @action

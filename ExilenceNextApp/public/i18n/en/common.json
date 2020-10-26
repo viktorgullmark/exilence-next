@@ -47,6 +47,7 @@
   },
   "label": {
     "visible_columns": "Visible columns",
+    "custom_price": "Custom price",
     "toggle_visible_columns": "Customize columns",
     "toggle_stash_tab_filter": "Show filter",
     "toggle_export_menu": "Export data",

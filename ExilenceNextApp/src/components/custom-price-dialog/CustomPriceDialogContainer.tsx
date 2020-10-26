@@ -14,7 +14,6 @@ type CustomPriceDialogContainerProps = {
 const CustomPriceDialogContainer = ({
   uiStateStore,
   customPriceStore,
-  accountStore,
 }: CustomPriceDialogContainerProps) => {
   const initialValues: CustomPriceForm = {
     price: uiStateStore!.selectedPricedItem?.calculated || 0,
@@ -22,12 +21,12 @@ const CustomPriceDialogContainer = ({
 
   const onSubmit = (form: CustomPriceForm) => {
     const price = uiStateStore!.selectedPricedItem;
-    // todo: replace with dd value
-    const activeLeagueId = accountStore?.getSelectedAccount.activeProfile?.activePriceLeagueId;
+    const activeLeagueId = uiStateStore!.selectedPriceTableLeagueId;
     if (price && activeLeagueId) {
       customPriceStore!.addOrUpdateCustomPrice(
         {
-          customPrice: form.price,
+          calculated: price.calculated,
+          customPrice: +form.price,
           name: price.name,
           icon: price.icon,
           quality: price.quality,
@@ -58,8 +57,4 @@ const CustomPriceDialogContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'customPriceStore',
-  'accountStore'
-)(observer(CustomPriceDialogContainer));
+export default inject('uiStateStore', 'customPriceStore')(observer(CustomPriceDialogContainer));

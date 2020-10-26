@@ -37,6 +37,7 @@ const itemTableColumns: Column<object>[] = [
   itemValue<IExternalPrice>({
     accessor: 'calculated',
     header: 'Price',
+    placeholder: 'No data',
   }),
   itemValue<IExternalPrice>({
     accessor: 'customPrice',

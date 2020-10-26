@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { mapPriceToItem } from '../utils/price.utils';
@@ -94,16 +95,19 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     }
   }
 
+  let modifiedPrice;
   if (price) {
-    item.total = item.stackSize * (price.calculated ? price.calculated : 1);
-    item = mapPriceToItem(item, price);
+    const { customPrice, ...rest } = price;
+    modifiedPrice = rest;
+    modifiedPrice.calculated = customPrice || modifiedPrice.calculated;
+    item.total = item.stackSize * (modifiedPrice.calculated ? modifiedPrice.calculated : 1);
+    item = mapPriceToItem(item, modifiedPrice);
   }
 
   const data: IPricedItem = {
     ...item,
-    ...price,
+    ...modifiedPrice,
     corrupted: item.corrupted,
   };
-
   return data;
 }

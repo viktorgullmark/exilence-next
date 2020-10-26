@@ -43,19 +43,21 @@ export class PriceStore {
   }
 
   @computed get pricesWithCustomValues() {
-    // todo: new league variable here instead of activeProfile
-    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
-    const leaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
-      (lp) => lp.leagueId === activeProfile?.activePriceLeagueId
+    const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
+    const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
+    const leagueId = selectedLeagueId ? selectedLeagueId : activeLeagueId;
+    const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
+      (lp) => lp.leagueId === leagueId
     );
-    const prices = this.activePriceDetails?.leaguePriceSources[0]?.prices;
+    const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
+    const prices = leaguePriceDetails?.leaguePriceSources[0]?.prices;
     if (!prices) {
       return;
     }
     return filterPrices(
       prices.filter((p) => {
-        if (leaguePrices) {
-          const foundCustomPrice = findPrice(leaguePrices?.prices, p);
+        if (customLeaguePrices) {
+          const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
           if (foundCustomPrice) {
             p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
           }
@@ -111,10 +113,6 @@ export class PriceStore {
   getPricesForLeagues() {
     const leagueIds = this.rootStore.leagueStore.priceLeagues.map((l) => l.id);
     this.isUpdatingPrices = true;
-    // override status message unless were snapshotting, so we can display the status to the user
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.setStatusMessage('fetching_prices');
-    }
     fromStream(
       forkJoin(
         from(leagueIds).pipe(
@@ -159,18 +157,12 @@ export class PriceStore {
   @action
   getPricesforLeaguesSuccess() {
     this.isUpdatingPrices = false;
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.resetStatusMessage();
-    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'success');
   }
 
   @action
   getPricesforLeaguesFail(e: AxiosError | Error) {
     this.isUpdatingPrices = false;
-    if (!this.rootStore.uiStateStore.isSnapshotting) {
-      this.rootStore.uiStateStore.resetStatusMessage();
-    }
     this.rootStore.notificationStore.createNotification('get_prices_for_leagues', 'error', true, e);
   }
 }
