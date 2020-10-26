@@ -23,7 +23,7 @@ const WhatsNewDialog = ({ open, onClose }: any) => {
     <InfoDialog
       show={open}
       title="Releases"
-      content={<>{isFetching ? 'loading' : <ReactMarkdown>{changelog}</ReactMarkdown>}</>}
+      content={<ReactMarkdown>{isFetching ? '' : changelog}</ReactMarkdown>}
       onClose={onClose}
     />
   );
