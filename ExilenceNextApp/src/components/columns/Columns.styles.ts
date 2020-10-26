@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 26,
     maxWidth: 120,
   },
-  noLinks: {
+  unavailable: {
     color: theme.palette.text.hint,
   },
   inlineIcon: {

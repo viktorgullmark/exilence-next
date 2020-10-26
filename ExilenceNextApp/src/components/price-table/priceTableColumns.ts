@@ -1,6 +1,13 @@
 import { Column } from 'react-table';
 import { IExternalPrice } from '../../interfaces/external-price.interface';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+import {
+  itemCell,
+  itemCorrupted,
+  itemIcon,
+  itemLinks,
+  itemName,
+  itemValue,
+} from '../columns/Columns';
 
 const itemTableColumns: Column<object>[] = [
   itemIcon<IExternalPrice>({
@@ -11,11 +18,11 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'name',
     header: 'Name',
   }),
-  {
-    Header: 'Item level',
+  itemCell({
+    header: 'Item level',
     accessor: 'ilvl',
     align: 'right',
-  },
+  }),
   itemCorrupted<IExternalPrice>({
     accessor: 'corrupted',
     header: 'Corrupted',
@@ -24,16 +31,16 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'links',
     header: 'Links',
   }),
-  {
-    Header: 'Quality',
+  itemCell({
+    header: 'Quality',
     accessor: 'quality',
     align: 'right',
-  },
-  {
-    Header: 'Level',
+  }),
+  itemCell({
+    header: 'Level',
     accessor: 'level',
     align: 'right',
-  },
+  }),
   itemValue<IExternalPrice>({
     accessor: 'calculated',
     header: 'Price',

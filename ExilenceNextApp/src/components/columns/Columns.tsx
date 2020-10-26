@@ -63,7 +63,29 @@ export function itemLinks<T>(options: { accessor: string; header: string }): Col
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
-      return <ItemLinksCell value={value} />;
+      const noLinks = (value: number) => {
+        return !value || value === 0;
+      };
+      return <ItemCell value={value} available={!noLinks(value)} />;
+    },
+  };
+}
+
+export function itemCell(options: {
+  accessor: string;
+  header: string;
+  align: string;
+}): Column<object> {
+  const { header, accessor, align } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.values[accessor];
+      return <ItemCell value={value} available={value} />;
     },
   };
 }
@@ -194,25 +216,22 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
   );
 };
 
-type ItemLinksCellProps = {
-  value: number;
+type ItemCellProps = {
+  value: string | number;
+  available?: boolean;
 };
 
-const ItemLinksCell = ({ value }: ItemLinksCellProps) => {
+const ItemCell = ({ value, available }: ItemCellProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
-  const noLinks = (value: number) => {
-    return !value || value === 0;
-  };
 
   return (
     <span
       className={clsx({
-        [classes.noLinks]: noLinks(value),
+        [classes.unavailable]: !available,
       })}
     >
-      {noLinks(value) ? t('label.not_available') : value}
+      {!available ? t('label.not_available') : value}
     </span>
   );
 };
@@ -233,18 +252,11 @@ const ItemValueCellComponent = ({
   pricedItem,
   uiStateStore,
   placeholder,
-  customPriceStore,
-  accountStore,
 }: ItemValueCellProps) => {
   const classes = useStyles();
   const tryParseNumber = (value: boolean | string | number) => {
     return typeof value === 'number' ? value.toFixed(2) : value;
   };
-
-  const activeLeagueId = accountStore!.getSelectedAccount.activePriceLeague?.id;
-  const isCustom = () => false;
-  // todo: implement
-  //activeLeagueId ? customPriceStore!.findCustomPriceForItem(pricedItem, activeLeagueId) : false;
 
   const toggleCustomPriceDialog = () => {
     uiStateStore!.setCustomPriceDialogOpen(true, pricedItem);
@@ -256,7 +268,7 @@ const ItemValueCellComponent = ({
         <span
           className={classes.lastCell}
           style={{
-            color: isCustom() ? itemColors.custom : itemColors.chaosOrb,
+            color: itemColors.chaosOrb,
           }}
         >
           {value ? tryParseNumber(value) : placeholder}
@@ -273,11 +285,7 @@ const ItemValueCellComponent = ({
   );
 };
 
-const ItemValueCell = inject(
-  'uiStateStore',
-  'accountStore',
-  'customPriceStore'
-)(observer(ItemValueCellComponent));
+const ItemValueCell = inject('uiStateStore')(observer(ItemValueCellComponent));
 
 type ItemCorruptedCellProps = {
   value: boolean;
