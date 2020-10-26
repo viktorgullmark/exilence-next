@@ -6,14 +6,11 @@ import CustomPricesSettings from './CustomPricesSettings';
 type CustomPricesSettingsContainerProps = {
   uiStateStore?: UiStateStore;
 };
-const CustomPricesSettingsContainer = ({ uiStateStore }: CustomPricesSettingsContainerProps) => {
-  {
-    uiStateStore!.initiated && uiStateStore!.validated ? (
-      <CustomPricesSettings />
-    ) : (
-      <>Waiting for response from price source ..</>
-    );
-  }
-};
+const CustomPricesSettingsContainer = ({ uiStateStore }: CustomPricesSettingsContainerProps) =>
+  uiStateStore!.initiated && uiStateStore!.validated ? (
+    <CustomPricesSettings />
+  ) : (
+    <>Waiting for response from price source ..</>
+  );
 
 export default inject('uiStateStore')(observer(CustomPricesSettingsContainer));
