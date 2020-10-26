@@ -66,7 +66,9 @@ const PriceTableContainer = ({ priceStore, uiStateStore }: PriceTableContainerPr
   }, [prices]);
 
   const tableName = 'price-table';
-  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
+  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {
+    pageSize: 25,
+  });
 
   const [instance] = useState<TableInstance<object>>(
     useTable(

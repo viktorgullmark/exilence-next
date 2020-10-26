@@ -85,7 +85,9 @@ const ItemTableContainer = ({
   }, [getItems]);
 
   const tableName = 'item-table';
-  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
+  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {
+    pageSize: 25,
+  });
 
   const [instance] = useState<TableInstance<object>>(
     useTable(
