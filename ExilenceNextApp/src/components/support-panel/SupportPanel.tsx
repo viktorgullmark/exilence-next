@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
@@ -12,6 +12,8 @@ import RedirectIcon from '@material-ui/icons/CallMade';
 import useStyles from './SupportPanel.styles';
 import { UiStateStore } from '../../store/uiStateStore';
 import { openLink } from '../../utils/window.utils';
+import { useLocation } from 'react-router-dom';
+import WhatsNewDialog from '../whats-new-dialog/WhatsNewDialog';
 
 type SupportPanelProps = {
   uiStateStore?: UiStateStore;
@@ -25,9 +27,12 @@ const SupportPanel = ({
   setIsOpen,
   anchorEl = null,
 }: SupportPanelProps) => {
+  const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
-  const closeSupportPanel = useCallback(() => setIsOpen(!isOpen), [setIsOpen, isOpen]);
+  const { pathname } = useLocation();
+  const isLogin = pathname === '/login';
+  const closeSupportPanel = useCallback(() => setIsOpen(false), [setIsOpen, isOpen]);
 
   const handleDiscordClick = (e) => {
     openLink(e);
@@ -39,19 +44,24 @@ const SupportPanel = ({
     closeSupportPanel();
   };
 
+  const handleWhatsNewClick = () => {
+    setIsWhatsNewOpen((isWhatsNewOpen) => !isWhatsNewOpen);
+    closeSupportPanel();
+  };
+
   return (
-    <Popper
-      open={isOpen}
-      anchorEl={anchorEl}
-      placement="bottom-end"
-      className={classes.popper}
-      transition
-    >
-      {({ TransitionProps }) => (
-        <Fade {...TransitionProps} timeout={350}>
-          <Paper className={classes.paper} elevation={3}>
-            <ul className={classes.list}>
-              <li className={classes.option}>
+    <>
+      <Popper
+        open={isOpen}
+        anchorEl={anchorEl}
+        placement="bottom-end"
+        className={classes.popper}
+        transition
+      >
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <Paper className={classes.paper} elevation={3}>
+              <ul className={classes.list}>
                 <a
                   href="https://discord.gg/yxuBrPY"
                   onClick={(e) => handleDiscordClick(e)}
@@ -60,21 +70,24 @@ const SupportPanel = ({
                   <Typography variant="body2">{t('label.get_help')}</Typography>
                   <RedirectIcon className={classes.icon} />
                 </a>
-              </li>
-              <li className={classes.option} onClick={handleRetakeTourClick}>
-                <Typography variant="body2">{t('label.retake_tour')}</Typography>
+                {!isLogin && (
+                  <li className={classes.option} onClick={handleRetakeTourClick}>
+                    <Typography variant="body2">{t('label.retake_tour')}</Typography>
 
-                <HistoryIcon className={classes.icon} />
-              </li>
-              <li className={classes.option}>
-                <Typography variant="body2">{t('label.whats_new')}</Typography>
-                <StarRoundedIcon className={classes.icon} />
-              </li>
-            </ul>
-          </Paper>
-        </Fade>
-      )}
-    </Popper>
+                    <HistoryIcon className={classes.icon} />
+                  </li>
+                )}
+                <li className={classes.option} onClick={handleWhatsNewClick}>
+                  <Typography variant="body2">{t('label.whats_new')}</Typography>
+                  <StarRoundedIcon className={classes.icon} />
+                </li>
+              </ul>
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
+      <WhatsNewDialog open={isWhatsNewOpen} onClose={handleWhatsNewClick} />
+    </>
   );
 };
 

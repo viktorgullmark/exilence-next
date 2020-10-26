@@ -29,7 +29,13 @@ const useStyles = makeStyles((theme) =>
       justifyContent: 'space-between',
       width: '100%',
       textDecoration: 'none',
-      '&:active, &:hover, &:visited, &:link': {
+      cursor: 'pointer',
+      padding: theme.spacing(0.5, 1.75),
+      '&:active, &:visited, &:link': {
+        color: theme.palette.text.primary,
+      },
+      '&:hover': {
+        background: theme.palette.primary.main,
         color: theme.palette.text.primary,
       },
     },
