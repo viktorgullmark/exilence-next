@@ -7,15 +7,13 @@ type CustomPricesSettingsContainerProps = {
   uiStateStore?: UiStateStore;
 };
 const CustomPricesSettingsContainer = ({ uiStateStore }: CustomPricesSettingsContainerProps) => {
-  return (
-    <>
-      {uiStateStore!.initiated && uiStateStore!.validated ? (
-        <CustomPricesSettings />
-      ) : (
-        <>Waiting for response from price source ..</>
-      )}
-    </>
-  );
+  {
+    uiStateStore!.initiated && uiStateStore!.validated ? (
+      <CustomPricesSettings />
+    ) : (
+      <>Waiting for response from price source ..</>
+    );
+  }
 };
 
 export default inject('uiStateStore')(observer(CustomPricesSettingsContainer));
