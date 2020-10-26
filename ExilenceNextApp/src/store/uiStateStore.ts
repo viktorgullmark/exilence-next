@@ -19,7 +19,7 @@ export type GroupDialogType = 'create' | 'join' | undefined;
 export class UiStateStore {
   @observable @persist userId: string = uuidv4();
   @observable sessIdCookie: ICookie | undefined = undefined;
-  @persist @observable sidenavOpen: boolean = true;
+  @persist @observable sidenavOpen: boolean = false;
   @persist @observable toolbarTourOpen: boolean = true;
   @observable validated: boolean = false;
   @observable isValidating: boolean = false;

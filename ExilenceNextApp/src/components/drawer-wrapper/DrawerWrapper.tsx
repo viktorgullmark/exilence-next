@@ -1,16 +1,19 @@
-import React, { ReactNode } from 'react';
-import { useLocation } from 'react-router';
 import { Box } from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-
+import React, { ReactNode } from 'react';
+import { useLocation } from 'react-router';
 import { background } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { innerToolbarHeight } from '../toolbar/Toolbar';
 import GroupOverviewContainer from './group-overview/GroupOverviewContainer';
+import {
+  collapsedNavigationMenuWidth,
+  navigationMenuWidth,
+} from './navigation-menu/NavigationMenu.styles';
 import NavigationMenuContainer from './navigation-menu/NavigationMenuContainer';
 
+export const innerToolbarHeight = 50;
 export const drawerWidth = 300;
 
 const topMargin = toolbarHeight + (innerToolbarHeight || 0) + resizeHandleContainerHeight;
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: 0,
+    marginLeft: collapsedNavigationMenuWidth,
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: drawerWidth,
   },
   fromLeft: {
-    marginLeft: drawerWidth,
+    marginLeft: navigationMenuWidth,
   },
   windowBottomBorder: {
     background: background.darker,
