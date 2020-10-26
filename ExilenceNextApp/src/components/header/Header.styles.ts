@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) =>
       '-webkit-app-region': 'drag',
       paddingBottom: resizeHandleContainerHeight,
     },
-    menuButton: {},
     hide: {
       display: 'none',
     },
@@ -44,6 +43,9 @@ const useStyles = makeStyles((theme) =>
     noDrag: {
       '-webkit-app-region': 'no-drag',
       cursor: 'pointer',
+    },
+    isActive: {
+      backgroundColor: theme.palette.background.paper,
     },
     windowHandlerButton: {
       display: 'flex',
@@ -69,6 +71,9 @@ const useStyles = makeStyles((theme) =>
       marginRight: theme.spacing(1),
       marginLeft: theme.spacing(1),
       cursor: 'pointer',
+    },
+    support: {
+      fontSize: 18,
     },
   })
 );
