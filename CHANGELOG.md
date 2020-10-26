@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added a new section "prices" in the settings
     - Ability to see all prices stored for each league
     - Ability to override any price with your custom value
+    - Added a shortcut to customize prices from the item table
 - Added a new support menu in the main window toolbar with helpful links
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
