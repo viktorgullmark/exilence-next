@@ -1,4 +1,3 @@
-import { toJS } from 'mobx';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { mapPriceToItem } from '../utils/price.utils';

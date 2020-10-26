@@ -1,5 +1,4 @@
 import { action, makeObservable, observable } from 'mobx';
-
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore.js';
 
@@ -9,7 +8,7 @@ export class LogStore {
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
-    electronService.ipcRenderer.on('log-event', (event: any, args: any) => {
+    electronService.ipcRenderer.on('log-event', (_event: any, args: any) => {
       switch (args.event) {
         case 'start':
           this.running = true;

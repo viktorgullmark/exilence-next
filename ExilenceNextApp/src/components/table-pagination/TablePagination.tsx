@@ -1,16 +1,16 @@
-import { default as React, PropsWithChildren, ReactElement, useCallback } from 'react';
-import { TableInstance } from 'react-table';
 import {
   IconButton,
   makeStyles,
   TablePagination as _MuiTablePagination,
-  useTheme,
+  useTheme
 } from '@material-ui/core';
 import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import { default as React, PropsWithChildren, ReactElement, useCallback } from 'react';
+import { TableInstance } from 'react-table';
 
 const rowsPerPageOptions = [5, 10, 25, 50];
 
@@ -47,7 +47,7 @@ export function TablePagination<T extends object>({
   } = instance;
 
   const handleChangePage = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
+    (_event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
       if (newPage === pageIndex + 1) {
         nextPage();
       } else if (newPage === pageIndex - 1) {
