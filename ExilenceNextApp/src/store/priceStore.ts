@@ -5,6 +5,7 @@ import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { IExternalPrice } from '../interfaces/external-price.interface';
+import { filterPrices, findPrice } from '../utils/price.utils';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
 import { LeaguePriceDetails } from './domains/league-price-details';
@@ -38,6 +39,29 @@ export class PriceStore {
           }
         })
       )
+    );
+  }
+
+  @computed get pricesWithCustomValues() {
+    // todo: new league variable here instead of activeProfile
+    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
+    const leaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
+      (lp) => lp.leagueId === activeProfile?.activePriceLeagueId
+    );
+    const prices = this.activePriceDetails?.leaguePriceSources[0]?.prices;
+    if (!prices) {
+      return;
+    }
+    return filterPrices(
+      prices.filter((p) => {
+        if (leaguePrices) {
+          const foundCustomPrice = findPrice(leaguePrices?.prices, p);
+          if (foundCustomPrice) {
+            p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+          }
+        }
+        return p;
+      })
     );
   }
 

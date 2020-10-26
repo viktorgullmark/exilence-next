@@ -1,25 +1,30 @@
 import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { IExternalPrice } from '../interfaces/external-price.interface';
+import { ILeaguePrices } from '../interfaces/league-prices';
 import { findPrice } from '../utils/price.utils';
 import { RootStore } from './rootStore.js';
 
 export class CustomPriceStore {
-  // todo: add support for multiple leagues
-  @observable @persist('list') customPrices: IExternalPrice[] = [];
+  @observable @persist('list') customLeaguePrices: ILeaguePrices[] = [];
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
   @action
-  addOrUpdateCustomPrice(customPrice: IExternalPrice) {
-    const foundItem = findPrice(this.customPrices, customPrice);
-    if (foundItem) {
-      const index = this.customPrices.indexOf(foundItem);
-      this.customPrices[index] = customPrice;
+  addOrUpdateCustomPrice(customPrice: IExternalPrice, leagueId: string) {
+    const leaguePrices = this.customLeaguePrices.find((lp) => lp.leagueId === leagueId);
+    if (!leaguePrices) {
+      this.customLeaguePrices.push({ leagueId: leagueId, prices: [customPrice] });
     } else {
-      this.customPrices.push(customPrice);
+      const foundItem = findPrice(leaguePrices.prices, customPrice);
+      if (foundItem) {
+        const index = leaguePrices.prices.indexOf(foundItem);
+        leaguePrices.prices[index] = customPrice;
+      } else {
+        leaguePrices.prices.push(customPrice);
+      }
     }
   }
 }
