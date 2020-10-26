@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
   iconRoot: {
     fontSize: '1.2rem',
   },
+  editIconRoot: {
+    fontSize: '0.75rem',
+  },
 }));
 
 export default useStyles;

@@ -1,21 +1,13 @@
 import { Column } from 'react-table';
-
-import { IPricedItem } from '../../interfaces/priced-item.interface';
-import {
-  itemCorrupted,
-  itemIcon,
-  itemLinks,
-  itemName,
-  itemTabs,
-  itemValue,
-} from '../columns/Columns';
+import { IExternalPrice } from '../../interfaces/external-price.interface';
+import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
 
 const itemTableColumns: Column<object>[] = [
-  itemIcon<IPricedItem>({
+  itemIcon<IExternalPrice>({
     accessor: 'icon',
     header: 'Icon',
   }),
-  itemName<IPricedItem>({
+  itemName<IExternalPrice>({
     accessor: 'name',
     header: 'Name',
   }),
@@ -24,15 +16,11 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'ilvl',
     align: 'right',
   },
-  itemTabs<IPricedItem>({
-    accessor: 'tab',
-    header: 'Tabs',
-  }),
-  itemCorrupted<IPricedItem>({
+  itemCorrupted<IExternalPrice>({
     accessor: 'corrupted',
     header: 'Corrupted',
   }),
-  itemLinks<IPricedItem>({
+  itemLinks<IExternalPrice>({
     accessor: 'links',
     header: 'Links',
   }),
@@ -46,18 +34,15 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'level',
     align: 'right',
   },
-  {
-    Header: 'Quantity',
-    accessor: 'stackSize',
-    align: 'right',
-  },
-  itemValue<IPricedItem>({
+  itemValue<IExternalPrice>({
     accessor: 'calculated',
     header: 'Price',
   }),
-  itemValue<IPricedItem>({
-    accessor: 'total',
-    header: 'Total value',
+  itemValue<IExternalPrice>({
+    accessor: 'customPrice',
+    header: 'Custom price',
+    editable: true,
+    placeholder: 'Not set',
   }),
 ];
 

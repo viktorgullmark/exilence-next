@@ -105,6 +105,7 @@ const hydrate = create({
 const renderApp = () => {
   Promise.all([
     hydrate('account', rootStore.accountStore),
+    hydrate('customPrice', rootStore.customPriceStore),
     hydrate('uiState', rootStore.uiStateStore),
     hydrate('league', rootStore.leagueStore),
     hydrate('setting', rootStore.settingStore),

@@ -1,11 +1,10 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Box, Typography } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { observer } from 'mobx-react';
-
-import LogSettingsContainer from './log-settings/LogSettingsContainer';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import CustomPricesSettingsContainer from './custom-prices-settings/CustomPricesSettingsContainer';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 import useStyles from './SettingsTabs.styles';
@@ -42,6 +41,7 @@ const SettingsTabs = () => {
       >
         <Tab label={t('title.net_worth_settings')} className={classes.tab} {...a11yProps(0)} />
         <Tab label={t('title.ui_settings')} className={classes.tab} {...a11yProps(1)} />
+        <Tab label={t('title.custom_prices_settings')} className={classes.tab} {...a11yProps(2)} />
       </Tabs>
       <SettingsTab value={value} index={0}>
         <Box className={classes.subSection}>
@@ -65,14 +65,14 @@ const SettingsTabs = () => {
           </Box>
         </Box>
       </SettingsTab>
-      {/* <SettingsTab value={value} index={2}>
+      <SettingsTab value={value} index={2}>
         <Box className={classes.subSection}>
-          <Typography variant="overline">{t('title.general')}</Typography>
+          <Typography variant="overline">{t('title.custom_prices_settings')}</Typography>
           <Box my={2}>
-            <LogSettingsContainer />
+            <CustomPricesSettingsContainer />
           </Box>
         </Box>
-      </SettingsTab> */}
+      </SettingsTab>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { AccountStore } from './accountStore';
+import { CustomPriceStore } from './customPriceStore';
 import { SignalrHub } from './domains/signalr-hub';
 import { LeagueStore } from './leagueStore';
 import { LogStore } from './logStore';
@@ -26,6 +27,7 @@ export class RootStore {
   priceStore: PriceStore;
   overlayStore: OverlayStore;
   logStore: LogStore;
+  customPriceStore: CustomPriceStore;
 
   constructor() {
     this.uiStateStore = new UiStateStore(this);
@@ -41,5 +43,6 @@ export class RootStore {
     this.priceStore = new PriceStore(this);
     this.overlayStore = new OverlayStore(this);
     this.logStore = new LogStore(this);
+    this.customPriceStore = new CustomPriceStore(this);
   }
 }

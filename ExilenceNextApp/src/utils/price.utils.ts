@@ -5,7 +5,9 @@ import { IPoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-ite
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import AppConfig from './../config/app.config';
+import { getRarityIdentifier } from './item.utils';
 import { getNinjaLeagueUrl, getNinjaTypeUrl } from './ninja.utils';
+import { rootStore } from '..';
 
 export function getExternalPriceFromWatchItem(
   item: IPoeWatchCombinedPriceItemData
@@ -79,9 +81,21 @@ export function getExternalPriceFromNinjaCurrencyItem(
     calculated: calculated,
     icon: details !== undefined ? details.icon : undefined,
     count: item.receive ? item.receive.count : 0,
+    frameType: 5,
     detailsUrl: detailsUrl,
   } as IExternalPrice;
 }
+
+export const filterPrices = (prices: IExternalPrice[]) => {
+  if (prices.length === 0) {
+    return [];
+  }
+  const filterText = rootStore.uiStateStore.priceTableFilterText.toLowerCase();
+
+  return prices.filter((p) => {
+    return p.name.toLowerCase().includes(filterText);
+  });
+};
 
 export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
   if (price !== undefined) {
@@ -94,6 +108,24 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
     item.detailsUrl = price.detailsUrl;
   }
   return item;
+}
+
+export function findPrice<T extends IExternalPrice>(array: T[], priceToFind: T) {
+  return array.find(
+    (x) =>
+      x.name === priceToFind.name &&
+      x.quality === priceToFind.quality &&
+      x.links === priceToFind.links &&
+      x.level === priceToFind.level &&
+      x.corrupted === priceToFind.corrupted &&
+      x.frameType === priceToFind.frameType &&
+      x.variant === priceToFind.variant &&
+      x.elder === priceToFind.elder &&
+      x.shaper === priceToFind.shaper &&
+      x.ilvl === priceToFind.ilvl &&
+      x.icon === priceToFind.icon &&
+      x.tier === priceToFind.tier
+  );
 }
 
 export function mapApiPricedItemToPricedItem(item: IPricedItem) {

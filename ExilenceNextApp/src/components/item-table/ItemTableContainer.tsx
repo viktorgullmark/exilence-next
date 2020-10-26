@@ -1,3 +1,8 @@
+import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { inject, observer } from 'mobx-react';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,18 +16,11 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { inject, observer } from 'mobx-react';
-
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import { mapPricedItemToTableItem } from '../../utils/item.utils';
 import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
@@ -83,7 +81,7 @@ const ItemTableContainer = ({
   }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
   const data = useMemo(() => {
-    return getItems.map((i) => mapPricedItemToTableItem(i));
+    return getItems;
   }, [getItems]);
 
   const tableName = 'item-table';

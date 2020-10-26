@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
-
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
 import { poeninjaService } from './../services/poe-ninja.service';
@@ -39,6 +39,13 @@ export class PriceStore {
         })
       )
     );
+  }
+
+  @computed get activePriceDetails() {
+    const activeProfile = this.rootStore.accountStore.getSelectedAccount.activeProfile;
+    if (activeProfile) {
+      return this.leaguePriceDetails.find((l) => l.leagueId === activeProfile.activePriceLeagueId);
+    } else return;
   }
 
   @action

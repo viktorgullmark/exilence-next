@@ -3,6 +3,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import { IPricedItem } from '../interfaces/priced-item.interface';
 
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
@@ -30,6 +31,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
+  @observable priceTableFilterText: string = '';
   @observable isInitiating: boolean = false;
   @observable groupDialogOpen: boolean = false;
   @observable groupDialogType: 'create' | 'join' | undefined = undefined;
@@ -56,6 +58,8 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
+  @observable customPriceDialogOpen: boolean = false;
+  @observable selectedPricedItem: IPricedItem | undefined = undefined;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -231,6 +235,17 @@ export class UiStateStore {
   }
 
   @action
+  setSelectedPricedItem(item?: IPricedItem) {
+    this.selectedPricedItem = item;
+  }
+
+  @action
+  setCustomPriceDialogOpen(open: boolean, row?: IPricedItem) {
+    this.customPriceDialogOpen = open;
+    this.setSelectedPricedItem(row);
+  }
+
+  @action
   setSessIdCookie(sessionId: string) {
     const cookie = constructCookie(sessionId);
     return authService.setAuthCookie(cookie).pipe(
@@ -277,6 +292,11 @@ export class UiStateStore {
   @action
   setItemTableFilterText(text: string) {
     this.itemTableFilterText = text;
+  }
+
+  @action
+  setPriceTableFilterText(text: string) {
+    this.priceTableFilterText = text;
   }
 
   @action
