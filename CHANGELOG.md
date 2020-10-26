@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Added a background process for parsing the Client.txt in preparation for upcoming features
 - Added rarity color for legacy uniques
 - Added style tweaks to the item table
+- Added persistence of selected settings tab
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the installer would sometimes get stuck halfway without any visible errors

@@ -48,6 +48,7 @@ export class UiStateStore {
   @observable leavingGroup: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
+  @observable settingsTabIndex: number = 0;
   @observable filteredStashTabs: IStashTab[] | undefined = undefined;
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
@@ -69,6 +70,11 @@ export class UiStateStore {
   @action
   resetStatusMessage() {
     this.statusMessage = undefined;
+  }
+
+  @action.bound
+  setSettingsTabIndex(index: number) {
+    this.settingsTabIndex = index;
   }
 
   @action

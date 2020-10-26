@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import { Box, Button, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
@@ -19,6 +19,7 @@ import {
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
+import { RouteStore } from '../../store/routeStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
@@ -33,6 +34,7 @@ type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
+  routeStore?: RouteStore;
 };
 
 export const itemTableFilterSpacing = 2;
@@ -67,6 +69,7 @@ const ItemTableContainer = ({
   accountStore,
   signalrStore,
   uiStateStore,
+  routeStore,
 }: ItemTableContainerProps) => {
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -159,6 +162,11 @@ const ItemTableContainer = ({
     setAnchorEl(null);
   }, []);
 
+  const handleRedirectToCustomPrices = () => {
+    uiStateStore!.setSettingsTabIndex(2);
+    routeStore!.redirect('/settings');
+  };
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -184,6 +192,16 @@ const ItemTableContainer = ({
               show={columnsOpen}
               anchorEl={anchorEl}
             />
+            <Box mr={1}>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={handleRedirectToCustomPrices}
+              >
+                {t('label.customize_prices')}
+              </Button>
+            </Box>
             {hideableColumns.length > 1 && (
               <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
@@ -224,4 +242,9 @@ const ItemTableContainer = ({
   );
 };
 
-export default inject('uiStateStore', 'signalrStore', 'accountStore')(observer(ItemTableContainer));
+export default inject(
+  'uiStateStore',
+  'signalrStore',
+  'accountStore',
+  'routeStore'
+)(observer(ItemTableContainer));

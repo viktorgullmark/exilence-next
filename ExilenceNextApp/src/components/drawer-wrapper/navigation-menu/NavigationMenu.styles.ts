@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
 import { innerToolbarHeight } from '../DrawerWrapper';
 
-export const navigationMenuWidth = 280;
+export const navigationMenuWidth = 240;
 export const collapsedNavigationMenuWidth = 57;
 const useStyles = makeStyles((theme) => ({
   drawer: {
