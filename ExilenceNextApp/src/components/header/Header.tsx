@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -12,8 +12,8 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 
 import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
+import SupportPanel from '../support-panel/SupportPanel';
 import useStyles from './Header.styles';
-const SupportPanel = lazy(() => import('../support-panel/SupportPanel'));
 
 export const resizeHandleContainerHeight = 5;
 export const toolbarHeight = 30;
@@ -47,9 +47,7 @@ const Header = ({
   return (
     <AppBar position="fixed" color="secondary" className={classes.header}>
       <div className={clsx(classes.noDrag, classes.resizeHandleContainer)} />
-      <Suspense fallback="XDDDD">
-        <SupportPanel isOpen={isOpen} anchorEl={anchorEl} setIsOpen={setIsOpen} />
-      </Suspense>
+      <SupportPanel isOpen={isOpen} anchorEl={anchorEl} setIsOpen={setIsOpen} />
       <Toolbar className={classes.toolbar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item>

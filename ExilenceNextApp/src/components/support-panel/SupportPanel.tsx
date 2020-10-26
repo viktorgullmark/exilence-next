@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import HistoryIcon from '@material-ui/icons/History';
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import RedirectIcon from '@material-ui/icons/CallMade';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 import useStyles from './SupportPanel.styles';
 import { UiStateStore } from '../../store/uiStateStore';
@@ -31,10 +32,10 @@ const SupportPanel = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const isLogin = pathname === '/login';
+  const isLoginRoute = pathname === '/login';
   const closeSupportPanel = useCallback(() => setIsOpen(false), [setIsOpen, isOpen]);
 
-  const handleDiscordClick = (e) => {
+  const handleLinkClick = (e) => {
     openLink(e);
     closeSupportPanel();
   };
@@ -64,23 +65,50 @@ const SupportPanel = ({
               <ul className={classes.list}>
                 <a
                   href="https://discord.gg/yxuBrPY"
-                  onClick={(e) => handleDiscordClick(e)}
+                  onClick={(e) => handleLinkClick(e)}
                   className={classes.optionLink}
                 >
-                  <Typography variant="body2">{t('label.get_help')}</Typography>
+                  <Typography variant="body2">{t('label.discord')}</Typography>
                   <RedirectIcon className={classes.icon} />
                 </a>
-                {!isLogin && (
+                {/*<li className={classes.option}>*/}
+                {/*  <Typography variant="body2">{t('label.faq')}</Typography>*/}
+                {/*</li>*/}
+                <li className={classes.option} onClick={handleWhatsNewClick}>
+                  <Typography variant="body2">{t('label.whats_new')}</Typography>
+                  <StarRoundedIcon className={classes.icon} />
+                </li>
+                {!isLoginRoute && (
                   <li className={classes.option} onClick={handleRetakeTourClick}>
                     <Typography variant="body2">{t('label.retake_tour')}</Typography>
 
                     <HistoryIcon className={classes.icon} />
                   </li>
                 )}
-                <li className={classes.option} onClick={handleWhatsNewClick}>
-                  <Typography variant="body2">{t('label.whats_new')}</Typography>
-                  <StarRoundedIcon className={classes.icon} />
-                </li>
+                <div className={classes.separator} />
+                <a
+                  href="https://github.com/viktorgullmark/exilence-next/issues/new?template=feature_request.md"
+                  onClick={(e) => handleLinkClick(e)}
+                  className={classes.optionLink}
+                >
+                  <Typography variant="body2">{t('label.feature_request')}</Typography>
+                </a>
+                <a
+                  href="https://github.com/viktorgullmark/exilence-next/issues/new?template=bug_report.md"
+                  onClick={(e) => handleLinkClick(e)}
+                  className={classes.optionLink}
+                >
+                  <Typography variant="body2">{t('label.bug_report')}</Typography>
+                </a>
+                <div className={classes.separator} />
+                <a
+                  href="https://www.patreon.com/exilence"
+                  onClick={(e) => handleLinkClick(e)}
+                  className={classes.optionLink}
+                >
+                  <Typography variant="body2">{t('label.support_us')}</Typography>
+                  <FavoriteIcon className={classes.icon} />
+                </a>
               </ul>
             </Paper>
           </Fade>

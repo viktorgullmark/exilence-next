@@ -125,9 +125,13 @@
     "microsoft_edge": "Microsoft Edge",
     "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly",
     "open_on_ninja": "View on poe.ninja",
-    "get_help": "Get Help",
+    "discord": "Discord Server",
     "retake_tour": "Re-take Tour",
-    "whats_new": "What's new"
+    "whats_new": "What's new",
+    "faq": "FAQ",
+    "bug_report": "Bug Report",
+    "feature_request": "Feature Request",
+    "support_us": "Support Us"
   },
   "value": {
     "none": "None",

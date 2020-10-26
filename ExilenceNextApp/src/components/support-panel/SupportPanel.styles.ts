@@ -10,6 +10,11 @@ const useStyles = makeStyles((theme) =>
     paper: {
       padding: theme.spacing(1, 0),
     },
+    separator: {
+      height: 1,
+      background: theme.palette.primary.main,
+      margin: theme.spacing(0.75, 1, 1),
+    },
     list: {
       listStyleType: 'none',
       margin: 0,
