@@ -80,8 +80,18 @@ export class Profile {
       !rootStore.priceStore.isUpdatingPrices &&
       rootStore.uiStateStore.validated &&
       rootStore.uiStateStore.initiated &&
-      !rootStore.uiStateStore.isSnapshotting
+      !rootStore.uiStateStore.isSnapshotting &&
+      this.hasPricesForActiveLeague
     );
+  }
+
+  @computed
+  get hasPricesForActiveLeague() {
+    const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
+      (l) => l.leagueId === this.activePriceLeagueId
+    );
+    const prices = activePriceDetails?.leaguePriceSources[0]?.prices;
+    return prices !== undefined && prices.length > 0;
   }
 
   @computed

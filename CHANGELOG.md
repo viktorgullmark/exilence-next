@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the installer would sometimes get stuck halfway without any visible errors
 - Fixed a bug where the net worth overlay would not update when income was reset
+- Fixed a bug where snapshotting would result in a "prices of undefined" error
 ##### Changed
 - Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
