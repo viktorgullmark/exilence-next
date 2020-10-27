@@ -20,6 +20,7 @@ namespace Shared.Repositories
         private readonly IMongoCollection<StashTab> _stashtabs;
         private readonly IMongoCollection<Snapshot> _snapshots;
         private readonly IMongoCollection<PricedItem> _pricedItems;
+        private readonly IMongoCollection<ExternalPrice> _customPrices;
 
         public SnapshotRepository(IConfiguration configuration)
         {
@@ -28,6 +29,7 @@ namespace Shared.Repositories
             _snapshots = _database.GetCollection<Snapshot>("SnapShots");
             _stashtabs = _database.GetCollection<StashTab>("StashTabs");
             _pricedItems = _database.GetCollection<PricedItem>("PricedItems");
+            _customPrices = _database.GetCollection<ExternalPrice>("CustomPrices");
         }
 
         public async Task<bool> SnapshotExists(string clientId)

@@ -69,34 +69,16 @@ namespace API.Hubs
             }
             Log($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
-        
-        #region Streams
-        //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
-        //{
-        //    await foreach (var pricedItem in pricedItems)
-        //    {
-        //        await _snapshotService.AddPricedItem(stashtabId, pricedItem);
-        //    }
-        //}
 
-        //public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
-        //{
-        //    var snapshots = _snapshotService.GetStashtabs(snapshotId);
 
-        //    foreach (var snapshot in snapshots)
-        //    {
-        //        // Check the cancellation token regularly so that the server will stop
-        //        // producing items if the client disconnects.
-        //        cancellationToken.ThrowIfCancellationRequested();
+        public async Task<ExternalPriceModel> AddCustomPrice(ExternalPriceModel externalPriceModel)
+        {
+            var connection = await _accountService.GetConnection(AccountName);
+            
 
-        //        yield return _mapper.Map<SnapshotModel>(snapshot);
-
-        //        // Use the cancellationToken in other APIs that accept cancellation
-        //        // tokens so the cancellation can flow down to them.
-        //        await Task.Delay(100, cancellationToken);
-        //    }
-        //}
-        #endregion
+            Log($"Added custom price for {externalPriceModel.Name} value: {externalPriceModel.CustomPrice} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+            return externalPriceModel;
+        }
 
     }
 }
