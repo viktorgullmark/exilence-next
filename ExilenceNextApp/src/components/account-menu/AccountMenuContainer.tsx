@@ -4,13 +4,19 @@ import { inject, observer } from 'mobx-react';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import AccountMenu from './AccountMenu';
+import { AccountStore } from '../../store/accountStore';
 
 type AccountMenuContainerProps = {
   uiStateStore?: UiStateStore;
+  accountStore?: AccountStore;
   signalrStore?: SignalrStore;
 };
 
-const AccountMenuContainer = ({ uiStateStore, signalrStore }: AccountMenuContainerProps) => {
+const AccountMenuContainer = ({
+  uiStateStore,
+  signalrStore,
+  accountStore,
+}: AccountMenuContainerProps) => {
   const open = Boolean(uiStateStore!.accountMenuAnchor);
 
   const handleMenuClose = () => {
@@ -25,6 +31,7 @@ const AccountMenuContainer = ({ uiStateStore, signalrStore }: AccountMenuContain
   return (
     <AccountMenu
       open={open}
+      disabled={!accountStore!.getSelectedAccount.activeProfile?.readyToSnapshot}
       anchorEl={uiStateStore!.accountMenuAnchor}
       handleMenuClose={handleMenuClose}
       handleSignOut={handleSignOut}
@@ -32,4 +39,8 @@ const AccountMenuContainer = ({ uiStateStore, signalrStore }: AccountMenuContain
   );
 };
 
-export default inject('uiStateStore', 'signalrStore')(observer(AccountMenuContainer));
+export default inject(
+  'uiStateStore',
+  'accountStore',
+  'signalrStore'
+)(observer(AccountMenuContainer));

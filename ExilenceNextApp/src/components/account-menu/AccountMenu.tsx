@@ -5,11 +5,18 @@ import { Menu, MenuItem } from '@material-ui/core';
 type AccountMenuProps = {
   open: boolean;
   anchorEl: HTMLElement | null;
+  disabled?: boolean;
   handleMenuClose: () => void;
   handleSignOut: () => void;
 };
 
-const AccountMenu = ({ anchorEl, open, handleMenuClose, handleSignOut }: AccountMenuProps) => {
+const AccountMenu = ({
+  anchorEl,
+  open,
+  handleMenuClose,
+  handleSignOut,
+  disabled,
+}: AccountMenuProps) => {
   const { t } = useTranslation();
   return (
     <Menu
@@ -21,7 +28,9 @@ const AccountMenu = ({ anchorEl, open, handleMenuClose, handleSignOut }: Account
       open={open}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleSignOut}>{t('label.sign_out')}</MenuItem>
+      <MenuItem disabled={disabled} onClick={handleSignOut}>
+        {t('label.sign_out')}
+      </MenuItem>
     </Menu>
   );
 };

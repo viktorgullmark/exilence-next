@@ -310,6 +310,7 @@ const Toolbar = ({
                     onClick={(e) => handleAccountMenuOpen(e)}
                     aria-label="account"
                     aria-haspopup="true"
+                    disabled={isSnapshotting || isInitiating}
                     className={clsx(classes.iconButton)}
                   >
                     <AccountCircle fontSize="small" />
