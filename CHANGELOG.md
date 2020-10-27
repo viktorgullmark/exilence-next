@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
 - Changed the default page size to 25, up from 10 for all tables
+- Changed title on the net worth settings tab (from "Net worth" to "General")
 - Reworked the layout of the side menu
 - Refactored code in preparation for new upcoming features
 ##### Updated
