@@ -126,7 +126,7 @@
     "auto_snapshotting": "Activate auto snapshotting",
     "auto_snapshot_interval": "Set auto snapshot interval",
     "ui_scale": "Interface scale (%)",
-    "filter_total": "Filter Total:",
+    "filter_total": "Filter total:",
     "google_chrome": "Google Chrome",
     "mozilla_firefox": "Mozilla Firefox",
     "microsoft_edge": "Microsoft Edge",
