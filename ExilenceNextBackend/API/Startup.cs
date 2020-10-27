@@ -24,6 +24,7 @@ using API.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using API.Providers;
 using MessagePack;
+using Shared.MongoMigrations;
 
 namespace API
 {
@@ -137,6 +138,13 @@ namespace API
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
             //Remove groups with no connections after connection cleanup
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT g.Id FROM Groups g WHERE (SELECT COUNT(*) FROM Connections WHERE GroupId = g.Id) = 0)");
+
+            //Apply mongo migrations on start if neeeded
+            var result = MongoMigrationHandler.Run(configuration.GetSection("ConnectionStrings")["Mongo"], configuration.GetSection("Mongo")["Database"]);
+            foreach (var migration in result.InterimSteps)
+            {
+                Console.WriteLine($"Applied migration version: {migration.TargetVersion} and name: {migration.MigrationName} to database: {migration.DatabaseName} on host: {migration.ServerAdress}");
+            }
         }
     }
 }
