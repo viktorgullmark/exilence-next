@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.ApiModels;
+using API.Hubs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +13,12 @@ namespace API.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
+        private readonly IHubContext<BaseHub> _hubContext;
+        public StatusController(IHubContext<BaseHub> hubContext)
+        {
+
+            _hubContext = hubContext;
+        }
 
         //Used by HAProxy to detect downtime. 
         [Route("")]
@@ -17,6 +26,15 @@ namespace API.Controllers
         public IActionResult GetStatus()
         {
             return Ok();
+        }
+
+        [Route("announcement")]
+        [HttpPost]
+        public async Task<IActionResult> Announcement(AnouncementModel announcement)
+        {
+            await _hubContext.Clients.All.SendAsync("announcement", announcement);
+
+            return Ok(announcement);
         }
     }
 }
