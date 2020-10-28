@@ -30,12 +30,12 @@ namespace API
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -43,7 +43,7 @@ namespace API
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<ExilenceContext>(
-                options => options.UseLazyLoadingProxies(false).UseSqlServer(Configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
+                options => options.UseLazyLoadingProxies(false).UseSqlServer(_configuration.GetConnectionString("ExilenceConnection"), b => b.MigrationsAssembly("Shared"))
             );
 
             //Services
@@ -63,7 +63,7 @@ namespace API
                 o.EnableDetailedErrors = true;
                 o.HandshakeTimeout = TimeSpan.FromSeconds(40);
                 o.MaximumReceiveMessageSize = 50 * 1024 * 1024;
-            }).AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
+            }).AddStackExchangeRedis(_configuration.GetConnectionString("Redis"), options =>
             {
                 options.Configuration.ChannelPrefix = "ExilenceNextSignalR";
                 options.Configuration.ConnectTimeout = 10000;
@@ -87,7 +87,7 @@ namespace API
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Settings")["Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection("Settings")["Secret"])),
                     ValidateAudience = false,
                     ValidateIssuer = false
 
@@ -114,7 +114,7 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, ExilenceContext exilenceContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, ExilenceContext exilenceContext, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -134,16 +134,24 @@ namespace API
 
             var instanceName = configuration.GetSection("Settings")["InstanceName"];
 
+
+            logger.LogInformation("Removing dead connections.");
             //Remove faulty connections to this node on startup if node crasched
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
+
+            logger.LogInformation("Removing dead groups.");
             //Remove groups with no connections after connection cleanup
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT g.Id FROM Groups g WHERE (SELECT COUNT(*) FROM Connections WHERE GroupId = g.Id) = 0)");
 
             //Apply mongo migrations on start if neeeded
-            var result = MongoMigrationHandler.Run(configuration.GetSection("ConnectionStrings")["Mongo"], configuration.GetSection("Mongo")["Database"]);
-            foreach (var migration in result.InterimSteps)
+            var migrationResult = MongoMigrationHandler.Run(configuration.GetSection("ConnectionStrings")["Mongo"], configuration.GetSection("Mongo")["Database"]);
+            foreach (var migration in migrationResult.InterimSteps)
             {
-                Console.WriteLine($"Applied migration version: {migration.TargetVersion} and name: {migration.MigrationName} to database: {migration.DatabaseName} on host: {migration.ServerAdress}");
+                logger.LogInformation($"Applied migration version: {migration.TargetVersion} and name: {migration.MigrationName} to database: {migration.DatabaseName} on host: {migration.ServerAdress}");
+            }
+            if (migrationResult.InterimSteps.Count() == 0)
+            {
+                logger.LogInformation($"No pending migrations found. Using MongoDB {migrationResult.DatabaseName} on {migrationResult.ServerAdress} version: {migrationResult.CurrentVersion}.");
             }
         }
     }
