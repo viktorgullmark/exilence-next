@@ -34,7 +34,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Announcement(AnouncementModel announcement)
         {
-            if (announcement.Password != _configuration.GetSection("Settings")["InstanceName"])
+            if (announcement.Password != _configuration.GetSection("Accouncment")["Password"])
                 return BadRequest(new { result = "wrong password" });
 
             await _hubContext.Clients.All.SendAsync("announcement", announcement);
