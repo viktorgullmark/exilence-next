@@ -61,7 +61,7 @@ const SupportPanel = ({
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper className={classes.paper} elevation={3}>
+            <Paper className={classes.paper} elevation={8}>
               <ul className={classes.list}>
                 <a
                   href="https://discord.gg/yxuBrPY"
@@ -81,7 +81,6 @@ const SupportPanel = ({
                 {!isLoginRoute && (
                   <li className={classes.option} onClick={handleRetakeTourClick}>
                     <Typography variant="body2">{t('label.retake_tour')}</Typography>
-
                     <HistoryIcon className={classes.icon} />
                   </li>
                 )}

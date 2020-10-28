@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import { CssBaseline } from '@material-ui/core';
@@ -35,6 +35,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import './assets/styles/reactour.scss';
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
+import useStyles from './index.styles';
 
 initSentry();
 configureI18n();
@@ -58,42 +59,50 @@ localForage.config({
   driver: localForage.INDEXEDDB,
 });
 
-const app = (
-  <>
+const App = () => {
+  const classes = useStyles();
+  useEffect(() => {
+    const preload = document.getElementById('preload');
+    if (preload) preload.remove();
+  }, []);
+
+  return (
     <ThemeProvider theme={theme}>
       <Provider {...rootStore}>
         <Suspense fallback={null}>
           <Router>
-            <HighchartsTheme />
-            <CssBaseline />
-            <GlobalStyles />
-            <ToastWrapper />
-            <Route path="/login" component={Login} />
-            <HeaderContainer />
-            <DrawerWrapperContainer>
-              <ToolbarContainer />
-              <Route path="/net-worth" component={NetWorth} />
-              <Route path="/settings" component={Settings} />
-              <Route
-                exact
-                path="/"
-                render={() =>
-                  rootStore.accountStore.getSelectedAccount.name ? (
-                    <Redirect to="/net-worth" />
-                  ) : (
-                    <Redirect to="/login" />
-                  )
-                }
-              />
-            </DrawerWrapperContainer>
-            <Notifier />
-            <ReactionContainer />
+            <div className={classes.app}>
+              <HighchartsTheme />
+              <CssBaseline />
+              <GlobalStyles />
+              <ToastWrapper />
+              <Route path="/login" component={Login} />
+              <HeaderContainer />
+              <DrawerWrapperContainer>
+                <ToolbarContainer />
+                <Route path="/net-worth" component={NetWorth} />
+                <Route path="/settings" component={Settings} />
+                <Route
+                  exact
+                  path="/"
+                  render={() =>
+                    rootStore.accountStore.getSelectedAccount.name ? (
+                      <Redirect to="/net-worth" />
+                    ) : (
+                      <Redirect to="/login" />
+                    )
+                  }
+                />
+              </DrawerWrapperContainer>
+              <Notifier />
+              <ReactionContainer />
+            </div>
           </Router>
         </Suspense>
       </Provider>
     </ThemeProvider>
-  </>
-);
+  );
+};
 
 const hydrate = create({
   storage: localForage,
@@ -110,7 +119,7 @@ const renderApp = () => {
   ]).then(() => {
     rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
     visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
-    ReactDOM.render(app, document.getElementById('root'));
+    ReactDOM.render(<App />, document.getElementById('root'));
   });
 };
 
