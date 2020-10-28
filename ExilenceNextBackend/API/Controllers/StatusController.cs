@@ -2,6 +2,7 @@
 using API.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace API.Controllers
     public class StatusController : ControllerBase
     {
         private readonly IHubContext<BaseHub> _hubContext;
-        public StatusController(IHubContext<BaseHub> hubContext)
+        private readonly IConfiguration _configuration;
+        public StatusController(IConfiguration configuration, IHubContext<BaseHub> hubContext)
         {
-
             _hubContext = hubContext;
+            _configuration = configuration;
         }
 
         //Used by HAProxy to detect downtime. 
@@ -32,9 +34,11 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Announcement(AnouncementModel announcement)
         {
-            await _hubContext.Clients.All.SendAsync("announcement", announcement);
+            if (announcement.Password != _configuration.GetSection("Settings")["InstanceName"])
+                return BadRequest(new { result = "wrong password" });
 
-            return Ok(announcement);
+            await _hubContext.Clients.All.SendAsync("announcement", announcement);
+            return Ok(new { result = "message sent" });
         }
     }
 }
