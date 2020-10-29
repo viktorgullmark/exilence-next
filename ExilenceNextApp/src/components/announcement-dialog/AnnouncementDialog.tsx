@@ -12,6 +12,7 @@ import {
 
 import useStyles from './AnnouncementDialog.styles';
 import { IApiAnnouncement } from '../../interfaces/api/api-announcement.interface';
+import ReactMarkdown from 'react-markdown';
 
 type AnnouncementDialogProps = {
   show: boolean;
@@ -31,7 +32,7 @@ const AnnouncementDialog = ({ show, announcement, onClose }: AnnouncementDialogP
           <Typography variant="h6">{announcement.title}</Typography>
         </Box>
         <Box width={1} mb={2}>
-          <Typography variant="body2" dangerouslySetInnerHTML={{ __html: announcement.message }} />
+          <ReactMarkdown>{announcement.message}</ReactMarkdown>
         </Box>
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
