@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 - Added rarity color for legacy uniques
 - Added style tweaks to the item table
 - Added persistence of selected settings tab
+- Added a warning icon to the toolbar that will show when prices has not been retrieved
+- Added a popup for displaying important announcements from the development team
+    - This will only be used in emergencies that require manual actions from you
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the installer would sometimes get stuck halfway without any visible errors

@@ -30,6 +30,7 @@
     "confirm_clear_snapshots": "Clear snapshots for profile",
     "confirm_remove_profile": "Remove profile",
     "confirm_leave_group": "Leave group",
+    "announcement_dialog_title": "Announcement",
     "ga_consent_dialog_title": "Terms and conditions",
     "custom_price_dialog_title": "Set custom price",
     "net_worth_settings": "General",
@@ -46,6 +47,7 @@
     "log_settings": "Log"
   },
   "label": {
+    "no_prices_retrieved": "Waiting for prices",
     "customize_prices": "Customize prices",
     "set_custom_price": "Set custom price",
     "remove_custom_price": "Remove custom price",

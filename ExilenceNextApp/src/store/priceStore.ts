@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, toJS } from 'mobx';
-import { persist } from 'mobx-persist';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
@@ -25,7 +24,7 @@ export class PriceStore {
   leaguePriceDetails: LeaguePriceDetails[] = [];
   @observable activePriceSourceUuid: string = '';
   @observable isUpdatingPrices: boolean = false;
-  @observable pollingInterval: number = 60 * 1000 * 20;
+  @observable pollingInterval: number = 60 * 1000 * 1;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
