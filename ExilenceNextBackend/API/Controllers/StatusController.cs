@@ -3,6 +3,7 @@ using API.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,16 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Announcement(AnouncementModel announcement)
         {
+            var message = new AnouncementMessageModel()
+            {
+                Title = announcement.Title,
+                Message = announcement.Message
+            };
+
             if (announcement.Password != _configuration.GetSection("Accouncement")["Password"])
                 return BadRequest(new { result = "Wrong password" });
 
-            await _hubContext.Clients.All.SendAsync("OnAnnouncement", announcement);
+            await _hubContext.Clients.All.SendAsync("OnAnnouncement", message);
             return Ok(new { result = "Message sent" });
         }
     }
