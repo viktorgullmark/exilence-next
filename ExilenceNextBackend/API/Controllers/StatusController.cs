@@ -35,13 +35,14 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Announcement(AnouncementModel announcement)
         {
+            var password = _configuration.GetSection("Announcement")["Password"];
             var message = new AnouncementMessageModel()
             {
                 Title = announcement.Title,
                 Message = announcement.Message
             };
 
-            if (announcement.Password != _configuration.GetSection("Accouncement")["Password"])
+            if (password == null || announcement.Password != password)
                 return BadRequest(new { result = "Wrong password" });
 
             await _hubContext.Clients.All.SendAsync("OnAnnouncement", message);
