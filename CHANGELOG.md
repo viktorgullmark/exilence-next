@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] - NOT RELEASED
+## [0.4.0] - 2020-10-29
 ##### Added
 - Added a new section "prices" in the settings
     - Ability to see all prices stored for each league
