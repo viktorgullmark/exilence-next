@@ -38,8 +38,7 @@ export class SignalrStore {
   @action
   registerEvents() {
     this.rootStore.signalrHub.onEvent<IApiAnnouncement>('OnAnnouncement', (announcement) => {
-      console.log(announcement);
-      // todo: implement
+      this.rootStore.uiStateStore.setAnnouncementDialogOpen(true, announcement);
     });
     this.rootStore.signalrHub.onEvent('OnCloseConnection', () => {
       fromStream(
