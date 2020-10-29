@@ -5,7 +5,7 @@ Exilence Next is a desktop application that helps you calculate how valuable you
 
 The app is a successor to our old application named Exilence, previously known as ExileParty.
 
-![Preview image](https://i.imgur.com/9bbHNFD.png)
+![Preview image](https://i.imgur.com/RftNTac.png)
 
 ## Contents
 
