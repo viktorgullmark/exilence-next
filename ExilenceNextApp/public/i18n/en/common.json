@@ -140,7 +140,8 @@
     "faq": "FAQ",
     "bug_report": "Bug Report",
     "feature_request": "Feature Request",
-    "support_us": "Support Us"
+    "support_us": "Support Us",
+    "reset_to_default": "Reset to default"
   },
   "value": {
     "none": "None",

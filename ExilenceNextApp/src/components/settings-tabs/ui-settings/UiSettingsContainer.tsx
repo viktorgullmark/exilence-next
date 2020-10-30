@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import { SettingStore } from '../../../store/settingStore';
@@ -10,9 +10,7 @@ type UiSettingsContainerProps = {
 const UiSettingsContainer = ({ settingStore }: UiSettingsContainerProps) => (
   <UiSettings
     uiScale={settingStore!.uiScale}
-    setUiScale={(_event: ChangeEvent<{}> | MouseEvent, value: number | string | number[]) =>
-      settingStore!.setUiScale(value)
-    }
+    setUiScale={(value: number | string | number[]) => settingStore!.setUiScale(value)}
   />
 );
 
