@@ -16,6 +16,8 @@ type CheckboxSettingProps = {
   value: boolean;
   handleChange: (value: boolean) => void;
   translationKey: string;
+  helperTextKey?: string;
+  labelKey?: string;
   requiresSnapshot?: boolean;
 };
 
@@ -23,6 +25,8 @@ const CheckboxSetting = ({
   value,
   handleChange,
   translationKey,
+  helperTextKey,
+  labelKey,
   requiresSnapshot,
 }: CheckboxSettingProps) => {
   const classes = useStyles();
@@ -30,7 +34,7 @@ const CheckboxSetting = ({
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend">
-        {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
+        {t(`label.${labelKey || translationKey}`)} {requiresSnapshot ? '*' : ''}
       </FormLabel>
       <FormGroup className={classes.checkBox}>
         <FormControlLabel
@@ -49,7 +53,7 @@ const CheckboxSetting = ({
           }
         />
       </FormGroup>
-      <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
+      <FormHelperText>{t(`helper_text.${helperTextKey || translationKey}`)}</FormHelperText>
     </FormControl>
   );
 };

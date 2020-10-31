@@ -1,6 +1,5 @@
-const { app, BrowserWindow, screen, session, ipcMain } = require('electron');
+const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
-const url = require('url');
 const isDev = require('electron-is-dev');
 const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
 const sentry = require('@sentry/electron');
@@ -15,6 +14,8 @@ const {
   netWorthOverlay: { createNetWorthOverlay, destroyNetWorthOverlayWindow },
   authWindow: { createAuthWindow },
   menuFunctions: { menuFunctions },
+  session: { createSession },
+  localSettings: { loadLocalSettings, getLocalSettings }
 } = require('./main');
 
 if (!isDev) {
@@ -22,6 +23,7 @@ if (!isDev) {
     dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',
   });
 }
+
 
 /**
  * Initial Declarations
@@ -34,6 +36,12 @@ let updateAvailable;
 let trayProps;
 
 /**
+ * Local Settings
+ */
+loadLocalSettings()
+
+
+/**
  * Overlays
  */
 createNetWorthOverlay();
@@ -42,26 +50,28 @@ createNetWorthOverlay();
  * Main Window
  */
 function createWindow() {
-  const size = screen.getPrimaryDisplay().workAreaSize;
+  const minMainWindowWidth = 800;
+  const minMainWindowHeight = 800;
+  const { width: defaultWidth, height: defaultHeight } = screen.getPrimaryDisplay().workAreaSize;
 
-  const mainWindowState = windowStateKeeper({
-    defaultWidth: size.width,
-    defaultHeight: size.height,
-    file: 'main',
+  const { x, y, width, height, manage } = windowStateKeeper({
+    defaultWidth,
+    defaultHeight,
+    file: mainWindow,
   });
 
   windows[mainWindow] = new BrowserWindow({
-    x: mainWindowState.x,
-    y: mainWindowState.y,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    minWidth: 800,
-    minHeight: 800,
+    x,
+    y,
+    width,
+    height,
+    minWidth: minMainWindowWidth,
+    minHeight: minMainWindowHeight,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     frame: false,
   });
 
-  mainWindowState.manage(windows[mainWindow]);
+  manage(windows[mainWindow]);
 
   windows[mainWindow].loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
@@ -76,13 +86,24 @@ function createWindow() {
   });
 
   /**
+   * Tray
+   */
+  trayProps = {
+    mainWindow: windows[mainWindow],
+    updateAvailable,
+    isQuittingCallback: (status) => (isQuitting = status),
+  };
+
+  /**
    * Expose main process variables
    */
   ipcMain.on('app-globals', (e) => {
+    const localSettings = getLocalSettings();
     const appPath = app.getAppPath();
     const appLocale = app.getLocale();
 
     e.returnValue = {
+      localSettings,
       appPath,
       appLocale,
     };
@@ -91,17 +112,7 @@ function createWindow() {
   /**
    * Session handlers
    */
-  ipcMain.handle('set-cookie', (_event, arg) => {
-    return session.defaultSession.cookies.set(arg);
-  });
-
-  ipcMain.handle('get-cookie', (_event, arg) => {
-    return session.defaultSession.cookies.get(arg);
-  });
-
-  ipcMain.handle('remove-cookie', (_event, url, id) => {
-    return session.defaultSession.cookies.remove(url, id);
-  });
+  createSession();
 
   /**
    * Generic overlay helper functions
@@ -119,18 +130,7 @@ function createWindow() {
   /**
    * Authorization
    */
-  ipcMain.on('create-auth-window', (_event, args) => {
-    createAuthWindow({ mainWindow: windows[mainWindow], options: args });
-  });
-
-  /**
-   * Tray
-   */
-  trayProps = {
-    mainWindow: windows[mainWindow],
-    updateAvailable,
-    isQuittingCallback: (status) => (isQuitting = status),
-  };
+    createAuthWindow({ mainWindow: windows[mainWindow] });
 
   /**
    * Flash Frames

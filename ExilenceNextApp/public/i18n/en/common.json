@@ -36,6 +36,7 @@
     "net_worth_settings": "General",
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",
+    "advanced_settings": "Advanced",
     "custom_prices_settings": "Prices",
     "create_group_dialog_title": "Create new group",
     "join_group_dialog_title": "Join existing group",
@@ -44,7 +45,8 @@
     "ui_settings": "Interface",
     "general": "General",
     "session_id_dialog": "How to find your session Id",
-    "log_settings": "Log"
+    "log_settings": "Log",
+    "hardware_acceleration": "Hardware Acceleration"
   },
   "label": {
     "no_prices_retrieved": "Waiting for prices",
@@ -141,7 +143,8 @@
     "bug_report": "Bug Report",
     "feature_request": "Feature Request",
     "support_us": "Support Us",
-    "reset_to_default": "Reset to default"
+    "reset_to_default": "Reset to default",
+    "enable_hardware_acceleration": "Enable Hardware Acceleration"
   },
   "value": {
     "none": "None",
@@ -149,7 +152,8 @@
     "price_treshold": "Price treshold",
     "total_price_treshold": "Total price treshold",
     "auto_snapshotting": "Auto snapshotting",
-    "auto_snapshot_interval": "Snapshotting interval"
+    "auto_snapshot_interval": "Snapshotting interval",
+    "hardware_acceleration": "Hardware Acceleration"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
@@ -157,7 +161,8 @@
     "total_price_treshold": "Sets the cutoff for including total stack of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
-    "ui_scale": "Sets the UI scale"
+    "ui_scale": "Sets the UI scale",
+    "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect"
   },
   "link": {
     "restart_now": "Restart now"

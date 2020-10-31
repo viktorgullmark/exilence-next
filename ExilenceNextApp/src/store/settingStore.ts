@@ -7,6 +7,8 @@ import { RootStore } from './rootStore';
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
   @persist @observable autoSnapshotting: boolean = true;
+  @persist @observable isHardwareAccelerationEnabled: boolean =
+    electronService.localSettings?.isHardwareAccelerationEnabled || true;
   @persist @observable priceTreshold: number = 0;
   @persist @observable totalPriceTreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
@@ -45,6 +47,12 @@ export class SettingStore {
       this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     this.autoSnapshotting = value;
+  }
+
+  @action
+  setHardwareAcceleration(value: boolean) {
+    this.isHardwareAccelerationEnabled = value;
+    electronService.ipcRenderer.send('hardware-acceleration', value);
   }
 
   @action
