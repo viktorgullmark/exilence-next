@@ -151,6 +151,9 @@ const ToolbarContainer = ({
         loading={uiStateStore!.removingProfile}
       />
       <Toolbar
+        hasPrices={
+          priceStore!.pricesWithCustomValues && priceStore!.pricesWithCustomValues.length > 0
+        }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
@@ -163,6 +166,7 @@ const ToolbarContainer = ({
         handleProfileChange={handleProfileChange}
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
+        statusMessage={uiStateStore!.statusMessage}
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}

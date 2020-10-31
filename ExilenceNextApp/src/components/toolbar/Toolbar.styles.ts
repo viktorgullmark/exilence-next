@@ -29,14 +29,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   fromLeft: {
     width: `calc(100% - ${navigationMenuWidth}px)`,
-    marginLeft: navigationMenuWidth,
+    marginLeft: navigationMenuWidth + theme.spacing(1),
   },
   fromRight: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginRight: drawerWidth,
   },
+  baseMargin: {
+    marginLeft: theme.spacing(1),
+  },
   marginLeft: {
-    marginLeft: collapsedNavigationMenuWidth + theme.spacing(1),
+    marginLeft: theme.spacing(1) + collapsedNavigationMenuWidth,
   },
   toolbar: {
     maxHeight: innerToolbarHeight,

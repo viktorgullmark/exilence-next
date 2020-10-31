@@ -33,6 +33,7 @@ import { RootStore } from './store/rootStore';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import './assets/styles/reactour.scss';
+import AnnouncementDialogContainer from './components/announcement-dialog/AnnouncementDialogContainer';
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 import useStyles from './index.styles';
@@ -96,6 +97,7 @@ const App = () => {
               </DrawerWrapperContainer>
               <Notifier />
               <ReactionContainer />
+              <AnnouncementDialogContainer />
             </div>
           </Router>
         </Suspense>

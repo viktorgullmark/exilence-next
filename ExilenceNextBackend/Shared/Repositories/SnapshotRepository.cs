@@ -25,9 +25,9 @@ namespace Shared.Repositories
         {
             _client = new MongoClient(configuration.GetSection("ConnectionStrings")["Mongo"]);
             _database = _client.GetDatabase(configuration.GetSection("Mongo")["Database"]);
-            _snapshots = _database.GetCollection<Snapshot>("SnapShots");
-            _stashtabs = _database.GetCollection<StashTab>("StashTabs");
-            _pricedItems = _database.GetCollection<PricedItem>("PricedItems");
+            _snapshots = _database.GetCollection<Snapshot>("Snapshots");
+            _stashtabs = _database.GetCollection<StashTab>("Stashtabs");
+            _pricedItems = _database.GetCollection<PricedItem>("Priceditems");
         }
 
         public async Task<bool> SnapshotExists(string clientId)

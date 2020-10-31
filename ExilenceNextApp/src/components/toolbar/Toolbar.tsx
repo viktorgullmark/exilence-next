@@ -26,6 +26,7 @@ import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import PatreonLogo from '../../assets/img/patreon-white.png';
+import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';
 import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
 import { openLink } from '../../utils/window.utils';
@@ -56,6 +57,8 @@ type ToolbarProps = {
   isUpdatingPrices: boolean;
   profilesLoaded: boolean;
   changingProfile: boolean;
+  hasPrices?: boolean;
+  statusMessage?: IStatusMessage;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
   handleProfileOpen: (edit?: boolean) => void;
@@ -75,6 +78,7 @@ const Toolbar = ({
   sidenavOpened,
   groupOverviewOpened,
   activeProfile,
+  hasPrices,
   profiles,
   profileOpen,
   isEditing,
@@ -84,6 +88,7 @@ const Toolbar = ({
   isUpdatingPrices,
   profilesLoaded,
   changingProfile,
+  statusMessage,
   toggleGroupOverview,
   handleProfileOpen,
   handleProfileClose,
@@ -97,6 +102,10 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
+
+  const fetchingPricesMsg: IStatusMessage = {
+    message: 'fetching_prices',
+  };
 
   return (
     <>
@@ -116,7 +125,7 @@ const Toolbar = ({
             justifyContent="center"
             height="1"
             mr={1.5}
-            className={clsx({ [classes.marginLeft]: !sidenavOpened })}
+            className={clsx(classes.baseMargin, { [classes.marginLeft]: !sidenavOpened })}
           >
             <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
               <Box display="flex" alignItems="center" height={1}>
@@ -130,6 +139,12 @@ const Toolbar = ({
               className={classes.offlineIcon}
             />
           )}
+          {signalrOnline && !hasPrices && (
+            <WarningIcon
+              titleAccess={t('label.no_prices_retrieved')}
+              className={classes.offlineIcon}
+            />
+          )}
           {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
             <Box ml={1} display="flex" alignItems="center" justifyContent="center">
               <CircularProgress
@@ -139,9 +154,11 @@ const Toolbar = ({
               />
             </Box>
           )}
-
           <Box ml={2} display="flex" whiteSpace="nowrap">
-            <StatusMessageContainer />
+            {statusMessage && <StatusMessageContainer />}
+            {!statusMessage && isUpdatingPrices && (
+              <StatusMessageContainer overrideMessage={fetchingPricesMsg} />
+            )}
           </Box>
           <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
@@ -310,6 +327,7 @@ const Toolbar = ({
                     onClick={(e) => handleAccountMenuOpen(e)}
                     aria-label="account"
                     aria-haspopup="true"
+                    disabled={isSnapshotting || isInitiating}
                     className={clsx(classes.iconButton)}
                   >
                     <AccountCircle fontSize="small" />

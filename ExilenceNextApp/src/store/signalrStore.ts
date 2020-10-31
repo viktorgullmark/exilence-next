@@ -5,6 +5,7 @@ import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
 
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
@@ -36,6 +37,9 @@ export class SignalrStore {
 
   @action
   registerEvents() {
+    this.rootStore.signalrHub.onEvent<IApiAnnouncement>('OnAnnouncement', (announcement) => {
+      this.rootStore.uiStateStore.setAnnouncementDialogOpen(true, announcement);
+    });
     this.rootStore.signalrHub.onEvent('OnCloseConnection', () => {
       fromStream(
         this.rootStore.signalrHub.stopConnection().pipe(

@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] - NOT RELEASED
+## [0.4.1] - 2020-10-29
+##### Changed
+- Hotfix for the price fetching interval being incorrectly set
+
+## [0.4.0] - 2020-10-29
 ##### Added
 - Added a new section "prices" in the settings
     - Ability to see all prices stored for each league
@@ -15,14 +19,20 @@ All notable changes to this project will be documented in this file.
 - Added rarity color for legacy uniques
 - Added style tweaks to the item table
 - Added persistence of selected settings tab
+- Added a warning icon to the toolbar that will show when prices has not been retrieved
+- Added a popup for displaying important announcements from the development team
+    - This will only be used in emergencies that require manual actions from you
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
 - Fixed a bug where the installer would sometimes get stuck halfway without any visible errors
 - Fixed a bug where the net worth overlay would not update when income was reset
+- Fixed a bug where snapshotting would result in a "prices of undefined" error
 ##### Changed
 - Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
 - Changed the default page size to 25, up from 10 for all tables
+- Changed title on the net worth settings tab (from "Net worth" to "General")
+- Disabled the ability to sign out during snapshotting or initiation process
 - Reworked the layout of the side menu
 - Refactored code in preparation for new upcoming features
 ##### Updated

@@ -3,6 +3,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 
 import { IStashTab } from '../interfaces/stash.interface';
@@ -49,6 +50,7 @@ export class UiStateStore {
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable settingsTabIndex: number = 0;
+  @observable announcementDialogOpen: boolean = false;
   @observable filteredStashTabs: IStashTab[] | undefined = undefined;
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
@@ -62,6 +64,7 @@ export class UiStateStore {
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @persist @observable selectedPriceTableLeagueId: string | undefined = undefined;
+  @observable announcementMessage: IApiAnnouncement | undefined = undefined;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -161,6 +164,12 @@ export class UiStateStore {
   @action
   setToolbarTourOpen(open: boolean) {
     this.toolbarTourOpen = open;
+  }
+
+  @action
+  setAnnouncementDialogOpen(open: boolean, announcement?: IApiAnnouncement) {
+    this.announcementMessage = announcement;
+    this.announcementDialogOpen = open;
   }
 
   @action
