@@ -558,10 +558,7 @@ export class Profile {
 
     const filteredTabs = pricedStashTabs.map((pst) => {
       pst.pricedItems = pst.pricedItems.filter((pi) => findItem(mergedItems, pi));
-      pst.value = +pst.pricedItems
-        .map((ts) => ts.total)
-        .reduce((a, b) => a + b, 0)
-        .toFixed(4);
+      pst.value = pst.pricedItems.map((ts) => ts.total).reduce((a, b) => a + b, 0);
 
       return pst;
     });
