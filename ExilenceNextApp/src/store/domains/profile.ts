@@ -32,6 +32,7 @@ import {
   formatStashTabSnapshotsForChart,
   formatValue,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';

@@ -1,3 +1,4 @@
+import { statSync } from 'fs';
 import moment from 'moment';
 
 import { rootStore } from '..';
@@ -13,25 +14,27 @@ import { rgbToHex } from './colour.utils';
 import { getRarityIdentifier, mergeItemStacks } from './item.utils';
 
 export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashTab[]) => {
+  const filteredLeagueTabs = stashTabs?.filter((st) =>
+    snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id)
+  );
   return {
     uuid: snapshot.uuid,
     created: snapshot.created,
     stashTabs: stashTabs
-      ? stashTabs
-          .filter((st) => snapshot.stashTabSnapshots.map((sts) => sts.stashTabId).includes(st.id))
-          .map((st) => {
-            const foundTab = snapshot.stashTabSnapshots.find((sts) => sts.stashTabId === st.id)!;
-
-            return {
-              uuid: foundTab.uuid,
-              stashTabId: st.id,
-              pricedItems: foundTab.pricedItems,
-              index: st.i,
-              value: +foundTab.value.toFixed(4),
-              color: rgbToHex(st.colour.r, st.colour.g, st.colour.b),
-              name: st.n,
-            } as IApiStashTabSnapshot;
-          })
+      ? snapshot.stashTabSnapshots.map((st) => {
+          const foundTab = filteredLeagueTabs?.find((lt) => lt.id === st.stashTabId);
+          return {
+            uuid: st.uuid,
+            stashTabId: foundTab?.id,
+            pricedItems: st.pricedItems,
+            index: foundTab?.i,
+            value: st.value,
+            color: foundTab
+              ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
+              : undefined,
+            name: foundTab?.n,
+          } as IApiStashTabSnapshot;
+        })
       : snapshot.stashTabSnapshots,
   } as IApiSnapshot;
 };
