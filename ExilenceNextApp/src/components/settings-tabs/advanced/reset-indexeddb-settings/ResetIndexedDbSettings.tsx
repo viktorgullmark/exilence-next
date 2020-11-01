@@ -25,11 +25,10 @@ const ResetIndexedDbSettings = ({ migrationStore, signalrStore }: ResetIndexedDb
 
   const handleDataResetConfirmation = async () => {
     await setIsClearing(true);
-    const resetDb = await migrationStore!.runClearStorage();
 
-    if (resetDb) {
-      signalrStore!.signOut();
-    }
+    // todo: wrap as an action within some store and signOut on success
+    migrationStore!.runClearStorage();
+    signalrStore!.signOut();
 
     await setIsClearing(false);
   };

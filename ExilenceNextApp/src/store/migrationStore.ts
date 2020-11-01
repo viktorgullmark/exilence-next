@@ -53,7 +53,7 @@ export class MigrationStore {
 
   @action
   runClearStorage() {
-    return fromStream(this.clearStorage());
+    fromStream(this.clearStorage());
   }
 
   @action
