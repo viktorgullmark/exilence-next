@@ -12,6 +12,7 @@ import NetWorthSettings from './general/net-worth-settings/NetWorthSettings';
 import CustomPricesSettings from './prices/custom-prices-settings/CustomPricesSettings';
 import UiSettings from './interface/ui-settings/UiSettings';
 import HardwareAccelerationSettings from './advanced/hardware-acceleration-settings/HardwareAccelerationSettings';
+import ResetIndexedDbSettings from './advanced/reset-indexeddb-settings/ResetIndexedDbSettings';
 
 function a11yProps(index: any) {
   return {
@@ -92,6 +93,12 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
               <Typography variant="overline">{t('title.hardware_acceleration')}</Typography>
               <Box my={2}>
                 <HardwareAccelerationSettings />
+              </Box>
+            </Box>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.reset_indexeddb')}</Typography>
+              <Box my={2}>
+                <ResetIndexedDbSettings />
               </Box>
             </Box>
           </SettingsTab>
