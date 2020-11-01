@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.4.2] - NOT RELEASED
 ##### Added
 - Added a loading screen that will be shown before the app is rendered
+##### Fixed
+- Fixed a bug where snapshotting in group would sometimes crash the app for other group members
 
 ## [0.4.1] - 2020-10-29
 ##### Changed
