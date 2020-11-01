@@ -29,6 +29,7 @@ import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilte
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
+import itemTableGroupColumns from './itemTableGroupColumns';
 
 type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
@@ -83,6 +84,10 @@ const ItemTableContainer = ({
     }
   }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
+  const getColumns = useMemo(() => {
+    return activeGroup ? itemTableGroupColumns : itemTableColumns;
+  }, [activeGroup]);
+
   const data = useMemo(() => {
     return getItems;
   }, [getItems]);
@@ -95,7 +100,7 @@ const ItemTableContainer = ({
   const [instance] = useState<TableInstance<object>>(
     useTable(
       {
-        columns: itemTableColumns,
+        columns: getColumns,
         defaultColumn,
         data,
         initialState,
@@ -147,7 +152,7 @@ const ItemTableContainer = ({
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);
 
-  const hideableColumns = itemTableColumns.filter((column) => !(column.id === '_selector'));
+  const hideableColumns = getColumns.filter((column) => !(column.id === '_selector'));
 
   const handleColumnsClick = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
