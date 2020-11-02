@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.2] - NOT RELEASED
+## [0.4.2] - 2020-11-02
 ##### Added
 - Added a loading screen that will be shown before the app is rendered
 ##### Fixed
