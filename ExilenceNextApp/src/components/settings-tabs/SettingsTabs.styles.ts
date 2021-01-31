@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     display: 'flex',
-    minHeight: 800,
+    minHeight: 1000,
   },
   tabs: {
     minWidth: 160,

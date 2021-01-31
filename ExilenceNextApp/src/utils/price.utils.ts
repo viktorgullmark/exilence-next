@@ -1,3 +1,4 @@
+import { rootStore } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaCurrencyOverviewCurrencyDetail } from '../interfaces/poe-ninja/poe-ninja-currency-overview-currency-detail.interface';
 import { IPoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja-currency-overview-line.interface';
@@ -79,13 +80,25 @@ export function getExternalPriceFromNinjaCurrencyItem(
     calculated: calculated,
     icon: details !== undefined ? details.icon : undefined,
     count: item.receive ? item.receive.count : 0,
+    frameType: 5,
     detailsUrl: detailsUrl,
   } as IExternalPrice;
 }
 
-export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
+export const filterPrices = (prices: IExternalPrice[]) => {
+  if (prices.length === 0) {
+    return [];
+  }
+  const filterText = rootStore.uiStateStore.priceTableFilterText.toLowerCase();
+
+  return prices.filter((p) => {
+    return p.name.toLowerCase().includes(filterText);
+  });
+};
+
+export function mapPriceToItem(item: IPricedItem, price: IExternalPrice, customPrice?: number) {
   if (price !== undefined) {
-    item.calculated = price.calculated ? price.calculated : 0;
+    item.calculated = customPrice ? customPrice : price.calculated || 0;
     item.max = price.max || 0;
     item.mean = price.mean || 0;
     item.mode = price.mode || 0;
@@ -94,6 +107,61 @@ export function mapPriceToItem(item: IPricedItem, price: IExternalPrice) {
     item.detailsUrl = price.detailsUrl;
   }
   return item;
+}
+
+export function findPrice<T extends IExternalPrice>(array: T[], priceToFind: T) {
+  return array.find(
+    (x) =>
+      x.name === priceToFind.name &&
+      x.quality === priceToFind.quality &&
+      x.links === priceToFind.links &&
+      x.level === priceToFind.level &&
+      x.corrupted === priceToFind.corrupted &&
+      x.frameType === priceToFind.frameType &&
+      x.variant === priceToFind.variant &&
+      x.elder === priceToFind.elder &&
+      x.shaper === priceToFind.shaper &&
+      x.ilvl === priceToFind.ilvl &&
+      x.icon === priceToFind.icon &&
+      x.tier === priceToFind.tier
+  );
+}
+
+export function findPriceForItem(array: IExternalPrice[], priceToFind: IPricedItem) {
+  return array.find(
+    (x) =>
+      x.name === priceToFind.name &&
+      x.quality === priceToFind.quality &&
+      x.links === priceToFind.links &&
+      x.level === priceToFind.level &&
+      x.corrupted === priceToFind.corrupted &&
+      x.frameType === priceToFind.frameType &&
+      x.variant === priceToFind.variant &&
+      x.elder === priceToFind.elder &&
+      x.shaper === priceToFind.shaper &&
+      x.ilvl === priceToFind.ilvl &&
+      x.icon === priceToFind.icon &&
+      x.tier === priceToFind.tier
+  );
+}
+
+export function getRawPriceFromPricedItem(item: IPricedItem): IExternalPrice {
+  return {
+    calculated: item.calculated,
+    name: item.name,
+    icon: item.icon,
+    quality: item.quality,
+    links: item.links,
+    level: item.level,
+    corrupted: item.corrupted,
+    frameType: item.frameType,
+    variant: item.variant,
+    elder: item.elder,
+    shaper: item.shaper,
+    ilvl: item.ilvl,
+    tier: item.tier,
+    count: 1,
+  };
 }
 
 export function mapApiPricedItemToPricedItem(item: IPricedItem) {

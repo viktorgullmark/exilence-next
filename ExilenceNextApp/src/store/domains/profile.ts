@@ -1,11 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -18,7 +18,12 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { findItem, mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
-import { excludeLegacyMaps } from '../../utils/price.utils';
+import {
+  excludeLegacyMaps,
+  findPrice,
+  findPriceForItem,
+  mapPriceToItem,
+} from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
@@ -27,6 +32,7 @@ import {
   formatStashTabSnapshotsForChart,
   formatValue,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';
@@ -36,7 +42,7 @@ import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
 export class Profile {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
 
   @persist name: string = '';
   @persist @observable activeLeagueId: string = '';
@@ -58,6 +64,7 @@ export class Profile {
   @observable incomeResetAt: moment.Moment = moment().utc();
 
   constructor(obj?: IProfile) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 
@@ -74,8 +81,18 @@ export class Profile {
       !rootStore.priceStore.isUpdatingPrices &&
       rootStore.uiStateStore.validated &&
       rootStore.uiStateStore.initiated &&
-      !rootStore.uiStateStore.isSnapshotting
+      !rootStore.uiStateStore.isSnapshotting &&
+      this.hasPricesForActiveLeague
     );
+  }
+
+  @computed
+  get hasPricesForActiveLeague() {
+    const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
+      (l) => l.leagueId === this.activePriceLeagueId
+    );
+    const prices = activePriceDetails?.leaguePriceSources[0]?.prices;
+    return prices !== undefined && prices.length > 0;
   }
 
   @computed
@@ -148,7 +165,7 @@ export class Profile {
 
   @computed
   get tabChartData() {
-    let snapshots = [...this.snapshots.slice(0, 50)];
+    const snapshots = [...this.snapshots.slice(0, 50)];
 
     const league = rootStore.leagueStore.leagues.find((l) => l.id === this.activeLeagueId);
 
@@ -496,7 +513,7 @@ export class Profile {
     );
 
     if (!activePriceDetails) {
-      return this.priceItemsForStashTabsFail(new Error('error:no_prices_received_for_league'));
+      return this.priceItemsForStashTabsFail(new Error('no_prices_received_for_league'));
     }
 
     let prices = activePriceDetails.leaguePriceSources[0].prices;
@@ -513,13 +530,24 @@ export class Profile {
 
     prices = excludeLegacyMaps(prices);
 
+    const customPrices = rootStore.customPriceStore.customLeaguePrices.find(
+      (cpl) => cpl.leagueId === activePriceLeague?.id
+    )?.prices;
+
+    if (customPrices) {
+      customPrices.filter((x) => {
+        const foundPrice = findPrice(prices, x);
+        if (foundPrice) {
+          foundPrice.customPrice = x.customPrice;
+          const index = prices.indexOf(foundPrice);
+          prices[index] = foundPrice;
+        }
+      });
+    }
+
     const pricedStashTabs = stashTabsWithItems.map((stashTabWithItems: IStashTabSnapshot) => {
       stashTabWithItems.pricedItems = stashTabWithItems.pricedItems.map((item: IPricedItem) => {
-        return pricingService.priceItem(
-          item,
-          // todo: add support for multiple sources
-          prices
-        );
+        return pricingService.priceItem(item, prices);
       });
       return stashTabWithItems;
     });
@@ -531,6 +559,7 @@ export class Profile {
     const filteredTabs = pricedStashTabs.map((pst) => {
       pst.pricedItems = pst.pricedItems.filter((pi) => findItem(mergedItems, pi));
       pst.value = pst.pricedItems.map((ts) => ts.total).reduce((a, b) => a + b, 0);
+
       return pst;
     });
 

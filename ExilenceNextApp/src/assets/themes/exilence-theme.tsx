@@ -61,11 +61,14 @@ export const rarityColors = {
   currency: '#AD904B',
   divination: '#c0c0c0',
   quest: '#6eb930',
+  unknown: '#fff',
+  legacy: '#82ad6a',
 };
 
 export const itemColors = {
   chaosOrb: '#d6b600',
   corrupted: '#d80404',
+  custom: '#38cfba',
 };
 
 export const statusColors = {
@@ -119,7 +122,7 @@ export default function exilenceTheme() {
         root: {
           color: '#c2c2c2',
         },
-      },
+      }
     },
     palette: {
       text: {

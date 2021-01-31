@@ -121,7 +121,6 @@
           </div>
         <script>
             const { ipcRenderer, remote } = require('electron')
-
             const incomeElement = document.getElementById('income');
             const netWorthElement = document.getElementById('netWorth');
 
@@ -133,7 +132,7 @@
             })
 
             function closeWindow() {
-                remote.getCurrentWindow().close();
+                ipcRenderer.send('close-overlay', { overlay: 'networth' });
             }
 
         </script>

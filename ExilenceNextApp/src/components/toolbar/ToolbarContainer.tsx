@@ -1,8 +1,10 @@
+import { inject, observer } from 'mobx-react';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { inject, observer } from 'mobx-react';
-
+import { of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 import { AccountStore } from '../../store/accountStore';
+import { LogStore } from '../../store/logStore';
 import { NotificationStore } from '../../store/notificationStore';
 import { OverlayStore } from '../../store/overlayStore';
 import { PriceStore } from '../../store/priceStore';
@@ -13,9 +15,6 @@ import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
 import { LeagueStore } from './../../store/leagueStore';
 import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
-import { LogStore } from '../../store/logStore';
-import { Observable, from, of } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
 
 type ToolbarContainerProps = {
   uiStateStore?: UiStateStore;
@@ -152,6 +151,9 @@ const ToolbarContainer = ({
         loading={uiStateStore!.removingProfile}
       />
       <Toolbar
+        hasPrices={
+          priceStore!.pricesWithCustomValues && priceStore!.pricesWithCustomValues.length > 0
+        }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
         sidenavOpened={uiStateStore!.sidenavOpen}
@@ -164,6 +166,7 @@ const ToolbarContainer = ({
         handleProfileChange={handleProfileChange}
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
+        statusMessage={uiStateStore!.statusMessage}
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}

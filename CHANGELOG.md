@@ -1,18 +1,52 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.15] - NOT RELEASED
+## [0.4.2] - 2020-11-02
 ##### Added
-- Added style tweaks to the item table
+- Added a loading screen that will be shown before the app is rendered
+##### Fixed
+- Fixed a bug where snapshotting in group would sometimes crash the app for other group members
+- Fixed a bug where the "filter total" value would be inaccurate when in a group
+- Fixed a bug where the value for snapshots would sometimes differ between group members
+
+## [0.4.1] - 2020-10-29
+##### Changed
+- Hotfix for the price fetching interval being incorrectly set
+
+## [0.4.0] - 2020-10-29
+##### Added
+- Added a new section "prices" in the settings
+    - Ability to see all prices stored for each league
+    - Ability to override any price with your custom value
+    - Added a shortcut to customize prices from the item table
+- Added a new support menu in the main window toolbar with helpful links
 - Added persistence of position/size for the overlay
 - Added reindexing of stash tabs before every snapshot, to support moving tabs around
 - Added a status message that shows when prices are being updated
+- Added a background process for parsing the Client.txt in preparation for upcoming features
+- Added rarity color for legacy uniques
+- Added style tweaks to the item table
+- Added persistence of selected settings tab
+- Added a warning icon to the toolbar that will show when prices has not been retrieved
+- Added a popup for displaying important announcements from the development team
+    - This will only be used in emergencies that require manual actions from you
 ##### Fixed
 - Fixed a bug where auto snapshotting would sometimes stop working
+- Fixed a bug where the installer would sometimes get stuck halfway without any visible errors
 - Fixed a bug where the net worth overlay would not update when income was reset
+- Fixed a bug where snapshotting would result in a "prices of undefined" error
 ##### Changed
-- Reworked how income is calculated
+- Reworked how income is calculated (will be changed further in upcoming releases)
     - Now based on the past hour, or the latest reset timestamp if one exists
+- Changed the default page size to 25, up from 10 for all tables
+- Changed title on the net worth settings tab (from "Net worth" to "General")
+- Disabled the ability to sign out during snapshotting or initiation process
+- Reworked the layout of the side menu
+- Refactored code in preparation for new upcoming features
+##### Updated
+- Updated the main framework (Electron) to the latest version
+- Updated React and related dependencies to the latest version
+- Updated most other dependencies we use to the latest version
 
 ## [0.3.14] - 2020-10-23
 ##### Added

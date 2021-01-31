@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import * as msgPack from '@microsoft/signalr-protocol-msgpack';
-import { action, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { from, throwError } from 'rxjs';
 
 import { randomIntFromInterval } from '../../utils/misc.utils';
@@ -10,7 +10,9 @@ import AppConfig from './../../config/app.config';
 export class SignalrHub {
   @observable connection: signalR.HubConnection | undefined = undefined;
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   stopConnection() {

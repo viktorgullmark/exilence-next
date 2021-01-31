@@ -10,6 +10,7 @@ export function constructCookie(sessionId: string): ICookie {
     path: '/',
     secure: true,
     expirationDate: 2550873600,
+    sameSite: 'no_restriction',
   };
   return cookie;
 }

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class AccountLeague {
   private static readonly excludedStashTypes: string[] = ['UniqueStash', 'MapStash'];
 
   constructor(id: string) {
+    makeObservable(this);
     this.leagueId = id;
   }
 

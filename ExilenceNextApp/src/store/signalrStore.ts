@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
 
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
@@ -30,10 +31,15 @@ export class SignalrStore {
   @observable events: string[] = [];
   @observable activeGroup?: Group = undefined;
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action
   registerEvents() {
+    this.rootStore.signalrHub.onEvent<IApiAnnouncement>('OnAnnouncement', (announcement) => {
+      this.rootStore.uiStateStore.setAnnouncementDialogOpen(true, announcement);
+    });
     this.rootStore.signalrHub.onEvent('OnCloseConnection', () => {
       fromStream(
         this.rootStore.signalrHub.stopConnection().pipe(
@@ -146,7 +152,7 @@ export class SignalrStore {
           return p;
         });
       });
-      let foundProfile = connection.account.profiles.find((p) => p.uuid === profile.uuid);
+      const foundProfile = connection.account.profiles.find((p) => p.uuid === profile.uuid);
       if (foundProfile) {
         const index = connection.account.profiles.indexOf(foundProfile);
         profile.snapshots = foundProfile.snapshots;
@@ -387,7 +393,7 @@ export class SignalrStore {
       fromStream(
         this.rootStore.signalrHub
           .sendEvent<IApiGroup>('JoinGroup', {
-            uuid: uuid.v4(),
+            uuid: uuidv4(),
             name: groupName,
             password: password,
             created: moment.utc().toDate(),

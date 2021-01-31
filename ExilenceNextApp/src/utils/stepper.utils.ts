@@ -25,5 +25,9 @@ export function getToolbarSteps(): IStepDescriptor[] {
       key: 'notifications_step',
       selector: '[data-tour-elem="notificationList"]',
     },
+    {
+      key: 'support_panel_step',
+      selector: '[data-tour-elem="supportPanel"]',
+    },
   ];
 }

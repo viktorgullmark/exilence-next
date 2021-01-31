@@ -23,22 +23,17 @@ function getToken(account: IAccountAuth): Observable<AxiosResponse<IApiAccount>>
 
 function setAuthCookie(cookie: ICookie): Observable<any> {
   return removeAuthCookie().pipe(
-    switchMap(() => {
-      return from(electronService.remote.session.defaultSession!.cookies.set(cookie));
-    })
+    switchMap(() => from(electronService.ipcRenderer.invoke('set-cookie', cookie)))
   );
 }
 
 function getAuthCookie(): Observable<any> {
-  return from(electronService.remote.session.defaultSession!.cookies.get({ name: 'POESESSID' }));
+  return from(electronService.ipcRenderer.invoke('get-cookie', { name: 'POESESSID' }));
 }
 
 function removeAuthCookie(): Observable<any> {
   return from(
-    electronService.remote.session.defaultSession!.cookies.remove(
-      AppConfig.pathOfExileUrl,
-      'POESESSID'
-    )
+    electronService.ipcRenderer.invoke('remove-cookie', AppConfig.pathOfExileUrl, 'POESESSID')
   );
 }
 

@@ -1,13 +1,21 @@
 import { Column } from 'react-table';
-import { ITableItem } from '../../interfaces/table-item.interface';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+
+import { IPricedItem } from '../../interfaces/priced-item.interface';
+import {
+  itemCorrupted,
+  itemIcon,
+  itemLinks,
+  itemName,
+  itemTabs,
+  itemValue,
+} from '../columns/Columns';
 
 const itemTableColumns: Column<object>[] = [
-  itemIcon<ITableItem>({
+  itemIcon<IPricedItem>({
     accessor: 'icon',
     header: 'Icon',
   }),
-  itemName<ITableItem>({
+  itemName<IPricedItem>({
     accessor: 'name',
     header: 'Name',
   }),
@@ -16,15 +24,15 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'ilvl',
     align: 'right',
   },
-  {
-    Header: 'Tabs',
-    accessor: 'tabNames',
-  },
-  itemCorrupted<ITableItem>({
+  itemTabs<IPricedItem>({
+    accessor: 'tab',
+    header: 'Tabs',
+  }),
+  itemCorrupted<IPricedItem>({
     accessor: 'corrupted',
     header: 'Corrupted',
   }),
-  itemLinks<ITableItem>({
+  itemLinks<IPricedItem>({
     accessor: 'links',
     header: 'Links',
   }),
@@ -43,11 +51,11 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'stackSize',
     align: 'right',
   },
-  itemValue<ITableItem>({
+  itemValue<IPricedItem>({
     accessor: 'calculated',
     header: 'Price',
   }),
-  itemValue<ITableItem>({
+  itemValue<IPricedItem>({
     accessor: 'total',
     header: 'Total value',
   }),

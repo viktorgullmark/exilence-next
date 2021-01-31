@@ -1,9 +1,10 @@
-import { TextField } from '@material-ui/core';
 import React, { useEffect } from 'react';
-import { HeaderProps, FilterProps } from 'react-table';
+import { FilterProps, HeaderProps } from 'react-table';
+import { TextField } from '@material-ui/core';
+
 import { camelToWords } from '../../utils/object.utils';
 
-const DefaultHeader: React.FC<HeaderProps<any>> = ({ column }) => (
+const DefaultHeader = ({ column }: HeaderProps<any>) => (
   <>{column.id.startsWith('_') ? null : camelToWords(column.id)}</>
 );
 

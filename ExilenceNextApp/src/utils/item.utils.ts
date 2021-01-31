@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Rarity } from '../assets/themes/exilence-theme';
 import { IItem } from '../interfaces/item.interface';
@@ -7,7 +7,6 @@ import { IProperty } from '../interfaces/property.interface';
 import { ISocket } from '../interfaces/socket.interface';
 import { IStashTabSnapshot } from '../interfaces/stash-tab-snapshot.interface';
 import { ICompactTab, IStashTab } from '../interfaces/stash.interface';
-import { ITableItem } from '../interfaces/table-item.interface';
 
 export function mergeItemStacks(items: IPricedItem[]) {
   const mergedItems: IPricedItem[] = [];
@@ -45,17 +44,14 @@ export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) 
   return mergeItemStacks(mergedStashTabs);
 }
 
-export function mapPricedItemToTableItem(pricedItem: IPricedItem) {
-  return {
-    ...pricedItem,
-    tabNames: pricedItem.tab ? pricedItem.tab.map((t) => t.n).join(', ') : '',
-  } as ITableItem;
+export function parseTabNames(tabs: ICompactTab[]) {
+  return tabs.map((t) => t.n).join(', ');
 }
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
   return items.map((item: IItem) => {
     return {
-      uuid: uuid.v4(),
+      uuid: uuidv4(),
       itemId: item.id,
       name: getItemName(item.typeLine, item.name),
       typeLine: item.typeLine,
@@ -115,6 +111,7 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
       (x.frameType === itemToFind.frameType || (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
   );
 }
+
 export function isDivinationCard(icon: string) {
   return icon.indexOf('/Divination/') > -1;
 }
@@ -140,6 +137,8 @@ const rarities: (keyof Rarity)[] = [
   'currency', //5
   'divination', //6
   'quest', //7
+  'unknown', //8
+  'legacy', //9
 ];
 
 export function getRarity(identifier: number): keyof Rarity {

@@ -3,24 +3,24 @@ import { MouseEvent } from 'react';
 import { electronService } from '../services/electron.service';
 
 export function maximize() {
-  electronService.remote.getCurrentWindow().maximize();
+  electronService.ipcRenderer.invoke('maximize');
 }
 
 export function unmaximize() {
-  electronService.remote.getCurrentWindow().unmaximize();
+  electronService.ipcRenderer.invoke('unmaximize');
 }
 
 export function minimize() {
-  electronService.remote.getCurrentWindow().minimize();
+  electronService.ipcRenderer.invoke('minimize');
 }
 
 export function close() {
-  electronService.remote.getCurrentWindow().close();
+  electronService.ipcRenderer.invoke('close');
 }
 
 export function openLink(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault();
-  let link = event.currentTarget.href;
+  const link = event.currentTarget.href;
   electronService.shell.openExternal(link);
 }
 

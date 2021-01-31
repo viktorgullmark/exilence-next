@@ -18,6 +18,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { observer } from 'mobx-react';
 
 import useStyles from './NavigationMenu.styles';
+import clsx from 'clsx';
 
 type NavigationMenuProps = {
   open: boolean;
@@ -33,19 +34,25 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
 
   return (
     <Drawer
-      className={classes.drawer}
-      variant="persistent"
+      className={clsx(classes.drawer, {
+        [classes.drawerOpen]: open,
+        [classes.drawerClose]: !open,
+      })}
+      classes={{
+        paper: clsx(classes.drawerPaper, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        }),
+      }}
+      variant="permanent"
       anchor="left"
       color="secondary"
       open={open}
       transitionDuration={0}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
     >
-      <div className={classes.drawerHeader}>
+      <div className={clsx(classes.drawerHeader, { [classes.drawerHeaderOpen]: open })}>
         <IconButton onClick={() => toggleSidenav()}>
-          {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
       <Divider />

@@ -1,12 +1,12 @@
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ICharacter } from '../../interfaces/character.interface';
 import { IItem } from '../../interfaces/item.interface';
 
 export class Character implements ICharacter {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
   @persist name: string = '';
   @persist league: string = '';
   @persist classId: number = -1;
@@ -18,6 +18,7 @@ export class Character implements ICharacter {
   @persist('list') @observable equipment: IItem[] = [];
 
   constructor(obj?: ICharacter) {
+    makeObservable(this);
     Object.assign(this, obj);
   }
 }

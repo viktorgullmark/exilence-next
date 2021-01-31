@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import { Box, Button, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
@@ -19,9 +19,9 @@ import {
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import { AccountStore } from '../../store/accountStore';
+import { RouteStore } from '../../store/routeStore';
 import { SignalrStore } from '../../store/signalrStore';
 import { UiStateStore } from '../../store/uiStateStore';
-import { mapPricedItemToTableItem } from '../../utils/item.utils';
 import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
@@ -29,11 +29,13 @@ import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilte
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
+import itemTableGroupColumns from './itemTableGroupColumns';
 
 type ItemTableContainerProps = {
   uiStateStore?: UiStateStore;
   signalrStore?: SignalrStore;
   accountStore?: AccountStore;
+  routeStore?: RouteStore;
 };
 
 export const itemTableFilterSpacing = 2;
@@ -68,6 +70,7 @@ const ItemTableContainer = ({
   accountStore,
   signalrStore,
   uiStateStore,
+  routeStore,
 }: ItemTableContainerProps) => {
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -81,17 +84,23 @@ const ItemTableContainer = ({
     }
   }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
+  const getColumns = useMemo(() => {
+    return activeGroup ? itemTableGroupColumns : itemTableColumns;
+  }, [activeGroup]);
+
   const data = useMemo(() => {
-    return getItems.map((i) => mapPricedItemToTableItem(i));
+    return getItems;
   }, [getItems]);
 
   const tableName = 'item-table';
-  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {});
+  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {
+    pageSize: 25,
+  });
 
   const [instance] = useState<TableInstance<object>>(
     useTable(
       {
-        columns: itemTableColumns,
+        columns: getColumns,
         defaultColumn,
         data,
         initialState,
@@ -143,7 +152,7 @@ const ItemTableContainer = ({
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);
 
-  const hideableColumns = itemTableColumns.filter((column) => !(column.id === '_selector'));
+  const hideableColumns = getColumns.filter((column) => !(column.id === '_selector'));
 
   const handleColumnsClick = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -157,6 +166,11 @@ const ItemTableContainer = ({
     setColumnsOpen(false);
     setAnchorEl(null);
   }, []);
+
+  const handleRedirectToCustomPrices = () => {
+    uiStateStore!.setSettingsTabIndex(2);
+    routeStore!.redirect('/settings');
+  };
 
   return (
     <>
@@ -183,8 +197,18 @@ const ItemTableContainer = ({
               show={columnsOpen}
               anchorEl={anchorEl}
             />
+            <Box mr={1}>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={handleRedirectToCustomPrices}
+              >
+                {t('label.customize_prices')}
+              </Button>
+            </Box>
             {hideableColumns.length > 1 && (
-              <Tooltip title={t('label.toggle_visible_columns')} placement="bottom">
+              <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
                   size="small"
                   className={classes.inlineIcon}
@@ -194,7 +218,7 @@ const ItemTableContainer = ({
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title={t('label.toggle_stash_tab_filter')} placement="bottom">
+            <Tooltip title={t('label.toggle_stash_tab_filter') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}
@@ -205,7 +229,7 @@ const ItemTableContainer = ({
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('label.toggle_export_menu')} placement="bottom">
+            <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
               <IconButton
                 size="small"
                 className={classes.inlineIcon}
@@ -223,4 +247,9 @@ const ItemTableContainer = ({
   );
 };
 
-export default inject('uiStateStore', 'signalrStore', 'accountStore')(observer(ItemTableContainer));
+export default inject(
+  'uiStateStore',
+  'signalrStore',
+  'accountStore',
+  'routeStore'
+)(observer(ItemTableContainer));

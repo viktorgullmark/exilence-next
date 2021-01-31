@@ -1,9 +1,10 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { v4 as uuidv4 } from 'uuid';
 
 import AppConfig from '../config/app.config';
 import { ICharacter } from '../interfaces/character.interface';
@@ -25,10 +26,16 @@ export class AccountStore {
   @persist('object') @observable token: IToken | undefined = undefined;
   @observable code: string = '';
   @observable sessionId: string = '';
+  @observable authState: string = uuidv4();
 
   cancelledRetry: Subject<boolean> = new Subject();
 
-  constructor(private rootStore: RootStore) {}
+  constructor(private rootStore: RootStore) {
+    makeObservable(this);
+    electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
+      this.handleAuthCallback(code, error);
+    });
+  }
 
   @computed
   get getSelectedAccount(): Account {
@@ -60,7 +67,7 @@ export class AccountStore {
 
   @action
   addOrUpdateAccount(name: string, sessionId: string) {
-    let foundAccount = this.findAccountByName(name);
+    const foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
       foundAccount.sessionId = sessionId;
@@ -73,17 +80,8 @@ export class AccountStore {
   }
 
   @action
-  handleAuthCallback(url: string, window: any) {
-    var raw_code = /code=([^&]*)/.exec(url) || null;
-    var code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-    var error = /\?error=(.+)$/.exec(url);
-
-    if (code || error) {
-      // Close the browser if code found or error
-      window.destroy();
-    }
-
-    // If there is a code, proceed to get token from github
+  handleAuthCallback(code: string, error: string) {
+    // If there is a code, proceed to get token
     if (code) {
       this.setCode(code);
       this.loginWithOAuth(code);
@@ -99,44 +97,15 @@ export class AccountStore {
 
   @action
   loadAuthWindow() {
-    var options = {
+    const options = {
       clientId: 'exilence',
       scopes: ['profile'], // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
-      state: 'yourstate',
+      state: this.authState,
       responseType: 'code',
     };
 
-    var authWindow = new electronService.remote.BrowserWindow({
-      width: 500,
-      height: 750,
-      show: false,
-      autoHideMenuBar: true,
-      'node-integration': false,
-      fullscreenable: false,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      alwaysOnTop: true,
-    });
-
-    var authUrl = `${AppConfig.oauthUrl}/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
-
-    authWindow.webContents.on('will-redirect', (_event: any, url: any) => {
-      this.handleAuthCallback(url, authWindow);
-    });
-
-    // Reset the authWindow on close
-    authWindow.on(
-      'close',
-      function () {
-        authWindow = null;
-      },
-      false
-    );
-
-    authWindow.loadURL(authUrl);
-    authWindow.show();
+    electronService.ipcRenderer.send('create-auth-window', options);
   }
 
   @action

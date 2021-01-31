@@ -1,10 +1,10 @@
 import { persist } from 'mobx-persist';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ILeague } from './../../interfaces/league.interface';
 
 export class League implements ILeague {
-  @persist uuid: string = uuid.v4();
+  @persist uuid: string = uuidv4();
   @persist id: string = '';
   @persist realm: string = '';
 
