@@ -56,6 +56,10 @@ const ToolbarContainer = ({
     accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
   };
 
+  const handleClearSnapshot = () => {
+    accountStore!.getSelectedAccount.activeProfile!.removeSnapshot();
+  };
+
   const activeCurrency = () => {
     return accountStore!.getSelectedAccount!.activeProfile!
       ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
@@ -176,6 +180,7 @@ const ToolbarContainer = ({
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
         handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
+        handleClearSnapshot={handleClearSnapshot}
         handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
         isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}

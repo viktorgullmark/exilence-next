@@ -665,4 +665,36 @@ export class Profile {
     rootStore.uiStateStore.setClearingSnapshots(false);
     rootStore.notificationStore.createNotification('remove_all_snapshots', 'error', false, e);
   }
+
+  @action
+  removeSnapshot() {
+    if (this.snapshots.length > 0) {
+      const lastSnapshotId = this.snapshots[0].uuid;
+      fromStream(
+        rootStore.signalrHub.invokeEvent<string>('RemoveSnapshot', lastSnapshotId).pipe(
+          map(() => {
+            runInAction(() => {
+              this.snapshots.splice(0, 1)
+            });
+            return this.removeSnapshotSuccess();
+          }),
+          catchError((e: AxiosError) => of(this.removeSnapshotFail(e)))
+        )
+      );
+    }
+  }
+
+  @action
+  removeSnapshotSuccess() {
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification('remove_snapshot', 'success');
+    this.updateNetWorthOverlay();
+  }
+
+  @action
+  removeSnapshotFail(e: Error) {
+    rootStore.uiStateStore.setClearingSnapshots(false);
+    rootStore.notificationStore.createNotification('remove_snapshot', 'error', false, e);
+  }
+  
 }
