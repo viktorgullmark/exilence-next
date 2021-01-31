@@ -60,6 +60,11 @@ namespace Shared.Repositories
             await _stashtabs.DeleteOneAsync(s => s.ClientId == stashtab.ClientId);
         }
 
+        public async Task RemoveStashtabsForSnapshot(string snapshotClientId)
+        {
+            await _stashtabs.DeleteManyAsync(s => s.SnapshotClientId == snapshotClientId);
+        }
+
         public async Task AddSnapshots(List<Snapshot> snapshots)
         {
             await _snapshots.InsertManyAsync(snapshots);
