@@ -6,6 +6,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UiStateStore } from '../../store/uiStateStore';
 import CustomPricesSettingsContainer from './custom-prices-settings/CustomPricesSettingsContainer';
+import LogSettingsContainer from './log-settings/LogSettingsContainer';
 import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
 import SettingsTab from './settings-tab/SettingsTab';
 import useStyles from './SettingsTabs.styles';
@@ -54,6 +55,8 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
               className={classes.tab}
               {...a11yProps(2)}
             />
+            
+            <Tab label={t('title.area_settings')} className={classes.tab} {...a11yProps(3)} />
           </Tabs>
           <SettingsTab value={settingsTabIndex} index={0}>
             <Box className={classes.subSection}>
@@ -82,6 +85,14 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
               <Typography variant="overline">{t('title.custom_prices_settings')}</Typography>
               <Box my={2}>
                 <CustomPricesSettingsContainer />
+              </Box>
+            </Box>
+          </SettingsTab>
+          <SettingsTab value={settingsTabIndex} index={3}>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.log_settings')}</Typography>
+              <Box my={2}>
+                <LogSettingsContainer />
               </Box>
             </Box>
           </SettingsTab>

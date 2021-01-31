@@ -11,7 +11,7 @@ type LogSettingsProps = {
 
 const LogSettings = ({ path, setLogPath }: LogSettingsProps) => (
   <Grid container spacing={2}>
-    <Grid item xs={12} sm={3}>
+    <Grid item xs={12}>
       <TextInputSetting value={path} handleChange={setLogPath} translationKey={'log_path'} />
     </Grid>
   </Grid>
