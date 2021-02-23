@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios';
 import { forkJoin, from } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import {
@@ -50,6 +49,7 @@ function getItemCategories() {
     'DeliriumOrb',
     'Beast',
     'Vial',
+    'Invitation'
   ];
   return categories;
 }
