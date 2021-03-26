@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { SettingStore } from '../../../store/settingStore';
+import { SettingStore } from '../../../../store/settingStore';
 import LogSettings from './LogSettings';
 
 interface Props {

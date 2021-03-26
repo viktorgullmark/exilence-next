@@ -30,7 +30,7 @@ const TextInputSetting = ({
           value={value}
           onChange={(e) => handleChange(e.target.value)}
           disabled={disabled}
-        ></TextField>
+        />
         <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
       </FormGroup>
     </FormControl>
