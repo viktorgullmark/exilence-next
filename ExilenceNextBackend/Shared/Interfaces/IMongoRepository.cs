@@ -20,6 +20,7 @@ namespace Shared.Interfaces
         Task AddPricedItems(List<PricedItem> pricedItems);
         Task RemoveSnapshot(Snapshot snapshot);
         Task RemoveStashtab(StashTab stashtab);
+        Task RemoveStashtabsForSnapshot(string snapshotClientId);
         Task RemovePricedItems(string profileClientId);
         Task RemoveAllSnapshots(string profileClientId);
     }

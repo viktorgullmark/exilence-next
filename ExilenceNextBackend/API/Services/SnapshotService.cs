@@ -40,31 +40,44 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            // todo: readd when we want to persist stash tabs and items for historical reasons
-
+            // Clear all priced items, we only want to save it for the last snapshot
             //await _snapshotRepository.RemovePricedItems(profileClientId);
 
             snapshot.ProfileClientId = profileClientId;
 
+            // Remove the oldest snapshot if we have more then 100 saved
+            var snapshotOverLimit = await _snapshotRepository
+                .GetSnapshots(s => s.ProfileClientId == profileClientId)
+                .OrderByDescending(s => s.Created)
+                .Skip(99)
+                .Take(1)
+                .FirstOrDefaultAsync();
+
+            if (snapshotOverLimit != null)
+            {
+                //await _snapshotRepository.RemoveStashtabsForSnapshot(snapshotOverLimit.ClientId);
+                await _snapshotRepository.RemoveSnapshot(snapshotOverLimit);
+            }
+
             await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
 
-            // todo: readd when we want to persist stash tabs and items for historical reasons
-
-            //snapshot.StashTabs.Select(stashtab => { 
+            //snapshot.StashTabs.Select(stashtab =>
+            //{
             //    stashtab.SnapshotClientId = snapshot.ClientId;
             //    stashtab.SnapshotProfileClientId = profileClientId;
-            //    return stashtab; 
+            //    return stashtab;
             //}).ToList();
 
             //await _snapshotRepository.AddStashtabs(snapshot.StashTabs.ToList());
 
-            //snapshot.StashTabs.ForEach( 
-            //    stashtab => stashtab.PricedItems.Select(pricedItem => { 
+            //snapshot.StashTabs.ForEach(
+            //    stashtab => stashtab.PricedItems.Select(pricedItem =>
+            //    {
             //        pricedItem.StashtabClientId = stashtab.ClientId;
             //        pricedItem.SnapshotProfileClientId = profileClientId;
-            //        return stashtab; 
+            //        return stashtab;
             //    }).ToList());
-           
+
             //await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
 
             return _mapper.Map<SnapshotModel>(snapshot);

@@ -1,5 +1,5 @@
 const devConfig = {
-  baseUrl: 'https://next.exilence.app',
+  baseUrl: 'http://localhost:5000',
   production: false,
   sentryBrowserDsn: undefined,
   i18nUrl: '/i18n/{{lng}}/{{ns}}.json',
