@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added a setting to toggle hardware acceleration
 ##### Fixed
 - Fixed a bug where the storage wasnt cleared correctly when doing this manually
+- Fixed one cause to the app sometimes being stuck on a whitescreen when launching
 ##### Changed
 - Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps
 
