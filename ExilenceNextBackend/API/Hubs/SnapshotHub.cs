@@ -14,7 +14,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
             var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
-            Log($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
 
@@ -24,7 +24,7 @@ namespace API.Hubs
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
             var snapshotModelWithItems = await _snapshotService.GetSnapshot(latestSnapshot.ClientId);
 
-            Log($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModelWithItems;
         }
 
@@ -38,7 +38,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
-            Log($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
                        
             
             return snapshotModel;
@@ -54,7 +54,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveSnapshot", ConnectionId, snapshotId);
             }
 
-            Log($"Removed snapshot with ClientId: {snapshotId} in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Removed snapshot with ClientId: {snapshotId} in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotId;
         }
 
@@ -67,7 +67,7 @@ namespace API.Hubs
             {
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveAllSnapshots", ConnectionId, profileClientId);
             }
-            Log($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
         
         #region Streams

@@ -36,14 +36,14 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddProfile", ConnectionId, profileModel);
             }
 
-            Log($"Added profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Added profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel;
         }
 
         public async Task<SnapshotProfileModel> EditProfile([FromBody]SnapshotProfileModel profileModel)
         {
             profileModel = await _accountService.EditProfile(AccountName, profileModel);
-            Log($"Updated profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Updated profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel;
         }
 
@@ -57,7 +57,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnRemoveProfile", ConnectionId, profileId);
             }
 
-            Log($"Removed profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Removed profile with name: {profileModel.Name} in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel.ClientId;
         }
 
@@ -78,7 +78,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnChangeProfile", ConnectionId, profileModel);
             }
 
-            Log($"Set profile with name: {profileModel.Name} to active in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Set profile with name: {profileModel.Name} to active in " + _timer.ElapsedMilliseconds + " ms.");
             return profileModel.ClientId;
         }
 
