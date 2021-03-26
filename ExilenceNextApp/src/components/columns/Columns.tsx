@@ -10,13 +10,13 @@ import { Column } from 'react-table';
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
-import { AccountStore } from '../../store/accountStore';
 import { CustomPriceStore } from '../../store/customPriceStore';
 import { UiStateStore } from '../../store/uiStateStore';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
 import { getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
+
 export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
@@ -354,5 +354,5 @@ type ItemTabsCellProps = {
 };
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
-  return <span>{parseTabNames(tabs)}</span>;
+  return <span>{tabs ? parseTabNames(tabs) : ''}</span>;
 };
