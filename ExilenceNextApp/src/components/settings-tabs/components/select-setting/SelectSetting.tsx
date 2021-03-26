@@ -9,7 +9,7 @@ import {
   Select,
 } from '@material-ui/core';
 
-import { ISelectOption } from '../../../interfaces/select-option.interface';
+import { ISelectOption } from '../../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
 
 type SelectSettingProps = {

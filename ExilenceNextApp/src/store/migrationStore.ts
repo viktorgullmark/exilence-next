@@ -5,6 +5,7 @@ import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
 
 import { RootStore } from './rootStore';
+import { fromStream } from 'mobx-utils';
 
 export class MigrationStore {
   @observable @persist current: number = 1;
@@ -48,6 +49,11 @@ export class MigrationStore {
         );
       })
     );
+  }
+
+  @action
+  runClearStorage() {
+    fromStream(this.clearStorage());
   }
 
   @action

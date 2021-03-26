@@ -36,6 +36,7 @@
     "net_worth_settings": "General",
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",
+    "advanced_settings": "Advanced",
     "custom_prices_settings": "Prices",
     "create_group_dialog_title": "Create new group",
     "join_group_dialog_title": "Join existing group",
@@ -44,7 +45,9 @@
     "ui_settings": "Interface",
     "general": "General",
     "session_id_dialog": "How to find your session Id",
-    "log_settings": "Log"
+    "log_settings": "Log",
+    "hardware_acceleration": "Hardware Acceleration",
+    "reset_indexeddb": "Reset Data"
   },
   "label": {
     "no_prices_retrieved": "Waiting for prices",
@@ -140,7 +143,9 @@
     "faq": "FAQ",
     "bug_report": "Bug Report",
     "feature_request": "Feature Request",
-    "support_us": "Support Us"
+    "support_us": "Support Us",
+    "reset_to_default": "Reset to default",
+    "enable_hardware_acceleration": "Enable Hardware Acceleration"
   },
   "value": {
     "none": "None",
@@ -148,7 +153,8 @@
     "price_treshold": "Price treshold",
     "total_price_treshold": "Total price treshold",
     "auto_snapshotting": "Auto snapshotting",
-    "auto_snapshot_interval": "Snapshotting interval"
+    "auto_snapshot_interval": "Snapshotting interval",
+    "hardware_acceleration": "Hardware Acceleration"
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
@@ -156,7 +162,8 @@
     "total_price_treshold": "Sets the cutoff for including total stack of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
-    "ui_scale": "Sets the UI scale"
+    "ui_scale": "Sets the UI scale",
+    "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect"
   },
   "link": {
     "restart_now": "Restart now"
@@ -165,6 +172,9 @@
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",
     "remove_profile": "Are you sure you want to remove your profile?",
     "leave_group": "Are you sure you want to leave your current group?",
+    "reset_indexeddb": "Are you sure you want to reset your data?",
+    "reset_indexeddb_notice": "Your league data, account data and local settings will be cleared.",
+    "reset_indexeddb_signout": "Performing this action will sign you out.",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
     "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
     "ga_consent_short_text": "By proceeding below, you agree to ",

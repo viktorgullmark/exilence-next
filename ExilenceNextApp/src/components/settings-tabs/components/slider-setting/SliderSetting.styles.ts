@@ -3,16 +3,29 @@ import { createStyles, makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      width: 250,
+      width: 400,
     },
     input: {
       width: 42,
+      marginRight: theme.spacing(2),
+      height: 30.71,
     },
     label: {
       '& + .MuiInput-formControl': {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
       },
+    },
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    slider: {
+      width: 120,
+      marginRight: theme.spacing(2),
+    },
+    icon: {
+      marginRight: theme.spacing(2),
     },
   })
 );
