@@ -99,7 +99,7 @@ export class AccountStore {
   loadAuthWindow() {
     const options = {
       clientId: 'exilence',
-      scopes: ['profile'], // Scopes limit access for OAuth tokens.
+      scopes: ['account:profile'], // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
       state: this.authState,
       responseType: 'code',

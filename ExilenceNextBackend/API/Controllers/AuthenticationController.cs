@@ -93,13 +93,15 @@ namespace API.Controllers
 
         public async Task<bool> ValidateAccount(string accountName, string accessToken)
         {
-            string uri = $"https://www.pathofexile.com/api/profile?access_token={accessToken}";
+            string uri = "https://www.pathofexile.com/api/profile";
 
             try
             {
 
                 using (var client = _httpClientFactory.CreateClient())
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+
                     var response = await client.GetAsync(uri);
                     var content = await response.Content.ReadAsStringAsync();
 
