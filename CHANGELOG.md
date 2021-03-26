@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - NOT RELEASED
+##### Added
+- Added a setting to toggle hardware acceleration
+##### Fixed
+- Fixed a bug where the storage wasnt cleared correctly when doing this manually
+##### Changed
+- Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps
+
 ## [0.4.2] - 2020-11-02
 ##### Added
 - Added a loading screen that will be shown before the app is rendered
