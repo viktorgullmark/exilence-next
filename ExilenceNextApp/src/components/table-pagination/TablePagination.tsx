@@ -2,7 +2,7 @@ import {
   IconButton,
   makeStyles,
   TablePagination as _MuiTablePagination,
-  useTheme
+  useTheme,
 } from '@material-ui/core';
 import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions';
 import FirstPageIcon from '@material-ui/icons/FirstPage';

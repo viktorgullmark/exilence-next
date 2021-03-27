@@ -1,6 +1,4 @@
 import { Column } from 'react-table';
-
-import { IPricedItem } from '../../interfaces/priced-item.interface';
 import {
   itemCorrupted,
   itemIcon,
@@ -11,11 +9,11 @@ import {
 } from '../columns/Columns';
 
 const itemTableColumns: Column<object>[] = [
-  itemIcon<IPricedItem>({
+  itemIcon({
     accessor: 'icon',
     header: 'Icon',
   }),
-  itemName<IPricedItem>({
+  itemName({
     accessor: 'name',
     header: 'Name',
   }),
@@ -24,15 +22,15 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'ilvl',
     align: 'right',
   },
-  itemTabs<IPricedItem>({
+  itemTabs({
     accessor: 'tab',
     header: 'Tabs',
   }),
-  itemCorrupted<IPricedItem>({
+  itemCorrupted({
     accessor: 'corrupted',
     header: 'Corrupted',
   }),
-  itemLinks<IPricedItem>({
+  itemLinks({
     accessor: 'links',
     header: 'Links',
   }),
@@ -51,11 +49,11 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'stackSize',
     align: 'right',
   },
-  itemValue<IPricedItem>({
+  itemValue({
     accessor: 'calculated',
     header: 'Price',
   }),
-  itemValue<IPricedItem>({
+  itemValue({
     accessor: 'total',
     header: 'Total value',
   }),

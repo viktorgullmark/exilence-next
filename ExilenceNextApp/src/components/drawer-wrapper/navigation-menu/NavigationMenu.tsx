@@ -1,6 +1,3 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
 import {
   Divider,
   Drawer,
@@ -10,15 +7,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { observer } from 'mobx-react-lite';
-
-import useStyles from './NavigationMenu.styles';
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
+import useStyles from './NavigationMenu.styles';
 
 type NavigationMenuProps = {
   open: boolean;
@@ -28,7 +26,6 @@ type NavigationMenuProps = {
 
 const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuProps) => {
   const classes = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const location = useLocation();
 

@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { ILeaguePrices } from '../interfaces/league-prices';

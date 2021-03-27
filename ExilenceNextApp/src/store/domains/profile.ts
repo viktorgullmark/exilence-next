@@ -1,12 +1,11 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
@@ -18,12 +17,7 @@ import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { findItem, mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
-import {
-  excludeLegacyMaps,
-  findPrice,
-  findPriceForItem,
-  mapPriceToItem,
-} from '../../utils/price.utils';
+import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
@@ -32,7 +26,6 @@ import {
   formatStashTabSnapshotsForChart,
   formatValue,
   getItemCount,
-  getValueForSnapshot,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';
