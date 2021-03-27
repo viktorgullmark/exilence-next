@@ -10,8 +10,9 @@ All notable changes to this project will be documented in this file.
     - Should catch most if not all errors and display them to the user, hopefully resolves whitescreen issues
 ##### Fixed
 - Fixed a bug where the storage wasnt cleared correctly when doing this manually
-- FIxed a bug where setting the interface scaling using the input field didnt work
+- Fixed a bug where setting the interface scaling using the input field didnt work
 - Fixed one cause to the app sometimes being stuck on a whitescreen when launching
+- Fixed a bug where the active profile would sometimes change when syncing from the server
 ##### Changed
 - Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps
 

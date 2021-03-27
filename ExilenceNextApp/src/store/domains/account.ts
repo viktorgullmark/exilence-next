@@ -138,7 +138,7 @@ export class Account implements IAccount {
       return newProfile;
     });
     // if no active profile, set first profile in array to active
-    const activeProfile = profiles.find((p) => p.active);
+    const activeProfile = profiles.find((p) => p.active) || this.profiles.find((p) => p.active);
     if (!activeProfile && profiles.length > 0) {
       profiles[0].active = true;
     }
