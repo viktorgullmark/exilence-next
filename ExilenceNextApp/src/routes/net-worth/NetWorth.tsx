@@ -1,5 +1,3 @@
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip, Typography, useTheme } from '@material-ui/core';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -9,7 +7,8 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { appName, visitor } from '../..';
 import { itemColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';

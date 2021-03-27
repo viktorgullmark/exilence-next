@@ -37,7 +37,8 @@ import AnnouncementDialogContainer from './components/announcement-dialog/Announ
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
 import useStyles from './index.styles';
-
+import * as Sentry from '@sentry/react';
+import ErrorBoundaryFallback from './components/error-boundary-fallback/ErrorBoundaryFallback';
 initSentry();
 configureI18n();
 configureAxios();
@@ -60,7 +61,11 @@ localForage.config({
   driver: localForage.INDEXEDDB,
 });
 
-const App = () => {
+type Props = {
+  error?: Error;
+};
+
+const App = ({ error }: Props) => {
   const classes = useStyles();
   useEffect(() => {
     const preload = document.getElementById('preload');
@@ -79,22 +84,28 @@ const App = () => {
               <ToastWrapper />
               <Route path="/login" component={Login} />
               <HeaderContainer />
-              <DrawerWrapperContainer>
-                <ToolbarContainer />
-                <Route path="/net-worth" component={NetWorth} />
-                <Route path="/settings" component={Settings} />
-                <Route
-                  exact
-                  path="/"
-                  render={() =>
-                    rootStore.accountStore.getSelectedAccount.name ? (
-                      <Redirect to="/net-worth" />
-                    ) : (
-                      <Redirect to="/login" />
-                    )
-                  }
-                />
-              </DrawerWrapperContainer>
+              {error ? (
+                <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
+              ) : (
+                <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+                  <DrawerWrapperContainer>
+                    <ToolbarContainer />
+                    <Route path="/net-worth" component={NetWorth} />
+                    <Route path="/settings" component={Settings} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        rootStore.accountStore.getSelectedAccount.name ? (
+                          <Redirect to="/net-worth" />
+                        ) : (
+                          <Redirect to="/login" />
+                        )
+                      }
+                    />
+                  </DrawerWrapperContainer>
+                </Sentry.ErrorBoundary>
+              )}
               <Notifier />
               <ReactionContainer />
               <AnnouncementDialogContainer />
@@ -118,17 +129,25 @@ const renderApp = () => {
     hydrate('uiState', rootStore.uiStateStore),
     hydrate('league', rootStore.leagueStore),
     hydrate('setting', rootStore.settingStore),
-  ]).then(() => {
-    rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
-    visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
-    ReactDOM.render(<App />, document.getElementById('root'));
-  });
+  ])
+    .then(() => {
+      rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
+      visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
+      ReactDOM.render(<App />, document.getElementById('root'));
+    })
+    .catch((err: Error) => {
+      ReactDOM.render(<App error={err} />, document.getElementById('root'));
+    });
 };
 
-hydrate('migration', rootStore.migrationStore).then(() => {
-  if (rootStore.migrationStore.current < rootStore.migrationStore.latest) {
-    rootStore.migrationStore.runMigrations().subscribe(() => renderApp());
-  } else {
-    renderApp();
-  }
-});
+hydrate('migration', rootStore.migrationStore)
+  .then(() => {
+    if (rootStore.migrationStore.current < rootStore.migrationStore.latest) {
+      rootStore.migrationStore.runMigrations().subscribe(() => renderApp());
+    } else {
+      renderApp();
+    }
+  })
+  .catch((err: Error) => {
+    ReactDOM.render(<App error={err} />, document.getElementById('root'));
+  });

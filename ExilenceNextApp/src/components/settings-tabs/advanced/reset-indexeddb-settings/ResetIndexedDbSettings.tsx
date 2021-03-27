@@ -24,13 +24,12 @@ const ResetIndexedDbSettings = ({ migrationStore, signalrStore }: ResetIndexedDb
   const { t } = useTranslation();
 
   const handleDataResetConfirmation = async () => {
-    await setIsClearing(true);
+    setIsClearing(true);
 
-    // todo: wrap as an action within some store and signOut on success
-    migrationStore!.runClearStorage();
-    signalrStore!.signOut();
-
-    await setIsClearing(false);
+    migrationStore!.clearStorage().subscribe(() => {
+      signalrStore!.signOut();
+      setIsClearing(false);
+    });
   };
 
   const handleConfirmationDialogToggle = () => setIsDialogOpen((isOpen) => !isOpen);
