@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added a setting to toggle hardware acceleration
 - Added pricing of invitations
+- Added the ability to manually reset storage (IndexedDB)
 - Introduced basic error boundaries
     - Should catch most if not all errors and display them to the user, hopefully resolves whitescreen issues
 ##### Fixed
