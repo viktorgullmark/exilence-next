@@ -122,7 +122,7 @@ export default function exilenceTheme() {
         root: {
           color: '#c2c2c2',
         },
-      }
+      },
     },
     palette: {
       text: {

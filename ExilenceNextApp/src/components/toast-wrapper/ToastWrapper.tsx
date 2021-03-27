@@ -1,17 +1,13 @@
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useLocation } from 'react-router';
 import { ToastContainer } from 'react-toastify';
-import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
-
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import useStyles from './ToastWrapper.styles';
 
-type ToastWrapperProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const ToastWrapper = ({ uiStateStore }: ToastWrapperProps) => {
+const ToastWrapper = () => {
+  const { uiStateStore } = useStores();
   const classes = useStyles();
   const location = useLocation();
 
@@ -25,4 +21,4 @@ const ToastWrapper = ({ uiStateStore }: ToastWrapperProps) => {
   );
 };
 
-export default inject('uiStateStore')(observer(ToastWrapper));
+export default observer(ToastWrapper);

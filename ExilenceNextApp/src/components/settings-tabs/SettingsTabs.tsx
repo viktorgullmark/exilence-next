@@ -1,18 +1,18 @@
 import { Box, Typography } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { UiStateStore } from '../../store/uiStateStore';
-import SettingsTab from './components/settings-tab/SettingsTab';
-import useStyles from './SettingsTabs.styles';
-import SnapshotSettings from './general/snapshot-settings/SnapshotSettings';
-import NetWorthSettings from './general/net-worth-settings/NetWorthSettings';
-import CustomPricesSettings from './prices/custom-prices-settings/CustomPricesSettings';
-import UiSettings from './interface/ui-settings/UiSettings';
+import { useStores } from '../..';
 import HardwareAccelerationSettings from './advanced/hardware-acceleration-settings/HardwareAccelerationSettings';
 import ResetIndexedDbSettings from './advanced/reset-indexeddb-settings/ResetIndexedDbSettings';
+import SettingsTab from './components/settings-tab/SettingsTab';
+import NetWorthSettings from './general/net-worth-settings/NetWorthSettings';
+import SnapshotSettings from './general/snapshot-settings/SnapshotSettings';
+import UiSettings from './interface/ui-settings/UiSettings';
+import CustomPricesSettings from './prices/custom-prices-settings/CustomPricesSettings';
+import useStyles from './SettingsTabs.styles';
 
 function a11yProps(index: any) {
   return {
@@ -21,11 +21,8 @@ function a11yProps(index: any) {
   };
 }
 
-type SettingsTabsProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
+const SettingsTabs = () => {
+  const { uiStateStore } = useStores();
   const classes = useStyles();
   const { t } = useTranslation();
   const { settingsTabIndex, setSettingsTabIndex } = uiStateStore!;
@@ -108,4 +105,4 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
   );
 };
 
-export default inject('uiStateStore')(observer(SettingsTabs));
+export default observer(SettingsTabs);

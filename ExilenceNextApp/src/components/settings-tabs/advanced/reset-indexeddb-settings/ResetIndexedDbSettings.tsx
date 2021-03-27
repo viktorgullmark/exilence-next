@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -8,29 +7,24 @@ import {
   DialogTitle,
   Grid,
 } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { inject, observer } from 'mobx-react';
-import { SignalrStore } from '../../../../store/signalrStore';
-import { MigrationStore } from '../../../../store/migrationStore';
+import { useStores } from '../../../..';
 
-type ResetIndexedDbSettingsProps = {
-  migrationStore?: MigrationStore;
-  signalrStore?: SignalrStore;
-};
-
-const ResetIndexedDbSettings = ({ migrationStore, signalrStore }: ResetIndexedDbSettingsProps) => {
+const ResetIndexedDbSettings = () => {
+  const { signalrStore, migrationStore } = useStores();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const { t } = useTranslation();
 
   const handleDataResetConfirmation = async () => {
-    await setIsClearing(true);
+    setIsClearing(true);
 
-    // todo: wrap as an action within some store and signOut on success
-    migrationStore!.runClearStorage();
-    signalrStore!.signOut();
-
-    await setIsClearing(false);
+    migrationStore!.clearStorage().subscribe(() => {
+      signalrStore!.signOut();
+      setIsClearing(false);
+    });
   };
 
   const handleConfirmationDialogToggle = () => setIsDialogOpen((isOpen) => !isOpen);
@@ -76,4 +70,4 @@ const ResetIndexedDbSettings = ({ migrationStore, signalrStore }: ResetIndexedDb
   );
 };
 
-export default inject('migrationStore', 'signalrStore')(observer(ResetIndexedDbSettings));
+export default observer(ResetIndexedDbSettings);

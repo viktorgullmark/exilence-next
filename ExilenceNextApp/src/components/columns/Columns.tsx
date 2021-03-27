@@ -3,21 +3,20 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
+import { useStores } from '../..';
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
-import { CustomPriceStore } from '../../store/customPriceStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
 import { getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
 
-export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemIcon(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -32,7 +31,7 @@ export function itemIcon<T>(options: { accessor: string; header: string }): Colu
   };
 }
 
-export function itemName<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemName(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -53,7 +52,7 @@ export function itemName<T>(options: { accessor: string; header: string }): Colu
   };
 }
 
-export function itemLinks<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemLinks(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -89,7 +88,7 @@ export function itemCell(options: {
   };
 }
 
-export function itemCorrupted<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemCorrupted(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -103,7 +102,7 @@ export function itemCorrupted<T>(options: { accessor: string; header: string }):
   };
 }
 
-export function itemTabs<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemTabs(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -117,7 +116,7 @@ export function itemTabs<T>(options: { accessor: string; header: string }): Colu
   };
 }
 
-export function itemValue<T>(options: {
+export function itemValue(options: {
   accessor: string;
   header: string;
   editable?: boolean;
@@ -240,18 +239,16 @@ type ItemValueCellProps = {
   editable?: boolean;
   pricedItem: IPricedItem;
   placeholder?: string;
-  uiStateStore?: UiStateStore;
-  customPriceStore?: CustomPriceStore;
 };
 
 const ItemValueCellComponent = ({
   value,
   editable,
   pricedItem,
-  uiStateStore,
-  customPriceStore,
   placeholder,
 }: ItemValueCellProps) => {
+  const { uiStateStore, customPriceStore } = useStores();
+
   const classes = useStyles();
   const { t } = useTranslation();
   const tryParseNumber = (value: boolean | string | number) => {
@@ -312,7 +309,7 @@ const ItemValueCellComponent = ({
   );
 };
 
-const ItemValueCell = inject('uiStateStore', 'customPriceStore')(observer(ItemValueCellComponent));
+const ItemValueCell = observer(ItemValueCellComponent);
 
 type ItemCorruptedCellProps = {
   value: boolean;

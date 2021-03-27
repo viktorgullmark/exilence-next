@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 ## [0.4.3] - NOT RELEASED
 ##### Added
 - Added a setting to toggle hardware acceleration
+- Added pricing of invitations
+- Introduced basic error boundaries
+    - Should catch most if not all errors and display them to the user, hopefully resolves whitescreen issues
 ##### Fixed
 - Fixed a bug where the storage wasnt cleared correctly when doing this manually
+- FIxed a bug where setting the interface scaling using the input field didnt work
 - Fixed one cause to the app sometimes being stuck on a whitescreen when launching
 ##### Changed
 - Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps

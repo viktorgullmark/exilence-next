@@ -1,14 +1,10 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import ChartToolbox from './ChartToolbox';
 
-type SnapshotHistoryChartContainerProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const SnapshotHistoryChartContainer = ({ uiStateStore }: SnapshotHistoryChartContainerProps) => {
+const SnapshotHistoryChartContainer = () => {
+  const { uiStateStore } = useStores();
   return (
     <ChartToolbox
       handleChangeTimeSpan={(val) => uiStateStore!.setChartTimeSpan(val)}
@@ -17,4 +13,4 @@ const SnapshotHistoryChartContainer = ({ uiStateStore }: SnapshotHistoryChartCon
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(observer(SnapshotHistoryChartContainer));
+export default observer(SnapshotHistoryChartContainer);

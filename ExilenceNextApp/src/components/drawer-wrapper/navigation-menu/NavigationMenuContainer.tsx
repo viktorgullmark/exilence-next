@@ -1,21 +1,18 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { RouteStore } from '../../../store/routeStore';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { useStores } from '../../..';
 import NavigationMenu from './NavigationMenu';
 
-type NavigationMenuContainerProps = {
-  uiStateStore?: UiStateStore;
-  routeStore?: RouteStore;
+const NavigationMenuContainer = () => {
+  const { uiStateStore, routeStore } = useStores();
+
+  return (
+    <NavigationMenu
+      open={uiStateStore!.sidenavOpen}
+      toggleSidenav={() => uiStateStore!.toggleSidenav()}
+      handleRedirect={(path) => routeStore!.redirect(path)}
+    />
+  );
 };
 
-const NavigationMenuContainer = ({ uiStateStore, routeStore }: NavigationMenuContainerProps) => (
-  <NavigationMenu
-    open={uiStateStore!.sidenavOpen}
-    toggleSidenav={() => uiStateStore!.toggleSidenav()}
-    handleRedirect={(path) => routeStore!.redirect(path)}
-  />
-);
-
-export default inject('uiStateStore', 'routeStore')(observer(NavigationMenuContainer));
+export default observer(NavigationMenuContainer);

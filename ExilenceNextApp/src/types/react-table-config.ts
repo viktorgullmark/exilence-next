@@ -45,11 +45,11 @@ import {
 } from 'react-table';
 
 declare module 'react-table' {
-  export interface UseFlexLayoutInstanceProps<D extends object> {
+  export interface UseFlexLayoutInstanceProps {
     totalColumnsMinWidth: number;
   }
 
-  export interface UseFlexLayoutColumnProps<D extends object> {
+  export interface UseFlexLayoutColumnProps {
     totalMinWidth: number;
   }
 
@@ -78,7 +78,7 @@ declare module 'react-table' {
       UseGroupByInstanceProps<D>,
       UsePaginationInstanceProps<D>,
       UseRowSelectInstanceProps<D>,
-      UseFlexLayoutInstanceProps<D>,
+      UseFlexLayoutInstanceProps,
       UsePaginationInstanceProps<D>,
       UseSortByInstanceProps<D> {}
 
@@ -107,7 +107,7 @@ declare module 'react-table' {
     extends UseFiltersColumnProps<D>,
       UseGroupByColumnProps<D>,
       UseResizeColumnsColumnProps<D>,
-      UseFlexLayoutColumnProps<D>,
+      UseFlexLayoutColumnProps,
       UseSortByColumnProps<D> {}
 
   export interface Cell<D extends object = {}> extends UseGroupByCellProps<D> {}

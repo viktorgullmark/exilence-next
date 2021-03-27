@@ -1,43 +1,24 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { AccountStore } from '../../store/accountStore';
-import { LogStore } from '../../store/logStore';
-import { NotificationStore } from '../../store/notificationStore';
-import { OverlayStore } from '../../store/overlayStore';
-import { PriceStore } from '../../store/priceStore';
-import { SettingStore } from '../../store/settingStore';
-import { SignalrStore } from '../../store/signalrStore';
+import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
-import { LeagueStore } from './../../store/leagueStore';
-import { UiStateStore } from './../../store/uiStateStore';
 import Toolbar from './Toolbar';
 
-type ToolbarContainerProps = {
-  uiStateStore?: UiStateStore;
-  accountStore?: AccountStore;
-  leagueStore?: LeagueStore;
-  notificationStore?: NotificationStore;
-  signalrStore?: SignalrStore;
-  priceStore?: PriceStore;
-  settingStore?: SettingStore;
-  overlayStore?: OverlayStore;
-  logStore?: LogStore;
-};
-
-const ToolbarContainer = ({
-  uiStateStore,
-  accountStore,
-  signalrStore,
-  notificationStore,
-  priceStore,
-  settingStore,
-  overlayStore,
-  logStore,
-}: ToolbarContainerProps) => {
+const ToolbarContainer = () => {
+  const {
+    uiStateStore,
+    accountStore,
+    signalrStore,
+    notificationStore,
+    priceStore,
+    settingStore,
+    overlayStore,
+    logStore,
+  } = useStores();
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -186,13 +167,4 @@ const ToolbarContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'accountStore',
-  'notificationStore',
-  'signalrStore',
-  'priceStore',
-  'settingStore',
-  'overlayStore',
-  'logStore'
-)(observer(ToolbarContainer));
+export default observer(ToolbarContainer);

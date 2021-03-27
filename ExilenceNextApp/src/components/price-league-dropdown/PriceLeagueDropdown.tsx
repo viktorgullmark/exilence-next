@@ -1,14 +1,12 @@
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import clsx from 'clsx';
+import { FormikErrors, FormikTouched } from 'formik';
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { FormikErrors, FormikTouched } from 'formik';
-import { observer } from 'mobx-react';
-
-import useLabelWidth from '../../hooks/use-label-width';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
 import useStyles from './PriceLeagueDropdown.styles';
-import clsx from 'clsx';
 
 type PriceLeagueDropdownProps = {
   touched: FormikTouched<any>;

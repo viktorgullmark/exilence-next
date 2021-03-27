@@ -49,7 +49,7 @@ function getItemCategories() {
     'DeliriumOrb',
     'Beast',
     'Vial',
-    'Invitation'
+    'Invitation',
   ];
   return categories;
 }

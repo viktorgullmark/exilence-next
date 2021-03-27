@@ -5,7 +5,7 @@ import { Checkbox, FormControlLabel, Popover, Typography } from '@material-ui/co
 
 import useStyles from './ColumnHidePage.styles';
 
-type ColumnHidePage = {
+type ColumnHidePageProps = {
   instance: TableInstance;
   anchorEl: Element | null;
   onClose: () => void;
@@ -19,7 +19,7 @@ export function ColumnHidePage({
   anchorEl,
   onClose,
   show,
-}: ColumnHidePage): ReactElement | null {
+}: ColumnHidePageProps): ReactElement | null {
   const classes = useStyles();
   const { allColumns, toggleHideColumn } = instance;
   const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'));

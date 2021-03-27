@@ -4,7 +4,7 @@ import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@mat
 import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';

@@ -14,7 +14,7 @@ type TableWrapperProps = {
   setInitialState: any;
 };
 
-const getStyles = <T extends object>(props: any, _disableResizing = false, align = 'left') => [
+const getStyles = (props: any, _disableResizing = false, align = 'left') => [
   props,
   {
     style: {

@@ -1,33 +1,27 @@
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { inject, observer } from 'mobx-react';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
-import { useTranslation } from 'react-i18next';
-import HistoryIcon from '@material-ui/icons/History';
-import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import Typography from '@material-ui/core/Typography';
 import RedirectIcon from '@material-ui/icons/CallMade';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-
-import useStyles from './SupportPanel.styles';
-import { UiStateStore } from '../../store/uiStateStore';
-import { openLink } from '../../utils/window.utils';
+import HistoryIcon from '@material-ui/icons/History';
+import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import { observer } from 'mobx-react-lite';
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import { useStores } from '../..';
+import { openLink } from '../../utils/window.utils';
 import WhatsNewDialog from '../whats-new-dialog/WhatsNewDialog';
+import useStyles from './SupportPanel.styles';
 
 type SupportPanelProps = {
-  uiStateStore?: UiStateStore;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 } & Pick<PopperProps, 'anchorEl'>;
 
-const SupportPanel = ({
-  uiStateStore,
-  isOpen = false,
-  setIsOpen,
-  anchorEl = null,
-}: SupportPanelProps) => {
+const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPanelProps) => {
+  const { uiStateStore } = useStores();
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
@@ -118,4 +112,4 @@ const SupportPanel = ({
   );
 };
 
-export default inject('uiStateStore')(observer(SupportPanel));
+export default observer(SupportPanel);

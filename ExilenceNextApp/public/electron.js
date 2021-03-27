@@ -1,7 +1,6 @@
 const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
-const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
@@ -15,7 +14,7 @@ const {
   authWindow: { createAuthWindow },
   menuFunctions: { menuFunctions },
   session: { createSession },
-  localSettings: { loadLocalSettings, getLocalSettings }
+  localSettings: { loadLocalSettings, getLocalSettings },
 } = require('./main');
 
 if (!isDev) {
@@ -23,7 +22,6 @@ if (!isDev) {
     dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',
   });
 }
-
 
 /**
  * Initial Declarations
@@ -38,8 +36,7 @@ let trayProps;
 /**
  * Local Settings
  */
-loadLocalSettings()
-
+loadLocalSettings();
 
 /**
  * Overlays
@@ -128,9 +125,21 @@ function createWindow() {
   });
 
   /**
+   * Window handlers
+   */
+  ipcMain.handle('restart', (e) => {
+    if (!isQuitting) {
+      e.preventDefault();
+      app.relaunch();
+      app.exit(0);
+      e.returnValue = false;
+    }
+  });
+
+  /**
    * Authorization
    */
-    createAuthWindow({ mainWindow: windows[mainWindow] });
+  createAuthWindow({ mainWindow: windows[mainWindow] });
 
   /**
    * Flash Frames

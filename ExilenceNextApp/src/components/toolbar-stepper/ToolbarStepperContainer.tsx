@@ -1,14 +1,10 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import ToolbarStepper from './ToolbarStepper';
 
-type ToolbarStepperContainerProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const ToolbarStepperContainer = ({ uiStateStore }: ToolbarStepperContainerProps) => {
+const ToolbarStepperContainer = () => {
+  const { uiStateStore } = useStores();
   const handleClose = () => {
     uiStateStore!.setToolbarTourOpen(false);
   };
@@ -16,4 +12,4 @@ const ToolbarStepperContainer = ({ uiStateStore }: ToolbarStepperContainerProps)
   return <ToolbarStepper isOpen={uiStateStore!.toolbarTourOpen} handleClose={handleClose} />;
 };
 
-export default inject('uiStateStore')(observer(ToolbarStepperContainer));
+export default observer(ToolbarStepperContainer);
