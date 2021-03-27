@@ -4,6 +4,8 @@
     "next": "Next",
     "authorize": "Authorize",
     "reset": "Reset",
+    "restart_application": "Restart",
+    "clear_and_restart_application": "Reset data and restart",
     "back": "Back",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -20,6 +22,7 @@
   },
   "title": {
     "login": "Login",
+    "error_boundary": "You encountered an error",
     "net_worth": "Net worth",
     "settings": "Settings",
     "save_profile": "Edit profile",
