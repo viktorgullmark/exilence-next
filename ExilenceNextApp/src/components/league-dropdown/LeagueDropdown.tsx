@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import useLabelWidth from '../../hooks/use-label-width';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';

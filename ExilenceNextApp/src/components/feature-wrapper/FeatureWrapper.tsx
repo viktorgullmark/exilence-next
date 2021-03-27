@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import useStyles from './FeatureWrapper.styles';
 

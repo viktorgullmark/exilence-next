@@ -1,19 +1,12 @@
-import React, { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
-
-import { appName, visitor } from '../..';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
+import { appName, useStores, visitor } from '../..';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import SettingsTabs from '../../components/settings-tabs/SettingsTabs';
-import { UiStateStore } from '../../store/uiStateStore';
-import { AccountStore } from '../../store/accountStore';
 
-type SettingsProps = {
-  uiStateStore: UiStateStore;
-  accountStore: AccountStore;
-};
-
-const Settings = ({ uiStateStore, accountStore }: SettingsProps) => {
+const Settings = () => {
+  const { uiStateStore, accountStore } = useStores();
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initiated && !uiStateStore!.isValidating) {
       accountStore!.validateSession('/settings');
@@ -32,4 +25,4 @@ const Settings = ({ uiStateStore, accountStore }: SettingsProps) => {
   );
 };
 
-export default inject('uiStateStore', 'accountStore')(observer(Settings));
+export default observer(Settings);

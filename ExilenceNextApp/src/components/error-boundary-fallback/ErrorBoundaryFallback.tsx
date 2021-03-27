@@ -1,23 +1,20 @@
 import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MigrationStore } from '../../store/migrationStore';
+import { useStores } from '../..';
 import { restart } from '../../utils/window.utils';
 import useStyles from './ErrorBoundaryFallback.styles';
 
 type ErrorBoundaryFallbackProps = {
   error: Error;
   componentStack: string | null;
-  migrationStore?: MigrationStore;
 };
 
-const ErrorBoundaryFallback = ({
-  error,
-  componentStack,
-  migrationStore,
-}: ErrorBoundaryFallbackProps) => {
+const ErrorBoundaryFallback = ({ error, componentStack }: ErrorBoundaryFallbackProps) => {
+  const { migrationStore } = useStores();
+
   const classes = useStyles();
   const { t } = useTranslation();
   const [isClearing, setIsClearing] = useState(false);
@@ -74,4 +71,4 @@ const ErrorBoundaryFallback = ({
   );
 };
 
-export default inject('migrationStore')(observer(ErrorBoundaryFallback));
+export default observer(ErrorBoundaryFallback);

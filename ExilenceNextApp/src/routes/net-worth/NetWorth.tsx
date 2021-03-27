@@ -5,11 +5,10 @@ import ListIcon from '@material-ui/icons/List';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
-import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { appName, visitor } from '../..';
+import { appName, useStores, visitor } from '../..';
 import { itemColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
@@ -23,24 +22,16 @@ import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 import Widget from '../../components/widget/Widget';
-import { AccountStore } from '../../store/accountStore';
-import { SignalrStore } from '../../store/signalrStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
-
-type NetWorthProps = {
-  accountStore?: AccountStore;
-  signalrStore?: SignalrStore;
-  uiStateStore?: UiStateStore;
-};
 
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
 
-const NetWorth = ({ accountStore, signalrStore, uiStateStore }: NetWorthProps) => {
+const NetWorth = () => {
+  const { accountStore, signalrStore, uiStateStore } = useStores();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -280,4 +271,4 @@ const NetWorth = ({ accountStore, signalrStore, uiStateStore }: NetWorthProps) =
   );
 };
 
-export default inject('accountStore', 'signalrStore', 'uiStateStore')(observer(NetWorth));
+export default observer(NetWorth);

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { appName, visitor } from '../..';
 import Image from '../../assets/img/conquerorsoftheatlas-bg.jpg';

@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { IAccount } from '../../interfaces/account.interface';
 import { Account } from '../../store/domains/account';

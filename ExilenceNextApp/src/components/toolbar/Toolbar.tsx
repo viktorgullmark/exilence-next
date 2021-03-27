@@ -22,7 +22,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import WarningIcon from '@material-ui/icons/Warning';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import PatreonLogo from '../../assets/img/patreon-white.png';

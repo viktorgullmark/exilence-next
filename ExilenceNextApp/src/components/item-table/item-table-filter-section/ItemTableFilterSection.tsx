@@ -1,18 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Box, Divider, Grid } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
-
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useStores } from '../../..';
 import { IStashTab } from '../../../interfaces/stash.interface';
-import { AccountStore } from '../../../store/accountStore';
-import { UiStateStore } from '../../../store/uiStateStore';
 import StashTabDropdown from '../../stash-tab-dropdown/StashTabDropdown';
 
-export interface ItemTableFilterSectionProps {
-  uiStateStore?: UiStateStore;
-  accountStore?: AccountStore;
-}
-
-const ItemTableFilterSection = ({ uiStateStore, accountStore }: ItemTableFilterSectionProps) => {
+const ItemTableFilterSection = () => {
+  const { uiStateStore, accountStore } = useStores();
   const [selectedStashTabs, setSelectedStashTabs] = useState<IStashTab[]>([]);
   const [stashTabs, setStashTabs] = useState<IStashTab[]>([]);
 
@@ -70,4 +64,4 @@ const ItemTableFilterSection = ({ uiStateStore, accountStore }: ItemTableFilterS
   );
 };
 
-export default inject('uiStateStore', 'accountStore')(observer(ItemTableFilterSection));
+export default observer(ItemTableFilterSection);

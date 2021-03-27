@@ -15,7 +15,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import useStyles from './NavigationMenu.styles';
 import clsx from 'clsx';

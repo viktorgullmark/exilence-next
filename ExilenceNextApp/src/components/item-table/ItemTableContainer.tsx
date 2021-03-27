@@ -2,7 +2,7 @@ import { Box, Button, Grid, IconButton, makeStyles, Theme, Tooltip } from '@mate
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,12 +16,9 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
+import { useStores } from '../..';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
-import { AccountStore } from '../../store/accountStore';
-import { RouteStore } from '../../store/routeStore';
-import { SignalrStore } from '../../store/signalrStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
@@ -30,13 +27,6 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
-
-type ItemTableContainerProps = {
-  uiStateStore?: UiStateStore;
-  signalrStore?: SignalrStore;
-  accountStore?: AccountStore;
-  routeStore?: RouteStore;
-};
 
 export const itemTableFilterSpacing = 2;
 
@@ -66,12 +56,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ItemTableContainer = ({
-  accountStore,
-  signalrStore,
-  uiStateStore,
-  routeStore,
-}: ItemTableContainerProps) => {
+const ItemTableContainer = () => {
+  const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
@@ -247,9 +233,4 @@ const ItemTableContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore',
-  'routeStore'
-)(observer(ItemTableContainer));
+export default observer(ItemTableContainer);

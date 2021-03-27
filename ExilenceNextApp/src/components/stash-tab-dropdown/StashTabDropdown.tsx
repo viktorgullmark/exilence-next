@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { IStashTab } from '../../interfaces/stash.interface';
 import { rgbToHex } from './../../utils/colour.utils';

@@ -1,22 +1,17 @@
-import React, { useRef } from 'react';
 import useComponentSize from '@rehooks/component-size';
-import { inject, observer } from 'mobx-react';
-
-import { AccountStore } from '../../store/accountStore';
-import { SignalrStore } from '../../store/signalrStore';
+import { observer } from 'mobx-react-lite';
+import React, { useRef } from 'react';
+import { useStores } from '../..';
 import SnapshotHistoryChart from './SnapshotHistoryChart';
 
 type SnapshotHistoryChartContainerProps = {
   showIndividualTabs?: boolean;
-  accountStore?: AccountStore;
-  signalrStore?: SignalrStore;
 };
 
 const SnapshotHistoryChartContainer = ({
-  accountStore,
-  signalrStore,
   showIndividualTabs,
 }: SnapshotHistoryChartContainerProps) => {
+  const { accountStore, signalrStore } = useStores();
   const ref = useRef(null);
   const size = useComponentSize(ref);
 
@@ -37,4 +32,4 @@ const SnapshotHistoryChartContainer = ({
   );
 };
 
-export default inject('accountStore', 'signalrStore')(observer(SnapshotHistoryChartContainer));
+export default observer(SnapshotHistoryChartContainer);

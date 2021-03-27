@@ -4,24 +4,20 @@ import { Box, IconButton, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from 'formik';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './PriceTableFilter.styles';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { useStores } from '../../..';
 
 export type TableFilterProps<T> = {
   handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
-  uiStateStore?: UiStateStore;
 };
 
-const PriceTableFilter = ({
-  handleFilter,
-  clearFilter,
-  uiStateStore,
-}: TableFilterProps<IPricedItem>) => {
+const PriceTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPricedItem>) => {
+  const { uiStateStore } = useStores();
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -86,4 +82,4 @@ const PriceTableFilter = ({
   );
 };
 
-export default inject('uiStateStore')(observer(PriceTableFilter));
+export default observer(PriceTableFilter);

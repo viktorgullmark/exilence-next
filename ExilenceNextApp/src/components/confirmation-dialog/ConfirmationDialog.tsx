@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import RequestButton from '../request-button/RequestButton';
 import useStyles from './ConfirmationDialog.styles';

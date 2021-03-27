@@ -11,7 +11,7 @@ import {
 import CasinoIcon from '@material-ui/icons/CasinoRounded';
 import { AxiosError } from 'axios';
 import { Formik } from 'formik';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { generateGroupName } from '../../utils/group.utils';

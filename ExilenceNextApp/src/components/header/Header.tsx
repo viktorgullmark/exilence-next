@@ -9,7 +9,7 @@ import FilterNone from '@material-ui/icons/FilterNone';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import HelpIcon from '@material-ui/icons/HelpOutline';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
 import SupportPanel from '../support-panel/SupportPanel';

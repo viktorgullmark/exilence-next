@@ -1,12 +1,10 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { SettingStore } from '../../../../store/settingStore';
+import { useStores } from '../../../..';
 import LogSettings from './LogSettings';
 
-interface Props {
-  settingStore?: SettingStore;
-}
-const LogSettingsContainer: React.FC<Props> = ({ settingStore }: Props) => {
+const LogSettingsContainer: React.FC = () => {
+  const { settingStore } = useStores();
   return (
     <LogSettings
       path={settingStore!.logPath}
@@ -15,4 +13,4 @@ const LogSettingsContainer: React.FC<Props> = ({ settingStore }: Props) => {
   );
 };
 
-export default inject('settingStore')(observer(LogSettingsContainer));
+export default observer(LogSettingsContainer);

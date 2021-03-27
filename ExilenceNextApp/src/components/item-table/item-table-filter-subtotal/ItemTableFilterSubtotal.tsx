@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Paper } from '@material-ui/core';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { itemColors } from '../../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../../interfaces/priced-item.interface';

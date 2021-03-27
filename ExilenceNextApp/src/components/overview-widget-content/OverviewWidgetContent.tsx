@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';

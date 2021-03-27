@@ -4,7 +4,7 @@ import { Box, Grid, IconButton, Link, TextField, Typography } from '@material-ui
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import { Formik } from 'formik';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { IAccount } from '../../../interfaces/account.interface';

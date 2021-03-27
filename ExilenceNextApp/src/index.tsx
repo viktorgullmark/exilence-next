@@ -1,19 +1,22 @@
-import React, { Suspense, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import { CssBaseline } from '@material-ui/core';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import * as Sentry from '@sentry/react';
 import localForage from 'localforage';
 import { configure } from 'mobx';
 import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
-import { Provider } from 'mobx-react';
 import moment from 'moment';
+import React, { Suspense, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.min.css';
 import ua, { Visitor } from 'universal-analytics';
-
+import './assets/styles/reactour.scss';
 import exilenceTheme from './assets/themes/exilence-theme';
+import AnnouncementDialogContainer from './components/announcement-dialog/AnnouncementDialogContainer';
 import DrawerWrapperContainer from './components/drawer-wrapper/DrawerWrapperContainer';
+import ErrorBoundaryFallback from './components/error-boundary-fallback/ErrorBoundaryFallback';
 import GlobalStyles from './components/global-styles/GlobalStyles';
 import HeaderContainer from './components/header/HeaderContainer';
 import HighchartsTheme from './components/highcharts-theme/HighchartsTheme';
@@ -25,20 +28,15 @@ import AppConfig from './config/app.config';
 import configureAxios from './config/axios';
 import configureI18n from './config/i18n';
 import initSentry from './config/sentry';
+import useStyles from './index.styles';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
 
-import 'react-toastify/dist/ReactToastify.min.css';
-import './assets/styles/reactour.scss';
-import AnnouncementDialogContainer from './components/announcement-dialog/AnnouncementDialogContainer';
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
-import useStyles from './index.styles';
-import * as Sentry from '@sentry/react';
-import ErrorBoundaryFallback from './components/error-boundary-fallback/ErrorBoundaryFallback';
 initSentry();
 configureI18n();
 configureAxios();
@@ -54,7 +52,14 @@ configure({ enforceActions: 'observed' });
 moment.locale(electronService.appLocale);
 
 const theme = responsiveFontSizes(exilenceTheme());
-export const rootStore: RootStore = new RootStore();
+
+export const rootStore = new RootStore();
+
+const RootStoreContext = React.createContext(rootStore);
+
+export function useStores() {
+  return React.useContext(RootStoreContext);
+}
 
 localForage.config({
   name: 'exilence-next-db',
@@ -74,45 +79,43 @@ const App = ({ error }: Props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Provider {...rootStore}>
-        <Suspense fallback={null}>
-          <Router>
-            <div className={classes.app}>
-              <HighchartsTheme />
-              <CssBaseline />
-              <GlobalStyles />
-              <ToastWrapper />
-              <Route path="/login" component={Login} />
-              <HeaderContainer />
-              {error ? (
-                <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
-              ) : (
-                <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
-                  <DrawerWrapperContainer>
-                    <ToolbarContainer />
-                    <Route path="/net-worth" component={NetWorth} />
-                    <Route path="/settings" component={Settings} />
-                    <Route
-                      exact
-                      path="/"
-                      render={() =>
-                        rootStore.accountStore.getSelectedAccount.name ? (
-                          <Redirect to="/net-worth" />
-                        ) : (
-                          <Redirect to="/login" />
-                        )
-                      }
-                    />
-                  </DrawerWrapperContainer>
-                </Sentry.ErrorBoundary>
-              )}
-              <Notifier />
-              <ReactionContainer />
-              <AnnouncementDialogContainer />
-            </div>
-          </Router>
-        </Suspense>
-      </Provider>
+      <Suspense fallback={null}>
+        <Router>
+          <div className={classes.app}>
+            <HighchartsTheme />
+            <CssBaseline />
+            <GlobalStyles />
+            <ToastWrapper />
+            <Route path="/login" component={Login} />
+            <HeaderContainer />
+            {error ? (
+              <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
+            ) : (
+              <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+                <DrawerWrapperContainer>
+                  <ToolbarContainer />
+                  <Route path="/net-worth" component={NetWorth} />
+                  <Route path="/settings" component={Settings} />
+                  <Route
+                    exact
+                    path="/"
+                    render={() =>
+                      rootStore.accountStore.getSelectedAccount.name ? (
+                        <Redirect to="/net-worth" />
+                      ) : (
+                        <Redirect to="/login" />
+                      )
+                    }
+                  />
+                </DrawerWrapperContainer>
+              </Sentry.ErrorBoundary>
+            )}
+            <Notifier />
+            <ReactionContainer />
+            <AnnouncementDialogContainer />
+          </div>
+        </Router>
+      </Suspense>
     </ThemeProvider>
   );
 };

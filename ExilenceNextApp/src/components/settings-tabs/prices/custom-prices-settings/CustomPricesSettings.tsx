@@ -1,22 +1,25 @@
-import React from 'react';
 import { Grid } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { useStores } from '../../../..';
 import PriceTableContainer from '../../../price-table/PriceTableContainer';
-import { UiStateStore } from '../../../../store/uiStateStore';
 
-type CustomPricesSettingsProps = {
-  uiStateStore?: UiStateStore;
+const CustomPricesSettings = () => {
+  const { uiStateStore } = useStores();
+  return (
+    <>
+      {uiStateStore.initiated && uiStateStore!.validated ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <PriceTableContainer />
+          </Grid>
+        </Grid>
+      ) : (
+        <>Waiting for response from price source...</>
+      )}
+      ;
+    </>
+  );
 };
 
-const CustomPricesSettings = ({ uiStateStore }: CustomPricesSettingsProps) =>
-  uiStateStore!.initiated && uiStateStore!.validated ? (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <PriceTableContainer />
-      </Grid>
-    </Grid>
-  ) : (
-    <>Waiting for response from price source...</>
-  );
-
-export default inject('uiStateStore')(observer(CustomPricesSettings));
+export default observer(CustomPricesSettings);

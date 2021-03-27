@@ -1,25 +1,17 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { SignalrStore } from '../../store/signalrStore';
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import { generateGroupName } from '../../utils/group.utils';
 import GroupDialog from './GroupDialog';
-
-type CreateGroupDialogContainerProps = {
-  uiStateStore?: UiStateStore;
-  signalrStore?: SignalrStore;
-};
 
 export interface IGroupForm {
   name: string;
   password: string;
 }
 
-const CreateGroupDialogContainer = ({
-  uiStateStore,
-  signalrStore,
-}: CreateGroupDialogContainerProps) => {
+const CreateGroupDialogContainer = () => {
+  const { uiStateStore, signalrStore } = useStores();
+
   const initialValues: IGroupForm = {
     name: uiStateStore!.groupDialogType === 'create' ? generateGroupName() : '',
     password: '',
@@ -47,4 +39,4 @@ const CreateGroupDialogContainer = ({
   );
 };
 
-export default inject('uiStateStore', 'signalrStore')(observer(CreateGroupDialogContainer));
+export default observer(CreateGroupDialogContainer);

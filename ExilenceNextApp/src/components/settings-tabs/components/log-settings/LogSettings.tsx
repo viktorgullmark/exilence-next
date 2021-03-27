@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
 import TextInputSetting from '../text-input-setting/TextInputSetting';
 

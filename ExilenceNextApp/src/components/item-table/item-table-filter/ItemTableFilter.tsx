@@ -4,7 +4,7 @@ import { Box, IconButton, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from 'formik';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { IPricedItem } from '../../../interfaces/priced-item.interface';

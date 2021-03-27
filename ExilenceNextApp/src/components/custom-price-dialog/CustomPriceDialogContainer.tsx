@@ -1,20 +1,10 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { AccountStore } from '../../store/accountStore';
-import { CustomPriceStore } from '../../store/customPriceStore';
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import CustomPriceDialog, { CustomPriceForm } from './CustomPriceDialog';
 
-type CustomPriceDialogContainerProps = {
-  uiStateStore?: UiStateStore;
-  customPriceStore?: CustomPriceStore;
-  accountStore?: AccountStore;
-};
-
-const CustomPriceDialogContainer = ({
-  uiStateStore,
-  customPriceStore,
-}: CustomPriceDialogContainerProps) => {
+const CustomPriceDialogContainer = () => {
+  const { uiStateStore, customPriceStore } = useStores();
   const value = uiStateStore!.selectedPricedItem?.calculated || 0;
   const initialValues: CustomPriceForm = {
     price: +value.toFixed(2),
@@ -58,4 +48,4 @@ const CustomPriceDialogContainer = ({
   );
 };
 
-export default inject('uiStateStore', 'customPriceStore')(observer(CustomPriceDialogContainer));
+export default observer(CustomPriceDialogContainer);

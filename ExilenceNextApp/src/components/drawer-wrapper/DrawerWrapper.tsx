@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 import { background } from '../../assets/themes/exilence-theme';

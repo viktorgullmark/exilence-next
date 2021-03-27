@@ -3,10 +3,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
+import { useStores } from '../..';
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
@@ -240,18 +241,16 @@ type ItemValueCellProps = {
   editable?: boolean;
   pricedItem: IPricedItem;
   placeholder?: string;
-  uiStateStore?: UiStateStore;
-  customPriceStore?: CustomPriceStore;
 };
 
 const ItemValueCellComponent = ({
   value,
   editable,
   pricedItem,
-  uiStateStore,
-  customPriceStore,
   placeholder,
 }: ItemValueCellProps) => {
+  const { uiStateStore, customPriceStore } = useStores();
+
   const classes = useStyles();
   const { t } = useTranslation();
   const tryParseNumber = (value: boolean | string | number) => {
@@ -312,7 +311,7 @@ const ItemValueCellComponent = ({
   );
 };
 
-const ItemValueCell = inject('uiStateStore', 'customPriceStore')(observer(ItemValueCellComponent));
+const ItemValueCell = observer(ItemValueCellComponent);
 
 type ItemCorruptedCellProps = {
   value: boolean;
