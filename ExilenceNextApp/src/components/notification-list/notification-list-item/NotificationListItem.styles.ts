@@ -25,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 400,
     textOverflow: 'ellipsis',
   },
+  avatarColor: {
+    color: theme.palette.secondary.light,
+    backgroundColor: theme.palette.secondary.dark,
+  },
 }));
 
 export default useStyles;

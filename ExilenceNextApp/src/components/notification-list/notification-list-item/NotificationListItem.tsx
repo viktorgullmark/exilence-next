@@ -22,7 +22,7 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
   const Icon = (type: string) => {
     switch (type) {
       case 'error':
-        return <ErrorIcon />;
+        return <ErrorIcon color="error" />;
       case 'warning':
         return <WarningIcon />;
       default:
@@ -32,7 +32,7 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
   return (
     <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
       <ListItemAvatar>
-        <Avatar>{Icon(notification.type)}</Avatar>
+        <Avatar classes={{ colorDefault: classes.avatarColor }}>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
         classes={{
