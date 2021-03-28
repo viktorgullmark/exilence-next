@@ -279,6 +279,17 @@ export class UiStateStore {
   }
 
   @action
+  removeSessIdCookie() {
+    return authService.removeAuthCookie().pipe(
+      map(() => {
+        return runInAction(() => {
+          this.sessIdCookie = undefined;
+        });
+      })
+    );
+  }
+
+  @action
   setIsSnapshotting(snapshotting: boolean = true) {
     this.isSnapshotting = snapshotting;
   }
