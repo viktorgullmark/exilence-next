@@ -16,7 +16,7 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
-import { findItem, mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
+import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
 import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
