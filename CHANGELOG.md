@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.4.4] - NOT RELEASED
 ##### Added
 - Added improved loading indicators for net worth page
+##### Fixed
+- Fixed a bug where the tabs column would take up multiple rows
 
 ## [0.4.3] - 2021-03-28
 ##### Added

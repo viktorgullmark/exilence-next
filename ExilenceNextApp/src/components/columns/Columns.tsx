@@ -351,5 +351,6 @@ type ItemTabsCellProps = {
 };
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
-  return <span>{tabs ? parseTabNames(tabs) : ''}</span>;
+  const classes = useStyles();
+  return <span className={classes.tabsCell}>{tabs ? parseTabNames(tabs) : ''}</span>;
 };

@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
   editIconRoot: {
     fontSize: '0.75rem',
   },
+  tabsCell: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 }));
 
 export default useStyles;
