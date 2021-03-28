@@ -545,14 +545,12 @@ export class Profile {
       return stashTabWithItems;
     });
 
-    const mergedItems = mergeItemStacks(pricedStashTabs.flatMap((s) => s.pricedItems)).filter(
-      (pi) => pi.total >= rootStore.settingStore.totalPriceTreshold && pi.total > 0
-    );
-
     const filteredTabs = pricedStashTabs.map((pst) => {
-      pst.pricedItems = pst.pricedItems.filter((pi) => findItem(mergedItems, pi));
-      pst.value = pst.pricedItems.map((ts) => ts.total).reduce((a, b) => a + b, 0);
-
+      const mergedTabItems = mergeItemStacks(pst.pricedItems).filter(
+        (pi) => pi.total >= rootStore.settingStore.totalPriceTreshold && pi.total > 0
+      );
+      pst.pricedItems = mergedTabItems;
+      pst.value = mergedTabItems.map((ts) => ts.total).reduce((a, b) => a + b, 0);
       return pst;
     });
 
