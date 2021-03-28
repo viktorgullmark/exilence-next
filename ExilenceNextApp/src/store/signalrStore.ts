@@ -115,8 +115,12 @@ export class SignalrStore {
   @action
   signOut() {
     fromStream(
-      this.rootStore.signalrHub.stopConnection().pipe(
+      forkJoin(
+        this.rootStore.signalrHub.stopConnection(),
+        this.rootStore.uiStateStore.removeSessIdCookie()
+      ).pipe(
         map(() => {
+          this.rootStore.uiStateStore.setValidated(false);
           this.stopConnectionSuccess();
           this.rootStore.routeStore.redirect('/login');
           this.signOutSuccess();
