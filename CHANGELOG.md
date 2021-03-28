@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Introduced basic error boundaries
     - Should catch most if not all errors and display them to the user, hopefully resolves whitescreen issues
 ##### Fixed
+- Fixed a bug where the values differed between the net worth total and the filter total
 - Fixed a bug where the storage wasnt cleared correctly when doing this manually
 - Fixed a bug where setting the interface scaling using the input field didnt work
 - Fixed one cause to the app sometimes being stuck on a whitescreen when launching
