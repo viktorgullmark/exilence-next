@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the active profile would sometimes change when syncing from the server
 ##### Changed
 - Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps
+- Improved styling of the notifications to make it more clear when an error appeared
 
 ## [0.4.2] - 2020-11-02
 ##### Added
