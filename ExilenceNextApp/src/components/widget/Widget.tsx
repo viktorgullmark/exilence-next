@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 import { cardHeight } from '../../routes/net-worth/NetWorth';
 import useStyles from './Widget.styles';
+import { Skeleton } from '@material-ui/lab';
 
 type WidgetProps = {
   backgroundColor?: string;
@@ -12,6 +13,7 @@ type WidgetProps = {
   height?: number;
   compact?: boolean;
   center?: boolean;
+  loading?: boolean;
   children: ReactNode;
 };
 
@@ -21,17 +23,27 @@ const Widget = ({
   textColor,
   height = cardHeight,
   compact,
+  loading,
   center,
 }: WidgetProps) => {
   const classes = useStyles();
 
   return (
-    <Paper
-      className={clsx(classes.paper, { [classes.noPadding]: compact, [classes.centered]: center })}
-      style={{ background: backgroundColor, color: textColor, height: height }}
-    >
-      {children}
-    </Paper>
+    <>
+      {loading ? (
+        <Skeleton variant="rect" height={height} />
+      ) : (
+        <Paper
+          className={clsx(classes.paper, {
+            [classes.noPadding]: compact,
+            [classes.centered]: center,
+          })}
+          style={{ background: backgroundColor, color: textColor, height: height }}
+        >
+          {children}
+        </Paper>
+      )}
+    </>
   );
 };
 

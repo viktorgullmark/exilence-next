@@ -5,6 +5,7 @@ import ListIcon from '@material-ui/icons/List';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import UpdateIcon from '@material-ui/icons/Update';
+import { Skeleton } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +38,10 @@ const NetWorth = () => {
   const { activeGroup } = signalrStore!;
   const { t } = useTranslation();
   const classes = useStyles();
+
+  const loading = () => {
+    return !uiStateStore.profilesLoaded || uiStateStore.isValidating;
+  };
 
   const updateTimeLabel = () => {
     let timeLabel: string | undefined;
@@ -88,7 +93,7 @@ const NetWorth = () => {
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={theme.palette.secondary.main}>
+          <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
               secondaryValue={activeGroup ? activeGroup.lastSnapshotChange : lastSnapshotChange()}
@@ -104,7 +109,7 @@ const NetWorth = () => {
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={theme.palette.secondary.main}>
+          <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.income : income()}
               valueIsDiff
@@ -119,7 +124,7 @@ const NetWorth = () => {
           </Widget>
         </Grid>
         <Grid item xs={6} md={3} lg={3} xl={2}>
-          <Widget backgroundColor={theme.palette.secondary.main}>
+          <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={getSnapshotCardValue(
                 activeGroup ? activeGroup.groupSnapshots.length : snapshots().length
@@ -141,130 +146,144 @@ const NetWorth = () => {
           <Grid container spacing={2}>
             <Grid item xs={7}>
               {/* todo: this block should be refactored to its own component */}
-              <ExpansionPanel
-                expanded={uiStateStore!.netWorthChartExpanded}
-                onChange={() =>
-                  uiStateStore!.setNetWorthChartExpanded(!uiStateStore!.netWorthChartExpanded)
-                }
-              >
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+              {loading() ? (
+                <Skeleton variant="rect" height={40} />
+              ) : (
+                <ExpansionPanel
+                  expanded={uiStateStore!.netWorthChartExpanded}
+                  onChange={() =>
+                    uiStateStore!.setNetWorthChartExpanded(!uiStateStore!.netWorthChartExpanded)
+                  }
                 >
-                  <Box display="flex" justifyContent="center" alignItems="center">
-                    <EqualizerIcon fontSize="small" />
-                    <Box ml={1}>
-                      <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                      <EqualizerIcon fontSize="small" />
+                      <Box ml={1}>
+                        <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails
-                  style={{
-                    height: chartHeight,
-                    background: theme.palette.background.default,
-                  }}
-                >
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <SnapshotHistoryChartContainer />
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails
+                    style={{
+                      height: chartHeight,
+                      background: theme.palette.background.default,
+                    }}
+                  >
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <SnapshotHistoryChartContainer />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <ChartToolboxContainer />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <ChartToolboxContainer />
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )}
             </Grid>
             <Grid item xs={5}>
-              <ExpansionPanel
-                expanded={uiStateStore!.tabChartExpanded}
-                onChange={() => uiStateStore!.setTabChartExpanded(!uiStateStore!.tabChartExpanded)}
-              >
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+              {loading() ? (
+                <Skeleton variant="rect" height={40} />
+              ) : (
+                <ExpansionPanel
+                  expanded={uiStateStore!.tabChartExpanded}
+                  onChange={() =>
+                    uiStateStore!.setTabChartExpanded(!uiStateStore!.tabChartExpanded)
+                  }
                 >
-                  <Box display="flex" justifyContent="center" alignItems="center">
-                    <EqualizerIcon fontSize="small" />
-                    <Box ml={1}>
-                      <Typography variant="overline">{t('label.tab_chart')}</Typography>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                      <EqualizerIcon fontSize="small" />
+                      <Box ml={1}>
+                        <Typography variant="overline">{t('label.tab_chart')}</Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails
-                  style={{
-                    height: chartHeight,
-                    background: theme.palette.background.default,
-                  }}
-                >
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <SnapshotHistoryChartContainer showIndividualTabs />
-                    </Grid>
-                    {/* <Grid item xs={12}>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails
+                    style={{
+                      height: chartHeight,
+                      background: theme.palette.background.default,
+                    }}
+                  >
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <SnapshotHistoryChartContainer showIndividualTabs />
+                      </Grid>
+                      {/* <Grid item xs={12}>
                       <ChartToolboxContainer />
                     </Grid> */}
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )}
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {/* todo: this block should be refactored to its own component */}
-          <ExpansionPanel
-            expanded={uiStateStore!.netWorthItemsExpanded}
-            onChange={() =>
-              uiStateStore!.setNetWorthItemsExpanded(!uiStateStore!.netWorthItemsExpanded)
-            }
-          >
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+          {loading() ? (
+            <Skeleton variant="rect" height={1000} />
+          ) : (
+            <ExpansionPanel
+              expanded={uiStateStore!.netWorthItemsExpanded}
+              onChange={() =>
+                uiStateStore!.setNetWorthItemsExpanded(!uiStateStore!.netWorthItemsExpanded)
+              }
             >
-              <Grid container justify="space-between">
-                <Grid item>
-                  <Box display="flex" justifyContent="center" alignItems="center">
-                    <ListIcon />
-                    <Box ml={1}>
-                      <Typography variant="overline">{t('label.item_table')}</Typography>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Grid container justify="space-between">
+                  <Grid item>
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                      <ListIcon />
+                      <Box ml={1}>
+                        <Typography variant="overline">{t('label.item_table')}</Typography>
+                      </Box>
                     </Box>
-                  </Box>
+                  </Grid>
+                  <Grid item className={classes.secondaryHeader}>
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                      <Tooltip
+                        title={t('label.prices_fetched_from_interval') || ''}
+                        placement="bottom"
+                      >
+                        <Typography variant="body2" className={classes.creditText}>
+                          {t('label.prices_fetched_from')}
+                          <a
+                            className={classes.inlineLink}
+                            href="https://poe.ninja"
+                            onClick={(e) => openLink(e)}
+                          >
+                            https://poe.ninja
+                          </a>
+                        </Typography>
+                      </Tooltip>
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid item className={classes.secondaryHeader}>
-                  <Box display="flex" justifyContent="center" alignItems="center">
-                    <Tooltip
-                      title={t('label.prices_fetched_from_interval') || ''}
-                      placement="bottom"
-                    >
-                      <Typography variant="body2" className={classes.creditText}>
-                        {t('label.prices_fetched_from')}
-                        <a
-                          className={classes.inlineLink}
-                          href="https://poe.ninja"
-                          onClick={(e) => openLink(e)}
-                        >
-                          https://poe.ninja
-                        </a>
-                      </Typography>
-                    </Tooltip>
-                  </Box>
-                </Grid>
-              </Grid>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails
-              style={{
-                background: theme.palette.background.default,
-                display: 'block',
-              }}
-            >
-              {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
-              <ItemTableContainer />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails
+                style={{
+                  background: theme.palette.background.default,
+                  display: 'block',
+                }}
+              >
+                {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
+                <ItemTableContainer />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )}
         </Grid>
       </Grid>
     </FeatureWrapper>

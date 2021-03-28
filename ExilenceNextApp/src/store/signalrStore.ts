@@ -121,6 +121,7 @@ export class SignalrStore {
       ).pipe(
         map(() => {
           this.rootStore.uiStateStore.setValidated(false);
+          this.rootStore.uiStateStore.setProfilesLoaded(false);
           this.stopConnectionSuccess();
           this.rootStore.routeStore.redirect('/login');
           this.signOutSuccess();

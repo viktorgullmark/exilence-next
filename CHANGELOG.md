@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - NOT RELEASED
+##### Added
+- Added improved loading indicators for net worth page
+
 ## [0.4.3] - 2021-03-28
 ##### Added
 - Added a setting to toggle hardware acceleration
