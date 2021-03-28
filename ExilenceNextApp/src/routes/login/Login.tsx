@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
 
 import { appName, visitor } from '../..';
-import Image from '../../assets/img/conquerorsoftheatlas-bg.jpg';
+import Image from '../../assets/img/2020expansion-bg.jpg';
 import LoginContentContainer from '../../components/login-content/LoginContentContainer';
 
 const useStyles = makeStyles(() => ({
@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     height: '100vh',
     background: `linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.8)), url(${Image})`,
+    backgroundSize: 'cover',
   },
 }));
 
