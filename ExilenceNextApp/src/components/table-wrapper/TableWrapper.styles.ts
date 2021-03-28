@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tableHeadCell: {
-      padding: '16px 1px 16px 16px',
+      padding: '8px 1px 8px 16px',
       fontSize: '0.75rem',
       textAlign: 'left',
       verticalAlign: 'inherit',
