@@ -1,16 +1,19 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormHelperText,
   Grid,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../../..';
+import { restart } from '../../../../utils/window.utils';
 
 const ResetIndexedDbSettings = () => {
   const { signalrStore, migrationStore } = useStores();
@@ -24,6 +27,7 @@ const ResetIndexedDbSettings = () => {
     migrationStore!.clearStorage().subscribe(() => {
       signalrStore!.signOut();
       setIsClearing(false);
+      restart();
     });
   };
 
@@ -39,10 +43,11 @@ const ResetIndexedDbSettings = () => {
             size="small"
             onClick={handleConfirmationDialogToggle}
           >
-            Reset Data
+            {t('title.reset_indexeddb')}
           </Button>
-          <p>This option will reset your account, league and local settings.</p>
-          <p>You will be signed out once data is cleared.</p>
+          <Box mt={2}>
+            <FormHelperText>{t('helper_text.reset_indexeddb')}</FormHelperText>
+          </Box>
         </Grid>
       </Grid>
       <Dialog open={isDialogOpen} onClose={handleConfirmationDialogToggle}>

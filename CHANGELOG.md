@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 - Added improved loading indicators for net worth page
 - Minor visual improvements
 ##### Fixed
+- Fixed a bug where the reset data option did not work properly
 - Fixed a bug where the tabs column would take up multiple rows
+- Fixed a bug where the income was not reset when snapshots were cleared
 
 ## [0.4.3] - 2021-03-28
 ##### Added

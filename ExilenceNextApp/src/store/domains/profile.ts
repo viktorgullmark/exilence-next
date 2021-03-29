@@ -643,6 +643,7 @@ export class Profile {
           runInAction(() => {
             this.snapshots = [];
           });
+          this.clearIncome();
           return this.removeAllSnapshotsSuccess();
         }),
         catchError((e: AxiosError) => of(this.removeAllSnapshotFail(e)))

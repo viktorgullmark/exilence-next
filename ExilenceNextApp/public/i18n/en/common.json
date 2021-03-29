@@ -166,7 +166,8 @@
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
     "ui_scale": "Sets the UI scale",
-    "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect"
+    "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect",
+    "reset_indexeddb": "This option will reset your account, league and local settings"
   },
   "link": {
     "restart_now": "Restart now"
@@ -177,7 +178,7 @@
     "leave_group": "Are you sure you want to leave your current group?",
     "reset_indexeddb": "Are you sure you want to reset your data?",
     "reset_indexeddb_notice": "Your league data, account data and local settings will be cleared.",
-    "reset_indexeddb_signout": "Performing this action will sign you out.",
+    "reset_indexeddb_signout": "Performing this action will sign you out and restart Exilence.",
     "ga_consent_main_text": "We use Google Analytics in Exilence Next. This means we track how you interact with the app, in order to improve it further.",
     "ga_consent_sub_text": "To clarify, we don't track anything related to your Path of Exile account in Google Analytics, and can't identify you as a user.",
     "ga_consent_short_text": "By proceeding below, you agree to ",
