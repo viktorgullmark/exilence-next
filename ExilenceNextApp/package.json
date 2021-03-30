@@ -49,7 +49,7 @@
     "react-scripts": "^4.0.0",
     "react-table": "^7.6.0",
     "react-toastify": "^6.0.9",
-    "reactour": "^1.16.0",
+    "reactour": "^1.18.3",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
     "styled-components": "^5.2.0",
