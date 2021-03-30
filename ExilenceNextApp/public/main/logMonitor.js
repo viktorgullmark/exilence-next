@@ -7,7 +7,7 @@ const checkForMissingWindow = require('../util');
 let logMonitorWindow = 'log-monitor';
 
 const createLogMonitor = ({ mainWindow }) => {
-  checkForMissingWindow({category: 'logMonitor', mainWindow});
+  checkForMissingWindow({ category: 'logMonitor', mainWindow });
 
   const LOG_CREATE = 'log-create';
   const LOG_START = 'log-start';
@@ -22,7 +22,7 @@ const createLogMonitor = ({ mainWindow }) => {
     logMonitorWindow = new BrowserWindow({
       skipTaskbar: true,
       show: false,
-      webPreferences: { webSecurity: false, nodeIntegration: true },
+      webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
     });
     logMonitorWindow.loadURL(
       isDev

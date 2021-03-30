@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppBar, Link, Toolbar } from '@material-ui/core';
+import { AppBar, Box, Link, Toolbar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
@@ -10,8 +10,8 @@ import MinimizeIcon from '@material-ui/icons/Minimize';
 import HelpIcon from '@material-ui/icons/HelpOutline';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-
-import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
+import PatreonLogo from '../../assets/img/patreon-wordmark-white.png';
+import { close, maximize, minimize, openLink, unmaximize } from '../../utils/window.utils';
 import SupportPanel from '../support-panel/SupportPanel';
 import useStyles from './Header.styles';
 
@@ -82,6 +82,18 @@ const Header = ({
           </Grid>
           <Grid item>
             <Grid container alignItems="center">
+              <Grid item className={clsx(classes.noDrag)}>
+                <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    height={1}
+                    className={classes.patreonWrapper}
+                  >
+                    <img className={classes.patreonLogo} src={PatreonLogo} alt="patreon" />
+                  </Box>
+                </a>
+              </Grid>
               <Grid
                 item
                 className={clsx(

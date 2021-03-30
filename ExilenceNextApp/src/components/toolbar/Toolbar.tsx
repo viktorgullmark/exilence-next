@@ -25,11 +25,9 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import PatreonLogo from '../../assets/img/patreon-white.png';
 import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';
 import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
-import { openLink } from '../../utils/window.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
@@ -38,9 +36,6 @@ import StatusMessageContainer from '../status-message/StatusMessageContainer';
 import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
-
-export const patreonLogoHeight = 35;
-export const patreonLogoWidth = 86;
 
 type ToolbarProps = {
   signalrOnline: boolean;
@@ -118,21 +113,7 @@ const Toolbar = ({
         })}
       >
         <ToolbarStepperContainer />
-        <MuiToolbar className={classes.toolbar}>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="1"
-            mr={1.5}
-            className={clsx(classes.baseMargin, { [classes.marginLeft]: !sidenavOpened })}
-          >
-            <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
-              <Box display="flex" alignItems="center" height={1}>
-                <img className={classes.patreonLogo} src={PatreonLogo} alt="patreon" />
-              </Box>
-            </a>
-          </Box>
+        <MuiToolbar className={clsx(classes.toolbar, { [classes.baseMargin]: !sidenavOpened })}>
           {!signalrOnline && (
             <WarningIcon
               titleAccess={t('label.server_offline_title')}

@@ -6,7 +6,6 @@ import {
   navigationMenuWidth,
 } from '../drawer-wrapper/navigation-menu/NavigationMenu.styles';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { patreonLogoHeight, patreonLogoWidth } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -23,20 +22,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  patreonLogo: {
-    height: patreonLogoHeight,
-    width: patreonLogoWidth,
-  },
   fromLeft: {
     width: `calc(100% - ${navigationMenuWidth}px)`,
     marginLeft: navigationMenuWidth + theme.spacing(1),
+    paddingLeft: theme.spacing(1),
   },
   fromRight: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginRight: drawerWidth,
   },
   baseMargin: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(8),
   },
   marginLeft: {
     marginLeft: theme.spacing(1) + collapsedNavigationMenuWidth,
