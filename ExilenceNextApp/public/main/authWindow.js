@@ -12,6 +12,7 @@ const createAuthWindow = ({ mainWindow }) => {
       show: false,
       autoHideMenuBar: true,
       nodeIntegration: true,
+      contextIsolation: false,
       fullscreenable: false,
       resizable: false,
       minimizable: false,

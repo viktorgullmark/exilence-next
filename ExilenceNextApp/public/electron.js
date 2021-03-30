@@ -64,7 +64,7 @@ function createWindow() {
     height,
     minWidth: minMainWindowWidth,
     minHeight: minMainWindowHeight,
-    webPreferences: { webSecurity: false, nodeIntegration: true },
+    webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
     frame: false,
   });
 

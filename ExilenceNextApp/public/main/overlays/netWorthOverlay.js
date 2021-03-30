@@ -13,7 +13,7 @@ function createOverlay() {
   const overlayState = windowStateKeeper({
     defaultWidth: 255,
     defaultHeight: 92,
-    file: 'netWorthOverlay'
+    file: 'netWorthOverlay',
   });
 
   netWorthOverlayWindow = new BrowserWindow({
@@ -25,7 +25,7 @@ function createOverlay() {
     alwaysOnTop: true,
     show: false,
     frame: false,
-    webPreferences: { webSecurity: false, nodeIntegration: true },
+    webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
     resizable: false,
   });
 
