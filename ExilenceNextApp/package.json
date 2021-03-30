@@ -37,7 +37,7 @@
     "mobx-react-lite": "^3.2.0",
     "mobx-utils": "^6.0.1",
     "moment": "^2.24.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^4.14.1",
     "poe-log-monitor": "^1.2.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
