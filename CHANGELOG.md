@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the reset data option did not work properly
 - Fixed a bug where the tabs column would take up multiple rows
 - Fixed a bug where the income was not reset when snapshots were cleared
+##### Changed
+- Changed location of Patreon button and updated it with their new wordmark
 ##### Updated
 - Updated Electron (10.1.4 -> 12.0.2) with dependencies
 
