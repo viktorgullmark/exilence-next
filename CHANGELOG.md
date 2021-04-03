@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.5] - NOT RELEASED
+##### Fixed
+- Fixed a console warning related to mobx arrays
+
 ## [0.4.4] - 2021-03-30
 ##### Added
 - Added improved loading indicators for net worth page
