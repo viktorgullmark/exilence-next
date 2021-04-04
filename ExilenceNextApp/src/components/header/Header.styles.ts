@@ -3,8 +3,8 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from './Header';
 
-export const patreonLogoHeight = 16;
-export const patreonLogoWidth = 83;
+export const patreonLogoHeight = 13;
+export const patreonLogoWidth = 68;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme) =>
       color: '#20cc76',
     },
     patreonWrapper: {
-      background: '#FF424D',
+      background: '#fff',
       marginRight: theme.spacing(1),
       marginLeft: theme.spacing(1),
-      padding: 3,
+      padding: '1px 3px',
     },
     patreonLogo: {
       height: patreonLogoHeight,

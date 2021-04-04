@@ -17,7 +17,6 @@ const CustomPricesSettings = () => {
       ) : (
         <>Waiting for response from price source...</>
       )}
-      ;
     </>
   );
 };

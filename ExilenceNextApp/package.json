@@ -11,7 +11,7 @@
     "@microsoft/signalr-protocol-msgpack": "^3.1.0",
     "@rehooks/component-size": "^1.0.3",
     "@sentry/browser": "^6.2.3",
-    "@sentry/electron": "^2.0.1",
+    "@sentry/electron": "^2.4.0",
     "@sentry/react": "^6.2.3",
     "@types/reactour": "^1.13.1",
     "@types/universal-analytics": "^0.4.3",

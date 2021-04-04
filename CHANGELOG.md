@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.5] - NOT RELEASED
+##### Added
+- Added missing translations
+- Improved error logging to Sentry
+- Minor visual improvements
+##### Fixed
+- Fixed a console warning related to mobx arrays
+- Fixed a console warning related to missing style element
+##### Changed
+- Changed size and color of Patreon wordmark to blend in more with theme
+##### Updated
+- Updated Sentry SDK
+
 ## [0.4.4] - 2021-03-30
 ##### Added
 - Added improved loading indicators for net worth page
