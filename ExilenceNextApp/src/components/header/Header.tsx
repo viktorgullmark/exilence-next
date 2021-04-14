@@ -10,7 +10,7 @@ import MinimizeIcon from '@material-ui/icons/Minimize';
 import HelpIcon from '@material-ui/icons/HelpOutline';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import PatreonLogo from '../../assets/img/patreon-wordmark-white.png';
+import PatreonLogo from '../../assets/img/patreon-wordmark-black.png';
 import { close, maximize, minimize, openLink, unmaximize } from '../../utils/window.utils';
 import SupportPanel from '../support-panel/SupportPanel';
 import useStyles from './Header.styles';

@@ -40,7 +40,7 @@ export const highchartsColors = [
 
 export const secondary = {
   light: '#696969',
-  main: '#202020',
+  main: '#1e1e1e',
   dark: '#000',
 };
 

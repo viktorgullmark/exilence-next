@@ -59,6 +59,7 @@
     "remove_custom_price": "Remove custom price",
     "visible_columns": "Visible columns",
     "custom_price": "Custom price",
+    "custom_price_placeholder": "Custom price",
     "toggle_visible_columns": "Customize columns",
     "toggle_stash_tab_filter": "Show filter",
     "toggle_export_menu": "Export data",

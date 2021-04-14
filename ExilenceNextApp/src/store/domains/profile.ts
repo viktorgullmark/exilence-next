@@ -84,7 +84,11 @@ export class Profile {
     const activePriceDetails = rootStore.priceStore.leaguePriceDetails.find(
       (l) => l.leagueId === this.activePriceLeagueId
     );
-    const prices = activePriceDetails?.leaguePriceSources[0]?.prices;
+    const leaguePriceSources = activePriceDetails?.leaguePriceSources;
+    if (!leaguePriceSources || leaguePriceSources?.length === 0) {
+      return false;
+    }
+    const prices = leaguePriceSources[0]?.prices;
     return prices !== undefined && prices.length > 0;
   }
 

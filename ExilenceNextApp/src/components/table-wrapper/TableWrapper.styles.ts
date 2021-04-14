@@ -1,5 +1,7 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
+const tableHeadCellBorder = '1px solid rgba(56, 56, 56, 1)';
+
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -18,7 +20,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       position: 'relative',
       borderBottom: '1px solid rgba(81, 81, 81, 1)',
-      '&:hover $resizeHandle': {
+      '&:hover': {
         opacity: 1,
       },
     },
@@ -30,9 +32,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       fontWeight: 500,
       lineHeight: '1.5rem',
-      borderRight: '1px solid rgba(56, 56, 56, 1)',
+      borderRight: tableHeadCellBorder,
+      borderTop: tableHeadCellBorder,
       '&:last-child': {
         borderRight: 'none',
+      },
+      '&:first-child': {
+        borderLeft: 'none',
       },
     },
     tableRow: {
