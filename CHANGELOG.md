@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.5] - NOT RELEASED
+## [0.4.5] - 2021-04-16
 ##### Added
 - Added missing translations
 - Improved error logging to Sentry
