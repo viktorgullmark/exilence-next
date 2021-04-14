@@ -26,7 +26,7 @@ Download the latest release at https://github.com/viktorgullmark/exilence-next/r
 
 Currently runs with:
 
-- Electron 10.1.5
+- Electron 12.0.2
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
