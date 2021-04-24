@@ -1,22 +1,27 @@
 ﻿using API.Interfaces;
 using AutoMapper;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Shared.Entities;
 using Shared.Interfaces;
 using Shared.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Services
 {
     public class SnapshotService : ISnapshotService
     {
-        private ISnapshotRepository _snapshotRepository;
-        private readonly IMapper _mapper;
+        ISnapshotRepository _snapshotRepository;
+        readonly IMapper _mapper;
 
         public SnapshotService(ISnapshotRepository snapshotRepository, IMapper mapper)
         {
             _snapshotRepository = snapshotRepository;
             _mapper = mapper;
         }
+
 
         public async Task<SnapshotModel> GetSnapshot(string snapshotClientId)
         {
@@ -35,7 +40,7 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            // todo: implement storing of snapshots when needed
+            // TODO: temporarily disabled snapshot storing
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
