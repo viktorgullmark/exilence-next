@@ -105,9 +105,8 @@ function getCharacterItems(
   );
 }
 
-function getProfile(accessToken: string): Observable<AxiosResponse<IPoeProfile>> {
-  const parameters = `?access_token=${accessToken}`;
-  return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
+function getProfile(): Observable<AxiosResponse<IPoeProfile>> {
+  return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile'));
 }
 
 /* #endregion */

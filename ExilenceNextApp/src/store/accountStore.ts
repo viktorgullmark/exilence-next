@@ -5,7 +5,7 @@ import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-
+import axios from 'axios-observable';
 import AppConfig from '../config/app.config';
 import { ICharacter } from '../interfaces/character.interface';
 import { ICookie } from '../interfaces/cookie.interface';
@@ -81,6 +81,8 @@ export class AccountStore {
 
   @action
   handleAuthCallback(code: string, error: string) {
+    console.log("CALLBACK CODE", code)
+    console.log("CALLBACK ERROR", error)
     // If there is a code, proceed to get token
     if (code) {
       this.setCode(code);
@@ -92,14 +94,14 @@ export class AccountStore {
 
   @action
   setCode(code: string) {
-    this.code = code;
+    this.code = code; 
   }
 
   @action
   loadAuthWindow() {
     const options = {
       clientId: 'exilence',
-      scopes: ['account:profile'], // Scopes limit access for OAuth tokens.
+      scopes: ['account:profile', 'account:stashes', 'account:characters'], // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
       state: this.authState,
       responseType: 'code',
@@ -110,6 +112,7 @@ export class AccountStore {
 
   @action
   loginWithOAuth(code: string) {
+    console.log("CODE", code)
     fromStream(
       externalService.loginWithOAuth(code).pipe(
         map((res: AxiosResponse<IOAuthResponse>) => {
@@ -126,12 +129,14 @@ export class AccountStore {
     this.rootStore.uiStateStore.setValidated(true);
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
+    // todo: implement refresh logic based on expiry
+    axios.defaults.headers.common['Authorization'] = `Bearer ${response.access_token}`;
     this.initSession();
   }
 
   @action
   getPoeProfile() {
-    return externalService.getProfile(this.token!.accessToken).pipe(
+    return externalService.getProfile().pipe(
       map((profile: AxiosResponse<IPoeProfile>) => {
         this.getPoeProfileSuccess();
         return profile.data;
@@ -160,6 +165,7 @@ export class AccountStore {
 
   @action
   loginWithOAuthFail(e?: AxiosError) {
+    console.log("E", e)
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'error', true, e);
     this.rootStore.routeStore.redirect('/login');
   }
