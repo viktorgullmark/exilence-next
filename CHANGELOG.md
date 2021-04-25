@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.6] - NOT RELEASED
+##### Fixed
+- Fixed a bug where the app would not start properly and result in a whitescreen
+    - Reason was some users having special characters and/or spaces in their windows username
+
 ## [0.4.5] - 2021-04-16
 ##### Added
 - Added missing translations

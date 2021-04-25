@@ -70,9 +70,9 @@ function createWindow() {
 
   manage(windows[mainWindow]);
 
-  windows[mainWindow].loadURL(
-    isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
-  );
+  isDev
+    ? windows[mainWindow].loadURL('http://localhost:3000')
+    : windows[mainWindow].loadFile(path.resolve(__dirname, '../build/index.html'));
 
   windows[mainWindow].on('close', (e) => {
     if (!isQuitting) {
@@ -96,7 +96,7 @@ function createWindow() {
    */
   ipcMain.on('app-globals', (e) => {
     const localSettings = getLocalSettings();
-    const appPath = app.getAppPath();
+    const appPath = __dirname;
     const appLocale = app.getLocale();
 
     e.returnValue = {
