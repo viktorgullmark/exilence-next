@@ -26,7 +26,7 @@ function createOverlay() {
     show: false,
     frame: false,
     webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
-    resizable: true,
+    resizable: false,
   });
 
   overlayState.manage(netWorthOverlayWindow);
