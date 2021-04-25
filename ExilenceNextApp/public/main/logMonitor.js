@@ -24,10 +24,11 @@ const createLogMonitor = ({ mainWindow }) => {
       show: false,
       webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
     });
-    logMonitorWindow.loadURL(
+
+    logMonitorWindow.loadFile(
       isDev
-        ? `file://${path.join(__dirname, `../../public/background-tasks/log-monitor.html`)}`
-        : `file://${path.join(__dirname, `../../build/background-tasks/log-monitor.html`)}`
+        ? path.resolve(__dirname, '../../background-tasks/log-monitor.html')
+        : path.resolve(__dirname, '../background-tasks/log-monitor.html')
     );
 
     logMonitorWindow.on('closed', () => {

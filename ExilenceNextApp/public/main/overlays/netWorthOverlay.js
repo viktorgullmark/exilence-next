@@ -26,15 +26,15 @@ function createOverlay() {
     show: false,
     frame: false,
     webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
-    resizable: false,
+    resizable: true,
   });
 
   overlayState.manage(netWorthOverlayWindow);
 
-  netWorthOverlayWindow.loadURL(
+  netWorthOverlayWindow.loadFile(
     isDev
-      ? `file://${path.join(__dirname, `../../../public/main/overlays/netWorth.html`)}`
-      : `file://${path.join(__dirname, `../../../build/main/overlays/netWorth.html`)}`
+      ? path.resolve(__dirname, '../../main/overlays/netWorth.html')
+      : path.resolve(__dirname, '../overlays/netWorth.html')
   );
 
   netWorthOverlayWindow.setAlwaysOnTop(true, 'screen-saver');
