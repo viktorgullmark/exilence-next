@@ -1,9 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.6] - NOT RELEASED
+## [0.4.6] - 2021-04-25
 ##### Fixed
-- Fixed a bug where the app would not start properly and result in a whitescreen
+- Fixed a rare bug where the app would not start properly and result in a blank screen
     - Reason was some users having special characters and/or spaces in their windows username
 
 ## [0.4.5] - 2021-04-16
