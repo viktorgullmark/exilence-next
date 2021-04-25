@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.7] - NOT RELEASED
+##### Updated
+- Updated authorization code in preparation of new OAuth flow
+
 ## [0.4.6] - 2021-04-25
 ##### Fixed
 - Fixed a rare bug where the app would not start properly and result in a blank screen
