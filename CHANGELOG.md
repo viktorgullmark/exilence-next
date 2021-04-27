@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.7] - NOT RELEASED
+##### Added
+- Added a credits section to the help menu
+##### Fixed
+- Fixed a bug where the price league dropdown for custom prices was not updated when new leagues were introduced
 ##### Updated
 - Updated authorization code in preparation of new OAuth flow
 
