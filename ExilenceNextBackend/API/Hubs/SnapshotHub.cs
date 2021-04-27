@@ -3,7 +3,10 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Shared.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace API.Hubs
@@ -14,7 +17,7 @@ namespace API.Hubs
         public async Task<SnapshotModel> GetSnapshot(string snapshotId)
         {
             var snapshotModel = await _snapshotService.GetSnapshot(snapshotId);
-            LogDebug($"Retrived snapshot worth {snapshotModel.StashTabs.Sum(s => s.Value)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Retrived snapshot in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModel;
         }
 
@@ -24,7 +27,7 @@ namespace API.Hubs
             var latestSnapshot = profileModel.Snapshots.OrderByDescending(snapshot => snapshot.Created).FirstOrDefault();
             var snapshotModelWithItems = await _snapshotService.GetSnapshot(latestSnapshot.ClientId);
 
-            LogDebug($"Retrived latest snapshot with worth {snapshotModelWithItems.StashTabs.Sum(s => s.Value)} chaos " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Retrived latest snapshot in " + _timer.ElapsedMilliseconds + " ms.");
             return snapshotModelWithItems;
         }
 
@@ -38,7 +41,7 @@ namespace API.Hubs
                 await Clients.OthersInGroup(group.Name).SendAsync("OnAddSnapshot", ConnectionId, profileId, snapshotModel);
             }
 
-            LogDebug($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items worth {Math.Round(snapshotModel.StashTabs.Sum(s => s.Value), 0)} chaos in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"Added snapshot containing {snapshotModel.StashTabs.Sum(s => s.PricedItems.Count())} items in " + _timer.ElapsedMilliseconds + " ms.");
                        
             
             return snapshotModel;
@@ -69,33 +72,27 @@ namespace API.Hubs
             }
             LogDebug($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
-        
+
         #region Streams
-        //public async Task AddPricedItem(IAsyncEnumerable<PricedItemModel> pricedItems, string stashtabId)
-        //{
-        //    await foreach (var pricedItem in pricedItems)
-        //    {
-        //        await _snapshotService.AddPricedItem(stashtabId, pricedItem);
-        //    }
-        //}
+       
+        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            var snapshots = await _snapshotService.GetSnapshotsForProfile(profileId);
 
-        //public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string snapshotId, [EnumeratorCancellation] CancellationToken cancellationToken)
-        //{
-        //    var snapshots = _snapshotService.GetStashtabs(snapshotId);
+            foreach (var snapshot in snapshots.AsQueryable())
+            {
+                // Check the cancellation token regularly so that the server will stop
+                // producing items if the client disconnects.
+                cancellationToken.ThrowIfCancellationRequested();
 
-        //    foreach (var snapshot in snapshots)
-        //    {
-        //        // Check the cancellation token regularly so that the server will stop
-        //        // producing items if the client disconnects.
-        //        cancellationToken.ThrowIfCancellationRequested();
+                yield return _mapper.Map<SnapshotModel>(snapshot);
 
-        //        yield return _mapper.Map<SnapshotModel>(snapshot);
+                // Use the cancellationToken in other APIs that accept cancellation
+                // tokens so the cancellation can flow down to them.
+                await Task.Delay(100, cancellationToken);
+            }
+        }
 
-        //        // Use the cancellationToken in other APIs that accept cancellation
-        //        // tokens so the cancellation can flow down to them.
-        //        await Task.Delay(100, cancellationToken);
-        //    }
-        //}
         #endregion
 
     }

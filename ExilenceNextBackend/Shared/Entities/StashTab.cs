@@ -12,10 +12,6 @@ namespace Shared.Entities
         public string Id { get; set; }
         public string ClientId { get; set; } // This is our own id.
         public string StashTabId { get; set; } // This is GGG's Id so it's 64 chars by default.
-        public string Name { get; set; }
-        public int Index { get; set; }
-        public string Color { get; set; }
-        public decimal Value { get; set; }
         [BsonIgnore]
         public List<PricedItem> PricedItems { get; set; }
 

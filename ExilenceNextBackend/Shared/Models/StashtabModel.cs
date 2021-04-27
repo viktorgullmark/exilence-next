@@ -16,14 +16,6 @@ namespace Shared.Models
         public string ClientId { get; set; }
         [Key("stashTabId")]
         public string StashTabId { get; set; }
-        [Key("name")]
-        public string Name { get; set; }
-        [Key("index")]
-        public int Index { get; set; }
-        [Key("color")]
-        public string Color { get; set; }
-        [Key("value")]
-        public double Value { get; set; }
         [Key("pricedItems")]
         public virtual List<PricedItemModel> PricedItems { get; set; }
     }

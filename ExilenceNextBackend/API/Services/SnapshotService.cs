@@ -5,6 +5,7 @@ using MongoDB.Driver.Linq;
 using Shared.Entities;
 using Shared.Interfaces;
 using Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +41,28 @@ namespace API.Services
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            // TODO: temporarily disabled snapshot storing
+            snapshot.ProfileClientId = profileClientId;
+
+            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
+
+            snapshot.StashTabs.Select(stashtab =>
+            {
+                stashtab.SnapshotClientId = snapshot.ClientId;
+                stashtab.SnapshotProfileClientId = profileClientId;
+                return stashtab;
+            }).ToList();
+
+            await _snapshotRepository.AddStashtabs(snapshot.StashTabs.ToList());
+
+            snapshot.StashTabs.ForEach(
+                stashtab => stashtab.PricedItems.Select(pricedItem =>
+                {
+                    pricedItem.StashtabClientId = stashtab.ClientId;
+                    pricedItem.SnapshotProfileClientId = profileClientId;
+                    return stashtab;
+                }).ToList());
+
+            await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
@@ -54,6 +76,22 @@ namespace API.Services
         public async Task RemoveAllSnapshots(string profileClientId)
         {
             await _snapshotRepository.RemoveAllSnapshots(profileClientId);
+        }
+
+        public async Task<List<SnapshotModel>> GetSnapshotsForProfile(string profileId)
+        {
+            var snapshots = await _snapshotRepository.GetSnapshots(snapshot => snapshot.ProfileClientId == profileId).ToListAsync();
+
+            foreach (var snapshot in snapshots)
+            {
+                snapshot.StashTabs = await _snapshotRepository.GetStashtabs(stashtab => stashtab.SnapshotClientId == snapshot.ClientId).ToListAsync();
+                foreach (var stashtab in snapshot.StashTabs)
+                {
+                    stashtab.PricedItems = await _snapshotRepository.GetPricedItems(p => p.StashtabClientId == stashtab.ClientId).ToListAsync();
+                }
+            }
+
+            return _mapper.Map<List<SnapshotModel>>(snapshots);
         }
     }
 }

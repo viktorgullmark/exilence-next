@@ -2,6 +2,7 @@ import * as signalR from '@microsoft/signalr';
 import * as msgPack from '@microsoft/signalr-protocol-msgpack';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { from, throwError } from 'rxjs';
+import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 
 import { randomIntFromInterval } from '../../utils/misc.utils';
 import { RootStore } from '../rootStore';
@@ -107,6 +108,21 @@ export class SignalrHub {
       iteration++;
     }, 250);
     return from(promise);
+  }
+
+  stream2(param: string, profileId: string) {
+    console.log('stream2');
+    this.connection?.stream(param, profileId).subscribe({
+      next: (snapshot: IApiSnapshot) => {
+        console.log('snapshot', snapshot);
+      },
+      complete: () => {
+        console.log('complete');
+      },
+      error: (err: Error) => {
+        console.log('err', err);
+      },
+    });
   }
 
   connectionLost(e?: Error) {
