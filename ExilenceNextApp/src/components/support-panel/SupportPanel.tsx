@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import Typography from '@material-ui/core/Typography';
 import RedirectIcon from '@material-ui/icons/CallMade';
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import HistoryIcon from '@material-ui/icons/History';
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
@@ -12,9 +13,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useStores } from '../..';
 import { openLink } from '../../utils/window.utils';
+import CreditsDialog from '../credits-dialog/CreditsDialog';
 import WhatsNewDialog from '../whats-new-dialog/WhatsNewDialog';
 import useStyles from './SupportPanel.styles';
-
 type SupportPanelProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ type SupportPanelProps = {
 const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPanelProps) => {
   const { uiStateStore } = useStores();
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
+  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
   const { pathname } = useLocation();
@@ -41,6 +43,11 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
 
   const handleWhatsNewClick = () => {
     setIsWhatsNewOpen((isWhatsNewOpen) => !isWhatsNewOpen);
+    closeSupportPanel();
+  };
+
+  const handleCreditsClick = () => {
+    setIsCreditsOpen((isCreditsOpen) => !isCreditsOpen);
     closeSupportPanel();
   };
 
@@ -102,12 +109,17 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
                   <Typography variant="body2">{t('label.support_us')}</Typography>
                   <FavoriteIcon className={classes.icon} />
                 </a>
+                <li className={classes.option} onClick={handleCreditsClick}>
+                  <Typography variant="body2">{t('label.credits')}</Typography>
+                  <CardGiftcardIcon className={classes.icon} />
+                </li>
               </ul>
             </Paper>
           </Fade>
         )}
       </Popper>
       <WhatsNewDialog open={isWhatsNewOpen} onClose={handleWhatsNewClick} />
+      <CreditsDialog open={isCreditsOpen} onClose={handleCreditsClick} />
     </>
   );
 };
