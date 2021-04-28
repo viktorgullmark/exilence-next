@@ -618,7 +618,7 @@ export class Profile {
   ) {
 
     // TODO: Remove this
-    //rootStore.signalrHub.stream2('RetriveSnapshots', this.uuid);
+    //rootStore.signalrHub.stream2('StreamSnapshotsWithItemsForProfile', this.uuid);
 
     return rootStore.signalrHub.invokeEvent<IApiSnapshot>('AddSnapshot', snapshot, this.uuid).pipe(
       switchMap(() => {

@@ -73,9 +73,17 @@ namespace API.Hubs
             LogDebug($"Removed all snapshots for ProfileId: {profileClientId} in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
+        public async Task<List<SnapshotModel>> GetSnapshotsWithItemsForProfile(string profileId)
+        {
+            var snapshotWithItemsForProfile = await _snapshotService.GetSnapshotsForProfile(profileId);
+            LogDebug($"Retrived snapshot with items for profile in " + _timer.ElapsedMilliseconds + " ms.");
+            return snapshotWithItemsForProfile;
+        }
+
+
         #region Streams
-       
-        public async IAsyncEnumerable<SnapshotModel> RetriveSnapshots(string profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
+
+        public async IAsyncEnumerable<SnapshotModel> StreamSnapshotsWithItemsForProfile(string profileId, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var snapshots = await _snapshotService.GetSnapshotsForProfile(profileId);
 
