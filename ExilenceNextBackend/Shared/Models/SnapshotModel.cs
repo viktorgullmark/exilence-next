@@ -16,6 +16,8 @@ namespace Shared.Models
         public string ClientId { get; set; }
         [Key("created")]
         public DateTime? Created { get; set; }
+        [Key("value")]
+        public double Value { get; set; }
         [Key("stashTabs")]
         public List<StashtabModel> StashTabs { get; set; }
     }

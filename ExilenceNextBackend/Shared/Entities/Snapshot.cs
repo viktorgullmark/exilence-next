@@ -13,6 +13,7 @@ namespace Shared.Entities
         public string Id { get; set; }
         public string ClientId { get; set; }
         public DateTime Created { get; set; }
+        public double Value { get; set; }
         [BsonIgnore]
         public List<StashTab> StashTabs { get; set; }
         public string ProfileClientId { get; set; } //stored in SQL
