@@ -63,7 +63,7 @@ export class UiStateStore {
   @persist @observable chartTimeSpan: TimespanType = 'All time';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
-  @persist @observable selectedPriceTableLeagueId: string | undefined = undefined;
+  @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
 
   constructor(private rootStore: RootStore) {

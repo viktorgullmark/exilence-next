@@ -48,6 +48,7 @@ export class PriceStore {
     const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
       (lp) => lp.leagueId === leagueId
     );
+
     const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
     const leaguePriceSources = leaguePriceDetails?.leaguePriceSources;
     if (!leaguePriceSources || leaguePriceSources?.length === 0) {

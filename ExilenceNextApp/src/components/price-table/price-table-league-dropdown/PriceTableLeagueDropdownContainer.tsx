@@ -21,10 +21,10 @@ const PriceTableLeagueDropdownContainer = () => {
   const activeLeagueId = accountStore!.getSelectedAccount.activePriceLeague?.id;
 
   useEffect(() => {
-    if (!leagueId || !leagueStore!.priceLeagues.find((l) => l.id === leagueId)) {
+    if (!leagueId) {
       uiStateStore!.setSelectedPriceTableLeagueId(activeLeagueId || '');
     }
-  }, [activeLeagueId, leagueStore!.priceLeagues]);
+  }, []);
 
   const initialValues: PriceTableFilterForm = useMemo(() => {
     return { priceLeague: leagueId || '' };
