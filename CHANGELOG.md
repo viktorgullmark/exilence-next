@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.7] - NOT RELEASED
+## [0.4.7] - 2021-05-02
 ##### Added
 - Added a credits section to the help menu
 ##### Fixed
