@@ -78,45 +78,47 @@ const App = ({ error }: Props) => {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Suspense fallback={null}>
-        <Router>
-          <div className={classes.app}>
-            <HighchartsTheme />
-            <CssBaseline />
-            <GlobalStyles />
-            <ToastWrapper />
-            <Route path="/login" component={Login} />
-            <HeaderContainer />
-            {error ? (
-              <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
-            ) : (
-              <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
-                <DrawerWrapperContainer>
-                  <ToolbarContainer />
-                  <Route path="/net-worth" component={NetWorth} />
-                  <Route path="/settings" component={Settings} />
-                  <Route
-                    exact
-                    path="/"
-                    render={() =>
-                      rootStore.accountStore.getSelectedAccount.name ? (
-                        <Redirect to="/net-worth" />
-                      ) : (
-                        <Redirect to="/login" />
-                      )
-                    }
-                  />
-                </DrawerWrapperContainer>
-              </Sentry.ErrorBoundary>
-            )}
-            <Notifier />
-            <ReactionContainer />
-            <AnnouncementDialogContainer />
-          </div>
-        </Router>
-      </Suspense>
-    </ThemeProvider>
+    <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+      <ThemeProvider theme={theme}>
+        <Suspense fallback={null}>
+          <Router>
+            <div className={classes.app}>
+              <HighchartsTheme />
+              <CssBaseline />
+              <GlobalStyles />
+              <ToastWrapper />
+              <Route path="/login" component={Login} />
+              <HeaderContainer />
+              {error ? (
+                <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
+              ) : (
+                <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+                  <DrawerWrapperContainer>
+                    <ToolbarContainer />
+                    <Route path="/net-worth" component={NetWorth} />
+                    <Route path="/settings" component={Settings} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        rootStore.accountStore.getSelectedAccount.name ? (
+                          <Redirect to="/net-worth" />
+                        ) : (
+                          <Redirect to="/login" />
+                        )
+                      }
+                    />
+                  </DrawerWrapperContainer>
+                </Sentry.ErrorBoundary>
+              )}
+              <Notifier />
+              <ReactionContainer />
+              <AnnouncementDialogContainer />
+            </div>
+          </Router>
+        </Suspense>
+      </ThemeProvider>
+    </Sentry.ErrorBoundary>
   );
 };
 

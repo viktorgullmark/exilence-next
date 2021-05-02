@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.4.7] - NOT RELEASED
 ##### Added
 - Added a credits section to the help menu
+- Added improved error handling
 ##### Fixed
 - Fixed a bug where too many errors were sent to Sentry
 - Fixed a bug where the price league dropdown for custom prices was not updated when new leagues were introduced
