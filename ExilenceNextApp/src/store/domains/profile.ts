@@ -605,7 +605,6 @@ export class Profile {
         });
         this.calculateIncome();
       };
-      console.log('API SNAPSHOT', toJS(apiSnapshot));
       fromStream(this.sendSnapshot(apiSnapshot, this.snapshotSuccess, this.snapshotFail, callback));
     }
   }
