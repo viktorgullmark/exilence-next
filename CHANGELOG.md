@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.8] - NOT RELEASED
+## [0.4.8] - 2021-05-03
 ##### Fixed
 - Fixed a bug where the memory would increase too much over time
 
