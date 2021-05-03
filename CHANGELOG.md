@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.8] - NOT RELEASED
+##### Fixed
+- Fixed a bug where the memory would increase too much over time
+
 ## [0.4.7] - 2021-05-02
 ##### Added
 - Added a credits section to the help menu
