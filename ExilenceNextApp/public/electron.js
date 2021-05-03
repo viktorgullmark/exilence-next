@@ -4,6 +4,7 @@ const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
+const log = require('electron-log');
 
 const {
   flashFrame: { createFlashFrame },
@@ -32,6 +33,7 @@ let windows = [];
 let isQuitting;
 let updateAvailable;
 let trayProps;
+let deeplinkingUrl;
 
 /**
  * Local Settings
@@ -176,12 +178,19 @@ function createWindow() {
 if (!gotTheLock && !isDev) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
+  app.on('second-instance', (_, argv) => {
     if (isDev) {
       windows[mainWindow].destroy();
     } else {
       // Someone tried to run a second instance, we should focus our window.
       if (windows[mainWindow]) {
+        // Protocol handler for win32
+        // argv: An array of the second instance’s (command line / deep linked) arguments
+        if (process.platform == 'win32') {
+          // Keep only command line / deep linked arguments
+          deeplinkingUrl = argv.slice(1);
+          log.info(`deeplinkingUrl ${deeplinkingUrl}`);
+        }
         if (windows[mainWindow].isMinimized()) {
           windows[mainWindow].restore();
           windows[mainWindow].focus();
@@ -204,6 +213,13 @@ if (!gotTheLock && !isDev) {
       await createTray(trayProps);
     }
   });
+
+  app.on('open-url', function (event, data) {
+    event.preventDefault();
+    deeplinkingUrl = data;
+  });
+
+  app.setAsDefaultProtocolClient('exilence');
 
   app.on('before-quit', () => {
     isQuitting = true;

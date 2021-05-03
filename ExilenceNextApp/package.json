@@ -136,6 +136,12 @@
     },
     "win": {
       "icon": "build/icon.ico"
+    },
+    "protocols": {
+      "name": "exilence-next",
+      "schemes": [
+        "exilence"
+      ]
     }
   }
 }
