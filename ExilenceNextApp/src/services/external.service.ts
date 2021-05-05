@@ -126,15 +126,10 @@ function getCharacterItems(
   );
 }
 
-function getProfile(accessToken: string, realm?: string): Observable<AxiosResponse<IPoeProfile>> {
+function getProfile(realm?: string): Observable<AxiosResponse<IPoeProfile>> {
   const parameters = `${realm !== undefined ? `&realm=${realm}` : ''}`;
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  };
-  return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters, config));
+  return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
 }
 
 /* #endregion */
