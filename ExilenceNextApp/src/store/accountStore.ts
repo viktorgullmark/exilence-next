@@ -16,6 +16,7 @@ import { ISelectOption } from '../interfaces/select-option.interface';
 import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
 import { getCharacterLeagues } from '../utils/league.utils';
+import { openCustomLink, openLink } from '../utils/window.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
@@ -94,7 +95,7 @@ export class AccountStore {
   }
 
   @action
-  loadAuthWindow() {
+  loadOAuthPage() {
     const options = {
       clientId: 'exilence',
       scopes: 'account:stashes account:profile account:characters', // Scopes limit access for OAuth tokens.
@@ -104,7 +105,8 @@ export class AccountStore {
       token: '',
     };
 
-    electronService.ipcRenderer.send('create-auth-window', options);
+    const authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+    openCustomLink(authUrl);
   }
 
   @action
@@ -320,18 +322,17 @@ export class AccountStore {
     this.rootStore.uiStateStore.setSubmitting(false);
     this.rootStore.uiStateStore.setValidating(false);
     // todo: check expiry date
-    // if (!this.token) {
-    debugger;
-    if (sender === '/login') {
-      this.loadAuthWindow();
+    if (!this.token) {
+      if (sender === '/login') {
+        this.loadOAuthPage();
+      } else {
+        this.rootStore.routeStore.redirect('/login');
+      }
     } else {
-      this.rootStore.routeStore.redirect('/login');
+      this.rootStore.uiStateStore.setValidated(true);
+      this.rootStore.routeStore.redirect('/net-worth');
+      this.initSession();
     }
-    // } else {
-    //   this.rootStore.uiStateStore.setValidated(true);
-    //   this.rootStore.routeStore.redirect('/net-worth');
-    //   this.initSession();
-    // }
   }
 
   @action

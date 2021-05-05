@@ -11,7 +11,7 @@ const LoginContentContainer = () => {
   const handleValidate = (form: AccountFormValues) => {
     uiStateStore!.setLoginError(undefined);
     if (uiStateStore!.validated) {
-      accountStore!.loadAuthWindow();
+      accountStore!.loadOAuthPage();
     } else {
       if (form.platform) {
         uiStateStore.setSelectedPlatform(form.platform);

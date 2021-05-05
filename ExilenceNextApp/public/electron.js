@@ -12,7 +12,6 @@ const {
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
   netWorthOverlay: { createNetWorthOverlay, destroyNetWorthOverlayWindow },
-  authWindow: { createAuthWindow },
   menuFunctions: { menuFunctions },
   session: { createSession },
   localSettings: { loadLocalSettings, getLocalSettings },
@@ -137,11 +136,6 @@ function createWindow() {
       e.returnValue = false;
     }
   });
-
-  /**
-   * Authorization
-   */
-  createAuthWindow({ mainWindow: windows[mainWindow] });
 
   /**
    * Flash Frames
