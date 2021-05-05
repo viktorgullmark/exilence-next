@@ -5,8 +5,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using API.ApiModels;
 using API.Helpers;
+using API.Hubs;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
@@ -18,6 +20,7 @@ namespace API.Controllers
     public class AuthenticationController : ControllerBase
     {
 
+        private readonly IHubContext<AuthenticationHub> _hubContext;
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccountService _accountService;
@@ -139,6 +142,15 @@ namespace API.Controllers
 
             return false;
 
+        }
+
+        [HttpGet]
+        [Route("Callback")]
+        public async Task<IActionResult> Callback(string code, string state)
+        {
+            await _hubContext.Clients.Group(state).SendAsync("Callback", code);
+            _logger.LogInformation($"Callback with code: {code} and state: {state} invoked on client.");
+            return Ok();
         }
     }
 }
