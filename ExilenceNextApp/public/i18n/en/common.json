@@ -2,7 +2,7 @@
   "action": {
     "finish": "Finish",
     "next": "Next",
-    "authorize": "Authorize",
+    "authorize": "Log in with pathofexile.com",
     "reset": "Reset",
     "restart_application": "Restart",
     "clear_and_restart_application": "Reset data and restart",
