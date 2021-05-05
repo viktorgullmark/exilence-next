@@ -1,18 +1,18 @@
 import { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios-observable';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-
 import AppConfig from '../config/app.config';
 import { ICharacter } from '../interfaces/character.interface';
-import { ICookie } from '../interfaces/cookie.interface';
 import { ILeague } from '../interfaces/league.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
 import { IProfile } from '../interfaces/profile.interface';
+import { ISelectOption } from '../interfaces/select-option.interface';
 import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
 import { getCharacterLeagues } from '../utils/league.utils';
@@ -25,7 +25,6 @@ export class AccountStore {
   @persist @observable activeAccount: string = '';
   @persist('object') @observable token: IToken | undefined = undefined;
   @observable code: string = '';
-  @observable sessionId: string = '';
   @observable authState: string = uuidv4();
 
   cancelledRetry: Subject<boolean> = new Subject();
@@ -66,14 +65,13 @@ export class AccountStore {
   }
 
   @action
-  addOrUpdateAccount(name: string, sessionId: string) {
+  addOrUpdateAccount(name: string) {
     const foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
-      foundAccount.sessionId = sessionId;
       return foundAccount;
     } else {
-      const newAccount = new Account({ name: name, sessionId: sessionId });
+      const newAccount = new Account({ name: name });
       this.accounts.push(newAccount);
       return newAccount;
     }
@@ -99,10 +97,11 @@ export class AccountStore {
   loadAuthWindow() {
     const options = {
       clientId: 'exilence',
-      scopes: ['account:profile'], // Scopes limit access for OAuth tokens.
+      scopes: 'account:stashes account:profile account:characters', // Scopes limit access for OAuth tokens.
       redirectUrl: AppConfig.redirectUrl,
       state: this.authState,
       responseType: 'code',
+      token: '',
     };
 
     electronService.ipcRenderer.send('create-auth-window', options);
@@ -126,12 +125,14 @@ export class AccountStore {
     this.rootStore.uiStateStore.setValidated(true);
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
+    // todo: implement refresh logic based on expiry
+    axios.defaults.headers.common['Authorization'] = `Bearer ${response.access_token}`;
     this.initSession();
   }
 
   @action
   getPoeProfile() {
-    return externalService.getProfile(this.token!.accessToken).pipe(
+    return externalService.getProfile().pipe(
       map((profile: AxiosResponse<IPoeProfile>) => {
         this.getPoeProfileSuccess();
         return profile.data;
@@ -192,7 +193,7 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: IPoeProfile) => {
-          const account = this.addOrUpdateAccount(res.name, this.sessionId);
+          const account = this.addOrUpdateAccount(res.name);
           this.selectAccountByName(account.name!);
           return forkJoin(
             externalService.getLeagues(),
@@ -305,57 +306,32 @@ export class AccountStore {
   }
 
   @action
-  validateSession(sender: string, sessionId?: string) {
+  validateSession(sender: string) {
     this.rootStore.uiStateStore.setValidating(true);
     this.rootStore.uiStateStore.setSubmitting(true);
-
-    const request = externalService.getCharacters().pipe(
-      switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
-      catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
-    );
     this.rootStore.uiStateStore.setStatusMessage('validating_session');
-    fromStream(
-      sessionId
-        ? this.rootStore.uiStateStore.setSessIdCookie(sessionId).pipe(
-            switchMap(() => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters');
-              return request;
-            })
-          )
-        : this.rootStore.uiStateStore.getSessIdCookie().pipe(
-            mergeMap((cookies: ICookie[]) => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters');
-              if (cookies && cookies.length > 0) {
-                this.sessionId = cookies[0].value;
-              }
-              return request;
-            })
-          )
-    );
+    this.validateSessionSuccess(sender);
   }
 
   @action
-  validateSessionSuccess(sender: string, sessionId: string | undefined) {
-    if (sessionId) {
-      this.sessionId = sessionId;
-    }
-
+  validateSessionSuccess(sender: string) {
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification('validate_session', 'success');
     this.rootStore.uiStateStore.setSubmitting(false);
     this.rootStore.uiStateStore.setValidating(false);
     // todo: check expiry date
-    if (!this.token || sessionId) {
-      if (sender === '/login') {
-        this.loadAuthWindow();
-      } else {
-        this.rootStore.routeStore.redirect('/login');
-      }
+    // if (!this.token) {
+    debugger;
+    if (sender === '/login') {
+      this.loadAuthWindow();
     } else {
-      this.rootStore.uiStateStore.setValidated(true);
-      this.rootStore.routeStore.redirect('/net-worth');
-      this.initSession();
+      this.rootStore.routeStore.redirect('/login');
     }
+    // } else {
+    //   this.rootStore.uiStateStore.setValidated(true);
+    //   this.rootStore.routeStore.redirect('/net-worth');
+    //   this.initSession();
+    // }
   }
 
   @action

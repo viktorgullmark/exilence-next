@@ -1,5 +1,3 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -7,14 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-
-import { IAccount } from '../../interfaces/account.interface';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Account } from '../../store/domains/account';
-import AccountValidationForm from './account-validation-form/AccountValidationForm';
+import AccountValidationForm, {
+  AccountFormValues,
+} from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
 
 type LoginContentProps = {
-  handleValidate: (account: IAccount) => void;
+  handleValidate: (form: AccountFormValues) => void;
   isSubmitting: boolean;
   isInitiating: boolean;
   account: Account;
@@ -55,7 +55,7 @@ const LoginContent = ({
             )}
             <Box>
               <AccountValidationForm
-                handleValidate={(details: IAccount) => handleValidate(details)}
+                handleValidate={(form: AccountFormValues) => handleValidate(form)}
                 styles={classes}
                 isSubmitting={isSubmitting}
                 isInitiating={isInitiating}
