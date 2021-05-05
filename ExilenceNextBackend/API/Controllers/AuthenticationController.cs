@@ -152,5 +152,12 @@ namespace API.Controllers
             _logger.LogInformation($"Callback with code: {code} and state: {state} invoked on client.");
             return Ok();
         }
+
+        [HttpGet]
+        [Route("Redirect")]
+        public async Task<IActionResult> Redirect(string code, string state)
+        {
+            return Redirect($"exilence://?code={code}&state={state}");
+        }
     }
 }
