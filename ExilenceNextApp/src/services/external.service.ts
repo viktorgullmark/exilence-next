@@ -50,9 +50,9 @@ function getStashTab(
   index: number,
   realm?: string
 ): Observable<AxiosResponse<IStash>> {
-  const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1${
-    realm !== undefined ? `&realm=${realm}` : ''
-  }`;
+  const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1${getRealmParam(
+    realm
+  )}`;
   return rateLimiter.limit(
     axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
   );
@@ -63,9 +63,7 @@ function getStashTabs(
   league: string,
   realm?: string
 ): Observable<AxiosResponse<IStash>> {
-  const parameters = `?league=${league}&accountName=${account}&tabs=1${
-    realm !== undefined ? `&realm=${realm}` : ''
-  }`;
+  const parameters = `?league=${league}&accountName=${account}&tabs=1${getRealmParam(realm)}`;
   return rateLimiter.limit(
     axios.get<IStash>(poeUrl + '/character-window/get-stash-items' + parameters)
   );
@@ -96,9 +94,7 @@ function getLeagues(
   compact: number = 1,
   realm?: string
 ): Observable<AxiosResponse<ILeague[]>> {
-  const parameters = `?type=${type}&compact=${compact}${
-    realm !== undefined ? `&realm=${realm}` : ''
-  }`;
+  const parameters = `?type=${type}&compact=${compact}${getRealmParam(realm)}`;
   return rateLimiter.limit(
     axios.get<ILeague[]>(apiUrl + '/leagues' + parameters, { headers: null })
   );
@@ -106,7 +102,7 @@ function getLeagues(
 
 function getCharacters(realm?: string): Observable<AxiosResponse<ICharacter[]>> {
   // todo: create util for this realm segment
-  const parameters = `${realm !== undefined ? `&realm=${realm}` : ''}`;
+  const parameters = `${getRealmParam(realm)}`;
 
   return rateLimiter.limit(
     axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters' + parameters)
@@ -118,9 +114,7 @@ function getCharacterItems(
   character: string,
   realm?: string
 ): Observable<AxiosResponse<ICharacterWithItems>> {
-  const parameters = `?accountName=${account}&character=${character}${
-    realm !== undefined ? `&realm=${realm}` : ''
-  }`;
+  const parameters = `?accountName=${account}&character=${character}${getRealmParam(realm)}`;
 
   return rateLimiter.limit(
     axios.get<ICharacterWithItems>(poeUrl + '/character-window/get-items' + parameters)
@@ -128,9 +122,13 @@ function getCharacterItems(
 }
 
 function getProfile(realm?: string): Observable<AxiosResponse<IPoeProfile>> {
-  const parameters = `${realm !== undefined ? `&realm=${realm}` : ''}`;
+  const parameters = `${getRealmParam(realm)}`;
 
   return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
+}
+
+function getRealmParam(realm?: string) {
+  return realm !== undefined ? `&realm=${realm}` : '';
 }
 
 /* #endregion */
