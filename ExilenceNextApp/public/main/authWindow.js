@@ -23,7 +23,6 @@ const createAuthWindow = ({ mainWindow }) => {
     const authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
 
     authWindow.webContents.on('will-redirect', (_event, url) => {
-      console.log("redirected url", url)
       // todo: handle returned state
       const raw_code = /code=([^&]*)/.exec(url) || null;
       const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
@@ -44,7 +43,7 @@ const createAuthWindow = ({ mainWindow }) => {
       false
     );
 
-    authWindow.loadURL(authUrl, { extraHeaders: 'Authorization TEST' });
+    authWindow.loadURL(authUrl);
     authWindow.show();
   });
 };

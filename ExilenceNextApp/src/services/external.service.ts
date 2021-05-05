@@ -105,6 +105,7 @@ function getLeagues(
 }
 
 function getCharacters(realm?: string): Observable<AxiosResponse<ICharacter[]>> {
+  // todo: create util for this realm segment
   const parameters = `${realm !== undefined ? `&realm=${realm}` : ''}`;
 
   return rateLimiter.limit(
