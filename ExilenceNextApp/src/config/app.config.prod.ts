@@ -3,7 +3,7 @@ const prodConfig = {
   production: true,
   sentryBrowserDsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',
   trackingId: 'UA-154599999-2',
-  redirectUrl: 'http://localhost:65535',
+  redirectUrl: 'https://next.exilence.app/api/authentication/redirect',
   oauthUrl: 'https://www.pathofexile.com',
   pathOfExileUrl: 'https://www.pathofexile.com',
   pathOfExileApiUrl: 'https://api.pathofexile.com',

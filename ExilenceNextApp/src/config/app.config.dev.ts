@@ -3,7 +3,7 @@ const devConfig = {
   production: false,
   sentryBrowserDsn: undefined,
   trackingId: '',
-  redirectUrl: 'http://localhost:65535',
+  redirectUrl: 'https://next.exilence.app/api/authentication/redirect',
   oauthUrl: 'https://www.pathofexile.com',
   pathOfExileUrl: 'https://www.pathofexile.com',
   pathOfExileApiUrl: 'https://api.pathofexile.com',
