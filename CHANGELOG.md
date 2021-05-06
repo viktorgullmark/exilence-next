@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - NOT RELEASED
+##### Added
+- Added support for Xbox players
+- Added support for Playstation players
+##### Updated
+- Reworked the authentication flow to match new requirements
+    - Now redirects you through the default browser
+    - No longer required to input session id when logging in
+
 ## [0.4.8] - 2021-05-03
 ##### Fixed
 - Fixed a bug where the memory would increase too much over time
