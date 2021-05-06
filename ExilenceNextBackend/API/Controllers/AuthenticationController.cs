@@ -145,7 +145,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("Callback")]
+        [Route("callback")]
         public async Task<IActionResult> Callback(string code, string state)
         {
             await _hubContext.Clients.Group(state).SendAsync("Callback", code);
@@ -154,8 +154,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("Redirect")]
-        public async Task<IActionResult> Redirect(string code, string state)
+        [Route("redirect")]
+        public IActionResult Redirect(string code, string state)
         {
             return Redirect($"exilence://?code={code}&state={state}");
         }
