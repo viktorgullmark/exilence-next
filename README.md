@@ -30,6 +30,7 @@ Currently runs with:
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
+- node > 14.x && node < 16 (node-sass is depracated and we do not support dart-sass yet)
 - npm 7.x
 
 ## Contributing with development
