@@ -136,6 +136,9 @@
     },
     "win": {
       "icon": "build/icon.ico"
+    },
+    "mac": {
+      "icon": "build/tray.jpg"
     }
   }
 }
