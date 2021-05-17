@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - NOT RELEASED
+##### Added
+- Added hour/minute marks to .csv export
+##### Fixed
+- Fixed a bug where the texts within the app would not translate properly
+
 ## [0.4.8] - 2021-05-03
 ##### Fixed
 - Fixed a bug where the memory would increase too much over time
