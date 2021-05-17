@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ##### Dependencies
 - Upgraded Electron to 12.0.7
 - Upgraded Node to 16.x
+- Upgraded Highcharts to 9.0.0
 - Replaced node-sass with dart-sass
 
 ## [0.4.8] - 2021-05-03
