@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 - Added hour/minute marks to .csv export
 ##### Fixed
 - Fixed a bug where the texts within the app would not translate properly
+##### Changed
+- Changed the behaviour of the stash tab selection when creating/editing profiles
+    - Now persists after selecting a stash tab, which means you can select more tabs quicker
 
 ## [0.4.8] - 2021-05-03
 ##### Fixed
