@@ -31,7 +31,7 @@ const pc: ISelectOption = {
 const sony: ISelectOption = {
   id: 'sony',
   value: 'sony',
-  label: 'Playstation',
+  label: 'PlayStation',
 };
 const platforms = [pc, xbox, sony];
 
