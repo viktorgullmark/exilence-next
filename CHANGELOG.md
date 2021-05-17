@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 ##### Changed
 - Changed the behaviour of the stash tab selection when creating/editing profiles
     - Now persists after selecting a stash tab, which means you can select more tabs quicker
+##### Dependencies
+- Upgraded Electron to 12.0.7
+- Upgraded Node to 16.x
+- Replaced node-sass with dart-sass
+
 
 ## [0.4.8] - 2021-05-03
 ##### Fixed
