@@ -14,7 +14,6 @@ All notable changes to this project will be documented in this file.
 - Upgraded Node to 16.x
 - Replaced node-sass with dart-sass
 
-
 ## [0.4.8] - 2021-05-03
 ##### Fixed
 - Fixed a bug where the memory would increase too much over time
