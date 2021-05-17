@@ -55,6 +55,7 @@ const StashTabDropdown = ({
     <Box mt={marginTop ? marginTop : 1} mb={marginBottom ? marginBottom : 2}>
       <Autocomplete
         multiple
+        disableCloseOnSelect
         id="stash"
         options={stashTabs}
         size={size}
