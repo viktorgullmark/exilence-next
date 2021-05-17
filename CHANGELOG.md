@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [0.5.0] - NOT RELEASED
 ##### Added
 - Added hour/minute marks to .csv export
+- Added app icon to MacOS
+- Added tray icon to MacOS
 ##### Fixed
 - Fixed a bug where the texts within the app would not translate properly
 ##### Changed
