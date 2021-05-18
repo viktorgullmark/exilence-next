@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added support for Xbox players
 - Added support for Playstation players
+- Added hour/minute marks to .csv export
+- Added app icon to MacOS
+- Added tray icon to MacOS
 ##### Updated
 - Reworked the authentication flow to match new requirements
     - Now redirects you through the default browser
     - No longer required to input session id when logging in
-- Added hour/minute marks to .csv export
-- Added app icon to MacOS
-- Added tray icon to MacOS
 ##### Fixed
 - Fixed a bug where the texts within the app would not translate properly
 ##### Changed
