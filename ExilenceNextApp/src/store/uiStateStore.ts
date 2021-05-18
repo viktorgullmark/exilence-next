@@ -83,8 +83,8 @@ export class UiStateStore {
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
-  @persist @observable selectedPlatform: ISelectOption = pc;
-  @observable platformList: ISelectOption[] = platforms;
+  @persist('list') @observable platformList: ISelectOption[] = platforms;
+  @persist('object') @observable selectedPlatform: ISelectOption = pc;
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
