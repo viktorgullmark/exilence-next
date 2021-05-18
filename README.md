@@ -30,6 +30,7 @@ Currently runs with:
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
+- node 16.x
 - npm 7.x
 
 ## Contributing with development
@@ -39,11 +40,11 @@ Before submitting a PR, please see our [contributing guidelines](https://github.
 Run the following to get started with the client:
 
 ```
-if (npm < 7.x) npm install
-if (npm >=7.x) npm install --legacy-peer-deps (flag needed temporarily)
+npm install
 npm start (to serve the project)
 npm run release (optional, to build the installer for production)
 ```
+NOTE: Running a build using node versions newer than v14 seem to fail on MacOS and Linux. For development on these platforms, it's recommended to use v14.16.1 (Latest LTS).
 
 ## Contact us
 

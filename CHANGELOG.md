@@ -9,6 +9,19 @@ All notable changes to this project will be documented in this file.
 - Reworked the authentication flow to match new requirements
     - Now redirects you through the default browser
     - No longer required to input session id when logging in
+- Added hour/minute marks to .csv export
+- Added app icon to MacOS
+- Added tray icon to MacOS
+##### Fixed
+- Fixed a bug where the texts within the app would not translate properly
+##### Changed
+- Changed the behaviour of the stash tab selection when creating/editing profiles
+    - Now persists after selecting a stash tab, which means you can select more tabs quicker
+##### Dependencies
+- Upgraded Electron to 12.0.7
+- Upgraded Node to 16.x
+- Upgraded Highcharts to 9.0.0
+- Replaced node-sass with dart-sass
 
 ## [0.4.8] - 2021-05-03
 ##### Fixed

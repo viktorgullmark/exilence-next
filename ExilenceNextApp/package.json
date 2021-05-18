@@ -15,7 +15,7 @@
     "@sentry/react": "^6.2.3",
     "@types/reactour": "^1.13.1",
     "@types/universal-analytics": "^0.4.3",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "axios-observable": "^1.1.2",
     "clsx": "^1.0.4",
     "electron-context-menu": "^2.5.0",
@@ -26,7 +26,7 @@
     "electron-window-state": "^5.0.3",
     "export-to-csv": "^0.2.1",
     "formik": "^2.0.8",
-    "highcharts": "^8.0.0",
+    "highcharts": "^9.0.0",
     "highcharts-react-official": "^3.0.0",
     "i18next": "^19.8.2",
     "i18next-xhr-backend": "^3.2.0",
@@ -37,7 +37,6 @@
     "mobx-react-lite": "^3.2.0",
     "mobx-utils": "^6.0.1",
     "moment": "^2.24.0",
-    "node-sass": "^4.14.1",
     "poe-log-monitor": "^1.2.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -52,6 +51,7 @@
     "reactour": "^1.18.3",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
+    "sass": "^1.32.12",
     "styled-components": "^5.2.0",
     "tslib": "^2.0.3",
     "typeface-roboto": "1.1.13",
@@ -103,7 +103,7 @@
     "chokidar": "^3.5.1",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
-    "electron": "^12.0.2",
+    "electron": "^12.0.7",
     "electron-builder": "^22.10.5",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.0.1",
@@ -112,7 +112,7 @@
     "eslint-plugin-react": "^7.15.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "prettier": "^2.1.2",
-    "wait-on": "^5.2.0"
+    "wait-on": "^5.3.0"
   },
   "build": {
     "productName": "Exilence Next",
@@ -141,7 +141,9 @@
       "name": "exilence-next",
       "schemes": [
         "exilence"
-      ]
+      ],
+      "mac": {
+        "icon": "build/tray.jpg"
+      }
     }
-  }
 }
