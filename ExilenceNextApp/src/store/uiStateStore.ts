@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { ISelectOption } from '../interfaces/select-option.interface';
 
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
@@ -16,6 +17,23 @@ import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
+
+const xbox: ISelectOption = {
+  id: 'xbox',
+  value: 'xbox',
+  label: 'Xbox',
+};
+const pc: ISelectOption = {
+  id: 'pc',
+  value: 'pc',
+  label: 'PC',
+};
+const sony: ISelectOption = {
+  id: 'sony',
+  value: 'sony',
+  label: 'PlayStation',
+};
+const platforms = [pc, xbox, sony];
 
 export class UiStateStore {
   @observable @persist userId: string = uuidv4();
@@ -65,7 +83,8 @@ export class UiStateStore {
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
-
+  @persist @observable selectedPlatform: ISelectOption = pc;
+  @observable platformList: ISelectOption[] = platforms;
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
@@ -78,6 +97,14 @@ export class UiStateStore {
   @action.bound
   setSettingsTabIndex(index: number) {
     this.settingsTabIndex = index;
+  }
+
+  @action.bound
+  setSelectedPlatform(id: string) {
+    const option = this.platformList.find((p) => p.id === id);
+    if (option) {
+      this.selectedPlatform = option;
+    }
   }
 
   @action

@@ -4,6 +4,7 @@ const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
+const log = require('electron-log');
 
 const {
   flashFrame: { createFlashFrame },
@@ -11,7 +12,6 @@ const {
   autoUpdater: { checkForUpdates, createAutoUpdater },
   tray: { createTray },
   netWorthOverlay: { createNetWorthOverlay, destroyNetWorthOverlayWindow },
-  authWindow: { createAuthWindow },
   menuFunctions: { menuFunctions },
   session: { createSession },
   localSettings: { loadLocalSettings, getLocalSettings },
@@ -32,6 +32,7 @@ let windows = [];
 let isQuitting;
 let updateAvailable;
 let trayProps;
+let deeplinkingUrl;
 
 /**
  * Local Settings
@@ -137,11 +138,6 @@ function createWindow() {
   });
 
   /**
-   * Authorization
-   */
-  createAuthWindow({ mainWindow: windows[mainWindow] });
-
-  /**
    * Flash Frames
    */
   createFlashFrame({ event: 'notify', mainWindow: windows[mainWindow] });
@@ -176,12 +172,22 @@ function createWindow() {
 if (!gotTheLock && !isDev) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
+  app.on('second-instance', (_, argv) => {
     if (isDev) {
       windows[mainWindow].destroy();
     } else {
       // Someone tried to run a second instance, we should focus our window.
       if (windows[mainWindow]) {
+        // Protocol handler for win32
+        // argv: An array of the second instance’s (command line / deep linked) arguments
+        if (process.platform == 'win32') {
+          // Keep only command line / deep linked arguments
+          deeplinkingUrl = argv.slice(1);
+          const raw_code = /code=([^&]*)/.exec(deeplinkingUrl) || null;
+          const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+          const error = /\?error=(.+)$/.exec(deeplinkingUrl);
+          windows[mainWindow].webContents.send('auth-callback', { code, error });
+        }
         if (windows[mainWindow].isMinimized()) {
           windows[mainWindow].restore();
           windows[mainWindow].focus();
@@ -204,6 +210,17 @@ if (!gotTheLock && !isDev) {
       await createTray(trayProps);
     }
   });
+
+  app.on('open-url', function (event, data) {
+    event.preventDefault();
+    deeplinkingUrl = data;
+    const raw_code = /code=([^&]*)/.exec(deeplinkingUrl) || null;
+    const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+    const error = /\?error=(.+)$/.exec(deeplinkingUrl);
+    windows[mainWindow].webContents.send('auth-callback', { code, error });
+  });
+
+  app.setAsDefaultProtocolClient('exilence');
 
   app.on('before-quit', () => {
     isQuitting = true;

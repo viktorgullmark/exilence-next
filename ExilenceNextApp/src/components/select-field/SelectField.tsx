@@ -11,14 +11,32 @@ type SelectFieldProps = {
   name: string;
   label: string;
   required?: boolean;
+  hasPlaceholder?: boolean;
   options?: ISelectOption[];
   children?: ReactNode;
 };
 
-const SelectField = ({ name, label, options, required, children }: SelectFieldProps) => {
+const SelectField = ({
+  name,
+  label,
+  options,
+  required,
+  hasPlaceholder,
+  children,
+}: SelectFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
   const { labelWidth, ref } = useLabelWidth(0);
+
+  const initialOptions = hasPlaceholder
+    ? [
+        {
+          id: '',
+          value: placeholderOption,
+          label: placeholderOption,
+        } as ISelectOption,
+      ]
+    : [];
 
   return (
     <FormControl
@@ -31,19 +49,11 @@ const SelectField = ({ name, label, options, required, children }: SelectFieldPr
       <InputLabel ref={ref}>{label}</InputLabel>
       <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
         {options
-          ? [
-              {
-                id: '',
-                value: placeholderOption,
-                label: placeholderOption,
-              } as ISelectOption,
-            ]
-              .concat(options)
-              .map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))
+          ? initialOptions.concat(options).map((opt) => (
+              <MenuItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </MenuItem>
+            ))
           : children}
       </Select>
       {meta.touched && meta.error && <FormHelperText>{meta.error}</FormHelperText>}

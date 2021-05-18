@@ -3,8 +3,8 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from './Header';
 
-export const patreonLogoHeight = 13;
-export const patreonLogoWidth = 68;
+export const patreonLogoHeight = 15;
+export const patreonLogoWidth = 80;
 
 const useStyles = makeStyles((theme) =>
   createStyles({

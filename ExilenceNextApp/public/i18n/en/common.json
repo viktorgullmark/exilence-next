@@ -2,7 +2,7 @@
   "action": {
     "finish": "Finish",
     "next": "Next",
-    "authorize": "Authorize",
+    "authorize": "Log in with pathofexile.com",
     "reset": "Reset",
     "restart_application": "Restart",
     "clear_and_restart_application": "Reset data and restart",
@@ -76,6 +76,7 @@
     "select_profile": "Select profile",
     "select_character": "Select character",
     "select_stash_tabs": "Select stash tabs",
+    "select_platform": "Select platform",
     "filter_stash_tabs": "Filter stash tabs",
     "profile_placeholder": "Select a profile",
     "group_name": "Group name",
