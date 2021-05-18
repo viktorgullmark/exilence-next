@@ -19,8 +19,6 @@ namespace API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-
-        private readonly IHubContext<AuthenticationHub> _hubContext;
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccountService _accountService;
@@ -142,15 +140,6 @@ namespace API.Controllers
 
             return false;
 
-        }
-
-        [HttpGet]
-        [Route("callback")]
-        public async Task<IActionResult> Callback(string code, string state)
-        {
-            await _hubContext.Clients.Group(state).SendAsync("Callback", code);
-            _logger.LogInformation($"Callback with code: {code} and state: {state} invoked on client.");
-            return Ok();
         }
 
         [HttpGet]
