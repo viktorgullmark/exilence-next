@@ -137,14 +137,14 @@
     "win": {
       "icon": "build/icon.ico"
     },
+    "mac": {
+      "icon": "build/tray.jpg"
+    },
     "protocols": {
       "name": "exilence-next",
       "schemes": [
         "exilence"
-      ],
-      "mac": {
-        "icon": "build/tray.jpg"
-      }
+      ]
     }
   }
 }
