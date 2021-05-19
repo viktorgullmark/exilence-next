@@ -127,7 +127,6 @@ export class AccountStore {
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     // todo: implement refresh logic based on expiry
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.token?.accessToken}`;
     this.initSession();
   }
 
@@ -174,6 +173,13 @@ export class AccountStore {
       scope: response.scope,
       expires: new Date(new Date().getTime() + +response.expires_in * 1000),
     };
+    axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
+  }
+
+  @action
+  clearToken() {
+    this.token = undefined;
+    axios.defaults.headers.common['Authorization'] = '';
   }
 
   @action

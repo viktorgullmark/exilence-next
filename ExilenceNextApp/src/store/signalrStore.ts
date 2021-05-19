@@ -121,7 +121,7 @@ export class SignalrStore {
         this.rootStore.uiStateStore.removeSessIdCookie(),
       ).pipe(
         map(() => {
-          axios.defaults.headers.common['Authorization'] = undefined;
+          this.rootStore.accountStore.clearToken();
           this.rootStore.uiStateStore.setValidated(false);
           this.rootStore.uiStateStore.setProfilesLoaded(false);
           this.stopConnectionSuccess();
