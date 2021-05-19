@@ -127,7 +127,7 @@ export class AccountStore {
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     // todo: implement refresh logic based on expiry
-    axios.defaults.headers.common['Authorization'] = `Bearer ${response.access_token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${this.token?.accessToken}`;
     this.initSession();
   }
 
@@ -293,12 +293,14 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    fromStream(
-      timer(45 * 1000).pipe(
-        takeUntil(this.cancelledRetry),
-        switchMap(() => of(this.initSession()))
-      )
-    );
+    if (this.rootStore.routeStore.redirectedTo !== '/login') {
+      fromStream(
+        timer(45 * 1000).pipe(
+          switchMap(() => of(this.initSession())),
+          takeUntil(this.cancelledRetry)
+        )
+      );
+    }
 
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification('init_session', 'error', true, e);
@@ -328,6 +330,7 @@ export class AccountStore {
         this.rootStore.routeStore.redirect('/login');
       }
     } else {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
       this.rootStore.uiStateStore.setValidated(true);
       this.rootStore.routeStore.redirect('/net-worth');
       this.initSession();
@@ -339,8 +342,8 @@ export class AccountStore {
     if (sender !== '/login') {
       fromStream(
         timer(45 * 1000).pipe(
-          takeUntil(this.cancelledRetry),
-          switchMap(() => of(this.validateSession(sender)))
+          switchMap(() => of(this.validateSession(sender))),
+          takeUntil(this.cancelledRetry)
         )
       );
     }

@@ -18,6 +18,7 @@ import { mapSnapshotToApiSnapshot } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { Snapshot } from './domains/snapshot';
 import { RootStore } from './rootStore';
+import axios from 'axios-observable';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -117,9 +118,10 @@ export class SignalrStore {
     fromStream(
       forkJoin(
         this.rootStore.signalrHub.stopConnection(),
-        this.rootStore.uiStateStore.removeSessIdCookie()
+        this.rootStore.uiStateStore.removeSessIdCookie(),
       ).pipe(
         map(() => {
+          axios.defaults.headers.common['Authorization'] = undefined;
           this.rootStore.uiStateStore.setValidated(false);
           this.rootStore.uiStateStore.setProfilesLoaded(false);
           this.stopConnectionSuccess();
