@@ -65,6 +65,7 @@ type ToolbarProps = {
   handleNotificationsOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
+  handleClearSnapshot: () => void;
   handleRemoveProfile: () => void;
 };
 
@@ -92,6 +93,7 @@ const Toolbar = ({
   handleNotificationsOpen,
   handleAccountMenuOpen,
   handleClearSnapshots,
+  handleClearSnapshot,
   handleRemoveProfile,
   handleOverlay,
 }: ToolbarProps) => {
@@ -230,7 +232,7 @@ const Toolbar = ({
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title={t('label.remove_snapshot_icon_title') || ''} placement="bottom">
+              <Tooltip title={t('label.remove_snapshots_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
                     disabled={
@@ -244,6 +246,23 @@ const Toolbar = ({
                     className={classes.iconButton}
                   >
                     <DeleteSweepIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title={t('label.remove_snapshot_icon_title') || ''} placement="bottom">
+                <span>
+                  <IconButton
+                    disabled={
+                      !activeProfile ||
+                      isSnapshotting ||
+                      !signalrOnline ||
+                      activeProfile.snapshots.length === 0
+                    }
+                    onClick={() => handleClearSnapshot()}
+                    aria-label="clear snapshot"
+                    className={classes.iconButton}
+                  >
+                    <DeleteIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>
