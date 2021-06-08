@@ -1,10 +1,21 @@
-import { Box, Button, Grid, IconButton, makeStyles, Theme, Tooltip } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  makeStyles,
+  Snackbar,
+  Theme,
+  Tooltip,
+} from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import ImageIcon from '@material-ui/icons/Image';
 import { observer } from 'mobx-react-lite';
-import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, default as React, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toBlob } from 'html-to-image';
 import {
   TableInstance,
   useColumnOrder,
@@ -27,6 +38,7 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
+import { Alert } from '@material-ui/lab';
 
 export const itemTableFilterSpacing = 2;
 
@@ -57,6 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ItemTableContainer = () => {
+  const [isExtractingImage, setIsExtractingImage] = useState(false);
+  const [isExtractingImageSuccessMsg, setIsExtractingImageSuccessMsg] = useState(false);
   const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -104,8 +118,19 @@ const ItemTableContainer = () => {
     )
   );
 
-  // FIXME: add useEffect() to clear timeout on dismounting
   let timer: NodeJS.Timeout | undefined = undefined;
+
+  useEffect(() => {
+    if (isExtractingImageSuccessMsg) {
+      const imageExtractingSuccessMsgTimer = setTimeout(
+        () => setIsExtractingImageSuccessMsg(false),
+        5000
+      );
+      return () => clearTimeout(imageExtractingSuccessMsgTimer);
+    }
+    // @ts-ignore
+    return () => clearTimeout(timer);
+  }, [isExtractingImageSuccessMsg]);
 
   const handleFilter = (
     event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -158,13 +183,63 @@ const ItemTableContainer = () => {
     routeStore!.redirect('/settings');
   };
 
+  const handleExtractImageClick = () => {
+    const table = document.getElementById('items-table');
+    const tableInput = document.getElementById('items-table-input');
+    const tableActions = document.getElementById('items-table-actions');
+
+    if (table) {
+      if (tableInput && tableActions) {
+        tableInput.style.display = 'none';
+        tableActions.style.display = 'none';
+      }
+      setIsExtractingImage(true);
+      toBlob(table)
+        .then(function (blob) {
+          // @ts-ignore
+          navigator.clipboard.write([
+            // @ts-ignore
+            new ClipboardItem({
+              'image/png': blob,
+            }),
+          ]);
+          setIsExtractingImageSuccessMsg(true);
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          setIsExtractingImage(false);
+          if (tableInput && tableActions) {
+            tableInput.style.display = 'flex';
+            tableActions.style.display = 'flex';
+          }
+        });
+    }
+  };
   return (
     <>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={isExtractingImage}
+      >
+        <Alert severity="info">Generating Image...</Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={isExtractingImageSuccessMsg}
+      >
+        <Alert severity="success">Image generated and saved to clipboard!</Alert>
+      </Snackbar>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <Grid item md={7}>
             <Grid container direction="row" spacing={2} alignItems="center">
-              <Grid item md={5}>
+              <Grid item md={5} id="items-table-input">
                 <ItemTableFilter
                   array={getItems}
                   handleFilter={handleFilter}
@@ -176,7 +251,7 @@ const ItemTableContainer = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={classes.actionArea}>
+          <Grid item className={classes.actionArea} id="items-table-actions">
             <ColumnHidePage
               instance={instance}
               onClose={handleClose}
@@ -213,6 +288,15 @@ const ItemTableContainer = () => {
                 }
               >
                 <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('label.export_image') || ''} placement="bottom">
+              <IconButton
+                size="small"
+                className={classes.inlineIcon}
+                onClick={handleExtractImageClick}
+              >
+                <ImageIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">

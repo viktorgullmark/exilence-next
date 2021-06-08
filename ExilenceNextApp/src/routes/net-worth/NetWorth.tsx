@@ -274,6 +274,7 @@ const NetWorth = () => {
                 </Grid>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails
+                id="items-table"
                 style={{
                   background: theme.palette.background.default,
                   display: 'block',
