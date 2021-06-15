@@ -62,6 +62,7 @@
     "custom_price_placeholder": "Custom price",
     "toggle_visible_columns": "Customize columns",
     "toggle_stash_tab_filter": "Show filter",
+    "export_image": "Export as PNG to Clipboard",
     "toggle_export_menu": "Export data",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
