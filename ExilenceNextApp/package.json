@@ -140,6 +140,12 @@
     "mac": {
       "icon": "build/tray.jpg"
     },
+    "linux": {
+      "icon": "build/tray.jpg",
+      "target": "AppImage",
+      "category": "Game",
+      "publish": "never"
+    },
     "protocols": {
       "name": "exilence-next",
       "schemes": [
