@@ -69,8 +69,8 @@
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder",
-    "release-dev": "npm run react-build && electron-builder --publish=never",
     "build": "npm run react-build && npm run electron-build",
+    "build-prod": "npm run react-build && electron-builder --publish=never",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
@@ -121,7 +121,7 @@
     "files": [
       "build/**/*",
       "public/icon.*",
-      "public/tray.*"
+      "public/icon512x512.*"
     ],
     "extraFiles": [
       "public/i18n/**/*",
@@ -140,11 +140,11 @@
       "icon": "build/icon.ico"
     },
     "mac": {
-      "icon": "build/tray.jpg"
+      "icon": "build/icon512x512.png"
     },
     "linux": {
       "artifactName":"Exilence-Next-${version}.${ext}",
-      "icon": "build/tray.jpg",
+      "icon": "build/icon512x512.png",
       "target": "AppImage",
       "category": "Utility"
     },
