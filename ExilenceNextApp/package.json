@@ -69,6 +69,7 @@
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder",
+    "release-dev": "npm run react-build && electron-builder --publish=never",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
@@ -145,8 +146,7 @@
       "artifactName":"Exilence-Next-${version}.${ext}",
       "icon": "build/tray.jpg",
       "target": "AppImage",
-      "category": "Utility",
-      "publish": "never"
+      "category": "Utility"
     },
     "protocols": {
       "name": "exilence-next",
