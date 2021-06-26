@@ -119,7 +119,8 @@
     "appId": "com.exilence.exilence-next-app",
     "files": [
       "build/**/*",
-      "public/icon.*"
+      "public/icon.*",
+      "public/tray.*"
     ],
     "extraFiles": [
       "public/i18n/**/*",
@@ -141,9 +142,10 @@
       "icon": "build/tray.jpg"
     },
     "linux": {
+      "artifactName":"Exilence-Next-${version}.${ext}",
       "icon": "build/tray.jpg",
       "target": "AppImage",
-      "category": "Game",
+      "category": "Utility",
       "publish": "never"
     },
     "protocols": {
