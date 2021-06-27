@@ -3,7 +3,7 @@ const { destroyNetWorthOverlayWindow } = require('./overlays/netWorthOverlay');
 const path = require('path');
 const { app, Tray, Menu, shell } = require('electron');
 
-const trayIconPath = path.join(__dirname, `../tray.jpg`);
+const trayIconPath = path.join(__dirname, `../icon512x512.png`);
 const checkForMissingWindow = require('../util');
 
 let tray;

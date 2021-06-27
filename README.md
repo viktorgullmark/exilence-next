@@ -42,7 +42,9 @@ Run the following to get started with the client:
 ```
 npm install
 npm start (to serve the project)
-npm run release (optional, to build the installer for production)
+npm run build-prod (optional, to build the installer for production) 
+---
+npm run release (optional, to build the installer for production and release)
 ```
 NOTE: Running a build using node versions newer than v14 seem to fail on MacOS and Linux. For development on these platforms, it's recommended to use v14.16.1 (Latest LTS).
 
