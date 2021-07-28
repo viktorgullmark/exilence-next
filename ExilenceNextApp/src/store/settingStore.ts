@@ -9,6 +9,8 @@ export class SettingStore {
   @persist @observable autoSnapshotting: boolean = true;
   @persist @observable isHardwareAccelerationEnabled: boolean =
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
+  // 0 - latest, 1 - beta
+  @persist @observable releaseChannel: number = electronService.localSettings?.releaseChannel || 0;
   @persist @observable priceTreshold: number = 0;
   @persist @observable totalPriceTreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
@@ -47,6 +49,13 @@ export class SettingStore {
       this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     this.autoSnapshotting = value;
+  }
+
+  // 0 - latest, 1 - beta
+  @action
+  setReleaseChannel(value: number) {
+    this.releaseChannel = value;
+    electronService.ipcRenderer.send('release-channel', value);
   }
 
   @action

@@ -18,6 +18,7 @@ type SelectSettingProps = {
   handleChange: (value: number) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
+  withNone?: boolean;
 };
 
 const SelectSetting = ({
@@ -26,6 +27,7 @@ const SelectSetting = ({
   handleChange,
   translationKey,
   requiresSnapshot,
+  withNone = true,
 }: SelectSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -42,9 +44,11 @@ const SelectSetting = ({
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
         >
-          <MenuItem value={0}>
-            <em>{t('value.none')}</em>
-          </MenuItem>
+          {withNone && (
+            <MenuItem value={0}>
+              <em>{t('value.none')}</em>
+            </MenuItem>
+          )}
           {options.map((option) => {
             return (
               <MenuItem key={option.id} value={option.value}>

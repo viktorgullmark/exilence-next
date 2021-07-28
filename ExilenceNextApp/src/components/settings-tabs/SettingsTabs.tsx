@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../..';
+import ReleaseChannelSettings from './advanced/release-channel-settings/ReleaseChannelSettings';
 import HardwareAccelerationSettings from './advanced/hardware-acceleration-settings/HardwareAccelerationSettings';
 import ResetIndexedDbSettings from './advanced/reset-indexeddb-settings/ResetIndexedDbSettings';
 import SettingsTab from './components/settings-tab/SettingsTab';
@@ -86,6 +87,12 @@ const SettingsTabs = () => {
             </Box>
           </SettingsTab>
           <SettingsTab value={settingsTabIndex} index={3}>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.release_channel')}</Typography>
+              <Box my={2}>
+                <ReleaseChannelSettings />
+              </Box>
+            </Box>
             <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.hardware_acceleration')}</Typography>
               <Box my={2}>
