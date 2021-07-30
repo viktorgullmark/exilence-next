@@ -220,7 +220,7 @@ export class AccountStore {
 
               this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
               this.rootStore.leagueStore.updatePriceLeagues(
-                leagues.filter((l) => l.id.indexOf('SSF') === -1)
+                leagues.filter((l) => l.id.indexOf('SSF') === -1 || l.id.indexOf('Royale') === -1)
               );
               this.getSelectedAccount.updateAccountLeagues(characters);
               this.getSelectedAccount.updateLeaguesForProfiles(
