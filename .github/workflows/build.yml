@@ -20,6 +20,11 @@
 #  APP_NAME: Exilence Next
 #  DISCORD_BUILD_CHANNEL: ${{ secrets.DISCORD_BUILD_CHANNEL }}
 #  DISCORD: ${{ secrets.DISCORD_BUILD_CHANNEL }}
+#  WORKING_DIR: ./ExilenceNextApp
+#
+#defaults:
+#  run:
+#    working-directory: ${{ env.WORKING_DIR }}
 #
 #jobs:
 #  build:
