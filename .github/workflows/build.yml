@@ -1,0 +1,107 @@
+#name: Build/release
+#
+#on:
+#  push:
+#    branches:
+#      - dev
+#      - release/**
+#      - main
+#  pull_request:
+#    branches:
+#      - dev
+#      - release/**
+#      - main
+#
+#  # allow manual triggering
+#  workflow_dispatch:
+#
+#env:
+#  NODE_VERSION: 14.15.1
+#  APP_NAME: Exilence Next
+#  DISCORD_BUILD_CHANNEL: ${{ secrets.DISCORD_BUILD_CHANNEL }}
+#  DISCORD: ${{ secrets.DISCORD_BUILD_CHANNEL }}
+#
+#jobs:
+#  build:
+#    name: 'Install, Lint, Build'
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: clean workspace
+#        uses: jstone28/runner-workspace-cleaner@v1.0.0
+#
+#      - name: checkout repo
+#        uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0 # Fetch-depth 0 necessary to get full commit history for checking changes
+#
+#      - name: use node ${{env.NODE_VERSION}}
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: ${{env.NODE_VERSION}}
+#
+#      - name: install deps
+#        run: npm ci
+#
+##      - name: run lint
+##        run: npm run lint
+#
+#      - name: Build
+#
+#  notify-ci:
+#    name: 'Notify'
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Notify ${{ env.DISCORD_BUILD_CHANNEL }} channel if Build failed
+#        if: always() && contains(needs.*.result, 'failure')
+#        timeout-minutes: 5
+#        uses: rjstone/discord-webhook-notify@v1
+#        with:
+#          severity: error
+#          username: ${{ env.APP_NAME }} bot
+#          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+#          description: ${{ format('<https://github.com/{0}/commit/{1}/checks|View {2} workflow log>', github.repository, github.sha , github.workflow) }}
+#          footer: 'Powered by @Exilence Next'.
+#          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+#
+#      - name: Notify ${{ env.DISCORD_BUILD_CHANNEL }} channel if build succeeded
+#        if: always() && contains(needs.*.result, 'success')
+#        timeout-minutes: 5
+#        uses: rjstone/discord-webhook-notify@v1
+#        with:
+#          severity: info
+#          username: ${{ env.APP_NAME }} bot
+#          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+#          description: Build passed ✅
+#          footer: 'Powered by @Exilence Next'.
+#          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+#
+#  release:
+#    name: 'Release on all OS'
+#    needs: [ build, notify-ci ]
+#    runs-on: ${{ matrix.os }}
+#
+#    strategy:
+#      matrix:
+#        # os: [macos-latest, ubuntu-latest, windows-latest]
+#        os: [windows-latest]
+#
+#    steps:
+#      - name: clean workspace
+#        uses: jstone28/runner-workspace-cleaner@v1.0.0
+#
+#      - name: checkout repo
+#        uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0 # Fetch-depth 0 necessary to get full commit history for checking changes
+#
+#      - name: release
+#        uses: samuelmeuli/action-electron-builder@v1
+#        with:
+#          # GitHub token, automatically provided to the action
+#          # (No need to define this secret in the repo settings)
+#          github_token: ${{ secrets.github_token }}
+#
+#          # If the commit is tagged with a version (e.g. "v1.0.0"),
+#          # release the app after building
+#          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
