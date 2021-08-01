@@ -6,12 +6,7 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     alignSelf: 'center',
-  },
-  pricingLeagueHelper: {
-    margin: 0,
-    marginTop: 5,
-    color: '#ffc107',
-  },
+  }
 }));
 
 export default useStyles;
