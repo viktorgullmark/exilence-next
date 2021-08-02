@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2021-08-02
+##### Fixed
+- Fixed a bug divination cards was not included in the networth
+- Fixed various bugs related to the new Path of Exile: Royale league
+
 ## [0.5.0] - 2021-07-23
 ##### Added
 - Added support for Xbox players
