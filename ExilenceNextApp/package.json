@@ -67,7 +67,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder -mwl",
+    "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder -mwl",
     "build": "npm run react-build && npm run electron-build",
     "smoke-build-linux": "npm run react-build && electron-builder -l --publish=never",
