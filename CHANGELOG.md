@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - NOT RELEASED
+##### Added
+- Added support for MacOS
+- Added support for Linux
+##### Fixed
+- Fixed a bug that prevented the authorize button from launching the app
+
 ## [0.5.1] - 2021-08-02
 ##### Fixed
 - Fixed a bug divination cards was not included in the networth
