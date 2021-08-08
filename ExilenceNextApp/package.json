@@ -68,8 +68,11 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder",
+    "release": "npm run react-build && electron-builder -mwl",
     "build": "npm run react-build && npm run electron-build",
+    "smoke-build-linux": "npm run react-build && electron-builder -l --publish=never",
+    "smoke-build-mac": "npm run react-build && electron-builder -m --publish=never",
+    "smoke-build-win": "npm run react-build && electron-builder -w --publish=never",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
@@ -119,7 +122,8 @@
     "appId": "com.exilence.exilence-next-app",
     "files": [
       "build/**/*",
-      "public/icon.*"
+      "public/icon.*",
+      "public/icon512x512.*"
     ],
     "extraFiles": [
       "public/i18n/**/*",
@@ -138,7 +142,14 @@
       "icon": "build/icon.ico"
     },
     "mac": {
-      "icon": "build/tray.jpg"
+      "icon": "build/icon512x512.png",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "artifactName":"Exilence-Next-${version}.${ext}",
+      "icon": "build/icon512x512.png",
+      "target": "AppImage",
+      "category": "Utility"
     },
     "protocols": {
       "name": "exilence-next",
