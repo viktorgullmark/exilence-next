@@ -3,8 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.2] - NOT RELEASED
 ##### Added
-- Added support for MacOS
-- Added support for Linux
+- Added build support for MacOS
+- Added build support for Linux
 ##### Fixed
 - Fixed a bug that prevented the authorize button from launching the app
 
