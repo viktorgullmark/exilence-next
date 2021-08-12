@@ -125,6 +125,8 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 
   const rarity = getRarityIdentifier(filterText);
 
+  const itemNameRegex = new RegExp(filterText, 'i');
+
   return mergeItemStacks(
     snapshots
       .flatMap((sts) =>
@@ -144,7 +146,8 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
                 .join(', ')
                 .toLowerCase()
                 .includes(filterText)) ||
-            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity)
+            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity) ||
+            itemNameRegex.test(i.name)
         )
       )
   );
