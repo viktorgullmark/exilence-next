@@ -47,6 +47,15 @@ createNetWorthOverlay();
  * Main Window
  */
 function createWindow() {
+
+  if(!app.isDefaultProtocolClient('exilence')) {
+    if (process.platform !== 'darwin') {
+      app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
+    } else {
+      app.setAsDefaultProtocolClient('exilence');
+    }
+  }
+
   const minMainWindowWidth = 800;
   const minMainWindowHeight = 800;
   const { width: defaultWidth, height: defaultHeight } = screen.getPrimaryDisplay().workAreaSize;
@@ -162,14 +171,6 @@ function createWindow() {
   if (isDev) {
     // Provide Inspect Element option on right click
     contextMenu();
-  }
-}
-
-if(!app.isDefaultProtocolClient('exilence')) {
-  if (process.platform !== 'darwin') {
-    app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
-  } else {
-    app.setAsDefaultProtocolClient('exilence');
   }
 }
 
