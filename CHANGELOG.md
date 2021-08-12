@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.2] - NOT RELEASED
+## [0.5.3] - 2021-08-12
+##### Fixed
+- Fixed a bug that prevented the application from launching for new users
+
+## [0.5.2] - 2021-08-11
 ##### Added
 - Added build support for MacOS
 - Added build support for Linux
