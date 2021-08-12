@@ -125,7 +125,13 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 
   const rarity = getRarityIdentifier(filterText);
 
-  const itemNameRegex = new RegExp(filterText, 'i');
+  let itemNameRegex = new RegExp('', 'i');
+  try {
+    // try/catch required because of filtering being an onChange event, example: typing only [ would lead to a SyntaxError
+    itemNameRegex = new RegExp(filterText, 'i');
+  } catch (error) {
+    console.error(error);
+  }
 
   return mergeItemStacks(
     snapshots
