@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2021-08-13
+##### Fixed
+- Fixed a bug where you would sometimes receive a 401-error when trying to login 
+
 ## [0.5.4] - 2021-08-13
 ##### Fixed
 - Fixed (again) a bug that prevented the application from launching for new users
