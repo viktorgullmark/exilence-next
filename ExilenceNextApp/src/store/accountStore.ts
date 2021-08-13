@@ -127,7 +127,7 @@ export class AccountStore {
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     // todo: implement refresh logic based on expiry
-    this.initSession();
+    fromStream(timer(3 * 1000).pipe(switchMap(() => of(this.initSession()))));
   }
 
   @action
@@ -348,7 +348,7 @@ export class AccountStore {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
       this.rootStore.uiStateStore.setValidated(true);
       this.rootStore.routeStore.redirect('/net-worth');
-      this.initSession();
+      fromStream(timer(3 * 1000).pipe(switchMap(() => of(this.initSession()))));
     }
   }
 
