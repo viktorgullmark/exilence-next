@@ -165,6 +165,12 @@ function createWindow() {
   }
 }
 
+if (isDev && process.platform !== 'darwin') {
+  app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
+} else {
+  app.setAsDefaultProtocolClient('exilence');
+}
+
 /**
  * App Listeners
  */
@@ -198,14 +204,6 @@ if (!gotTheLock) {
     await createWindow();
     await createTray(trayProps);
     await checkForUpdates();
-
-    if(!app.isDefaultProtocolClient('exilence')) {
-      if (isDev && process.platform !== 'darwin') {
-        app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
-      } else {
-        app.setAsDefaultProtocolClient('exilence');
-      }
-    }
   });
 
   app.on('activate', async () => {
