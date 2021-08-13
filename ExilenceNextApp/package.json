@@ -152,7 +152,7 @@
       "category": "Utility"
     },
     "protocols": {
-      "name": "exilence-next",
+      "name": "exilence",
       "schemes": [
         "exilence"
       ]

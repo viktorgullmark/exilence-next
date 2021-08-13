@@ -47,15 +47,6 @@ createNetWorthOverlay();
  * Main Window
  */
 function createWindow() {
-
-  if(!app.isDefaultProtocolClient('exilence')) {
-    if (process.platform !== 'darwin') {
-      app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
-    } else {
-      app.setAsDefaultProtocolClient('exilence');
-    }
-  }
-
   const minMainWindowWidth = 800;
   const minMainWindowHeight = 800;
   const { width: defaultWidth, height: defaultHeight } = screen.getPrimaryDisplay().workAreaSize;
@@ -207,6 +198,14 @@ if (!gotTheLock) {
     await createWindow();
     await createTray(trayProps);
     await checkForUpdates();
+
+    if(!app.isDefaultProtocolClient('exilence')) {
+      if (isDev && process.platform !== 'darwin') {
+        app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
+      } else {
+        app.setAsDefaultProtocolClient('exilence');
+      }
+    }
   });
 
   app.on('activate', async () => {
