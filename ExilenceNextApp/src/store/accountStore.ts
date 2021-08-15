@@ -202,9 +202,10 @@ export class AccountStore {
         concatMap((res: IPoeProfile) => {
           const account = this.addOrUpdateAccount(res.name);
           this.selectAccountByName(account.name!);
+          console.log({account});
           return forkJoin(
-            externalService.getLeagues(),
-            externalService.getCharacters(),
+            externalService.getLeagues('main', 1, res.realm),
+            externalService.getCharacters(res.realm),
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap((requests) => {
