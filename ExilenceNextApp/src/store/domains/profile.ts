@@ -433,14 +433,16 @@ export class Profile {
         externalService.getItemsForTabs(
           selectedStashTabs,
           rootStore.accountStore.getSelectedAccount.name!,
-          league.id
+          league.id,
+          rootStore.uiStateStore.selectedPlatform.id
         ),
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'
           ? externalService.getCharacterItems(
               rootStore.accountStore.getSelectedAccount.name!,
-              this.activeCharacterName
+              this.activeCharacterName,
+              rootStore.uiStateStore.selectedPlatform.id
             )
           : of(null)
       ).pipe(
