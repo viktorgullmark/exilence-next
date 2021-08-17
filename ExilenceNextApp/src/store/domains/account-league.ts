@@ -38,7 +38,11 @@ export class AccountLeague {
   @action
   getStashTabs() {
     return externalService
-      .getStashTabs(rootStore.accountStore.getSelectedAccount.name!, this.leagueId)
+      .getStashTabs(
+        rootStore.accountStore.getSelectedAccount.name!,
+        this.leagueId,
+        rootStore.uiStateStore.selectedPlatform.id
+      )
       .pipe(
         map((response: AxiosResponse<IStash>) => {
           runInAction(() => {
