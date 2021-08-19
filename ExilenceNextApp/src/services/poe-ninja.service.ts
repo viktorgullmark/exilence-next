@@ -52,7 +52,7 @@ function getItemCategories() {
     'Invitation',
     'Artifact',
     'UniqueJewel',
-    'ClusterJewel',
+    //'ClusterJewel',
     'BlightedMap',
     //'BaseType',
     'HelmetEnchant',
