@@ -1,4 +1,4 @@
-const { webFrame, ipcRenderer, shell, BrowserWindow } = window.require('electron');
+const { webFrame, ipcRenderer, shell, BrowserWindow, clipboard } = window.require('electron');
 const childProcess = window.require('child_process');
 const fs = window.require('fs');
 
@@ -14,4 +14,5 @@ export const electronService = {
   appPath,
   appLocale,
   localSettings,
+  clipboard,
 };
