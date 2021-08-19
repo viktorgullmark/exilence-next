@@ -54,7 +54,7 @@ function getItemCategories() {
     'UniqueJewel',
     'ClusterJewel',
     'BlightedMap',
-    'BaseType',
+    //'BaseType',
     'HelmetEnchant',
   ];
   return categories;
