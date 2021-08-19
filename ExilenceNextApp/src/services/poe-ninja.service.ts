@@ -50,6 +50,12 @@ function getItemCategories() {
     'Beast',
     'Vial',
     'Invitation',
+    'Artifact',
+    'UniqueJewel',
+    'ClusterJewel',
+    'BlightedMap',
+    'BaseType',
+    'HelmetEnchant',
   ];
   return categories;
 }
