@@ -22,6 +22,7 @@
   },
   "title": {
     "login": "Login",
+    "redirect_not_working": "If the button doesn't work, copy the link below",
     "error_boundary": "You encountered an error",
     "net_worth": "Net worth",
     "settings": "Settings",
@@ -142,6 +143,7 @@
     "microsoft_edge": "Microsoft Edge",
     "stash_tab_count_warning": "Selecting more than 10 tabs will increase the snapshot duration significantly",
     "open_on_ninja": "View on poe.ninja",
+    "copy_link": "Copy link",
     "discord": "Discord Server",
     "retake_tour": "Re-take Tour",
     "whats_new": "What's new",
