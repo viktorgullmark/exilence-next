@@ -19,9 +19,9 @@ const NetWorthSettings = () => {
       </Grid>
       <Grid item>
         <NumberInputSetting
-          value={settingStore!.priceTreshold}
-          handleChange={(value: number) => settingStore!.setPriceTreshold(value)}
-          translationKey="price_treshold"
+          value={settingStore!.priceThreshold}
+          handleChange={(value: number) => settingStore!.setPriceThreshold(value)}
+          translationKey="price_threshold"
           minimum={0}
           maximum={100}
           suffixKey="unit.chaos"
@@ -30,9 +30,9 @@ const NetWorthSettings = () => {
       </Grid>
       <Grid item>
         <NumberInputSetting
-          value={settingStore!.totalPriceTreshold}
-          handleChange={(value: number) => settingStore!.setTotalPriceTreshold(value)}
-          translationKey="total_price_treshold"
+          value={settingStore!.totalPriceThreshold}
+          handleChange={(value: number) => settingStore!.setTotalPriceThreshold(value)}
+          translationKey="total_price_threshold"
           minimum={0}
           maximum={5000}
           suffixKey="unit.chaos"

@@ -202,8 +202,8 @@ All notable changes to this project will be documented in this file.
 - Added a warning text if more than 10 tabs are selected in the profile
 - Added translations for "no_characters" string
 ##### Changed
-- Changed how the price tresholds work (thanks to kryo4096)
-    - The total treshold now overrides the individual treshold, not the other way around
+- Changed how the price thresholds work (thanks to kryo4096)
+    - The total threshold now overrides the individual threshold, not the other way around
     - Note that this may affect your net worth substantially depending on settings
 - Changed the behavior of the menu drawers, to reduce client lag
 - Changed the visual display of the expired session error on the login screen
@@ -217,7 +217,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.7] - 2020-06-16
 ##### Added
-- Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
+- Added a setting for selecting the cutoff for stacks of items, similar to the price threshold but for the total item count
     - Maximum value for the setting is capped at 5000 c
 - Added a fallback to 'Standard' league for profiles where the pricing league was outdated
     - Previously we didnt update these profiles, so they would fail when snapshotting
@@ -237,7 +237,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.6] - 2020-04-11
 ##### Added
 - Added a label which shows the current selection net worth value (e.g after searching/filtering) (thanks to kryo4096)
-- Added the ability to set a custom price treshold interval between 1c and 100c (thanks to kryo4096)
+- Added the ability to set a custom price threshold interval between 1c and 100c (thanks to kryo4096)
 - Added the ability to search for rarities/categories in the search bar (thanks to kryo4096)
     - You can now typ 'currency' to list only currency for example
 ##### Changed
@@ -406,7 +406,7 @@ All notable changes to this project will be documented in this file.
 - Changed the look and feel of the cards in the top of the net worth page
 - Changed order of the sections in the toolbar
 - Changed how the scroll behaves on the net worth page, to allow for more control
-- Changed how the price treshold setting works
+- Changed how the price threshold setting works
     - It now updates the actual value on the snapshot, which means you have to wait for a new snapshot for changes
 ##### Fixed
 - Fixed a bug where the font was not properly set for some users
@@ -490,7 +490,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added settings page
     - Added setting for toggling low confidence pricing
-    - Added setting for controlling the price treshold
+    - Added setting for controlling the price threshold
 - Added automatic retry for validate session at 30 second intervals if it fails
 - Added an asterisk to profile name field in profile dialog
 ##### Changed
