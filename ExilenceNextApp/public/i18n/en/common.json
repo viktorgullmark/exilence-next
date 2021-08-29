@@ -152,7 +152,8 @@
     "feature_request": "Feature Request",
     "support_us": "Support Us",
     "reset_to_default": "Reset to default",
-    "enable_hardware_acceleration": "Enable Hardware Acceleration"
+    "enable_hardware_acceleration": "Enable Hardware Acceleration",
+    "new_character_no_league_in_pricing_league": "Newly created character and can't see the league it's in? Refresh Exilence Next (ctrl + r)."
   },
   "value": {
     "none": "None",

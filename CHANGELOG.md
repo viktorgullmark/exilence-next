@@ -1,7 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] - NOT RELEASED
+## [0.5.5] - 2021-08-13
+##### Fixed
+- Fixed a bug where you would sometimes receive a 401-error when trying to login 
+
+## [0.5.4] - 2021-08-13
+##### Fixed
+- Fixed (again) a bug that prevented the application from launching for new users
+
+## [0.5.3] - 2021-08-12
+##### Fixed
+- Fixed a bug that prevented the application from launching for new users
+
+## [0.5.2] - 2021-08-11
+##### Added
+- Added build support for MacOS
+- Added build support for Linux
+##### Fixed
+- Fixed a bug that prevented the authorize button from launching the app
+
+## [0.5.1] - 2021-08-02
+##### Fixed
+- Fixed a bug divination cards was not included in the networth
+- Fixed various bugs related to the new Path of Exile: Royale league
+
+## [0.5.0] - 2021-07-23
 ##### Added
 - Added support for Xbox players
 - Added support for Playstation players

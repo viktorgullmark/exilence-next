@@ -4,7 +4,6 @@ const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
-const log = require('electron-log');
 
 const {
   flashFrame: { createFlashFrame },
@@ -166,24 +165,24 @@ function createWindow() {
   }
 }
 
-/**
- * App Listeners
- */
-if(isDev) {
+if (isDev && process.platform !== 'darwin') {
   app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
 } else {
   app.setAsDefaultProtocolClient('exilence');
 }
 
-if (!gotTheLock && !isDev) {
+/**
+ * App Listeners
+ */
+if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', (_, argv) => {
     // Someone tried to run a second instance, we should focus our window.
     if (windows[mainWindow]) {
-      // Protocol handler for win32
+      // Protocol handler for win32 || linux
       // argv: An array of the second instance’s (command line / deep linked) arguments
-      if (process.platform == 'win32') {
+      if (process.platform !== 'darwin') {
         // Keep only command line / deep linked arguments
         deeplinkingUrl = argv.slice(1);
         const raw_code = /code=([^&]*)/.exec(deeplinkingUrl) || null;
@@ -191,13 +190,12 @@ if (!gotTheLock && !isDev) {
         const error = /\?error=(.+)$/.exec(deeplinkingUrl);
         windows[mainWindow].webContents.send('auth-callback', {code, error});
       }
+
       if (windows[mainWindow].isMinimized()) {
-        windows[mainWindow].show();
         windows[mainWindow].restore();
         windows[mainWindow].focus();
       } else {
         windows[mainWindow].show();
-        windows[mainWindow].focus();
       }
     }
   });
@@ -223,7 +221,6 @@ if (!gotTheLock && !isDev) {
     const error = /\?error=(.+)$/.exec(deeplinkingUrl);
     windows[mainWindow].webContents.send('auth-callback', { code, error });
   });
-
 
   app.on('before-quit', () => {
     isQuitting = true;

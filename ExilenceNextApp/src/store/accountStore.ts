@@ -127,7 +127,7 @@ export class AccountStore {
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
     // todo: implement refresh logic based on expiry
-    this.initSession();
+    fromStream(timer(1 * 1000).pipe(switchMap(() => of(this.initSession()))));
   }
 
   @action
@@ -202,14 +202,16 @@ export class AccountStore {
         concatMap((res: IPoeProfile) => {
           const account = this.addOrUpdateAccount(res.name);
           this.selectAccountByName(account.name!);
+          console.log({account});
           return forkJoin(
-            externalService.getLeagues(),
-            externalService.getCharacters(),
+            externalService.getLeagues('main', 1, res.realm),
+            externalService.getCharacters(res.realm),
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap((requests) => {
               const leagues: ILeague[] = requests[0].data;
               const characters: ICharacter[] = requests[1].data;
+              const unsupportedLeagues = ['Path of Exile: Royale'];
 
               if (leagues.length === 0) {
                 throw new Error('error:no_leagues');
@@ -218,10 +220,18 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
-              this.rootStore.leagueStore.updatePriceLeagues(
-                leagues.filter((l) => l.id.indexOf('SSF') === -1)
+              const accountLeagues = leagues.filter((league) =>
+                characters.find((character) =>
+                  character.league.toLowerCase().includes(league.id.toLowerCase())
+                )
               );
+              const filteredLeagues = accountLeagues.filter(
+                (league) =>
+                  !unsupportedLeagues.includes(league.id) && league.id.indexOf('SSF') === -1
+              );
+
+              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
+              this.rootStore.leagueStore.updatePriceLeagues(filteredLeagues);
               this.getSelectedAccount.updateAccountLeagues(characters);
               this.getSelectedAccount.updateLeaguesForProfiles(
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
@@ -339,7 +349,7 @@ export class AccountStore {
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
       this.rootStore.uiStateStore.setValidated(true);
       this.rootStore.routeStore.redirect('/net-worth');
-      this.initSession();
+      fromStream(timer(1 * 1000).pipe(switchMap(() => of(this.initSession()))));
     }
   }
 

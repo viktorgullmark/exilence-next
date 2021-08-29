@@ -125,6 +125,14 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
 
   const rarity = getRarityIdentifier(filterText);
 
+  let itemNameRegex = new RegExp('', 'i');
+  try {
+    // try/catch required because of filtering being an onChange event, example: typing only [ would lead to a SyntaxError
+    itemNameRegex = new RegExp(filterText, 'i');
+  } catch (error) {
+    console.error(error);
+  }
+
   return mergeItemStacks(
     snapshots
       .flatMap((sts) =>
@@ -144,7 +152,8 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
                 .join(', ')
                 .toLowerCase()
                 .includes(filterText)) ||
-            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity)
+            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity) ||
+            itemNameRegex.test(i.name)
         )
       )
   );

@@ -81,7 +81,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         }
         break;
       case 6: // divination card
-        price = prices.find((p) => p.name === item.name && p.icon.indexOf('Divination') > -1);
+        price = prices.find((p) => p.name === item.name && p.icon.indexOf('Inventory') > -1);
         break;
       case 8: // prophecy
         price = prices.find((p) => p.name === item.name && p.icon.indexOf('Prophecy') > -1);
