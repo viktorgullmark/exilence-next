@@ -121,7 +121,7 @@ function getCharacterItems(
   );
 }
 
-function getProfile(realm?: string): Observable<AxiosResponse<IPoeProfile>> {
+function getProfile(realm: string = 'pc'): Observable<AxiosResponse<IPoeProfile>> {
   const parameters = `?realm=${realm}`;
 
   return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
