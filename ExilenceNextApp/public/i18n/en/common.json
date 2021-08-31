@@ -25,6 +25,7 @@
     "error_boundary": "You encountered an error",
     "net_worth": "Net worth",
     "settings": "Settings",
+    "tft_bulk_sell": "TFT Bulk Sell",
     "save_profile": "Edit profile",
     "create_profile": "Create new profile",
     "enter_acc_info": "Enter account information",
@@ -159,7 +160,18 @@
     "asking_price": "Asking Price",
     "generated_at": "Generated at",
     "generated_by": "via Exilence Next",
-    "powered_by_poe_ninja": "Prices fetched from poe.ninja"
+    "powered_by_poe_ninja": "Prices fetched from poe.ninja",
+    "prerequisites": "Prerequisites",
+    "steps": "Steps",
+    "column_presets": "Column Presets",
+    "generated_message": "Generated Message",
+    "open_tft": "Open TFT Discord with desired bulk-* channel",
+    "tft_demo": "See Video Guide",
+    "generate_image": "Generate Image",
+    "ign": "In Game Name",
+    "twice": "TWICE",
+    "paste": "ctrl+v",
+    "paste_reason": "(first time for image, second time for text message)"
   },
   "value": {
     "none": "None",

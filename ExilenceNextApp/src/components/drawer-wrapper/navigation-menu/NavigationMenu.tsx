@@ -17,6 +17,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import useStyles from './NavigationMenu.styles';
+import TftLogo from '../../../assets/img/tft.png';
 
 type NavigationMenuProps = {
   open: boolean;
@@ -64,6 +65,17 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
             <AttachMoneyIcon />
           </ListItemIcon>
           <ListItemText primary={t('title.net_worth')} />
+        </ListItem>
+        <ListItem
+          button
+          key="tft-bulk-selling"
+          selected={location.pathname === '/tft-bulk-sell'}
+          onClick={() => handleRedirect('/tft-bulk-sell')}
+        >
+          <ListItemIcon>
+            <img alt="tft logo" src={TftLogo} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary={t('title.tft_bulk_sell')} />
         </ListItem>
         <ListItem
           button

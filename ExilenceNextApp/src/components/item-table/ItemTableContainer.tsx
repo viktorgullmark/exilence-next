@@ -3,10 +3,8 @@ import {
   Button,
   Grid,
   IconButton,
-  Input,
   makeStyles,
   Snackbar,
-  TextField,
   Theme,
   Tooltip,
   Typography,
@@ -14,7 +12,6 @@ import {
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import ImageIcon from '@material-ui/icons/Image';
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, default as React, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,8 +40,6 @@ import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
 import { Alert } from '@material-ui/lab';
-import TftLogo from '../../assets/img/tft.png';
-import CloseIcon from '@material-ui/icons/Close';
 
 export const itemTableFilterSpacing = 2;
 
@@ -102,11 +97,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ItemTableContainer = () => {
+type ItemTableContainerProps = {
+  tftView?: boolean;
+  askingPriceInputValue?: string;
+};
+
+const ItemTableContainer = ({
+  tftView = false,
+  askingPriceInputValue = undefined,
+}: ItemTableContainerProps) => {
   const [isExtractingImage, setIsExtractingImage] = useState(false);
   const [isExtractingImageSuccessMsg, setIsExtractingImageSuccessMsg] = useState(false);
-  const [isTftSelected, setIsTftSelected] = useState(false);
-  const [askingPriceInputValue, setAskingPriceInputValue] = useState('');
   const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -128,10 +129,15 @@ const ItemTableContainer = () => {
     return getItems;
   }, [getItems]);
 
-  const tableName = 'item-table';
-  const [initialState, setInitialState] = useLocalStorage(`tableState:${tableName}`, {
-    pageSize: 25,
-  });
+  const tableName = tftView ? 'tft-item-table' : 'item-table';
+  const [initialState, setInitialState] = tftView
+    ? useLocalStorage(`tableState:${tableName}`, {
+        pageSize: 50,
+        hiddenColumns: ['corrupted', 'links'],
+      })
+    : useLocalStorage(`tableState:${tableName}`, {
+        pageSize: 25,
+      });
 
   const [instance] = useState<TableInstance<object>>(
     useTable(
@@ -193,16 +199,12 @@ const ItemTableContainer = () => {
     );
   };
 
-  const handleAskingPriceInputChange = (e) => setAskingPriceInputValue(e.currentTarget.value);
-
   const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
   };
 
-  const handleTftBulkClick = () => setIsTftSelected((isSelected) => !isSelected);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);
-
   const hideableColumns = getColumns.filter((column) => !(column.id === '_selector'));
 
   const handleColumnsClick = useCallback(
@@ -236,13 +238,19 @@ const ItemTableContainer = () => {
       setIsExtractingImage(true);
       toBlob(table)
         .then(function (blob) {
-          // @ts-ignore
-          navigator.clipboard.write([
+          const type = 'text/plain';
+          const textBlob = new Blob(['`WTS Softcore - Scarabs - 10ex - ign: test`'], { type });
+
+          navigator.clipboard
             // @ts-ignore
-            new ClipboardItem({
-              'image/png': blob,
-            }),
-          ]);
+            .write([
+              // @ts-ignore
+              new ClipboardItem({
+                'image/png': blob,
+                'text/plain': textBlob,
+              }),
+            ])
+            .catch((e) => console.log(e));
           setIsExtractingImageSuccessMsg(true);
         })
         .catch((err) => console.log(err))
@@ -252,7 +260,6 @@ const ItemTableContainer = () => {
             tableInput.style.display = 'flex';
             tableActions.style.display = 'flex';
           }
-          window.open('discord://');
         });
     }
   };
@@ -279,7 +286,7 @@ const ItemTableContainer = () => {
       </Snackbar>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Grid item md={isExtractingImage ? 11 : 4}>
+          <Grid item md={isExtractingImage ? 11 : 5}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={7} id="items-table-input">
                 <ItemTableFilter
@@ -321,56 +328,26 @@ const ItemTableContainer = () => {
             item
             className={classes.actionArea}
             id="items-table-actions"
-            md={isExtractingImage ? 1 : 8}
+            md={isExtractingImage ? 1 : 7}
           >
-            {isTftSelected && (
-              <Grid item md={4} className={classes.tftBulk}>
-                <TextField
-                  label={t('label.asking_price')}
-                  className={classes.askingPriceInput}
-                  value={askingPriceInputValue}
-                  onChange={handleAskingPriceInputChange}
-                />
-                <Tooltip title={t('label.export_image') || ''} placement="bottom">
-                  <IconButton
-                    size="small"
-                    className={classes.inlineIcon}
-                    onClick={handleExtractImageClick}
-                  >
-                    <ImageIcon />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            )}
-            <Box mr={1}>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={handleTftBulkClick}
-                className={classes.tftBulk}
-              >
-                {t('label.tft_bulk')}
-                <img alt="tft logo" src={TftLogo} className={classes.tftBulkImg} />
-                {isTftSelected && <CloseIcon fontSize="small" />}
-              </Button>
-            </Box>
             <ColumnHidePage
               instance={instance}
               onClose={handleClose}
               show={columnsOpen}
               anchorEl={anchorEl}
             />
-            <Box mr={1}>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={handleRedirectToCustomPrices}
-              >
-                {t('label.customize_prices')}
-              </Button>
-            </Box>
+            {!tftView && (
+              <Box mr={1}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRedirectToCustomPrices}
+                >
+                  {t('label.customize_prices')}
+                </Button>
+              </Box>
+            )}
             {hideableColumns.length > 1 && (
               <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
@@ -393,15 +370,17 @@ const ItemTableContainer = () => {
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
-              <IconButton
-                size="small"
-                className={classes.inlineIcon}
-                onClick={handleItemTableMenuOpen}
-              >
-                <GetAppIcon />
-              </IconButton>
-            </Tooltip>
+            {!tftView && (
+              <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
+                <IconButton
+                  size="small"
+                  className={classes.inlineIcon}
+                  onClick={handleItemTableMenuOpen}
+                >
+                  <GetAppIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </Grid>
         </Grid>
       </Box>

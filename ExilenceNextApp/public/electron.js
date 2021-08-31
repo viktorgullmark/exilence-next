@@ -47,7 +47,7 @@ createNetWorthOverlay();
  * Main Window
  */
 function createWindow() {
-  const minMainWindowWidth = 800;
+  const minMainWindowWidth = 1150;
   const minMainWindowHeight = 800;
   const { width: defaultWidth, height: defaultHeight } = screen.getPrimaryDisplay().workAreaSize;
 
