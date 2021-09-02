@@ -4,7 +4,6 @@ import {
   Grid,
   IconButton,
   makeStyles,
-  Snackbar,
   Theme,
   Tooltip,
   Typography,
@@ -12,10 +11,8 @@ import {
 import FilterListIcon from '@material-ui/icons/FilterList';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
-import { observer } from 'mobx-react-lite';
-import { ChangeEvent, default as React, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toBlob } from 'html-to-image';
 import moment from 'moment';
 import {
   TableInstance,
@@ -39,7 +36,6 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
-import { Alert } from '@material-ui/lab';
 
 export const itemTableFilterSpacing = 2;
 
@@ -106,8 +102,6 @@ const ItemTableContainer = ({
   tftView = false,
   askingPriceInputValue = undefined,
 }: ItemTableContainerProps) => {
-  const [isExtractingImage, setIsExtractingImage] = useState(false);
-  const [isExtractingImageSuccessMsg, setIsExtractingImageSuccessMsg] = useState(false);
   const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -133,7 +127,7 @@ const ItemTableContainer = ({
   const [initialState, setInitialState] = tftView
     ? useLocalStorage(`tableState:${tableName}`, {
         pageSize: 50,
-        hiddenColumns: ['corrupted', 'links'],
+        hiddenColumns: uiStateStore!.tftActivePreset?.hiddenColumns || [],
       })
     : useLocalStorage(`tableState:${tableName}`, {
         pageSize: 25,
@@ -161,18 +155,6 @@ const ItemTableContainer = ({
   );
 
   let timer: NodeJS.Timeout | undefined = undefined;
-
-  useEffect(() => {
-    if (isExtractingImageSuccessMsg) {
-      const imageExtractingSuccessMsgTimer = setTimeout(
-        () => setIsExtractingImageSuccessMsg(false),
-        5000
-      );
-      return () => clearTimeout(imageExtractingSuccessMsgTimer);
-    }
-    // @ts-ignore
-    return () => clearTimeout(timer);
-  }, [isExtractingImageSuccessMsg]);
 
   const handleFilter = (
     event?: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -225,68 +207,11 @@ const ItemTableContainer = ({
     routeStore!.redirect('/settings');
   };
 
-  const handleExtractImageClick = () => {
-    const table = document.getElementById('items-table');
-    const tableInput = document.getElementById('items-table-input');
-    const tableActions = document.getElementById('items-table-actions');
-
-    if (table) {
-      if (tableInput && tableActions) {
-        tableInput.style.display = 'none';
-        tableActions.style.display = 'none';
-      }
-      setIsExtractingImage(true);
-      toBlob(table)
-        .then(function (blob) {
-          const type = 'text/plain';
-          const textBlob = new Blob(['`WTS Softcore - Scarabs - 10ex - ign: test`'], { type });
-
-          navigator.clipboard
-            // @ts-ignore
-            .write([
-              // @ts-ignore
-              new ClipboardItem({
-                'image/png': blob,
-                'text/plain': textBlob,
-              }),
-            ])
-            .catch((e) => console.log(e));
-          setIsExtractingImageSuccessMsg(true);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          setIsExtractingImage(false);
-          if (tableInput && tableActions) {
-            tableInput.style.display = 'flex';
-            tableActions.style.display = 'flex';
-          }
-        });
-    }
-  };
-
   return (
     <>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        open={isExtractingImage}
-      >
-        <Alert severity="info">Generating Image...</Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        open={isExtractingImageSuccessMsg}
-      >
-        <Alert severity="success">Image generated and saved to clipboard!</Alert>
-      </Snackbar>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Grid item md={isExtractingImage ? 11 : 5}>
+          <Grid item md={uiStateStore!.tftGeneratingImage ? 11 : 5}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={7} id="items-table-input">
                 <ItemTableFilter
@@ -298,7 +223,7 @@ const ItemTableContainer = ({
               <Grid item>
                 <ItemTableFilterSubtotal array={getItems} />
               </Grid>
-              {isExtractingImage && (
+              {uiStateStore!.tftGeneratingImage && (
                 <>
                   <Grid item id="items-table-asking-price" className={classes.askingPrice}>
                     <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
@@ -328,7 +253,7 @@ const ItemTableContainer = ({
             item
             className={classes.actionArea}
             id="items-table-actions"
-            md={isExtractingImage ? 1 : 7}
+            md={uiStateStore!.tftGeneratingImage ? 1 : 7}
           >
             <ColumnHidePage
               instance={instance}
@@ -390,4 +315,4 @@ const ItemTableContainer = ({
   );
 };
 
-export default observer(ItemTableContainer);
+export default ItemTableContainer;

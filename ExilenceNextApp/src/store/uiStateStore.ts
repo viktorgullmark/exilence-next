@@ -15,6 +15,7 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
+import { ITftColumnPreset } from '../interfaces/tft-column-preset.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -85,6 +86,10 @@ export class UiStateStore {
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
+  @persist('object') @observable tftActivePreset: ITftColumnPreset | undefined = undefined;
+  @observable tftGeneratedMessage: string = '';
+  @persist @observable tftGeneratingImage: boolean = false;
+
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
@@ -376,5 +381,20 @@ export class UiStateStore {
   @action
   setGroupError(error: AxiosError | Error | undefined) {
     this.groupError = error;
+  }
+
+  @action
+  setTftActivePreset(preset: ITftColumnPreset) {
+    this.tftActivePreset = preset;
+  }
+
+  @action
+  setTftGeneratedMessage(msg: string) {
+    this.tftGeneratedMessage = msg;
+  }
+
+  @action
+  setTftGeneratingImage(status: boolean) {
+    this.tftGeneratingImage = status;
   }
 }
