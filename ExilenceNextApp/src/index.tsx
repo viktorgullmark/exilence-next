@@ -32,7 +32,7 @@ import useStyles from './index.styles';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
-import TftBulkSell from './routes/tft-bulk-sell/TftBulkSell';
+import BulkSell from './routes/bulk-sell/BulkSell';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
 
@@ -97,7 +97,7 @@ const App = ({ error }: Props) => {
                   <ToolbarContainer />
                   <Route path="/net-worth" component={NetWorth} />
                   <Route path="/settings" component={Settings} />
-                  <Route path="/tft-bulk-sell" component={TftBulkSell} />
+                  <Route path="/bulk-sell" component={BulkSell} />
                   <Route
                     exact
                     path="/"

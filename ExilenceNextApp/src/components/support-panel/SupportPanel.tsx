@@ -20,7 +20,6 @@ type SupportPanelProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 } & Pick<PopperProps, 'anchorEl'>;
-import TftLogo from '../../assets/img/tft.png';
 
 const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPanelProps) => {
   const { uiStateStore } = useStores();
@@ -100,15 +99,6 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
                   className={classes.optionLink}
                 >
                   <Typography variant="body2">{t('label.bug_report')}</Typography>
-                </a>
-                <div className={classes.separator} />
-                <a
-                  href="https://discord.gg/tftrove"
-                  onClick={(e) => handleLinkClick(e)}
-                  className={classes.optionLink}
-                >
-                  <Typography variant="body2">{t('label.tft_discord')}</Typography>
-                  <img src={TftLogo} width={20} height={20} />
                 </a>
                 <div className={classes.separator} />
                 <a

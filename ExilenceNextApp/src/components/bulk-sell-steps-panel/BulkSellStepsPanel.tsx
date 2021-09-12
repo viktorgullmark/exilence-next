@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { toBlob } from 'html-to-image';
 import { observer } from 'mobx-react-lite';
 
-const TftStepsPanel = () => {
+const BulkSellStepsPanel = () => {
   const [isExtractingImageSuccessMsg, setIsExtractingImageSuccessMsg] = useState(false);
   const { uiStateStore } = useStores();
   const theme = useTheme();
@@ -31,11 +31,11 @@ const TftStepsPanel = () => {
   }, [isExtractingImageSuccessMsg]);
 
   useEffect(() => {
-    return uiStateStore!.setTftGeneratingImage(false);
+    return uiStateStore!.setBulkSellGeneratingImage(false);
   }, []);
 
   const handleGenerateImage = () => {
-    uiStateStore!.setTftGeneratingImage(true);
+    uiStateStore!.setBulkSellGeneratingImage(true);
     generateImage();
   };
 
@@ -52,7 +52,7 @@ const TftStepsPanel = () => {
       toBlob(table)
         .then(function (blob) {
           const type = 'text/plain';
-          const textBlob = new Blob([uiStateStore!.tftGeneratedMessage], { type });
+          const textBlob = new Blob([uiStateStore!.bulkSellGeneratedMessage], { type });
 
           navigator.clipboard
             // @ts-ignore
@@ -68,7 +68,7 @@ const TftStepsPanel = () => {
         })
         .catch((err) => console.log(err))
         .finally(() => {
-          uiStateStore!.setTftGeneratingImage(false);
+          uiStateStore!.setBulkSellGeneratingImage(false);
           if (tableInput && tableActions) {
             tableInput.style.display = 'flex';
             tableActions.style.display = 'flex';
@@ -101,22 +101,23 @@ const TftStepsPanel = () => {
             2. <b>{t('label.generate_image')}</b>
           </Grid>
           <Grid item xs={12}>
-            3. <b>{t('label.open_tft')}</b>
+            3. <b>{t('label.share_bulk_sell')}</b>
           </Grid>
           <Grid item xs={12}>
-            4. {t('label.paste')} <b>{t('label.twice')}</b> {t('label.paste_reason')}
+            <i>{t('label.note_discord')}:</i> <br />
+            {t('label.paste')} <b>{t('label.twice')}</b> {t('label.paste_reason')}
           </Grid>
           <Grid item xs={6}>
             <Button
               variant="contained"
               color="primary"
               onClick={handleGenerateImage}
-              disabled={uiStateStore!.tftGeneratingImage}
+              disabled={uiStateStore!.bulkSellGeneratingImage}
             >
               {isExtractingImageSuccessMsg
                 ? t('label.generated_image_success')
                 : t(
-                    uiStateStore!.tftGeneratingImage
+                    uiStateStore!.bulkSellGeneratingImage
                       ? 'label.generating_image'
                       : 'label.generate_image'
                   )}
@@ -131,7 +132,7 @@ const TftStepsPanel = () => {
               alignItems: 'flex-start',
             }}
           >
-            <Button variant="outlined">{t('label.tft_demo')}</Button>
+            <Button variant="outlined">{t('label.bulk_sell_demo')}</Button>
           </Grid>
         </Grid>
       </ExpansionPanelDetails>
@@ -139,4 +140,4 @@ const TftStepsPanel = () => {
   );
 };
 
-export default observer(TftStepsPanel);
+export default observer(BulkSellStepsPanel);

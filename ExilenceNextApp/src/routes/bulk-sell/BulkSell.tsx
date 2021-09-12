@@ -15,15 +15,15 @@ import ItemTableFilterSection from '../../components/item-table/item-table-filte
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
-import TftColumnPresetsPanel from '../../components/tft-column-presets-panel/TftColumnPresetsPanel';
-import TftPrerequisitesPanel from '../../components/tft-prerequisites-panel/TftPrerequisitesPanel';
-import TftStepsPanel from '../../components/tft-steps-panel/TftStepsPanel';
+// import BulkSellColumnPresetsPanel from '../../components/bulk-sell-column-presets-panel/BulkSellColumnPresetsPanel';
+import BulkSellPrerequisitesPanel from '../../components/bulk-sell-prerequisites-panel/BulkSellPrerequisitesPanel';
+import BulkSellStepsPanel from '../../components/bulk-sell-steps-panel/BulkSellStepsPanel';
 
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 240;
 
-const TftBulkSell = () => {
+const BulkSell = () => {
   const { accountStore, uiStateStore } = useStores();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -33,10 +33,10 @@ const TftBulkSell = () => {
 
   useEffect(() => {
     if (!uiStateStore!.validated && !uiStateStore!.initiated && !uiStateStore!.isValidating) {
-      accountStore!.validateSession('/tft-bulk-sell');
+      accountStore!.validateSession('/bulk-sell');
     }
 
-    visitor!.pageview('/tft-bulk-sell', appName).send();
+    visitor!.pageview('/bulk-sell', appName).send();
   }, []);
 
   return (
@@ -45,16 +45,16 @@ const TftBulkSell = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={7}>
-              {loading ? <Skeleton variant="rect" height={40} /> : <TftPrerequisitesPanel />}
+              {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellPrerequisitesPanel />}
             </Grid>
             <Grid item xs={5}>
-              {loading ? <Skeleton variant="rect" height={40} /> : <TftStepsPanel />}
+              {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellStepsPanel />}
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          {loading ? <Skeleton variant="rect" height={40} /> : <TftColumnPresetsPanel />}
-        </Grid>
+        {/*<Grid item xs={12}>*/}
+        {/*  {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellColumnPresetsPanel />}*/}
+        {/*</Grid>*/}
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {loading ? (
             <Skeleton variant="rect" height={1000} />
@@ -99,7 +99,7 @@ const TftBulkSell = () => {
                 }}
               >
                 {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
-                <ItemTableContainer tftView askingPriceInputValue="10c" />
+                <ItemTableContainer bulkSellView />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}
@@ -109,4 +109,4 @@ const TftBulkSell = () => {
   );
 };
 
-export default observer(TftBulkSell);
+export default observer(BulkSell);

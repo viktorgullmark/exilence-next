@@ -15,7 +15,7 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
-import { ITftColumnPreset } from '../interfaces/tft-column-preset.interface';
+import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -86,9 +86,13 @@ export class UiStateStore {
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
-  @persist('object') @observable tftActivePreset: ITftColumnPreset | undefined = undefined;
-  @observable tftGeneratedMessage: string = '';
-  @persist @observable tftGeneratingImage: boolean = false;
+  @persist('object') @observable bulkSellActivePreset:
+    | IBulkSellColumnPreset
+    | undefined = undefined;
+  @persist @observable bulkSellAskingPrice: number = 0;
+  @persist @observable bulkSellAskingPricePercentage: number = 100;
+  @persist @observable bulkSellGeneratedMessage: string = '';
+  @persist @observable bulkSellGeneratingImage: boolean = false;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -384,17 +388,27 @@ export class UiStateStore {
   }
 
   @action
-  setTftActivePreset(preset: ITftColumnPreset) {
-    this.tftActivePreset = preset;
+  setBulkSellActivePreset(preset: IBulkSellColumnPreset) {
+    this.bulkSellActivePreset = preset;
   }
 
   @action
-  setTftGeneratedMessage(msg: string) {
-    this.tftGeneratedMessage = msg;
+  setBulkSellAskingPrice(price: number) {
+    this.bulkSellAskingPrice = price;
   }
 
   @action
-  setTftGeneratingImage(status: boolean) {
-    this.tftGeneratingImage = status;
+  setBulkSellAskingPricePercentage(percentage: number) {
+    this.bulkSellAskingPricePercentage = percentage;
+  }
+
+  @action
+  setBulkSellGeneratedMessage(msg: string) {
+    this.bulkSellGeneratedMessage = msg;
+  }
+
+  @action
+  setBulkSellGeneratingImage(status: boolean) {
+    this.bulkSellGeneratingImage = status;
   }
 }

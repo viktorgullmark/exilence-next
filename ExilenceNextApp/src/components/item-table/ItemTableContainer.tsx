@@ -36,6 +36,7 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
+import { observer } from 'mobx-react-lite';
 
 export const itemTableFilterSpacing = 2;
 
@@ -63,14 +64,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: statusColors.warning,
     marginLeft: theme.spacing(2),
   },
-  tftBulk: {
+  bulkSell: {
     display: 'flex',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     marginRight: 5,
     marginLeft: 5,
   },
-  tftBulkImg: {
+  bulkSellImg: {
     width: 20,
     height: 20,
     marginLeft: 5,
@@ -94,14 +95,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type ItemTableContainerProps = {
-  tftView?: boolean;
-  askingPriceInputValue?: string;
+  bulkSellView?: boolean;
 };
 
-const ItemTableContainer = ({
-  tftView = false,
-  askingPriceInputValue = undefined,
-}: ItemTableContainerProps) => {
+const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) => {
   const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -123,11 +120,11 @@ const ItemTableContainer = ({
     return getItems;
   }, [getItems]);
 
-  const tableName = tftView ? 'tft-item-table' : 'item-table';
-  const [initialState, setInitialState] = tftView
+  const tableName = bulkSellView ? 'bulk-sell-item-table' : 'item-table';
+  const [initialState, setInitialState] = bulkSellView
     ? useLocalStorage(`tableState:${tableName}`, {
         pageSize: 50,
-        hiddenColumns: uiStateStore!.tftActivePreset?.hiddenColumns || [],
+        hiddenColumns: uiStateStore!.bulkSellActivePreset?.hiddenColumns || [],
       })
     : useLocalStorage(`tableState:${tableName}`, {
         pageSize: 25,
@@ -206,12 +203,12 @@ const ItemTableContainer = ({
     uiStateStore!.setSettingsTabIndex(2);
     routeStore!.redirect('/settings');
   };
-
+  console.log(uiStateStore!.bulkSellGeneratingImage);
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Grid item md={uiStateStore!.tftGeneratingImage ? 11 : 5}>
+          <Grid item md={uiStateStore!.bulkSellGeneratingImage ? 11 : 5}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={7} id="items-table-input">
                 <ItemTableFilter
@@ -223,7 +220,7 @@ const ItemTableContainer = ({
               <Grid item>
                 <ItemTableFilterSubtotal array={getItems} />
               </Grid>
-              {uiStateStore!.tftGeneratingImage && (
+              {uiStateStore!.bulkSellGeneratingImage && (
                 <>
                   <Grid item id="items-table-asking-price" className={classes.askingPrice}>
                     <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
@@ -233,7 +230,8 @@ const ItemTableContainer = ({
                       variant="contained"
                       color="primary"
                     >
-                      {askingPriceInputValue}
+                      {uiStateStore!.bulkSellAskingPrice}c (
+                      {uiStateStore!.bulkSellAskingPricePercentage}% of original price)
                     </Button>
                   </Grid>
                   <Grid item id="items-table-generated" className={classes.generatedAt}>
@@ -253,7 +251,7 @@ const ItemTableContainer = ({
             item
             className={classes.actionArea}
             id="items-table-actions"
-            md={uiStateStore!.tftGeneratingImage ? 1 : 7}
+            md={uiStateStore!.bulkSellGeneratingImage ? 1 : 7}
           >
             <ColumnHidePage
               instance={instance}
@@ -261,7 +259,7 @@ const ItemTableContainer = ({
               show={columnsOpen}
               anchorEl={anchorEl}
             />
-            {!tftView && (
+            {!bulkSellView && (
               <Box mr={1}>
                 <Button
                   size="small"
@@ -295,7 +293,7 @@ const ItemTableContainer = ({
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-            {!tftView && (
+            {!bulkSellView && (
               <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
                 <IconButton
                   size="small"
@@ -315,4 +313,4 @@ const ItemTableContainer = ({
   );
 };
 
-export default ItemTableContainer;
+export default observer(ItemTableContainer);

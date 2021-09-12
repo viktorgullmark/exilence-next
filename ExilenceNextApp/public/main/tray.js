@@ -42,14 +42,6 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
     },
     separator,
     {
-      label: 'TFT Discord',
-      type: 'normal',
-      click: async () => {
-        await shell.openExternal('https://discord.gg/tftrove');
-      },
-    },
-    separator,
-    {
       label: 'Quit',
       type: 'normal',
       click: () => {

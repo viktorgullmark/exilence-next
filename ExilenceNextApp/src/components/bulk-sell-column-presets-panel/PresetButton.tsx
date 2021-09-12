@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
-import { ITftColumnPreset } from '../../interfaces/tft-column-preset.interface';
+import { IBulkSellColumnPreset } from '../../interfaces/bulk-sell-column-preset.interface';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../index';
 
 type PresetButtonProps = {
   selected: boolean;
-  preset: ITftColumnPreset;
-  onPresetSelect: (preset: ITftColumnPreset) => void;
+  preset: IBulkSellColumnPreset;
+  onPresetSelect: (preset: IBulkSellColumnPreset) => void;
 };
 
 const PresetButton = ({ selected, preset, onPresetSelect }: PresetButtonProps) => {
@@ -19,7 +19,7 @@ const PresetButton = ({ selected, preset, onPresetSelect }: PresetButtonProps) =
       variant={selected ? 'contained' : 'outlined'}
       size="small"
       onClick={() => onPresetSelect(preset)}
-      disabled={uiStateStore!.tftGeneratingImage}
+      disabled={uiStateStore!.bulkSellGeneratingImage}
     >
       {t(preset.name)}
     </Button>

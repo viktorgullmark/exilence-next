@@ -11,13 +11,13 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
+import BurstModeIcon from '@material-ui/icons/BurstMode';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import useStyles from './NavigationMenu.styles';
-import TftLogo from '../../../assets/img/tft.png';
 
 type NavigationMenuProps = {
   open: boolean;
@@ -68,14 +68,14 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         </ListItem>
         <ListItem
           button
-          key="tft-bulk-selling"
-          selected={location.pathname === '/tft-bulk-sell'}
-          onClick={() => handleRedirect('/tft-bulk-sell')}
+          key="bulk-selling"
+          selected={location.pathname === '/bulk-sell'}
+          onClick={() => handleRedirect('/bulk-sell')}
         >
           <ListItemIcon>
-            <img alt="tft logo" src={TftLogo} width={24} height={24} />
+            <BurstModeIcon />
           </ListItemIcon>
-          <ListItemText primary={t('title.tft_bulk_sell')} />
+          <ListItemText primary={t('title.bulk_sell')} />
         </ListItem>
         <ListItem
           button

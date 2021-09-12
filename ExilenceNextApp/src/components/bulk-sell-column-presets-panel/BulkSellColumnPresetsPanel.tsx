@@ -10,15 +10,16 @@ import { useTranslation } from 'react-i18next';
 import SUPPORTED_PRESETS from './supportedPresets';
 import PresetButton from './PresetButton';
 import { useStores } from '../../index';
-import { ITftColumnPreset } from '../../interfaces/tft-column-preset.interface';
+import { IBulkSellColumnPreset } from '../../interfaces/bulk-sell-column-preset.interface';
 import { observer } from 'mobx-react-lite';
 
-const TftColumnPresetsPanel = () => {
+const BulkSellColumnPresetsPanel = () => {
   const { uiStateStore } = useStores();
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const onPresetSelect = (preset: ITftColumnPreset) => uiStateStore!.setTftActivePreset(preset);
+  const onPresetSelect = (preset: IBulkSellColumnPreset) =>
+    uiStateStore!.setBulkSellActivePreset(preset);
 
   return (
     <ExpansionPanel expanded>
@@ -40,7 +41,7 @@ const TftColumnPresetsPanel = () => {
           {SUPPORTED_PRESETS.map((preset) => (
             <PresetButton
               key={preset.name}
-              selected={preset.name === uiStateStore!.tftActivePreset?.name}
+              selected={preset.name === uiStateStore!.bulkSellActivePreset?.name}
               preset={preset}
               onPresetSelect={onPresetSelect}
             />
@@ -51,4 +52,4 @@ const TftColumnPresetsPanel = () => {
   );
 };
 
-export default observer(TftColumnPresetsPanel);
+export default observer(BulkSellColumnPresetsPanel);
