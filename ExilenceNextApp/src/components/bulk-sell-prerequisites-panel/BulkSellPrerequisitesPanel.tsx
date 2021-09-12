@@ -28,10 +28,6 @@ const BulkSellPrerequisitesPanel = () => {
   const currentItemsTableValue = getItems
     .map((i) => i.total)
     .reduce((a, b) => a + b, 0)
-    .toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-    });
 
   useEffect(() => {
     uiStateStore!.setBulkSellAskingPrice(Math.round(+currentItemsTableValue));
@@ -96,7 +92,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={4}>
             <TextField
               style={{ width: 255 }}
-              value={`${currentItemsTableValue}c` ?? ''}
+              value={`${currentItemsTableValue.toFixed(2)}c` ?? ''}
               disabled
               label={t('label.current_price')}
             />

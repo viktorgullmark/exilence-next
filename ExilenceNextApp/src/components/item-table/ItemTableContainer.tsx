@@ -203,7 +203,7 @@ const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) =
     uiStateStore!.setSettingsTabIndex(2);
     routeStore!.redirect('/settings');
   };
-  console.log(uiStateStore!.bulkSellGeneratingImage);
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
