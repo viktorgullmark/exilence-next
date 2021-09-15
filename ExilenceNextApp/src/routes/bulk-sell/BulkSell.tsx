@@ -35,8 +35,8 @@ const BulkSell = () => {
     if (!uiStateStore!.validated && !uiStateStore!.initiated && !uiStateStore!.isValidating) {
       accountStore!.validateSession('/bulk-sell');
     }
-
     visitor!.pageview('/bulk-sell', appName).send();
+    uiStateStore!.setBulkSellView(true);
   }, []);
 
   return (
@@ -99,7 +99,10 @@ const BulkSell = () => {
                 }}
               >
                 {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
-                <ItemTableContainer bulkSellView />
+                <ItemTableContainer
+                  bulkSellView
+                  searchFilterText={uiStateStore!.bulkSellItemTableFilterText}
+                />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}

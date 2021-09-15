@@ -87,6 +87,7 @@ const NetWorth = () => {
     }
 
     visitor!.pageview('/net-worth', appName).send();
+    uiStateStore!.setBulkSellView(false);
   }, []);
 
   return (
@@ -281,7 +282,7 @@ const NetWorth = () => {
                 }}
               >
                 {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
-                <ItemTableContainer />
+                <ItemTableContainer searchFilterText={uiStateStore!.itemTableFilterText} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}

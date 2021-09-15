@@ -36,6 +36,7 @@ import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
+import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import { observer } from 'mobx-react-lite';
 
 export const itemTableFilterSpacing = 2;
@@ -96,9 +97,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type ItemTableContainerProps = {
   bulkSellView?: boolean;
+  searchFilterText: string;
 };
 
-const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) => {
+const ItemTableContainer = ({
+  bulkSellView = false,
+  searchFilterText = '',
+}: ItemTableContainerProps) => {
   const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -106,27 +111,29 @@ const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) =
   const { t } = useTranslation();
   const getItems = useMemo(() => {
     if (activeProfile) {
-      return activeGroup ? activeGroup.items : activeProfile.items;
+      return activeGroup && !bulkSellView ? activeGroup.items : activeProfile.items;
     } else {
       return [];
     }
   }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
   const getColumns = useMemo(() => {
-    return activeGroup ? itemTableGroupColumns : itemTableColumns;
+    if (activeGroup && !bulkSellView) return itemTableGroupColumns;
+    if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
+    return itemTableColumns;
   }, [activeGroup]);
 
   const data = useMemo(() => {
     return getItems;
-  }, [getItems]);
+  }, [getItems, bulkSellView]);
 
-  const tableName = bulkSellView ? 'bulk-sell-item-table' : 'item-table';
   const [initialState, setInitialState] = bulkSellView
-    ? useLocalStorage(`tableState:${tableName}`, {
+    ? useLocalStorage(`tableState:bulk-sell-item-table`, {
         pageSize: 50,
         hiddenColumns: uiStateStore!.bulkSellActivePreset?.hiddenColumns || [],
+        sortBy: [{ id: 'total', desc: true }],
       })
-    : useLocalStorage(`tableState:${tableName}`, {
+    : useLocalStorage(`tableState:item-table`, {
         pageSize: 25,
       });
 
@@ -172,7 +179,9 @@ const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) =
           text = searchText;
         }
 
-        uiStateStore!.setItemTableFilterText(text);
+        bulkSellView
+          ? uiStateStore!.setBulkSellItemTableFilterText(text)
+          : uiStateStore!.setItemTableFilterText(text);
       },
       event ? 500 : 0
     );
@@ -215,6 +224,7 @@ const ItemTableContainer = ({ bulkSellView = false }: ItemTableContainerProps) =
                   array={getItems}
                   handleFilter={handleFilter}
                   clearFilter={() => handleFilter(undefined, '')}
+                  searchText={searchFilterText}
                 />
               </Grid>
               <Grid item>

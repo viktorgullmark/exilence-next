@@ -51,6 +51,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
+  @observable bulkSellItemTableFilterText: string = '';
   @observable priceTableFilterText: string = '';
   @observable isInitiating: boolean = false;
   @observable groupDialogOpen: boolean = false;
@@ -86,6 +87,7 @@ export class UiStateStore {
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
+  @observable bulkSellView: boolean = false;
   @persist('object') @observable bulkSellActivePreset:
     | IBulkSellColumnPreset
     | undefined = undefined;
@@ -363,6 +365,11 @@ export class UiStateStore {
   }
 
   @action
+  setBulkSellItemTableFilterText(text: string) {
+    this.bulkSellItemTableFilterText = text;
+  }
+
+  @action
   setPriceTableFilterText(text: string) {
     this.priceTableFilterText = text;
   }
@@ -385,6 +392,11 @@ export class UiStateStore {
   @action
   setGroupError(error: AxiosError | Error | undefined) {
     this.groupError = error;
+  }
+
+  @action
+  setBulkSellView(active: boolean) {
+    this.bulkSellView = active;
   }
 
   @action
