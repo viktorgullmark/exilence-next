@@ -14,7 +14,7 @@ import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import { openLink } from '../../utils/window.utils';
-import { useStyles } from './NetWorth.styles';
+import { useStyles } from './BulkSell.styles';
 // import BulkSellColumnPresetsPanel from '../../components/bulk-sell-column-presets-panel/BulkSellColumnPresetsPanel';
 import BulkSellPrerequisitesPanel from '../../components/bulk-sell-prerequisites-panel/BulkSellPrerequisitesPanel';
 import BulkSellStepsPanel from '../../components/bulk-sell-steps-panel/BulkSellStepsPanel';

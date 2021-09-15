@@ -10,8 +10,10 @@ import { useStores } from '../../index';
 import { useTranslation } from 'react-i18next';
 import { toBlob } from 'html-to-image';
 import { observer } from 'mobx-react-lite';
+import BulkSellGuideDialog from '../bulk-sell-guide-dialog/BulkSellGuideDialog';
 
 const BulkSellStepsPanel = () => {
+  const [isBulkSellGuideDialogVisible, setIsBulkSellGuideDialogVisible] = useState(false);
   const [isExtractingImageSuccessMsg, setIsExtractingImageSuccessMsg] = useState(false);
   const { uiStateStore } = useStores();
   const theme = useTheme();
@@ -77,6 +79,9 @@ const BulkSellStepsPanel = () => {
     }
   };
 
+  const handleBulkSellGuideDialogClick = () => setIsBulkSellGuideDialogVisible(true);
+  const handleBulkSellGuideDialogClose = () => setIsBulkSellGuideDialogVisible(false);
+
   return (
     <ExpansionPanel expanded>
       <ExpansionPanelSummary>
@@ -132,10 +137,16 @@ const BulkSellStepsPanel = () => {
               alignItems: 'flex-start',
             }}
           >
-            <Button variant="outlined">{t('label.bulk_sell_demo')}</Button>
+            <Button variant="outlined" onClick={handleBulkSellGuideDialogClick}>
+              {t('label.bulk_sell_demo')}
+            </Button>
           </Grid>
         </Grid>
       </ExpansionPanelDetails>
+      <BulkSellGuideDialog
+        isOpen={isBulkSellGuideDialogVisible}
+        onClose={handleBulkSellGuideDialogClose}
+      />
     </ExpansionPanel>
   );
 };
