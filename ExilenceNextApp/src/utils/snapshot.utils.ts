@@ -120,7 +120,6 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
-  console.log(rootStore.uiStateStore.bulkSellView);
   const filterText = rootStore.uiStateStore.bulkSellView
     ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
     : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
