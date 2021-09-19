@@ -147,7 +147,7 @@
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "artifactName":"Exilence-Next-${version}.${ext}",
+      "artifactName": "Exilence-Next-${version}.${ext}",
       "icon": "build/icon512x512.png",
       "target": "AppImage",
       "category": "Utility"
