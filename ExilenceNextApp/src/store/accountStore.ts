@@ -42,6 +42,20 @@ export class AccountStore {
     return account ? account : new Account();
   }
 
+  @computed
+  get authUrl(): string {
+    const options = {
+      clientId: 'exilence',
+      scopes: 'account:stashes account:profile account:characters', // Scopes limit access for OAuth tokens.
+      redirectUrl: AppConfig.redirectUrl,
+      state: this.authState,
+      responseType: 'code',
+      token: '',
+    };
+
+    return `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
+  }
+
   @action
   cancelRetries() {
     this.cancelledRetry.next(true);
@@ -95,17 +109,7 @@ export class AccountStore {
 
   @action
   loadOAuthPage() {
-    const options = {
-      clientId: 'exilence',
-      scopes: 'account:stashes account:profile account:characters', // Scopes limit access for OAuth tokens.
-      redirectUrl: AppConfig.redirectUrl,
-      state: this.authState,
-      responseType: 'code',
-      token: '',
-    };
-
-    const authUrl = `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
-    openCustomLink(authUrl);
+    openCustomLink(this.authUrl);
   }
 
   @action
