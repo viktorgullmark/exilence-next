@@ -247,7 +247,7 @@ const ItemTableContainer = ({
                   <Grid item id="items-table-generated" className={classes.generatedAt}>
                     <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
                     <b>
-                      <u>{moment().format()}</u>
+                      <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
                     </b>
                     &nbsp;
                     <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
