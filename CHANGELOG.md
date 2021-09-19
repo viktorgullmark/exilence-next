@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.0] - NOT RELEASED
 #### Added
+- Added pricing support for item type `Blighted map`
+- Added pricing support for item type `Artifact`
 - Added a manual link with copy button, in case the browser fails to open when logging in
 - Added prerequisite info to `README.md` regarding linux protocol handling
 #### Fixed
