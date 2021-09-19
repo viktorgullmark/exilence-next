@@ -25,9 +25,7 @@ const BulkSellPrerequisitesPanel = () => {
     }
   }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
 
-  const currentItemsTableValue = getItems
-    .map((i) => i.total)
-    .reduce((a, b) => a + b, 0)
+  const currentItemsTableValue = getItems.map((i) => i.total).reduce((a, b) => a + b, 0);
 
   useEffect(() => {
     uiStateStore!.setBulkSellAskingPrice(Math.round(+currentItemsTableValue));
@@ -125,7 +123,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={1} />
           <Grid item xs={4}>
             <TextField
-              style={{ width: 250 }}
+              style={{ width: '100%' }}
               value={activeLeague?.id ?? ''}
               disabled
               label={t('label.active_league')}
@@ -133,7 +131,7 @@ const BulkSellPrerequisitesPanel = () => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              style={{ width: 250 }}
+              style={{ width: '100%' }}
               value={activePriceLeague?.id ?? ''}
               disabled
               label={t('label.price_league')}
@@ -144,7 +142,7 @@ const BulkSellPrerequisitesPanel = () => {
               disabled
               label={t('label.ign')}
               value={activeCharacter?.name ?? ''}
-              style={{ width: 250 }}
+              style={{ width: '100%' }}
             />
           </Grid>
           <Grid item xs={12}>
