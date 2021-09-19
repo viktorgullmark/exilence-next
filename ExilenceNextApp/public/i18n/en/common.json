@@ -162,7 +162,7 @@
     "current_price": "Current Price (based on table data)",
     "asking_price_percentage": "Current Price %",
     "generated_at": "Generated at",
-    "generated_by": "via Exilence Next",
+    "generated_by": "(UTC) via Exilence Next",
     "powered_by_poe_ninja": "Prices fetched from poe.ninja",
     "prerequisites": "Prerequisites",
     "steps": "Steps",
