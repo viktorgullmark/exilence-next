@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6.0] - NOT RELEASED
+## [0.6.0] - 2021-09-19
 #### Added
 - Added pricing support for item type `Blighted map` (Thanks to AndyHoang)
 - Added pricing support for item type `Artifact` (Thanks to AndyHoang)
