@@ -3,8 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.0] - NOT RELEASED
 #### Added
-- Added pricing support for item type `Blighted map`
-- Added pricing support for item type `Artifact`
+- Added pricing support for item type `Blighted map` (Thanks to AndyHoang)
+- Added pricing support for item type `Artifact` (Thanks to AndyHoang)
+- Added support for filtering items with RegEx (Thanks to roelsprimont)
+- Added a new screen `Bulk sell` (Thanks to Ailuro)
+    - Added support for bulk selling items, commonly used in Discord communities
+    - Added automatic image generation of the items 
+    - Added a video guide with step-by-step description
 - Added a manual link with copy button, in case the browser fails to open when logging in
 - Added prerequisite info to `README.md` regarding linux protocol handling
 #### Fixed
