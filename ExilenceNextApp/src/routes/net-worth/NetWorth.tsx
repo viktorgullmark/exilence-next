@@ -87,6 +87,7 @@ const NetWorth = () => {
     }
 
     visitor!.pageview('/net-worth', appName).send();
+    uiStateStore!.setBulkSellView(false);
   }, []);
 
   return (
@@ -274,13 +275,14 @@ const NetWorth = () => {
                 </Grid>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails
+                id="items-table"
                 style={{
                   background: theme.palette.background.default,
                   display: 'block',
                 }}
               >
                 {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
-                <ItemTableContainer />
+                <ItemTableContainer searchFilterText={uiStateStore!.itemTableFilterText} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )}

@@ -11,6 +11,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
+import BurstModeIcon from '@material-ui/icons/BurstMode';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -64,6 +65,17 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
             <AttachMoneyIcon />
           </ListItemIcon>
           <ListItemText primary={t('title.net_worth')} />
+        </ListItem>
+        <ListItem
+          button
+          key="bulk-selling"
+          selected={location.pathname === '/bulk-sell'}
+          onClick={() => handleRedirect('/bulk-sell')}
+        >
+          <ListItemIcon>
+            <BurstModeIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('title.bulk_sell')} />
         </ListItem>
         <ListItem
           button

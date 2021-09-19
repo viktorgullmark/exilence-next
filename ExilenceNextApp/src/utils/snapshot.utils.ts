@@ -120,8 +120,9 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
-
-  const filterText = rootStore.uiStateStore.itemTableFilterText.toLowerCase();
+  const filterText = rootStore.uiStateStore.bulkSellView
+    ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
+    : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
 
   const rarity = getRarityIdentifier(filterText);
 

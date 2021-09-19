@@ -15,6 +15,7 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
+import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -50,6 +51,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
+  @observable bulkSellItemTableFilterText: string = '';
   @observable priceTableFilterText: string = '';
   @observable isInitiating: boolean = false;
   @observable groupDialogOpen: boolean = false;
@@ -85,6 +87,15 @@ export class UiStateStore {
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
+  @observable bulkSellView: boolean = false;
+  @persist('object') @observable bulkSellActivePreset:
+    | IBulkSellColumnPreset
+    | undefined = undefined;
+  @persist @observable bulkSellAskingPrice: number = 0;
+  @persist @observable bulkSellAskingPricePercentage: number = 100;
+  @persist @observable bulkSellGeneratedMessage: string = '';
+  @persist @observable bulkSellGeneratingImage: boolean = false;
+
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
@@ -354,6 +365,11 @@ export class UiStateStore {
   }
 
   @action
+  setBulkSellItemTableFilterText(text: string) {
+    this.bulkSellItemTableFilterText = text;
+  }
+
+  @action
   setPriceTableFilterText(text: string) {
     this.priceTableFilterText = text;
   }
@@ -376,5 +392,35 @@ export class UiStateStore {
   @action
   setGroupError(error: AxiosError | Error | undefined) {
     this.groupError = error;
+  }
+
+  @action
+  setBulkSellView(active: boolean) {
+    this.bulkSellView = active;
+  }
+
+  @action
+  setBulkSellActivePreset(preset: IBulkSellColumnPreset) {
+    this.bulkSellActivePreset = preset;
+  }
+
+  @action
+  setBulkSellAskingPrice(price: number) {
+    this.bulkSellAskingPrice = price;
+  }
+
+  @action
+  setBulkSellAskingPricePercentage(percentage: number) {
+    this.bulkSellAskingPricePercentage = percentage;
+  }
+
+  @action
+  setBulkSellGeneratedMessage(msg: string) {
+    this.bulkSellGeneratedMessage = msg;
+  }
+
+  @action
+  setBulkSellGeneratingImage(status: boolean) {
+    this.bulkSellGeneratingImage = status;
   }
 }

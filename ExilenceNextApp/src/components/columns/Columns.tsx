@@ -31,7 +31,10 @@ export function itemIcon(options: { accessor: string; header: string }): Column<
   };
 }
 
-export function itemName(options: { accessor: string; header: string }): Column<object> {
+export function itemName(
+  options: { accessor: string; header: string },
+  bulkSellView?: boolean
+): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -39,16 +42,18 @@ export function itemName(options: { accessor: string; header: string }): Column<
     accessor,
     minWidth: 180,
     // eslint-disable-next-line react/display-name
-    Cell: (data: any) => {
-      const value = data.row.values[accessor];
-      return (
-        <ItemNameCell
-          value={value}
-          frameType={data.row.original.frameType}
-          poeNinjaUrl={data.row.original.detailsUrl}
-        />
-      );
-    },
+    ...(!bulkSellView && {
+      Cell: (data: any) => {
+        const value = data.row.values[accessor];
+        return (
+          <ItemNameCell
+            value={value}
+            frameType={data.row.original.frameType}
+            poeNinjaUrl={data.row.original.detailsUrl}
+          />
+        );
+      },
+    }),
   };
 }
 
