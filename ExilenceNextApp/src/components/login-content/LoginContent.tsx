@@ -67,7 +67,7 @@ const LoginContent = ({
               />
             </Box>
             <Box mb={2} mt={2}>
-              <Typography variant="subtitle2">{t('title.redirect_not_working')}</Typography>
+              <Typography variant="body2">{t('title.redirect_not_working')}</Typography>
               <Box className={classes.linkBox} p={1} mt={1} pr={4}>
                 <Typography variant="caption">{authUrl}</Typography>
                 <Tooltip title={t('label.copy_link') || ''} placement="bottom">

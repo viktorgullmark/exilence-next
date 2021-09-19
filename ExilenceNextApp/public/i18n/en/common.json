@@ -22,7 +22,7 @@
   },
   "title": {
     "login": "Login",
-    "redirect_not_working": "If the button doesn't work, copy the link below",
+    "redirect_not_working": "If the button doesn't work, copy the link below and paste it to your preferred browser",
     "error_boundary": "You encountered an error",
     "net_worth": "Net worth",
     "settings": "Settings",
