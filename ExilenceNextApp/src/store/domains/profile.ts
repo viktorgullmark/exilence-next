@@ -521,9 +521,9 @@ export class Profile {
       prices = prices.filter((p) => p.count > 10);
     }
 
-    if (rootStore.settingStore.totalPriceTreshold === 0) {
+    if (rootStore.settingStore.totalPriceThreshold === 0) {
       prices = prices.filter(
-        (p) => p.calculated && p.calculated >= rootStore.settingStore.priceTreshold
+        (p) => p.calculated && p.calculated >= rootStore.settingStore.priceThreshold
       );
     }
 
@@ -553,7 +553,7 @@ export class Profile {
 
     const filteredTabs = pricedStashTabs.map((pst) => {
       const mergedTabItems = mergeItemStacks(pst.pricedItems).filter(
-        (pi) => pi.total >= rootStore.settingStore.totalPriceTreshold && pi.total > 0
+        (pi) => pi.total >= rootStore.settingStore.totalPriceThreshold && pi.total > 0
       );
       pst.pricedItems = mergedTabItems;
       pst.value = mergedTabItems.map((ts) => ts.total).reduce((a, b) => a + b, 0);

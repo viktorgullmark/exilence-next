@@ -36,8 +36,8 @@ const SelectSetting = ({
           {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
         </FormLabel>
         <Select
-          labelId="price-treshold-label"
-          id="price-treshold"
+          labelId="price-threshold-label"
+          id="price-threshold"
           value={value}
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty

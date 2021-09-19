@@ -30,15 +30,37 @@ Currently runs with:
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
-- node 16.x
-- npm 7.x
+- **node 14.x**
+- **npm 6.x**
 
 ## Contributing with development
 
 Before submitting a PR, please see our [contributing guidelines](https://github.com/viktorgullmark/exilence-next/blob/master/CONTRIBUTING.md).
 
-Run the following to get started with the client:
+---
+**Prerequisite for building LINUX**
 
+You will need to manually set protocol handling. Follow steps below:
+
+1. Create `~/.local/share/applications/ExilenceNext.desktop` with:
+
+```bash
+[Desktop Entry]
+Name=Exilence Next
+Exec=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/dist/appimage %u
+Icon=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/public/icon.ico
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/exilence;
+```
+
+2. Run:
+- `update-mime-database ~/.local/share/mime`
+- `update-desktop-database ~/.local/share/applications`
+
+---
+
+Run the following to get started with the client:
 ```
 npm install
 npm start (to serve the project)
