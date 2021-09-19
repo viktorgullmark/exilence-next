@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - NOT RELEASED
+#### Added
+- Added a manual link with copy button, in case the browser fails to open when logging in
+- Added prerequisite info to `README.md` regarding linux protocol handling
+#### Fixed
+- Fixed a bug where the `Log in` button sometimes would not work properly
+- Fixed some typos across the app
+
 ## [0.5.5] - 2021-08-13
 ##### Fixed
 - Fixed a bug where you would sometimes receive a 401-error when trying to login 
