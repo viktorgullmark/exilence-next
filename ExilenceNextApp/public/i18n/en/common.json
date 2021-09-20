@@ -127,6 +127,7 @@
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",
+    "price_in_exalt": "Display prices in Exalted Orbs",
     "price_threshold": "Price threshold",
     "total_price_threshold": "Total price threshold",
     "requires_snapshot_info": "* = requires a new snapshot to take effect",
@@ -194,6 +195,7 @@
   "value": {
     "none": "None",
     "low_confidence_pricing": "Low confidence",
+    "price_in_exalt": "Prices in exalted",
     "price_threshold": "Price threshold",
     "total_price_threshold": "Total price threshold",
     "auto_snapshotting": "Auto snapshotting",
@@ -202,6 +204,7 @@
   },
   "helper_text": {
     "low_confidence_pricing": "Includes prices with less than 10 listings",
+    "price_in_exalt": "Displays prices and values in exalt instead of chaos",
     "price_threshold": "Sets the cutoff for including items",
     "total_price_threshold": "Sets the cutoff for including total stack of items",
     "auto_snapshotting": "Handles snapshotting for you at set intervals",
