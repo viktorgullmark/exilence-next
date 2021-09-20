@@ -1,5 +1,6 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { ICurrency } from '../interfaces/currency.interface';
 
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
@@ -21,6 +22,10 @@ export class SettingStore {
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @computed get activeCurrency(): ICurrency {
+    return this.showPriceInExalt ? { name: 'exalted', short: 'ex' } : { name: 'chaos', short: 'c' };
   }
 
   @action

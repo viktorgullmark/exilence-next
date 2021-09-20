@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, useStores, visitor } from '../..';
-import { itemColors } from '../../assets/themes/exilence-theme';
+import { rarityColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   ExpansionPanel,
@@ -32,7 +32,7 @@ export const cardHeight = 100;
 export const chartHeight = 240;
 
 const NetWorth = () => {
-  const { accountStore, signalrStore, uiStateStore } = useStores();
+  const { accountStore, signalrStore, uiStateStore, settingStore, priceStore } = useStores();
   const theme = useTheme();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -77,8 +77,11 @@ const NetWorth = () => {
     return activeProfile ? activeProfile.snapshots : [];
   };
 
-  const activeCurrency = () => {
-    return activeProfile ? activeProfile.activeCurrency : { name: 'chaos', short: 'c' };
+  const getExaltedValue = (value: number) => {
+    if (settingStore.showPriceInExalt && priceStore.exaltedPrice) {
+      value = value / priceStore.exaltedPrice;
+    }
+    return value;
   };
 
   useEffect(() => {
@@ -101,8 +104,8 @@ const NetWorth = () => {
               secondaryValueIsDiff
               secondaryValueStyles={{ fontSize: '0.8rem' }}
               title="label.total_value"
-              valueColor={itemColors.chaosOrb}
-              currencyShort={activeCurrency().short}
+              valueColor={rarityColors.currency}
+              currencyShort={settingStore.activeCurrency.short}
               icon={<MonetizationOnIcon fontSize="default" />}
               currency
               tooltip="Change in value between the two latest snapshots"
@@ -112,13 +115,13 @@ const NetWorth = () => {
         <Grid item xs={6} md={3} lg={3} xl={2}>
           <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.income : income()}
+              value={activeGroup ? getExaltedValue(activeGroup.income) : getExaltedValue(income())}
               valueIsDiff
               valueSuffix={` ${t('label.hour_suffix')}`}
               title="label.total_income"
-              valueColor={itemColors.chaosOrb}
+              valueColor={rarityColors.currency}
               icon={<TrendingUpIcon fontSize="default" />}
-              currencyShort={activeCurrency().short}
+              currencyShort={settingStore.activeCurrency.short}
               currency
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
             />

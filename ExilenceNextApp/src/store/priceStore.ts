@@ -41,6 +41,10 @@ export class PriceStore {
     );
   }
 
+  @computed get exaltedPrice() {
+    return this.pricesWithCustomValues?.find((p) => p.name === 'Exalted Orb')?.calculated;
+  }
+
   @computed get pricesWithCustomValues() {
     const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
     const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;

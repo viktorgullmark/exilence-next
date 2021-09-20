@@ -38,8 +38,8 @@ const ToolbarContainer = () => {
   };
 
   const activeCurrency = () => {
-    return accountStore!.getSelectedAccount!.activeProfile!
-      ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
+    return settingStore?.showPriceInExalt
+      ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
   };
 
