@@ -60,7 +60,7 @@ const ToolbarContainer = () => {
 
     overlayStore!.createOverlay({
       event: 'netWorth',
-      data: { netWorth: netWorth, income: income },
+      data: { netWorth: netWorth, income: income, short: settingStore.activeCurrency.short },
     });
   };
 

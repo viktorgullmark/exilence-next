@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { rootStore } from '..';
 import { ICurrency } from '../interfaces/currency.interface';
 
 import { electronService } from '../services/electron.service';
@@ -43,6 +44,7 @@ export class SettingStore {
   @action
   setShowPriceInExalt(value: boolean) {
     this.showPriceInExalt = value;
+    rootStore.accountStore.getSelectedAccount?.activeProfile?.updateNetWorthOverlay();
   }
 
   @action

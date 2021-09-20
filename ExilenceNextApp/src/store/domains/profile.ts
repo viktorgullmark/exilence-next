@@ -349,6 +349,7 @@ export class Profile {
       true
     );
 
+    console.log(rootStore.settingStore.activeCurrency.short)
     rootStore.overlayStore.updateOverlay({
       event: 'netWorth',
       data: {
@@ -356,6 +357,7 @@ export class Profile {
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue,
         income: income,
+        short: rootStore.settingStore.activeCurrency.short,
       },
     });
   }
