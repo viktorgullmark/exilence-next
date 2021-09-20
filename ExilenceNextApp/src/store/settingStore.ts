@@ -11,6 +11,7 @@ export class SettingStore {
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
+  @persist @observable showPriceInExalt = false;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
   @persist
   @observable
@@ -32,6 +33,11 @@ export class SettingStore {
     }
     this.uiScale = factor;
     electronService.webFrame.setZoomFactor(factor / 100);
+  }
+
+  @action
+  setShowPriceInExalt(value: boolean) {
+    this.showPriceInExalt = value;
   }
 
   @action
