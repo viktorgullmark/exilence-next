@@ -341,22 +341,23 @@ export class Profile {
       ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
 
-    const income = formatValue(
-      rootStore.signalrStore.activeGroup
-        ? rootStore.signalrStore.activeGroup.income
-        : rootStore.accountStore.getSelectedAccount!.activeProfile!.income,
-      activeCurrency.short,
-      true
-    );
+    let income = rootStore.signalrStore.activeGroup
+      ? rootStore.signalrStore.activeGroup.income
+      : rootStore.accountStore.getSelectedAccount!.activeProfile!.income;
 
-    console.log(rootStore.settingStore.activeCurrency.short)
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      income = income / rootStore.priceStore.exaltedPrice;
+    }
+
+    const formattedIncome = formatValue(income, activeCurrency.short, true);
+
     rootStore.overlayStore.updateOverlay({
       event: 'netWorth',
       data: {
         netWorth: rootStore.signalrStore.activeGroup
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue,
-        income: income,
+        income: formattedIncome,
         short: rootStore.settingStore.activeCurrency.short,
       },
     });
