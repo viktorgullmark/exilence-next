@@ -6,8 +6,10 @@ const localSettingsFile = 'local-settings.json';
 // Saving localSettings in AppData so auto-updater won't overwrite/recreate the file with defaults
 const localSettingsFileLocation = path.join(app.getPath('userData'), localSettingsFile);
 const localSettingsExist = fs.existsSync(localSettingsFileLocation);
+
 const defaultLocalSettings = {
   isHardwareAccelerationEnabled: true,
+  releaseChannel: 'latest'
 }
 
 function loadLocalSettings() {
@@ -21,10 +23,21 @@ function loadLocalSettings() {
   /**
    * Hardware Acceleration
    */
-  if(!isHardwareAccelerationEnabled) app.disableHardwareAcceleration();
+  if(!isHardwareAccelerationEnabled) {
+    app.disableHardwareAcceleration();
+  }
 
   ipcMain.on('hardware-acceleration', (_event, isHardwareAccelerationEnabled) => {
-    fs.writeFileSync(localSettingsFileLocation, JSON.stringify({isHardwareAccelerationEnabled}))
+    const localData = fs.readFileSync(localSettingsFileLocation);
+    fs.writeFileSync(localSettingsFileLocation, JSON.stringify({...JSON.parse(localData), isHardwareAccelerationEnabled}))
+  })
+
+  /**
+   * Release Channel
+   */
+  ipcMain.on('release-channel', (_event, releaseChannel) => {
+    const localData = fs.readFileSync(localSettingsFileLocation);
+    fs.writeFileSync(localSettingsFileLocation, JSON.stringify({...JSON.parse(localData), releaseChannel}))
   })
 }
 

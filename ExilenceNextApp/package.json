@@ -118,6 +118,7 @@
     "wait-on": "^5.3.0"
   },
   "build": {
+    "generateUpdatesFilesForAllChannels": true,
     "productName": "Exilence Next",
     "appId": "com.exilence.exilence-next-app",
     "files": [

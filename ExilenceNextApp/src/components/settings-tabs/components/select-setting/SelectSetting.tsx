@@ -13,9 +13,9 @@ import { ISelectOption } from '../../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
 
 type SelectSettingProps = {
-  value: number;
+  value: number | string;
   options: ISelectOption[];
-  handleChange: (value: number) => void;
+  handleChange: (value: any) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
   withNone?: boolean;
@@ -43,6 +43,7 @@ const SelectSetting = ({
           value={value}
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
+          className={classes.select}
         >
           {withNone && (
             <MenuItem value={0}>

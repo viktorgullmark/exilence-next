@@ -3,10 +3,11 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStores } from '../../../..';
 import SelectSetting from '../../components/select-setting/SelectSetting';
+import { ReleaseChannel } from '../../../../store/settingStore';
 
 const RELEASE_CHANNELS = [
-  { label: 'latest', value: 0, id: 'latest' },
-  { label: 'beta', value: 1, id: 'beta' },
+  { label: 'Latest Stable', value: 'latest', id: 'latest' },
+  { label: 'Beta', value: 'beta', id: 'beta' },
 ];
 
 const ReleaseChannelSettings = () => {
@@ -17,7 +18,7 @@ const ReleaseChannelSettings = () => {
         <SelectSetting
           value={settingStore!.releaseChannel}
           options={RELEASE_CHANNELS}
-          handleChange={(value: number) => settingStore!.setReleaseChannel(value)}
+          handleChange={(value: ReleaseChannel) => settingStore!.setReleaseChannel(value)}
           translationKey="release_channel"
           withNone={false}
         />

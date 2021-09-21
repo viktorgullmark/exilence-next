@@ -50,7 +50,8 @@
     "session_id_dialog": "How to find your session Id",
     "log_settings": "Log",
     "hardware_acceleration": "Hardware Acceleration",
-    "reset_indexeddb": "Reset Data"
+    "reset_indexeddb": "Reset Data",
+    "release_channel": "Release Channel"
   },
   "label": {
     "no_prices_retrieved": "Waiting for prices",
@@ -151,7 +152,8 @@
     "feature_request": "Feature Request",
     "support_us": "Support Us",
     "reset_to_default": "Reset to default",
-    "enable_hardware_acceleration": "Enable Hardware Acceleration"
+    "enable_hardware_acceleration": "Enable Hardware Acceleration",
+    "release_channel": "Current release channel:"
   },
   "value": {
     "none": "None",
@@ -170,7 +172,8 @@
     "auto_snapshot_interval": "Sets the interval for auto snapshotting",
     "ui_scale": "Sets the UI scale",
     "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect",
-    "reset_indexeddb": "This option will reset your account, league and local settings"
+    "reset_indexeddb": "This option will reset your account, league and local settings",
+    "release_channel": "Note: this setting is for this computer only. You may need to restart Exilence Next to receive app updates."
   },
   "link": {
     "restart_now": "Restart now"

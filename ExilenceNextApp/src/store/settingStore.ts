@@ -4,13 +4,15 @@ import { persist } from 'mobx-persist';
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
+export type ReleaseChannel = 'latest' | 'beta';
+
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
   @persist @observable autoSnapshotting: boolean = true;
   @persist @observable isHardwareAccelerationEnabled: boolean =
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
-  // 0 - latest, 1 - beta
-  @persist @observable releaseChannel: number = electronService.localSettings?.releaseChannel || 0;
+  @persist @observable releaseChannel: ReleaseChannel =
+    electronService.localSettings?.releaseChannel || 'latest';
   @persist @observable priceTreshold: number = 0;
   @persist @observable totalPriceTreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
@@ -51,9 +53,8 @@ export class SettingStore {
     this.autoSnapshotting = value;
   }
 
-  // 0 - latest, 1 - beta
   @action
-  setReleaseChannel(value: number) {
+  setReleaseChannel(value: ReleaseChannel) {
     this.releaseChannel = value;
     electronService.ipcRenderer.send('release-channel', value);
   }

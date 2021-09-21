@@ -8,6 +8,9 @@ const useStyles = makeStyles((theme) =>
         marginBottom: theme.spacing(1),
       },
     },
+    select: {
+      maxWidth: 150,
+    },
   })
 );
 
