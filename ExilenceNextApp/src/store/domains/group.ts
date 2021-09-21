@@ -2,15 +2,16 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { rootStore } from '../..';
-
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
+import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import {
   calculateNetWorth,
   filterItems,
   formatSnapshotsForChart,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
 } from '../../utils/snapshot.utils';
 
@@ -52,6 +53,18 @@ export class Group implements IApiGroup {
   @action
   removeConnection(connectionId: string) {
     this.connections = this.connections.filter((c) => c.connectionId !== connectionId);
+  }
+
+  @computed
+  get sparklineChartData(): ISparklineDataPoint[] {
+    const snapshots = [...this.latestGroupSnapshots.slice(0, 10)];
+
+    return snapshots.map((s, i) => {
+      return {
+        x: i + 1,
+        y: getValueForSnapshot(s),
+      } as ISparklineDataPoint;
+    });
   }
 
   @computed

@@ -18,6 +18,7 @@ type OverviewWidgetContentProps = {
   clearFn?: () => void;
   title: string;
   icon: JSX.Element;
+  sparklineChart?: JSX.Element;
   valueColor?: string;
   currency?: boolean;
   currencyShort?: string;
@@ -40,6 +41,7 @@ const OverviewWidgetContent = ({
   currencyShort,
   tooltip = '',
   currencySwitch,
+  sparklineChart,
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -47,10 +49,15 @@ const OverviewWidgetContent = ({
   return (
     <>
       <Grid container className={classes.topContent}>
-        <Grid item sm={3}>
+        <Grid item sm={1}>
           <div className={classes.iconWrapper}>{icon}</div>
         </Grid>
-        <Grid item sm={9}>
+        <Grid item sm={4}>
+          <Box mx={1} height={1} display="flex" justifyContent="center" alignItems="center">
+            {sparklineChart}
+          </Box>
+        </Grid>
+        <Grid item sm={7}>
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
               {currency

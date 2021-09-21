@@ -59,6 +59,7 @@
     "typescript": "^4.0.3",
     "universal-analytics": "^0.4.20",
     "uuid": "^8.3.1",
+    "victory": "^36.0.1",
     "yup": "^0.29.3"
   },
   "main": "public/electron.js",

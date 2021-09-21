@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import { IConnectionChartSeries } from '../../interfaces/connection-chart-series
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
+import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
 import { pricingService } from '../../services/pricing.service';
 import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
@@ -25,6 +26,7 @@ import {
   formatStashTabSnapshotsForChart,
   formatValue,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';
@@ -161,6 +163,28 @@ export class Profile {
     };
 
     return [connectionSeries];
+  }
+
+  @computed
+  get sparklineChartData(): ISparklineDataPoint[] {
+    const snapshots = [...this.snapshots.slice(0, 10)];
+
+    console.log(
+      toJS(
+        snapshots.map((s, i) => {
+          return {
+            x: i + 1,
+            y: getValueForSnapshot(mapSnapshotToApiSnapshot(s)),
+          } as ISparklineDataPoint;
+        })
+      )
+    );
+    return snapshots.map((s, i) => {
+      return {
+        x: i + 1,
+        y: getValueForSnapshot(mapSnapshotToApiSnapshot(s)),
+      } as ISparklineDataPoint;
+    });
   }
 
   @computed

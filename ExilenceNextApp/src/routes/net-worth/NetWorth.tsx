@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, useStores, visitor } from '../..';
-import { rarityColors } from '../../assets/themes/exilence-theme';
+import { primaryLighter, rarityColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   ExpansionPanel,
@@ -22,6 +22,7 @@ import ItemTableFilterSection from '../../components/item-table/item-table-filte
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
 import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
+import SparklineChart from '../../components/sparkline-chart/SparklineChart';
 import Widget from '../../components/widget/Widget';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import { openLink } from '../../utils/window.utils';
@@ -109,6 +110,17 @@ const NetWorth = () => {
               icon={<MonetizationOnIcon fontSize="default" />}
               currency
               tooltip="Change in value between the two latest snapshots"
+              sparklineChart={
+                <SparklineChart
+                  internalName="networth"
+                  color={primaryLighter}
+                  height={15}
+                  width={60}
+                  data={
+                    activeGroup ? activeGroup.sparklineChartData : activeProfile?.sparklineChartData
+                  }
+                />
+              }
               currencySwitch
             />
           </Widget>
@@ -125,6 +137,14 @@ const NetWorth = () => {
               currencyShort={settingStore.activeCurrency.short}
               currency
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
+              sparklineChart={
+                <SparklineChart
+                  internalName="income"
+                  color={primaryLighter}
+                  height={15}
+                  width={60}
+                />
+              }
             />
           </Widget>
         </Grid>
@@ -144,6 +164,14 @@ const NetWorth = () => {
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="default" />}
               tooltip="Time since last snapshot"
+              sparklineChart={
+                <SparklineChart
+                  internalName="snapshots"
+                  color={primaryLighter}
+                  height={15}
+                  width={60}
+                />
+              }
             />
           </Widget>
         </Grid>
