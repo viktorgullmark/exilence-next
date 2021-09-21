@@ -43,6 +43,16 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'hidden',
     width: collapsedNavigationMenuWidth,
   },
+  new: {
+    color: 'lime',
+    fontSize: 10,
+    background: theme.palette.background.default,
+    position: 'absolute',
+    borderRadius: 4,
+    top: 6,
+    right: 2,
+    padding: '0 2px',
+  },
 }));
 
 export default useStyles;
