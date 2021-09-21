@@ -229,7 +229,7 @@ const Toolbar = ({
                   checked={autoSnapshotting}
                   onChange={toggleAutosnapshot}
                   name="autoSnapshot"
-                  color="primary"
+                  color="default"
                 />
               </Tooltip>
               <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
