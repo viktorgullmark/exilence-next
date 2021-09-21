@@ -109,6 +109,7 @@ const NetWorth = () => {
               icon={<MonetizationOnIcon fontSize="default" />}
               currency
               tooltip="Change in value between the two latest snapshots"
+              currencySwitch
             />
           </Widget>
         </Grid>
