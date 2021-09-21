@@ -18,7 +18,8 @@
     "leave_group": "Leave group",
     "save_custom_price": "Save",
     "lets_begin": "Lets begin!",
-    "apply_filter": "Apply filter"
+    "apply_filter": "Apply filter",
+    "currency_switch": "Click to switch currency"
   },
   "title": {
     "login": "Login",
