@@ -75,7 +75,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
           selected={location.pathname === '/bulk-sell'}
           onClick={() => handleRedirect('/bulk-sell')}
         >
-          <Typography className={classes.new}>NEW</Typography>
+          <Typography className={classes.new}>BETA</Typography>
           <ListItemIcon>
             <BurstModeIcon />
           </ListItemIcon>

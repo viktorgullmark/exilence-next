@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: collapsedNavigationMenuWidth,
   },
   new: {
-    color: 'lime',
+    color: 'yellow',
     fontSize: 10,
     background: theme.palette.background.default,
     position: 'absolute',
