@@ -349,7 +349,12 @@ export class Profile {
       income = income / rootStore.priceStore.exaltedPrice;
     }
 
-    const formattedIncome = formatValue(income, activeCurrency.short, true);
+    const formattedIncome = formatValue(
+      income,
+      activeCurrency.short,
+      true,
+      !rootStore.priceStore.exaltedPrice
+    );
 
     rootStore.overlayStore.updateOverlay({
       event: 'netWorth',
