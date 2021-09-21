@@ -53,7 +53,15 @@ const OverviewWidgetContent = ({
         <Grid item sm={9}>
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
-              {currency ? `${formatValue(value, currencyShort, valueIsDiff, true)}` : value}
+              {currency
+                ? `${formatValue(
+                    value,
+                    currencyShort,
+                    valueIsDiff,
+                    true,
+                    !priceStore.exaltedPrice
+                  )}`
+                : value}
               {currency && currencySwitch && (
                 <Tooltip
                   title={
