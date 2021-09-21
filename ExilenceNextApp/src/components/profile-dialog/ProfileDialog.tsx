@@ -150,6 +150,7 @@ const ProfileDialog = ({
                   errors={errors}
                   handleChange={handleChange}
                   values={values}
+                  helperIcon
                 />
                 <LeagueDropdown
                   leagues={leagues}
