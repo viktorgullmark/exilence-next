@@ -1,6 +1,9 @@
 {
   "title": {
     "initial_step": "Welcome to Exilence Next!",
+    "net_worth_step": "Net Worth View",
+    "bulk_sell_step": "Bulk Sell View",
+    "settings_step": "Settings View",
     "profile_step": "Profile section",
     "snapshot_step": "Snapshot section",
     "overlay_step": "Overlay section",
@@ -10,6 +13,9 @@
   },
   "body": {
     "initial_step": "This tour will guide you through the main functions of the app to get you started quickly.",
+    "net_worth_step": "In this view you can track all your gains and loses now or in the past and how much your (public) stash is worth",
+    "bulk_sell_step": "In this view you can share your stash items via generated image and message to various Discord communities",
+    "settings_step": "In this view you can manage your general, interface, pricing or data reset settings.",
     "profile_step": "In this area you can manage your profiles, and create multiple ones for different setups for quick access.",
     "snapshot_step": "This is where you take snapshots to see your current net worth, you can also enable automatic snapshotting in the settings.",
     "overlay_step": "Here you can toggle the overlay, for a slim overview while you map!",

@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 
 import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
 import { innerToolbarHeight } from '../DrawerWrapper';
+import { primaryLighter } from '../../../assets/themes/exilence-theme';
 
 export const navigationMenuWidth = 240;
 export const collapsedNavigationMenuWidth = 57;
@@ -42,6 +43,18 @@ const useStyles = makeStyles((theme) => ({
     }),
     overflowX: 'hidden',
     width: collapsedNavigationMenuWidth,
+  },
+  new: {
+    color: primaryLighter,
+    fontSize: 10,
+    background: theme.palette.background.default,
+    position: 'absolute',
+    borderRadius: 4,
+    top: 6,
+    right: 2,
+    padding: '0 2px',
+    border: `1px solid ${primaryLighter}`,
+    boxShadow: `-4px 4px 10px ${theme.palette.background.default}`,
   },
 }));
 

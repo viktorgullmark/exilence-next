@@ -28,6 +28,7 @@ function getCurrencyCategories() {
 }
 
 function getItemCategories() {
+  // commented categories are mostly in accuracy pricing
   const categories = [
     'Oil',
     'Incubator',
@@ -50,6 +51,12 @@ function getItemCategories() {
     'Beast',
     'Vial',
     'Invitation',
+    'Artifact',
+    //'UniqueJewel',
+    //'ClusterJewel',
+    'BlightedMap',
+    //'BaseType',
+    //'HelmetEnchant',
   ];
   return categories;
 }

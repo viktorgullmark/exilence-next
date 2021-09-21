@@ -92,7 +92,7 @@ function getItemsForTabs(tabs: IStashTab[], account: string, league: string, rea
 function getLeagues(
   type: string = 'main',
   compact: number = 1,
-  realm?: string
+  realm: string = 'pc'
 ): Observable<AxiosResponse<ILeague[]>> {
   const parameters = `?type=${type}&compact=${compact}${getRealmParam(realm)}`;
   return rateLimiter.limit(
@@ -102,7 +102,7 @@ function getLeagues(
 
 function getCharacters(realm?: string): Observable<AxiosResponse<ICharacter[]>> {
   // todo: create util for this realm segment
-  const parameters = `${getRealmParam(realm)}`;
+  const parameters = `?realm=${realm}`;
 
   return rateLimiter.limit(
     axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters' + parameters)
@@ -121,8 +121,8 @@ function getCharacterItems(
   );
 }
 
-function getProfile(realm?: string): Observable<AxiosResponse<IPoeProfile>> {
-  const parameters = `${getRealmParam(realm)}`;
+function getProfile(realm: string = 'pc'): Observable<AxiosResponse<IPoeProfile>> {
+  const parameters = `?realm=${realm}`;
 
   return rateLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
 }

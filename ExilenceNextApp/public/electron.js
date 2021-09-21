@@ -4,7 +4,6 @@ const isDev = require('electron-is-dev');
 const sentry = require('@sentry/electron');
 const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
-const log = require('electron-log');
 
 const {
   flashFrame: { createFlashFrame },
@@ -48,7 +47,7 @@ createNetWorthOverlay();
  * Main Window
  */
 function createWindow() {
-  const minMainWindowWidth = 800;
+  const minMainWindowWidth = 1150;
   const minMainWindowHeight = 800;
   const { width: defaultWidth, height: defaultHeight } = screen.getPrimaryDisplay().workAreaSize;
 
@@ -166,34 +165,37 @@ function createWindow() {
   }
 }
 
+if (isDev && process.platform !== 'darwin') {
+  app.setAsDefaultProtocolClient('exilence', process.execPath, [path.resolve(process.argv[1])]);
+} else {
+  app.setAsDefaultProtocolClient('exilence');
+}
+
 /**
  * App Listeners
  */
-if (!gotTheLock && !isDev) {
+if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', (_, argv) => {
-    if (isDev) {
-      windows[mainWindow].destroy();
-    } else {
-      // Someone tried to run a second instance, we should focus our window.
-      if (windows[mainWindow]) {
-        // Protocol handler for win32
-        // argv: An array of the second instance’s (command line / deep linked) arguments
-        if (process.platform == 'win32') {
-          // Keep only command line / deep linked arguments
-          deeplinkingUrl = argv.slice(1);
-          const raw_code = /code=([^&]*)/.exec(deeplinkingUrl) || null;
-          const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-          const error = /\?error=(.+)$/.exec(deeplinkingUrl);
-          windows[mainWindow].webContents.send('auth-callback', { code, error });
-        }
-        if (windows[mainWindow].isMinimized()) {
-          windows[mainWindow].restore();
-          windows[mainWindow].focus();
-        } else {
-          windows[mainWindow].show();
-        }
+    // Someone tried to run a second instance, we should focus our window.
+    if (windows[mainWindow]) {
+      // Protocol handler for win32 || linux
+      // argv: An array of the second instance’s (command line / deep linked) arguments
+      if (process.platform !== 'darwin') {
+        // Keep only command line / deep linked arguments
+        deeplinkingUrl = argv.slice(1);
+        const raw_code = /code=([^&]*)/.exec(deeplinkingUrl) || null;
+        const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+        const error = /\?error=(.+)$/.exec(deeplinkingUrl);
+        windows[mainWindow].webContents.send('auth-callback', {code, error});
+      }
+
+      if (windows[mainWindow].isMinimized()) {
+        windows[mainWindow].restore();
+        windows[mainWindow].focus();
+      } else {
+        windows[mainWindow].show();
       }
     }
   });
@@ -219,8 +221,6 @@ if (!gotTheLock && !isDev) {
     const error = /\?error=(.+)$/.exec(deeplinkingUrl);
     windows[mainWindow].webContents.send('auth-callback', { code, error });
   });
-
-  app.setAsDefaultProtocolClient('exilence');
 
   app.on('before-quit', () => {
     isQuitting = true;

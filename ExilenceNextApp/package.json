@@ -1,6 +1,6 @@
 {
   "name": "exilence-next-app",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -28,6 +28,7 @@
     "formik": "^2.0.8",
     "highcharts": "^9.0.0",
     "highcharts-react-official": "^3.0.0",
+    "html-to-image": "^1.6.2",
     "i18next": "^19.8.2",
     "i18next-xhr-backend": "^3.2.0",
     "localforage": "^1.7.3",
@@ -67,8 +68,8 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder -mwl",
-    "release": "npm run react-build && electron-builder -mwl",
+    "electron-build": "electron-builder",
+    "release": "npm run react-build && electron-builder",
     "build": "npm run react-build && npm run electron-build",
     "smoke-build-linux": "npm run react-build && electron-builder -l --publish=never",
     "smoke-build-mac": "npm run react-build && electron-builder -m --publish=never",
@@ -147,13 +148,13 @@
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "artifactName":"Exilence-Next-${version}.${ext}",
+      "artifactName": "Exilence-Next-${version}.${ext}",
       "icon": "build/icon512x512.png",
       "target": "AppImage",
       "category": "Utility"
     },
     "protocols": {
-      "name": "exilence-next",
+      "name": "exilence",
       "schemes": [
         "exilence"
       ]

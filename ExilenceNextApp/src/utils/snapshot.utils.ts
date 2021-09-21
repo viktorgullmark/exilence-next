@@ -120,10 +120,19 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
-
-  const filterText = rootStore.uiStateStore.itemTableFilterText.toLowerCase();
+  const filterText = rootStore.uiStateStore.bulkSellView
+    ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
+    : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
 
   const rarity = getRarityIdentifier(filterText);
+
+  let itemNameRegex = new RegExp('', 'i');
+  try {
+    // try/catch required because of filtering being an onChange event, example: typing only [ would lead to a SyntaxError
+    itemNameRegex = new RegExp(filterText, 'i');
+  } catch (error) {
+    console.error(error);
+  }
 
   return mergeItemStacks(
     snapshots
@@ -144,7 +153,8 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
                 .join(', ')
                 .toLowerCase()
                 .includes(filterText)) ||
-            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity)
+            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity) ||
+            itemNameRegex.test(i.name)
         )
       )
   );

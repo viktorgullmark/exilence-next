@@ -6,11 +6,13 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
+import BurstModeIcon from '@material-ui/icons/BurstMode';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -57,6 +59,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         <ListItem
           button
           key="net-worth"
+          data-tour-elem="netWorthView"
           selected={location.pathname === '/net-worth'}
           onClick={() => handleRedirect('/net-worth')}
         >
@@ -67,7 +70,21 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         </ListItem>
         <ListItem
           button
+          key="bulk-selling"
+          data-tour-elem="bulkSellView"
+          selected={location.pathname === '/bulk-sell'}
+          onClick={() => handleRedirect('/bulk-sell')}
+        >
+          <Typography className={classes.new}>BETA</Typography>
+          <ListItemIcon>
+            <BurstModeIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('title.bulk_sell')} />
+        </ListItem>
+        <ListItem
+          button
           key="settings"
+          data-tour-elem="settingsView"
           selected={location.pathname === '/settings'}
           onClick={() => handleRedirect('/settings')}
         >

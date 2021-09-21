@@ -13,8 +13,8 @@ export class SettingStore {
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
   @persist @observable releaseChannel: ReleaseChannel =
     electronService.localSettings?.releaseChannel || 'latest';
-  @persist @observable priceTreshold: number = 0;
-  @persist @observable totalPriceTreshold: number = 0;
+  @persist @observable priceThreshold: number = 0;
+  @persist @observable totalPriceThreshold: number = 0;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
   @persist
   @observable
@@ -66,13 +66,13 @@ export class SettingStore {
   }
 
   @action
-  setPriceTreshold(value: number) {
-    this.priceTreshold = value;
+  setPriceThreshold(value: number) {
+    this.priceThreshold = value;
   }
 
   @action
-  setTotalPriceTreshold(value: number) {
-    this.totalPriceTreshold = value;
+  setTotalPriceThreshold(value: number) {
+    this.totalPriceThreshold = value;
   }
 
   @action

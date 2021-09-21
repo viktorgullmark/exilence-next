@@ -14,15 +14,20 @@ export type TableFilterProps<T> = {
   array: T[];
   handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
+  searchText: string;
 };
 
-const ItemTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPricedItem>) => {
+const ItemTableFilter = ({
+  handleFilter,
+  clearFilter,
+  searchText = '',
+}: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
   const formik = useFormik({
     initialValues: {
-      searchText: '',
+      searchText,
     },
 
     onSubmit: (): void => {
