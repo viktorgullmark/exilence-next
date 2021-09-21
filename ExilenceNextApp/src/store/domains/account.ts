@@ -254,7 +254,7 @@ export class Account implements IAccount {
         if (rootStore.signalrStore.activeGroup) {
           rootStore.signalrStore.changeProfileForConnection(
             rootStore.signalrStore.ownConnection.connectionId,
-            mapProfileToApiProfile(foundProfile)
+            mapProfileToApiProfile(foundProfile, rootStore.settingStore.activeCurrency)
           );
         }
         return this.setActiveProfileSuccess();
@@ -369,7 +369,7 @@ export class Account implements IAccount {
 
     newProfile.active = true;
 
-    const apiProfile = mapProfileToApiProfile(newProfile);
+    const apiProfile = mapProfileToApiProfile(newProfile, rootStore.settingStore.activeCurrency);
 
     return rootStore.signalrHub.invokeEvent<IApiProfile>('AddProfile', apiProfile).pipe(
       map((p: IApiProfile) => {
@@ -407,7 +407,7 @@ export class Account implements IAccount {
     if (rootStore.signalrStore.activeGroup) {
       rootStore.signalrStore.addProfileToConnection(
         rootStore.signalrStore.ownConnection.connectionId,
-        mapProfileToApiProfile(p)
+        mapProfileToApiProfile(p, rootStore.settingStore.activeCurrency)
       );
     }
   }

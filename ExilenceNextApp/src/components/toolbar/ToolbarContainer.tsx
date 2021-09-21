@@ -38,8 +38,8 @@ const ToolbarContainer = () => {
   };
 
   const activeCurrency = () => {
-    return accountStore!.getSelectedAccount!.activeProfile!
-      ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
+    return settingStore?.showPriceInExalt
+      ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
   };
 
@@ -51,7 +51,8 @@ const ToolbarContainer = () => {
         ? signalrStore!.activeGroup.income
         : accountStore!.getSelectedAccount!.activeProfile!.income,
       activeCurrency().short,
-      true
+      true,
+      !priceStore.exaltedPrice
     );
 
     const netWorth = signalrStore!.activeGroup
@@ -60,7 +61,7 @@ const ToolbarContainer = () => {
 
     overlayStore!.createOverlay({
       event: 'netWorth',
-      data: { netWorth: netWorth, income: income },
+      data: { netWorth: netWorth, income: income, short: settingStore.activeCurrency.short },
     });
   };
 
@@ -133,7 +134,7 @@ const ToolbarContainer = () => {
       />
       <Toolbar
         hasPrices={
-          priceStore!.pricesWithCustomValues && priceStore!.pricesWithCustomValues.length > 0
+          priceStore!.customPricesTableData && priceStore!.customPricesTableData.length > 0
         }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}

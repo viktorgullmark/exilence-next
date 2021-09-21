@@ -10,7 +10,6 @@ import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
-import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
@@ -41,10 +40,6 @@ export class Profile {
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
   @persist @observable activeCharacterName: string = '';
-  @persist('object') @observable activeCurrency: ICurrency = {
-    name: 'chaos',
-    short: 'c',
-  };
 
   @persist('list') @observable activeStashTabIds: string[] = [];
 
@@ -105,7 +100,11 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    let calculatedValue = calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
+    }
+    return calculatedValue;
   }
 
   @computed
@@ -113,13 +112,17 @@ export class Profile {
     if (this.snapshots.length < 2) {
       return 0;
     }
-    const lastSnapshotNetWorth = getValueForSnapshotsTabs([
+    let lastSnapshotNetWorth = getValueForSnapshotsTabs([
       mapSnapshotToApiSnapshot(this.snapshots[0]),
     ]);
-    const previousSnapshotNetWorth = getValueForSnapshotsTabs([
+    let previousSnapshotNetWorth = getValueForSnapshotsTabs([
       mapSnapshotToApiSnapshot(this.snapshots[1]),
     ]);
 
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      lastSnapshotNetWorth = lastSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
+      previousSnapshotNetWorth = previousSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
+    }
     return lastSnapshotNetWorth - previousSnapshotNetWorth;
   }
 
@@ -234,6 +237,7 @@ export class Profile {
       const incomePerHour =
         (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
       this.income = incomePerHour;
+
       return;
     }
 
@@ -280,7 +284,10 @@ export class Profile {
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    const apiProfile = mapProfileToApiProfile(new Profile(profile));
+    const apiProfile = mapProfileToApiProfile(
+      new Profile(profile),
+      rootStore.settingStore.activeCurrency
+    );
 
     fromStream(
       rootStore.signalrHub.invokeEvent<IApiProfile>('EditProfile', apiProfile).pipe(
@@ -330,16 +337,23 @@ export class Profile {
 
   @action
   updateNetWorthOverlay() {
-    const activeCurrency = rootStore.accountStore.getSelectedAccount!.activeProfile!
-      ? rootStore.accountStore.getSelectedAccount!.activeProfile!.activeCurrency
+    const activeCurrency = rootStore.settingStore.showPriceInExalt
+      ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
 
-    const income = formatValue(
-      rootStore.signalrStore.activeGroup
-        ? rootStore.signalrStore.activeGroup.income
-        : rootStore.accountStore.getSelectedAccount!.activeProfile!.income,
+    let income = rootStore.signalrStore.activeGroup
+      ? rootStore.signalrStore.activeGroup.income
+      : rootStore.accountStore.getSelectedAccount!.activeProfile!.income;
+
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      income = income / rootStore.priceStore.exaltedPrice;
+    }
+
+    const formattedIncome = formatValue(
+      income,
       activeCurrency.short,
-      true
+      true,
+      !rootStore.priceStore.exaltedPrice
     );
 
     rootStore.overlayStore.updateOverlay({
@@ -348,7 +362,8 @@ export class Profile {
         netWorth: rootStore.signalrStore.activeGroup
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue,
-        income: income,
+        income: formattedIncome,
+        short: rootStore.settingStore.activeCurrency.short,
       },
     });
   }

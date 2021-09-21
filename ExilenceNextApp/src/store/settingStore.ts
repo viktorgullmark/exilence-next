@@ -1,5 +1,7 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { rootStore } from '..';
+import { ICurrency } from '../interfaces/currency.interface';
 
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
@@ -11,6 +13,7 @@ export class SettingStore {
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
+  @persist @observable showPriceInExalt = false;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
   @persist
   @observable
@@ -20,6 +23,10 @@ export class SettingStore {
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @computed get activeCurrency(): ICurrency {
+    return this.showPriceInExalt ? { name: 'exalted', short: 'ex' } : { name: 'chaos', short: 'c' };
   }
 
   @action
@@ -32,6 +39,12 @@ export class SettingStore {
     }
     this.uiScale = factor;
     electronService.webFrame.setZoomFactor(factor / 100);
+  }
+
+  @action
+  setShowPriceInExalt(value: boolean) {
+    this.showPriceInExalt = value;
+    rootStore.accountStore.getSelectedAccount?.activeProfile?.updateNetWorthOverlay();
   }
 
   @action

@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     textAlign: 'right',
   },
+  adornmentIcon: {
+    marginLeft: theme.spacing(0.75),
+    color: primaryLighter,
+  },
   title: {
     fontSize: '0.8rem',
   },

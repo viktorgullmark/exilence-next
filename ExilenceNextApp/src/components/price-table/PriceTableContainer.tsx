@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PriceTableContainer = () => {
   const { uiStateStore, priceStore } = useStores();
   const classes = useStyles();
-  const prices = priceStore!.pricesWithCustomValues;
+  const prices = priceStore!.customPricesTableData;
   const data = useMemo(() => {
     return excludeLegacyMaps(prices ? prices : []);
   }, [prices]);

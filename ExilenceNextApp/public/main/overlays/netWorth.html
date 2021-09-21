@@ -74,7 +74,7 @@
             }
 
             .net-worth {
-                color: rgb(214, 182, 0);
+                color: #AD904B;
             }
 
             .secondary-text {
@@ -126,8 +126,8 @@
 
             ipcRenderer.on('overlayUpdate', (event, window) => {
                 if (window.event === 'netWorth') {
-                    netWorthElement.innerText = +window.data.netWorth.toFixed(2) + ' c';
-                    incomeElement.innerText = window.data.income ? window.data.income : '0 c';
+                    netWorthElement.innerText = +window.data.netWorth.toFixed(2) + ` ${window.data.short}`;
+                    incomeElement.innerText = window.data.income ? window.data.income : `0 ${window.data.short}`;
                 }
             })
 
