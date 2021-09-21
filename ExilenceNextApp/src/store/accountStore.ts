@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
@@ -33,6 +33,14 @@ export class AccountStore {
     makeObservable(this);
     electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
       this.handleAuthCallback(code, error);
+    });
+
+    autorun(() => {
+      if (this.getSelectedAccount?.activeLeague) {
+        rootStore.uiStateStore.setSelectedPriceTableLeagueId(
+          this.getSelectedAccount?.activeLeague.id
+        );
+      }
     });
   }
 
