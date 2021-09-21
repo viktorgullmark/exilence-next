@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -64,7 +65,9 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
           onClick={() => handleRedirect('/net-worth')}
         >
           <ListItemIcon>
-            <AttachMoneyIcon />
+            <Tooltip title={t('title.net_worth') || ''} placement="right">
+              <AttachMoneyIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.net_worth')} />
         </ListItem>
@@ -77,7 +80,9 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         >
           <Typography className={classes.new}>BETA</Typography>
           <ListItemIcon>
-            <BurstModeIcon />
+            <Tooltip title={t('title.bulk_sell') || ''} placement="right">
+              <BurstModeIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.bulk_sell')} />
         </ListItem>
@@ -89,7 +94,9 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
           onClick={() => handleRedirect('/settings')}
         >
           <ListItemIcon>
-            <SettingsIcon />
+            <Tooltip title={t('title.settings') || ''} placement="right">
+              <SettingsIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.settings')} />
         </ListItem>
