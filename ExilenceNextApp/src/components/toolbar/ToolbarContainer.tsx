@@ -51,7 +51,8 @@ const ToolbarContainer = () => {
         ? signalrStore!.activeGroup.income
         : accountStore!.getSelectedAccount!.activeProfile!.income,
       activeCurrency().short,
-      true
+      true,
+      !priceStore.exaltedPrice
     );
 
     const netWorth = signalrStore!.activeGroup
@@ -133,7 +134,7 @@ const ToolbarContainer = () => {
       />
       <Toolbar
         hasPrices={
-          priceStore!.pricesWithCustomValues && priceStore!.pricesWithCustomValues.length > 0
+          priceStore!.customPricesTableData && priceStore!.customPricesTableData.length > 0
         }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
