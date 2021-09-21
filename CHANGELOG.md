@@ -1,6 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - NOT RELEASED
+#### Added
+- Added a setting for using exalted orbs as main currency
+   - Added quicktoggle button directly on the net worth card
+   - Changed the currency color to a more neutral tone
+- Added a sparkline chart to the net worth card
+- Added beta labels to new features
+- Added a switch in the toolbar for quickly toggling autosnapshotting
+- Added tooltips to menu icons
+- Added placeholder option to character selection dropdown
+#### Fixed
+- Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
+- Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
+#### Changed
+- Changed which leagues the pricing league dropdown lists
+  - Now lists all leagues that has prices on poe.ninja
+- Changed the warning message for `Waiting for prices` to be more descriptive than previously
+- Changed the behaviour of the custom prices table
+  - Now uses the active pricing league as default
+- Changed the default setting for autosnapshotting to false
+- Changed background color of the filter total chip
+#### Removed
+- Removed the helper icon from the pricing league dropdown
+
 ## [0.6.0] - 2021-09-19
 #### Added
 - Added pricing support for item type `Blighted map` (Thanks to AndyHoang)
