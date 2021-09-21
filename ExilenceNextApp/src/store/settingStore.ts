@@ -8,7 +8,7 @@ import { RootStore } from './rootStore';
 
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
-  @persist @observable autoSnapshotting: boolean = true;
+  @persist @observable autoSnapshotting: boolean = false;
   @persist @observable isHardwareAccelerationEnabled: boolean =
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
   @persist @observable priceThreshold: number = 0;
