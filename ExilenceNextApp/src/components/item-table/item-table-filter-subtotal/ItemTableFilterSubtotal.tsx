@@ -15,7 +15,7 @@ type ItemTableFilterSubtotalProps = {
 const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { priceStore, settingStore } = useStores();
+  const { priceStore, settingStore, uiStateStore } = useStores();
 
   let value = array.map((i) => i.total).reduce((a, b) => a + b, 0);
 
@@ -36,12 +36,16 @@ const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
     });
 
   return (
-    <Paper className={clsx(classes.paper)}>
-      {t('label.filter_total')}
-      <span style={{ color: rarityColors.currency }}>
-        &nbsp;{sumString} {settingStore.activeCurrency.short}
-      </span>
-    </Paper>
+    <>
+      {uiStateStore?.itemTableFilterText !== '' && (
+        <Paper className={clsx(classes.paper)}>
+          {t('label.filter_total')}
+          <span style={{ color: rarityColors.currency }}>
+            &nbsp;{sumString} {settingStore.activeCurrency.short}
+          </span>
+        </Paper>
+      )}
+    </>
   );
 };
 
