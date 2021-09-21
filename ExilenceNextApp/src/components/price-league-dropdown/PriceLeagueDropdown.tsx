@@ -27,6 +27,7 @@ type PriceLeagueDropdownProps = {
   size?: 'small' | 'medium';
   margin?: 'dense' | 'normal';
   required?: boolean;
+  helperIcon?: boolean;
 };
 
 const PriceLeagueDropdown = ({
@@ -38,6 +39,7 @@ const PriceLeagueDropdown = ({
   size = 'medium',
   margin = 'normal',
   required = true,
+  helperIcon,
 }: PriceLeagueDropdownProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -59,7 +61,7 @@ const PriceLeagueDropdown = ({
           {t('label.select_price_league')}
         </InputLabel>
         <Grid container>
-          <Grid item xs={11}>
+          <Grid item xs={helperIcon ? 11 : 12}>
             <Select
               fullWidth
               labelWidth={141} // FIXME not sure why labelwidth is sometimes reset to 0 when using useLabelWidth
@@ -82,16 +84,18 @@ const PriceLeagueDropdown = ({
               })}
             </Select>
           </Grid>
-          <Grid item xs={1} className={classes.icon}>
-            <Tooltip
-              placement="bottom-end"
-              title={<span>{t('label.new_character_no_league_in_pricing_league')}</span>}
-            >
-              <IconButton>
-                <HelpOutline />
-              </IconButton>
-            </Tooltip>
-          </Grid>
+          {helperIcon && (
+            <Grid item xs={1} className={classes.icon}>
+              <Tooltip
+                placement="bottom-end"
+                title={<span>{t('label.new_character_no_league_in_pricing_league')}</span>}
+              >
+                <IconButton>
+                  <HelpOutline />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          )}
         </Grid>
         {touched.priceLeague && errors.priceLeague && (
           <FormHelperText error>
