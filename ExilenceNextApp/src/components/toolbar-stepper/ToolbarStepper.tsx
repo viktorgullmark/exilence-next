@@ -18,10 +18,11 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   const theme = useTheme();
   const stepDescriptors: IStepDescriptor[] = getToolbarSteps();
   const supportPanelStep = stepDescriptors.length - 1; // Support Panel should be always last
+  const viewStep = [1, 2, 3].includes(step); // 1 - net worth, 2 - bulk sell, 3 - settings
   const isOnSupportPanelStep = step === supportPanelStep;
   const style = {
     color: '#000',
-    maxWidth: 356,
+    maxWidth: 401,
     marginTop: isOnSupportPanelStep ? 10 : 0,
   };
 
@@ -36,24 +37,22 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   });
 
   return (
-    <>
-      <Tour
-        steps={steps}
-        isOpen={isOpen}
-        onRequestClose={handleClose}
-        accentColor={theme.palette.primary.main}
-        maskSpace={theme.spacing(isOnSupportPanelStep ? 0 : 2)}
-        closeWithMask={false}
-        getCurrentStep={(currentStep) => setStep(currentStep)}
-        startAt={0}
-        lastStepNextButton={
-          <Button color="primary" variant="contained">
-            {t('action.lets_begin')}
-          </Button>
-        }
-        disableInteraction
-      />
-    </>
+    <Tour
+      steps={steps}
+      isOpen={isOpen}
+      onRequestClose={handleClose}
+      accentColor={theme.palette.primary.main}
+      maskSpace={theme.spacing(isOnSupportPanelStep || viewStep ? 0 : 2)}
+      closeWithMask={false}
+      getCurrentStep={(currentStep) => setStep(currentStep)}
+      startAt={0}
+      lastStepNextButton={
+        <Button color="primary" variant="contained">
+          {t('action.lets_begin')}
+        </Button>
+      }
+      disableInteraction
+    />
   );
 };
 

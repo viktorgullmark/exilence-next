@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -58,6 +59,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         <ListItem
           button
           key="net-worth"
+          data-tour-elem="netWorthView"
           selected={location.pathname === '/net-worth'}
           onClick={() => handleRedirect('/net-worth')}
         >
@@ -69,9 +71,11 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         <ListItem
           button
           key="bulk-selling"
+          data-tour-elem="bulkSellView"
           selected={location.pathname === '/bulk-sell'}
           onClick={() => handleRedirect('/bulk-sell')}
         >
+          <Typography className={classes.new}>BETA</Typography>
           <ListItemIcon>
             <BurstModeIcon />
           </ListItemIcon>
@@ -80,6 +84,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         <ListItem
           button
           key="settings"
+          data-tour-elem="settingsView"
           selected={location.pathname === '/settings'}
           onClick={() => handleRedirect('/settings')}
         >
