@@ -122,7 +122,9 @@ const Toolbar = ({
           )}
           {signalrOnline && !hasPrices && (
             <WarningIcon
-              titleAccess={t('label.no_prices_retrieved')}
+              titleAccess={t('label.no_prices_retrieved', {
+                league: activeProfile?.activePriceLeagueId,
+              })}
               className={classes.offlineIcon}
             />
           )}
