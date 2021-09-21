@@ -18,6 +18,7 @@ const createAutoUpdater = ({ mainWindow, callbackUpdateAvailable }) => {
   checkForMissingWindow({category: 'autoUpdater', mainWindow})
 
   autoUpdater.channel = getLocalSettings().releaseChannel;
+  autoUpdater.allowDowngrade = false;
   autoUpdater.logger = log;
   autoUpdater.logger.transports.file.level = 'info';
   log.info('App starting...');
