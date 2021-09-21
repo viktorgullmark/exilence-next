@@ -143,6 +143,9 @@ const ToolbarContainer = () => {
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
+        toggleAutosnapshot={() =>
+          settingStore!.setAutoSnapshotting(!settingStore!.autoSnapshotting)
+        }
         toggleSidenav={() => uiStateStore!.toggleSidenav()}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
         handleProfileChange={handleProfileChange}

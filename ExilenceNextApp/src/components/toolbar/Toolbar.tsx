@@ -6,6 +6,7 @@ import {
   Grid,
   MenuItem,
   Select,
+  Switch,
   Tooltip,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -54,6 +55,7 @@ type ToolbarProps = {
   changingProfile: boolean;
   hasPrices?: boolean;
   statusMessage?: IStatusMessage;
+  toggleAutosnapshot: () => void;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
   handleProfileOpen: (edit?: boolean) => void;
@@ -69,6 +71,7 @@ type ToolbarProps = {
 };
 
 const Toolbar = ({
+  autoSnapshotting,
   signalrOnline,
   sidenavOpened,
   groupOverviewOpened,
@@ -84,6 +87,7 @@ const Toolbar = ({
   profilesLoaded,
   changingProfile,
   statusMessage,
+  toggleAutosnapshot,
   toggleGroupOverview,
   handleProfileOpen,
   handleProfileClose,
@@ -220,6 +224,14 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
+              <Tooltip title={t('label.toggle_auto_snapshot_icon_title') || ''} placement="bottom">
+                <Switch
+                  checked={autoSnapshotting}
+                  onChange={toggleAutosnapshot}
+                  name="autoSnapshot"
+                  color="primary"
+                />
+              </Tooltip>
               <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
