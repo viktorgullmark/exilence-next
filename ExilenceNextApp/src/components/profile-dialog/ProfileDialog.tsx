@@ -181,6 +181,7 @@ const ProfileDialog = ({
                         label: c.name,
                       } as ISelectOption;
                     })}
+                    hasPlaceholder
                   />
                   <CheckboxField
                     name="includeEquipment"
