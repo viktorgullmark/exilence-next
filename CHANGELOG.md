@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
   - Now uses the active pricing league as default
 - Changed the default setting for autosnapshotting to false
 - Changed background color of the filter total chip
+- Now only shows the filter total chip when the filter is active
 #### Removed
 - Removed the helper icon from the pricing league dropdown
 
