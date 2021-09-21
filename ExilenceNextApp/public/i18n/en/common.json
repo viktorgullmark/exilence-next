@@ -56,7 +56,7 @@
     "reset_indexeddb": "Reset Data"
   },
   "label": {
-    "no_prices_retrieved": "Waiting for prices",
+    "no_prices_retrieved": "No prices fetched for `{{league}}`, you can change pricing league in your profile",
     "customize_prices": "Customize prices",
     "set_custom_price": "Set custom price",
     "remove_custom_price": "Remove custom price",
