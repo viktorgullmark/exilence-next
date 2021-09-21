@@ -1,9 +1,10 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
+import { Box, Grid, IconButton, Tooltip, Typography } from '@material-ui/core';
+import { Clear, SwapHoriz } from '@material-ui/icons';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
 
@@ -21,6 +22,7 @@ type OverviewWidgetContentProps = {
   currency?: boolean;
   currencyShort?: string;
   tooltip?: string;
+  currencySwitch?: boolean;
 };
 
 const OverviewWidgetContent = ({
@@ -37,9 +39,11 @@ const OverviewWidgetContent = ({
   currency,
   currencyShort,
   tooltip = '',
+  currencySwitch,
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { settingStore, priceStore } = useStores();
   return (
     <>
       <Grid container className={classes.topContent}>
@@ -50,7 +54,40 @@ const OverviewWidgetContent = ({
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
               {currency ? `${formatValue(value, currencyShort, valueIsDiff, true)}` : value}
+              {currency && currencySwitch && (
+                <Tooltip
+                  title={
+                    <>
+                      <Typography variant="subtitle1" color="inherit" gutterBottom>
+                        1 ex = {priceStore.exaltedPrice?.toFixed(1)} chaos
+                      </Typography>
+                      <em>{t('action.currency_switch')}</em>
+                    </>
+                  }
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end"
+                >
+                  <IconButton
+                    size="small"
+                    className={classes.adornmentIcon}
+                    onClick={() => settingStore.setShowPriceInExalt(!settingStore.showPriceInExalt)}
+                  >
+                    <SwapHoriz />
+                  </IconButton>
+                </Tooltip>
+              )}
               <span className={classes.valueSuffix}>{valueSuffix}</span>
+              {clearFn && (
+                <Tooltip
+                  title={`${t('label.reset')}`}
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end"
+                >
+                  <IconButton size="small" className={classes.adornmentIcon} onClick={clearFn}>
+                    <Clear />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Typography>
           </div>
         </Grid>
@@ -90,11 +127,6 @@ const OverviewWidgetContent = ({
                     >
                       {secondaryValue !== 0 ? secondaryValue : ''}
                     </Typography>
-                    {!secondaryValue && clearFn && (
-                      <a className={classes.inlineLink} onClick={clearFn}>
-                        {t('label.reset')}
-                      </a>
-                    )}
                   </>
                 )}
               </div>
