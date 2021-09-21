@@ -232,18 +232,12 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              const accountLeagues = leagues.filter((league) =>
-                characters.find((character) =>
-                  character.league.toLowerCase().includes(league.id.toLowerCase())
-                )
-              );
-              const filteredLeagues = accountLeagues.filter(
+              const filteredPriceLeagues = leagues.filter(
                 (league) =>
                   !unsupportedLeagues.includes(league.id) && league.id.indexOf('SSF') === -1
               );
-
               this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
-              this.rootStore.leagueStore.updatePriceLeagues(filteredLeagues);
+              this.rootStore.leagueStore.updatePriceLeagues(filteredPriceLeagues);
               this.getSelectedAccount.updateAccountLeagues(characters);
               this.getSelectedAccount.updateLeaguesForProfiles(
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
