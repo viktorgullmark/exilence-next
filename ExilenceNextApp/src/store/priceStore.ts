@@ -91,19 +91,17 @@ export class PriceStore {
     if (!prices) {
       return;
     }
-    return filterPrices(
-      prices.filter((p) => {
-        if (customLeaguePrices) {
-          const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
-          if (foundCustomPrice) {
-            p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
-          } else {
-            p.customPrice = 0;
-          }
+    return prices.filter((p) => {
+      if (customLeaguePrices) {
+        const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
+        if (foundCustomPrice) {
+          p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+        } else {
+          p.customPrice = 0;
         }
-        return p;
-      })
-    );
+      }
+      return p;
+    });
   }
 
   @computed get activePriceDetails() {

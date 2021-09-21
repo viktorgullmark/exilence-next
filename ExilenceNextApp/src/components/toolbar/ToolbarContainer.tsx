@@ -134,7 +134,8 @@ const ToolbarContainer = () => {
       />
       <Toolbar
         hasPrices={
-          priceStore!.customPricesTableData && priceStore!.customPricesTableData.length > 0
+          priceStore!.activePricesWithCustomValues &&
+          priceStore!.activePricesWithCustomValues.length > 0
         }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}

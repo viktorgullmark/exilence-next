@@ -168,17 +168,6 @@ export class Profile {
   @computed
   get sparklineChartData(): ISparklineDataPoint[] {
     const snapshots = [...this.snapshots.slice(0, 10)];
-
-    console.log(
-      toJS(
-        snapshots.map((s, i) => {
-          return {
-            x: i + 1,
-            y: getValueForSnapshot(mapSnapshotToApiSnapshot(s)),
-          } as ISparklineDataPoint;
-        })
-      )
-    );
     return snapshots.map((s, i) => {
       return {
         x: i + 1,
