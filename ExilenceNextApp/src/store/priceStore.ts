@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { rootStore } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { filterPrices, findPrice } from '../utils/price.utils';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';
@@ -42,18 +43,46 @@ export class PriceStore {
   }
 
   @computed get exaltedPrice() {
-    return this.pricesWithCustomValues?.find((p) => p.name === 'Exalted Orb')?.calculated;
+    return this.activePricesWithCustomValues?.find((p) => p.name === 'Exalted Orb')?.calculated;
   }
 
-  @computed get pricesWithCustomValues() {
+  @computed get customPricesTableData() {
     const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
     const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
     const leagueId = selectedLeagueId ? selectedLeagueId : activeLeagueId;
     const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
       (lp) => lp.leagueId === leagueId
     );
-
     const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
+    const leaguePriceSources = leaguePriceDetails?.leaguePriceSources;
+    if (!leaguePriceSources || leaguePriceSources?.length === 0) {
+      return;
+    }
+    const prices = leaguePriceSources[0]?.prices;
+    if (!prices) {
+      return;
+    }
+    return filterPrices(
+      prices.filter((p) => {
+        if (customLeaguePrices) {
+          const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
+          if (foundCustomPrice) {
+            p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+          } else {
+            p.customPrice = 0;
+          }
+        }
+        return p;
+      })
+    );
+  }
+
+  @computed get activePricesWithCustomValues() {
+    const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
+    const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
+      (lp) => lp.leagueId === activeLeagueId
+    );
+    const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === activeLeagueId);
     const leaguePriceSources = leaguePriceDetails?.leaguePriceSources;
     if (!leaguePriceSources || leaguePriceSources?.length === 0) {
       return;
