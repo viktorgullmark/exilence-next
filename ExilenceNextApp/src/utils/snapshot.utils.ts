@@ -80,7 +80,8 @@ export const formatValue = (
   value: number | string | undefined,
   suffix: string | undefined,
   change?: boolean,
-  displayZero?: boolean
+  displayZero?: boolean,
+  unavailable?: boolean
 ) => {
   if (!value || typeof value === 'string') {
     return !displayZero ? '' : `0 ${suffix}`;
@@ -93,7 +94,7 @@ export const formatValue = (
 
   valueString = valueString.replace('-', '- ').replace('−', '− ');
 
-  if (value === 0) {
+  if (value === 0 || unavailable) {
     valueString = '0';
   }
 
