@@ -115,7 +115,7 @@ const NetWorth = () => {
                   internalName="networth"
                   color={primaryLighter}
                   height={15}
-                  width={60}
+                  width={80}
                   data={
                     activeGroup ? activeGroup.sparklineChartData : activeProfile?.sparklineChartData
                   }
@@ -137,14 +137,6 @@ const NetWorth = () => {
               currencyShort={settingStore.activeCurrency.short}
               currency
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
-              sparklineChart={
-                <SparklineChart
-                  internalName="income"
-                  color={primaryLighter}
-                  height={15}
-                  width={60}
-                />
-              }
             />
           </Widget>
         </Grid>
@@ -164,14 +156,6 @@ const NetWorth = () => {
               valueColor={theme.palette.text.primary}
               icon={<UpdateIcon fontSize="default" />}
               tooltip="Time since last snapshot"
-              sparklineChart={
-                <SparklineChart
-                  internalName="snapshots"
-                  color={primaryLighter}
-                  height={15}
-                  width={60}
-                />
-              }
             />
           </Widget>
         </Grid>

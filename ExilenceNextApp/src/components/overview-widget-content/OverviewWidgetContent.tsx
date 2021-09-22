@@ -49,15 +49,17 @@ const OverviewWidgetContent = ({
   return (
     <>
       <Grid container className={classes.topContent}>
-        <Grid item sm={1}>
-          <div className={classes.iconWrapper}>{icon}</div>
-        </Grid>
-        <Grid item sm={4}>
-          <Box mx={1} height={1} display="flex" justifyContent="center" alignItems="center">
-            {sparklineChart}
-          </Box>
-        </Grid>
         <Grid item sm={7}>
+          <Grid container spacing={2}>
+            <Grid item>{icon}</Grid>
+            <Grid item>
+              <Box height={1} display="flex" justifyContent="center" alignItems="center">
+                {sparklineChart}
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item sm={5}>
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
               {currency
