@@ -14,6 +14,7 @@ import SnapshotSettings from './general/snapshot-settings/SnapshotSettings';
 import UiSettings from './interface/ui-settings/UiSettings';
 import CustomPricesSettings from './prices/custom-prices-settings/CustomPricesSettings';
 import useStyles from './SettingsTabs.styles';
+import AppExitActionsSettings from './general/app-exit-actions-settings/AppExitActionsSettings';
 
 function a11yProps(index: any) {
   return {
@@ -58,6 +59,12 @@ const SettingsTabs = () => {
           </Tabs>
           <SettingsTab value={settingsTabIndex} index={0}>
             <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.app_exit_action_settings')}</Typography>
+              <Box my={2}>
+                <AppExitActionsSettings />
+              </Box>
+            </Box>
+            <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.snapshot_settings')}</Typography>
               <Box my={2}>
                 <SnapshotSettings />
@@ -88,7 +95,7 @@ const SettingsTabs = () => {
           </SettingsTab>
           <SettingsTab value={settingsTabIndex} index={3}>
             <Box className={classes.subSection}>
-              <Typography variant="overline">{t('title.release_channel')}</Typography>
+              <Typography variant="overline">{t('title.release_channel_settings')}</Typography>
               <Box my={2}>
                 <ReleaseChannelSettings />
               </Box>

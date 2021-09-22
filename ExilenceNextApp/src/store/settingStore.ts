@@ -7,6 +7,7 @@ import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
 export type ReleaseChannel = 'latest' | 'beta';
+export type AppExitTypes = 'minimize-to-tray' | 'exit';
 
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
@@ -19,11 +20,11 @@ export class SettingStore {
   @persist @observable totalPriceThreshold: number = 0;
   @persist @observable showPriceInExalt = false;
   @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
-  @persist
-  @observable
-  uiScale: number = electronService.webFrame.getZoomFactor() * 100;
+  @persist @observable uiScale: number = electronService.webFrame.getZoomFactor() * 100;
   @persist @observable logPath: string =
     'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';
+  @persist @observable appExitAction: AppExitTypes =
+    electronService.localSettings?.appExitAction || 'minimize-to-tray';
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -98,5 +99,11 @@ export class SettingStore {
   @action
   setLogPath(path: string) {
     this.logPath = path;
+  }
+
+  @action
+  setAppExitAction(appExitAction: AppExitTypes) {
+    this.appExitAction = appExitAction;
+    electronService.ipcRenderer.send('app-exit-action', appExitAction);
   }
 }

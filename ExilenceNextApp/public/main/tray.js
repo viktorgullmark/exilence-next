@@ -56,6 +56,8 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
   tray.on('click', () => mainWindow.show());
   tray.setIgnoreDoubleClickEvents(true);
   tray.setContextMenu(contextMenu);
+
+  return tray
 };
 
 module.exports = {

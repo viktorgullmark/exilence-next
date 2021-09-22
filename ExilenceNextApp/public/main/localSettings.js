@@ -9,7 +9,8 @@ const localSettingsExist = fs.existsSync(localSettingsFileLocation);
 
 const defaultLocalSettings = {
   isHardwareAccelerationEnabled: true,
-  releaseChannel: 'latest'
+  releaseChannel: 'latest',
+  appExitAction: 'minimize-to-tray'
 }
 
 function loadLocalSettings() {
@@ -38,6 +39,14 @@ function loadLocalSettings() {
   ipcMain.on('release-channel', (_event, releaseChannel) => {
     const localData = fs.readFileSync(localSettingsFileLocation);
     fs.writeFileSync(localSettingsFileLocation, JSON.stringify({...JSON.parse(localData), releaseChannel}))
+  })
+
+  /**
+   * When clicking X (close window)
+   */
+  ipcMain.on('app-exit-action', (_event, appExitAction) => {
+    const localData = fs.readFileSync(localSettingsFileLocation);
+    fs.writeFileSync(localSettingsFileLocation, JSON.stringify({...JSON.parse(localData), appExitAction}))
   })
 }
 

@@ -18,6 +18,7 @@ type SelectSettingProps = {
   handleChange: (value: any) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
+  maxWidth?: number;
   withNone?: boolean;
 };
 
@@ -27,6 +28,7 @@ const SelectSetting = ({
   handleChange,
   translationKey,
   requiresSnapshot,
+  maxWidth = 150,
   withNone = true,
 }: SelectSettingProps) => {
   const classes = useStyles();
@@ -43,7 +45,7 @@ const SelectSetting = ({
           value={value}
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
-          className={classes.select}
+          style={{ maxWidth }}
         >
           {withNone && (
             <MenuItem value={0}>
