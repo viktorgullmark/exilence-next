@@ -124,6 +124,7 @@ const ItemTableContainer = ({
   }, [activeGroup]);
 
   const data = useMemo(() => {
+    console.log("table data", getItems);
     return getItems;
   }, [getItems, bulkSellView]);
 

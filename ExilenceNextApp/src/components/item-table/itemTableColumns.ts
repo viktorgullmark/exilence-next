@@ -2,6 +2,7 @@ import { Column } from 'react-table';
 import {
   itemCorrupted,
   itemIcon,
+  itemIlvlTier,
   itemLinks,
   itemName,
   itemTabs,
@@ -17,11 +18,10 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'name',
     header: 'Name',
   }),
-  {
-    Header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
-  },
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
+  }),
   itemTabs({
     accessor: 'tab',
     header: 'Tabs',
