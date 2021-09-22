@@ -38,6 +38,14 @@ export function getToolbarSteps(): IStepDescriptor[] {
       selector: '[data-tour-elem="notificationList"]',
     },
     {
+      key: 'currency_switch',
+      selector: '[data-tour-elem="currencySwitch"]',
+    },
+    {
+      key: 'reset_income',
+      selector: '[data-tour-elem="resetIncome"]',
+    },
+    {
       key: 'support_panel_step',
       selector: '[data-tour-elem="supportPanel"]',
     },
