@@ -1,5 +1,12 @@
 import { Column } from 'react-table';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+import {
+  itemCorrupted,
+  itemIcon,
+  itemIlvlTier,
+  itemLinks,
+  itemName,
+  itemValue,
+} from '../columns/Columns';
 
 const itemTableGroupColumns: Column<object>[] = [
   itemIcon({
@@ -10,11 +17,10 @@ const itemTableGroupColumns: Column<object>[] = [
     accessor: 'name',
     header: 'Name',
   }),
-  {
-    Header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
-  },
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
+  }),
   itemCorrupted({
     accessor: 'corrupted',
     header: 'Corrupted',

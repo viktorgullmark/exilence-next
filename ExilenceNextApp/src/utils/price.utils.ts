@@ -169,6 +169,6 @@ export function mapApiPricedItemToPricedItem(item: IPricedItem) {
 }
 
 export function excludeLegacyMaps(prices: IExternalPrice[]) {
-  const legacyMapVariants = ['Pre 2.0', 'Atlas2', 'Atlas2-3.4'];
-  return prices.filter((p) => !p.variant || !legacyMapVariants.includes(p.variant));
+  const acceptedMaps = [', Gen-11', 'expedition'];
+  return prices.filter((p) => !p.variant || acceptedMaps.includes(p.variant));
 }

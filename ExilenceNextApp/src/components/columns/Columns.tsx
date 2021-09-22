@@ -107,6 +107,23 @@ export function itemCorrupted(options: { accessor: string; header: string }): Co
   };
 }
 
+export function itemIlvlTier(options: {
+  accessor: (row: any) => string | number | null | undefined;
+  header: string;
+}): Column<object> {
+  const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    // eslint-disable-next-line react/display-name
+    Cell: (row: any) => {
+      return <span>{row.value}</span>;
+    },
+  };
+}
+
 export function itemTabs(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 

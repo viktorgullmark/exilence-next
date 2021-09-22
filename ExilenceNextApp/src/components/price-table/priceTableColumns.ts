@@ -3,6 +3,7 @@ import {
   itemCell,
   itemCorrupted,
   itemIcon,
+  itemIlvlTier,
   itemLinks,
   itemName,
   itemValue,
@@ -17,10 +18,9 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'name',
     header: 'Name',
   }),
-  itemCell({
-    header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
   }),
   itemCell({
     header: 'Variant',

@@ -50,23 +50,26 @@ export function parseTabNames(tabs: ICompactTab[]) {
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
   return items.map((item: IItem) => {
-    return {
+    const mapTier =
+      item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0;
+    const blighted = item.typeLine.indexOf('Blighted ') > -1;
+    const mappedItem = {
       uuid: uuidv4(),
       itemId: item.id,
-      name: getItemName(item.typeLine, item.name),
+      name: mapTier && item.frameType !== 3 ? item.baseType : getItemName(item.typeLine, item.name),
       typeLine: item.typeLine,
       frameType: item.frameType,
       calculated: 0,
       inventoryId: item.inventoryId,
-      elder: item.elder !== undefined ? item.elder : false,
-      shaper: item.shaper !== undefined ? item.shaper : false,
+      elder: (item.elder !== undefined ? item.elder : false) || isElderMap(item.implicitMods),
+      shaper: (item.shaper !== undefined ? item.shaper : false) || isShaperMap(item.implicitMods),
+      blighted: blighted,
       icon: item.icon,
       ilvl:
         item.typeLine.indexOf(' Seed') > -1 && item.frameType === 5
           ? getSeedTier(item.properties)
           : item.ilvl,
-      tier:
-        item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0,
+      tier: mapTier,
       corrupted: item.corrupted || false,
       links:
         item.sockets !== undefined && item.sockets !== null
@@ -95,6 +98,7 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
           ]
         : [],
     } as IPricedItem;
+    return mappedItem;
   });
 }
 
@@ -193,6 +197,20 @@ export function getItemName(typeline: string, name: string) {
     itemName += ' ' + typeline;
   }
   return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+}
+
+export function isElderMap(implicitMods: string[]): boolean {
+  if (implicitMods) {
+    return implicitMods.some((im) => im.includes('Elder'));
+  }
+  return false;
+}
+
+export function isShaperMap(implicitMods: string[]): boolean {
+  if (implicitMods) {
+    return implicitMods.some((im) => im.includes('Shaper'));
+  }
+  return false;
 }
 
 export function getItemVariant(sockets: ISocket[], explicitMods: string[], name: string): string {

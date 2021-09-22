@@ -11,6 +11,7 @@ export interface IPricedItem {
   max: number;
   elder: boolean;
   shaper: boolean;
+  blighted: boolean;
   mean: number;
   median: number;
   min: number;

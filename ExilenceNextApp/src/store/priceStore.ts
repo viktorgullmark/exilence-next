@@ -1,9 +1,8 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, toJS } from 'mobx';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
-import { rootStore } from '..';
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { filterPrices, findPrice } from '../utils/price.utils';
 import { ILeaguePriceSource } from './../interfaces/league-price-source.interface';

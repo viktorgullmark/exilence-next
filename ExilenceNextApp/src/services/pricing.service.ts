@@ -27,9 +27,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       case 1: // magic
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
-          price = prices.find(
-            (p) => (p.name === item.name || item.name.indexOf(p.name) > -1) && p.tier === item.tier
-          );
+          price = prices.find((p) => p.name === item.name && p.tier === item.tier);
         } else {
           // other (e.g fragments, scrabs)
           price = prices.find((p) => p.name === item.name);
@@ -107,6 +105,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     ...item,
     ...modifiedPrice,
     corrupted: item.corrupted,
+    icon: item.icon,
   };
   return data;
 }

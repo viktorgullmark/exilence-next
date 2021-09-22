@@ -15,6 +15,7 @@ export interface IItem {
   name: string;
   shaper: boolean;
   elder: boolean;
+  baseType: string;
   fractured: boolean;
   synthesised: boolean;
   typeLine: string;

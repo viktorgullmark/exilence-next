@@ -1,5 +1,12 @@
 import { Column } from 'react-table';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+import {
+  itemCorrupted,
+  itemIcon,
+  itemIlvlTier,
+  itemLinks,
+  itemName,
+  itemValue,
+} from '../columns/Columns';
 
 const itemTableBulkSellColumns: Column<object>[] = [
   itemIcon({
@@ -13,11 +20,10 @@ const itemTableBulkSellColumns: Column<object>[] = [
     },
     true
   ),
-  {
-    Header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
-  },
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
+  }),
   itemCorrupted({
     accessor: 'corrupted',
     header: 'Corrupted',
