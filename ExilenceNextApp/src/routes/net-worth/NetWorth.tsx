@@ -114,8 +114,8 @@ const NetWorth = () => {
                 <SparklineChart
                   internalName="networth"
                   color={primaryLighter}
-                  height={15}
-                  width={80}
+                  height={20}
+                  width={90}
                   data={
                     activeGroup ? activeGroup.sparklineChartData : activeProfile?.sparklineChartData
                   }

@@ -24,7 +24,7 @@ const SparklineChart = ({ data, internalName, color, height, width }: any) => (
       data={data}
       style={{
         parent: { position: 'absolute', top: 0 },
-        data: { strokeWidth: 1, fillOpacity: 0.4, fill: `url(#${internalName})`, stroke: color },
+        data: { strokeWidth: 2, fillOpacity: 0.4, fill: `url(#${internalName})`, stroke: color },
       }}
     >
       <VictoryArea interpolation="natural" />
