@@ -28,10 +28,6 @@ const itemTableBulkSellColumns: Column<object>[] = [
     accessor: 'corrupted',
     header: 'Corrupted',
   }),
-  itemCorrupted({
-    accessor: 'corrupted',
-    header: 'Corrupted',
-  }),
   itemLinks({
     accessor: 'links',
     header: 'Links',
