@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - Added a switch in the toolbar for quickly toggling autosnapshotting
 - Added tooltips to menu icons
 - Added placeholder option to character selection dropdown
+- Added option to choose release channels
+   - Allows you to change to the beta channel feed
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
