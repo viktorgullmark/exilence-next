@@ -203,7 +203,7 @@ if (!gotTheLock) {
   app.whenReady().then(async () => {
     await createWindow();
     await createTray(trayProps);
-    await checkForUpdates();
+    if(!isDev) await checkForUpdates();
   });
 
   app.on('activate', async () => {

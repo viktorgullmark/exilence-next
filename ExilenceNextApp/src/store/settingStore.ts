@@ -6,11 +6,15 @@ import { ICurrency } from '../interfaces/currency.interface';
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
+export type ReleaseChannel = 'latest' | 'beta';
+
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
   @persist @observable autoSnapshotting: boolean = false;
   @persist @observable isHardwareAccelerationEnabled: boolean =
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
+  @persist @observable releaseChannel: ReleaseChannel =
+    electronService.localSettings?.releaseChannel || 'latest';
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
   @persist @observable showPriceInExalt = false;
@@ -60,6 +64,12 @@ export class SettingStore {
       this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     this.autoSnapshotting = value;
+  }
+
+  @action
+  setReleaseChannel(value: ReleaseChannel) {
+    this.releaseChannel = value;
+    electronService.ipcRenderer.send('release-channel', value);
   }
 
   @action
