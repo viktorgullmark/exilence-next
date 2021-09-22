@@ -167,7 +167,10 @@ export class Profile {
 
   @computed
   get sparklineChartData(): ISparklineDataPoint[] | undefined {
-    const snapshots = [...this.snapshots.slice(0, 10)];
+    const sortedSnapshots = this.snapshots
+      .slice(0, 10)
+      .sort((a, b) => (moment(a.created).isAfter(b.created) ? 1 : -1));
+    const snapshots = [...sortedSnapshots];
     if (snapshots.length === 0) {
       return;
     }
