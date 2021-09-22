@@ -87,6 +87,7 @@ const OverviewWidgetContent = ({
                   placement="bottom-end"
                 >
                   <IconButton
+                    data-tour-elem="currencySwitch"
                     size="small"
                     className={classes.adornmentIcon}
                     onClick={() => settingStore.setShowPriceInExalt(!settingStore.showPriceInExalt)}
@@ -102,7 +103,12 @@ const OverviewWidgetContent = ({
                   classes={{ tooltip: classes.tooltip }}
                   placement="bottom-end"
                 >
-                  <IconButton size="small" className={classes.adornmentIcon} onClick={clearFn}>
+                  <IconButton
+                    size="small"
+                    data-tour-elem="resetIncome"
+                    className={classes.adornmentIcon}
+                    onClick={clearFn}
+                  >
                     <Clear />
                   </IconButton>
                 </Tooltip>
