@@ -97,7 +97,7 @@ const NetWorth = () => {
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
-        <Grid item xs={6} md={3} lg={3} xl={2}>
+        <Grid item xs={6} md={4} lg={3} xl={2}>
           <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
@@ -125,7 +125,7 @@ const NetWorth = () => {
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3} xl={2}>
+        <Grid item xs={6} md={4} lg={3} xl={2}>
           <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={activeGroup ? getExaltedValue(activeGroup.income) : getExaltedValue(income())}
@@ -140,7 +140,7 @@ const NetWorth = () => {
             />
           </Widget>
         </Grid>
-        <Grid item xs={6} md={3} lg={3} xl={2}>
+        <Grid item xs={6} md={4} lg={3} xl={2}>
           <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
             <OverviewWidgetContent
               value={getSnapshotCardValue(

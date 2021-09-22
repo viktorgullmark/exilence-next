@@ -37,7 +37,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         // unique
         const itemPrices = prices.filter(
           (p) =>
-            item.name.startsWith(p.name) &&
+            p.name === item.name &&
             ((item.links < 5 && p.links !== undefined && p.links < 5) || p.links === item.links) &&
             p.frameType === 3 &&
             (p.variant === item.variant ||

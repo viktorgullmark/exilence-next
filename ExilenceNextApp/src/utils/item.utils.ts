@@ -56,7 +56,10 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
     const mappedItem = {
       uuid: uuidv4(),
       itemId: item.id,
-      name: mapTier && item.frameType !== 3 ? item.baseType : getItemName(item.typeLine, item.name),
+      name:
+        mapTier && item.frameType !== 3
+          ? item.baseType
+          : getItemName(item.name, item.frameType !== 3 ? item.typeLine : undefined),
       typeLine: item.typeLine,
       frameType: item.frameType,
       calculated: 0,
@@ -85,7 +88,7 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
       variant: getItemVariant(
         item.sockets,
         item.explicitMods,
-        getItemName(item.typeLine, item.name)
+        getItemName(item.name, item.typeLine)
       ),
       tab: tab
         ? [
@@ -191,7 +194,7 @@ export function getMapTier(properties: IProperty[]) {
   return 0;
 }
 
-export function getItemName(typeline: string, name: string) {
+export function getItemName(name: string, typeline?: string) {
   let itemName = name;
   if (typeline) {
     itemName += ' ' + typeline;

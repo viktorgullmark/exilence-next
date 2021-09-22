@@ -26,6 +26,8 @@ All notable changes to this project will be documented in this file.
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
   - Now only prices maps based on the latest generation of maps (e.g Expedition)
+- Reworked how uniques are priced
+  - Should now correctly identify uniques all the time
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
