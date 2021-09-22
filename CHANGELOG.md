@@ -1,20 +1,29 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6.1] - NOT RELEASED
+## [1.0.0] - NOT RELEASED
 #### Added
 - Added a setting for using exalted orbs as main currency
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
+- Added support for pricing `Blighted` maps
+- Added support for pricing `Elder` maps
+- Added support for pricing `Shaper` maps
+- Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
 - Added a switch in the toolbar for quickly toggling autosnapshotting
 - Added tooltips to menu icons
 - Added placeholder option to character selection dropdown
 #### Fixed
+- Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
+- Fixed an issue where some legacy maps were priced incorrectly
 - Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
 #### Changed
+- Reworked how maps are priced
+  - Should now accurately price maps with good confidence
+  - Now only prices maps based on the latest generation of maps (e.g Expedition)
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
