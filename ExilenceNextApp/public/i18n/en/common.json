@@ -54,7 +54,8 @@
     "log_settings": "Log",
     "hardware_acceleration": "Hardware Acceleration",
     "reset_indexeddb": "Reset Data",
-    "release_channel": "Release Channel"
+    "release_channel_settings": "Release Channel Settings",
+    "app_exit_action_settings": "Application on exit action"
   },
   "label": {
     "no_prices_retrieved": "No prices fetched for `{{league}}`, you can change pricing league in your profile",
@@ -161,6 +162,7 @@
     "reset_to_default": "Reset to default",
     "enable_hardware_acceleration": "Enable Hardware Acceleration",
     "release_channel": "Current release channel:",
+    "app_exit_actions": "When clicking X (close window)",
     "new_character_no_league_in_pricing_league": "Newly created character and can't see the league it's in? Refresh Exilence Next (ctrl + r).",
     "bulk": "Bulk sell",
     "asking_price": "Asking Price",
@@ -216,7 +218,8 @@
     "ui_scale": "Sets the UI scale",
     "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect",
     "reset_indexeddb": "This option will reset your account, league and local settings",
-    "release_channel": "Note: this setting is for this computer only. You may need to restart Exilence Next to receive app updates."
+    "release_channel": "Note: this setting is for this computer only. You may need to restart Exilence Next to receive app updates.",
+    "app_exit_actions": ""
   },
   "link": {
     "restart_now": "Restart now"

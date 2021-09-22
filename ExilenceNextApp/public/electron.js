@@ -32,6 +32,7 @@ let isQuitting;
 let updateAvailable;
 let trayProps;
 let deeplinkingUrl;
+let tray;
 
 /**
  * Local Settings
@@ -75,6 +76,7 @@ function createWindow() {
     : windows[mainWindow].loadFile(path.resolve(__dirname, '../build/index.html'));
 
   windows[mainWindow].on('close', (e) => {
+    if(getLocalSettings().appExitAction === 'exit') return;
     if (!isQuitting) {
       e.preventDefault();
       windows[mainWindow].hide();
@@ -202,14 +204,14 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
     await createWindow();
-    await createTray(trayProps);
+    tray = await createTray(trayProps);
     if(!isDev) await checkForUpdates();
   });
 
   app.on('activate', async () => {
     if (windows[mainWindow] === null) {
       await createWindow();
-      await createTray(trayProps);
+      tray = await createTray(trayProps);
     }
   });
 
@@ -223,6 +225,7 @@ if (!gotTheLock) {
   });
 
   app.on('before-quit', () => {
+    tray.destroy()
     isQuitting = true;
   });
 }
