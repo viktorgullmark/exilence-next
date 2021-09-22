@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Added placeholder option to character selection dropdown
 - Added option to choose release channels
    - Allows you to change to the beta channel feed
+- Added option to choose what should happen when closing the app window
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
