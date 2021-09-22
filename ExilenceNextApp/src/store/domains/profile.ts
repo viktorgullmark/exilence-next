@@ -166,8 +166,11 @@ export class Profile {
   }
 
   @computed
-  get sparklineChartData(): ISparklineDataPoint[] {
+  get sparklineChartData(): ISparklineDataPoint[] | undefined {
     const snapshots = [...this.snapshots.slice(0, 10)];
+    if (snapshots.length === 0) {
+      return;
+    }
     return snapshots.map((s, i) => {
       return {
         x: i + 1,
