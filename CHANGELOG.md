@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - NOT RELEASED
 #### Added
+- Added support for parsing the Unique stash tab
+- Added support for parsing the Map tab
 - Added a setting for using exalted orbs as main currency
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
@@ -29,6 +31,8 @@ All notable changes to this project will be documented in this file.
   - Now only prices maps based on the latest generation of maps (e.g Expedition)
 - Reworked how uniques are priced
   - Should now correctly identify uniques all the time
+- Changed the underlying data provider
+  - Now uses the new https://api.pathofexile.com instead of `/character-window`
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
