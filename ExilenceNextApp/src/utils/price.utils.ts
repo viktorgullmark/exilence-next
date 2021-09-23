@@ -170,5 +170,5 @@ export function mapApiPricedItemToPricedItem(item: IPricedItem) {
 
 export function excludeLegacyMaps(prices: IExternalPrice[]) {
   const acceptedMaps = [', Gen-11', 'expedition'];
-  return prices.filter((p) => !p.variant || acceptedMaps.includes(p.variant));
+  return prices.filter((p) => p.tier === 0 || !p.variant || acceptedMaps.includes(p.variant));
 }
