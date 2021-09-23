@@ -5,7 +5,6 @@ import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
 
 import { rootStore } from '..';
-import { ICharacterWithItems } from '../interfaces/character-with-items.interface';
 import { ICharacter } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
 import { ILeague } from '../interfaces/league.interface';
@@ -16,7 +15,6 @@ import AppConfig from './../config/app.config';
 import { IStashTabSnapshot } from './../interfaces/stash-tab-snapshot.interface';
 
 const rateLimiter = new RateLimiter(5, 10000);
-const poeUrl = AppConfig.pathOfExileUrl;
 const apiUrl = AppConfig.pathOfExileApiUrl;
 
 export const externalService = {
@@ -26,7 +24,7 @@ export const externalService = {
   getItemsForTabs,
   getLeagues,
   getCharacters,
-  getCharacterItems,
+  getCharacter,
   getProfile,
   loginWithOAuth,
 };
@@ -85,25 +83,12 @@ function getLeagues(
   );
 }
 
-function getCharacters(realm?: string): Observable<AxiosResponse<ICharacter[]>> {
-  // todo: create util for this realm segment
-  const parameters = `?realm=${realm}`;
-
-  return rateLimiter.limit(
-    axios.get<ICharacter[]>(poeUrl + '/character-window/get-characters' + parameters)
-  );
+function getCharacters(): Observable<AxiosResponse<ICharacter[]>> {
+  return rateLimiter.limit(axios.get<ICharacter[]>(`${apiUrl}/character`));
 }
 
-function getCharacterItems(
-  account: string,
-  character: string,
-  realm?: string
-): Observable<AxiosResponse<ICharacterWithItems>> {
-  const parameters = `?accountName=${account}&character=${character}${getRealmParam(realm)}`;
-
-  return rateLimiter.limit(
-    axios.get<ICharacterWithItems>(poeUrl + '/character-window/get-items' + parameters)
-  );
+function getCharacter(character: string): Observable<AxiosResponse<ICharacter>> {
+  return rateLimiter.limit(axios.get<ICharacter>(`${apiUrl}/character/${character}`));
 }
 
 function getProfile(realm: string = 'pc'): Observable<AxiosResponse<IPoeProfile>> {

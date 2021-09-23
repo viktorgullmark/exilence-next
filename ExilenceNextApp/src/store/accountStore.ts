@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
@@ -217,7 +217,7 @@ export class AccountStore {
 
           return forkJoin(
             externalService.getLeagues('main', 1, res.realm),
-            externalService.getCharacters(res.realm),
+            externalService.getCharacters(),
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap((requests) => {

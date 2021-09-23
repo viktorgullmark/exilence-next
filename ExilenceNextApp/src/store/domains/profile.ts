@@ -468,28 +468,23 @@ export class Profile {
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'
-          ? externalService.getCharacterItems(
-              rootStore.accountStore.getSelectedAccount.name!,
-              this.activeCharacterName,
-              rootStore.uiStateStore.selectedPlatform.id
-            )
+          ? externalService.getCharacter(this.activeCharacterName)
           : of(null)
       ).pipe(
         map((result) => {
           const stashTabsWithItems = result[0];
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
-            const characterItems = mapItemsToPricedItems(characterWithItems?.data?.items);
             let includedCharacterItems: IPricedItem[] = [];
             if (this.includeInventory) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId === 'MainInventory')
-              );
+              const inventory = characterWithItems?.data?.inventory;
+              const mappedInventory = inventory ? mapItemsToPricedItems(inventory) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedInventory);
             }
             if (this.includeEquipment) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId !== 'MainInventory')
-              );
+              const equipment = characterWithItems?.data?.equipment;
+              const mappedEquipment = equipment ? mapItemsToPricedItems(equipment) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedEquipment);
             }
             const characterTab: IStashTabSnapshot = {
               stashTabId: 'Character',
