@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing `Blighted` maps
 - Added support for pricing `Elder` maps
 - Added support for pricing `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
@@ -29,6 +30,9 @@ All notable changes to this project will be documented in this file.
   - Now only prices maps based on the latest generation of maps (e.g Expedition)
 - Reworked how uniques are priced
   - Should now correctly identify uniques all the time
+- Reworked skill gem pricing
+  - Accurate pricing for empower, enhance, enlighten
+  - Accurate pricing and identification for all gems
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
