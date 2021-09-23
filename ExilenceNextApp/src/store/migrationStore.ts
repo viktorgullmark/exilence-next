@@ -9,7 +9,7 @@ import { fromStream } from 'mobx-utils';
 
 export class MigrationStore {
   @observable @persist current: number = 1;
-  @observable latest: number = 2;
+  @observable latest: number = 3;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -66,6 +66,13 @@ export class MigrationStore {
           switch (this.current) {
             case 1:
               // version 1
+              observable = this.clearStorage();
+              break;
+            case 2:
+              // version 2
+              break;
+            case 3:
+              // version 3
               observable = this.clearStorage();
               break;
             default:

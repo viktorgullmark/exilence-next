@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
@@ -222,7 +222,7 @@ export class Profile {
     }, Object.create(null));
 
     this.activeStashTabIds.map((id) => {
-      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.n;
+      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.name;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
         series: formatStashTabSnapshotsForChart(
@@ -464,12 +464,7 @@ export class Profile {
 
     fromStream(
       forkJoin(
-        externalService.getItemsForTabs(
-          selectedStashTabs,
-          rootStore.accountStore.getSelectedAccount.name!,
-          league.id,
-          rootStore.uiStateStore.selectedPlatform.id
-        ),
+        externalService.getItemsForTabs(selectedStashTabs, league.id),
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'

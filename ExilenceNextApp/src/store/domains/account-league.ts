@@ -37,28 +37,22 @@ export class AccountLeague {
 
   @action
   getStashTabs() {
-    return externalService
-      .getStashTabs(
-        rootStore.accountStore.getSelectedAccount.name!,
-        this.leagueId,
-        rootStore.uiStateStore.selectedPlatform.id
-      )
-      .pipe(
-        map((response: AxiosResponse<IStash>) => {
-          runInAction(() => {
-            if (response.data.tabs.length > 0) {
-              this.stashtabs = response.data.tabs.filter(
-                (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type)
-              );
-            }
-            this.getStashTabsSuccess();
-          });
-        }),
-        catchError((e: AxiosError) => {
-          of(this.getStashTabsFail(e));
-          throw e;
-        })
-      );
+    return externalService.getStashTabs(this.leagueId).pipe(
+      map((response: AxiosResponse<IStash>) => {
+        runInAction(() => {
+          if (response.data.stashes.length > 0) {
+            this.stashtabs = response.data.stashes.filter(
+              (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type)
+            );
+          }
+          this.getStashTabsSuccess();
+        });
+      }),
+      catchError((e: AxiosError) => {
+        of(this.getStashTabsFail(e));
+        throw e;
+      })
+    );
   }
 
   @action getStashTabsSuccess() {
