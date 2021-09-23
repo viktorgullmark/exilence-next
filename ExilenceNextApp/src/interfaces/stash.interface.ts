@@ -15,8 +15,6 @@ export interface IStashTab {
   type: string;
   metadata: IMetaData;
   items?: IItem[];
-  public?: boolean;
-  folder?: boolean;
   parent?: string;
   children?: IStashTab[];
 }
@@ -29,5 +27,8 @@ export interface ICompactTab {
 }
 
 export interface IMetaData {
-  colour: string;
+  colour?: string;
+  public?: boolean;
+  folder?: boolean;
+  items?: number;
 }

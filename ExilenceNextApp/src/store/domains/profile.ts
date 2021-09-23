@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, concatAll, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -222,7 +222,7 @@ export class Profile {
     }, Object.create(null));
 
     this.activeStashTabIds.map((id) => {
-      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.name;
+      const stashTabName = accountLeague.stashtabList.find((s) => s.id === id)?.name;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
         series: formatStashTabSnapshotsForChart(
@@ -451,7 +451,7 @@ export class Profile {
       return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
     }
 
-    const selectedStashTabs = accountLeague.stashtabs.filter(
+    const selectedStashTabs = accountLeague.stashtabList.filter(
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
 
@@ -461,7 +461,6 @@ export class Profile {
       1,
       selectedStashTabs.length
     );
-
     fromStream(
       forkJoin(
         externalService.getItemsForTabs(selectedStashTabs, league.id),
@@ -477,12 +476,12 @@ export class Profile {
           if (characterWithItems?.data) {
             let includedCharacterItems: IPricedItem[] = [];
             if (this.includeInventory) {
-              const inventory = characterWithItems?.data?.inventory;
+              const inventory = characterWithItems?.data?.character.inventory;
               const mappedInventory = inventory ? mapItemsToPricedItems(inventory) : [];
               includedCharacterItems = includedCharacterItems.concat(mappedInventory);
             }
             if (this.includeEquipment) {
-              const equipment = characterWithItems?.data?.equipment;
+              const equipment = characterWithItems?.data?.character.equipment;
               const mappedEquipment = equipment ? mapItemsToPricedItems(equipment) : [];
               includedCharacterItems = includedCharacterItems.concat(mappedEquipment);
             }
@@ -613,7 +612,7 @@ export class Profile {
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabs);
+      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabList);
       const callback = () => {
         // clear items from previous snapshot
         if (this.snapshots.length > 1) {

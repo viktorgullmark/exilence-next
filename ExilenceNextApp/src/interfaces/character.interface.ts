@@ -1,5 +1,13 @@
 import { IItem } from './item.interface';
 
+export interface ICharacterListResponse {
+  characters: ICharacter[];
+}
+
+export interface ICharacterResponse {
+  character: ICharacter;
+}
+
 export interface ICharacter {
   id: string;
   name: string;

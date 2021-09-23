@@ -49,7 +49,6 @@ export function parseTabNames(tabs: ICompactTab[]) {
 }
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
-  console.log('items for tab before map', items);
   return items.map((item: IItem) => {
     const mapTier =
       item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0;

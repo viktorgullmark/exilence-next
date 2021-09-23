@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -21,6 +21,13 @@ export class AccountLeague {
   constructor(id: string) {
     makeObservable(this);
     this.leagueId = id;
+  }
+
+  @computed get stashtabList() {
+    const flattenedTabs = this.stashtabs.flatMap((st) => {
+      return st.children ?? st;
+    });
+    return flattenedTabs;
   }
 
   @action

@@ -222,7 +222,7 @@ export class AccountStore {
           ).pipe(
             concatMap((requests) => {
               const leagues: ILeague[] = requests[0].data;
-              const characters: ICharacter[] = requests[1].data;
+              const characters: ICharacter[] = requests[1].data.characters;
               const unsupportedLeagues = ['Path of Exile: Royale'];
 
               if (leagues.length === 0) {

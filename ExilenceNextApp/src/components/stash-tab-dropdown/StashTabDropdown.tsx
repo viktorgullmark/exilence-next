@@ -42,7 +42,6 @@ const StashTabDropdown = ({
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find((st) => st.id === id);
-    console.log('color', foundTab?.metadata.colour);
     return foundTab ? foundTab.metadata.colour : '';
   };
 

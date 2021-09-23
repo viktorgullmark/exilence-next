@@ -51,11 +51,11 @@ const ProfileDialogContainer = ({
       if (foundLeague && accountLeague) {
         setPriceLeague(getPriceLeagueSelection(isEditing).id);
         setCharacters(accountLeague.characters);
-        setStashTabs(accountLeague.stashtabs);
+        setStashTabs(accountLeague.stashtabList);
 
         if (isEditing) {
           setSelectedStashTabs(
-            accountLeague.stashtabs.filter((s) => profile!.activeStashTabIds.includes(s.id))
+            accountLeague.stashtabList.filter((s) => profile!.activeStashTabIds.includes(s.id))
           );
         }
       }
@@ -95,7 +95,7 @@ const ProfileDialogContainer = ({
     setSelectedStashTabs([]);
 
     if (accountLeague) {
-      setStashTabs(accountLeague.stashtabs);
+      setStashTabs(accountLeague.stashtabList);
       setCharacters(accountLeague.characters);
     } else {
       setStashTabs([]);
