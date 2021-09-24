@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Changed the behaviour of the custom prices table
   - Now uses the active pricing league as default
 - Changed the default setting for autosnapshotting to false
+- Changed the minimum auto snapshotting interval to five minutes, up from two
 - Changed background color of the filter total chip
 - Now only shows the filter total chip when the filter is active
 #### Removed

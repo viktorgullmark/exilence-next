@@ -22,7 +22,7 @@ const SnapshotSettings = () => {
           handleChange={(value: number) => settingStore!.setAutoSnapshotInterval(value)}
           translationKey="auto_snapshot_interval"
           disabled={!settingStore!.autoSnapshotting}
-          minimum={2}
+          minimum={5}
           maximum={1000}
           suffixKey="unit.minute"
         />
