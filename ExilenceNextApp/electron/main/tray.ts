@@ -1,18 +1,23 @@
-const { checkForUpdates } = require('./autoUpdater');
-const { destroyNetWorthOverlayWindow } = require('./overlays/netWorthOverlay');
-const path = require('path');
-const { app, Tray, Menu, shell } = require('electron');
+import { app, Tray, Menu, shell, BrowserWindow } from 'electron';
+import { checkForUpdates } from './autoUpdater';
+import { destroyNetWorthOverlay } from './overlays/NetWorth/netWorthOverlay';
+import * as path from 'path';
 
-const trayIconPath = path.join(__dirname, `../icon512x512.png`);
-const checkForMissingWindow = require('../util');
+const trayIconPath = path.join(__dirname, `../../icon512x512.png`);
+import checkForMissingWindow from './utils';
 
-let tray;
+type CreateTrayProps = {
+  mainWindow: BrowserWindow;
+  updateAvailable: boolean;
+  isQuittingCallback: (status: boolean) => void;
+};
 
-const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
-  checkForMissingWindow({category: 'tray', mainWindow})
+let tray: Tray | null;
 
+const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }: CreateTrayProps) => {
+  checkForMissingWindow({ category: 'tray', mainWindow });
   tray = new Tray(trayIconPath);
-  const separator = { type: 'separator' };
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show Exilence Next',
@@ -25,7 +30,7 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
         await checkForUpdates();
       },
     },
-    separator,
+    { type: 'separator' },
     {
       label: 'Patreon',
       type: 'normal',
@@ -40,13 +45,13 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
         await shell.openExternal('https://discord.gg/yxuBrPY');
       },
     },
-    separator,
+    { type: 'separator' },
     {
       label: 'Quit',
       type: 'normal',
       click: () => {
         isQuittingCallback(true);
-        destroyNetWorthOverlayWindow();
+        destroyNetWorthOverlay();
         app.quit();
       },
     },
@@ -56,10 +61,8 @@ const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }) => {
   tray.on('click', () => mainWindow.show());
   tray.setIgnoreDoubleClickEvents(true);
   tray.setContextMenu(contextMenu);
-
-  return tray
 };
 
-module.exports = {
-  createTray,
-};
+const destroyTray = () => tray instanceof Tray && tray.destroy();
+
+export { createTray, CreateTrayProps, destroyTray };

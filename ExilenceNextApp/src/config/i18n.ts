@@ -10,7 +10,7 @@ const url = require('url');
 function getTranslationPath(lng: string, ns: string) {
   const langPath = `/i18n/${lng}/${ns}.json`;
   const fullPath = url.format({
-    pathname: path.join(electronService.appPath, langPath),
+    pathname: path.join(electronService.appPath, `../public/${langPath}`),
     protocol: 'file:',
     slashes: true,
   });
