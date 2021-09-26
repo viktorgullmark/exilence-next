@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing `Blighted` maps
 - Added support for pricing `Elder` maps
 - Added support for pricing `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
