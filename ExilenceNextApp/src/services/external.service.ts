@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { forkJoin, from, Observable, of, throwError } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
-import { concatMap, map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
