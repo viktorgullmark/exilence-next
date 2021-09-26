@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
 - Added support for pricing `Blighted`, `Elder` and `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
