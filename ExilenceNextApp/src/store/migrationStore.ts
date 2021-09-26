@@ -8,7 +8,7 @@ import { RootStore } from './rootStore';
 import { fromStream } from 'mobx-utils';
 
 export class MigrationStore {
-  @observable @persist current: number = 1;
+  @observable @persist current: number = 2;
   @observable latest: number = 3;
 
   constructor(private rootStore: RootStore) {
@@ -65,14 +65,11 @@ export class MigrationStore {
           let observable: Observable<void | {}> = of({});
           switch (this.current) {
             case 1:
-              // version 1
+              // from version 1
               observable = this.clearStorage();
               break;
             case 2:
-              // version 2
-              break;
-            case 3:
-              // version 3
+              // from version 2
               observable = this.clearStorage();
               break;
             default:
