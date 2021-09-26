@@ -19,7 +19,7 @@ const SparklineChart = ({ data, internalName, color, height, width }: any) => (
         duration: 2000,
         onLoad: { duration: 1000 },
       }}
-      domainPadding={{ x: 0, y: 5 }}
+      domainPadding={{ x: 0, y: 0 }}
       padding={{ top: 0, bottom: 0, right: 0, left: 0 }}
       data={data}
       style={{
@@ -27,7 +27,7 @@ const SparklineChart = ({ data, internalName, color, height, width }: any) => (
         data: { strokeWidth: 2, fillOpacity: 0.4, fill: `url(#${internalName})`, stroke: color },
       }}
     >
-      <VictoryArea interpolation="natural" />
+      <VictoryArea interpolation="basis" />
     </VictoryGroup>
   </Box>
 );
