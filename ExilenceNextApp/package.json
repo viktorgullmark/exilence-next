@@ -120,12 +120,10 @@
     ],
     "extraFiles": [
       "public/i18n/**/*",
-      "electron/main/overlays/**/*",
-      "public/background-tasks/**/*",
       "public/overlays/**/*"
     ],
     "directories": {
-      "buildResources": "src/assets/**/*"
+      "buildResources": "src/assets/*"
     },
     "publish": {
       "provider": "github",

@@ -19,10 +19,10 @@ type BrowserWindowsConfigType = {
 
 const filePathLocations = {
   prodPath: '..',
-  overlaysDev: '../../electron/main/overlays',
-  overlaysProd: '../main/overlays',
+  overlaysDev: '../../public/overlays',
+  overlaysProd: '../overlays',
 };
-console.log(path.resolve(__dirname, `${filePathLocations.overlaysProd}/index.html`));
+
 const browserWindowsConfig: BrowserWindowsConfigType = {
   [MAIN_BROWSER_WINDOW]: {
     width: 1150,
@@ -46,10 +46,7 @@ const browserWindowsConfig: BrowserWindowsConfigType = {
     width: 255,
     height: 92,
     devLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysDev}/NetWorth/netWorth.html`),
-    prodLoadPath: path.resolve(
-      __dirname,
-      `${filePathLocations.overlaysProd}/NetWorth/netWorth.html`
-    ),
+    prodLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysProd}/netWorth.html`),
   },
 };
 export {
