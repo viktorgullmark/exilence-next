@@ -8,9 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added a setting for using exalted orbs as main currency
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
-- Added support for pricing `Blighted` maps
-- Added support for pricing `Elder` maps
-- Added support for pricing `Shaper` maps
+- Added support for pricing `Blighted`, `Elder` and `Shaper` maps
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
