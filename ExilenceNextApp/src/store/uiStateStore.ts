@@ -16,6 +16,7 @@ import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
 import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
+import RateLimiter from 'rxjs-ratelimiter';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -96,8 +97,16 @@ export class UiStateStore {
   @persist @observable bulkSellGeneratedMessage: string = '';
   @persist @observable bulkSellGeneratingImage: boolean = false;
 
+  // default: 1 req per 10 sec = 30 req over 5 min
+  @observable rateLimiter = new RateLimiter(1, 10 * 1000);
+
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @action.bound
+  setRateLimit(requests: number, interval: number) {
+    this.rateLimiter = new RateLimiter(1, (interval / requests) * 1000);
   }
 
   @action
