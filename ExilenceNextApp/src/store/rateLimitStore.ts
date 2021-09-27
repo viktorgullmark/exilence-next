@@ -28,7 +28,7 @@ export class RateLimitStore {
 
   @action
   setRateLimiter2(limit: IRateLimitBoundaries) {
-    // todo: update headers when needed
+    // todo: only update when needed
   }
 
   @action
