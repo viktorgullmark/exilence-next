@@ -122,6 +122,13 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
 export function isDivinationCard(icon: string) {
   return icon.indexOf('/Divination/') > -1;
 }
+
+export function isSpecialGem(name: string) {
+  const suffix = 'Support';
+  const specialGems = [`Empower ${suffix}`, `Enhance ${suffix}`, `Enlighten ${suffix}`];
+  return specialGems.some((sg) => name.includes(sg));
+}
+
 export function getLinks(array: any[]) {
   const numMapping: any = {};
   let greatestFreq = 0;

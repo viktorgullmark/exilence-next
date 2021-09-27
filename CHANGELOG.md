@@ -30,6 +30,9 @@ All notable changes to this project will be documented in this file.
   - Now only prices maps based on the latest generation of maps (e.g Expedition)
 - Reworked how uniques are priced
   - Should now correctly identify uniques all the time
+- Reworked skill gem pricing
+  - Accurate pricing for empower, enhance, enlighten
+  - Accurate pricing and identification for all gems
 - Changed the underlying data provider
   - Now uses the new https://api.pathofexile.com instead of `/character-window`
 - Changed which leagues the pricing league dropdown lists
