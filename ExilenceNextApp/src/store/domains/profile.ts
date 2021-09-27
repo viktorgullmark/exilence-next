@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction, toJS } from 
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, from, of, throwError } from 'rxjs';
 import { catchError, concatAll, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
@@ -15,6 +15,7 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
+import { IStashTab } from '../../interfaces/stash.interface';
 import { pricingService } from '../../services/pricing.service';
 import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
 import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
@@ -455,6 +456,12 @@ export class Profile {
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
 
+    const getItemsForTabs = forkJoin(
+      selectedStashTabs.map((tab: IStashTab) => {
+        return externalService.getItemsForTab(tab, league.id);
+      })
+    );
+
     rootStore.uiStateStore.setStatusMessage(
       'fetching_stash_tab',
       undefined,
@@ -463,7 +470,7 @@ export class Profile {
     );
     fromStream(
       forkJoin(
-        externalService.getItemsForTabs(selectedStashTabs, league.id),
+        getItemsForTabs,
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'

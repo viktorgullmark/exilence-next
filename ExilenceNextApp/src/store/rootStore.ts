@@ -7,6 +7,7 @@ import { MigrationStore } from './migrationStore';
 import { NotificationStore } from './notificationStore';
 import { OverlayStore } from './overlayStore';
 import { PriceStore } from './priceStore';
+import { RateLimitStore } from './rateLimitStore';
 import { RouteStore } from './routeStore';
 import { SettingStore } from './settingStore';
 import { SignalrStore } from './signalrStore';
@@ -28,6 +29,7 @@ export class RootStore {
   overlayStore: OverlayStore;
   logStore: LogStore;
   customPriceStore: CustomPriceStore;
+  rateLimitStore: RateLimitStore;
 
   constructor() {
     this.uiStateStore = new UiStateStore(this);
@@ -44,5 +46,6 @@ export class RootStore {
     this.overlayStore = new OverlayStore(this);
     this.logStore = new LogStore(this);
     this.customPriceStore = new CustomPriceStore(this);
+    this.rateLimitStore = new RateLimitStore(this);
   }
 }
