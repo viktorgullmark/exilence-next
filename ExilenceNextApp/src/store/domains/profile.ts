@@ -465,12 +465,15 @@ export class Profile {
     }
 
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
-    const getMainTabsWithChildren = forkJoin(
-      // slice away first because we already fetched it when checking headers
-      tabsToFetch.map((tab: IStashTab) => {
-        return externalService.getStashTabWithChildren(tab, league.id);
-      })
-    );
+    const getMainTabsWithChildren =
+      tabsToFetch.length > 0
+        ? forkJoin(
+            // slice away first because we already fetched it when checking headers
+            tabsToFetch.map((tab: IStashTab) => {
+              return externalService.getStashTabWithChildren(tab, league.id);
+            })
+          )
+        : of([]);
 
     rootStore.uiStateStore.setStatusMessage(
       'fetching_stash_tab',
@@ -491,7 +494,10 @@ export class Profile {
           let subTabs = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
-          subTabs = firstStashTab ? subTabs.concat([firstStashTab]) : subTabs;
+          subTabs =
+            firstStashTab && firstStashTab.children
+              ? subTabs.concat(firstStashTab.children)
+              : subTabs;
           // if no subtabs exist, simply return the original request
           if (subTabs.length === 0) {
             return of(response);
