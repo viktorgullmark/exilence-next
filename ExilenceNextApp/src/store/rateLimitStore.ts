@@ -1,4 +1,5 @@
 import { action, makeObservable } from 'mobx';
+import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
 
@@ -14,8 +15,8 @@ interface IRateLimitBoundaries {
 // todo: test timer for limits
 
 export class RateLimitStore {
-  rateLimiter1 = rateLimit(13, 10 * 1000);
-  rateLimiter2 = rateLimit(27, 300 * 1000);
+  rateLimiter1 = rateLimit(13, 10 * 1000, queueScheduler);
+  rateLimiter2 = rateLimit(27, 300 * 1000, queueScheduler);
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);

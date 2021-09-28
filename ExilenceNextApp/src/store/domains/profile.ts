@@ -10,6 +10,7 @@ import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
+import { IItem } from '../../interfaces/item.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
@@ -456,9 +457,9 @@ export class Profile {
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
 
-    const getItemsForTabs = forkJoin(
+    const getMainTabsWithChildren = forkJoin(
       selectedStashTabs.map((tab: IStashTab) => {
-        return externalService.getItemsForTab(tab, league.id);
+        return externalService.getStashTabWithChildren(tab, league.id);
       })
     );
 
@@ -470,15 +471,49 @@ export class Profile {
     );
     fromStream(
       forkJoin(
-        getItemsForTabs,
+        getMainTabsWithChildren,
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'
           ? externalService.getCharacter(this.activeCharacterName)
           : of(null)
       ).pipe(
+        switchMap((response) => {
+          const subTabs = response[0]
+            .filter((sst) => sst.children)
+            .flatMap((sst) => sst.children ?? sst);
+          const getItemsForSubTabs = forkJoin(
+            subTabs.map((tab) => {
+              return externalService.getStashTabWithChildren(tab, league.id, true);
+            })
+          );
+          return getItemsForSubTabs.pipe(
+            mergeMap((items) => {
+              const combinedTabs = response[0].concat(items);
+              response[0] = combinedTabs.map((sst) => {
+                // set name for sub tabs to same as parent
+                const parent = combinedTabs.find((x) => x.id === sst.parent);
+                if (parent) {
+                  sst.index = parent.index;
+                  sst.name = parent.name;
+                  sst.id = parent.id;
+                  sst.metadata = parent.metadata;
+                }
+                return sst;
+              });
+              return of(response);
+            })
+          );
+        }),
         map((result) => {
-          const stashTabsWithItems = result[0];
+          const stashTabsWithItems = result[0].map((tab) => {
+            const stashitems = tab.items;
+            const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
+            return {
+              ...{ stashTabId: tab.id },
+              ...{ pricedItems: items },
+            } as IStashTabSnapshot;
+          });
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
             let includedCharacterItems: IPricedItem[] = [];
