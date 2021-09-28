@@ -19,7 +19,7 @@ export class SettingStore {
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
   @persist @observable showPriceInExalt = false;
-  @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
+  @persist @observable autoSnapshotInterval: number = 60 * 5 * 1000; // default to 5 minutes
   @persist @observable uiScale: number = electronService.webFrame.getZoomFactor() * 100;
   @persist @observable logPath: string =
     'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';

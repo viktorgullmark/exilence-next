@@ -45,7 +45,7 @@ export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) 
 }
 
 export function parseTabNames(tabs: ICompactTab[]) {
-  return tabs.map((t) => t.n).join(', ');
+  return tabs.map((t) => t.name).join(', ');
 }
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
@@ -93,10 +93,10 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
       tab: tab
         ? [
             {
-              n: tab.n,
-              i: tab.i,
+              name: tab.name,
+              index: tab.index,
               id: tab.id,
-              colour: tab.colour,
+              color: tab.metadata.colour,
             } as ICompactTab,
           ]
         : [],

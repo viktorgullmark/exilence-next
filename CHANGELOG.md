@@ -3,12 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - NOT RELEASED
 #### Added
+- Added support for parsing the Unique stash tab
+- Added support for parsing the Map tab
 - Added a setting for using exalted orbs as main currency
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
-- Added support for pricing `Blighted` maps
-- Added support for pricing `Elder` maps
-- Added support for pricing `Shaper` maps
+- Added support for pricing `Blighted`, `Elder` and `Shaper` maps
 - Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
@@ -33,13 +33,18 @@ All notable changes to this project will be documented in this file.
 - Reworked skill gem pricing
   - Accurate pricing for empower, enhance, enlighten
   - Accurate pricing and identification for all gems
+- Changed the underlying data provider
+  - Now uses the new https://api.pathofexile.com instead of `/character-window`
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
 - Changed the behaviour of the custom prices table
   - Now uses the active pricing league as default
 - Changed the default setting for autosnapshotting to false
+- Changed the minimum auto snapshotting interval to five minutes, up from two
 - Changed background color of the filter total chip
+- Changed how we set the rate limitation on requests
+  - Now parses the headers from the response and sets/updates them accordingly
 - Now only shows the filter total chip when the filter is active
 #### Removed
 - Removed the helper icon from the pricing league dropdown

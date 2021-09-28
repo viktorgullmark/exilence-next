@@ -94,6 +94,10 @@ const NetWorth = () => {
     uiStateStore!.setBulkSellView(false);
   }, []);
 
+  const chartData = activeGroup
+    ? activeGroup.sparklineChartData
+    : activeProfile?.sparklineChartData;
+
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
@@ -111,15 +115,15 @@ const NetWorth = () => {
               currency
               tooltip="Change in value between the two latest snapshots"
               sparklineChart={
-                <SparklineChart
-                  internalName="networth"
-                  color={primaryLighter}
-                  height={20}
-                  width={90}
-                  data={
-                    activeGroup ? activeGroup.sparklineChartData : activeProfile?.sparklineChartData
-                  }
-                />
+                chartData && (
+                  <SparklineChart
+                    internalName="networth"
+                    color={primaryLighter}
+                    height={20}
+                    width={90}
+                    data={chartData}
+                  />
+                )
               }
               currencySwitch
             />

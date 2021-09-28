@@ -4,9 +4,9 @@ import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
+import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ISelectOption } from '../interfaces/select-option.interface';
-
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { TimespanType } from '../types/timespan.type';
@@ -15,7 +15,6 @@ import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
-import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 

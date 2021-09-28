@@ -1,12 +1,10 @@
-import React, { ChangeEvent, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { observer } from 'mobx-react-lite';
-
+import React, { ChangeEvent, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
-import { rgbToHex } from './../../utils/colour.utils';
 import useStyles from './StashTabDropdown.styles';
 
 type StashTabDropdownProps = {
@@ -44,7 +42,7 @@ const StashTabDropdown = ({
 
   const getColour = (id: string) => {
     const foundTab = stashTabs.find((st) => st.id === id);
-    return foundTab ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b) : '';
+    return foundTab ? foundTab.metadata.colour : '';
   };
 
   useEffect(() => {
@@ -62,7 +60,7 @@ const StashTabDropdown = ({
         style={{ width: width ? width : 'auto' }}
         value={selectedStashTabs}
         defaultValue={defaultValue}
-        getOptionLabel={(option) => option.n}
+        getOptionLabel={(option) => option.name}
         onChange={(e, value) => {
           if (handleChange) {
             handleChange(e);
@@ -75,9 +73,9 @@ const StashTabDropdown = ({
               variant="outlined"
               key={index}
               className={classes.chip}
-              label={option.n}
+              label={option.name}
               classes={{ label: classes.chipLabel }}
-              style={{ border: `2px solid ${getColour(option.id)}` }}
+              style={{ border: `2px solid #${getColour(option.id)}` }}
               {...getTagProps({ index })}
             />
           ))

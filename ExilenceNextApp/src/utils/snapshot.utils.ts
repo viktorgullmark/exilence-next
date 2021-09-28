@@ -7,7 +7,6 @@ import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-pricedite
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
-import { rgbToHex } from './colour.utils';
 import { getRarityIdentifier, mergeItemStacks } from './item.utils';
 
 export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashTab[]) => {
@@ -24,12 +23,10 @@ export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashT
             uuid: st.uuid,
             stashTabId: foundTab?.id,
             pricedItems: st.pricedItems,
-            index: foundTab?.i,
+            index: foundTab?.index,
             value: st.value,
-            color: foundTab
-              ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
-              : undefined,
-            name: foundTab?.n,
+            color: foundTab ? foundTab.metadata.colour : undefined,
+            name: foundTab?.name,
           } as IApiStashTabSnapshot;
         })
       : snapshot.stashTabSnapshots,
@@ -150,7 +147,7 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
             (i.calculated > 0 && i.name.toLowerCase().includes(filterText)) ||
             (i.tab &&
               i.tab
-                .map((t) => t.n)
+                .map((t) => t.name)
                 .join(', ')
                 .toLowerCase()
                 .includes(filterText)) ||
