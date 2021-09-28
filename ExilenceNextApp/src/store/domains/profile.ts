@@ -488,9 +488,10 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
-          const subTabs = response[0]
+          let subTabs = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
+          subTabs = firstStashTab ? subTabs.concat([firstStashTab]) : subTabs;
           // if no subtabs exist, simply return the original request
           if (subTabs.length === 0) {
             return of(response);
