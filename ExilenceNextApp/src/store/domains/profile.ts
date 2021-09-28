@@ -482,6 +482,10 @@ export class Profile {
           const subTabs = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
+          // if no subtabs exist, simply return the original request
+          if (subTabs.length === 0) {
+            return of(response);
+          }
           const getItemsForSubTabs = forkJoin(
             subTabs.map((tab) => {
               return externalService.getStashTabWithChildren(tab, league.id, true);
