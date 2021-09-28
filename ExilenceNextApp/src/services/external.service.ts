@@ -50,6 +50,9 @@ function getStashTabWithChildren(stashTab: IStashTab, league: string, children?:
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
       mergeMap((stashTab: AxiosResponse<IStashTabResponse>) => {
+        if (!children) {
+          rootStore.uiStateStore.incrementStatusMessageCount();
+        }
         return of(stashTab.data.stash);
       })
     );

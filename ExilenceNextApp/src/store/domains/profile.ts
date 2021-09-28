@@ -486,6 +486,7 @@ export class Profile {
           if (subTabs.length === 0) {
             return of(response);
           }
+          rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
           const getItemsForSubTabs = forkJoin(
             subTabs.map((tab) => {
               return externalService.getStashTabWithChildren(tab, league.id, true);
