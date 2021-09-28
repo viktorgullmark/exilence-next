@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
@@ -41,7 +41,7 @@ export class AccountLeague {
   }
 
   @action
-  getStashTabs() {
+  getStashTabs(checkHeaders?: boolean) {
     return externalService.getStashTabs(this.leagueId).pipe(
       map((response: AxiosResponse<IStash>) => {
         runInAction(() => {
@@ -50,6 +50,24 @@ export class AccountLeague {
           }
           this.getStashTabsSuccess();
         });
+      }),
+      switchMap(() => {
+        const selectedStashTabs = this.stashtabList.filter(
+          (st) =>
+            rootStore.accountStore.getSelectedAccount.activeProfile?.activeStashTabIds.find(
+              (ast) => ast === st.id
+            ) !== undefined
+        );
+        // fetch first and set headers
+        if (selectedStashTabs.length > 0 && checkHeaders) {
+          return externalService.getStashTabWithChildren(
+            selectedStashTabs[0],
+            this.leagueId,
+            false,
+            true
+          );
+        }
+        return of(undefined);
       }),
       catchError((e: AxiosError) => {
         of(this.getStashTabsFail(e));

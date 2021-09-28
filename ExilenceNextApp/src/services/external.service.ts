@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { Observable, of } from 'rxjs';
-import { concatMap, mergeMap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -45,13 +45,24 @@ function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
   return axios.get<IStash>(`${apiUrl}/stash/${league}`);
 }
 
-function getStashTabWithChildren(stashTab: IStashTab, league: string, children?: boolean) {
+function getStashTabWithChildren(
+  stashTab: IStashTab,
+  league: string,
+  children?: boolean,
+  parseHeaders?: boolean
+) {
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
-      mergeMap((stashTab: AxiosResponse<IStashTabResponse>) => {
+      concatMap((stashTab: AxiosResponse<IStashTabResponse>) => {
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
+        }
+        if (parseHeaders) {
+          rootStore.rateLimitStore.parseRateLimitHeaders(stashTab.headers['x-rate-limit-account']);
+          if (rootStore.rateLimitStore.shouldUpdateLimits) {
+            rootStore.rateLimitStore.updateLimits();
+          }
         }
         return of(stashTab.data.stash);
       })

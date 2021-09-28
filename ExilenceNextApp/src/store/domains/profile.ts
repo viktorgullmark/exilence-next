@@ -413,14 +413,14 @@ export class Profile {
     rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
 
     fromStream(
-      accountLeague.getStashTabs().pipe(
-        mergeMap(() => of(this.refreshStashTabsSuccess(league.id))),
+      accountLeague.getStashTabs(rootStore.rateLimitStore.shouldUpdateLimits).pipe(
+        mergeMap((response) => of(this.refreshStashTabsSuccess(league.id, response))),
         catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
       )
     );
   }
 
-  @action refreshStashTabsSuccess(leagueId: string) {
+  @action refreshStashTabsSuccess(leagueId: string, firstStashTab?: IStashTab) {
     rootStore.notificationStore.createNotification(
       'refreshing_stash_tabs',
       'success',
@@ -428,7 +428,7 @@ export class Profile {
       undefined,
       leagueId
     );
-    this.getItems();
+    this.getItems(firstStashTab);
   }
 
   @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
@@ -442,7 +442,7 @@ export class Profile {
     this.snapshotFail();
   }
 
-  @action getItems() {
+  @action getItems(firstStashTab?: IStashTab) {
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       (al) => al.leagueId === this.activeLeagueId
     );
@@ -457,8 +457,17 @@ export class Profile {
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
 
+    if (selectedStashTabs.length === 0) {
+      return this.getItemsFail(
+        new Error('no_stash_tabs_selected_for_profile'),
+        this.activeLeagueId
+      );
+    }
+
+    const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
     const getMainTabsWithChildren = forkJoin(
-      selectedStashTabs.map((tab: IStashTab) => {
+      // slice away first because we already fetched it when checking headers
+      tabsToFetch.slice(1).map((tab: IStashTab) => {
         return externalService.getStashTabWithChildren(tab, league.id);
       })
     );
@@ -494,7 +503,10 @@ export class Profile {
           );
           return getItemsForSubTabs.pipe(
             mergeMap((items) => {
-              const combinedTabs = response[0].concat(items);
+              let combinedTabs = response[0].concat(items);
+              if (firstStashTab) {
+                combinedTabs = combinedTabs.concat([firstStashTab]);
+              }
               response[0] = combinedTabs.map((sst) => {
                 // set name for sub tabs to same as parent
                 const parent = combinedTabs.find((x) => x.id === sst.parent);
