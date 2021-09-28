@@ -8,9 +8,6 @@ interface IRateLimitBoundaries {
   interval: number;
 }
 
-// prio: optimize, right now we waste 1 request to check limits every snapshot
-
-// todo: parse remaining requests until limit
 // todo: parse remaining time on current limit
 
 const rateLimiter1Defaults: IRateLimitBoundaries = {
@@ -26,7 +23,6 @@ const rateLimiter2Defaults: IRateLimitBoundaries = {
 export class RateLimitStore {
   @observable rateLimiter1limits = rateLimiter1Defaults;
   @observable rateLimiter2limits = rateLimiter2Defaults;
-  // set to true just to test
   @observable shouldUpdateLimits = false;
   @observable rateLimiter1 = rateLimit(
     this.rateLimiter1limits.requests,

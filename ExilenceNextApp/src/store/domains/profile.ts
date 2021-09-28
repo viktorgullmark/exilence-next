@@ -413,7 +413,7 @@ export class Profile {
     rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
 
     fromStream(
-      accountLeague.getStashTabs(rootStore.rateLimitStore.shouldUpdateLimits).pipe(
+      accountLeague.getStashTabs(true).pipe(
         mergeMap((response) => of(this.refreshStashTabsSuccess(league.id, response))),
         catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
       )
@@ -467,7 +467,7 @@ export class Profile {
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
     const getMainTabsWithChildren = forkJoin(
       // slice away first because we already fetched it when checking headers
-      tabsToFetch.slice(1).map((tab: IStashTab) => {
+      tabsToFetch.map((tab: IStashTab) => {
         return externalService.getStashTabWithChildren(tab, league.id);
       })
     );
