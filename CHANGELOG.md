@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 - Changed the default setting for autosnapshotting to false
 - Changed the minimum auto snapshotting interval to five minutes, up from two
 - Changed background color of the filter total chip
+- Changed the default columns for the item table
 - Changed how we set the rate limitation on requests
   - Now parses the headers from the response and sets/updates them accordingly
 - Now only shows the filter total chip when the filter is active
