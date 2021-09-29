@@ -510,10 +510,7 @@ export class Profile {
           );
           return getItemsForSubTabs.pipe(
             mergeMap((items) => {
-              let combinedTabs = response[0].concat(items);
-              if (firstStashTab) {
-                combinedTabs = combinedTabs.concat([firstStashTab]);
-              }
+              const combinedTabs = response[0].concat(items);
               response[0] = combinedTabs.map((sst) => {
                 // set name for sub tabs to same as parent
                 const parent = combinedTabs.find((x) => x.id === sst.parent);
@@ -530,7 +527,11 @@ export class Profile {
           );
         }),
         map((result) => {
-          const stashTabsWithItems = result[0].map((tab) => {
+          let combinedTabs = result[0];
+          if (firstStashTab) {
+            combinedTabs = combinedTabs.concat([firstStashTab]);
+          }
+          const stashTabsWithItems = combinedTabs.map((tab) => {
             const stashitems = tab.items;
             const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
             return {
@@ -538,6 +539,7 @@ export class Profile {
               ...{ pricedItems: items },
             } as IStashTabSnapshot;
           });
+
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
             let includedCharacterItems: IPricedItem[] = [];
