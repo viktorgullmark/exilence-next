@@ -6,8 +6,6 @@ using AutoMapper;
 using API.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +21,6 @@ using API.Services;
 using API.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using API.Providers;
-using MessagePack;
-using Shared.MongoMigrations;
 
 namespace API
 {
@@ -56,7 +52,9 @@ namespace API
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
 
-            //services.AddSignalR().AddMessagePackProtocol();
+            services.AddStackExchangeRedisCache(o => {
+                o.Configuration = _configuration.GetConnectionString("Redis");
+            });
 
             services.AddSignalR(o =>
             {
