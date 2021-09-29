@@ -78,6 +78,7 @@
     "session_id": "Session Id",
     "profile_name": "Profile name",
     "select_main_league": "Select league",
+    "select_column_preset": "Select preset",
     "select_price_league": "Select pricing league",
     "select_profile": "Select profile",
     "select_character": "Select character",
@@ -200,6 +201,7 @@
   },
   "value": {
     "none": "None",
+    "custom": "Custom",
     "low_confidence_pricing": "Low confidence",
     "price_in_exalt": "Prices in exalted",
     "price_threshold": "Price threshold",
@@ -237,7 +239,7 @@
     "session_id_dialog_prefix": "The session Id is located in a cookie from the",
     "session_id_dialog_suffix": "website under the name POESESSID. Use the appropriate link below to find how you inspect cookies using your browser."
   },
-  "unit":{
+  "unit": {
     "chaos": "c",
     "minute": "min"
   }
