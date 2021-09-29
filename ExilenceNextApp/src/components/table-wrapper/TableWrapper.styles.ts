@@ -40,6 +40,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:first-child': {
         borderLeft: 'none',
       },
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     tableRow: {
       color: 'inherit',
