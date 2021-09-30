@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Added option to choose release channels
    - Allows you to change to the beta channel feed
 - Added option to choose what should happen when closing the app window
+- Added column presets to the item table
+- Added minor display improvements to the item table
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
@@ -43,8 +45,10 @@ All notable changes to this project will be documented in this file.
 - Changed the default setting for autosnapshotting to false
 - Changed the minimum auto snapshotting interval to five minutes, up from two
 - Changed background color of the filter total chip
+- Changed the default columns for the item table
 - Changed how we set the rate limitation on requests
   - Now parses the headers from the response and sets/updates them accordingly
+  - Sets a temporary cooldown for snapshots after you have been rate limited
 - Now only shows the filter total chip when the filter is active
 #### Removed
 - Removed the helper icon from the pricing league dropdown

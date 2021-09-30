@@ -1,16 +1,15 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { forkJoin, from, of, throwError } from 'rxjs';
-import { catchError, concatAll, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
-import { IItem } from '../../interfaces/item.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
@@ -74,7 +73,8 @@ export class Profile {
       rootStore.uiStateStore.validated &&
       rootStore.uiStateStore.initiated &&
       !rootStore.uiStateStore.isSnapshotting &&
-      this.hasPricesForActiveLeague
+      this.hasPricesForActiveLeague &&
+      rootStore.rateLimitStore.retryAfter === 0
     );
   }
 
@@ -491,6 +491,10 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
+          let combinedTabs = response[0];
+          if (firstStashTab) {
+            combinedTabs = combinedTabs.concat([firstStashTab]);
+          }
           let subTabs = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
@@ -500,6 +504,7 @@ export class Profile {
               : subTabs;
           // if no subtabs exist, simply return the original request
           if (subTabs.length === 0) {
+            response[0] = combinedTabs;
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
@@ -509,19 +514,12 @@ export class Profile {
             })
           );
           return getItemsForSubTabs.pipe(
-            mergeMap((items) => {
-              let combinedTabs = response[0].concat(items);
-              if (firstStashTab) {
-                combinedTabs = combinedTabs.concat([firstStashTab]);
-              }
+            mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
-                // set name for sub tabs to same as parent
-                const parent = combinedTabs.find((x) => x.id === sst.parent);
-                if (parent) {
-                  sst.index = parent.index;
-                  sst.name = parent.name;
-                  sst.id = parent.id;
-                  sst.metadata = parent.metadata;
+                if (sst.children) {
+                  const children = subTabs.filter((st) => st.parent === sst.id);
+                  const childItems = children.flatMap((st) => st.items ?? []);
+                  sst.items = (sst.items ?? []).concat(childItems);
                 }
                 return sst;
               });
@@ -538,6 +536,7 @@ export class Profile {
               ...{ pricedItems: items },
             } as IStashTabSnapshot;
           });
+
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
             let includedCharacterItems: IPricedItem[] = [];

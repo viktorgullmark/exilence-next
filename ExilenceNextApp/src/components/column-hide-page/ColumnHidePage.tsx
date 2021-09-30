@@ -1,8 +1,20 @@
-import React, { ReactElement } from 'react';
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Popover,
+  Select,
+  Typography,
+} from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableInstance } from 'react-table';
-import { Checkbox, FormControlLabel, Popover, Typography } from '@material-ui/core';
-
+import { useStores } from '../..';
+import SUPPORTED_PRESETS from '../bulk-sell-column-presets-panel/supportedPresets';
 import useStyles from './ColumnHidePage.styles';
 
 type ColumnHidePageProps = {
@@ -14,18 +26,79 @@ type ColumnHidePageProps = {
 
 const id = 'popover-column-hide';
 
-export function ColumnHidePage({
+const ColumnHidePage = ({
   instance,
   anchorEl,
   onClose,
   show,
-}: ColumnHidePageProps): ReactElement | null {
+}: ColumnHidePageProps): ReactElement | null => {
+  const {
+    uiStateStore: {
+      itemTableColumnPresets,
+      setBulkSellActivePreset,
+      bulkSellActivePreset,
+      setItemtableColumnPresets,
+    },
+  } = useStores();
   const classes = useStyles();
   const { allColumns, toggleHideColumn } = instance;
-  const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'));
-  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
+
+  const [hideableColumns, setHideableColumns] = useState(
+    allColumns.filter((column) => !(column.id === '_selector'))
+  );
+
+  const [checkedCount, setCheckedCount] = useState(
+    hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0)
+  );
+
   const { t } = useTranslation();
   const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length;
+  const onPresetSelect = (presetId: string) => {
+    const foundPreset = itemTableColumnPresets.find((x) => x.name === presetId);
+    if (foundPreset) {
+      setBulkSellActivePreset(foundPreset);
+    }
+  };
+
+  const onColumnChange = (id: string, isVisible: boolean) => {
+    toggleHideColumn(id, isVisible);
+    updateState();
+    // todo: this code is fugly and should really be reworked, but hey it works
+    const updatedPresets = itemTableColumnPresets.map((preset) => {
+      if (preset.name === bulkSellActivePreset?.name) {
+        const cols = hideableColumns.map((hc) => {
+          if (hc.id === id) {
+            hc.isVisible = !hc.isVisible;
+          }
+          return hc;
+        });
+        preset.hiddenColumns = cols
+          .filter((hc) => !hc.isVisible)
+          .map((hc) => {
+            return hc.id;
+          });
+        setBulkSellActivePreset(preset);
+      }
+      return preset;
+    });
+    setItemtableColumnPresets(updatedPresets);
+  };
+
+  const updateState = () => {
+    setHideableColumns(allColumns.filter((column) => !(column.id === '_selector')));
+    setCheckedCount(hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0));
+  };
+
+  useEffect(() => {
+    hideableColumns.map((col) => {
+      let shouldHide = false;
+      if (bulkSellActivePreset?.hiddenColumns?.includes(col.id)) {
+        shouldHide = true;
+      }
+      toggleHideColumn(col.id, shouldHide);
+    });
+    updateState();
+  }, [bulkSellActivePreset]);
 
   return hideableColumns.length > 1 ? (
     <div>
@@ -46,6 +119,30 @@ export function ColumnHidePage({
       >
         <div className={classes.columnsPopOver}>
           <Typography className={classes.popoverTitle}>{t('label.visible_columns')}</Typography>
+          <Box>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="column-preset-dd">{t('label.select_column_preset')}</InputLabel>
+              <Select
+                labelWidth={100}
+                value={bulkSellActivePreset?.name}
+                onChange={(e) => onPresetSelect(e.target.value as string)}
+                displayEmpty
+                fullWidth
+                inputProps={{
+                  name: 'column-preset',
+                  id: 'column-preset-dd',
+                }}
+              >
+                {SUPPORTED_PRESETS.map((option, i) => {
+                  return (
+                    <MenuItem key={i} value={option.name}>
+                      {t(option.name)}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
           <div className={classes.grid}>
             {hideableColumns.map((column) => {
               return (
@@ -60,7 +157,7 @@ export function ColumnHidePage({
                   }
                   label={column.render('Header')}
                   checked={column.isVisible}
-                  onChange={() => toggleHideColumn(column.id, column.isVisible)}
+                  onChange={() => onColumnChange(column.id, column.isVisible)}
                 />
               );
             })}
@@ -69,4 +166,6 @@ export function ColumnHidePage({
       </Popover>
     </div>
   ) : null;
-}
+};
+
+export default observer(ColumnHidePage);

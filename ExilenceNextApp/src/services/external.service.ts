@@ -64,6 +64,7 @@ function getStashTabWithChildren(
             rootStore.rateLimitStore.updateLimits();
           }
         }
+        rootStore.rateLimitStore.setLastRequestTimestamp(new Date());
         return of(stashTab.data.stash);
       })
     );

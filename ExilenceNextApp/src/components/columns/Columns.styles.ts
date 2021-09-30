@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   editIconRoot: {
     fontSize: '0.75rem',
   },
-  tabsCell: {
+  ellipsis: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

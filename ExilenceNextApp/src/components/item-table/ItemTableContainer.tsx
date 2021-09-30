@@ -28,7 +28,6 @@ import {
 import { useStores } from '../..';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
-import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
@@ -38,6 +37,7 @@ import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
 import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import { observer } from 'mobx-react-lite';
+import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 
 export const itemTableFilterSpacing = 2;
 
@@ -135,6 +135,7 @@ const ItemTableContainer = ({
       })
     : useLocalStorage(`tableState:item-table`, {
         pageSize: 25,
+        hiddenColumns: ['level', 'quality'],
       });
 
   const [instance] = useState<TableInstance<object>>(

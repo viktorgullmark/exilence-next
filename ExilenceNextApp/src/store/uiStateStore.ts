@@ -3,6 +3,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import SUPPORTED_PRESETS from '../components/bulk-sell-column-presets-panel/supportedPresets';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
 import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
@@ -85,6 +86,7 @@ export class UiStateStore {
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
+  @persist('list') @observable itemTableColumnPresets: IBulkSellColumnPreset[] = SUPPORTED_PRESETS;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
   @observable bulkSellView: boolean = false;
   @persist('object') @observable bulkSellActivePreset:
@@ -107,6 +109,11 @@ export class UiStateStore {
   @action.bound
   setSettingsTabIndex(index: number) {
     this.settingsTabIndex = index;
+  }
+
+  @action.bound
+  setItemtableColumnPresets(presets: IBulkSellColumnPreset[]) {
+    this.itemTableColumnPresets = presets;
   }
 
   @action.bound
@@ -398,7 +405,7 @@ export class UiStateStore {
     this.bulkSellView = active;
   }
 
-  @action
+  @action.bound
   setBulkSellActivePreset(preset: IBulkSellColumnPreset) {
     this.bulkSellActivePreset = preset;
   }

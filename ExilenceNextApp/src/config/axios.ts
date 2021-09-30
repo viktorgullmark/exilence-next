@@ -26,6 +26,13 @@ function configureAxios() {
         rootStore.accountStore.cancelRetries();
         rootStore.routeStore.redirect('/login', 'error:token_expired');
       }
+      if (error.response?.status === 429) {
+        rootStore.accountStore.cancelRetries();
+        const retryAfter = error.response?.headers['retry-after'];
+        if (retryAfter) {
+          rootStore.rateLimitStore.setRetryAfter(+retryAfter);
+        }
+      }
       return Promise.reject(error);
     }
   );
