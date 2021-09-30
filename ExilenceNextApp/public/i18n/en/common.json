@@ -58,6 +58,7 @@
     "app_exit_action_settings": "Application on exit action"
   },
   "label": {
+    "no_rows_found": "No items found",
     "no_prices_retrieved": "No prices fetched for `{{league}}`, you can change pricing league in your profile",
     "customize_prices": "Customize prices",
     "set_custom_price": "Set custom price",

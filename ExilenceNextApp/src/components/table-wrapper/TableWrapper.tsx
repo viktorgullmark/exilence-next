@@ -3,6 +3,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import clsx from 'clsx';
 import React, { CSSProperties, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Cell, HeaderGroup, Meta, Row, TableInstance } from 'react-table';
 import { useDebounce } from '../../hooks/use-debounce';
 import { ResizeHandle } from '../resize-handle/ResizeHandle';
@@ -13,6 +14,7 @@ type TableWrapperProps = {
   instance: TableInstance<object>;
   onClick?: (row: Row<object>) => void;
   setInitialState: any;
+  noRowsMessage?: string;
 };
 
 const getStyles = (props: any, _disableResizing = false, align = 'left') => [
@@ -34,7 +36,12 @@ const headerProps = <T extends object>(
 const cellProps = <T extends object>(props: any, { cell }: Meta<T, { cell: Cell<T> }>) =>
   getStyles(props, cell.column && cell.column.disableResizing, cell.column && cell.column.align);
 
-const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps) => {
+const TableWrapper = ({
+  instance,
+  onClick,
+  setInitialState,
+  noRowsMessage = 'label.no_rows_found',
+}: TableWrapperProps) => {
   const classes = useStyles();
 
   const { getTableProps, headerGroups, prepareRow, page, getTableBodyProps, state }: any = instance;
@@ -56,6 +63,8 @@ const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps)
   const cellClickHandler = (cell: Cell<object>) => () => {
     onClick && cell.column.id !== '_selector' && onClick(cell.row);
   };
+
+  const { t } = useTranslation();
 
   return (
     <TableContainer className={classes.container}>
@@ -102,7 +111,7 @@ const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps)
         <div {...getTableBodyProps()} className={classes.tableBody}>
           {page && page.length === 0 && (
             <Box p={1} className={clsx(classes.tableRow, classes.placeholderRow)}>
-              <Typography variant="body2">No rows found</Typography>
+              <Typography variant="body2">{t(noRowsMessage)}</Typography>
             </Box>
           )}
           {page.map((row, i) => {
