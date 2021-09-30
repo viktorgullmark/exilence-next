@@ -491,6 +491,10 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
+          let combinedTabs = response[0];
+          if (firstStashTab) {
+            combinedTabs = combinedTabs.concat([firstStashTab]);
+          }
           let subTabs = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
@@ -500,6 +504,7 @@ export class Profile {
               : subTabs;
           // if no subtabs exist, simply return the original request
           if (subTabs.length === 0) {
+            response[0] = combinedTabs;
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
@@ -509,16 +514,12 @@ export class Profile {
             })
           );
           return getItemsForSubTabs.pipe(
-            mergeMap((items) => {
-              const combinedTabs = response[0].concat(items);
+            mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
-                // set name for sub tabs to same as parent
-                const parent = combinedTabs.find((x) => x.id === sst.parent);
-                if (parent) {
-                  sst.index = parent.index;
-                  sst.name = parent.name;
-                  sst.id = parent.id;
-                  sst.metadata = parent.metadata;
+                if (sst.children) {
+                  const children = subTabs.filter((st) => st.parent === sst.id);
+                  const childItems = children.flatMap((st) => st.items ?? []);
+                  sst.items = (sst.items ?? []).concat(childItems);
                 }
                 return sst;
               });
@@ -527,11 +528,7 @@ export class Profile {
           );
         }),
         map((result) => {
-          let combinedTabs = result[0];
-          if (firstStashTab) {
-            combinedTabs = combinedTabs.concat([firstStashTab]);
-          }
-          const stashTabsWithItems = combinedTabs.map((tab) => {
+          const stashTabsWithItems = result[0].map((tab) => {
             const stashitems = tab.items;
             const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
             return {
