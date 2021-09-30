@@ -18,6 +18,7 @@ const ToolbarContainer = () => {
     settingStore,
     overlayStore,
     logStore,
+    rateLimitStore,
   } = useStores();
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -153,6 +154,7 @@ const ToolbarContainer = () => {
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
         statusMessage={uiStateStore!.statusMessage}
+        retryAfter={rateLimitStore.retryAfter}
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}

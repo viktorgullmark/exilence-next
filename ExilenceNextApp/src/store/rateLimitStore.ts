@@ -1,7 +1,9 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { persist } from 'mobx-persist';
 import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
+import moment from 'moment';
 
 interface IRateLimitBoundaries {
   requests: number;
@@ -24,6 +26,8 @@ export class RateLimitStore {
   @observable rateLimiter1limits = rateLimiter1Defaults;
   @observable rateLimiter2limits = rateLimiter2Defaults;
   @observable shouldUpdateLimits = false;
+  @observable retryAfter = 0;
+  @persist('object') @observable lastRequestTimestamp?: Date;
   @observable rateLimiter1 = rateLimit(
     this.rateLimiter1limits.requests,
     this.rateLimiter1limits.interval,
@@ -47,6 +51,16 @@ export class RateLimitStore {
   @action
   setRateLimiter2(limit: IRateLimitBoundaries) {
     this.rateLimiter2 = rateLimit(limit.requests, limit.interval, queueScheduler);
+  }
+
+  @action
+  setRetryAfter(seconds: number) {
+    this.retryAfter = seconds === 0 ? 0 : new Date().setSeconds(new Date().getSeconds() + seconds);
+  }
+
+  @action
+  setLastRequestTimestamp(timestamp: Date) {
+    this.lastRequestTimestamp = timestamp;
   }
 
   @action

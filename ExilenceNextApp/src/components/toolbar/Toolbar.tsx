@@ -8,6 +8,7 @@ import {
   Select,
   Switch,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,6 +31,7 @@ import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';
 import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
+import CountdownTimer from '../countdown-timer/CountdownTimer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
@@ -54,6 +56,7 @@ type ToolbarProps = {
   profilesLoaded: boolean;
   changingProfile: boolean;
   hasPrices?: boolean;
+  retryAfter: number;
   statusMessage?: IStatusMessage;
   toggleAutosnapshot: () => void;
   toggleSidenav: () => void;
@@ -87,6 +90,7 @@ const Toolbar = ({
   profilesLoaded,
   changingProfile,
   statusMessage,
+  retryAfter,
   toggleAutosnapshot,
   toggleGroupOverview,
   handleProfileOpen,
@@ -118,13 +122,13 @@ const Toolbar = ({
       >
         <ToolbarStepperContainer />
         <MuiToolbar className={clsx(classes.toolbar, { [classes.baseMargin]: !sidenavOpened })}>
-          {!signalrOnline && (
+          {!signalrOnline && retryAfter === 0 && (
             <WarningIcon
               titleAccess={t('label.server_offline_title')}
               className={classes.offlineIcon}
             />
           )}
-          {signalrOnline && !hasPrices && (
+          {signalrOnline && !hasPrices && retryAfter === 0 && (
             <WarningIcon
               titleAccess={t('label.no_prices_retrieved', {
                 league: activeProfile?.activePriceLeagueId,
@@ -132,21 +136,38 @@ const Toolbar = ({
               className={classes.offlineIcon}
             />
           )}
-          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
-            <Box ml={1} display="flex" alignItems="center" justifyContent="center">
-              <CircularProgress
-                className={classes.leftSpinner}
-                title={t('label.loading_title')}
-                size={20}
+          {retryAfter > 0 && (
+            <>
+              <WarningIcon
+                titleAccess={t('label.rate_limit_exceeded')}
+                className={classes.offlineIcon}
               />
+              <Box display="flex" alignItems="center" width={420}>
+                <Typography variant="caption">
+                  {t('label.rate_limit_exceeded_prefix')}:&nbsp;
+                </Typography>
+                <CountdownTimer comparison={retryAfter} />
+              </Box>
+            </>
+          )}
+          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) &&
+            retryAfter === 0 && (
+              <Box ml={1} display="flex" alignItems="center" justifyContent="center">
+                <CircularProgress
+                  className={classes.leftSpinner}
+                  title={t('label.loading_title')}
+                  size={20}
+                />
+              </Box>
+            )}
+          {retryAfter === 0 && (
+            <Box ml={2} display="flex" whiteSpace="nowrap">
+              {statusMessage && <StatusMessageContainer />}
+              {!statusMessage && isUpdatingPrices && (
+                <StatusMessageContainer overrideMessage={fetchingPricesMsg} />
+              )}
             </Box>
           )}
-          <Box ml={2} display="flex" whiteSpace="nowrap">
-            {statusMessage && <StatusMessageContainer />}
-            {!statusMessage && isUpdatingPrices && (
-              <StatusMessageContainer overrideMessage={fetchingPricesMsg} />
-            )}
-          </Box>
           <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
               <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
@@ -230,12 +251,18 @@ const Toolbar = ({
                   onChange={toggleAutosnapshot}
                   name="autoSnapshot"
                   color="default"
+                  disabled={!signalrOnline}
                 />
               </Tooltip>
               <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
-                    disabled={!activeProfile || !activeProfile.readyToSnapshot || !signalrOnline}
+                    disabled={
+                      !activeProfile ||
+                      !activeProfile.readyToSnapshot ||
+                      !signalrOnline ||
+                      retryAfter > 0
+                    }
                     onClick={() => handleSnapshot()}
                     aria-label="snapshot"
                     className={classes.iconButton}

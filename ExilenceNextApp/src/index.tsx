@@ -134,9 +134,20 @@ const renderApp = () => {
     hydrate('uiState', rootStore.uiStateStore),
     hydrate('league', rootStore.leagueStore),
     hydrate('setting', rootStore.settingStore),
+    hydrate('rateLimit', rootStore.rateLimitStore),
   ])
     .then(() => {
       rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
+      // if last stash tab request is sent less than 5 min ago, put on cooldown
+      const fiveMinutesAgo = moment().utc().subtract(5, 'minutes');
+      if (rootStore.rateLimitStore.lastRequestTimestamp) {
+        const requestRecently = moment(rootStore.rateLimitStore.lastRequestTimestamp)
+          .utc()
+          .isAfter(fiveMinutesAgo);
+        if (requestRecently) {
+          rootStore.rateLimitStore.setRetryAfter(300);
+        }
+      }
       visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
       ReactDOM.render(<App />, document.getElementById('root'));
     })
