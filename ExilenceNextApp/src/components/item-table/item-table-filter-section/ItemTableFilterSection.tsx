@@ -20,13 +20,13 @@ const ItemTableFilterSection = () => {
       const foundLeague = accountLeagues.find((al) => al.leagueId === activeProfile.activeLeagueId);
       if (foundLeague) {
         setStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
         setSelectedStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
         uiStateStore!.setFilteredStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
       }
     }
