@@ -53,6 +53,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       borderBottom: '1px solid rgba(81, 81, 81, 1)',
     },
+    placeholderRow: {
+      backgroundColor: theme.palette.background.paper,
+      '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
     rowSelected: {
       backgroundColor: 'rgba(0, 0, 0, 0.04)',
       '&:hover': {

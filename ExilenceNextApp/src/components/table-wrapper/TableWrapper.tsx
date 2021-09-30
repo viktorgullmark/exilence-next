@@ -1,3 +1,4 @@
+import { Box, Typography } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import clsx from 'clsx';
@@ -99,6 +100,11 @@ const TableWrapper = ({ instance, onClick, setInitialState }: TableWrapperProps)
           ))}
         </div>
         <div {...getTableBodyProps()} className={classes.tableBody}>
+          {page && page.length === 0 && (
+            <Box p={1} className={clsx(classes.tableRow, classes.placeholderRow)}>
+              <Typography variant="body2">No rows found</Typography>
+            </Box>
+          )}
           {page.map((row, i) => {
             prepareRow(row);
             return (

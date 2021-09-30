@@ -49,9 +49,12 @@ All notable changes to this project will be documented in this file.
 - Changed how we set the rate limitation on requests
   - Now parses the headers from the response and sets/updates them accordingly
   - Sets a temporary cooldown for snapshots after you have been rate limited
+- Changed the way the profile modal behaves
+  - Now you should not be able to close it by mistake
 - Now only shows the filter total chip when the filter is active
 #### Removed
 - Removed the helper icon from the pricing league dropdown
+- Removed the close button from the initial quickstart tour
 
 ## [0.6.0] - 2021-09-19
 #### Added

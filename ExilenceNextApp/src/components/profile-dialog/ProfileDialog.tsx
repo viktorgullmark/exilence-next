@@ -86,6 +86,7 @@ const ProfileDialog = ({
         open={isOpen}
         onClose={() => handleClickClose()}
         aria-labelledby="profile-dialog-title"
+        disableBackdropClick
       >
         <DialogTitle id="profile-dialog-title">
           {isEditing ? t('title.save_profile') : t('title.create_profile')}

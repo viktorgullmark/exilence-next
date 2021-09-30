@@ -40,6 +40,7 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
     <Tour
       steps={steps}
       isOpen={isOpen}
+      showCloseButton={false}
       onRequestClose={handleClose}
       accentColor={theme.palette.primary.main}
       maskSpace={theme.spacing(isOnSupportPanelStep || viewStep ? 0 : 2)}
