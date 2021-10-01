@@ -42,7 +42,12 @@ export class PriceStore {
   }
 
   @computed get exaltedPrice() {
-    return this.activePricesWithCustomValues?.find((p) => p.name === 'Exalted Orb')?.calculated;
+    const exaltedOrbPrice = this.activePricesWithCustomValues?.find(
+      (p) => p.name === 'Exalted Orb'
+    );
+    return exaltedOrbPrice?.customPrice && exaltedOrbPrice.customPrice > 0
+      ? exaltedOrbPrice?.customPrice
+      : exaltedOrbPrice?.calculated;
   }
 
   @computed get customPricesTableData() {
