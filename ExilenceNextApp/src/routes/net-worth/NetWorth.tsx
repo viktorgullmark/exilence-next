@@ -102,7 +102,10 @@ const NetWorth = () => {
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={4} lg={3} xl={2}>
-          <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
+          <Widget
+            loading={loading() || !priceStore.exaltedPrice}
+            backgroundColor={theme.palette.secondary.main}
+          >
             <OverviewWidgetContent
               value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
               secondaryValue={activeGroup ? activeGroup.lastSnapshotChange : lastSnapshotChange()}
@@ -130,7 +133,10 @@ const NetWorth = () => {
           </Widget>
         </Grid>
         <Grid item xs={6} md={4} lg={3} xl={2}>
-          <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
+          <Widget
+            loading={loading() || !priceStore.exaltedPrice}
+            backgroundColor={theme.palette.secondary.main}
+          >
             <OverviewWidgetContent
               value={activeGroup ? getExaltedValue(activeGroup.income) : getExaltedValue(income())}
               valueIsDiff
