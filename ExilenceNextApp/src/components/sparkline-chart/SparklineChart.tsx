@@ -1,6 +1,6 @@
 import React from 'react';
 import { VictoryGroup, VictoryArea } from 'victory';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 
 const SparklineChart = ({ data, internalName, color, height, width }: any) => (
   <Box width={width} height={height} position="relative">

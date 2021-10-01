@@ -1,7 +1,7 @@
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

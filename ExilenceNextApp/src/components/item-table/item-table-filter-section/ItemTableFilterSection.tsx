@@ -1,4 +1,4 @@
-import { Box, Divider, Grid } from '@material-ui/core';
+import { Box, Divider, Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useStores } from '../../..';
@@ -37,31 +37,29 @@ const ItemTableFilterSection = () => {
     uiStateStore!.setFilteredStashTabs(value);
   };
 
-  return (
-    <>
-      {stashTabs.length > 0 && (
-        <Box mb={1}>
-          <Box>
-            <Grid container direction="row" justify="space-between" alignItems="center">
-              <Grid item>
-                <StashTabDropdown
-                  width={600}
-                  size="small"
-                  marginBottom={1.5}
-                  stashTabs={stashTabs}
-                  selectedStashTabs={selectedStashTabs}
-                  handleStashTabChange={handleStashTabChange}
-                  hideLabel
-                  placeholderKey="common:label.filter_stash_tabs"
-                />
-              </Grid>
+  return <>
+    {stashTabs.length > 0 && (
+      <Box mb={1}>
+        <Box>
+          <Grid container direction="row" justifyContent="space-between" alignItems="center">
+            <Grid item>
+              <StashTabDropdown
+                width={600}
+                size="small"
+                marginBottom={1.5}
+                stashTabs={stashTabs}
+                selectedStashTabs={selectedStashTabs}
+                handleStashTabChange={handleStashTabChange}
+                hideLabel
+                placeholderKey="common:label.filter_stash_tabs"
+              />
             </Grid>
-          </Box>
-          <Divider />
+          </Grid>
         </Box>
-      )}
-    </>
-  );
+        <Divider />
+      </Box>
+    )}
+  </>;
 };
 
 export default observer(ItemTableFilterSection);

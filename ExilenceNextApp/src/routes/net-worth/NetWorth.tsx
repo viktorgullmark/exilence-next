@@ -1,11 +1,11 @@
-import { Box, Grid, Tooltip, Typography, useTheme } from '@material-ui/core';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ListIcon from '@material-ui/icons/List';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-import UpdateIcon from '@material-ui/icons/Update';
-import { Skeleton } from '@material-ui/lab';
+import { Box, Grid, Tooltip, Typography, useTheme } from '@mui/material';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ListIcon from '@mui/icons-material/List';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import UpdateIcon from '@mui/icons-material/Update';
+import { Skeleton } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,9 @@ import { appName, useStores, visitor } from '../..';
 import { primaryLighter, rarityColors } from '../../assets/themes/exilence-theme';
 import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '../../components/expansion-panel/ExpansionPanel';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
@@ -114,7 +114,7 @@ const NetWorth = () => {
               title="label.total_value"
               valueColor={rarityColors.currency}
               currencyShort={settingStore.activeCurrency.short}
-              icon={<MonetizationOnIcon fontSize="default" />}
+              icon={<MonetizationOnIcon fontSize="inherit" />}
               currency
               tooltip="Change in value between the two latest snapshots"
               sparklineChart={
@@ -143,7 +143,7 @@ const NetWorth = () => {
               valueSuffix={` ${t('label.hour_suffix')}`}
               title="label.total_income"
               valueColor={rarityColors.currency}
-              icon={<TrendingUpIcon fontSize="default" />}
+              icon={<TrendingUpIcon fontSize="inherit" />}
               currencyShort={settingStore.activeCurrency.short}
               currency
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
@@ -164,7 +164,7 @@ const NetWorth = () => {
                 fontWeight: 'normal',
               }}
               valueColor={theme.palette.text.primary}
-              icon={<UpdateIcon fontSize="default" />}
+              icon={<UpdateIcon fontSize="inherit" />}
               tooltip="Time since last snapshot"
             />
           </Widget>
@@ -174,15 +174,15 @@ const NetWorth = () => {
             <Grid item xs={7}>
               {/* todo: this block should be refactored to its own component */}
               {loading() ? (
-                <Skeleton variant="rect" height={40} />
+                <Skeleton variant="rectangular" height={40} />
               ) : (
-                <ExpansionPanel
+                <Accordion
                   expanded={uiStateStore!.netWorthChartExpanded}
                   onChange={() =>
                     uiStateStore!.setNetWorthChartExpanded(!uiStateStore!.netWorthChartExpanded)
                   }
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
@@ -193,8 +193,8 @@ const NetWorth = () => {
                         <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
                       </Box>
                     </Box>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails
+                  </AccordionSummary>
+                  <AccordionDetails
                     style={{
                       height: chartHeight,
                       background: theme.palette.background.default,
@@ -208,21 +208,21 @@ const NetWorth = () => {
                         <ChartToolboxContainer />
                       </Grid>
                     </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               )}
             </Grid>
             <Grid item xs={5}>
               {loading() ? (
-                <Skeleton variant="rect" height={40} />
+                <Skeleton variant="rectangular" height={40} />
               ) : (
-                <ExpansionPanel
+                <Accordion
                   expanded={uiStateStore!.tabChartExpanded}
                   onChange={() =>
                     uiStateStore!.setTabChartExpanded(!uiStateStore!.tabChartExpanded)
                   }
                 >
-                  <ExpansionPanelSummary
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
@@ -233,8 +233,8 @@ const NetWorth = () => {
                         <Typography variant="overline">{t('label.tab_chart')}</Typography>
                       </Box>
                     </Box>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails
+                  </AccordionSummary>
+                  <AccordionDetails
                     style={{
                       height: chartHeight,
                       background: theme.palette.background.default,
@@ -248,8 +248,8 @@ const NetWorth = () => {
                       <ChartToolboxContainer />
                     </Grid> */}
                     </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </AccordionDetails>
+                </Accordion>
               )}
             </Grid>
           </Grid>
@@ -257,20 +257,20 @@ const NetWorth = () => {
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {/* todo: this block should be refactored to its own component */}
           {loading() ? (
-            <Skeleton variant="rect" height={1000} />
+            <Skeleton variant="rectangular" height={1000} />
           ) : (
-            <ExpansionPanel
+            <Accordion
               expanded={uiStateStore!.netWorthItemsExpanded}
               onChange={() =>
                 uiStateStore!.setNetWorthItemsExpanded(!uiStateStore!.netWorthItemsExpanded)
               }
             >
-              <ExpansionPanelSummary
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Grid container justify="space-between">
+                <Grid container justifyContent="space-between">
                   <Grid item>
                     <Box display="flex" justifyContent="center" alignItems="center">
                       <ListIcon />
@@ -299,8 +299,8 @@ const NetWorth = () => {
                     </Box>
                   </Grid>
                 </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails
+              </AccordionSummary>
+              <AccordionDetails
                 id="items-table"
                 style={{
                   background: theme.palette.background.default,
@@ -309,8 +309,8 @@ const NetWorth = () => {
               >
                 {uiStateStore!.showItemTableFilter && <ItemTableFilterSection />}
                 <ItemTableContainer searchFilterText={uiStateStore!.itemTableFilterText} />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
           )}
         </Grid>
       </Grid>

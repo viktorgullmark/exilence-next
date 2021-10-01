@@ -10,10 +10,10 @@ import {
   pink,
   red,
   teal,
-} from '@material-ui/core/colors';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+} from '@mui/material/colors';
+import { adaptV4Theme, createTheme } from '@mui/material/styles';
 
-const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
+const defaultTheme = createTheme(adaptV4Theme({ palette: { mode: 'dark' } }));
 
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
@@ -96,58 +96,59 @@ export type StatusColor = typeof statusColors;
 export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
 
 export default function exilenceTheme() {
-  return createMuiTheme({
-    overrides: {
-      MuiToolbar: {
-        gutters: {
-          [defaultTheme.breakpoints.up('xs')]: {
-            paddingLeft: '8px',
-            paddingRight: 0,
+  return createTheme(
+    adaptV4Theme({
+      overrides: {
+        MuiToolbar: {
+          gutters: {
+            [defaultTheme.breakpoints.up('xs')]: {
+              paddingLeft: '8px',
+              paddingRight: 0,
+            },
+          },
+        },
+        MuiTableRow: {
+          root: {
+            '&$hover:hover': {
+              backgroundColor: defaultTheme.palette.background.default,
+            },
+          },
+        },
+        MuiTableCell: {
+          root: {
+            fontSize: '0.75rem',
+          },
+        },
+        MuiFormControlLabel: {
+          root: {
+            color: '#c2c2c2',
           },
         },
       },
-      MuiTableRow: {
-        root: {
-          '&$hover:hover': {
-            backgroundColor: defaultTheme.palette.background.default,
-          },
+      palette: {
+        text: {
+          secondary: '#c2c2c2',
+        },
+        primary: {
+          light: primaryLight,
+          main: primaryMain,
+          dark: primaryDark,
+        },
+        secondary: secondary,
+        background: background,
+      },
+      typography: {
+        h6: {
+          fontWeight: 400,
+          fontSize: '1.15rem',
         },
       },
-      MuiTableCell: {
-        root: {
-          fontSize: '0.75rem',
+      transitions: {
+        duration: {
+          enteringScreen: 0,
+          leavingScreen: 0,
         },
       },
-      MuiFormControlLabel: {
-        root: {
-          color: '#c2c2c2',
-        },
-      },
-    },
-    palette: {
-      text: {
-        secondary: '#c2c2c2',
-      },
-      primary: {
-        light: primaryLight,
-        main: primaryMain,
-        dark: primaryDark,
-      },
-      secondary: secondary,
-      background: background,
-      type: 'dark',
-    },
-    typography: {
-      h6: {
-        fontWeight: 400,
-        fontSize: '1.15rem',
-      },
-    },
-    transitions: {
-      duration: {
-        enteringScreen: 0,
-        leavingScreen: 0,
-      },
-    },
-  });
+    })
+  );
 }

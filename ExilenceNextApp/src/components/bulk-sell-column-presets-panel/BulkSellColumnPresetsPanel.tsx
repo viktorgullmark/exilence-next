@@ -1,11 +1,7 @@
 import React from 'react';
-import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from '../expansion-panel/ExpansionPanel';
-import { Box, Grid, Typography, useTheme } from '@material-ui/core';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { Accordion, AccordionDetails, AccordionSummary } from '../expansion-panel/ExpansionPanel';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { useTranslation } from 'react-i18next';
 import SUPPORTED_PRESETS from './supportedPresets';
 import PresetButton from './PresetButton';
@@ -22,16 +18,16 @@ const BulkSellColumnPresetsPanel = () => {
     uiStateStore!.setBulkSellActivePreset(preset);
 
   return (
-    <ExpansionPanel expanded>
-      <ExpansionPanelSummary>
+    <Accordion expanded>
+      <AccordionSummary>
         <Box display="flex" justifyContent="center" alignItems="center">
           <ViewColumnsIcon fontSize="small" />
           <Box ml={1}>
             <Typography variant="overline">{t('label.column_presets')}</Typography>
           </Box>
         </Box>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails
+      </AccordionSummary>
+      <AccordionDetails
         style={{
           height: 52,
           background: theme.palette.background.default,
@@ -47,8 +43,8 @@ const BulkSellColumnPresetsPanel = () => {
             />
           ))}
         </Grid>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

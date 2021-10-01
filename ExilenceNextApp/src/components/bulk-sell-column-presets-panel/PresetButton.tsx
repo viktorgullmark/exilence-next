@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { IBulkSellColumnPreset } from '../../interfaces/bulk-sell-column-preset.interface';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../index';

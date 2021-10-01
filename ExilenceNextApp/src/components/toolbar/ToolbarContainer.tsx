@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -95,9 +96,7 @@ const ToolbarContainer = () => {
     accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
 
-  const handleProfileChange = (
-    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ) => {
+  const handleProfileChange = (event: SelectChangeEvent<string>) => {
     accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 

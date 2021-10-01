@@ -6,23 +6,24 @@ import {
   Grid,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Switch,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
-import MuiToolbar from '@material-ui/core/Toolbar';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import AddIcon from '@material-ui/icons/Add';
-import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
-import GroupIcon from '@material-ui/icons/Group';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import UpdateIcon from '@material-ui/icons/Update';
-import WarningIcon from '@material-ui/icons/Warning';
+} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import MuiToolbar from '@mui/material/Toolbar';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import AddIcon from '@mui/icons-material/Add';
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import GroupIcon from '@mui/icons-material/Group';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
+import UpdateIcon from '@mui/icons-material/Update';
+import WarningIcon from '@mui/icons-material/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
@@ -63,7 +64,7 @@ type ToolbarProps = {
   toggleGroupOverview: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
-  handleProfileChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
+  handleProfileChange: (event: SelectChangeEvent<string>) => void;
   handleSnapshot: () => void;
   handleOverlay: () => void;
   handleLogMonitor: () => void;
@@ -168,7 +169,12 @@ const Toolbar = ({
               )}
             </Box>
           )}
-          <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="flex-end"
+            className={classes.toolbarGrid}
+          >
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
               <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
                 <span>
@@ -183,6 +189,7 @@ const Toolbar = ({
                     aria-label="edit"
                     className={classes.iconButton}
                     onClick={() => handleProfileOpen(true)}
+                    size="large"
                   >
                     <SettingsIcon fontSize="small" />
                   </IconButton>
@@ -219,6 +226,7 @@ const Toolbar = ({
                     onClick={() => handleProfileOpen()}
                     aria-label="create"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <AddIcon fontSize="small" />
                   </IconButton>
@@ -237,6 +245,7 @@ const Toolbar = ({
                     onClick={() => handleRemoveProfile()}
                     aria-label="remove profile"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
@@ -266,6 +275,7 @@ const Toolbar = ({
                     onClick={() => handleSnapshot()}
                     aria-label="snapshot"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <UpdateIcon fontSize="small" />
                   </IconButton>
@@ -283,6 +293,7 @@ const Toolbar = ({
                     onClick={() => handleClearSnapshots()}
                     aria-label="clear snapshots"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <DeleteSweepIcon fontSize="small" />
                   </IconButton>
@@ -298,6 +309,7 @@ const Toolbar = ({
                     aria-label="overlay"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <AddToPhotosIcon fontSize="small" />
                   </IconButton>
@@ -314,6 +326,7 @@ const Toolbar = ({
                     aria-label="group"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <GroupIcon fontSize="small" />
                   </IconButton>
@@ -330,6 +343,7 @@ const Toolbar = ({
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <Badge
                       max={9}
@@ -351,6 +365,7 @@ const Toolbar = ({
                     aria-haspopup="true"
                     disabled={isSnapshotting || isInitiating}
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <AccountCircle fontSize="small" />
                   </IconButton>

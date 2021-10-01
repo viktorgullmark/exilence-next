@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import useStyles from './AnnouncementDialog.styles';
 import { IApiAnnouncement } from '../../interfaces/api/api-announcement.interface';

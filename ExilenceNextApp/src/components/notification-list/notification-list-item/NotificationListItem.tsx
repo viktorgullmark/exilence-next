@@ -1,9 +1,9 @@
 import React, { forwardRef, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import WarningIcon from '@material-ui/icons/Warning';
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import ErrorIcon from '@mui/icons-material/Error';
+import InfoIcon from '@mui/icons-material/Info';
+import WarningIcon from '@mui/icons-material/Warning';
 import moment from 'moment';
 
 import { Notification } from '../../../store/domains/notification';
@@ -29,8 +29,11 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         return <InfoIcon />;
     }
   };
+
+  // todo: use ref?
+
   return (
-    <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
+    <ListItem key={notification.uuid} className={classes.notification}>
       <ListItemAvatar>
         <Avatar classes={{ colorDefault: classes.avatarColor }}>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>

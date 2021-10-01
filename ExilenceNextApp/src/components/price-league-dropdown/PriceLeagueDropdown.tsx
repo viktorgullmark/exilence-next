@@ -7,12 +7,13 @@ import {
   Grid,
   Tooltip,
   IconButton,
-} from '@material-ui/core';
-import { HelpOutline } from '@material-ui/icons';
+  SelectChangeEvent,
+} from '@mui/material';
+import { HelpOutline } from '@mui/icons-material';
 import clsx from 'clsx';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
@@ -22,7 +23,7 @@ type PriceLeagueDropdownProps = {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   priceLeagues: League[];
-  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleChange: (event: SelectChangeEvent<string>) => void;
   values: ILeagueFormValues;
   size?: 'small' | 'medium';
   margin?: 'dense' | 'normal';
@@ -64,7 +65,6 @@ const PriceLeagueDropdown = ({
           <Grid item xs={helperIcon ? 11 : 12}>
             <Select
               fullWidth
-              labelWidth={141} // FIXME not sure why labelwidth is sometimes reset to 0 when using useLabelWidth
               value={values.priceLeague}
               onChange={(e) => handleChange(e)}
               classes={{
@@ -90,7 +90,7 @@ const PriceLeagueDropdown = ({
                 placement="bottom-end"
                 title={<span>{t('label.new_character_no_league_in_pricing_league')}</span>}
               >
-                <IconButton>
+                <IconButton size="large">
                   <HelpOutline />
                 </IconButton>
               </Tooltip>

@@ -4,9 +4,10 @@ import {
   Checkbox,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import useStyles from './PlayerListItem.styles';
@@ -21,11 +22,9 @@ const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, r
   const classes = useStyles();
 
   return (
-    <ListItem
+    <ListItemButton
       key={account.uuid}
-      innerRef={ref}
       className={classes.root}
-      button
       onClick={() => handleToggle(account.uuid)}
     >
       <ListItemAvatar>
@@ -41,7 +40,7 @@ const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, r
           inputProps={{ 'aria-labelledby': account.uuid }}
         />
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
 });
 

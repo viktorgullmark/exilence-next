@@ -8,7 +8,7 @@ import {
   Popover,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -123,7 +123,6 @@ const ColumnHidePage = ({
             <FormControl variant="outlined" fullWidth>
               <InputLabel htmlFor="column-preset-dd">{t('label.select_column_preset')}</InputLabel>
               <Select
-                labelWidth={100}
                 value={bulkSellActivePreset?.name}
                 onChange={(e) => onPresetSelect(e.target.value as string)}
                 displayEmpty

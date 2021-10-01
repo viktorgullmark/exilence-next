@@ -1,5 +1,5 @@
-import { Grid, Link, Typography } from '@material-ui/core';
-import ExitToApp from '@material-ui/icons/ExitToApp';
+import { Grid, Link, Typography } from '@mui/material';
+import ExitToApp from '@mui/icons-material/ExitToApp';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';

@@ -1,11 +1,11 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   dialogActions: {
     padding: theme.spacing(2),
   },
   consent: {
-    color: theme.palette.text.hint,
+    color: theme.palette.text.disabled,
   },
   formField: {
     marginBottom: theme.spacing(2),

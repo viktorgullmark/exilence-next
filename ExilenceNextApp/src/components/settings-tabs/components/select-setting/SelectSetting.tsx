@@ -7,7 +7,7 @@ import {
   FormLabel,
   MenuItem,
   Select,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { ISelectOption } from '../../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';

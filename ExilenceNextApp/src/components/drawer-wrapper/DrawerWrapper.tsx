@@ -1,5 +1,6 @@
-import { Box } from '@material-ui/core';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { Box } from '@mui/material';
+import { Theme, useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { ReactNode } from 'react';
@@ -20,7 +21,7 @@ const topMargin = toolbarHeight + (innerToolbarHeight || 0) + resizeHandleContai
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
-    height: `calc(100% - ${topMargin}px - ${theme.spacing(2.25)}px)`,
+    height: `calc(100% - ${topMargin}px - ${theme.spacing(2.25)})`,
     overflowY: 'scroll',
     overflowX: 'hidden',
     marginTop: topMargin,

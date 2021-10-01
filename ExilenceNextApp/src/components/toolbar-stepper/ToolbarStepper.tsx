@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tour from 'reactour';
-import { Button, useTheme } from '@material-ui/core';
+import { Button, useTheme } from '@mui/material';
 
 import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
 import { getToolbarSteps } from '../../utils/stepper.utils';
@@ -43,7 +43,7 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
       showCloseButton={false}
       onRequestClose={handleClose}
       accentColor={theme.palette.primary.main}
-      maskSpace={theme.spacing(isOnSupportPanelStep || viewStep ? 0 : 2)}
+      maskSpace={+theme.spacing(isOnSupportPanelStep || viewStep ? 0 : 2)}
       closeWithMask={false}
       getCurrentStep={(currentStep) => setStep(currentStep)}
       startAt={0}

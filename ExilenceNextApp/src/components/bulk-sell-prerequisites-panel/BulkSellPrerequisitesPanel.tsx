@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '../expansion-panel/ExpansionPanel';
-import { Box, Grid, InputAdornment, TextField, Typography, useTheme } from '@material-ui/core';
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import { Box, Grid, InputAdornment, TextField, Typography, useTheme } from '@mui/material';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useStores } from '../../index';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react-lite';
@@ -71,16 +71,16 @@ const BulkSellPrerequisitesPanel = () => {
   };
 
   return (
-    <ExpansionPanel expanded>
-      <ExpansionPanelSummary>
+    <Accordion expanded>
+      <AccordionSummary>
         <Box display="flex" justifyContent="center" alignItems="center">
           <PlaylistAddCheckIcon fontSize="small" />
           <Box ml={1}>
             <Typography variant="overline">{t('label.prerequisites')}</Typography>
           </Box>
         </Box>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails
+      </AccordionSummary>
+      <AccordionDetails
         style={{
           height: 240,
           background: theme.palette.background.default,
@@ -154,8 +154,8 @@ const BulkSellPrerequisitesPanel = () => {
             />
           </Grid>
         </Grid>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

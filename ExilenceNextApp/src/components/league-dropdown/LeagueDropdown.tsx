@@ -1,10 +1,15 @@
-import React, { ChangeEvent } from 'react';
-import { useTranslation } from 'react-i18next';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import { FormikErrors, FormikTouched } from 'formik';
 import { observer } from 'mobx-react-lite';
-
-import useLabelWidth from '../../hooks/use-label-width';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ILeagueFormValues } from '../../interfaces/league-form-values.interface';
 import { League } from '../../store/domains/league';
 
@@ -13,8 +18,8 @@ type LeagueDropdownProps = {
   errors: FormikErrors<any>;
   noCharacters: string;
   leagues: League[];
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
-  handleChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleLeagueChange: (event: SelectChangeEvent<string>) => void;
+  handleChange: (event: SelectChangeEvent<string>) => void;
   values: ILeagueFormValues;
   margin?: 'normal' | 'none' | 'dense' | undefined;
   fullWidth?: boolean;
@@ -34,7 +39,6 @@ const LeagueDropdown = ({
   values,
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
-  const { labelWidth, ref } = useLabelWidth(0);
 
   return (
     <>
@@ -45,13 +49,8 @@ const LeagueDropdown = ({
         required
         error={(touched.league && errors.league !== undefined) || noCharacters.length > 0}
       >
-        {!hideLabel && (
-          <InputLabel ref={ref} htmlFor="league-dd">
-            {t('label.select_main_league')}
-          </InputLabel>
-        )}
+        {!hideLabel && <InputLabel htmlFor="league-dd">{t('label.select_main_league')}</InputLabel>}
         <Select
-          labelWidth={labelWidth}
           fullWidth
           value={values.league}
           onChange={(e) => {

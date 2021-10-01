@@ -1,6 +1,6 @@
-import { Box, Chip, Popper, PopperProps, TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Box, Chip, Popper, PopperProps, TextField } from '@mui/material';
+import { Alert } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -71,12 +71,12 @@ const StashTabDropdown = ({
           value.map((option: IStashTab, index: number) => (
             <Chip
               variant="outlined"
-              key={index}
-              className={classes.chip}
               label={option.name}
               classes={{ label: classes.chipLabel }}
               style={{ border: `2px solid #${getColour(option.id)}` }}
               {...getTagProps({ index })}
+              key={`${option.id}-${index}`}
+              className={classes.chip}
             />
           ))
         }

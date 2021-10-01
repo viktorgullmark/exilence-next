@@ -8,7 +8,7 @@ import {
   FormHelperText,
   FormLabel,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import useStyles from './CheckboxSetting.styles';
 

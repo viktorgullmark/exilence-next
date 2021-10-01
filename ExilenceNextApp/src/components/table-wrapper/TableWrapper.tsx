@@ -1,6 +1,6 @@
-import { Box, Typography } from '@material-ui/core';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { Box, Typography } from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import clsx from 'clsx';
 import React, { CSSProperties, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { useField } from 'formik';
 
 import useLabelWidth from '../../hooks/use-label-width';
@@ -26,7 +26,6 @@ const SelectField = ({
 }: SelectFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
-  const { labelWidth, ref } = useLabelWidth(0);
 
   const initialOptions = hasPlaceholder
     ? [
@@ -46,8 +45,8 @@ const SelectField = ({
       className={classes.root}
       fullWidth
     >
-      <InputLabel ref={ref}>{label}</InputLabel>
-      <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
+      <InputLabel>{label}</InputLabel>
+      <Select id={name} fullWidth {...field}>
         {options
           ? initialOptions.concat(options).map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>

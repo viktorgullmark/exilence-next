@@ -1,6 +1,6 @@
-import { CssBaseline } from '@material-ui/core';
-import { responsiveFontSizes } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import { CssBaseline } from '@mui/material';
+import { responsiveFontSizes, StyledEngineProvider, Theme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/styles';
 import * as Sentry from '@sentry/react';
 import localForage from 'localforage';
 import { configure } from 'mobx';
@@ -35,6 +35,11 @@ import Settings from './routes/settings/Settings';
 import BulkSell from './routes/bulk-sell/BulkSell';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -79,46 +84,48 @@ const App = ({ error }: Props) => {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Suspense fallback={null}>
-        <Router>
-          <div className={classes.app}>
-            <HighchartsTheme />
-            <CssBaseline />
-            <GlobalStyles />
-            <ToastWrapper />
-            <Route path="/login" component={Login} />
-            <HeaderContainer />
-            {error ? (
-              <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
-            ) : (
-              <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
-                <DrawerWrapperContainer>
-                  <ToolbarContainer />
-                  <Route path="/net-worth" component={NetWorth} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/bulk-sell" component={BulkSell} />
-                  <Route
-                    exact
-                    path="/"
-                    render={() =>
-                      rootStore.accountStore.getSelectedAccount.name ? (
-                        <Redirect to="/net-worth" />
-                      ) : (
-                        <Redirect to="/login" />
-                      )
-                    }
-                  />
-                </DrawerWrapperContainer>
-              </Sentry.ErrorBoundary>
-            )}
-            <Notifier />
-            <ReactionContainer />
-            <AnnouncementDialogContainer />
-          </div>
-        </Router>
-      </Suspense>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Suspense fallback={null}>
+          <Router>
+            <div className={classes.app}>
+              <HighchartsTheme />
+              <CssBaseline />
+              <GlobalStyles />
+              <ToastWrapper />
+              <Route path="/login" component={Login} />
+              <HeaderContainer />
+              {error ? (
+                <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
+              ) : (
+                <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+                  <DrawerWrapperContainer>
+                    <ToolbarContainer />
+                    <Route path="/net-worth" component={NetWorth} />
+                    <Route path="/settings" component={Settings} />
+                    <Route path="/bulk-sell" component={BulkSell} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        rootStore.accountStore.getSelectedAccount.name ? (
+                          <Redirect to="/net-worth" />
+                        ) : (
+                          <Redirect to="/login" />
+                        )
+                      }
+                    />
+                  </DrawerWrapperContainer>
+                </Sentry.ErrorBoundary>
+              )}
+              <Notifier />
+              <ReactionContainer />
+              <AnnouncementDialogContainer />
+            </div>
+          </Router>
+        </Suspense>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

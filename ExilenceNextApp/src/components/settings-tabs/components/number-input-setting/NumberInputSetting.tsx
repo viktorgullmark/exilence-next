@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format';
-import { FormControl, FormGroup, FormHelperText, FormLabel, TextField } from '@material-ui/core';
+import { FormControl, FormGroup, FormHelperText, FormLabel, TextField } from '@mui/material';
 
 import useStyles from './NumberInputSetting.styles';
 
