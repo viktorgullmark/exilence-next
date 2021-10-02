@@ -29,7 +29,7 @@ function configureI18n() {
         crossDomain: true,
       },
       fallbackLng: 'en',
-      debug: !AppConfig.production,
+      debug: false,
       ns: ['common', 'notification', 'error', 'tables', 'stepper', 'status'],
       defaultNS: 'common',
       interpolation: {
