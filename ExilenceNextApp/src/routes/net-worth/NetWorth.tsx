@@ -30,7 +30,7 @@ import { useStyles } from './NetWorth.styles';
 
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
-export const chartHeight = 240;
+export const chartHeight = 180;
 
 const NetWorth = () => {
   const { accountStore, signalrStore, uiStateStore, settingStore, priceStore } = useStores();
@@ -97,6 +97,8 @@ const NetWorth = () => {
   const chartData = activeGroup
     ? activeGroup.sparklineChartData
     : activeProfile?.sparklineChartData;
+
+  const tabChartHeight = chartHeight + 42;
 
   return (
     <FeatureWrapper>
@@ -196,11 +198,15 @@ const NetWorth = () => {
                   </AccordionSummary>
                   <AccordionDetails
                     style={{
-                      height: chartHeight,
                       background: theme.palette.background.default,
                     }}
                   >
-                    <Grid container>
+                    <Grid
+                      container
+                      direction="column"
+                      justifyContent="space-evenly"
+                      alignItems="stretch"
+                    >
                       <Grid item xs={12}>
                         <SnapshotHistoryChartContainer />
                       </Grid>
@@ -236,13 +242,20 @@ const NetWorth = () => {
                   </AccordionSummary>
                   <AccordionDetails
                     style={{
-                      height: chartHeight,
                       background: theme.palette.background.default,
                     }}
                   >
-                    <Grid container>
+                    <Grid
+                      container
+                      direction="column"
+                      justifyContent="space-evenly"
+                      alignItems="stretch"
+                    >
                       <Grid item xs={12}>
-                        <SnapshotHistoryChartContainer showIndividualTabs />
+                        <SnapshotHistoryChartContainer
+                          chartHeight={tabChartHeight}
+                          showIndividualTabs
+                        />
                       </Grid>
                       {/* <Grid item xs={12}>
                       <ChartToolboxContainer />
