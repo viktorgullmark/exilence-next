@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) =>
         content: 'min !important',
       },
     },
+    helperText: {
+      marginLeft: 0,
+    },
   })
 );
 

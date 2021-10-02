@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-} from '../expansion-panel/ExpansionPanel';
+import { Accordion, AccordionDetails, AccordionSummary } from '../expansion-panel/ExpansionPanel';
 import { Box, Grid, InputAdornment, TextField, Typography, useTheme } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useStores } from '../../index';
@@ -89,6 +85,7 @@ const BulkSellPrerequisitesPanel = () => {
         <Grid container spacing={4}>
           <Grid item xs={4}>
             <TextField
+              variant="standard"
               style={{ width: 255 }}
               value={`${currentItemsTableValue.toFixed(2)}c` ?? ''}
               disabled
@@ -98,6 +95,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={3}>
             <TextField
               type="number"
+              variant="standard"
               label={t('label.asking_price')}
               value={uiStateStore!.bulkSellAskingPrice}
               onChange={handleAskingPriceChange}
@@ -110,6 +108,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={4} alignItems="center">
             <TextField
               type="number"
+              variant="standard"
               style={{ width: 111 }}
               value={uiStateStore!.bulkSellAskingPricePercentage}
               onChange={handleAskingPricePercentageChange}
@@ -123,6 +122,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={1} />
           <Grid item xs={4}>
             <TextField
+              variant="standard"
               style={{ width: '100%' }}
               value={activeLeague?.id ?? ''}
               disabled
@@ -131,6 +131,7 @@ const BulkSellPrerequisitesPanel = () => {
           </Grid>
           <Grid item xs={4}>
             <TextField
+              variant="standard"
               style={{ width: '100%' }}
               value={activePriceLeague?.id ?? ''}
               disabled
@@ -140,6 +141,7 @@ const BulkSellPrerequisitesPanel = () => {
           <Grid item xs={4}>
             <TextField
               disabled
+              variant="standard"
               label={t('label.ign')}
               value={activeCharacter?.name ?? ''}
               style={{ width: '100%' }}
@@ -147,6 +149,7 @@ const BulkSellPrerequisitesPanel = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              variant="standard"
               label={t('label.generated_message')}
               disabled
               style={{ width: '100%' }}

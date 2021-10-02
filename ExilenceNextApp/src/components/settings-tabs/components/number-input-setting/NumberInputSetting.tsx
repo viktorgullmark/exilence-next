@@ -63,6 +63,7 @@ const NumberInputSetting = ({
           {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
         </FormLabel>
         <TextField
+          variant="standard"
           className={classes.root}
           id={`${translationKey}-label`}
           value={value}
@@ -77,7 +78,9 @@ const NumberInputSetting = ({
           }}
           disabled={disabled}
         />
-        <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
+        <FormHelperText className={classes.helperText}>
+          {t(`helper_text.${translationKey}`)}
+        </FormHelperText>
       </FormGroup>
     </FormControl>
   );

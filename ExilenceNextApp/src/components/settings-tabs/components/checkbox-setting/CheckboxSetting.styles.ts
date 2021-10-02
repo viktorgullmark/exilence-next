@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) =>
     checkBoxValue: {
       color: theme.palette.text.primary,
     },
+    helperText: {
+      marginLeft: 0,
+    },
   })
 );
 

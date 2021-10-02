@@ -49,6 +49,7 @@ const ItemTableFilter = ({
           handleFilter(e);
         }}
         name="searchText"
+        size="small"
         placeholder={t('tables:label.search_text')}
         className={classes.searchField}
         value={formik.values.searchText}
