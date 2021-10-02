@@ -1,6 +1,5 @@
 import { CssBaseline } from '@mui/material';
-import { responsiveFontSizes, StyledEngineProvider, Theme } from '@mui/material/styles';
-import { ThemeProvider } from '@mui/styles';
+import { responsiveFontSizes, StyledEngineProvider, Theme, ThemeProvider } from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
 import localForage from 'localforage';
 import { configure } from 'mobx';

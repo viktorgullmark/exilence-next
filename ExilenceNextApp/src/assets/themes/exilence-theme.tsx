@@ -11,9 +11,9 @@ import {
   red,
   teal,
 } from '@mui/material/colors';
-import { adaptV4Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-const defaultTheme = createTheme(adaptV4Theme({ palette: { mode: 'dark' } }));
+const defaultTheme = createTheme({ palette: { mode: 'dark' } });
 
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
@@ -96,10 +96,10 @@ export type StatusColor = typeof statusColors;
 export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
 
 export default function exilenceTheme() {
-  return createTheme(
-    adaptV4Theme({
-      overrides: {
-        MuiToolbar: {
+  return createTheme({
+    components: {
+      MuiToolbar: {
+        styleOverrides: {
           gutters: {
             [defaultTheme.breakpoints.up('xs')]: {
               paddingLeft: '8px',
@@ -107,48 +107,57 @@ export default function exilenceTheme() {
             },
           },
         },
-        MuiTableRow: {
+      },
+      MuiTableRow: {
+        styleOverrides: {
           root: {
-            '&$hover:hover': {
+            // todo: test
+            '&.Mui-hovered': {
               backgroundColor: defaultTheme.palette.background.default,
             },
           },
         },
-        MuiTableCell: {
+      },
+      MuiTableCell: {
+        styleOverrides: {
           root: {
             fontSize: '0.75rem',
           },
         },
-        MuiFormControlLabel: {
+      },
+      MuiFormControlLabel: {
+        styleOverrides: {
           root: {
             color: '#c2c2c2',
           },
         },
       },
-      palette: {
-        text: {
-          secondary: '#c2c2c2',
-        },
-        primary: {
-          light: primaryLight,
-          main: primaryMain,
-          dark: primaryDark,
-        },
-        secondary: secondary,
-        background: background,
+    },
+    palette: {
+      text: {
+        primary: '#fff',
+        secondary: '#c2c2c2',
       },
-      typography: {
-        h6: {
-          fontWeight: 400,
-          fontSize: '1.15rem',
-        },
+      primary: {
+        light: primaryLight,
+        main: primaryMain,
+        dark: primaryDark,
       },
-      transitions: {
-        duration: {
-          enteringScreen: 0,
-          leavingScreen: 0,
-        },
+      secondary: secondary,
+      background: background,
+      mode: 'dark',
+    },
+    typography: {
+      h6: {
+        fontWeight: 400,
+        fontSize: '1.15rem',
       },
-    })
-  );
+    },
+    transitions: {
+      duration: {
+        enteringScreen: 0,
+        leavingScreen: 0,
+      },
+    },
+  });
 }

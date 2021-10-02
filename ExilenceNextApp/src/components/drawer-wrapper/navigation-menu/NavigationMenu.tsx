@@ -8,6 +8,7 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -31,6 +32,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
   const classes = useStyles();
   const { t } = useTranslation();
   const location = useLocation();
+  const theme = useTheme();
 
   return (
     <Drawer
