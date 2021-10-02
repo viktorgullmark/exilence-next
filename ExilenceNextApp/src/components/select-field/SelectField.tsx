@@ -1,8 +1,6 @@
-import React, { ReactNode } from 'react';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { useField } from 'formik';
-
-import useLabelWidth from '../../hooks/use-label-width';
+import React, { ReactNode } from 'react';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { placeholderOption } from '../../utils/misc.utils';
 import useStyles from './SelectField.styles';

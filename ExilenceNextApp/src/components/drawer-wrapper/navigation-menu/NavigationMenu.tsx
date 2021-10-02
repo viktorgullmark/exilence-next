@@ -1,3 +1,8 @@
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BurstModeIcon from '@mui/icons-material/BurstMode';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Divider,
   Drawer,
@@ -10,11 +15,6 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import SettingsIcon from '@mui/icons-material/Settings';
-import BurstModeIcon from '@mui/icons-material/BurstMode';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

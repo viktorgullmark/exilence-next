@@ -112,27 +112,29 @@ const PriceTableContainer = () => {
     );
   };
 
-  return <>
-    <Box mb={priceTableFilterSpacing} className={classes.priceTableFilter}>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item md={7}>
-          <Grid container direction="row" spacing={2} alignItems="center">
-            <Grid item md={6}>
-              <PriceTableFilter
-                handleFilter={handleFilter}
-                clearFilter={() => handleFilter(undefined, '')}
-              />
+  return (
+    <>
+      <Box mb={priceTableFilterSpacing} className={classes.priceTableFilter}>
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
+          <Grid item md={7}>
+            <Grid container direction="row" spacing={2} alignItems="center">
+              <Grid item md={6}>
+                <PriceTableFilter
+                  handleFilter={handleFilter}
+                  clearFilter={() => handleFilter(undefined, '')}
+                />
+              </Grid>
             </Grid>
           </Grid>
+          <Grid item md={2} className={classes.actionArea}>
+            <PriceTableLeagueDropdownContainer />
+          </Grid>
         </Grid>
-        <Grid item md={2} className={classes.actionArea}>
-          <PriceTableLeagueDropdownContainer />
-        </Grid>
-      </Grid>
-    </Box>
-    <TableWrapper instance={instance} setInitialState={setInitialState} />
-    <CustomPriceDialogContainer />
-  </>;
+      </Box>
+      <TableWrapper instance={instance} setInitialState={setInitialState} />
+      <CustomPriceDialogContainer />
+    </>
+  );
 };
 
 export default observer(PriceTableContainer);

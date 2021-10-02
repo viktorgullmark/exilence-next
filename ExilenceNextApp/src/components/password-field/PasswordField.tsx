@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
 import { useField } from 'formik';
-
-import useLabelWidth from '../../hooks/use-label-width';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useStyles from './PasswordField.styles';
 

@@ -1,5 +1,10 @@
 import { CssBaseline } from '@mui/material';
-import { responsiveFontSizes, StyledEngineProvider, Theme, ThemeProvider } from '@mui/material/styles';
+import {
+  responsiveFontSizes,
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
 import localForage from 'localforage';
 import { configure } from 'mobx';
@@ -28,10 +33,10 @@ import configureAxios from './config/axios';
 import configureI18n from './config/i18n';
 import initSentry from './config/sentry';
 import useStyles from './index.styles';
+import BulkSell from './routes/bulk-sell/BulkSell';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
-import BulkSell from './routes/bulk-sell/BulkSell';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
 

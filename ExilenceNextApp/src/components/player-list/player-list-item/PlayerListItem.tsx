@@ -1,14 +1,12 @@
-import React, { forwardRef } from 'react';
 import {
   Avatar,
   Checkbox,
-  ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-
+import React, { forwardRef } from 'react';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import useStyles from './PlayerListItem.styles';
 

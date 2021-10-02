@@ -1,11 +1,10 @@
-import React, { forwardRef, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoIcon from '@mui/icons-material/Info';
 import WarningIcon from '@mui/icons-material/Warning';
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import moment from 'moment';
-
+import React, { forwardRef, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Notification } from '../../../store/domains/notification';
 import useStyles from './NotificationListItem.styles';
 

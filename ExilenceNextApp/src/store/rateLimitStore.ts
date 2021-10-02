@@ -3,7 +3,6 @@ import { persist } from 'mobx-persist';
 import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
-import moment from 'moment';
 
 interface IRateLimitBoundaries {
   requests: number;

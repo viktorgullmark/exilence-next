@@ -1,3 +1,13 @@
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import AddIcon from '@mui/icons-material/Add';
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import GroupIcon from '@mui/icons-material/Group';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
+import UpdateIcon from '@mui/icons-material/Update';
+import WarningIcon from '@mui/icons-material/Warning';
 import {
   AppBar,
   Badge,
@@ -14,19 +24,9 @@ import {
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import MuiToolbar from '@mui/material/Toolbar';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import AddIcon from '@mui/icons-material/Add';
-import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import GroupIcon from '@mui/icons-material/Group';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
-import UpdateIcon from '@mui/icons-material/Update';
-import WarningIcon from '@mui/icons-material/Warning';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';

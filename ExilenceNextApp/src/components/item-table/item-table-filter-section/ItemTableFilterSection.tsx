@@ -37,29 +37,31 @@ const ItemTableFilterSection = () => {
     uiStateStore!.setFilteredStashTabs(value);
   };
 
-  return <>
-    {stashTabs.length > 0 && (
-      <Box mb={1}>
-        <Box>
-          <Grid container direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <StashTabDropdown
-                width={600}
-                size="small"
-                marginBottom={1.5}
-                stashTabs={stashTabs}
-                selectedStashTabs={selectedStashTabs}
-                handleStashTabChange={handleStashTabChange}
-                hideLabel
-                placeholderKey="common:label.filter_stash_tabs"
-              />
+  return (
+    <>
+      {stashTabs.length > 0 && (
+        <Box mb={1}>
+          <Box>
+            <Grid container direction="row" justifyContent="space-between" alignItems="center">
+              <Grid item>
+                <StashTabDropdown
+                  width={600}
+                  size="small"
+                  marginBottom={1.5}
+                  stashTabs={stashTabs}
+                  selectedStashTabs={selectedStashTabs}
+                  handleStashTabChange={handleStashTabChange}
+                  hideLabel
+                  placeholderKey="common:label.filter_stash_tabs"
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
+          <Divider />
         </Box>
-        <Divider />
-      </Box>
-    )}
-  </>;
+      )}
+    </>
+  );
 };
 
 export default observer(ItemTableFilterSection);
