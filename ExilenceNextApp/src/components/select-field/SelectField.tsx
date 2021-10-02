@@ -37,6 +37,8 @@ const SelectField = ({
       ]
     : [];
 
+  const combinedOptions = options ? initialOptions.concat(options) : initialOptions;
+
   return (
     <FormControl
       variant="outlined"
@@ -46,9 +48,15 @@ const SelectField = ({
       fullWidth
     >
       <InputLabel>{label}</InputLabel>
-      <Select id={name} fullWidth {...field}>
+      <Select
+        id={name}
+        fullWidth
+        label={label}
+        {...field}
+        defaultValue={hasPlaceholder ? placeholderOption : undefined}
+      >
         {options
-          ? initialOptions.concat(options).map((opt) => (
+          ? combinedOptions.map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>
                 {opt.label}
               </MenuItem>

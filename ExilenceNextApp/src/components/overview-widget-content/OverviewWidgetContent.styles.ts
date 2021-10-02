@@ -9,6 +9,7 @@ import {
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {},
   topContent: {
+    minHeight: 43,
     borderBottom: `1px solid ${fontColors.hintDarker}`,
     paddingBottom: theme.spacing(1),
     marginBottom: theme.spacing(1),

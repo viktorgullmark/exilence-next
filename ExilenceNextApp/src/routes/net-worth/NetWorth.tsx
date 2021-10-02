@@ -114,7 +114,7 @@ const NetWorth = () => {
               title="label.total_value"
               valueColor={rarityColors.currency}
               currencyShort={settingStore.activeCurrency.short}
-              icon={<MonetizationOnIcon fontSize="inherit" />}
+              icon={<MonetizationOnIcon fontSize="medium" />}
               currency
               tooltip="Change in value between the two latest snapshots"
               sparklineChart={
@@ -143,7 +143,7 @@ const NetWorth = () => {
               valueSuffix={` ${t('label.hour_suffix')}`}
               title="label.total_income"
               valueColor={rarityColors.currency}
-              icon={<TrendingUpIcon fontSize="inherit" />}
+              icon={<TrendingUpIcon fontSize="medium" />}
               currencyShort={settingStore.activeCurrency.short}
               currency
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
@@ -164,7 +164,7 @@ const NetWorth = () => {
                 fontWeight: 'normal',
               }}
               valueColor={theme.palette.text.primary}
-              icon={<UpdateIcon fontSize="inherit" />}
+              icon={<UpdateIcon fontSize="medium" />}
               tooltip="Time since last snapshot"
             />
           </Widget>

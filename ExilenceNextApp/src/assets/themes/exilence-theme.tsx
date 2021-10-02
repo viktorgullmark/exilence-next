@@ -132,6 +132,13 @@ export default function exilenceTheme() {
           },
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+          },
+        },
+      },
     },
     palette: {
       text: {

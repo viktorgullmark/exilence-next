@@ -39,7 +39,7 @@ const LeagueDropdown = ({
   values,
 }: LeagueDropdownProps) => {
   const { t } = useTranslation();
-
+  const label = t('label.select_main_league');
   return (
     <>
       <FormControl
@@ -49,9 +49,10 @@ const LeagueDropdown = ({
         required
         error={(touched.league && errors.league !== undefined) || noCharacters.length > 0}
       >
-        {!hideLabel && <InputLabel htmlFor="league-dd">{t('label.select_main_league')}</InputLabel>}
+        {!hideLabel && <InputLabel htmlFor="league-dd">{label}</InputLabel>}
         <Select
           fullWidth
+          label={!hideLabel && label}
           value={values.league}
           onChange={(e) => {
             handleChange(e);

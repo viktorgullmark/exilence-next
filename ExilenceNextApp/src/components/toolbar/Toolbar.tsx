@@ -208,6 +208,7 @@ const Toolbar = ({
                     name: 'profile',
                     id: 'profile-dd',
                   }}
+                  variant="standard"
                 >
                   {profiles.map((profile: Profile) => {
                     return (

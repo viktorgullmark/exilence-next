@@ -44,7 +44,7 @@ const PriceLeagueDropdown = ({
 }: PriceLeagueDropdownProps) => {
   const { t } = useTranslation();
   const classes = useStyles();
-
+  const label = t('label.select_price_league');
   return (
     <>
       <FormControl
@@ -59,12 +59,13 @@ const PriceLeagueDropdown = ({
           className={clsx({ [classes.small]: size === 'small' })}
           htmlFor="price-league-table-dd"
         >
-          {t('label.select_price_league')}
+          {label}
         </InputLabel>
         <Grid container>
           <Grid item xs={helperIcon ? 11 : 12}>
             <Select
               fullWidth
+              label={label}
               value={values.priceLeague}
               onChange={(e) => handleChange(e)}
               classes={{

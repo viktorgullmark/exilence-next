@@ -1,4 +1,4 @@
-import { Box, Chip, Popper, PopperProps, TextField } from '@mui/material';
+import { Box, Chip, Popper, PopperProps, TextField, Typography } from '@mui/material';
 import { Alert } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { observer } from 'mobx-react-lite';
@@ -60,7 +60,33 @@ const StashTabDropdown = ({
         style={{ width: width ? width : 'auto' }}
         value={selectedStashTabs}
         defaultValue={defaultValue}
-        getOptionLabel={(option) => option.name}
+        renderOption={(props, option) => (
+          <li {...props}>
+            <Box
+              component="span"
+              sx={{
+                width: 14,
+                height: 14,
+                flexShrink: 0,
+                borderRadius: '3px',
+                mr: 1,
+                mt: '2px',
+              }}
+              style={{ backgroundColor: `#${option.metadata.colour}` }}
+            />
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {option.name}
+            </Box>
+            <Box component="span" sx={{ opacity: 0.6 }}>
+              {option.index}
+            </Box>
+          </li>
+        )}
+        getOptionLabel={(option) => `${option.name} (idx: ${option.index})`}
         onChange={(e, value) => {
           if (handleChange) {
             handleChange(e);

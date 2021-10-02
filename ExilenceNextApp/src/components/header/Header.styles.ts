@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) =>
     header: {
       zIndex: 1290,
       backgroundColor: theme.palette.secondary.dark,
+      backgroundImage: 'none',
     },
     title: {
       flexGrow: 1,

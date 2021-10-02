@@ -85,7 +85,8 @@ const ProfileDialog = ({
       <Dialog
         open={isOpen}
         onClose={() => handleClickClose()}
-        aria-labelledby="profile-dialog-title">
+        aria-labelledby="profile-dialog-title"
+      >
         <DialogTitle id="profile-dialog-title">
           {isEditing ? t('title.save_profile') : t('title.create_profile')}
         </DialogTitle>
@@ -156,7 +157,13 @@ const ProfileDialog = ({
                   errors={errors}
                   fullWidth
                   noCharacters={noCharacters}
-                  handleLeagueChange={handleLeagueChange}
+                  handleLeagueChange={(e) => {
+                    handleLeagueChange(e);
+                    // reset these fields when league changes
+                    setFieldValue('character', placeholderOption);
+                    setFieldValue('includeEquipment', false);
+                    setFieldValue('includeInventory', false);
+                  }}
                   handleChange={handleChange}
                   values={values}
                 />
