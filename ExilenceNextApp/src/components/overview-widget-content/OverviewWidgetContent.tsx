@@ -1,5 +1,5 @@
-import { Box, Grid, IconButton, Tooltip, Typography } from '@material-ui/core';
-import { Clear, SwapHoriz } from '@material-ui/icons';
+import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material';
+import { Clear, SwapHoriz } from '@mui/icons-material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

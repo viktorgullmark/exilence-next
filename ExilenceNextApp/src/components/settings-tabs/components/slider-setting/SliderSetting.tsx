@@ -8,9 +8,9 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-} from '@material-ui/core';
-import Slider from '@material-ui/core/Slider';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
+} from '@mui/material';
+import Slider from '@mui/material/Slider';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
 import useStyles from './SliderSetting.styles';
 

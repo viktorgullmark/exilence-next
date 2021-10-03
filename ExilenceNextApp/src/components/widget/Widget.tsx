@@ -1,11 +1,9 @@
-import React, { ReactNode } from 'react';
-import { Paper } from '@material-ui/core';
+import { Paper, Skeleton } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-
+import React, { ReactNode } from 'react';
 import { cardHeight } from '../../routes/net-worth/NetWorth';
 import useStyles from './Widget.styles';
-import { Skeleton } from '@material-ui/lab';
 
 type WidgetProps = {
   backgroundColor?: string;
@@ -31,7 +29,7 @@ const Widget = ({
   return (
     <>
       {loading ? (
-        <Skeleton variant="rect" height={height} />
+        <Skeleton variant="rectangular" height={height} />
       ) : (
         <Paper
           className={clsx(classes.paper, {

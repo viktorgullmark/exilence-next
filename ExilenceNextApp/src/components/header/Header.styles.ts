@@ -1,4 +1,5 @@
-import { createStyles, makeStyles } from '@material-ui/core';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from './Header';
@@ -11,6 +12,7 @@ const useStyles = makeStyles((theme) =>
     header: {
       zIndex: 1290,
       backgroundColor: theme.palette.secondary.dark,
+      backgroundImage: 'none',
     },
     title: {
       flexGrow: 1,
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) =>
     },
     version: {
       flexGrow: 1,
-      color: theme.palette.text.hint,
+      color: theme.palette.text.disabled,
     },
     updateAvailable: {
       flexGrow: 1,

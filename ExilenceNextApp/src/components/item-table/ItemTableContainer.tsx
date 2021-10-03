@@ -1,16 +1,8 @@
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  makeStyles,
-  Theme,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { Box, Button, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -217,7 +209,7 @@ const ItemTableContainer = ({
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
           <Grid item md={uiStateStore!.bulkSellGeneratingImage ? 11 : 5}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={7} id="items-table-input">

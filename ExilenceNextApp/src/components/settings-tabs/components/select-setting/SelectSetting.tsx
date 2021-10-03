@@ -1,13 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  FormControl,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  MenuItem,
-  Select,
-} from '@material-ui/core';
+import { FormControl, FormGroup, FormHelperText, FormLabel, MenuItem, Select } from '@mui/material';
 
 import { ISelectOption } from '../../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
@@ -46,6 +39,7 @@ const SelectSetting = ({
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
           style={{ maxWidth }}
+          variant="standard"
         >
           {withNone && (
             <MenuItem value={0}>
@@ -60,7 +54,9 @@ const SelectSetting = ({
             );
           })}
         </Select>
-        <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
+        <FormHelperText className={classes.helperText}>
+          {t(`helper_text.${translationKey}`)}
+        </FormHelperText>
       </FormGroup>
     </FormControl>
   );

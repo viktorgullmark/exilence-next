@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { resizeHandleContainerHeight, toolbarHeight } from '../../header/Header';
 import { drawerWidth } from '../DrawerWrapper';

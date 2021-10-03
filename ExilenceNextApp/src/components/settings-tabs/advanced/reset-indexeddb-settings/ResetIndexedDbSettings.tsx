@@ -8,7 +8,7 @@ import {
   DialogTitle,
   FormHelperText,
   Grid,
-} from '@material-ui/core';
+} from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';

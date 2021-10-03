@@ -1,5 +1,6 @@
+import { SelectChangeEvent } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
@@ -95,9 +96,7 @@ const ToolbarContainer = () => {
     accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
 
-  const handleProfileChange = (
-    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ) => {
+  const handleProfileChange = (event: SelectChangeEvent<string>) => {
     accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 

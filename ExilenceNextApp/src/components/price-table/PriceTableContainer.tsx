@@ -1,4 +1,5 @@
-import { Box, Grid, makeStyles, Theme } from '@material-ui/core';
+import { Box, Grid, Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, default as React, useMemo, useState } from 'react';
 import {
@@ -114,7 +115,7 @@ const PriceTableContainer = () => {
   return (
     <>
       <Box mb={priceTableFilterSpacing} className={classes.priceTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
           <Grid item md={7}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={6}>

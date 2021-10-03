@@ -8,7 +8,7 @@ import {
   Popover,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -100,6 +100,7 @@ const ColumnHidePage = ({
     updateState();
   }, [bulkSellActivePreset]);
 
+  const label = t('label.select_column_preset');
   return hideableColumns.length > 1 ? (
     <div>
       <Popover
@@ -121,9 +122,9 @@ const ColumnHidePage = ({
           <Typography className={classes.popoverTitle}>{t('label.visible_columns')}</Typography>
           <Box>
             <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="column-preset-dd">{t('label.select_column_preset')}</InputLabel>
+              <InputLabel htmlFor="column-preset-dd">{label}</InputLabel>
               <Select
-                labelWidth={100}
+                label={label}
                 value={bulkSellActivePreset?.name}
                 onChange={(e) => onPresetSelect(e.target.value as string)}
                 displayEmpty

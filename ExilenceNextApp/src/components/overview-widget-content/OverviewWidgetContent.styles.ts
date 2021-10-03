@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {
   currencyChangeColors,
@@ -9,6 +9,7 @@ import {
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {},
   topContent: {
+    minHeight: 43,
     borderBottom: `1px solid ${fontColors.hintDarker}`,
     paddingBottom: theme.spacing(1),
     marginBottom: theme.spacing(1),

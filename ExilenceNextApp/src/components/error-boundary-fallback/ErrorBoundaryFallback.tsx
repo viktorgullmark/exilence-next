@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
@@ -32,7 +32,7 @@ const ErrorBoundaryFallback = ({ error, componentStack }: ErrorBoundaryFallbackP
     <Grid
       container
       direction="row"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.content}
     >
@@ -46,7 +46,7 @@ const ErrorBoundaryFallback = ({ error, componentStack }: ErrorBoundaryFallbackP
             <div>{componentStack}</div>
           </Box>
           <Box mt={2}>
-            <Grid container justify="flex-end" spacing={2}>
+            <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item>
                 <Button disabled={isClearing} onClick={handleClearAndRestart} variant="contained">
                   {t('action.clear_and_restart_application')}

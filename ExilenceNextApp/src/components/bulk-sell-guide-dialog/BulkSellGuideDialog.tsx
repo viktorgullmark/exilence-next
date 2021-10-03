@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { CardMedia, Dialog, DialogTitle } from '@material-ui/core';
+import { CardMedia, Dialog, DialogTitle } from '@mui/material';
 
 type BulkSellGuideDialogProps = {
   onClose: () => void;

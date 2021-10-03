@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -87,7 +88,7 @@ const ProfileDialogContainer = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
+  const handleLeagueChange = (event: SelectChangeEvent<string>) => {
     const id = event.target.value;
     const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       (l) => l.leagueId === id

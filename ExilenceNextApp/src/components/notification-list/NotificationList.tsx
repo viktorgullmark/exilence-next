@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu } from '@material-ui/core';
+import { Menu } from '@mui/material';
 
 import { Notification } from '../../store/domains/notification';
 import NotificationListItem from './notification-list-item/NotificationListItem';

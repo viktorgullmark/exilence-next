@@ -10,10 +10,10 @@ import {
   pink,
   red,
   teal,
-} from '@material-ui/core/colors';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+} from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 
-const defaultTheme = createMuiTheme({ palette: { type: 'dark' } });
+const defaultTheme = createTheme({ palette: { mode: 'dark' } });
 
 const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
@@ -96,36 +96,62 @@ export type StatusColor = typeof statusColors;
 export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
 
 export default function exilenceTheme() {
-  return createMuiTheme({
-    overrides: {
+  return createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1300,
+        xl: 1950,
+      },
+    },
+    components: {
       MuiToolbar: {
-        gutters: {
-          [defaultTheme.breakpoints.up('xs')]: {
-            paddingLeft: '8px',
-            paddingRight: 0,
+        styleOverrides: {
+          gutters: {
+            [defaultTheme.breakpoints.up('xs')]: {
+              paddingLeft: '8px',
+              paddingRight: 0,
+            },
           },
         },
       },
       MuiTableRow: {
-        root: {
-          '&$hover:hover': {
-            backgroundColor: defaultTheme.palette.background.default,
+        styleOverrides: {
+          root: {
+            // todo: test
+            '&.Mui-hovered': {
+              backgroundColor: defaultTheme.palette.background.default,
+            },
           },
         },
       },
       MuiTableCell: {
-        root: {
-          fontSize: '0.75rem',
+        styleOverrides: {
+          root: {
+            fontSize: '0.75rem',
+          },
         },
       },
       MuiFormControlLabel: {
-        root: {
-          color: '#c2c2c2',
+        styleOverrides: {
+          root: {
+            color: '#c2c2c2',
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+          },
         },
       },
     },
     palette: {
       text: {
+        primary: '#fff',
         secondary: '#c2c2c2',
       },
       primary: {
@@ -135,7 +161,7 @@ export default function exilenceTheme() {
       },
       secondary: secondary,
       background: background,
-      type: 'dark',
+      mode: 'dark',
     },
     typography: {
       h6: {

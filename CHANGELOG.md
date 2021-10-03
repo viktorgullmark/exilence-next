@@ -21,11 +21,13 @@ All notable changes to this project will be documented in this file.
 - Added option to choose what should happen when closing the app window
 - Added column presets to the item table
 - Added minor display improvements to the item table
+- Added minor display improvements to the stash tab list
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
 - Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
+- Fixed a bug where the character selection sometimes would not change when league was changed
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
@@ -55,6 +57,8 @@ All notable changes to this project will be documented in this file.
 #### Removed
 - Removed the helper icon from the pricing league dropdown
 - Removed the close button from the initial quickstart tour
+##### Updated
+- Updated Material UI (v4 -> v5) with dependencies
 
 ## [0.6.0] - 2021-09-19
 #### Added
