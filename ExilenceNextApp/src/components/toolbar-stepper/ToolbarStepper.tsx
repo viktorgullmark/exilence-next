@@ -43,7 +43,7 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
       showCloseButton={false}
       onRequestClose={handleClose}
       accentColor={theme.palette.primary.main}
-      maskSpace={+theme.spacing(isOnSupportPanelStep || viewStep ? 0 : 2)}
+      maskSpace={isOnSupportPanelStep || viewStep ? 0 : 16}
       closeWithMask={false}
       getCurrentStep={(currentStep) => setStep(currentStep)}
       startAt={0}
