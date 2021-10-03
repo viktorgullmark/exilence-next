@@ -24,14 +24,27 @@ namespace API.Services
             _mapper = mapper;
         }
 
-        public async Task<CacheValue> GetPrices(CacheValue value)
+        public async Task<string> Get(string key)
         {
-            throw new NotImplementedException();
+            CacheValue cache = await _cacheRepository.Get(key);
+
+            if (cache != null)
+                return cache.Value;
+
+            return null;
         }
 
-        public async Task Add(CacheValue cacheValue)
+
+        public async Task Add(string key, string value, DateTime expireAt)
         {
-            throw new NotImplementedException();
+            CacheValue cacheValue = new CacheValue()
+            {
+                Key = key,
+                Value = value,
+                ExpireAt = expireAt
+            };
+
+            await _cacheRepository.Add(cacheValue);
         }
 
     }

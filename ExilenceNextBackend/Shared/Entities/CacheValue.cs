@@ -9,8 +9,10 @@ namespace Shared.Entities
     public class CacheValue
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.String)]
         public string Key { get; set; }
+
+        [BsonRepresentation(BsonType.String)]
         public string Value { get; set; }
 
         [BsonRequired]

@@ -32,6 +32,11 @@ namespace Shared.Repositories
 
         }
 
+        public async Task<CacheValue> Get(string key)
+        {
+            return await _cache.AsQueryable().FirstOrDefaultAsync(c => c.Key == key);
+        }
+
         public async Task Add(CacheValue cacheValue)
         {
             await _cache.InsertOneAsync(cacheValue);

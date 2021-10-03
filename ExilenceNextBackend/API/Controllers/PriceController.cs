@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using API.Interfaces;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -19,12 +20,12 @@ namespace API.Controllers
     {
         private readonly ILogger<PriceController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IDistributedCache _distributedCache;
+        private readonly ICacheService _cacheService;
 
-        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, IDistributedCache distributedCache)
+        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService)
         {
             _httpClientFactory = httpClientFactory;
-            _distributedCache = distributedCache;
+            _cacheService = cacheService;
             _logger = logger;
         }
 
@@ -33,12 +34,12 @@ namespace API.Controllers
         public async Task<IActionResult> GetPrices(NinjaOverviewTypeEnum overviewType, string league, string type, string language)
         {
             string cacheKey = BuildCacheKey(overviewType, league, type, language);
-            string prices = await _distributedCache.GetStringAsync(cacheKey);
+            string prices = await _cacheService.Get(cacheKey);
             if (prices == null)
             {
                 string url = BuildUrl(overviewType, league, type, language);
                 PriceResponseModel priceModel = await GetPricesFromNinja(url);
-                await _distributedCache.SetStringAsync(cacheKey, priceModel.Data, new DistributedCacheEntryOptions() { AbsoluteExpiration = priceModel.Expires });
+                await _cacheService.Add(cacheKey, priceModel.Data, priceModel.Expires);
                 prices = priceModel.Data;
             }
             return Ok(prices);
@@ -83,7 +84,7 @@ namespace API.Controllers
                 if (int.TryParse(age, out int ageInSeconds) && int.TryParse(maxAge, out int maxAgeInSeconds))
                 {
                     int expiresInSeconds = maxAgeInSeconds - ageInSeconds;
-                    absoluteExpireTime = DateTime.UtcNow.AddSeconds(expiresInSeconds);
+                    absoluteExpireTime = DateTime.UtcNow.AddSeconds(30);
                 }
             }
 

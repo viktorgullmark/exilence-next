@@ -11,5 +11,7 @@ namespace Shared.Interfaces
 {
     public interface ICacheRepository
     {
+        Task<CacheValue> Get(string key);
+        Task Add(CacheValue cacheValue);
     }
 }
