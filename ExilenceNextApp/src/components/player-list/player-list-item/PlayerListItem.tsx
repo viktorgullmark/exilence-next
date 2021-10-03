@@ -6,7 +6,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import useStyles from './PlayerListItem.styles';
 
@@ -16,7 +16,7 @@ interface Props {
   handleToggle: (uuid: string) => void;
 }
 
-const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, ref) => {
+const PlayerListItem = ({ account, selected, handleToggle }: Props) => {
   const classes = useStyles();
 
   return (
@@ -40,7 +40,7 @@ const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, r
       </ListItemSecondaryAction>
     </ListItemButton>
   );
-});
+};
 
 PlayerListItem.displayName = 'PlayerListItem';
 
