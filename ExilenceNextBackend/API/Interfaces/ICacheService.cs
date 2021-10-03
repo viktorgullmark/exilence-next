@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.Interfaces
 {
-    public interface IPriceService
+    public interface ICacheService
     {
 
     }

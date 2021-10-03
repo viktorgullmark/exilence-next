@@ -78,7 +78,7 @@ namespace API.Controllers
             {
                 string age = ageHeader.First();
                 string cacheControl = cacheControlHeader.First();
-                string maxAge = cacheControl.Substring(cacheControl.LastIndexOf("=") + 1);
+                string maxAge = cacheControl[(cacheControl.LastIndexOf("=") + 1)..];
 
                 if (int.TryParse(age, out int ageInSeconds) && int.TryParse(maxAge, out int maxAgeInSeconds))
                 {

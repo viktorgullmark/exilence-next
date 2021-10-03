@@ -12,29 +12,29 @@ using System.Threading.Tasks;
 
 namespace Shared.Repositories
 {
-    public class PriceRepository : IPriceRepository
+    public class CacheRepository : ICacheRepository
     {
         private readonly IMongoClient _client;
         private readonly IMongoDatabase _database;
 
-        private readonly IMongoCollection<object> _prices;
+        private readonly IMongoCollection<CacheValue> _cache;
         
-        public PriceRepository(IConfiguration configuration)
+        public CacheRepository(IConfiguration configuration)
         {
             _client = new MongoClient(configuration.GetSection("ConnectionStrings")["Mongo"]);
             _database = _client.GetDatabase(configuration.GetSection("Mongo")["Database"]);
-            _prices = _database.GetCollection<object>("Prices");
+            _cache = _database.GetCollection<CacheValue>("Cache");
         }
 
-        public async Task<object> GetPrices(Expression<Func<object, bool>> predicate)
+        public IQueryable<CacheValue> Queryable(Expression<Func<CacheValue, bool>> predicate)
         {
-            return _prices.AsQueryable().Where(predicate);
+            return _cache.AsQueryable().Where(predicate);
 
         }
 
-        public async Task<object> AddSnapshot(object priceModel)
+        public async Task Add(CacheValue cacheValue)
         {
-            _prices.InsertOneAsync(priceModel, new InsertOneOptions() { });
+            await _cache.InsertOneAsync(cacheValue);
         }
 
     }

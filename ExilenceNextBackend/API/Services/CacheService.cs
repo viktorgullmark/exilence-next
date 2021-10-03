@@ -12,25 +12,24 @@ using System.Threading.Tasks;
 
 namespace API.Services
 {
-    public class PriceService : IPriceService
+    public class CacheService : ICacheService
     {
-        IPriceRepository _priceRepository;
+        ICacheRepository _cacheRepository;
         readonly IMapper _mapper;
 
 
-        public PriceService(IPriceRepository priceRepository, IMapper mapper)
+        public CacheService(ICacheRepository cacheRepository, IMapper mapper)
         {
-            _priceRepository = priceRepository;
+            _cacheRepository = cacheRepository;
             _mapper = mapper;
         }
 
-        public async Task<object> GetPrices(string snapshotClientId)
+        public async Task<CacheValue> GetPrices(CacheValue value)
         {
             throw new NotImplementedException();
-
         }
 
-        public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
+        public async Task Add(CacheValue cacheValue)
         {
             throw new NotImplementedException();
         }

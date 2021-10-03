@@ -4,7 +4,7 @@ using System;
 
 namespace Shared.MongoMigrations
 {
-    public class PriceCacheMigration : IMigration
+    public class CacheMigration : IMigration
     {
         public MongoDBMigrations.Version Version => new MongoDBMigrations.Version(1, 0, 0);
         public string Name => "Cache";

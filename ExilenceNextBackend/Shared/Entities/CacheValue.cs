@@ -6,14 +6,16 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class LeaguePrices
+    public class CacheValue
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-        public string League { get; set; }
-        public string Type { get; set; }
-        public string Language { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+
+        [BsonRequired]
+        [BsonElement("expiry")]
+        public DateTime ExpireAt { get; set; }
 
     }
 }
