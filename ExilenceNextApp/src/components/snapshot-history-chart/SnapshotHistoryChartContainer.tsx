@@ -22,6 +22,8 @@ const SnapshotHistoryChartContainer = ({
 
   const { activeGroup } = signalrStore!;
 
+  console.log(size)
+
   return (
     <div ref={ref} style={{ height: chartHeight ?? _chartHeight, width: '100%' }}>
       <SnapshotHistoryChart

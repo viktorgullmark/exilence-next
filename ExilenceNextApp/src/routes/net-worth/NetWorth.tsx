@@ -206,12 +206,7 @@ const NetWorth = () => {
                       background: theme.palette.background.default,
                     }}
                   >
-                    <Grid
-                      container
-                      direction="column"
-                      justifyContent="space-evenly"
-                      alignItems="stretch"
-                    >
+                    <Grid container>
                       <Grid item xs={12}>
                         <SnapshotHistoryChartContainer />
                       </Grid>
@@ -250,21 +245,13 @@ const NetWorth = () => {
                       background: theme.palette.background.default,
                     }}
                   >
-                    <Grid
-                      container
-                      direction="column"
-                      justifyContent="space-evenly"
-                      alignItems="stretch"
-                    >
+                    <Grid container>
                       <Grid item xs={12}>
                         <SnapshotHistoryChartContainer
                           chartHeight={tabChartHeight}
                           showIndividualTabs
                         />
                       </Grid>
-                      {/* <Grid item xs={12}>
-                      <ChartToolboxContainer />
-                    </Grid> */}
                     </Grid>
                   </AccordionDetails>
                 </Accordion>
