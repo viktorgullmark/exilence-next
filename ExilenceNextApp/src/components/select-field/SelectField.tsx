@@ -1,8 +1,6 @@
-import React, { ReactNode } from 'react';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { useField } from 'formik';
-
-import useLabelWidth from '../../hooks/use-label-width';
+import React, { ReactNode } from 'react';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { placeholderOption } from '../../utils/misc.utils';
 import useStyles from './SelectField.styles';
@@ -26,7 +24,6 @@ const SelectField = ({
 }: SelectFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
-  const { labelWidth, ref } = useLabelWidth(0);
 
   const initialOptions = hasPlaceholder
     ? [
@@ -38,6 +35,8 @@ const SelectField = ({
       ]
     : [];
 
+  const combinedOptions = options ? initialOptions.concat(options) : initialOptions;
+
   return (
     <FormControl
       variant="outlined"
@@ -46,10 +45,16 @@ const SelectField = ({
       className={classes.root}
       fullWidth
     >
-      <InputLabel ref={ref}>{label}</InputLabel>
-      <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
+      <InputLabel>{label}</InputLabel>
+      <Select
+        id={name}
+        fullWidth
+        label={label}
+        {...field}
+        defaultValue={hasPlaceholder ? placeholderOption : undefined}
+      >
         {options
-          ? initialOptions.concat(options).map((opt) => (
+          ? combinedOptions.map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>
                 {opt.label}
               </MenuItem>

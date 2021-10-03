@@ -38,16 +38,19 @@ const itemTableColumns: Column<object>[] = [
     Header: 'Quality',
     accessor: 'quality',
     align: 'right',
+    maxWidth: 60,
   },
   {
     Header: 'Level',
     accessor: 'level',
     align: 'right',
+    maxWidth: 60,
   },
   {
     Header: 'Quantity',
     accessor: 'stackSize',
     align: 'right',
+    maxWidth: 80,
   },
   itemValue({
     accessor: 'calculated',

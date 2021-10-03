@@ -1,13 +1,12 @@
-import React, { forwardRef } from 'react';
 import {
   Avatar,
   Checkbox,
-  ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
-} from '@material-ui/core';
-
+} from '@mui/material';
+import React from 'react';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
 import useStyles from './PlayerListItem.styles';
 
@@ -17,15 +16,13 @@ interface Props {
   handleToggle: (uuid: string) => void;
 }
 
-const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, ref) => {
+const PlayerListItem = ({ account, selected, handleToggle }: Props) => {
   const classes = useStyles();
 
   return (
-    <ListItem
+    <ListItemButton
       key={account.uuid}
-      innerRef={ref}
       className={classes.root}
-      button
       onClick={() => handleToggle(account.uuid)}
     >
       <ListItemAvatar>
@@ -41,9 +38,9 @@ const PlayerListItem = forwardRef(({ account, selected, handleToggle }: Props, r
           inputProps={{ 'aria-labelledby': account.uuid }}
         />
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
-});
+};
 
 PlayerListItem.displayName = 'PlayerListItem';
 

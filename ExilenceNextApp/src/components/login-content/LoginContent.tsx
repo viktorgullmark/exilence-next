@@ -1,20 +1,19 @@
-import { IconButton, Tooltip } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Alert, AlertTitle, IconButton, Tooltip } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { electronService } from '../../services/electron.service';
 import { Account } from '../../store/domains/account';
 import AccountValidationForm, {
   AccountFormValues,
 } from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import { electronService } from '../../services/electron.service';
 type LoginContentProps = {
   handleValidate: (form: AccountFormValues) => void;
   isSubmitting: boolean;
@@ -40,7 +39,7 @@ const LoginContent = ({
       <Grid
         container
         direction="row"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         className={classes.content}
       >

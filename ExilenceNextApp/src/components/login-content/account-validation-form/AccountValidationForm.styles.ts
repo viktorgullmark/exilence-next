@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   helperIcon: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'baseline',
   },
   modalBody: {
-    color: theme.palette.text.hint,
+    color: theme.palette.text.disabled,
   },
   linkBlock: {
     whiteSpace: 'nowrap',

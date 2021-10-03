@@ -45,7 +45,7 @@ export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) 
 }
 
 export function parseTabNames(tabs: ICompactTab[]) {
-  return tabs.map((t) => t.n).join(', ');
+  return tabs.map((t) => t.name).join(', ');
 }
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
@@ -93,10 +93,10 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
       tab: tab
         ? [
             {
-              n: tab.n,
-              i: tab.i,
+              name: tab.name,
+              index: tab.index,
               id: tab.id,
-              colour: tab.colour,
+              color: tab.metadata.colour,
             } as ICompactTab,
           ]
         : [],
@@ -122,6 +122,13 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
 export function isDivinationCard(icon: string) {
   return icon.indexOf('/Divination/') > -1;
 }
+
+export function isSpecialGem(name: string) {
+  const suffix = 'Support';
+  const specialGems = [`Empower ${suffix}`, `Enhance ${suffix}`, `Enlighten ${suffix}`];
+  return specialGems.some((sg) => name.includes(sg));
+}
+
 export function getLinks(array: any[]) {
   const numMapping: any = {};
   let greatestFreq = 0;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, ListItem, ListItemText } from '@material-ui/core';
+import { Box, Grid, ListItem, ListItemText } from '@mui/material';
 
 import { TimespanType } from '../../types/timespan.type';
 import useStyles from './ChartToolbox.styles';

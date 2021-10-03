@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import HC from 'highcharts';
 
 import { primaryDarker } from '../../assets/themes/exilence-theme';

@@ -6,7 +6,6 @@ import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
-
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
@@ -18,7 +17,6 @@ import { mapSnapshotToApiSnapshot } from '../utils/snapshot.utils';
 import { Group } from './domains/group';
 import { Snapshot } from './domains/snapshot';
 import { RootStore } from './rootStore';
-import axios from 'axios-observable';
 
 export interface ISignalrEvent<T> {
   method: string;
@@ -118,7 +116,7 @@ export class SignalrStore {
     fromStream(
       forkJoin(
         this.rootStore.signalrHub.stopConnection(),
-        this.rootStore.uiStateStore.removeSessIdCookie(),
+        this.rootStore.uiStateStore.removeSessIdCookie()
       ).pipe(
         map(() => {
           this.rootStore.accountStore.clearToken();

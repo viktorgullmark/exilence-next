@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   tableCell: {
-    padding: `${theme.spacing(1.75)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1.75)} ${theme.spacing(2)}`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 120,
   },
   unavailable: {
-    color: theme.palette.text.hint,
+    color: theme.palette.text.disabled,
   },
   inlineIcon: {
     color: primaryLighter,
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   editIconRoot: {
     fontSize: '0.75rem',
   },
-  tabsCell: {
+  ellipsis: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

@@ -1,7 +1,7 @@
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -39,8 +39,8 @@ export function itemName(
 
   return {
     Header: header,
+    minWidth: 120,
     accessor,
-    minWidth: 180,
     // eslint-disable-next-line react/display-name
     ...(!bulkSellView && {
       Cell: (data: any) => {
@@ -63,6 +63,7 @@ export function itemLinks(options: { accessor: string; header: string }): Column
   return {
     Header: header,
     accessor,
+    maxWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
@@ -99,6 +100,7 @@ export function itemCorrupted(options: { accessor: string; header: string }): Co
   return {
     Header: header,
     accessor,
+    minWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
@@ -117,6 +119,7 @@ export function itemIlvlTier(options: {
     Header: header,
     accessor,
     align: 'right',
+    maxWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (row: any) => {
       return <span>{row.value}</span>;
@@ -172,6 +175,7 @@ type ItemIconCellProps = {
 
 const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const theme = useTheme();
   const rarityColor = rarityColors[getRarity(frameType)];
 
@@ -192,8 +196,7 @@ const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
       >
         <img
           className={classes.iconImg}
-          alt={value.toString()}
-          title={value.toString()}
+          alt={t('label.icon_fetched_from')}
           src={typeof value === 'string' ? value : ''}
         />
       </Box>
@@ -214,13 +217,16 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
 
   return (
     <Box display="flex" width={1} alignItems="center" justifyContent="space-between">
-      <span
-        style={{
-          color: rarityColor,
-        }}
-      >
-        {value}
-      </span>
+      <Tooltip title={value || ''} placement="bottom">
+        <span
+          style={{
+            color: rarityColor,
+          }}
+          className={classes.ellipsis}
+        >
+          {value}
+        </span>
+      </Tooltip>
       {poeNinjaUrl && (
         <Tooltip title={t('label.open_on_ninja') || ''} placement="bottom">
           <IconButton
@@ -374,5 +380,5 @@ type ItemTabsCellProps = {
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
   const classes = useStyles();
-  return <span className={classes.tabsCell}>{tabs ? parseTabNames(tabs) : ''}</span>;
+  return <span className={classes.ellipsis}>{tabs ? parseTabNames(tabs) : ''}</span>;
 };

@@ -1,9 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
@@ -16,11 +15,16 @@ export class AccountLeague {
   @persist('list', Character) @observable characters: Character[] = [];
   @persist('list') @observable stashtabs: IStashTab[] = [];
 
-  private static readonly excludedStashTypes: string[] = ['UniqueStash', 'MapStash'];
-
   constructor(id: string) {
     makeObservable(this);
     this.leagueId = id;
+  }
+
+  @computed get stashtabList() {
+    const flattenedTabs = this.stashtabs.flatMap((st) => {
+      return st.children ?? st;
+    });
+    return flattenedTabs;
   }
 
   @action
@@ -36,29 +40,39 @@ export class AccountLeague {
   }
 
   @action
-  getStashTabs() {
-    return externalService
-      .getStashTabs(
-        rootStore.accountStore.getSelectedAccount.name!,
-        this.leagueId,
-        rootStore.uiStateStore.selectedPlatform.id
-      )
-      .pipe(
-        map((response: AxiosResponse<IStash>) => {
-          runInAction(() => {
-            if (response.data.tabs.length > 0) {
-              this.stashtabs = response.data.tabs.filter(
-                (s: IStashTab) => !AccountLeague.excludedStashTypes.includes(s.type)
-              );
-            }
-            this.getStashTabsSuccess();
-          });
-        }),
-        catchError((e: AxiosError) => {
-          of(this.getStashTabsFail(e));
-          throw e;
-        })
-      );
+  getStashTabs(checkHeaders?: boolean) {
+    return externalService.getStashTabs(this.leagueId).pipe(
+      map((response: AxiosResponse<IStash>) => {
+        runInAction(() => {
+          if (response.data.stashes.length > 0) {
+            this.stashtabs = response.data.stashes;
+          }
+          this.getStashTabsSuccess();
+        });
+      }),
+      switchMap(() => {
+        const selectedStashTabs = this.stashtabList.filter(
+          (st) =>
+            rootStore.accountStore.getSelectedAccount.activeProfile?.activeStashTabIds.find(
+              (ast) => ast === st.id
+            ) !== undefined
+        );
+        // fetch first and set headers
+        if (selectedStashTabs.length > 0 && checkHeaders) {
+          return externalService.getStashTabWithChildren(
+            selectedStashTabs[0],
+            this.leagueId,
+            false,
+            true
+          );
+        }
+        return of(undefined);
+      }),
+      catchError((e: AxiosError) => {
+        of(this.getStashTabsFail(e));
+        throw e;
+      })
+    );
   }
 
   @action getStashTabsSuccess() {

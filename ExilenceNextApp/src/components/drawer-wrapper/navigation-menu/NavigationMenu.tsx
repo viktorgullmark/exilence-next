@@ -1,3 +1,8 @@
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BurstModeIcon from '@mui/icons-material/BurstMode';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Divider,
   Drawer,
@@ -8,12 +13,8 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SettingsIcon from '@material-ui/icons/Settings';
-import BurstModeIcon from '@material-ui/icons/BurstMode';
+  useTheme,
+} from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -31,6 +32,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
   const classes = useStyles();
   const { t } = useTranslation();
   const location = useLocation();
+  const theme = useTheme();
 
   return (
     <Drawer
@@ -51,7 +53,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
       transitionDuration={0}
     >
       <div className={clsx(classes.drawerHeader, { [classes.drawerHeaderOpen]: open })}>
-        <IconButton onClick={() => toggleSidenav()}>
+        <IconButton onClick={() => toggleSidenav()} size="large">
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>

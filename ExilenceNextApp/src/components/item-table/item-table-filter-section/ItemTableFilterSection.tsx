@@ -1,4 +1,4 @@
-import { Box, Divider, Grid } from '@material-ui/core';
+import { Box, Divider, Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useStores } from '../../..';
@@ -20,13 +20,13 @@ const ItemTableFilterSection = () => {
       const foundLeague = accountLeagues.find((al) => al.leagueId === activeProfile.activeLeagueId);
       if (foundLeague) {
         setStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
         setSelectedStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
         uiStateStore!.setFilteredStashTabs(
-          foundLeague.stashtabs.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
+          foundLeague.stashtabList.filter((st) => activeProfile.activeStashTabIds.includes(st.id))
         );
       }
     }
@@ -42,7 +42,7 @@ const ItemTableFilterSection = () => {
       {stashTabs.length > 0 && (
         <Box mb={1}>
           <Box>
-            <Grid container direction="row" justify="space-between" alignItems="center">
+            <Grid container direction="row" justifyContent="space-between" alignItems="center">
               <Grid item>
                 <StashTabDropdown
                   width={600}

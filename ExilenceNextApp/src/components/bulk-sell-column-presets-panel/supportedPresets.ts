@@ -1,5 +1,9 @@
 const SUPPORTED_PRESETS = [
   {
+    name: 'value.custom',
+    hiddenColumns: [],
+  },
+  {
     name: 'label.breachstones',
     hiddenColumns: ['corrupted', 'quality'],
   },
@@ -37,10 +41,6 @@ const SUPPORTED_PRESETS = [
   },
   {
     name: 'label.sets',
-    hiddenColumns: [],
-  },
-  {
-    name: 'value.none',
     hiddenColumns: [],
   },
 ];

@@ -1,9 +1,9 @@
-import MuiExpansionPanel from '@material-ui/core/Accordion';
-import MuiExpansionPanelDetails from '@material-ui/core/AccordionDetails';
-import MuiExpansionPanelSummary from '@material-ui/core/AccordionSummary';
-import { withStyles } from '@material-ui/core/styles';
+import MuiExpansionPanel from '@mui/material/Accordion';
+import MuiExpansionPanelDetails from '@mui/material/AccordionDetails';
+import MuiExpansionPanelSummary from '@mui/material/AccordionSummary';
+import withStyles from '@mui/styles/withStyles';
 
-export const ExpansionPanel = withStyles({
+export const Accordion = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
@@ -20,7 +20,7 @@ export const ExpansionPanel = withStyles({
   expanded: {},
 })(MuiExpansionPanel);
 
-export const ExpansionPanelSummary = withStyles((theme) => ({
+export const AccordionSummary = withStyles((theme) => ({
   root: {
     maxHeight: 40,
     minHeight: '40px !important',
@@ -40,7 +40,7 @@ export const ExpansionPanelSummary = withStyles((theme) => ({
   expanded: {},
 }))(MuiExpansionPanelSummary);
 
-export const ExpansionPanelDetails = withStyles((theme) => ({
+export const AccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
   },

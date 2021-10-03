@@ -3,12 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - NOT RELEASED
 #### Added
+- Added support for parsing the Unique stash tab
+- Added support for parsing the Map tab
 - Added a setting for using exalted orbs as main currency
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
-- Added support for pricing `Blighted` maps
-- Added support for pricing `Elder` maps
-- Added support for pricing `Shaper` maps
+- Added support for pricing `Blighted`, `Elder` and `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
@@ -18,27 +19,46 @@ All notable changes to this project will be documented in this file.
 - Added option to choose release channels
    - Allows you to change to the beta channel feed
 - Added option to choose what should happen when closing the app window
+- Added column presets to the item table
+- Added minor display improvements to the item table
+- Added minor display improvements to the stash tab list
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
 - Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
+- Fixed a bug where the character selection sometimes would not change when league was changed
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
   - Now only prices maps based on the latest generation of maps (e.g Expedition)
 - Reworked how uniques are priced
   - Should now correctly identify uniques all the time
+- Reworked skill gem pricing
+  - Accurate pricing for empower, enhance, enlighten
+  - Accurate pricing and identification for all gems
+- Changed the underlying data provider
+  - Now uses the new https://api.pathofexile.com instead of `/character-window`
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
 - Changed the behaviour of the custom prices table
   - Now uses the active pricing league as default
 - Changed the default setting for autosnapshotting to false
+- Changed the minimum auto snapshotting interval to five minutes, up from two
 - Changed background color of the filter total chip
+- Changed the default columns for the item table
+- Changed how we set the rate limitation on requests
+  - Now parses the headers from the response and sets/updates them accordingly
+  - Sets a temporary cooldown for snapshots after you have been rate limited
+- Changed the way the profile modal behaves
+  - Now you should not be able to close it by mistake
 - Now only shows the filter total chip when the filter is active
 #### Removed
 - Removed the helper icon from the pricing league dropdown
+- Removed the close button from the initial quickstart tour
+##### Updated
+- Updated Material UI (v4 -> v5) with dependencies
 
 ## [0.6.0] - 2021-09-19
 #### Added

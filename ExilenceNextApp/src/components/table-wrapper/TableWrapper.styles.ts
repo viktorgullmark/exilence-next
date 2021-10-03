@@ -1,4 +1,7 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Theme } from '@mui/material';
+
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 
 const tableHeadCellBorder = '1px solid rgba(56, 56, 56, 1)';
 
@@ -40,6 +43,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       '&:first-child': {
         borderLeft: 'none',
       },
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     tableRow: {
       color: 'inherit',
@@ -49,6 +55,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#303030',
       },
       borderBottom: '1px solid rgba(81, 81, 81, 1)',
+    },
+    placeholderRow: {
+      backgroundColor: theme.palette.background.paper,
+      '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+      },
     },
     rowSelected: {
       backgroundColor: 'rgba(0, 0, 0, 0.04)',

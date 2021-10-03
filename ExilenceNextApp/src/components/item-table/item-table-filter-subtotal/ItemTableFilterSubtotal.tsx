@@ -1,4 +1,4 @@
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -37,7 +37,7 @@ const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
 
   return (
     <>
-      {uiStateStore?.itemTableFilterText !== '' && (
+      {(uiStateStore?.itemTableFilterText !== '' || uiStateStore?.showItemTableFilter) && (
         <Paper className={clsx(classes.paper)}>
           {t('label.filter_total')}
           <span style={{ color: rarityColors.currency }}>

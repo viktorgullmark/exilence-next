@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
+import { IStashTab } from '../../interfaces/stash.interface';
 import { pricingService } from '../../services/pricing.service';
 import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
 import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
@@ -72,7 +73,8 @@ export class Profile {
       rootStore.uiStateStore.validated &&
       rootStore.uiStateStore.initiated &&
       !rootStore.uiStateStore.isSnapshotting &&
-      this.hasPricesForActiveLeague
+      this.hasPricesForActiveLeague &&
+      rootStore.rateLimitStore.retryAfter === 0
     );
   }
 
@@ -222,7 +224,7 @@ export class Profile {
     }, Object.create(null));
 
     this.activeStashTabIds.map((id) => {
-      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.n;
+      const stashTabName = accountLeague.stashtabList.find((s) => s.id === id)?.name;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
         series: formatStashTabSnapshotsForChart(
@@ -411,14 +413,14 @@ export class Profile {
     rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
 
     fromStream(
-      accountLeague.getStashTabs().pipe(
-        mergeMap(() => of(this.refreshStashTabsSuccess(league.id))),
+      accountLeague.getStashTabs(true).pipe(
+        mergeMap((response) => of(this.refreshStashTabsSuccess(league.id, response))),
         catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
       )
     );
   }
 
-  @action refreshStashTabsSuccess(leagueId: string) {
+  @action refreshStashTabsSuccess(leagueId: string, firstStashTab?: IStashTab) {
     rootStore.notificationStore.createNotification(
       'refreshing_stash_tabs',
       'success',
@@ -426,7 +428,7 @@ export class Profile {
       undefined,
       leagueId
     );
-    this.getItems();
+    this.getItems(firstStashTab);
   }
 
   @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
@@ -440,7 +442,7 @@ export class Profile {
     this.snapshotFail();
   }
 
-  @action getItems() {
+  @action getItems(firstStashTab?: IStashTab) {
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       (al) => al.leagueId === this.activeLeagueId
     );
@@ -451,9 +453,27 @@ export class Profile {
       return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
     }
 
-    const selectedStashTabs = accountLeague.stashtabs.filter(
+    const selectedStashTabs = accountLeague.stashtabList.filter(
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
+
+    if (selectedStashTabs.length === 0) {
+      return this.getItemsFail(
+        new Error('no_stash_tabs_selected_for_profile'),
+        this.activeLeagueId
+      );
+    }
+
+    const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
+    const getMainTabsWithChildren =
+      tabsToFetch.length > 0
+        ? forkJoin(
+            // slice away first because we already fetched it when checking headers
+            tabsToFetch.map((tab: IStashTab) => {
+              return externalService.getStashTabWithChildren(tab, league.id);
+            })
+          )
+        : of([]);
 
     rootStore.uiStateStore.setStatusMessage(
       'fetching_stash_tab',
@@ -461,40 +481,74 @@ export class Profile {
       1,
       selectedStashTabs.length
     );
-
     fromStream(
       forkJoin(
-        externalService.getItemsForTabs(
-          selectedStashTabs,
-          rootStore.accountStore.getSelectedAccount.name!,
-          league.id,
-          rootStore.uiStateStore.selectedPlatform.id
-        ),
+        getMainTabsWithChildren,
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'
-          ? externalService.getCharacterItems(
-              rootStore.accountStore.getSelectedAccount.name!,
-              this.activeCharacterName,
-              rootStore.uiStateStore.selectedPlatform.id
-            )
+          ? externalService.getCharacter(this.activeCharacterName)
           : of(null)
       ).pipe(
+        switchMap((response) => {
+          let combinedTabs = response[0];
+          if (firstStashTab) {
+            combinedTabs = combinedTabs.concat([firstStashTab]);
+          }
+          let subTabs = response[0]
+            .filter((sst) => sst.children)
+            .flatMap((sst) => sst.children ?? sst);
+          subTabs =
+            firstStashTab && firstStashTab.children
+              ? subTabs.concat(firstStashTab.children)
+              : subTabs;
+          // if no subtabs exist, simply return the original request
+          if (subTabs.length === 0) {
+            response[0] = combinedTabs;
+            return of(response);
+          }
+          rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
+          const getItemsForSubTabs = forkJoin(
+            subTabs.map((tab) => {
+              return externalService.getStashTabWithChildren(tab, league.id, true);
+            })
+          );
+          return getItemsForSubTabs.pipe(
+            mergeMap((subTabs) => {
+              response[0] = combinedTabs.map((sst) => {
+                if (sst.children) {
+                  const children = subTabs.filter((st) => st.parent === sst.id);
+                  const childItems = children.flatMap((st) => st.items ?? []);
+                  sst.items = (sst.items ?? []).concat(childItems);
+                }
+                return sst;
+              });
+              return of(response);
+            })
+          );
+        }),
         map((result) => {
-          const stashTabsWithItems = result[0];
+          const stashTabsWithItems = result[0].map((tab) => {
+            const stashitems = tab.items;
+            const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
+            return {
+              ...{ stashTabId: tab.id },
+              ...{ pricedItems: items },
+            } as IStashTabSnapshot;
+          });
+
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
-            const characterItems = mapItemsToPricedItems(characterWithItems?.data?.items);
             let includedCharacterItems: IPricedItem[] = [];
             if (this.includeInventory) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId === 'MainInventory')
-              );
+              const inventory = characterWithItems?.data?.character.inventory;
+              const mappedInventory = inventory ? mapItemsToPricedItems(inventory) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedInventory);
             }
             if (this.includeEquipment) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId !== 'MainInventory')
-              );
+              const equipment = characterWithItems?.data?.character.equipment;
+              const mappedEquipment = equipment ? mapItemsToPricedItems(equipment) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedEquipment);
             }
             const characterTab: IStashTabSnapshot = {
               stashTabId: 'Character',
@@ -623,7 +677,7 @@ export class Profile {
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabs);
+      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabList);
       const callback = () => {
         // clear items from previous snapshot
         if (this.snapshots.length > 1) {

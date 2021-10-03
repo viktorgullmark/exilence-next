@@ -1,5 +1,6 @@
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { isSpecialGem } from '../utils/item.utils';
 import { mapPriceToItem } from '../utils/price.utils';
 
 export const pricingService = {
@@ -60,9 +61,11 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(
           (p) =>
             p.name === item.name &&
-            p.level === item.level &&
             p.corrupted === item.corrupted &&
-            p.quality === item.quality
+            (item.quality < 20 || p.quality === item.quality) &&
+            ((isSpecialGem(item.name) && p.level === item.level) ||
+              item.level < 20 ||
+              p.level === item.level)
         );
         break;
       case 5: // currency, including seeds

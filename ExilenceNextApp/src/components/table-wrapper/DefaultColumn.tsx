@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FilterProps, HeaderProps } from 'react-table';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 import { camelToWords } from '../../utils/object.utils';
 

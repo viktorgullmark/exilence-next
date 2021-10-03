@@ -1,16 +1,8 @@
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  makeStyles,
-  Theme,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+import { Box, Button, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -28,7 +20,6 @@ import {
 import { useStores } from '../..';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
-import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
@@ -38,6 +29,7 @@ import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
 import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import { observer } from 'mobx-react-lite';
+import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 
 export const itemTableFilterSpacing = 2;
 
@@ -54,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineIcon: {
     color: primaryLighter,
+    marginLeft: theme.spacing(1.5),
   },
   warning: {
     color: statusColors.warning,
@@ -135,6 +128,7 @@ const ItemTableContainer = ({
       })
     : useLocalStorage(`tableState:item-table`, {
         pageSize: 25,
+        hiddenColumns: ['level', 'quality'],
       });
 
   const [instance] = useState<TableInstance<object>>(
@@ -216,7 +210,7 @@ const ItemTableContainer = ({
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
           <Grid item md={uiStateStore!.bulkSellGeneratingImage ? 11 : 5}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={7} id="items-table-input">
@@ -269,18 +263,6 @@ const ItemTableContainer = ({
               show={columnsOpen}
               anchorEl={anchorEl}
             />
-            {!bulkSellView && (
-              <Box mr={1}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleRedirectToCustomPrices}
-                >
-                  {t('label.customize_prices')}
-                </Button>
-              </Box>
-            )}
             {hideableColumns.length > 1 && (
               <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton

@@ -1,14 +1,14 @@
-import { Box, Grid, Tooltip, Typography, useTheme } from '@material-ui/core';
-import ListIcon from '@material-ui/icons/List';
-import { Skeleton } from '@material-ui/lab';
+import { Box, Grid, Tooltip, Typography, useTheme } from '@mui/material';
+import ListIcon from '@mui/icons-material/List';
+import { Skeleton } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, useStores, visitor } from '../..';
 import {
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '../../components/expansion-panel/ExpansionPanel';
 import FeatureWrapper from '../../components/feature-wrapper/FeatureWrapper';
 import ItemTableFilterSection from '../../components/item-table/item-table-filter-section/ItemTableFilterSection';
@@ -45,10 +45,14 @@ const BulkSell = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={7}>
-              {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellPrerequisitesPanel />}
+              {loading ? (
+                <Skeleton variant="rectangular" height={40} />
+              ) : (
+                <BulkSellPrerequisitesPanel />
+              )}
             </Grid>
             <Grid item xs={5}>
-              {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellStepsPanel />}
+              {loading ? <Skeleton variant="rectangular" height={40} /> : <BulkSellStepsPanel />}
             </Grid>
           </Grid>
         </Grid>
@@ -57,11 +61,11 @@ const BulkSell = () => {
         {/*</Grid>*/}
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {loading ? (
-            <Skeleton variant="rect" height={1000} />
+            <Skeleton variant="rectangular" height={1000} />
           ) : (
-            <ExpansionPanel expanded>
-              <ExpansionPanelSummary>
-                <Grid container justify="space-between">
+            <Accordion expanded>
+              <AccordionSummary>
+                <Grid container justifyContent="space-between">
                   <Grid item>
                     <Box display="flex" justifyContent="center" alignItems="center">
                       <ListIcon />
@@ -90,8 +94,8 @@ const BulkSell = () => {
                     </Box>
                   </Grid>
                 </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails
+              </AccordionSummary>
+              <AccordionDetails
                 id="items-table"
                 style={{
                   background: theme.palette.background.default,
@@ -103,8 +107,8 @@ const BulkSell = () => {
                   bulkSellView
                   searchFilterText={uiStateStore!.bulkSellItemTableFilterText}
                 />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
           )}
         </Grid>
       </Grid>
