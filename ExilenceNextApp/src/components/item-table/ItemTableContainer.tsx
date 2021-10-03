@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inlineIcon: {
     color: primaryLighter,
+    marginLeft: theme.spacing(1.5),
   },
   warning: {
     color: statusColors.warning,
@@ -262,18 +263,6 @@ const ItemTableContainer = ({
               show={columnsOpen}
               anchorEl={anchorEl}
             />
-            {!bulkSellView && (
-              <Box mr={1}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleRedirectToCustomPrices}
-                >
-                  {t('label.customize_prices')}
-                </Button>
-              </Box>
-            )}
             {hideableColumns.length > 1 && (
               <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
                 <IconButton
