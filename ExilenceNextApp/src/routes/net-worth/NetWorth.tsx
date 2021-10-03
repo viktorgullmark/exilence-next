@@ -100,16 +100,21 @@ const NetWorth = () => {
 
   const tabChartHeight = chartHeight + 42;
 
+  const displayedValue = activeGroup ? activeGroup.netWorthValue : netWorthValue();
+  const displayedIncome = activeGroup
+    ? getExaltedValue(activeGroup.income)
+    : getExaltedValue(income());
+
   return (
     <FeatureWrapper>
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={6} md={4} lg={3} xl={2}>
           <Widget
-            loading={loading() || !priceStore.exaltedPrice}
+            loading={loading() || (!priceStore.exaltedPrice && displayedValue !== 0)}
             backgroundColor={theme.palette.secondary.main}
           >
             <OverviewWidgetContent
-              value={activeGroup ? activeGroup.netWorthValue : netWorthValue()}
+              value={displayedValue}
               secondaryValue={activeGroup ? activeGroup.lastSnapshotChange : lastSnapshotChange()}
               secondaryValueIsDiff
               secondaryValueStyles={{ fontSize: '0.8rem' }}
@@ -136,11 +141,11 @@ const NetWorth = () => {
         </Grid>
         <Grid item xs={6} md={4} lg={3} xl={2}>
           <Widget
-            loading={loading() || !priceStore.exaltedPrice}
+            loading={loading() || (!priceStore.exaltedPrice && displayedIncome !== 0)}
             backgroundColor={theme.palette.secondary.main}
           >
             <OverviewWidgetContent
-              value={activeGroup ? getExaltedValue(activeGroup.income) : getExaltedValue(income())}
+              value={displayedIncome}
               valueIsDiff
               valueSuffix={` ${t('label.hour_suffix')}`}
               title="label.total_income"
