@@ -129,7 +129,7 @@ const NetWorth = () => {
                   <SparklineChart
                     internalName="networth"
                     color={primaryLighter}
-                    height={20}
+                    height={31}
                     width={90}
                     data={chartData}
                   />

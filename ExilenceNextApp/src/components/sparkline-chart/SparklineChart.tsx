@@ -19,7 +19,7 @@ const SparklineChart = ({ data, internalName, color, height, width }: any) => (
         duration: 2000,
         onLoad: { duration: 1000 },
       }}
-      domainPadding={{ x: 0, y: 0 }}
+      domainPadding={{ x: 1, y: 1 }}
       padding={{ top: 0, bottom: 0, right: 0, left: 0 }}
       data={data}
       style={{

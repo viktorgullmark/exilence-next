@@ -97,6 +97,15 @@ export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${prim
 
 export default function exilenceTheme() {
   return createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1300,
+        xl: 1950,
+      },
+    },
     components: {
       MuiToolbar: {
         styleOverrides: {
