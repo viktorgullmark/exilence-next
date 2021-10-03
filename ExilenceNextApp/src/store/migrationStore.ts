@@ -59,6 +59,7 @@ export class MigrationStore {
   @action
   runMigrations() {
     this.rootStore.routeStore.redirect('/login');
+    // @ts-ignore
     return from([...Array(this.latest - this.current).keys()])
       .pipe(
         concatMap(() => {

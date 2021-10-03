@@ -1,29 +1,33 @@
-const { ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
-const log = require('electron-log');
+import { ipcMain, BrowserWindow } from 'electron';
+import { autoUpdater } from 'electron-updater';
+import log from 'electron-log';
 
-const checkForMissingWindow = require('../util');
-const { getLocalSettings } = require('../main/localSettings');
+import checkForMissingWindow from './utils';
+import { getLocalSettings } from './localSettings';
 let shouldNotify = true;
 
-function checkForUpdates() {
+const checkForUpdates = () => {
   if (shouldNotify) {
     autoUpdater.checkForUpdatesAndNotify();
   } else {
     autoUpdater.checkForUpdates();
   }
-}
+};
 
-const createAutoUpdater = ({ mainWindow, callbackUpdateAvailable }) => {
-  checkForMissingWindow({category: 'autoUpdater', mainWindow})
+type CreateAutoUpdaterType = {
+  mainWindow: BrowserWindow;
+  callbackUpdateAvailable: (status: boolean) => void;
+};
+
+const createAutoUpdater = ({ mainWindow, callbackUpdateAvailable }: CreateAutoUpdaterType) => {
+  checkForMissingWindow({ category: 'autoUpdater', mainWindow });
 
   autoUpdater.channel = getLocalSettings().releaseChannel;
   autoUpdater.allowDowngrade = false;
   autoUpdater.logger = log;
-  autoUpdater.logger.transports.file.level = 'info';
   log.info('App starting...');
 
-  function sendStatusToWindow(text) {
+  function sendStatusToWindow(text: string) {
     log.info(text);
     mainWindow.webContents.send('message', text);
   }
@@ -65,7 +69,4 @@ const createAutoUpdater = ({ mainWindow, callbackUpdateAvailable }) => {
   });
 };
 
-module.exports = {
-  createAutoUpdater,
-  checkForUpdates,
-};
+export { createAutoUpdater, checkForUpdates };

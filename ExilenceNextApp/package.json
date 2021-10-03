@@ -64,37 +64,25 @@
     "victory": "^36.0.1",
     "yup": "^0.29.3"
   },
-  "main": "public/electron.js",
-  "homepage": "./",
+  "main": "build/electron/main.js",
+  "homepage": ".",
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder",
-    "build": "npm run react-build && npm run electron-build",
-    "smoke-build-linux": "npm run react-build && electron-builder -l --publish=never",
-    "smoke-build-mac": "npm run react-build && electron-builder -m --publish=never",
-    "smoke-build-win": "npm run react-build && electron-builder -w --publish=never",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "release": "npm run react-build && tsc -p electron && electron-builder",
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
+    "build": "npm run react-build && tsc -p electron && electron-build",
+    "smoke-build-linux": "npm run react-build && tsc -p electron && electron-builder -l --publish=never",
+    "smoke-build-mac": "npm run react-build && tsc -p electron && electron-builder -m --publish=never",
+    "smoke-build-win": "npm run react-build && tsc -p electron && electron-builder -w --publish=never",
     "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "devDependencies": {
     "@types/electron-is-dev": "^1.1.1",
@@ -112,6 +100,7 @@
     "cross-env": "^7.0.2",
     "electron": "^12.0.7",
     "electron-builder": "^22.10.5",
+    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.13.0",
@@ -122,6 +111,7 @@
     "wait-on": "^5.3.0"
   },
   "build": {
+    "extends": null,
     "generateUpdatesFilesForAllChannels": true,
     "productName": "Exilence Next",
     "appId": "com.exilence.exilence-next-app",
@@ -132,11 +122,10 @@
     ],
     "extraFiles": [
       "public/i18n/**/*",
-      "public/overlays/**/*",
-      "public/background-tasks/**/*"
+      "public/overlays/**/*"
     ],
     "directories": {
-      "buildResources": "src/assets/**/*"
+      "buildResources": "src/assets/*"
     },
     "publish": {
       "provider": "github",
@@ -162,5 +151,17 @@
         "exilence"
       ]
     }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
