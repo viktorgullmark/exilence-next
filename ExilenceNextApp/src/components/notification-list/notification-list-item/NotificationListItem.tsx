@@ -13,7 +13,7 @@ interface Props {
   notification: Notification;
 }
 
-const NotificationListItem = forwardRef((props: Props, ref) => {
+const NotificationListItem = forwardRef((props: Props) => {
   const { notification } = props;
   const classes = useStyles();
   const { t } = useTranslation();
@@ -28,8 +28,6 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
         return <InfoIcon />;
     }
   };
-
-  // todo: use ref?
 
   return (
     <ListItem key={notification.uuid} className={classes.notification}>
