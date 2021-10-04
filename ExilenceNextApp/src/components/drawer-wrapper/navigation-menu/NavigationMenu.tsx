@@ -13,7 +13,6 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
@@ -32,7 +31,6 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
   const classes = useStyles();
   const { t } = useTranslation();
   const location = useLocation();
-  const theme = useTheme();
 
   return (
     <Drawer

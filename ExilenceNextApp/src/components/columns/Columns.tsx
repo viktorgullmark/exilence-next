@@ -41,8 +41,8 @@ export function itemName(
     Header: header,
     minWidth: 120,
     accessor,
-    // eslint-disable-next-line react/display-name
     ...(!bulkSellView && {
+      // eslint-disable-next-line react/display-name
       Cell: (data: any) => {
         const value = data.row.values[accessor];
         return (
@@ -380,5 +380,10 @@ type ItemTabsCellProps = {
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
   const classes = useStyles();
-  return <span className={classes.ellipsis}>{tabs ? parseTabNames(tabs) : ''}</span>;
+  const value = tabs ? parseTabNames(tabs) : '';
+  return (
+    <Tooltip title={value} placement="bottom">
+      <span className={classes.ellipsis}>{value}</span>
+    </Tooltip>
+  );
 };

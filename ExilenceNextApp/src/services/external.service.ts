@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { Observable, of } from 'rxjs';
+import RateLimiter from 'rxjs-ratelimiter';
 import { concatMap } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
@@ -11,6 +12,7 @@ import { IStash, IStashTab, IStashTabResponse } from '../interfaces/stash.interf
 import AppConfig from './../config/app.config';
 
 const apiUrl = AppConfig.pathOfExileApiUrl;
+const globalLimiter = new RateLimiter(1, 250);
 
 export const externalService = {
   getLatestRelease,
@@ -38,11 +40,11 @@ function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
 
 /* #region pathofexile.com */
 function getStashTab(league: string, id: string): Observable<AxiosResponse<IStashTabResponse>> {
-  return axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`);
+  return globalLimiter.limit(axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`));
 }
 
 function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
-  return axios.get<IStash>(`${apiUrl}/stash/${league}`);
+  return globalLimiter.limit(axios.get<IStash>(`${apiUrl}/stash/${league}`));
 }
 
 function getStashTabWithChildren(
@@ -85,20 +87,22 @@ function getLeagues(
   realm: string = 'pc'
 ): Observable<AxiosResponse<ILeague[]>> {
   const parameters = `?type=${type}&compact=${compact}${getRealmParam(realm)}`;
-  return axios.get<ILeague[]>(apiUrl + '/leagues' + parameters, { headers: null });
+  return globalLimiter.limit(
+    axios.get<ILeague[]>(apiUrl + '/leagues' + parameters, { headers: null })
+  );
 }
 
 function getCharacters(): Observable<AxiosResponse<ICharacterListResponse>> {
-  return axios.get<ICharacterListResponse>(`${apiUrl}/character`);
+  return globalLimiter.limit(axios.get<ICharacterListResponse>(`${apiUrl}/character`));
 }
 
 function getCharacter(character: string): Observable<AxiosResponse<ICharacterResponse>> {
-  return axios.get<ICharacterResponse>(`${apiUrl}/character/${character}`);
+  return globalLimiter.limit(axios.get<ICharacterResponse>(`${apiUrl}/character/${character}`));
 }
 
 function getProfile(realm: string = 'pc'): Observable<AxiosResponse<IPoeProfile>> {
   const parameters = `?realm=${realm}`;
-  return axios.get<IPoeProfile>(apiUrl + '/profile' + parameters);
+  return globalLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
 }
 
 function getRealmParam(realm?: string) {
