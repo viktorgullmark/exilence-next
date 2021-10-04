@@ -59,6 +59,8 @@ All notable changes to this project will be documented in this file.
 - Removed the close button from the initial quickstart tour
 ##### Updated
 - Updated Material UI (v4 -> v5) with dependencies
+- Updated Electron (v12 -> v15) with dependencies
+- Updated SignalR (v3 -> v5) with dependencies
 
 ## [0.6.0] - 2021-09-19
 #### Added
