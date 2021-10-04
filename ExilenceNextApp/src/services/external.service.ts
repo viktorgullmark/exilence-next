@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { Observable, of } from 'rxjs';
+import RateLimiter from 'rxjs-ratelimiter';
 import { concatMap } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
@@ -11,6 +12,7 @@ import { IStash, IStashTab, IStashTabResponse } from '../interfaces/stash.interf
 import AppConfig from './../config/app.config';
 
 const apiUrl = AppConfig.pathOfExileApiUrl;
+const globalLimiter = new RateLimiter(1, 250);
 
 export const externalService = {
   getLatestRelease,
@@ -38,7 +40,7 @@ function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
 
 /* #region pathofexile.com */
 function getStashTab(league: string, id: string): Observable<AxiosResponse<IStashTabResponse>> {
-  return axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`);
+  return globalLimiter.limit(axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`));
 }
 
 function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
