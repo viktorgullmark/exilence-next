@@ -15,12 +15,13 @@ const netWorthOverlayConfig = () => {
     y: overlayState.y,
     height: overlayState.height,
     width: overlayState.width,
+    minWidth: browserWindowsConfig[NET_WORTH_OVERLAY].width,
+    minHeight: browserWindowsConfig[NET_WORTH_OVERLAY].height,
     skipTaskbar: true,
     alwaysOnTop: true,
     show: false,
     frame: false,
     webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
-    resizable: false,
   });
 
   overlayState.manage(browserWindows[NET_WORTH_OVERLAY]);

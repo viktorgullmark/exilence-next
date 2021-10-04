@@ -37,7 +37,7 @@ const browserWindowsConfig: BrowserWindowsConfigType = {
     prodLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysProd}/log-monitor.html`),
   },
   [NET_WORTH_OVERLAY]: {
-    width: 255,
+    width: 200,
     height: 92,
     devLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysDev}/netWorth.html`),
     prodLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysProd}/netWorth.html`),
