@@ -17,6 +17,7 @@ namespace Shared.Entities
 
         [BsonRequired]
         [BsonElement("expiry")]
+        [BsonRepresentation(BsonType.DateTime)]
         public DateTime ExpireAt { get; set; }
 
     }
