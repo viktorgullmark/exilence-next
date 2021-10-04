@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { forkJoin, of } from 'rxjs';
+import { combineLatest, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
@@ -467,7 +467,7 @@ export class Profile {
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? forkJoin(
+        ? combineLatest(
             // slice away first because we already fetched it when checking headers
             tabsToFetch.map((tab: IStashTab) => {
               return externalService.getStashTabWithChildren(tab, league.id);
@@ -508,7 +508,7 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabs = forkJoin(
+          const getItemsForSubTabs = combineLatest(
             subTabs.map((tab) => {
               return externalService.getStashTabWithChildren(tab, league.id, true);
             })
