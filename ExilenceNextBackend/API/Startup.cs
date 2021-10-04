@@ -132,18 +132,19 @@ namespace API
                 endpoints.MapHub<BaseHub>("/hub");
             });
 
-            var instanceName = configuration.GetSection("Settings")["InstanceName"];
+            string instanceName = configuration.GetSection("Settings")["InstanceName"];
 
 
-            logger.LogInformation("Removing dead connections.");
+            logger.LogInformation("Removing dead connections with instance: {0}", instanceName);
             //Remove faulty connections to this node on startup if node crasched
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Connections WHERE InstanceName = '{instanceName}'");
 
-            logger.LogInformation("Removing dead groups.");
+            logger.LogInformation("Removing dead groups with instance: {0}", instanceName);
             //Remove groups with no connections after connection cleanup
             exilenceContext.Database.ExecuteSqlRaw($"DELETE FROM Groups WHERE Id IN (SELECT g.Id FROM Groups g WHERE (SELECT COUNT(*) FROM Connections WHERE GroupId = g.Id) = 0)");
 
             //Apply mongo migrations on start if neeeded
+            logger.LogInformation("Starting to apply MongoDB migrations.");
             var migrationResult = MongoMigrationHandler.Run(configuration.GetSection("ConnectionStrings")["Mongo"], configuration.GetSection("Mongo")["Database"]);
             foreach (var migration in migrationResult.InterimSteps)
             {
@@ -153,6 +154,7 @@ namespace API
             {
                 logger.LogInformation($"No pending migrations found. Using MongoDB {migrationResult.DatabaseName} on {migrationResult.ServerAdress} version: {migrationResult.CurrentVersion}.");
             }
+            logger.LogInformation("Finished applying MongoDB migrations.");
         }
     }
 }
