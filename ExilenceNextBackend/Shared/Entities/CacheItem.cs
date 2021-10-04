@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Shared.Entities
 {
-    public class CacheValue
+    public class CacheItem
     {
         [BsonId]
         [BsonRepresentation(BsonType.String)]

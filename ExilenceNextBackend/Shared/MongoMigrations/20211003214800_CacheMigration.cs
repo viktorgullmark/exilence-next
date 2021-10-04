@@ -12,9 +12,9 @@ namespace Shared.MongoMigrations
         public void Up(IMongoDatabase database)
         {
             database.CreateCollection("Cache");
-            var collection = database.GetCollection<CacheValue>("Cache");
-            var indexModel = new CreateIndexModel<CacheValue>(
-                keys: Builders<CacheValue>.IndexKeys.Ascending("ExpireAt"),
+            var collection = database.GetCollection<CacheItem>("Cache");
+            var indexModel = new CreateIndexModel<CacheItem>(
+                keys: Builders<CacheItem>.IndexKeys.Ascending("ExpireAt"),
                 options: new CreateIndexOptions
                 {
                     ExpireAfter = TimeSpan.FromSeconds(0),

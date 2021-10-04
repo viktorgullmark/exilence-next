@@ -26,7 +26,7 @@ namespace API.Services
 
         public async Task<string> Get(string key)
         {
-            CacheValue cache = await _cacheRepository.Get(key);
+            CacheItem cache = await _cacheRepository.Get(key);
 
             if (cache != null)
                 return cache.Value;
@@ -37,7 +37,7 @@ namespace API.Services
 
         public async Task Add(string key, string value, DateTime expireAt)
         {
-            CacheValue cacheValue = new CacheValue()
+            CacheItem cacheValue = new CacheItem()
             {
                 Key = key,
                 Value = value,
