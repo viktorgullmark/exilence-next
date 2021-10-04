@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { asyncScheduler, queueScheduler } from 'rxjs';
+import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
 
