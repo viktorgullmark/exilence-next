@@ -2,7 +2,6 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as isDev from 'electron-is-dev';
 import * as sentry from '@sentry/electron';
-import * as contextMenu from 'electron-context-menu';
 import * as windowStateKeeper from 'electron-window-state';
 
 import {
@@ -174,8 +173,6 @@ function createWindow() {
   createNetWorthOverlay();
 
   if (isDev) {
-    // Provide Inspect Element option on right click
-    contextMenu();
     browserWindows[MAIN_BROWSER_WINDOW].webContents.openDevTools();
     // Hot Reloading on 'node_modules/.bin/electronPath'
     require('electron-reload')(__dirname, {
