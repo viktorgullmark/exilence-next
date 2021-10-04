@@ -380,5 +380,10 @@ type ItemTabsCellProps = {
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
   const classes = useStyles();
-  return <span className={classes.ellipsis}>{tabs ? parseTabNames(tabs) : ''}</span>;
+  const value = tabs ? parseTabNames(tabs) : '';
+  return (
+    <Tooltip title={value} placement="bottom">
+      <span className={classes.ellipsis}>{value}</span>
+    </Tooltip>
+  );
 };
