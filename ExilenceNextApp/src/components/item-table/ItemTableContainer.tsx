@@ -1,11 +1,12 @@
-import { Box, Button, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
+import { Box, Button, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { observer } from 'mobx-react-lite';
+import moment from 'moment';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 import {
   TableInstance,
   useColumnOrder,
@@ -20,16 +21,15 @@ import {
 import { useStores } from '../..';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
+import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
+import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
-import itemTableBulkSellColumns from './itemTableBulkSellColumns';
-import { observer } from 'mobx-react-lite';
-import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 
 export const itemTableFilterSpacing = 2;
 
@@ -97,7 +97,7 @@ const ItemTableContainer = ({
   bulkSellView = false,
   searchFilterText = '',
 }: ItemTableContainerProps) => {
-  const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
+  const { accountStore, signalrStore, uiStateStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
@@ -201,11 +201,6 @@ const ItemTableContainer = ({
     setColumnsOpen(false);
     setAnchorEl(null);
   }, []);
-
-  const handleRedirectToCustomPrices = () => {
-    uiStateStore!.setSettingsTabIndex(2);
-    routeStore!.redirect('/settings');
-  };
 
   return (
     <>
