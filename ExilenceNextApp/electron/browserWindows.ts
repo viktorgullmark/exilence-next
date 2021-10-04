@@ -33,19 +33,13 @@ const browserWindowsConfig: BrowserWindowsConfigType = {
   [LOG_MONITOR_OVERLAY]: {
     width: 0,
     height: 0,
-    devLoadPath: path.resolve(
-      __dirname,
-      `${filePathLocations.overlaysDev}/LogMonitor/log-monitor.html`
-    ),
-    prodLoadPath: path.resolve(
-      __dirname,
-      `${filePathLocations.overlaysProd}/LogMonitor/log-monitor.html`
-    ),
+    devLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysDev}/log-monitor.html`),
+    prodLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysProd}/log-monitor.html`),
   },
   [NET_WORTH_OVERLAY]: {
     width: 255,
     height: 92,
-    devLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysDev}/NetWorth/netWorth.html`),
+    devLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysDev}/netWorth.html`),
     prodLoadPath: path.resolve(__dirname, `${filePathLocations.overlaysProd}/netWorth.html`),
   },
 };
