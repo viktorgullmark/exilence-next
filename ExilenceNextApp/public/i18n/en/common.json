@@ -114,6 +114,7 @@
     "edit_profile_icon_title": "Edit profile",
     "create_profile_icon_title": "Create profile",
     "fetch_snapshot_icon_title": "Fetch snapshot",
+    "cancel_snapshot_icon_title": "Cancel snapshot",
     "toggle_auto_snapshot_icon_title": "Toggle autosnapshotting",
     "remove_snapshot_icon_title": "Remove snapshots",
     "remove_profile_icon_title": "Remove profile",
