@@ -49,11 +49,11 @@ const itemTableBulkSellColumns: Column<object>[] = [
   },
   itemValue({
     accessor: 'calculated',
-    header: 'Price',
+    header: 'Price (c)',
   }),
   itemValue({
     accessor: 'total',
-    header: 'Total value',
+    header: 'Total value (c)',
   }),
 ];
 
