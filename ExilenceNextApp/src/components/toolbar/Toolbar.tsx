@@ -1,3 +1,4 @@
+import { Cancel } from '@mui/icons-material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AddIcon from '@mui/icons-material/Add';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
@@ -72,6 +73,7 @@ type ToolbarProps = {
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
+  handleCancelSnapshot: () => void;
 };
 
 const Toolbar = ({
@@ -103,6 +105,7 @@ const Toolbar = ({
   handleClearSnapshots,
   handleRemoveProfile,
   handleOverlay,
+  handleCancelSnapshot,
 }: ToolbarProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -279,6 +282,19 @@ const Toolbar = ({
                     size="large"
                   >
                     <UpdateIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title={t('label.cancel_snapshot_icon_title') || ''} placement="bottom">
+                <span>
+                  <IconButton
+                    disabled={!isSnapshotting}
+                    onClick={() => handleCancelSnapshot()}
+                    aria-label="cancelSnapshot"
+                    className={classes.iconButton}
+                    size="large"
+                  >
+                    <Cancel fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>

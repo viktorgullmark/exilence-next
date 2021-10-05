@@ -4,7 +4,7 @@ import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { combineLatest, forkJoin, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -415,6 +415,7 @@ export class Profile {
     fromStream(
       accountLeague.getStashTabs(true).pipe(
         mergeMap((response) => of(this.refreshStashTabsSuccess(league.id, response))),
+        takeUntil(rootStore.uiStateStore.cancelSnapshot),
         catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
       )
     );
@@ -563,6 +564,7 @@ export class Profile {
           });
         }),
         mergeMap((stashTabsWithItems) => of(this.getItemsSuccess(stashTabsWithItems, league.id))),
+        takeUntil(rootStore.uiStateStore.cancelSnapshot),
         catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
       )
     );

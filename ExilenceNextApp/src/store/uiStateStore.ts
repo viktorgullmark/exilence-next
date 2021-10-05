@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import SUPPORTED_PRESETS from '../components/bulk-sell-column-presets-panel/supportedPresets';
@@ -97,8 +98,24 @@ export class UiStateStore {
   @persist @observable bulkSellGeneratedMessage: string = '';
   @persist @observable bulkSellGeneratingImage: boolean = false;
 
+  @observable cancelSnapshot: Subject<boolean> = new Subject();
+
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @action
+  setCancelSnapshot(cancel: boolean) {
+    this.cancelSnapshot.next(cancel);
+    if (cancel) {
+      this.resetStatusMessage();
+      if (this.rootStore.settingStore.autoSnapshotting) {
+        this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+        this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
+      }
+      this.setIsSnapshotting(false);
+      this.cancelSnapshot.next(!cancel);
+    }
   }
 
   @action

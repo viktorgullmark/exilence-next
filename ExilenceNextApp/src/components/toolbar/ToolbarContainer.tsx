@@ -164,6 +164,7 @@ const ToolbarContainer = () => {
         handleAccountMenuOpen={handleAccountMenuOpen}
         handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
         handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
+        handleCancelSnapshot={() => uiStateStore!.setCancelSnapshot(true)}
         isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}
         isUpdatingPrices={priceStore!.isUpdatingPrices}

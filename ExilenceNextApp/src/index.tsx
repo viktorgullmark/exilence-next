@@ -156,7 +156,10 @@ const renderApp = () => {
           .utc()
           .isAfter(fiveMinutesAgo);
         if (requestRecently) {
-          rootStore.rateLimitStore.setRetryAfter(300);
+          const duration = moment.duration(
+            moment(rootStore.rateLimitStore.lastRequestTimestamp).diff(fiveMinutesAgo)
+          );
+          rootStore.rateLimitStore.setRetryAfter(duration.asSeconds());
         }
       }
       visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
