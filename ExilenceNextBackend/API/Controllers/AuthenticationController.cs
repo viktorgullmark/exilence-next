@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.ApiModels;
+using API.Models;
 using API.Helpers;
 using API.Hubs;
 using API.Interfaces;

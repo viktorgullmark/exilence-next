@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace API.ApiModels
+namespace API.Models
 {
     [MessagePackObject]
     public class AnouncementMessageModel

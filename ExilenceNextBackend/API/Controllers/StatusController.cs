@@ -1,4 +1,4 @@
-﻿using API.ApiModels;
+﻿using API.Models;
 using API.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
