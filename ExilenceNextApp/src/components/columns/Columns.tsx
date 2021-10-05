@@ -315,7 +315,7 @@ const ItemValueCellComponent = ({
             color: itemColors.chaosOrb,
           }}
         >
-          {value ? tryParseNumber(value) : placeholder}{' '}
+          {value ? tryParseNumber(value) : placeholder}
         </span>
       ) : (
         <span className={classes.lastCell}>{placeholder}</span>
