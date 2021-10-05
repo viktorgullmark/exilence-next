@@ -83,7 +83,9 @@ const TableWrapper = ({
                 return (
                   <div
                     {...column.getHeaderProps(headerProps)}
-                    className={classes.tableHeadCell}
+                    className={clsx(classes.tableHeadCell, {
+                      [classes.disabledSortBy]: !column.accessor,
+                    })}
                     key={`column_${j}`}
                   >
                     {column.canSort ? (

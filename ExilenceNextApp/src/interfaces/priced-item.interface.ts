@@ -30,4 +30,5 @@ export interface IPricedItem {
   inventoryId: string;
   tab: ICompactTab[];
   detailsUrl?: string;
+  cumulative?: number;
 }
