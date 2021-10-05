@@ -762,7 +762,7 @@ export class Profile {
         rootStore.signalrHub.invokeEvent<string>('RemoveSnapshot', lastSnapshotId).pipe(
           map(() => {
             runInAction(() => {
-              this.snapshots.splice(0, 1)
+              this.snapshots.splice(0, 1);
             });
             return this.removeSnapshotSuccess();
           }),
@@ -784,5 +784,4 @@ export class Profile {
     rootStore.uiStateStore.setClearingSnapshots(false);
     rootStore.notificationStore.createNotification('remove_snapshot', 'error', false, e);
   }
-  
 }

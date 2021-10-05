@@ -1,5 +1,5 @@
 const devConfig = {
-  baseUrl: 'http://localhost:5000',
+  baseUrl: 'https://next.exilence.app',
   production: false,
   sentryBrowserDsn: undefined,
   trackingId: '',
