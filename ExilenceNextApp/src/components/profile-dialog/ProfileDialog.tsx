@@ -84,7 +84,11 @@ const ProfileDialog = ({
     <div>
       <Dialog
         open={isOpen}
-        onClose={() => handleClickClose()}
+        onClose={(_, reason) => {
+          if (reason !== 'backdropClick') {
+            handleClickClose();
+          }
+        }}
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
