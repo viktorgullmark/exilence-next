@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
    - Changed the currency color to a more neutral tone
 - Added support for pricing `Blighted`, `Elder` and `Shaper` maps
 - Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
+- Added the ability to cancel an ongoing snapshot
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
@@ -58,6 +59,7 @@ All notable changes to this project will be documented in this file.
 #### Removed
 - Removed the helper icon from the pricing league dropdown
 - Removed the close button from the initial quickstart tour
+- Removed the shortcut to custom prices from the item table
 ##### Updated
 - Updated Material UI (v4 -> v5) with dependencies
 - Updated Electron (v12 -> v15) with dependencies
