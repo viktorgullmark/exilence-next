@@ -18,7 +18,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Switch,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -77,7 +76,6 @@ type ToolbarProps = {
 };
 
 const Toolbar = ({
-  autoSnapshotting,
   signalrOnline,
   sidenavOpened,
   groupOverviewOpened,
@@ -94,7 +92,6 @@ const Toolbar = ({
   changingProfile,
   statusMessage,
   retryAfter,
-  toggleAutosnapshot,
   toggleGroupOverview,
   handleProfileOpen,
   handleProfileClose,
@@ -258,15 +255,6 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
-              <Tooltip title={t('label.toggle_auto_snapshot_icon_title') || ''} placement="bottom">
-                <Switch
-                  checked={autoSnapshotting}
-                  onChange={toggleAutosnapshot}
-                  name="autoSnapshot"
-                  color="default"
-                  disabled={!signalrOnline}
-                />
-              </Tooltip>
               <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton

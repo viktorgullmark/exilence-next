@@ -14,7 +14,6 @@ All notable changes to this project will be documented in this file.
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
-- Added a switch in the toolbar for quickly toggling autosnapshotting
 - Added tooltips to menu icons
 - Added placeholder option to character selection dropdown
 - Added option to choose release channels
