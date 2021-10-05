@@ -8,8 +8,8 @@
     "quality": "Quality",
     "corrupted": "Corrupted",
     "stacksize": "Quantity",
-    "calculated": "Price",
-    "total": "Total value",
+    "calculated": "Price (c)",
+    "total": "Total value (c)",
     "tab_names": "Tabs"
   },
   "label": {
