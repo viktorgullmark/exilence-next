@@ -1,16 +1,15 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
+import { useStores } from '../../..';
 import { IApiAccount } from '../../../interfaces/api/api-account.interface';
-import { SignalrStore } from '../../../store/signalrStore';
 import PlayerListItem from './PlayerListItem';
 
 type PlayerListItemContainerProps = {
   account: IApiAccount;
-  signalrStore?: SignalrStore;
 };
 
-const PlayerListItemContainer = ({ signalrStore, account }: PlayerListItemContainerProps) => {
+const PlayerListItemContainer = ({ account }: PlayerListItemContainerProps) => {
+  const { signalrStore } = useStores();
   const { activeAccounts } = signalrStore!.activeGroup!;
 
   const handleToggle = (uuid: string) => {
@@ -32,4 +31,4 @@ const PlayerListItemContainer = ({ signalrStore, account }: PlayerListItemContai
   );
 };
 
-export default inject('signalrStore')(observer(PlayerListItemContainer));
+export default observer(PlayerListItemContainer);

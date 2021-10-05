@@ -1,13 +1,9 @@
+import { observer } from 'mobx-react-lite';
 import { useHistory, useLocation } from 'react-router';
-import { inject, observer } from 'mobx-react';
+import { useStores } from '../..';
 
-import { RouteStore } from '../../store/routeStore';
-
-type ReactionContainerProps = {
-  routeStore?: RouteStore;
-};
-
-const ReactionContainer = ({ routeStore }: ReactionContainerProps) => {
+const ReactionContainer = () => {
+  const { routeStore } = useStores();
   const history = useHistory();
   const location = useLocation();
 
@@ -19,4 +15,4 @@ const ReactionContainer = ({ routeStore }: ReactionContainerProps) => {
   return null;
 };
 
-export default inject('routeStore')(observer(ReactionContainer));
+export default observer(ReactionContainer);

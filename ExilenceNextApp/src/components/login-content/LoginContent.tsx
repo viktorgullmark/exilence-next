@@ -1,24 +1,26 @@
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Alert, AlertTitle, IconButton, Tooltip } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { Alert, AlertTitle } from '@material-ui/lab';
-import clsx from 'clsx';
-import { observer } from 'mobx-react';
-
-import { IAccount } from '../../interfaces/account.interface';
+import { electronService } from '../../services/electron.service';
 import { Account } from '../../store/domains/account';
-import AccountValidationForm from './account-validation-form/AccountValidationForm';
+import AccountValidationForm, {
+  AccountFormValues,
+} from './account-validation-form/AccountValidationForm';
 import useStyles from './LoginContent.styles';
-
 type LoginContentProps = {
-  handleValidate: (account: IAccount) => void;
+  handleValidate: (form: AccountFormValues) => void;
   isSubmitting: boolean;
   isInitiating: boolean;
   account: Account;
   errorMessage?: string;
+  authUrl?: string;
 };
 
 const LoginContent = ({
@@ -27,6 +29,7 @@ const LoginContent = ({
   isInitiating,
   account,
   errorMessage,
+  authUrl,
 }: LoginContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -36,7 +39,7 @@ const LoginContent = ({
       <Grid
         container
         direction="row"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         className={classes.content}
       >
@@ -55,12 +58,27 @@ const LoginContent = ({
             )}
             <Box>
               <AccountValidationForm
-                handleValidate={(details: IAccount) => handleValidate(details)}
+                handleValidate={(form: AccountFormValues) => handleValidate(form)}
                 styles={classes}
                 isSubmitting={isSubmitting}
                 isInitiating={isInitiating}
                 account={account}
               />
+            </Box>
+            <Box mb={2} mt={2}>
+              <Typography variant="body2">{t('title.redirect_not_working')}</Typography>
+              <Box className={classes.linkBox} p={1} mt={1} pr={4}>
+                <Typography variant="caption">{authUrl}</Typography>
+                <Tooltip title={t('label.copy_link') || ''} placement="bottom">
+                  <IconButton
+                    size="small"
+                    className={classes.copyIcon}
+                    onClick={() => electronService.clipboard.writeText(authUrl)}
+                  >
+                    <FileCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Box>
           </Paper>
         </Grid>

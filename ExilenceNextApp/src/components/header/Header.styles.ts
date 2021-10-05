@@ -1,13 +1,18 @@
-import { createStyles, makeStyles } from '@material-ui/core';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { primaryLighter } from '../../assets/themes/exilence-theme';
 import { resizeHandleContainerHeight, toolbarHeight } from './Header';
+
+export const patreonLogoHeight = 15;
+export const patreonLogoWidth = 80;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
       zIndex: 1290,
       backgroundColor: theme.palette.secondary.dark,
+      backgroundImage: 'none',
     },
     title: {
       flexGrow: 1,
@@ -19,11 +24,21 @@ const useStyles = makeStyles((theme) =>
     },
     version: {
       flexGrow: 1,
-      color: theme.palette.text.hint,
+      color: theme.palette.text.disabled,
     },
     updateAvailable: {
       flexGrow: 1,
       color: '#20cc76',
+    },
+    patreonWrapper: {
+      background: '#fff',
+      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      padding: '1px 3px',
+    },
+    patreonLogo: {
+      height: patreonLogoHeight,
+      width: patreonLogoWidth,
     },
     toolbar: {
       minHeight: toolbarHeight,

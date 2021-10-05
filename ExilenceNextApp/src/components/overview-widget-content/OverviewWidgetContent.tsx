@@ -1,9 +1,10 @@
+import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material';
+import { Clear, SwapHoriz } from '@mui/icons-material';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Grid, Tooltip, Typography } from '@material-ui/core';
-import clsx from 'clsx';
-import { observer } from 'mobx-react';
-
+import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
 
@@ -17,10 +18,12 @@ type OverviewWidgetContentProps = {
   clearFn?: () => void;
   title: string;
   icon: JSX.Element;
+  sparklineChart?: JSX.Element;
   valueColor?: string;
   currency?: boolean;
   currencyShort?: string;
   tooltip?: string;
+  currencySwitch?: boolean;
 };
 
 const OverviewWidgetContent = ({
@@ -37,20 +40,79 @@ const OverviewWidgetContent = ({
   currency,
   currencyShort,
   tooltip = '',
+  currencySwitch,
+  sparklineChart,
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { settingStore, priceStore } = useStores();
   return (
     <>
       <Grid container className={classes.topContent}>
-        <Grid item sm={3}>
-          <div className={classes.iconWrapper}>{icon}</div>
+        <Grid item xs={5}>
+          <Grid container spacing={2}>
+            <Grid item sm={3}>
+              {icon}
+            </Grid>
+            <Grid item sm={9}>
+              <Box height={1} display="flex" alignItems="center">
+                {sparklineChart}
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item sm={9}>
+        <Grid item xs={7}>
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
-              {currency ? `${formatValue(value, currencyShort, valueIsDiff, true)}` : value}
+              {currency
+                ? `${formatValue(
+                    value,
+                    currencyShort,
+                    valueIsDiff,
+                    true,
+                    !priceStore.exaltedPrice
+                  )}`
+                : value}
+              {currency && currencySwitch && (
+                <Tooltip
+                  title={
+                    <>
+                      <Typography variant="subtitle1" color="inherit" gutterBottom>
+                        1 ex = {priceStore.exaltedPrice?.toFixed(1)} chaos
+                      </Typography>
+                      <em>{t('action.currency_switch')}</em>
+                    </>
+                  }
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end"
+                >
+                  <IconButton
+                    data-tour-elem="currencySwitch"
+                    size="small"
+                    className={classes.adornmentIcon}
+                    onClick={() => settingStore.setShowPriceInExalt(!settingStore.showPriceInExalt)}
+                  >
+                    <SwapHoriz />
+                  </IconButton>
+                </Tooltip>
+              )}
               <span className={classes.valueSuffix}>{valueSuffix}</span>
+              {clearFn && (
+                <Tooltip
+                  title={`${t('label.reset')}`}
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end"
+                >
+                  <IconButton
+                    size="small"
+                    data-tour-elem="resetIncome"
+                    className={classes.adornmentIcon}
+                    onClick={clearFn}
+                  >
+                    <Clear />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Typography>
           </div>
         </Grid>
@@ -90,11 +152,6 @@ const OverviewWidgetContent = ({
                     >
                       {secondaryValue !== 0 ? secondaryValue : ''}
                     </Typography>
-                    {!secondaryValue && clearFn && (
-                      <a className={classes.inlineLink} onClick={clearFn}>
-                        {t('label.reset')}
-                      </a>
-                    )}
                   </>
                 )}
               </div>

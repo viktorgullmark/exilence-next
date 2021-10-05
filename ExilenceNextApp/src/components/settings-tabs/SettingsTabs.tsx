@@ -1,16 +1,20 @@
-import { Box, Typography } from '@material-ui/core';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { inject, observer } from 'mobx-react';
+import { Box, Typography } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { UiStateStore } from '../../store/uiStateStore';
-import CustomPricesSettingsContainer from './custom-prices-settings/CustomPricesSettingsContainer';
-import NetWorthSettingsContainer from './net-worth-settings/NetWorthSettingsContainer';
-import SettingsTab from './settings-tab/SettingsTab';
+import { useStores } from '../..';
+import ReleaseChannelSettings from './advanced/release-channel-settings/ReleaseChannelSettings';
+import HardwareAccelerationSettings from './advanced/hardware-acceleration-settings/HardwareAccelerationSettings';
+import ResetIndexedDbSettings from './advanced/reset-indexeddb-settings/ResetIndexedDbSettings';
+import SettingsTab from './components/settings-tab/SettingsTab';
+import NetWorthSettings from './general/net-worth-settings/NetWorthSettings';
+import SnapshotSettings from './general/snapshot-settings/SnapshotSettings';
+import UiSettings from './interface/ui-settings/UiSettings';
+import CustomPricesSettings from './prices/custom-prices-settings/CustomPricesSettings';
 import useStyles from './SettingsTabs.styles';
-import SnapshotSettingsContainer from './snapshot-settings/SnapshotSettingsContainer';
-import UiSettingsContainer from './ui-settings/UiSettingsContainer';
+import AppExitActionsSettings from './general/app-exit-actions-settings/AppExitActionsSettings';
 
 function a11yProps(index: any) {
   return {
@@ -19,11 +23,8 @@ function a11yProps(index: any) {
   };
 }
 
-type SettingsTabsProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
+const SettingsTabs = () => {
+  const { uiStateStore } = useStores();
   const classes = useStyles();
   const { t } = useTranslation();
   const { settingsTabIndex, setSettingsTabIndex } = uiStateStore!;
@@ -54,18 +55,25 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
               className={classes.tab}
               {...a11yProps(2)}
             />
+            <Tab label={t('title.advanced_settings')} className={classes.tab} {...a11yProps(3)} />
           </Tabs>
           <SettingsTab value={settingsTabIndex} index={0}>
             <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.app_exit_action_settings')}</Typography>
+              <Box my={2}>
+                <AppExitActionsSettings />
+              </Box>
+            </Box>
+            <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.snapshot_settings')}</Typography>
               <Box my={2}>
-                <SnapshotSettingsContainer />
+                <SnapshotSettings />
               </Box>
             </Box>
             <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.pricing_settings')}</Typography>
               <Box my={2}>
-                <NetWorthSettingsContainer />
+                <NetWorthSettings />
               </Box>
             </Box>
           </SettingsTab>
@@ -73,7 +81,7 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
             <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.general')}</Typography>
               <Box my={2}>
-                <UiSettingsContainer />
+                <UiSettings />
               </Box>
             </Box>
           </SettingsTab>
@@ -81,7 +89,27 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
             <Box className={classes.subSection}>
               <Typography variant="overline">{t('title.custom_prices_settings')}</Typography>
               <Box my={2}>
-                <CustomPricesSettingsContainer />
+                <CustomPricesSettings />
+              </Box>
+            </Box>
+          </SettingsTab>
+          <SettingsTab value={settingsTabIndex} index={3}>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.release_channel_settings')}</Typography>
+              <Box my={2}>
+                <ReleaseChannelSettings />
+              </Box>
+            </Box>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.hardware_acceleration')}</Typography>
+              <Box my={2}>
+                <HardwareAccelerationSettings />
+              </Box>
+            </Box>
+            <Box className={classes.subSection}>
+              <Typography variant="overline">{t('title.reset_indexeddb')}</Typography>
+              <Box my={2}>
+                <ResetIndexedDbSettings />
               </Box>
             </Box>
           </SettingsTab>
@@ -91,4 +119,4 @@ const SettingsTabs = ({ uiStateStore }: SettingsTabsProps) => {
   );
 };
 
-export default inject('uiStateStore')(observer(SettingsTabs));
+export default observer(SettingsTabs);

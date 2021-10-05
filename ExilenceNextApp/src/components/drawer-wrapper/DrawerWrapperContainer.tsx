@@ -1,18 +1,16 @@
+import { useTheme } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 import React, { ReactNode, useEffect } from 'react';
-import { useTheme } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
-
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import DrawerWrapper from './DrawerWrapper';
 
 type DrawerWrapperContainerProps = {
-  uiStateStore?: UiStateStore;
   children: ReactNode;
 };
 
-const DrawerWrapperContainer = ({ uiStateStore, children }: DrawerWrapperContainerProps) => {
+const DrawerWrapperContainer = ({ children }: DrawerWrapperContainerProps) => {
   const theme = useTheme();
-
+  const { uiStateStore } = useStores();
   useEffect(() => {
     const t = window.setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
@@ -30,4 +28,4 @@ const DrawerWrapperContainer = ({ uiStateStore, children }: DrawerWrapperContain
   );
 };
 
-export default inject('uiStateStore')(observer(DrawerWrapperContainer));
+export default observer(DrawerWrapperContainer);

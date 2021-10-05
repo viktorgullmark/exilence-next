@@ -1,40 +1,30 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { useLocation } from 'react-router';
-import { inject, observer } from 'mobx-react';
-
-import { IAccount } from '../../interfaces/account.interface';
-import { AccountStore } from '../../store/accountStore';
-import { UiStateStore } from '../../store/uiStateStore';
-import { LeagueStore } from './../../store/leagueStore';
+import { useStores } from '../..';
+import { AccountFormValues } from './account-validation-form/AccountValidationForm';
 import LoginContent from './LoginContent';
 
-type LoginContentProps = {
-  accountStore?: AccountStore;
-  uiStateStore?: UiStateStore;
-  leagueStore?: LeagueStore;
-};
+const LoginContentContainer = () => {
+  const { uiStateStore, accountStore } = useStores();
 
-const LoginContentContainer = ({ accountStore, uiStateStore }: LoginContentProps) => {
-  const location = useLocation();
-
-  const handleValidate = (details: IAccount) => {
+  const handleValidate = (form: AccountFormValues) => {
     uiStateStore!.setLoginError(undefined);
-    if (uiStateStore!.validated) {
-      accountStore!.loadAuthWindow();
-    } else {
-      accountStore!.validateSession(location.pathname, details.sessionId);
+    if (form.platform) {
+      uiStateStore.setSelectedPlatform(form.platform);
     }
+    accountStore!.loadOAuthPage();
   };
 
   return (
     <LoginContent
-      handleValidate={(details: IAccount) => handleValidate(details)}
+      handleValidate={(form: AccountFormValues) => handleValidate(form)}
       isSubmitting={uiStateStore!.isSubmitting}
       isInitiating={uiStateStore!.isInitiating}
       account={accountStore!.getSelectedAccount}
       errorMessage={uiStateStore!.loginError}
+      authUrl={accountStore!.authUrl}
     />
   );
 };
 
-export default inject('accountStore', 'uiStateStore')(observer(LoginContentContainer));
+export default observer(LoginContentContainer);

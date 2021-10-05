@@ -1,27 +1,21 @@
+import { Box, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import { useFormik } from 'formik';
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, IconButton, TextField } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
-import { useFormik } from 'formik';
-import { inject, observer } from 'mobx-react';
 import * as Yup from 'yup';
-
-import { IPricedItem } from '../../../interfaces/priced-item.interface';
+import { useStores } from '../../..';
 import useStyles from './PriceTableFilter.styles';
-import { UiStateStore } from '../../../store/uiStateStore';
 
-export type TableFilterProps<T> = {
+export type TableFilterProps = {
   handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
-  uiStateStore?: UiStateStore;
 };
 
-const PriceTableFilter = ({
-  handleFilter,
-  clearFilter,
-  uiStateStore,
-}: TableFilterProps<IPricedItem>) => {
+const PriceTableFilter = ({ handleFilter, clearFilter }: TableFilterProps) => {
+  const { uiStateStore } = useStores();
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -86,4 +80,4 @@ const PriceTableFilter = ({
   );
 };
 
-export default inject('uiStateStore')(observer(PriceTableFilter));
+export default observer(PriceTableFilter);

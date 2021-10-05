@@ -71,7 +71,7 @@ namespace API.Hubs
             };
             await _groupService.AddConnection(connection, AccountName);
             await base.OnConnectedAsync();
-            Log($"ConnectionId: {ConnectionId} connected in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"ConnectionId: {ConnectionId} connected in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -83,21 +83,26 @@ namespace API.Hubs
             }
             await _groupService.RemoveConnection(ConnectionId);
             await base.OnDisconnectedAsync(exception);
-            Log($"ConnectionId: {ConnectionId} disconnected in " + _timer.ElapsedMilliseconds + " ms.");
+            LogDebug($"ConnectionId: {ConnectionId} disconnected in " + _timer.ElapsedMilliseconds + " ms.");
         }
 
         public async Task CloseConnection(string connectionId)
         {
             await Clients.Client(connectionId).SendAsync("OnCloseConnection");
-            Log($"Told connectionId: {connectionId} to close");
+            LogDebug($"Told connectionId: {connectionId} to close");
         }
 
-        private void Log(string message)
+        private void LogDebug(string message)
         {
-            message = $"[Account: {AccountName}] -  " + message; // Add account name
+            message = $"[Account: {AccountName}] -  " + message;
             _logger.LogDebug(message);
         }
 
+        private void LogError(string message)
+        {
+            message = $"[Account: {AccountName}] -  " + message;
+            _logger.LogError(message);
+        }
 
     }
 }

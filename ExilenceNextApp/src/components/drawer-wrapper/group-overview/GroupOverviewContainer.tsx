@@ -1,18 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { inject, observer } from 'mobx-react';
-
-import { SignalrStore } from '../../../store/signalrStore';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { useStores } from '../../..';
 import ConfirmationDialog from '../../confirmation-dialog/ConfirmationDialog';
 import GroupOverview from './GroupOverview';
 
-type GroupOverviewContainerProps = {
-  uiStateStore?: UiStateStore;
-  signalrStore?: SignalrStore;
-};
-
-const GroupOverviewContainer = ({ uiStateStore, signalrStore }: GroupOverviewContainerProps) => {
+const GroupOverviewContainer = () => {
+  const { uiStateStore, signalrStore } = useStores();
   const { t } = useTranslation();
   const [showLeaveGroupDialog, setShowLeaveGroupDialog] = useState(false);
 
@@ -45,4 +39,4 @@ const GroupOverviewContainer = ({ uiStateStore, signalrStore }: GroupOverviewCon
   );
 };
 
-export default inject('uiStateStore', 'signalrStore')(observer(GroupOverviewContainer));
+export default observer(GroupOverviewContainer);

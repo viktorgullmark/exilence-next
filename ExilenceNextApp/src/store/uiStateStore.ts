@@ -1,11 +1,14 @@
 import { AxiosError } from 'axios';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import SUPPORTED_PRESETS from '../components/bulk-sell-column-presets-panel/supportedPresets';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
+import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
-
+import { ISelectOption } from '../interfaces/select-option.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { TimespanType } from '../types/timespan.type';
@@ -16,6 +19,23 @@ import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
+
+const xbox: ISelectOption = {
+  id: 'xbox',
+  value: 'xbox',
+  label: 'Xbox',
+};
+const pc: ISelectOption = {
+  id: 'pc',
+  value: 'pc',
+  label: 'PC',
+};
+const sony: ISelectOption = {
+  id: 'sony',
+  value: 'sony',
+  label: 'PlayStation',
+};
+const platforms = [pc, xbox, sony];
 
 export class UiStateStore {
   @observable @persist userId: string = uuidv4();
@@ -32,6 +52,7 @@ export class UiStateStore {
   @observable notificationList: Notification[] = [];
   @observable initiated: boolean = false;
   @observable itemTableFilterText: string = '';
+  @observable bulkSellItemTableFilterText: string = '';
   @observable priceTableFilterText: string = '';
   @observable isInitiating: boolean = false;
   @observable groupDialogOpen: boolean = false;
@@ -63,11 +84,38 @@ export class UiStateStore {
   @persist @observable chartTimeSpan: TimespanType = 'All time';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
-  @persist @observable selectedPriceTableLeagueId: string | undefined = undefined;
+  @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
+  @persist('list') @observable platformList: ISelectOption[] = platforms;
+  @persist('list') @observable itemTableColumnPresets: IBulkSellColumnPreset[] = SUPPORTED_PRESETS;
+  @persist('object') @observable selectedPlatform: ISelectOption = pc;
+  @observable bulkSellView: boolean = false;
+  @persist('object') @observable bulkSellActivePreset:
+    | IBulkSellColumnPreset
+    | undefined = undefined;
+  @persist @observable bulkSellAskingPrice: number = 0;
+  @persist @observable bulkSellAskingPricePercentage: number = 100;
+  @persist @observable bulkSellGeneratedMessage: string = '';
+  @persist @observable bulkSellGeneratingImage: boolean = false;
+
+  @observable cancelSnapshot: Subject<boolean> = new Subject();
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @action
+  setCancelSnapshot(cancel: boolean) {
+    this.cancelSnapshot.next(cancel);
+    if (cancel) {
+      this.resetStatusMessage();
+      if (this.rootStore.settingStore.autoSnapshotting) {
+        this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+        this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
+      }
+      this.setIsSnapshotting(false);
+      this.cancelSnapshot.next(!cancel);
+    }
   }
 
   @action
@@ -78,6 +126,19 @@ export class UiStateStore {
   @action.bound
   setSettingsTabIndex(index: number) {
     this.settingsTabIndex = index;
+  }
+
+  @action.bound
+  setItemtableColumnPresets(presets: IBulkSellColumnPreset[]) {
+    this.itemTableColumnPresets = presets;
+  }
+
+  @action.bound
+  setSelectedPlatform(id: string) {
+    const option = this.platformList.find((p) => p.id === id);
+    if (option) {
+      this.selectedPlatform = option;
+    }
   }
 
   @action
@@ -279,6 +340,17 @@ export class UiStateStore {
   }
 
   @action
+  removeSessIdCookie() {
+    return authService.removeAuthCookie().pipe(
+      map(() => {
+        return runInAction(() => {
+          this.sessIdCookie = undefined;
+        });
+      })
+    );
+  }
+
+  @action
   setIsSnapshotting(snapshotting: boolean = true) {
     this.isSnapshotting = snapshotting;
   }
@@ -316,6 +388,11 @@ export class UiStateStore {
   }
 
   @action
+  setBulkSellItemTableFilterText(text: string) {
+    this.bulkSellItemTableFilterText = text;
+  }
+
+  @action
   setPriceTableFilterText(text: string) {
     this.priceTableFilterText = text;
   }
@@ -338,5 +415,35 @@ export class UiStateStore {
   @action
   setGroupError(error: AxiosError | Error | undefined) {
     this.groupError = error;
+  }
+
+  @action
+  setBulkSellView(active: boolean) {
+    this.bulkSellView = active;
+  }
+
+  @action.bound
+  setBulkSellActivePreset(preset: IBulkSellColumnPreset) {
+    this.bulkSellActivePreset = preset;
+  }
+
+  @action
+  setBulkSellAskingPrice(price: number) {
+    this.bulkSellAskingPrice = price;
+  }
+
+  @action
+  setBulkSellAskingPricePercentage(percentage: number) {
+    this.bulkSellAskingPricePercentage = percentage;
+  }
+
+  @action
+  setBulkSellGeneratedMessage(msg: string) {
+    this.bulkSellGeneratedMessage = msg;
+  }
+
+  @action
+  setBulkSellGeneratingImage(status: boolean) {
+    this.bulkSellGeneratingImage = status;
   }
 }

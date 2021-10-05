@@ -1,13 +1,14 @@
 import { IApiProfile } from '../interfaces/api/api-profile.interface';
+import { ICurrency } from '../interfaces/currency.interface';
 import { Profile } from '../store/domains/profile';
 
-export function mapProfileToApiProfile(p: Profile) {
+export function mapProfileToApiProfile(p: Profile, activeCurrency: ICurrency) {
   return {
     uuid: p.uuid,
     name: p.name,
     activeLeagueId: p.activeLeagueId,
     activePriceLeagueId: p.activePriceLeagueId,
-    activeCurrency: p.activeCurrency,
+    activeCurrency: activeCurrency,
     activeStashTabIds: p.activeStashTabIds,
     snapshots: [],
     active: p.active,

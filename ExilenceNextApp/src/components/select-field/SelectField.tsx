@@ -1,8 +1,6 @@
-import React, { ReactNode } from 'react';
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { useField } from 'formik';
-
-import useLabelWidth from '../../hooks/use-label-width';
+import React, { ReactNode } from 'react';
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { placeholderOption } from '../../utils/misc.utils';
 import useStyles from './SelectField.styles';
@@ -11,14 +9,33 @@ type SelectFieldProps = {
   name: string;
   label: string;
   required?: boolean;
+  hasPlaceholder?: boolean;
   options?: ISelectOption[];
   children?: ReactNode;
 };
 
-const SelectField = ({ name, label, options, required, children }: SelectFieldProps) => {
+const SelectField = ({
+  name,
+  label,
+  options,
+  required,
+  hasPlaceholder,
+  children,
+}: SelectFieldProps) => {
   const classes = useStyles();
   const [field, meta] = useField(name);
-  const { labelWidth, ref } = useLabelWidth(0);
+
+  const initialOptions = hasPlaceholder
+    ? [
+        {
+          id: '',
+          value: placeholderOption,
+          label: placeholderOption,
+        } as ISelectOption,
+      ]
+    : [];
+
+  const combinedOptions = options ? initialOptions.concat(options) : initialOptions;
 
   return (
     <FormControl
@@ -28,22 +45,20 @@ const SelectField = ({ name, label, options, required, children }: SelectFieldPr
       className={classes.root}
       fullWidth
     >
-      <InputLabel ref={ref}>{label}</InputLabel>
-      <Select id={name} fullWidth labelWidth={labelWidth} {...field}>
+      <InputLabel>{label}</InputLabel>
+      <Select
+        id={name}
+        fullWidth
+        label={label}
+        {...field}
+        defaultValue={hasPlaceholder ? placeholderOption : undefined}
+      >
         {options
-          ? [
-              {
-                id: '',
-                value: placeholderOption,
-                label: placeholderOption,
-              } as ISelectOption,
-            ]
-              .concat(options)
-              .map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))
+          ? combinedOptions.map((opt) => (
+              <MenuItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </MenuItem>
+            ))
           : children}
       </Select>
       {meta.touched && meta.error && <FormHelperText>{meta.error}</FormHelperText>}

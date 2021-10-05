@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Typography } from '@material-ui/core';
-import { observer } from 'mobx-react';
+import { Typography } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 
 import { IStatusMessage } from '../../interfaces/status-message.interface';
 

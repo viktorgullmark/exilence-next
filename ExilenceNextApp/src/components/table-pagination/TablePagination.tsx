@@ -1,16 +1,12 @@
-import {
-  IconButton,
-  makeStyles,
-  TablePagination as _MuiTablePagination,
-  useTheme
-} from '@material-ui/core';
-import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+import { IconButton, TablePagination as _MuiTablePagination } from '@mui/material';
+import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
 import { default as React, PropsWithChildren, ReactElement, useCallback } from 'react';
 import { TableInstance } from 'react-table';
+import { makeStyles, useTheme } from '@mui/styles';
 
 const rowsPerPageOptions = [5, 10, 25, 50];
 
@@ -73,8 +69,8 @@ export function TablePagination<T extends object>({
       count={rowCount}
       rowsPerPage={pageSize}
       page={pageIndex}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={onChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={onChangeRowsPerPage}
       ActionsComponent={TablePaginationActions}
     />
   ) : null;
@@ -82,21 +78,21 @@ export function TablePagination<T extends object>({
 
 const TablePaginationActions = ({
   count,
-  onChangePage,
+  onPageChange,
   page,
   rowsPerPage,
 }: TablePaginationActionsProps) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const handleFirstPageButtonClick = (event: ButtonEvent) => onChangePage(event, 0);
+  const handleFirstPageButtonClick = (event: ButtonEvent) => onPageChange(event, 0);
 
-  const handleBackButtonClick = (event: ButtonEvent) => onChangePage(event, page - 1);
+  const handleBackButtonClick = (event: ButtonEvent) => onPageChange(event, page - 1);
 
-  const handleNextButtonClick = (event: ButtonEvent) => onChangePage(event, page + 1);
+  const handleNextButtonClick = (event: ButtonEvent) => onPageChange(event, page + 1);
 
   const handleLastPageButtonClick = (event: ButtonEvent) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
   return (

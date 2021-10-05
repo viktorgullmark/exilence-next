@@ -1,13 +1,10 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { UiStateStore } from '../../store/uiStateStore';
+import { useStores } from '../..';
 import AnnouncementDialog from './AnnouncementDialog';
 
-type AnnouncementDialogContainerProps = {
-  uiStateStore?: UiStateStore;
-};
-
-const AnnouncementDialogContainer = ({ uiStateStore }: AnnouncementDialogContainerProps) => {
+const AnnouncementDialogContainer = () => {
+  const { uiStateStore } = useStores();
   return (
     <>
       {uiStateStore!.announcementMessage && (
@@ -21,4 +18,4 @@ const AnnouncementDialogContainer = ({ uiStateStore }: AnnouncementDialogContain
   );
 };
 
-export default inject('uiStateStore')(observer(AnnouncementDialogContainer));
+export default observer(AnnouncementDialogContainer);

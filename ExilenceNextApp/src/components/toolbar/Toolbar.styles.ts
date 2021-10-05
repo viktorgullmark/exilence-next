@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core';
+import { Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { primaryGradient, statusColors } from '../../assets/themes/exilence-theme';
 import { drawerWidth, innerToolbarHeight } from '../drawer-wrapper/DrawerWrapper';
 import {
@@ -6,7 +7,6 @@ import {
   navigationMenuWidth,
 } from '../drawer-wrapper/navigation-menu/NavigationMenu.styles';
 import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
-import { patreonLogoHeight, patreonLogoWidth } from './Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
@@ -23,20 +23,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  patreonLogo: {
-    height: patreonLogoHeight,
-    width: patreonLogoWidth,
-  },
   fromLeft: {
     width: `calc(100% - ${navigationMenuWidth}px)`,
     marginLeft: navigationMenuWidth + theme.spacing(1),
+    paddingLeft: theme.spacing(1),
   },
   fromRight: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginRight: drawerWidth,
   },
   baseMargin: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(8),
   },
   marginLeft: {
     marginLeft: theme.spacing(1) + collapsedNavigationMenuWidth,
@@ -65,25 +62,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: innerToolbarHeight,
   },
   profileArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   snapshotArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   miscArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   overlayArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   logMonitorArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   groupArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   formControl: {
-    padding: `0 ${theme.spacing(0.5)}px`,
+    padding: `0 ${theme.spacing(0.5)}`,
   },
   divider: {
     height: innerToolbarHeight,

@@ -1,10 +1,10 @@
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, IconButton, TextField } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
+import { Box, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import { useFormik } from 'formik';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
@@ -14,15 +14,20 @@ export type TableFilterProps<T> = {
   array: T[];
   handleFilter: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   clearFilter: () => void;
+  searchText: string;
 };
 
-const ItemTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPricedItem>) => {
+const ItemTableFilter = ({
+  handleFilter,
+  clearFilter,
+  searchText = '',
+}: TableFilterProps<IPricedItem>) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
   const formik = useFormik({
     initialValues: {
-      searchText: '',
+      searchText,
     },
 
     onSubmit: (): void => {
@@ -44,6 +49,7 @@ const ItemTableFilter = ({ handleFilter, clearFilter }: TableFilterProps<IPriced
           handleFilter(e);
         }}
         name="searchText"
+        size="small"
         placeholder={t('tables:label.search_text')}
         className={classes.searchField}
         value={formik.values.searchText}

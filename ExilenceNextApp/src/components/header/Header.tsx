@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppBar, Link, Toolbar } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CloseIcon from '@material-ui/icons/Close';
-import FilterNone from '@material-ui/icons/FilterNone';
-import MinimizeIcon from '@material-ui/icons/Minimize';
-import HelpIcon from '@material-ui/icons/HelpOutline';
+import { AppBar, Box, Link, Toolbar } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CloseIcon from '@mui/icons-material/Close';
+import FilterNone from '@mui/icons-material/FilterNone';
+import MinimizeIcon from '@mui/icons-material/Minimize';
+import HelpIcon from '@mui/icons-material/HelpOutline';
 import clsx from 'clsx';
-import { observer } from 'mobx-react';
-
-import { close, maximize, minimize, unmaximize } from '../../utils/window.utils';
+import { observer } from 'mobx-react-lite';
+import PatreonLogo from '../../assets/img/patreon-wordmark-black.png';
+import { close, maximize, minimize, openLink, unmaximize } from '../../utils/window.utils';
 import SupportPanel from '../support-panel/SupportPanel';
 import useStyles from './Header.styles';
 
@@ -49,7 +49,7 @@ const Header = ({
       <div className={clsx(classes.noDrag, classes.resizeHandleContainer)} />
       <SupportPanel isOpen={isOpen} anchorEl={anchorEl} setIsOpen={setIsOpen} />
       <Toolbar className={classes.toolbar}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
           <Grid item>
             <Grid container spacing={1} alignItems="center">
               <Grid item>
@@ -82,6 +82,18 @@ const Header = ({
           </Grid>
           <Grid item>
             <Grid container alignItems="center">
+              <Grid item className={clsx(classes.noDrag)}>
+                <a href="https://patreon.com/exilence" onClick={(e) => openLink(e)}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    height={1}
+                    className={classes.patreonWrapper}
+                  >
+                    <img className={classes.patreonLogo} src={PatreonLogo} alt="patreon" />
+                  </Box>
+                </a>
+              </Grid>
               <Grid
                 item
                 className={clsx(

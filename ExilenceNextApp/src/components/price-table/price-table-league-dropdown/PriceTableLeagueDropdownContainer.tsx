@@ -1,27 +1,16 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import { AccountStore } from '../../../store/accountStore';
-import { LeagueStore } from '../../../store/leagueStore';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { useStores } from '../../..';
 import PriceTableLeagueDropdown from './PriceTableLeagueDropdown';
-
-type PriceTableLeagueDropdownContainerProps = {
-  uiStateStore?: UiStateStore;
-  leagueStore?: LeagueStore;
-  accountStore?: AccountStore;
-};
 
 export type PriceTableFilterForm = {
   priceLeague: string;
 };
 
-const PriceTableLeagueDropdownContainer = ({
-  uiStateStore,
-  leagueStore,
-  accountStore,
-}: PriceTableLeagueDropdownContainerProps) => {
+const PriceTableLeagueDropdownContainer = () => {
+  const { uiStateStore, leagueStore, accountStore } = useStores();
   const { t } = useTranslation();
 
   const validationSchema = Yup.object<PriceTableFilterForm>().shape({
@@ -55,8 +44,4 @@ const PriceTableLeagueDropdownContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'leagueStore',
-  'accountStore'
-)(observer(PriceTableLeagueDropdownContainer));
+export default observer(PriceTableLeagueDropdownContainer);

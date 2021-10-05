@@ -1,16 +1,12 @@
-import { statSync } from 'fs';
 import moment from 'moment';
-
 import { rootStore } from '..';
 import { IPricedItem } from '../interfaces/api/api-priced-item.interface';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
-import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Snapshot } from '../store/domains/snapshot';
-import { rgbToHex } from './colour.utils';
 import { getRarityIdentifier, mergeItemStacks } from './item.utils';
 
 export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashTab[]) => {
@@ -27,12 +23,10 @@ export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashT
             uuid: st.uuid,
             stashTabId: foundTab?.id,
             pricedItems: st.pricedItems,
-            index: foundTab?.i,
+            index: foundTab?.index,
             value: st.value,
-            color: foundTab
-              ? rgbToHex(foundTab.colour.r, foundTab.colour.g, foundTab.colour.b)
-              : undefined,
-            name: foundTab?.n,
+            color: foundTab ? foundTab.metadata.colour : undefined,
+            name: foundTab?.name,
           } as IApiStashTabSnapshot;
         })
       : snapshot.stashTabSnapshots,
@@ -83,7 +77,8 @@ export const formatValue = (
   value: number | string | undefined,
   suffix: string | undefined,
   change?: boolean,
-  displayZero?: boolean
+  displayZero?: boolean,
+  unavailable?: boolean
 ) => {
   if (!value || typeof value === 'string') {
     return !displayZero ? '' : `0 ${suffix}`;
@@ -96,7 +91,7 @@ export const formatValue = (
 
   valueString = valueString.replace('-', '- ').replace('−', '− ');
 
-  if (value === 0) {
+  if (value === 0 || unavailable) {
     valueString = '0';
   }
 
@@ -123,10 +118,19 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
   if (snapshots.length === 0) {
     return [];
   }
-
-  const filterText = rootStore.uiStateStore.itemTableFilterText.toLowerCase();
+  const filterText = rootStore.uiStateStore.bulkSellView
+    ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
+    : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
 
   const rarity = getRarityIdentifier(filterText);
+
+  let itemNameRegex = new RegExp('', 'i');
+  try {
+    // try/catch required because of filtering being an onChange event, example: typing only [ would lead to a SyntaxError
+    itemNameRegex = new RegExp(filterText, 'i');
+  } catch (error) {
+    console.error(error);
+  }
 
   return mergeItemStacks(
     snapshots
@@ -143,11 +147,12 @@ export const filterItems = (snapshots: IApiSnapshot[]) => {
             (i.calculated > 0 && i.name.toLowerCase().includes(filterText)) ||
             (i.tab &&
               i.tab
-                .map((t) => t.n)
+                .map((t) => t.name)
                 .join(', ')
                 .toLowerCase()
                 .includes(filterText)) ||
-            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity)
+            (i.calculated > 0 && rarity >= 0 && i.frameType === rarity) ||
+            itemNameRegex.test(i.name)
         )
       )
   );

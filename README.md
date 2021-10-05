@@ -5,7 +5,7 @@ Exilence Next is a desktop application that helps you calculate how valuable you
 
 The app is a successor to our old application named Exilence, previously known as ExileParty.
 
-![Preview image](https://i.imgur.com/RftNTac.png)
+![Preview image](https://i.imgur.com/M8ouCP2.png)
 
 ## Contents
 
@@ -26,24 +26,53 @@ Download the latest release at https://github.com/viktorgullmark/exilence-next/r
 
 Currently runs with:
 
-- Electron 10.1.5
+- Electron 15.1.0
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
-- npm 7.x
+- **node 16.x**
+- **npm 7.x**
 
 ## Contributing with development
 
 Before submitting a PR, please see our [contributing guidelines](https://github.com/viktorgullmark/exilence-next/blob/master/CONTRIBUTING.md).
 
-Run the following to get started with the client:
+---
+**Prerequisite for building LINUX**
 
+You will need to manually set protocol handling. Follow steps below:
+
+1. Create `~/.local/share/applications/ExilenceNext.desktop` with:
+
+```bash
+[Desktop Entry]
+Name=Exilence Next
+Exec=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/dist/appimage %u
+Icon=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/public/icon.ico
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/exilence;
 ```
-if (npm < 7.x) npm install
-if (npm >=7.x) npm install --legacy-peer-deps (flag needed temporarily)
+
+2. Run:
+- `update-mime-database ~/.local/share/mime`
+- `update-desktop-database ~/.local/share/applications`
+
+---
+
+Run the following to get started with the client:
+```
+npm install
 npm start (to serve the project)
-npm run release (optional, to build the installer for production)
+npm run build (optional, to build the installer for production) 
+---
+npm run release (optional, to build the installer for production and release)
+---
+npm run smoke-build-linux (build for linux)
+npm run smoke-build-mac (build for macOS)
+npm run smoke-build-win (build for windows)
 ```
+NOTE: Running a build using node versions newer than v14 seem to fail on MacOS and Linux. For development on these platforms, it's recommended to use v14.16.1 (Latest LTS).
 
 ## Contact us
 

@@ -1,5 +1,6 @@
-import { Box, Grid, makeStyles, Theme } from '@material-ui/core';
-import { inject, observer } from 'mobx-react';
+import { Box, Grid, Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { observer } from 'mobx-react-lite';
 import { ChangeEvent, default as React, useMemo, useState } from 'react';
 import {
   TableInstance,
@@ -11,11 +12,9 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
+import { useStores } from '../..';
 import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
-import { AccountStore } from '../../store/accountStore';
-import { PriceStore } from '../../store/priceStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { excludeLegacyMaps } from '../../utils/price.utils';
 import CustomPriceDialogContainer from '../custom-price-dialog/CustomPriceDialogContainer';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
@@ -23,12 +22,6 @@ import TableWrapper from '../table-wrapper/TableWrapper';
 import PriceTableFilter from './price-table-filter/PriceTableFilter';
 import PriceTableLeagueDropdownContainer from './price-table-league-dropdown/PriceTableLeagueDropdownContainer';
 import priceTableColumns from './priceTableColumns';
-
-type PriceTableContainerProps = {
-  uiStateStore?: UiStateStore;
-  accountStore?: AccountStore;
-  priceStore?: PriceStore;
-};
 
 export const priceTableFilterSpacing = 2;
 
@@ -58,9 +51,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const PriceTableContainer = ({ priceStore, uiStateStore }: PriceTableContainerProps) => {
+const PriceTableContainer = () => {
+  const { uiStateStore, priceStore } = useStores();
   const classes = useStyles();
-  const prices = priceStore!.pricesWithCustomValues;
+  const prices = priceStore!.customPricesTableData;
   const data = useMemo(() => {
     return excludeLegacyMaps(prices ? prices : []);
   }, [prices]);
@@ -121,7 +115,7 @@ const PriceTableContainer = ({ priceStore, uiStateStore }: PriceTableContainerPr
   return (
     <>
       <Box mb={priceTableFilterSpacing} className={classes.priceTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
           <Grid item md={7}>
             <Grid container direction="row" spacing={2} alignItems="center">
               <Grid item md={6}>
@@ -143,4 +137,4 @@ const PriceTableContainer = ({ priceStore, uiStateStore }: PriceTableContainerPr
   );
 };
 
-export default inject('uiStateStore', 'priceStore')(observer(PriceTableContainer));
+export default observer(PriceTableContainer);

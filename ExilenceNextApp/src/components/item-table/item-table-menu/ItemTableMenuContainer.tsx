@@ -1,23 +1,11 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { AccountStore } from '../../../store/accountStore';
-import { SignalrStore } from '../../../store/signalrStore';
-import { UiStateStore } from '../../../store/uiStateStore';
+import { useStores } from '../../..';
 import { exportData } from '../../../utils/export.utils';
 import ItemTableMenu from './ItemTableMenu';
 
-type ItemTableMenuContainerProps = {
-  uiStateStore?: UiStateStore;
-  signalrStore?: SignalrStore;
-  accountStore?: AccountStore;
-};
-
-const ItemTableMenuContainer = ({
-  uiStateStore,
-  signalrStore,
-  accountStore,
-}: ItemTableMenuContainerProps) => {
+const ItemTableMenuContainer = () => {
+  const { uiStateStore, signalrStore, accountStore } = useStores();
   const open = Boolean(uiStateStore!.itemTableMenuAnchor);
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
@@ -50,8 +38,4 @@ const ItemTableMenuContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'signalrStore',
-  'accountStore'
-)(observer(ItemTableMenuContainer));
+export default observer(ItemTableMenuContainer);

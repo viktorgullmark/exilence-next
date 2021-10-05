@@ -1,10 +1,10 @@
 import React, { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { observer } from 'mobx-react';
+import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { observer } from 'mobx-react-lite';
 
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
@@ -49,7 +49,7 @@ const GroupOverview = ({
       }}
     >
       <div className={classes.drawerHeader}>
-        <IconButton onClick={() => toggleGroupOverview()}>
+        <IconButton onClick={() => toggleGroupOverview()} size="large">
           {theme.direction !== 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>

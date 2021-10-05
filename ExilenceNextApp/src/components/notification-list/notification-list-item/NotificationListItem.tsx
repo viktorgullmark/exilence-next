@@ -1,11 +1,10 @@
-import React, { forwardRef, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import WarningIcon from '@material-ui/icons/Warning';
+import ErrorIcon from '@mui/icons-material/Error';
+import InfoIcon from '@mui/icons-material/Info';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import moment from 'moment';
-
+import React, { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Notification } from '../../../store/domains/notification';
 import useStyles from './NotificationListItem.styles';
 
@@ -14,7 +13,7 @@ interface Props {
   notification: Notification;
 }
 
-const NotificationListItem = forwardRef((props: Props, ref) => {
+const NotificationListItem = (props: Props) => {
   const { notification } = props;
   const classes = useStyles();
   const { t } = useTranslation();
@@ -22,17 +21,18 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
   const Icon = (type: string) => {
     switch (type) {
       case 'error':
-        return <ErrorIcon />;
+        return <ErrorIcon color="error" />;
       case 'warning':
         return <WarningIcon />;
       default:
         return <InfoIcon />;
     }
   };
+
   return (
-    <ListItem key={notification.uuid} className={classes.notification} innerRef={ref}>
+    <ListItem key={notification.uuid} className={classes.notification}>
       <ListItemAvatar>
-        <Avatar>{Icon(notification.type)}</Avatar>
+        <Avatar classes={{ colorDefault: classes.avatarColor }}>{Icon(notification.type)}</Avatar>
       </ListItemAvatar>
       <ListItemText
         classes={{
@@ -55,7 +55,7 @@ const NotificationListItem = forwardRef((props: Props, ref) => {
       />
     </ListItem>
   );
-});
+};
 
 NotificationListItem.displayName = 'NotificationListItem';
 

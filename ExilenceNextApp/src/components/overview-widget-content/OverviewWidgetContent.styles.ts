@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {
   currencyChangeColors,
@@ -9,6 +9,7 @@ import {
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {},
   topContent: {
+    minHeight: 43,
     borderBottom: `1px solid ${fontColors.hintDarker}`,
     paddingBottom: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -18,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     width: '100%',
     textAlign: 'right',
+  },
+  adornmentIcon: {
+    marginLeft: theme.spacing(0.75),
+    color: primaryLighter,
   },
   title: {
     fontSize: '0.8rem',
@@ -37,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     color: currencyChangeColors.negative,
   },
   tooltip: {
-    maxWidth: 150,
+    maxWidth: 170,
   },
   clearBtn: {
     color: theme.palette.text.secondary,

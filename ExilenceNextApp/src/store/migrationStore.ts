@@ -5,10 +5,11 @@ import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, switchMap } from 'rxjs/operators';
 
 import { RootStore } from './rootStore';
+import { fromStream } from 'mobx-utils';
 
 export class MigrationStore {
-  @observable @persist current: number = 1;
-  @observable latest: number = 2;
+  @observable @persist current: number = 2;
+  @observable latest: number = 3;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -51,15 +52,25 @@ export class MigrationStore {
   }
 
   @action
+  runClearStorage() {
+    fromStream(this.clearStorage());
+  }
+
+  @action
   runMigrations() {
     this.rootStore.routeStore.redirect('/login');
+    // @ts-ignore
     return from([...Array(this.latest - this.current).keys()])
       .pipe(
         concatMap(() => {
           let observable: Observable<void | {}> = of({});
           switch (this.current) {
             case 1:
-              // version 1
+              // from version 1
+              observable = this.clearStorage();
+              break;
+            case 2:
+              // from version 2
               observable = this.clearStorage();
               break;
             default:

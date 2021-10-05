@@ -5,9 +5,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using API.ApiModels;
 using API.Helpers;
+using API.Hubs;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Shared.Models;
 
 namespace API.Controllers
@@ -16,19 +19,21 @@ namespace API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private readonly ILogger<AuthenticationController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccountService _accountService;
         private readonly string _secret;
         private readonly string _clientId;
         private readonly string _clientSecret;
 
-        public AuthenticationController(IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public AuthenticationController(IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<AuthenticationController> logger)
         {
             _accountService = accountRepository;
             _secret = configuration.GetSection("Settings")["Secret"];
             _httpClientFactory = httpClientFactory;
             _clientId = configuration.GetSection("OAuth2")["ClientId"];
             _clientSecret = configuration.GetSection("OAuth2")["ClientSecret"];
+            _logger = logger;
         }
 
         [HttpPost]
@@ -38,6 +43,7 @@ namespace API.Controllers
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
             {
+                _logger.LogError($"[Account: {accountModel.Name}] -  Token has expired for account with Id: {accountModel.ClientId}");
                 return BadRequest("error:token_expired");
             }
 
@@ -87,38 +93,60 @@ namespace API.Controllers
                     return Ok(content);
                 }
 
+                _logger.LogError($"Something went wrong fetching token from code: {code}", response.ReasonPhrase);
                 return BadRequest(content);
             }
         }
 
         public async Task<bool> ValidateAccount(string accountName, string accessToken)
         {
-            string uri = $"https://www.pathofexile.com/api/profile?access_token={accessToken}";
+            string uri = "https://www.pathofexile.com/api/profile";
 
             try
             {
 
                 using (var client = _httpClientFactory.CreateClient())
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+
                     var response = await client.GetAsync(uri);
                     var content = await response.Content.ReadAsStringAsync();
 
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     var model = JsonSerializer.Deserialize<ProfileEndpointModel>(content, options);
 
-                    if (model.Name == accountName)
+                    if (response.IsSuccessStatusCode)
                     {
-                        return true;
+                        if (model.Name == accountName)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            _logger.LogError($"Mismatch between said accountName: {accountName} and accountName fetched from GGG: {model.Name}.");
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError($"Something went wrong trying to validate account: {accountName} with token: {accessToken}", response.ReasonPhrase);
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}", e.Message);
                 return false;
             }
 
             return false;
 
+        }
+
+        [HttpGet]
+        [Route("redirect")]
+        public IActionResult Redirect(string code, string state)
+        {
+            return Redirect($"exilence://?code={code}&state={state}");
         }
     }
 }

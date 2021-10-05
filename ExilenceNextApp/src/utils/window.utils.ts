@@ -18,6 +18,10 @@ export function close() {
   electronService.ipcRenderer.invoke('close');
 }
 
+export function restart() {
+  electronService.ipcRenderer.invoke('restart');
+}
+
 export function openLink(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault();
   const link = event.currentTarget.href;

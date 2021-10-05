@@ -1,23 +1,22 @@
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import clsx from 'clsx';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
+import { useStores } from '../..';
 import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
-import { AccountStore } from '../../store/accountStore';
-import { CustomPriceStore } from '../../store/customPriceStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
 import { getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
 import useStyles from './Columns.styles';
-export function itemIcon<T>(options: { accessor: string; header: string }): Column<object> {
+
+export function itemIcon(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -32,33 +31,39 @@ export function itemIcon<T>(options: { accessor: string; header: string }): Colu
   };
 }
 
-export function itemName<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemName(
+  options: { accessor: string; header: string },
+  bulkSellView?: boolean
+): Column<object> {
   const { header, accessor } = options;
 
   return {
     Header: header,
+    minWidth: 120,
     accessor,
-    minWidth: 180,
-    // eslint-disable-next-line react/display-name
-    Cell: (data: any) => {
-      const value = data.row.values[accessor];
-      return (
-        <ItemNameCell
-          value={value}
-          frameType={data.row.original.frameType}
-          poeNinjaUrl={data.row.original.detailsUrl}
-        />
-      );
-    },
+    ...(!bulkSellView && {
+      // eslint-disable-next-line react/display-name
+      Cell: (data: any) => {
+        const value = data.row.values[accessor];
+        return (
+          <ItemNameCell
+            value={value}
+            frameType={data.row.original.frameType}
+            poeNinjaUrl={data.row.original.detailsUrl}
+          />
+        );
+      },
+    }),
   };
 }
 
-export function itemLinks<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemLinks(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
     Header: header,
     accessor,
+    maxWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
@@ -89,12 +94,13 @@ export function itemCell(options: {
   };
 }
 
-export function itemCorrupted<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemCorrupted(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
     Header: header,
     accessor,
+    minWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
@@ -103,7 +109,25 @@ export function itemCorrupted<T>(options: { accessor: string; header: string }):
   };
 }
 
-export function itemTabs<T>(options: { accessor: string; header: string }): Column<object> {
+export function itemIlvlTier(options: {
+  accessor: (row: any) => string | number | null | undefined;
+  header: string;
+}): Column<object> {
+  const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    maxWidth: 60,
+    // eslint-disable-next-line react/display-name
+    Cell: (row: any) => {
+      return <span>{row.value}</span>;
+    },
+  };
+}
+
+export function itemTabs(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
   return {
@@ -117,7 +141,7 @@ export function itemTabs<T>(options: { accessor: string; header: string }): Colu
   };
 }
 
-export function itemValue<T>(options: {
+export function itemValue(options: {
   accessor: string;
   header: string;
   editable?: boolean;
@@ -151,6 +175,7 @@ type ItemIconCellProps = {
 
 const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const theme = useTheme();
   const rarityColor = rarityColors[getRarity(frameType)];
 
@@ -171,8 +196,7 @@ const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
       >
         <img
           className={classes.iconImg}
-          alt={value.toString()}
-          title={value.toString()}
+          alt={t('label.icon_fetched_from')}
           src={typeof value === 'string' ? value : ''}
         />
       </Box>
@@ -193,13 +217,16 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
 
   return (
     <Box display="flex" width={1} alignItems="center" justifyContent="space-between">
-      <span
-        style={{
-          color: rarityColor,
-        }}
-      >
-        {value}
-      </span>
+      <Tooltip title={value || ''} placement="bottom">
+        <span
+          style={{
+            color: rarityColor,
+          }}
+          className={classes.ellipsis}
+        >
+          {value}
+        </span>
+      </Tooltip>
       {poeNinjaUrl && (
         <Tooltip title={t('label.open_on_ninja') || ''} placement="bottom">
           <IconButton
@@ -240,18 +267,16 @@ type ItemValueCellProps = {
   editable?: boolean;
   pricedItem: IPricedItem;
   placeholder?: string;
-  uiStateStore?: UiStateStore;
-  customPriceStore?: CustomPriceStore;
 };
 
 const ItemValueCellComponent = ({
   value,
   editable,
   pricedItem,
-  uiStateStore,
-  customPriceStore,
   placeholder,
 }: ItemValueCellProps) => {
+  const { uiStateStore, customPriceStore } = useStores();
+
   const classes = useStyles();
   const { t } = useTranslation();
   const tryParseNumber = (value: boolean | string | number) => {
@@ -312,7 +337,7 @@ const ItemValueCellComponent = ({
   );
 };
 
-const ItemValueCell = inject('uiStateStore', 'customPriceStore')(observer(ItemValueCellComponent));
+const ItemValueCell = observer(ItemValueCellComponent);
 
 type ItemCorruptedCellProps = {
   value: boolean;
@@ -354,5 +379,11 @@ type ItemTabsCellProps = {
 };
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
-  return <span>{parseTabNames(tabs)}</span>;
+  const classes = useStyles();
+  const value = tabs ? parseTabNames(tabs) : '';
+  return (
+    <Tooltip title={value} placement="bottom">
+      <span className={classes.ellipsis}>{value}</span>
+    </Tooltip>
+  );
 };

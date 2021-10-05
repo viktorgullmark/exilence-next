@@ -1,6 +1,193 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - NOT RELEASED
+#### Added
+- Added support for parsing the Unique stash tab
+- Added support for parsing the Map tab
+- Added a setting for using exalted orbs as main currency
+   - Added quicktoggle button directly on the net worth card
+   - Changed the currency color to a more neutral tone
+- Added support for pricing `Blighted`, `Elder` and `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
+- Added the ability to cancel an ongoing snapshot
+- Added display of map tier in the item table
+- Added a sparkline chart to the net worth card
+- Added beta labels to new features
+- Added tooltips to menu icons
+- Added placeholder option to character selection dropdown
+- Added option to choose release channels
+   - Allows you to change to the beta channel feed
+- Added option to choose what should happen when closing the app window
+- Added column presets to the item table
+- Added minor display improvements to the item table
+- Added minor display improvements to the stash tab list
+#### Fixed
+- Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
+- Fixed an issue where some legacy maps were priced incorrectly
+- Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
+- Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
+- Fixed a bug where the character selection sometimes would not change when league was changed
+#### Changed
+- Reworked how maps are priced
+  - Should now accurately price maps with good confidence
+  - Now only prices maps based on the latest generation of maps (e.g Expedition)
+- Reworked how uniques are priced
+  - Should now correctly identify uniques all the time
+- Reworked skill gem pricing
+  - Accurate pricing for empower, enhance, enlighten
+  - Accurate pricing and identification for all gems
+- Changed the underlying data provider
+  - Now uses the new https://api.pathofexile.com instead of `/character-window`
+- Changed which leagues the pricing league dropdown lists
+  - Now lists all leagues that has prices on poe.ninja
+- Changed the warning message for `Waiting for prices` to be more descriptive than previously
+- Changed the behaviour of the custom prices table
+  - Now uses the active pricing league as default
+- Changed the default setting for autosnapshotting to false
+- Changed the minimum auto snapshotting interval to five minutes, up from two
+- Changed background color of the filter total chip
+- Changed the default columns for the item table
+- Changed how we set the rate limitation on requests
+  - Now parses the headers from the response and sets/updates them accordingly
+  - Sets a temporary cooldown for snapshots after you have been rate limited
+- Changed the way the profile modal behaves
+  - Now you should not be able to close it by mistake
+- Changed some common translations
+- Now only shows the filter total chip when the filter is active
+#### Removed
+- Removed the helper icon from the pricing league dropdown
+- Removed the close button from the initial quickstart tour
+- Removed the shortcut to custom prices from the item table
+##### Updated
+- Updated Material UI (v4 -> v5) with dependencies
+- Updated Electron (v12 -> v15) with dependencies
+- Updated SignalR (v3 -> v5) with dependencies
+
+## [0.6.0] - 2021-09-19
+#### Added
+- Added pricing support for item type `Blighted map` (Thanks to AndyHoang)
+- Added pricing support for item type `Artifact` (Thanks to AndyHoang)
+- Added support for filtering items with RegEx (Thanks to roelsprimont)
+- Added a new screen `Bulk sell` (Thanks to Ailuro)
+    - Added support for bulk selling items, commonly used in Discord communities
+    - Added automatic image generation of the items 
+    - Added a video guide with step-by-step description
+- Added a manual link with copy button, in case the browser fails to open when logging in
+- Added prerequisite info to `README.md` regarding linux protocol handling
+#### Fixed
+- Fixed a bug where the `Log in` button sometimes would not work properly
+- Fixed some typos across the app
+
+## [0.5.5] - 2021-08-13
+##### Fixed
+- Fixed a bug where you would sometimes receive a 401-error when trying to login 
+
+## [0.5.4] - 2021-08-13
+##### Fixed
+- Fixed (again) a bug that prevented the application from launching for new users
+
+## [0.5.3] - 2021-08-12
+##### Fixed
+- Fixed a bug that prevented the application from launching for new users
+
+## [0.5.2] - 2021-08-11
+##### Added
+- Added build support for MacOS
+- Added build support for Linux
+##### Fixed
+- Fixed a bug that prevented the authorize button from launching the app
+
+## [0.5.1] - 2021-08-02
+##### Fixed
+- Fixed a bug divination cards was not included in the networth
+- Fixed various bugs related to the new Path of Exile: Royale league
+
+## [0.5.0] - 2021-07-23
+##### Added
+- Added support for Xbox players
+- Added support for Playstation players
+- Added hour/minute marks to .csv export
+- Added app icon to MacOS
+- Added tray icon to MacOS
+##### Updated
+- Reworked the authentication flow to match new requirements
+    - Now redirects you through the default browser
+    - No longer required to input session id when logging in
+##### Fixed
+- Fixed a bug where the texts within the app would not translate properly
+##### Changed
+- Changed the behaviour of the stash tab selection when creating/editing profiles
+    - Now persists after selecting a stash tab, which means you can select more tabs quicker
+##### Dependencies
+- Upgraded Electron to 12.0.7
+- Upgraded Node to 16.x
+- Upgraded Highcharts to 9.0.0
+- Replaced node-sass with dart-sass
+
+## [0.4.8] - 2021-05-03
+##### Fixed
+- Fixed a bug where the memory would increase too much over time
+
+## [0.4.7] - 2021-05-02
+##### Added
+- Added a credits section to the help menu
+##### Fixed
+- Fixed a bug where snapshots would fail to be created
+- Fixed a bug where too many errors were sent to Sentry
+- Fixed a bug where the price league dropdown for custom prices was not updated when new leagues were introduced
+##### Updated
+- Updated authorization code in preparation of new OAuth flow
+
+## [0.4.6] - 2021-04-25
+##### Fixed
+- Fixed a rare bug where the app would not start properly and result in a blank screen
+    - Reason was some users having special characters and/or spaces in their windows username
+
+## [0.4.5] - 2021-04-16
+##### Added
+- Added missing translations
+- Improved error logging to Sentry
+- Minor visual improvements
+##### Fixed
+- Fixed a console warning related to mobx arrays
+- Fixed a console warning related to missing style element
+##### Changed
+- Changed size and color of Patreon wordmark to blend in more with theme
+##### Updated
+- Updated Sentry SDK
+
+## [0.4.4] - 2021-03-30
+##### Added
+- Added improved loading indicators for net worth page
+- Minor visual improvements
+##### Fixed
+- Fixed a bug where the reset data option did not work properly
+- Fixed a bug where the tabs column would take up multiple rows
+- Fixed a bug where the income was not reset when snapshots were cleared
+##### Changed
+- Changed location of Patreon button and updated it with their new wordmark
+##### Updated
+- Updated Electron (10.1.4 -> 12.0.2) with dependencies
+
+## [0.4.3] - 2021-03-28
+##### Added
+- Added a setting to toggle hardware acceleration
+- Added pricing of invitations
+- Added the ability to manually reset storage (IndexedDB)
+- Introduced basic error boundaries
+    - Should catch most if not all errors and display them to the user, hopefully resolves whitescreen issues
+##### Fixed
+- Fixed a bug where the values differed between the net worth total and the filter total
+- Fixed a bug where you couldn't properly switch accounts, should now correctly reset your previous session
+- Fixed a bug where the storage wasnt cleared correctly when doing this manually
+- Fixed a bug where setting the interface scaling using the input field didnt work
+- Fixed one cause to the app sometimes being stuck on a whitescreen when launching
+- Fixed a bug where the active profile would sometimes change when syncing from the server
+##### Changed
+- Reworked the way OAuth2 works, to match GGGs new requirements on OAuth2 apps
+- Improved styling of the notifications to make it more clear when an error appeared
+
 ## [0.4.2] - 2020-11-02
 ##### Added
 - Added a loading screen that will be shown before the app is rendered
@@ -93,8 +280,8 @@ All notable changes to this project will be documented in this file.
 - Added a warning text if more than 10 tabs are selected in the profile
 - Added translations for "no_characters" string
 ##### Changed
-- Changed how the price tresholds work (thanks to kryo4096)
-    - The total treshold now overrides the individual treshold, not the other way around
+- Changed how the price thresholds work (thanks to kryo4096)
+    - The total threshold now overrides the individual threshold, not the other way around
     - Note that this may affect your net worth substantially depending on settings
 - Changed the behavior of the menu drawers, to reduce client lag
 - Changed the visual display of the expired session error on the login screen
@@ -108,7 +295,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.7] - 2020-06-16
 ##### Added
-- Added a setting for selecting the cutoff for stacks of items, similar to the price treshold but for the total item count
+- Added a setting for selecting the cutoff for stacks of items, similar to the price threshold but for the total item count
     - Maximum value for the setting is capped at 5000 c
 - Added a fallback to 'Standard' league for profiles where the pricing league was outdated
     - Previously we didnt update these profiles, so they would fail when snapshotting
@@ -128,7 +315,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.6] - 2020-04-11
 ##### Added
 - Added a label which shows the current selection net worth value (e.g after searching/filtering) (thanks to kryo4096)
-- Added the ability to set a custom price treshold interval between 1c and 100c (thanks to kryo4096)
+- Added the ability to set a custom price threshold interval between 1c and 100c (thanks to kryo4096)
 - Added the ability to search for rarities/categories in the search bar (thanks to kryo4096)
     - You can now typ 'currency' to list only currency for example
 ##### Changed
@@ -297,7 +484,7 @@ All notable changes to this project will be documented in this file.
 - Changed the look and feel of the cards in the top of the net worth page
 - Changed order of the sections in the toolbar
 - Changed how the scroll behaves on the net worth page, to allow for more control
-- Changed how the price treshold setting works
+- Changed how the price threshold setting works
     - It now updates the actual value on the snapshot, which means you have to wait for a new snapshot for changes
 ##### Fixed
 - Fixed a bug where the font was not properly set for some users
@@ -381,7 +568,7 @@ All notable changes to this project will be documented in this file.
 ##### Added
 - Added settings page
     - Added setting for toggling low confidence pricing
-    - Added setting for controlling the price treshold
+    - Added setting for controlling the price threshold
 - Added automatic retry for validate session at 30 second intervals if it fails
 - Added an asterisk to profile name field in profile dialog
 ##### Changed

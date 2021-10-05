@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, IconButton } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CasinoIcon from '@material-ui/icons/CasinoRounded';
+import { Box, IconButton, SelectChangeEvent } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import CasinoIcon from '@mui/icons-material/CasinoRounded';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -52,7 +52,7 @@ type ProfileDialogProps = {
   includeInventory?: boolean;
   includeEquipment?: boolean;
   handleClickClose: () => void;
-  handleLeagueChange: (event: ChangeEvent<{ value: unknown }>) => void;
+  handleLeagueChange: (event: SelectChangeEvent<string>) => void;
   handleSubmit: (values: ProfileFormValues) => void;
   handleStashTabChange: (event: ChangeEvent<{}>, value: IStashTab[]) => void;
 };
@@ -84,7 +84,11 @@ const ProfileDialog = ({
     <div>
       <Dialog
         open={isOpen}
-        onClose={() => handleClickClose()}
+        onClose={(_, reason) => {
+          if (reason !== 'backdropClick') {
+            handleClickClose();
+          }
+        }}
         aria-labelledby="profile-dialog-title"
       >
         <DialogTitle id="profile-dialog-title">
@@ -157,7 +161,13 @@ const ProfileDialog = ({
                   errors={errors}
                   fullWidth
                   noCharacters={noCharacters}
-                  handleLeagueChange={handleLeagueChange}
+                  handleLeagueChange={(e) => {
+                    handleLeagueChange(e);
+                    // reset these fields when league changes
+                    setFieldValue('character', placeholderOption);
+                    setFieldValue('includeEquipment', false);
+                    setFieldValue('includeInventory', false);
+                  }}
                   handleChange={handleChange}
                   values={values}
                 />
@@ -181,6 +191,7 @@ const ProfileDialog = ({
                         label: c.name,
                       } as ISelectOption;
                     })}
+                    hasPlaceholder
                   />
                   <CheckboxField
                     name="includeEquipment"

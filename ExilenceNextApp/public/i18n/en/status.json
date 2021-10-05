@@ -6,6 +6,7 @@
     "fetching_characters": "Fetching characters",
     "validating_session": "Validating session",
     "fetching_stash_tab": "Fetching stash tab",
+    "fetching_subtabs": "Fetching special tabs (this may take a while)",
     "pricing_items": "Pricing items",
     "saving_snapshot": "Saving snapshot",
     "refreshing_stash_tabs": "Refreshing stash tabs",

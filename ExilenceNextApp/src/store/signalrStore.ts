@@ -6,7 +6,6 @@ import { forkJoin, from, of } from 'rxjs';
 import { catchError, concatMap, map, retryWhen } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
-
 import { IApiConnection } from '../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../interfaces/api/api-group.interface';
 import { IApiPricedItemsUpdate } from '../interfaces/api/api-priced-items-update.interface';
@@ -115,8 +114,14 @@ export class SignalrStore {
   @action
   signOut() {
     fromStream(
-      this.rootStore.signalrHub.stopConnection().pipe(
+      forkJoin(
+        this.rootStore.signalrHub.stopConnection(),
+        this.rootStore.uiStateStore.removeSessIdCookie()
+      ).pipe(
         map(() => {
+          this.rootStore.accountStore.clearToken();
+          this.rootStore.uiStateStore.setValidated(false);
+          this.rootStore.uiStateStore.setProfilesLoaded(false);
           this.stopConnectionSuccess();
           this.rootStore.routeStore.redirect('/login');
           this.signOutSuccess();

@@ -1,22 +1,17 @@
+import { SelectChangeEvent } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { inject, observer } from 'mobx-react';
 import { v4 as uuidv4 } from 'uuid';
-
+import { useStores } from '../..';
 import { IProfile } from '../../interfaces/profile.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
 import { Character } from '../../store/domains/character';
 import { Profile } from '../../store/domains/profile';
-import { LeagueStore } from '../../store/leagueStore';
-import { UiStateStore } from '../../store/uiStateStore';
 import { getDropdownSelection } from '../../utils/dropdown.utils';
 import { placeholderOption } from '../../utils/misc.utils';
-import { AccountStore } from './../../store/accountStore';
 import ProfileDialog, { ProfileFormValues } from './ProfileDialog';
 
 type ProfileDialogContainerProps = {
-  accountStore?: AccountStore;
-  leagueStore?: LeagueStore;
-  uiStateStore?: UiStateStore;
   isOpen: boolean;
   isEditing: boolean;
   profile?: Profile;
@@ -25,14 +20,12 @@ type ProfileDialogContainerProps = {
 };
 
 const ProfileDialogContainer = ({
-  accountStore,
-  leagueStore,
-  uiStateStore,
   profile,
   isOpen,
   isEditing,
   handleClickClose,
 }: ProfileDialogContainerProps) => {
+  const { uiStateStore, leagueStore, accountStore } = useStores();
   const account = accountStore!.getSelectedAccount;
   const {
     activeLeague,
@@ -59,11 +52,11 @@ const ProfileDialogContainer = ({
       if (foundLeague && accountLeague) {
         setPriceLeague(getPriceLeagueSelection(isEditing).id);
         setCharacters(accountLeague.characters);
-        setStashTabs(accountLeague.stashtabs);
+        setStashTabs(accountLeague.stashtabList);
 
         if (isEditing) {
           setSelectedStashTabs(
-            accountLeague.stashtabs.filter((s) => profile!.activeStashTabIds.includes(s.id))
+            accountLeague.stashtabList.filter((s) => profile!.activeStashTabIds.includes(s.id))
           );
         }
       }
@@ -95,7 +88,7 @@ const ProfileDialogContainer = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
+  const handleLeagueChange = (event: SelectChangeEvent<string>) => {
     const id = event.target.value;
     const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       (l) => l.leagueId === id
@@ -103,7 +96,7 @@ const ProfileDialogContainer = ({
     setSelectedStashTabs([]);
 
     if (accountLeague) {
-      setStashTabs(accountLeague.stashtabs);
+      setStashTabs(accountLeague.stashtabList);
       setCharacters(accountLeague.characters);
     } else {
       setStashTabs([]);
@@ -154,8 +147,4 @@ const ProfileDialogContainer = ({
   );
 };
 
-export default inject(
-  'uiStateStore',
-  'accountStore',
-  'leagueStore'
-)(observer(ProfileDialogContainer));
+export default observer(ProfileDialogContainer);

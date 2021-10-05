@@ -1,19 +1,13 @@
+import { observer } from 'mobx-react-lite';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { inject, observer } from 'mobx-react';
-
-import { NotificationStore } from '../../store/notificationStore';
+import { useStores } from '../..';
 import ToastContent from '../toast-content/ToastContent';
-import { UiStateStore } from './../../store/uiStateStore';
 import useStyles from './Notifier.styles';
 
-type NotifierProps = {
-  uiStateStore?: UiStateStore;
-  notificationStore?: NotificationStore;
-};
-
-const Notifier = ({ notificationStore }: NotifierProps) => {
+const Notifier = () => {
+  const { notificationStore } = useStores();
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -42,4 +36,4 @@ const Notifier = ({ notificationStore }: NotifierProps) => {
   return null;
 };
 
-export default inject('notificationStore')(observer(Notifier));
+export default observer(Notifier);

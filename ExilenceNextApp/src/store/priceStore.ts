@@ -41,7 +41,16 @@ export class PriceStore {
     );
   }
 
-  @computed get pricesWithCustomValues() {
+  @computed get exaltedPrice() {
+    const exaltedOrbPrice = this.activePricesWithCustomValues?.find(
+      (p) => p.name === 'Exalted Orb'
+    );
+    return exaltedOrbPrice?.customPrice && exaltedOrbPrice.customPrice > 0
+      ? exaltedOrbPrice?.customPrice
+      : exaltedOrbPrice?.calculated;
+  }
+
+  @computed get customPricesTableData() {
     const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
     const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
     const leagueId = selectedLeagueId ? selectedLeagueId : activeLeagueId;
@@ -49,7 +58,11 @@ export class PriceStore {
       (lp) => lp.leagueId === leagueId
     );
     const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === leagueId);
-    const prices = leaguePriceDetails?.leaguePriceSources[0]?.prices;
+    const leaguePriceSources = leaguePriceDetails?.leaguePriceSources;
+    if (!leaguePriceSources || leaguePriceSources?.length === 0) {
+      return;
+    }
+    const prices = leaguePriceSources[0]?.prices;
     if (!prices) {
       return;
     }
@@ -66,6 +79,33 @@ export class PriceStore {
         return p;
       })
     );
+  }
+
+  @computed get activePricesWithCustomValues() {
+    const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;
+    const customLeaguePrices = this.rootStore.customPriceStore.customLeaguePrices.find(
+      (lp) => lp.leagueId === activeLeagueId
+    );
+    const leaguePriceDetails = this.leaguePriceDetails.find((l) => l.leagueId === activeLeagueId);
+    const leaguePriceSources = leaguePriceDetails?.leaguePriceSources;
+    if (!leaguePriceSources || leaguePriceSources?.length === 0) {
+      return;
+    }
+    const prices = leaguePriceSources[0]?.prices;
+    if (!prices) {
+      return;
+    }
+    return prices.filter((p) => {
+      if (customLeaguePrices) {
+        const foundCustomPrice = findPrice(customLeaguePrices?.prices, p);
+        if (foundCustomPrice) {
+          p.customPrice = foundCustomPrice.customPrice ? +foundCustomPrice.customPrice : 0;
+        } else {
+          p.customPrice = 0;
+        }
+      }
+      return p;
+    });
   }
 
   @computed get activePriceDetails() {

@@ -1,14 +1,13 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import axios from 'axios-observable';
+import { action, autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
-
 import AppConfig from '../config/app.config';
 import { ICharacter } from '../interfaces/character.interface';
-import { ICookie } from '../interfaces/cookie.interface';
 import { ILeague } from '../interfaces/league.interface';
 import { IOAuthResponse } from '../interfaces/oauth-response.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
@@ -16,6 +15,7 @@ import { IProfile } from '../interfaces/profile.interface';
 import { IToken } from '../interfaces/token.interface';
 import { externalService } from '../services/external.service';
 import { getCharacterLeagues } from '../utils/league.utils';
+import { openCustomLink } from '../utils/window.utils';
 import { electronService } from './../services/electron.service';
 import { Account } from './domains/account';
 import { RootStore } from './rootStore';
@@ -25,7 +25,6 @@ export class AccountStore {
   @persist @observable activeAccount: string = '';
   @persist('object') @observable token: IToken | undefined = undefined;
   @observable code: string = '';
-  @observable sessionId: string = '';
   @observable authState: string = uuidv4();
 
   cancelledRetry: Subject<boolean> = new Subject();
@@ -35,12 +34,34 @@ export class AccountStore {
     electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
       this.handleAuthCallback(code, error);
     });
+
+    autorun(() => {
+      if (this.getSelectedAccount?.activeLeague) {
+        rootStore.uiStateStore.setSelectedPriceTableLeagueId(
+          this.getSelectedAccount?.activeLeague.id
+        );
+      }
+    });
   }
 
   @computed
   get getSelectedAccount(): Account {
     const account = this.accounts.find((a) => a.uuid === this.activeAccount);
     return account ? account : new Account();
+  }
+
+  @computed
+  get authUrl(): string {
+    const options = {
+      clientId: 'exilence',
+      scopes: 'account:stashes account:profile account:characters', // Scopes limit access for OAuth tokens.
+      redirectUrl: AppConfig.redirectUrl,
+      state: this.authState,
+      responseType: 'code',
+      token: '',
+    };
+
+    return `https://www.pathofexile.com/oauth/authorize?client_id=${options.clientId}&response_type=${options.responseType}&scope=${options.scopes}&state=${options.state}&redirect_uri=${options.redirectUrl}`;
   }
 
   @action
@@ -66,14 +87,13 @@ export class AccountStore {
   }
 
   @action
-  addOrUpdateAccount(name: string, sessionId: string) {
+  addOrUpdateAccount(name: string) {
     const foundAccount = this.findAccountByName(name);
 
     if (foundAccount) {
-      foundAccount.sessionId = sessionId;
       return foundAccount;
     } else {
-      const newAccount = new Account({ name: name, sessionId: sessionId });
+      const newAccount = new Account({ name: name });
       this.accounts.push(newAccount);
       return newAccount;
     }
@@ -96,16 +116,8 @@ export class AccountStore {
   }
 
   @action
-  loadAuthWindow() {
-    const options = {
-      clientId: 'exilence',
-      scopes: ['profile'], // Scopes limit access for OAuth tokens.
-      redirectUrl: AppConfig.redirectUrl,
-      state: this.authState,
-      responseType: 'code',
-    };
-
-    electronService.ipcRenderer.send('create-auth-window', options);
+  loadOAuthPage() {
+    openCustomLink(this.authUrl);
   }
 
   @action
@@ -126,12 +138,13 @@ export class AccountStore {
     this.rootStore.uiStateStore.setValidated(true);
     this.rootStore.notificationStore.createNotification('login_with_oauth', 'success');
     this.setToken(response);
-    this.initSession();
+    // todo: implement refresh logic based on expiry
+    fromStream(timer(1 * 1000).pipe(switchMap(() => of(this.initSession()))));
   }
 
   @action
   getPoeProfile() {
-    return externalService.getProfile(this.token!.accessToken).pipe(
+    return externalService.getProfile().pipe(
       map((profile: AxiosResponse<IPoeProfile>) => {
         this.getPoeProfileSuccess();
         return profile.data;
@@ -172,6 +185,13 @@ export class AccountStore {
       scope: response.scope,
       expires: new Date(new Date().getTime() + +response.expires_in * 1000),
     };
+    axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
+  }
+
+  @action
+  clearToken() {
+    this.token = undefined;
+    axios.defaults.headers.common['Authorization'] = '';
   }
 
   @action
@@ -192,16 +212,18 @@ export class AccountStore {
     fromStream(
       this.getPoeProfile().pipe(
         concatMap((res: IPoeProfile) => {
-          const account = this.addOrUpdateAccount(res.name, this.sessionId);
+          const account = this.addOrUpdateAccount(res.name);
           this.selectAccountByName(account.name!);
+
           return forkJoin(
-            externalService.getLeagues(),
+            externalService.getLeagues('main', 1, res.realm),
             externalService.getCharacters(),
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap((requests) => {
               const leagues: ILeague[] = requests[0].data;
-              const characters: ICharacter[] = requests[1].data;
+              const characters: ICharacter[] = requests[1].data.characters;
+              const unsupportedLeagues = ['Path of Exile: Royale'];
 
               if (leagues.length === 0) {
                 throw new Error('error:no_leagues');
@@ -210,10 +232,12 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
-              this.rootStore.leagueStore.updatePriceLeagues(
-                leagues.filter((l) => l.id.indexOf('SSF') === -1)
+              const filteredPriceLeagues = leagues.filter(
+                (league) =>
+                  !unsupportedLeagues.includes(league.id) && league.id.indexOf('SSF') === -1
               );
+              this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
+              this.rootStore.leagueStore.updatePriceLeagues(filteredPriceLeagues);
               this.getSelectedAccount.updateAccountLeagues(characters);
               this.getSelectedAccount.updateLeaguesForProfiles(
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
@@ -291,12 +315,14 @@ export class AccountStore {
 
   @action
   initSessionFail(e: AxiosError | Error) {
-    fromStream(
-      timer(45 * 1000).pipe(
-        takeUntil(this.cancelledRetry),
-        switchMap(() => of(this.initSession()))
-      )
-    );
+    if (this.rootStore.routeStore.redirectedTo !== '/login') {
+      fromStream(
+        timer(45 * 1000).pipe(
+          switchMap(() => of(this.initSession())),
+          takeUntil(this.cancelledRetry)
+        )
+      );
+    }
 
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification('init_session', 'error', true, e);
@@ -305,56 +331,31 @@ export class AccountStore {
   }
 
   @action
-  validateSession(sender: string, sessionId?: string) {
+  validateSession(sender: string) {
     this.rootStore.uiStateStore.setValidating(true);
     this.rootStore.uiStateStore.setSubmitting(true);
-
-    const request = externalService.getCharacters().pipe(
-      switchMap(() => of(this.validateSessionSuccess(sender, sessionId))),
-      catchError((e: AxiosError) => of(this.validateSessionFail(e, sender)))
-    );
     this.rootStore.uiStateStore.setStatusMessage('validating_session');
-    fromStream(
-      sessionId
-        ? this.rootStore.uiStateStore.setSessIdCookie(sessionId).pipe(
-            switchMap(() => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters');
-              return request;
-            })
-          )
-        : this.rootStore.uiStateStore.getSessIdCookie().pipe(
-            mergeMap((cookies: ICookie[]) => {
-              this.rootStore.uiStateStore.setStatusMessage('fetching_characters');
-              if (cookies && cookies.length > 0) {
-                this.sessionId = cookies[0].value;
-              }
-              return request;
-            })
-          )
-    );
+    this.validateSessionSuccess(sender);
   }
 
   @action
-  validateSessionSuccess(sender: string, sessionId: string | undefined) {
-    if (sessionId) {
-      this.sessionId = sessionId;
-    }
-
+  validateSessionSuccess(sender: string) {
     this.rootStore.uiStateStore.resetStatusMessage();
     this.rootStore.notificationStore.createNotification('validate_session', 'success');
     this.rootStore.uiStateStore.setSubmitting(false);
     this.rootStore.uiStateStore.setValidating(false);
     // todo: check expiry date
-    if (!this.token || sessionId) {
+    if (!this.token) {
       if (sender === '/login') {
-        this.loadAuthWindow();
+        this.loadOAuthPage();
       } else {
         this.rootStore.routeStore.redirect('/login');
       }
     } else {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.token.accessToken}`;
       this.rootStore.uiStateStore.setValidated(true);
       this.rootStore.routeStore.redirect('/net-worth');
-      this.initSession();
+      fromStream(timer(1 * 1000).pipe(switchMap(() => of(this.initSession()))));
     }
   }
 
@@ -363,8 +364,8 @@ export class AccountStore {
     if (sender !== '/login') {
       fromStream(
         timer(45 * 1000).pipe(
-          takeUntil(this.cancelledRetry),
-          switchMap(() => of(this.validateSession(sender)))
+          switchMap(() => of(this.validateSession(sender))),
+          takeUntil(this.cancelledRetry)
         )
       );
     }

@@ -1,35 +1,34 @@
 import { IItem } from './item.interface';
 
 export interface IStash {
-  numTabs: number;
-  tabs: IStashTab[];
-  items: IItem[];
-  mapLayout: any;
-  [x: string]: any;
+  stashes: IStashTab[];
+}
+
+export interface IStashTabResponse {
+  stash: IStashTab;
 }
 
 export interface IStashTab {
-  n: string;
-  i: number;
   id: string;
+  index: number;
+  name: string;
   type: string;
-  hidden: boolean;
-  selected: boolean;
-  colour: IColour;
-  srcL: string;
-  srcC: string;
-  srcR: string;
+  metadata: IMetaData;
+  items?: IItem[];
+  parent?: string;
+  children?: IStashTab[];
 }
 
 export interface ICompactTab {
-  n: string;
-  i: number;
   id: string;
-  colour: IColour;
+  name: string;
+  index: number;
+  color: string;
 }
 
-export interface IColour {
-  r: number;
-  g: number;
-  b: number;
+export interface IMetaData {
+  colour?: string;
+  public?: boolean;
+  folder?: boolean;
+  items?: number;
 }

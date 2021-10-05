@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios';
 import { forkJoin, from } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { map } from 'rxjs/operators';
-
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPoeNinjaItemOverview } from '../interfaces/poe-ninja/poe-ninja-item-overview.interface';
 import {
@@ -29,6 +28,7 @@ function getCurrencyCategories() {
 }
 
 function getItemCategories() {
+  // commented categories are mostly in accuracy pricing
   const categories = [
     'Oil',
     'Incubator',
@@ -50,6 +50,13 @@ function getItemCategories() {
     'DeliriumOrb',
     'Beast',
     'Vial',
+    'Invitation',
+    'Artifact',
+    //'UniqueJewel',
+    //'ClusterJewel',
+    'BlightedMap',
+    //'BaseType',
+    //'HelmetEnchant',
   ];
   return categories;
 }

@@ -1,17 +1,16 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-
-import { UiStateStore } from '../../store/uiStateStore';
-import StatusMessage from './StatusMessage';
+import { useStores } from '../..';
 import { IStatusMessage } from '../../interfaces/status-message.interface';
+import StatusMessage from './StatusMessage';
 
 type StatusMessageContainerProps = {
-  uiStateStore?: UiStateStore;
   overrideMessage?: IStatusMessage;
 };
 
-const StatusMessageContainer = ({ uiStateStore, overrideMessage }: StatusMessageContainerProps) => {
+const StatusMessageContainer = ({ overrideMessage }: StatusMessageContainerProps) => {
+  const { uiStateStore } = useStores();
   return <StatusMessage statusMessage={overrideMessage || uiStateStore!.statusMessage} />;
 };
 
-export default inject('uiStateStore')(observer(StatusMessageContainer));
+export default observer(StatusMessageContainer);

@@ -35,37 +35,12 @@ namespace API.Services
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
-        
+
         public async Task<SnapshotModel> AddSnapshot(string profileClientId, SnapshotModel snapshotModel)
         {
             var snapshot = _mapper.Map<Snapshot>(snapshotModel);
 
-            // todo: readd when we want to persist stash tabs and items for historical reasons
-
-            //await _snapshotRepository.RemovePricedItems(profileClientId);
-
-            snapshot.ProfileClientId = profileClientId;
-
-            await _snapshotRepository.AddSnapshots(new List<Snapshot>() { snapshot });
-
-            // todo: readd when we want to persist stash tabs and items for historical reasons
-
-            //snapshot.StashTabs.Select(stashtab => { 
-            //    stashtab.SnapshotClientId = snapshot.ClientId;
-            //    stashtab.SnapshotProfileClientId = profileClientId;
-            //    return stashtab; 
-            //}).ToList();
-
-            //await _snapshotRepository.AddStashtabs(snapshot.StashTabs.ToList());
-
-            //snapshot.StashTabs.ForEach( 
-            //    stashtab => stashtab.PricedItems.Select(pricedItem => { 
-            //        pricedItem.StashtabClientId = stashtab.ClientId;
-            //        pricedItem.SnapshotProfileClientId = profileClientId;
-            //        return stashtab; 
-            //    }).ToList());
-           
-            //await _snapshotRepository.AddPricedItems(snapshot.StashTabs.SelectMany(s => s.PricedItems).ToList());
+            // TODO: temporarily disabled snapshot storing
 
             return _mapper.Map<SnapshotModel>(snapshot);
         }
