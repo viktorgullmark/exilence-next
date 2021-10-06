@@ -75,7 +75,7 @@
     "toggle_export_menu": "Export data",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
-    "add_stash_tabs": "Add tabs",
+    "add_stash_tabs": "Add/remove tabs",
     "required": "Required",
     "optional": "Optional",
     "account_name": "Account name",
