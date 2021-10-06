@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   generatedAt: {
     display: 'flex',
     alignItems: 'center',
-    marginLeft: -10,
+    marginLeft: theme.spacing(2),
   },
   askingPriceInput: {
     width: 100,
@@ -202,94 +202,94 @@ const ItemTableContainer = ({
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
         <Grid container direction="row" justifyContent="space-between" alignItems="center">
-          <Grid item md={uiStateStore!.bulkSellGeneratingImage ? 11 : 5}>
-            <Grid container direction="row" spacing={2} alignItems="center">
-              <Grid item md={7} id="items-table-input">
-                <ItemTableFilter
-                  array={getItems}
-                  handleFilter={handleFilter}
-                  clearFilter={() => handleFilter(undefined, '')}
-                  searchText={searchFilterText}
-                />
-              </Grid>
-              <Grid item>
-                <ItemTableFilterSubtotal array={getItems} />
-              </Grid>
-              {uiStateStore!.bulkSellGeneratingImage && (
-                <>
-                  <Grid item id="items-table-asking-price" className={classes.askingPrice}>
-                    <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
-                    <Button
-                      className={classes.askingPriceGeneratedValue}
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                    >
-                      {uiStateStore!.bulkSellAskingPrice}c (
-                      {uiStateStore!.bulkSellAskingPricePercentage}% of original price)
-                    </Button>
-                  </Grid>
-                  <Grid item id="items-table-generated" className={classes.generatedAt}>
-                    <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
-                    <b>
-                      <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
-                    </b>
-                    &nbsp;
-                    <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
-                    <Typography variant="body2">{t('label.powered_by_poe_ninja')}</Typography>
-                  </Grid>
-                </>
-              )}
+          {uiStateStore!.bulkSellGeneratingImage ? (
+            <Grid item md={12} display="flex" flexDirection="row">
+              <>
+                <Grid item id="items-table-asking-price" className={classes.askingPrice}>
+                  <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
+                  <Button
+                    className={classes.askingPriceGeneratedValue}
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                  >
+                    {uiStateStore!.bulkSellAskingPrice}c (
+                    {uiStateStore!.bulkSellAskingPricePercentage}% of original price)
+                  </Button>
+                </Grid>
+                <Grid item id="items-table-generated" className={classes.generatedAt}>
+                  <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
+                  <b>
+                    <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
+                  </b>
+                  &nbsp;
+                  <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
+                  <Typography variant="body2">{t('label.powered_by_poe_ninja')}</Typography>
+                </Grid>
+              </>
             </Grid>
-          </Grid>
-          <Grid
-            item
-            className={classes.actionArea}
-            id="items-table-actions"
-            md={uiStateStore!.bulkSellGeneratingImage ? 1 : 7}
-          >
-            <ColumnHidePage
-              instance={instance}
-              onClose={handleClose}
-              show={columnsOpen}
-              anchorEl={anchorEl}
-            />
-            {hideableColumns.length > 1 && (
-              <Button
-                size="small"
-                className={classes.tableButton}
-                variant="contained"
-                onClick={handleColumnsClick}
-                startIcon={<ViewColumnsIcon />}
-              >
-                {t('label.toggle_visible_columns')}
-              </Button>
-            )}
-            <Button
-              size="small"
-              className={classes.tableButton}
-              variant="contained"
-              onClick={() =>
-                uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
-              }
-              startIcon={<FilterListIcon />}
-            >
-              {!uiStateStore!.showItemTableFilter
-                ? t('label.show_stash_tab_filter')
-                : t('label.disable_stash_tab_filter')}
-            </Button>
-            {!bulkSellView && (
-              <Button
-                size="small"
-                className={classes.tableButton}
-                variant="contained"
-                onClick={() => exportData(data)}
-                startIcon={<GetAppIcon />}
-              >
-                {t('label.toggle_export_menu')}
-              </Button>
-            )}
-          </Grid>
+          ) : (
+            <>
+              <Grid item md={5}>
+                <Grid container direction="row" spacing={2} alignItems="center">
+                  <Grid item md={7} id="items-table-input" display="block">
+                    <ItemTableFilter
+                      array={getItems}
+                      handleFilter={handleFilter}
+                      clearFilter={() => handleFilter(undefined, '')}
+                      searchText={searchFilterText}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <ItemTableFilterSubtotal array={getItems} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item className={classes.actionArea} id="items-table-actions" md={7}>
+                <ColumnHidePage
+                  instance={instance}
+                  onClose={handleClose}
+                  show={columnsOpen}
+                  anchorEl={anchorEl}
+                />
+                {hideableColumns.length > 1 && (
+                  <Button
+                    size="small"
+                    className={classes.tableButton}
+                    variant="contained"
+                    onClick={handleColumnsClick}
+                    startIcon={<ViewColumnsIcon />}
+                  >
+                    {t('label.toggle_visible_columns')}
+                  </Button>
+                )}
+                <Button
+                  size="small"
+                  className={classes.tableButton}
+                  variant="contained"
+                  onClick={() =>
+                    uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
+                  }
+                  startIcon={<FilterListIcon />}
+                >
+                  {!uiStateStore!.showItemTableFilter
+                    ? t('label.show_stash_tab_filter')
+                    : t('label.disable_stash_tab_filter')}
+                </Button>
+                {!bulkSellView && (
+                  <Button
+                    size="small"
+                    className={classes.tableButton}
+                    variant="contained"
+                    onClick={() => exportData(data)}
+                    startIcon={<GetAppIcon />}
+                  >
+                    {t('label.toggle_export_menu')}
+                  </Button>
+                )}
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
       <TableWrapper instance={instance} setInitialState={setInitialState} />
