@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
 - Fixed a bug where the character selection sometimes would not change when league was changed
+- Fixed a bug where the filter input width would change after generating a bulk sell image
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
