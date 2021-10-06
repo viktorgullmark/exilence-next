@@ -53,6 +53,7 @@ const StashTabDropdown = ({
       <Autocomplete
         multiple
         disableCloseOnSelect
+        limitTags={2}
         id="stash"
         options={stashTabs}
         size={size}

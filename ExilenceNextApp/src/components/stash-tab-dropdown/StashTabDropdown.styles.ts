@@ -5,6 +5,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     chip: {
       background: theme.palette.secondary.main,
+      margin: 4,
     },
     chipLabel: {},
   })

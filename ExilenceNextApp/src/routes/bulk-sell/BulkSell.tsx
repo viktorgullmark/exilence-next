@@ -44,6 +44,9 @@ const BulkSell = () => {
       <Grid container spacing={netWorthGridSpacing}>
         <Grid item xs={12}>
           <Grid container spacing={2}>
+            <Grid item xs={5}>
+              {loading ? <Skeleton variant="rectangular" height={40} /> : <BulkSellStepsPanel />}
+            </Grid>
             <Grid item xs={7}>
               {loading ? (
                 <Skeleton variant="rectangular" height={40} />
@@ -51,14 +54,8 @@ const BulkSell = () => {
                 <BulkSellPrerequisitesPanel />
               )}
             </Grid>
-            <Grid item xs={5}>
-              {loading ? <Skeleton variant="rectangular" height={40} /> : <BulkSellStepsPanel />}
-            </Grid>
           </Grid>
         </Grid>
-        {/*<Grid item xs={12}>*/}
-        {/*  {loading ? <Skeleton variant="rect" height={40} /> : <BulkSellColumnPresetsPanel />}*/}
-        {/*</Grid>*/}
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {loading ? (
             <Skeleton variant="rectangular" height={1000} />

@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
 - Fixed a bug where the character selection sometimes would not change when league was changed
+- Fixed a bug where the filter input width would change after generating a bulk sell image
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
@@ -55,6 +56,7 @@ All notable changes to this project will be documented in this file.
   - Sets a temporary cooldown for snapshots after you have been rate limited
 - Changed the way the profile modal behaves
   - Now you should not be able to close it by mistake
+- Changed the widget placement on the bulk sell page
 - Changed some common translations
 - Now only shows the filter total chip when the filter is active
 #### Removed

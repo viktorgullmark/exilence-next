@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CasinoIcon from '@mui/icons-material/CasinoRounded';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -19,7 +20,7 @@ import { noCharError } from '../../utils/validation.utils';
 import CheckboxField from '../checkbox-field/CheckboxField';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
-import RequestButton from '../request-button/RequestButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 import SelectField from '../select-field/SelectField';
 import SimpleField from '../simple-field/SimpleField';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
@@ -206,15 +207,17 @@ const ProfileDialog = ({
                 </Box>
                 <div className={classes.dialogActions}>
                   <Button onClick={() => handleClickClose()}>{t('action.cancel')}</Button>
-                  <RequestButton
+                  <LoadingButton
                     variant="contained"
                     type="submit"
                     color="primary"
+                    loadingPosition="end"
                     loading={loading}
-                    disabled={loading || noCharacters.length > 0 || (dirty && !isValid)}
+                    endIcon={<SaveIcon />}
+                    disabled={noCharacters.length > 0 || (dirty && !isValid)}
                   >
                     {isEditing ? t('action.save_profile') : t('action.create_profile')}
-                  </RequestButton>
+                  </LoadingButton>
                 </div>
               </form>
             )}

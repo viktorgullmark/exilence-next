@@ -45,14 +45,12 @@ const ItemTableFilterSection = () => {
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
               <Grid item>
                 <StashTabDropdown
-                  width={600}
+                  width={500}
                   size="small"
                   marginBottom={1.5}
                   stashTabs={stashTabs}
                   selectedStashTabs={selectedStashTabs}
                   handleStashTabChange={handleStashTabChange}
-                  hideLabel
-                  placeholderKey="common:label.filter_stash_tabs"
                 />
               </Grid>
             </Grid>

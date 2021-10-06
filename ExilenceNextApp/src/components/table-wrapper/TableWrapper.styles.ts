@@ -77,6 +77,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: `6px 14px`,
       fontSize: '0.75rem',
       textAlign: 'left',
+      height: 42,
       lineHeight: 1.43,
       verticalAlign: 'inherit',
       color: theme.palette.text.primary,
