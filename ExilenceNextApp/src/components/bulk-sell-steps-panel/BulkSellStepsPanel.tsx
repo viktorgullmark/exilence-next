@@ -94,48 +94,56 @@ const BulkSellStepsPanel = () => {
           background: theme.palette.background.default,
         }}
       >
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            1. Set <b>{t('label.asking_price')}</b>
+        <Grid container spacing={3}>
+          <Grid item xs={12} direction="column" justifyContent="flex-start">
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                1. Set <b>{t('label.asking_price')}</b>
+              </Grid>
+              <Grid item xs={12}>
+                2. <b>{t('label.generate_image')}</b>
+              </Grid>
+              <Grid item xs={12}>
+                3. <b>{t('label.share_bulk_sell')}</b>
+              </Grid>
+              <Grid item xs={12}>
+                <i>{t('label.note_discord')}:</i> <br />
+                {t('label.paste')} <b>{t('label.twice')}</b> {t('label.paste_reason')}
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            2. <b>{t('label.generate_image')}</b>
-          </Grid>
-          <Grid item xs={12}>
-            3. <b>{t('label.share_bulk_sell')}</b>
-          </Grid>
-          <Grid item xs={12}>
-            <i>{t('label.note_discord')}:</i> <br />
-            {t('label.paste')} <b>{t('label.twice')}</b> {t('label.paste_reason')}
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleGenerateImage}
-              disabled={uiStateStore!.bulkSellGeneratingImage}
-            >
-              {isExtractingImageSuccessMsg
-                ? t('label.generated_image_success')
-                : t(
-                    uiStateStore!.bulkSellGeneratingImage
-                      ? 'label.generating_image'
-                      : 'label.generate_image'
-                  )}
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-start',
-            }}
-          >
-            <Button variant="outlined" onClick={handleBulkSellGuideDialogClick}>
-              {t('label.bulk_sell_demo')}
-            </Button>
+          <Grid item xs={12} direction="column" justifyContent="flex-end">
+            <Grid container>
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleGenerateImage}
+                  disabled={uiStateStore!.bulkSellGeneratingImage}
+                >
+                  {isExtractingImageSuccessMsg
+                    ? t('label.generated_image_success')
+                    : t(
+                        uiStateStore!.bulkSellGeneratingImage
+                          ? 'label.generating_image'
+                          : 'label.generate_image'
+                      )}
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Button variant="outlined" onClick={handleBulkSellGuideDialogClick}>
+                  {t('label.bulk_sell_demo')}
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </AccordionDetails>
