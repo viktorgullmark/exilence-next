@@ -278,7 +278,9 @@ const ItemTableContainer = ({
               }
               startIcon={<FilterListIcon />}
             >
-              {t('label.toggle_stash_tab_filter')}
+              {!uiStateStore!.showItemTableFilter
+                ? t('label.show_stash_tab_filter')
+                : t('label.disable_stash_tab_filter')}
             </Button>
             {!bulkSellView && (
               <Button
