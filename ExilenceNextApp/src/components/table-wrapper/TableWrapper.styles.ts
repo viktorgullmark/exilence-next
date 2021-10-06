@@ -64,6 +64,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.background.paper,
       },
     },
+    noFlex: {
+      flex: 'none !important',
+    },
     rowSelected: {
       backgroundColor: 'rgba(0, 0, 0, 0.04)',
       '&:hover': {

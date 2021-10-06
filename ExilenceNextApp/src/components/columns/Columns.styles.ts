@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-import { primaryLighter } from '../../assets/themes/exilence-theme';
+import { currencyChangeColors, primaryLighter } from '../../assets/themes/exilence-theme';
 
 const useStyles = makeStyles((theme) => ({
   iconCellInner: {
@@ -35,6 +35,13 @@ const useStyles = makeStyles((theme) => ({
   },
   iconRoot: {
     fontSize: '1.2rem',
+  },
+  currencyChange: { fontWeight: 'bold' },
+  positiveChange: {
+    color: currencyChangeColors.positive,
+  },
+  negativeChange: {
+    color: currencyChangeColors.negative,
   },
   editIconRoot: {
     fontSize: '0.75rem',

@@ -7,6 +7,7 @@ import {
   itemLinks,
   itemName,
   itemValue,
+  sparkLine,
 } from '../columns/Columns';
 
 const itemTableColumns: Column<object>[] = [
@@ -43,6 +44,10 @@ const itemTableColumns: Column<object>[] = [
     header: 'Level',
     accessor: 'level',
     align: 'right',
+  }),
+  sparkLine({
+    accessor: 'sparkLine.totalChange',
+    header: 'Price last 7 days',
   }),
   itemValue({
     accessor: 'calculated',

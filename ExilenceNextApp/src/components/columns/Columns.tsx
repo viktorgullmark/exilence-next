@@ -8,12 +8,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
 import { useStores } from '../..';
-import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
+import { itemColors, primaryLighter, rarityColors } from '../../assets/themes/exilence-theme';
+import { ISparkLineDetails } from '../../interfaces/external-price.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
-import { getRawPriceFromPricedItem } from '../../utils/price.utils';
+import { formatSparklineChartData, getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
+import SparklineChart from '../sparkline-chart/SparklineChart';
 import useStyles from './Columns.styles';
 
 export function itemIcon(options: { accessor: string; header: string }): Column<object> {
@@ -137,6 +139,25 @@ export function itemTabs(options: { accessor: string; header: string }): Column<
     Cell: (data: any) => {
       const value = data.row.values[accessor];
       return <ItemTabsCell tabs={value ? value : ''} />;
+    },
+  };
+}
+
+export function sparkLine(options: { accessor: string; header: string }): Column<object> {
+  const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    maxWidth: 190,
+    minWidth: 190,
+    width: 190,
+    disableResizing: true,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.original['sparkLine'];
+      return <SparklineCell sparkline={value} id={data.row.id} />;
     },
   };
 }
@@ -397,5 +418,38 @@ const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
     <Tooltip title={value} placement="bottom">
       <span className={classes.ellipsis}>{value}</span>
     </Tooltip>
+  );
+};
+
+type SparklineCellProps = {
+  id: string;
+  sparkline?: ISparkLineDetails;
+};
+
+const SparklineCell = ({ sparkline, id }: SparklineCellProps) => {
+  const classes = useStyles();
+  const data = sparkline ? formatSparklineChartData(sparkline.data) : undefined;
+  return (
+    <>
+      {data && (
+        <Box display="flex" width={1} alignItems="center" justifyContent="space-between">
+          <SparklineChart
+            internalName={id}
+            color={primaryLighter}
+            height={25}
+            width={90}
+            data={data}
+          />
+          <span
+            className={clsx(classes.ellipsis, classes.currencyChange, {
+              [classes.positiveChange]: sparkline && sparkline.totalChange > 0,
+              [classes.negativeChange]: sparkline && sparkline.totalChange < 0,
+            })}
+          >
+            {sparkline?.totalChange} %
+          </span>
+        </Box>
+      )}
+    </>
   );
 };

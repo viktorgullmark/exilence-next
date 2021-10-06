@@ -84,6 +84,7 @@ const TableWrapper = ({
                   <div
                     {...column.getHeaderProps(headerProps)}
                     className={clsx(classes.tableHeadCell, {
+                      [classes.noFlex]: !column.canResize,
                       [classes.disabledSortBy]: !column.accessor,
                     })}
                     key={`column_${j}`}
@@ -129,7 +130,9 @@ const TableWrapper = ({
                     <div
                       {...cell.getCellProps(cellProps)}
                       onClick={cellClickHandler(cell)}
-                      className={classes.tableCell}
+                      className={clsx(classes.tableCell, {
+                        [classes.noFlex]: !cell.column.canResize,
+                      })}
                       key={`cell_${j}`}
                     >
                       {cell.render('Cell')}

@@ -22,4 +22,10 @@ export interface IExternalPrice {
   count: number;
   detailsUrl?: string;
   customPrice?: number;
+  sparkLine?: ISparkLineDetails;
+}
+
+export interface ISparkLineDetails {
+  data: number[];
+  totalChange: number;
 }

@@ -6,6 +6,7 @@ import {
   itemLinks,
   itemName,
   itemValue,
+  sparkLine,
 } from '../columns/Columns';
 
 const itemTableBulkSellColumns: Column<object>[] = [
@@ -47,6 +48,10 @@ const itemTableBulkSellColumns: Column<object>[] = [
     accessor: 'stackSize',
     align: 'right',
   },
+  sparkLine({
+    accessor: 'sparkLine.totalChange',
+    header: 'Price last 7 days',
+  }),
   itemValue({
     accessor: 'calculated',
     header: 'Price (c)',
