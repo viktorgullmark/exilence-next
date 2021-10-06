@@ -62,7 +62,7 @@ export function getExternalPriceFromNinjaItem(
     count: item.count ?? 0,
     quality: item.gemQuality ?? 0,
     detailsUrl: detailsUrl,
-    sparkLine: item.sparkline,
+    sparkLine: item.count > 10 ? item.sparkline : item.lowConfidenceSparkline,
   } as IExternalPrice;
 }
 
@@ -97,7 +97,8 @@ export function getExternalPriceFromNinjaCurrencyItem(
     count: item.receive ? item.receive.count : 0,
     frameType: 5,
     detailsUrl: detailsUrl,
-    sparkLine: sparkLine,
+    sparkLine:
+      item.receive && item.receive.count > 10 ? sparkLine : item.lowConfidenceReceiveSparkLine,
   } as IExternalPrice;
 }
 
