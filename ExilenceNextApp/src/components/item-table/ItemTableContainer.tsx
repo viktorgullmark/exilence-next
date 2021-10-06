@@ -181,10 +181,6 @@ const ItemTableContainer = ({
     );
   };
 
-  const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
-  };
-
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const hideableColumns = getColumns.filter((column) => !(column.id === '_selector'));
