@@ -9,9 +9,11 @@ import {
   getExternalPriceFromNinjaItem,
 } from '../utils/price.utils';
 import { IPoeNinjaCurrencyOverview } from './../interfaces/poe-ninja/poe-ninja-currency-overview.interface';
+import AppConfig from './../config/app.config';
 
 const rateLimiter = new RateLimiter(1, 1);
-const apiUrl = 'https://poe.ninja/api/data';
+const apiUrl = `${AppConfig.baseUrl}/api/price`;
+const lang = 'en';
 
 export const poeninjaService = {
   getCurrencyCategories,
@@ -62,16 +64,14 @@ function getItemCategories() {
 }
 
 function getItemCategoryOverview(league: string, type: string) {
-  const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(axios.get<IPoeNinjaItemOverview>(`${apiUrl}/itemoverview${parameters}`))
+    from(axios.get<IPoeNinjaItemOverview>(`${apiUrl}/0/${league}/${type}/${lang}`))
   );
 }
 
 function getCurrencyCategoryOverview(league: string, type: string) {
-  const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(axios.get<IPoeNinjaCurrencyOverview>(`${apiUrl}/currencyoverview${parameters}`))
+    from(axios.get<IPoeNinjaCurrencyOverview>(`${apiUrl}/1/${league}/${type}/${lang}`))
   );
 }
 
