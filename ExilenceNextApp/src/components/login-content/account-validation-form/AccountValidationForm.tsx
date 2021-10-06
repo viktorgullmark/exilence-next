@@ -88,7 +88,7 @@ const AccountValidationForm = ({
                       color="primary"
                       fullWidth
                       type="submit"
-                      loadingPosition="start"
+                      loadingPosition="end"
                       loading={isSubmitting || isInitiating}
                       disabled={!touched || (dirty && !isValid)}
                       endIcon={<ExitToApp />}

@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import useStyles from './ConfirmationDialog.styles';
+import SaveIcon from '@mui/icons-material/Save';
 
 type ConfirmationDialogProps = {
   show: boolean;
@@ -38,7 +39,8 @@ const ConfirmationDialog = ({
           color="primary"
           variant="contained"
           loading={!!loading}
-          loadingPosition="start"
+          loadingPosition="end"
+          endIcon={<SaveIcon />}
         >
           {acceptButtonText}
         </LoadingButton>

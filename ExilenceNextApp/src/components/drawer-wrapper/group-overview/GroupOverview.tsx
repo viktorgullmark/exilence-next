@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
 import useStyles from './GroupOverview.styles';
+import SaveIcon from '@mui/icons-material/Save';
 
 type Handler = (event: MouseEvent<HTMLElement>) => void;
 
@@ -66,9 +67,10 @@ const GroupOverview = ({
                 <LoadingButton
                   variant="contained"
                   color="primary"
-                  loadingPosition="start"
+                  loadingPosition="end"
                   loading={leavingGroup}
                   fullWidth
+                  endIcon={<SaveIcon />}
                   onClick={handleLeaveGroup}
                 >
                   {t('action.leave_group')}

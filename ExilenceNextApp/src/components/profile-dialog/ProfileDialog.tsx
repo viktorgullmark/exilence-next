@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CasinoIcon from '@mui/icons-material/CasinoRounded';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { ISelectOption } from '../../interfaces/select-option.interface';
 import { IStashTab } from '../../interfaces/stash.interface';
@@ -210,8 +211,9 @@ const ProfileDialog = ({
                     variant="contained"
                     type="submit"
                     color="primary"
-                    loadingPosition="start"
+                    loadingPosition="end"
                     loading={loading}
+                    endIcon={<SaveIcon />}
                     disabled={noCharacters.length > 0 || (dirty && !isValid)}
                   >
                     {isEditing ? t('action.save_profile') : t('action.create_profile')}

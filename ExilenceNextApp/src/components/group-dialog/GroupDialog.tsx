@@ -19,6 +19,7 @@ import PasswordField from '../password-field/PasswordField';
 import SimpleField from '../simple-field/SimpleField';
 import useStyles from './GroupDialog.styles';
 import { IGroupForm } from './GroupDialogContainer';
+import SaveIcon from '@mui/icons-material/Save';
 
 type GroupDialogProps = {
   show: boolean;
@@ -122,7 +123,8 @@ const GroupDialog = ({
                 color="primary"
                 variant="contained"
                 loading={loading}
-                loadingPosition="start"
+                loadingPosition="end"
+                endIcon={<SaveIcon />}
               >
                 {t(`action.${dialogType}_group`)}
               </LoadingButton>
