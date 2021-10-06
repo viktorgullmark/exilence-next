@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing `Blighted`, `Elder` and `Shaper` maps
 - Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added the ability to cancel an ongoing snapshot
+- Added a new column for showing price history for the last 7 days
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features
