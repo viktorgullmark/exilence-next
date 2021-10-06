@@ -53,6 +53,7 @@ All notable changes to this project will be documented in this file.
   - Sets a temporary cooldown for snapshots after you have been rate limited
 - Changed the way the profile modal behaves
   - Now you should not be able to close it by mistake
+- Changed the widget placement on the bulk sell page
 - Changed some common translations
 - Now only shows the filter total chip when the filter is active
 #### Removed
