@@ -85,6 +85,7 @@ const TableWrapper = ({
                     {...column.getHeaderProps(headerProps)}
                     className={clsx(classes.tableHeadCell, {
                       [classes.noFlex]: !column.canResize,
+                      [classes.disabledSortBy]: !column.accessor,
                     })}
                     key={`column_${j}`}
                   >

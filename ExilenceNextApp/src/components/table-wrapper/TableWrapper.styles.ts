@@ -55,6 +55,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       borderBottom: '1px solid rgba(81, 81, 81, 0.6)',
     },
+    disabledSortBy: {
+      paddingRight: theme.spacing(2),
+    },
     placeholderRow: {
       backgroundColor: theme.palette.background.paper,
       '&:hover': {

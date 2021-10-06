@@ -163,12 +163,13 @@ export function sparkLine(options: { accessor: string; header: string }): Column
 }
 
 export function itemValue(options: {
-  accessor: string;
+  accessor?: string;
   header: string;
   editable?: boolean;
   placeholder?: string;
+  cumulative?: boolean;
 }): Column<object> {
-  const { header, accessor, editable, placeholder } = options;
+  const { header, accessor, editable, placeholder, cumulative } = options;
 
   return {
     Header: header,
@@ -176,7 +177,18 @@ export function itemValue(options: {
     align: 'right',
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
-      const value = data.row.values[accessor];
+      let value = 0;
+      if (cumulative) {
+        value = data.row.original.total;
+        for (let i = 0; i < data.sortedRows.length; i++) {
+          if (data.sortedRows[i].id === data.row.id) {
+            break;
+          }
+          value += data.sortedRows[i].original.total;
+        }
+      } else if (accessor) {
+        value = data.row.values[accessor];
+      }
       return (
         <ItemValueCell
           value={value}

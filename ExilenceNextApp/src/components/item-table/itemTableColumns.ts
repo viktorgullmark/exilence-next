@@ -65,6 +65,10 @@ const itemTableColumns: Column<object>[] = [
     accessor: 'total',
     header: 'Total value (c)',
   }),
+  itemValue({
+    header: 'Cumulative (c)',
+    cumulative: true,
+  }),
 ];
 
 export default itemTableColumns;
