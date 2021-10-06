@@ -1,7 +1,7 @@
 import FilterListIcon from '@mui/icons-material/FilterList';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
-import { Box, Button, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Grid, Theme, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { observer } from 'mobx-react-lite';
 import moment from 'moment';
@@ -19,8 +19,9 @@ import {
   useTable,
 } from 'react-table';
 import { useStores } from '../..';
-import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
+import { statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
+import { exportData } from '../../utils/export.utils';
 import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
@@ -44,8 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignSelf: 'flex-end',
   },
-  inlineIcon: {
-    color: primaryLighter,
+  tableButton: {
     marginLeft: theme.spacing(1.5),
   },
   warning: {
@@ -259,37 +259,37 @@ const ItemTableContainer = ({
               anchorEl={anchorEl}
             />
             {hideableColumns.length > 1 && (
-              <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
-                <IconButton
-                  size="small"
-                  className={classes.inlineIcon}
-                  onClick={handleColumnsClick}
-                >
-                  <ViewColumnsIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title={t('label.toggle_stash_tab_filter') || ''} placement="bottom">
-              <IconButton
+              <Button
                 size="small"
-                className={classes.inlineIcon}
-                onClick={() =>
-                  uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
-                }
+                className={classes.tableButton}
+                variant="contained"
+                onClick={handleColumnsClick}
+                startIcon={<ViewColumnsIcon />}
               >
-                <FilterListIcon />
-              </IconButton>
-            </Tooltip>
+                {t('label.toggle_visible_columns')}
+              </Button>
+            )}
+            <Button
+              size="small"
+              className={classes.tableButton}
+              variant="contained"
+              onClick={() =>
+                uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
+              }
+              startIcon={<FilterListIcon />}
+            >
+              {t('label.toggle_stash_tab_filter')}
+            </Button>
             {!bulkSellView && (
-              <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
-                <IconButton
-                  size="small"
-                  className={classes.inlineIcon}
-                  onClick={handleItemTableMenuOpen}
-                >
-                  <GetAppIcon />
-                </IconButton>
-              </Tooltip>
+              <Button
+                size="small"
+                className={classes.tableButton}
+                variant="contained"
+                onClick={() => exportData(data)}
+                startIcon={<GetAppIcon />}
+              >
+                {t('label.toggle_export_menu')}
+              </Button>
             )}
           </Grid>
         </Grid>
