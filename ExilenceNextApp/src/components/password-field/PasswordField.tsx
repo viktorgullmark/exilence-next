@@ -35,6 +35,8 @@ const PasswordField = ({
     e.preventDefault();
   };
 
+  const inputLabel = `${label} ${!required && `(${t('label.optional').toLowerCase()})`}`;
+
   return (
     <FormControl
       variant="outlined"
@@ -46,11 +48,10 @@ const PasswordField = ({
       }}
       fullWidth
     >
-      <InputLabel htmlFor={name}>
-        {label} {!required && `(${t('label.optional').toLowerCase()})`}
-      </InputLabel>
+      <InputLabel htmlFor={name}>{inputLabel}</InputLabel>
       <OutlinedInput
         id={name}
+        label={inputLabel}
         type={visible ? 'text' : 'password'}
         autoFocus={autoFocus}
         placeholder={placeholder}
