@@ -56,9 +56,11 @@ export class Group implements IApiGroup {
   }
 
   @computed
-  get sparklineChartData(): ISparklineDataPoint[] {
+  get sparklineChartData(): ISparklineDataPoint[] | undefined {
     const snapshots = [...this.latestGroupSnapshots.slice(0, 10)];
-
+    if (snapshots.length === 0) {
+      return;
+    }
     return snapshots.map((s, i) => {
       return {
         x: i + 1,
