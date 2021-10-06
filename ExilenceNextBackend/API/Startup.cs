@@ -54,10 +54,6 @@ namespace API
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
 
-            services.AddStackExchangeRedisCache(o => {
-                o.Configuration = _configuration.GetConnectionString("Redis");
-            });
-
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
