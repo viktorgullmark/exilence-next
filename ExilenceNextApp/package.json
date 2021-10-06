@@ -8,6 +8,7 @@
     "@microsoft/signalr": "^5.0.10",
     "@microsoft/signalr-protocol-msgpack": "^5.0.10",
     "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "*",
     "@mui/material": "^5.0.2",
     "@mui/styles": "^5.0.1",
     "@rehooks/component-size": "^1.0.3",

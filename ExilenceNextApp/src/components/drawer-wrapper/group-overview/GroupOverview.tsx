@@ -1,14 +1,13 @@
-import React, { MouseEvent } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Button, Divider, Drawer, Grid, IconButton, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { observer } from 'mobx-react-lite';
-
+import React, { MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Group } from '../../../store/domains/group';
 import PlayerListContainer from '../../player-list/PlayerListContainer';
-import RequestButton from '../../request-button/RequestButton';
 import useStyles from './GroupOverview.styles';
 
 type Handler = (event: MouseEvent<HTMLElement>) => void;
@@ -64,16 +63,16 @@ const GroupOverview = ({
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <RequestButton
+                <LoadingButton
                   variant="contained"
                   color="primary"
-                  disabled={leavingGroup}
+                  loadingPosition="start"
                   loading={leavingGroup}
                   fullWidth
                   onClick={handleLeaveGroup}
                 >
                   {t('action.leave_group')}
-                </RequestButton>
+                </LoadingButton>
               </Grid>
             </>
           ) : (

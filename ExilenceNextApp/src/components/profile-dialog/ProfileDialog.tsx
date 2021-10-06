@@ -19,7 +19,7 @@ import { noCharError } from '../../utils/validation.utils';
 import CheckboxField from '../checkbox-field/CheckboxField';
 import LeagueDropdown from '../league-dropdown/LeagueDropdown';
 import PriceLeagueDropdown from '../price-league-dropdown/PriceLeagueDropdown';
-import RequestButton from '../request-button/RequestButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 import SelectField from '../select-field/SelectField';
 import SimpleField from '../simple-field/SimpleField';
 import StashTabDropdown from '../stash-tab-dropdown/StashTabDropdown';
@@ -206,15 +206,16 @@ const ProfileDialog = ({
                 </Box>
                 <div className={classes.dialogActions}>
                   <Button onClick={() => handleClickClose()}>{t('action.cancel')}</Button>
-                  <RequestButton
+                  <LoadingButton
                     variant="contained"
                     type="submit"
                     color="primary"
+                    loadingPosition="start"
                     loading={loading}
-                    disabled={loading || noCharacters.length > 0 || (dirty && !isValid)}
+                    disabled={noCharacters.length > 0 || (dirty && !isValid)}
                   >
                     {isEditing ? t('action.save_profile') : t('action.create_profile')}
-                  </RequestButton>
+                  </LoadingButton>
                 </div>
               </form>
             )}

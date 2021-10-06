@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import CasinoIcon from '@mui/icons-material/CasinoRounded';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Button,
   Dialog,
@@ -8,15 +8,14 @@ import {
   DialogTitle,
   IconButton,
 } from '@mui/material';
-import CasinoIcon from '@mui/icons-material/CasinoRounded';
 import { AxiosError } from 'axios';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
 import { generateGroupName } from '../../utils/group.utils';
 import PasswordField from '../password-field/PasswordField';
-import RequestButton from '../request-button/RequestButton';
 import SimpleField from '../simple-field/SimpleField';
 import useStyles from './GroupDialog.styles';
 import { IGroupForm } from './GroupDialogContainer';
@@ -117,15 +116,16 @@ const GroupDialog = ({
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
               <Button onClick={onClose}>{t('action.close')}</Button>
-              <RequestButton
+              <LoadingButton
                 type="submit"
-                disabled={loading || !isValid || getGroupExistsError() !== undefined}
+                disabled={!isValid || getGroupExistsError() !== undefined}
                 color="primary"
                 variant="contained"
                 loading={loading}
+                loadingPosition="start"
               >
                 {t(`action.${dialogType}_group`)}
-              </RequestButton>
+              </LoadingButton>
             </DialogActions>
           </form>
         )}

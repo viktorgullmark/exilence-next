@@ -1,5 +1,6 @@
-import { Grid, Link, Typography } from '@mui/material';
 import ExitToApp from '@mui/icons-material/ExitToApp';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Grid, Link, Typography } from '@mui/material';
 import { Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
@@ -9,10 +10,8 @@ import { useStores } from '../../..';
 import { ISelectOption } from '../../../interfaces/select-option.interface';
 import { Account } from '../../../store/domains/account';
 import ConsentDialog from '../../consent-dialog/ConsentDialog';
-import RequestButton from '../../request-button/RequestButton';
 import SelectField from '../../select-field/SelectField';
 import useStyles from './AccountValidationForm.styles';
-
 export type AccountFormValues = {
   platform: string;
 };
@@ -84,17 +83,18 @@ const AccountValidationForm = ({
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <RequestButton
+                    <LoadingButton
                       variant="contained"
                       color="primary"
                       fullWidth
                       type="submit"
+                      loadingPosition="start"
                       loading={isSubmitting || isInitiating}
-                      disabled={!touched || isSubmitting || isInitiating || (dirty && !isValid)}
+                      disabled={!touched || (dirty && !isValid)}
                       endIcon={<ExitToApp />}
                     >
                       {t('action.authorize')}
-                    </RequestButton>
+                    </LoadingButton>
                   </Grid>
                 </Grid>
               </div>

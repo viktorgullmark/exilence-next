@@ -1,8 +1,7 @@
-import React from 'react';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-
-import RequestButton from '../request-button/RequestButton';
+import React from 'react';
 import useStyles from './ConfirmationDialog.styles';
 
 type ConfirmationDialogProps = {
@@ -34,15 +33,15 @@ const ConfirmationDialog = ({
       <DialogContent>{body}</DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <RequestButton
+        <LoadingButton
           onClick={onConfirm}
           color="primary"
           variant="contained"
-          disabled={loading}
           loading={!!loading}
+          loadingPosition="start"
         >
           {acceptButtonText}
-        </RequestButton>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );
