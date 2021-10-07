@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButton: {
     padding: theme.spacing(0.5),
   },
+  snapshotBtn: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
   toolbarGrid: {
     maxHeight: innerToolbarHeight,
     minHeight: innerToolbarHeight,
