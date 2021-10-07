@@ -90,9 +90,7 @@ export class UiStateStore {
   @persist('list') @observable itemTableColumnPresets: IBulkSellColumnPreset[] = SUPPORTED_PRESETS;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
   @observable bulkSellView: boolean = false;
-  @persist('object') @observable bulkSellActivePreset:
-    | IBulkSellColumnPreset
-    | undefined = undefined;
+  @persist('object') @observable bulkSellActivePreset: IBulkSellColumnPreset = SUPPORTED_PRESETS[0];
   @persist @observable bulkSellAskingPrice: number = 0;
   @persist @observable bulkSellAskingPricePercentage: number = 100;
   @persist @observable bulkSellGeneratedMessage: string = '';
