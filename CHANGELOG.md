@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Added option to choose what should happen when closing the app window
 - Added column presets to the item table
 - Added minor display improvements to the item table
+- Added minor display improvements to the toolbar
 - Added minor display improvements to the stash tab list
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
@@ -44,6 +45,8 @@ All notable changes to this project will be documented in this file.
   - Now uses the new https://api.pathofexile.com instead of `/character-window`
 - Changed which leagues the pricing league dropdown lists
   - Now lists all leagues that has prices on poe.ninja
+- Reworked how we fetch prices
+  - We now only refresh prices for the leagues you are actively using
 - Changed the warning message for `Waiting for prices` to be more descriptive than previously
 - Changed the behaviour of the custom prices table
   - Now uses the active pricing league as default
