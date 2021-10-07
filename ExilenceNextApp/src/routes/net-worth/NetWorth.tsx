@@ -1,11 +1,10 @@
-import { Box, Grid, Tooltip, Typography, useTheme } from '@mui/material';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ListIcon from '@mui/icons-material/List';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import UpdateIcon from '@mui/icons-material/Update';
-import { Skeleton } from '@mui/material';
+import { Box, Grid, Skeleton, Tooltip, Typography, useTheme } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -196,7 +195,7 @@ const NetWorth = () => {
                     id="panel1a-header"
                   >
                     <Box display="flex" justifyContent="center" alignItems="center">
-                      <EqualizerIcon fontSize="small" />
+                      <ShowChartIcon fontSize="small" />
                       <Box ml={1}>
                         <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
                       </Box>
@@ -235,7 +234,7 @@ const NetWorth = () => {
                     id="panel1a-header"
                   >
                     <Box display="flex" justifyContent="center" alignItems="center">
-                      <EqualizerIcon fontSize="small" />
+                      <StackedLineChartIcon fontSize="small" />
                       <Box ml={1}>
                         <Typography variant="overline">{t('label.tab_chart')}</Typography>
                       </Box>
@@ -279,7 +278,7 @@ const NetWorth = () => {
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     <Box display="flex" justifyContent="center" alignItems="center">
-                      <ListIcon />
+                      <UpdateIcon />
                       <Box ml={1}>
                         <Typography variant="overline">{t('label.item_table')}</Typography>
                       </Box>

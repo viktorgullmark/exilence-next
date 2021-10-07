@@ -1,5 +1,6 @@
+import { Cancel } from '@mui/icons-material';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material';
-import { Clear, SwapHoriz } from '@mui/icons-material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -7,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
-
 type OverviewWidgetContentProps = {
   value: number | string;
   valueIsDiff?: boolean;
@@ -92,7 +92,7 @@ const OverviewWidgetContent = ({
                     className={classes.adornmentIcon}
                     onClick={() => settingStore.setShowPriceInExalt(!settingStore.showPriceInExalt)}
                   >
-                    <SwapHoriz />
+                    <ChangeCircleIcon />
                   </IconButton>
                 </Tooltip>
               )}
@@ -109,7 +109,7 @@ const OverviewWidgetContent = ({
                     className={classes.adornmentIcon}
                     onClick={clearFn}
                   >
-                    <Clear />
+                    <Cancel />
                   </IconButton>
                 </Tooltip>
               )}

@@ -230,7 +230,7 @@ const ItemTableContainer = ({
             </Grid>
           ) : (
             <>
-              <Grid item md={5}>
+              <Grid item md={6}>
                 <Grid container direction="row" spacing={2} alignItems="center">
                   <Grid item md={7} id="items-table-input" display="block">
                     <ItemTableFilter
@@ -245,7 +245,7 @@ const ItemTableContainer = ({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item className={classes.actionArea} id="items-table-actions" md={7}>
+              <Grid item className={classes.actionArea} id="items-table-actions" md={6}>
                 <ColumnHidePage
                   instance={instance}
                   onClose={handleClose}

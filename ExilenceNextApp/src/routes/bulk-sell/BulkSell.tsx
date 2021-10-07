@@ -1,5 +1,5 @@
 import { Box, Grid, Tooltip, Typography, useTheme } from '@mui/material';
-import ListIcon from '@mui/icons-material/List';
+import UpdateIcon from '@mui/icons-material/Update';
 import { Skeleton } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
@@ -65,7 +65,7 @@ const BulkSell = () => {
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     <Box display="flex" justifyContent="center" alignItems="center">
-                      <ListIcon />
+                      <UpdateIcon />
                       <Box ml={1}>
                         <Typography variant="overline">{t('label.item_table')}</Typography>
                       </Box>
