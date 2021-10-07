@@ -278,7 +278,7 @@ const NetWorth = () => {
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     <Box display="flex" justifyContent="center" alignItems="center">
-                      <UpdateIcon />
+                      <UpdateIcon fontSize="small" />
                       <Box ml={1}>
                         <Typography variant="overline">{t('label.item_table')}</Typography>
                       </Box>
