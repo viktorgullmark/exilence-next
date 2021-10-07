@@ -438,6 +438,7 @@ const SparklineCell = ({ sparkline, id }: SparklineCellProps) => {
             color={primaryLighter}
             height={25}
             width={90}
+            domainPadding={{ x: 1, y: 1 }}
             data={data}
           />
           <span
