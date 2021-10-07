@@ -79,6 +79,7 @@ export class UiStateStore {
   @persist @observable tabChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
+  @observable timeSincePricesFetchedLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
@@ -205,6 +206,11 @@ export class UiStateStore {
   @action
   setTimeSinceLastSnapshotLabel(label: string | undefined) {
     this.timeSinceLastSnapshotLabel = label;
+  }
+
+  @action
+  setTimeSincePricesFetchedLabel(label: string | undefined) {
+    this.timeSincePricesFetchedLabel = label;
   }
 
   @action

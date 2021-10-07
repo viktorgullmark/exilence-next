@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
    - Allows you to change to the beta channel feed
 - Added option to choose what should happen when closing the app window
 - Added column presets to the item table
+- Added a label for displaying the age of prices fetched from `https://poe.ninja`
 - Added minor display improvements to the item table
 - Added minor display improvements to the toolbar
 - Added minor display improvements to the stash tab list

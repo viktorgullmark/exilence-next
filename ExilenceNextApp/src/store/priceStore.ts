@@ -59,6 +59,19 @@ export class PriceStore {
     );
   }
 
+  @computed get timeSincePricesFetched() {
+    const activePriceLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague
+      ?.id;
+    if (activePriceLeagueId) {
+      const leaguePriceDetails = this.rootStore.priceStore.getLeaguePriceDetails(
+        activePriceLeagueId
+      );
+      const leaguePriceSource = this.rootStore.priceStore.getLeaguePriceSource(leaguePriceDetails);
+      return leaguePriceSource.timeSincePricesFetched;
+    }
+    return undefined;
+  }
+
   @computed get exaltedPrice() {
     const exaltedOrbPrice = this.activePricesWithCustomValues?.find(
       (p) => p.name === 'Exalted Orb'

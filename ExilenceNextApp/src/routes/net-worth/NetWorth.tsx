@@ -51,6 +51,7 @@ const NetWorth = () => {
     } else {
       timeLabel = activeProfile?.timeSinceLastSnapshot;
     }
+    uiStateStore.setTimeSincePricesFetchedLabel(priceStore.timeSincePricesFetched);
     uiStateStore!.setTimeSinceLastSnapshotLabel(timeLabel);
   };
 
@@ -285,23 +286,29 @@ const NetWorth = () => {
                     </Box>
                   </Grid>
                   <Grid item className={classes.secondaryHeader}>
-                    <Box display="flex" justifyContent="center" alignItems="center">
-                      <Tooltip
-                        title={t('label.prices_fetched_from_interval') || ''}
-                        placement="bottom"
-                      >
-                        <Typography variant="body2" className={classes.creditText}>
-                          {t('label.prices_fetched_from')}
-                          <a
-                            className={classes.inlineLink}
-                            href="https://poe.ninja"
-                            onClick={(e) => openLink(e)}
-                          >
-                            https://poe.ninja
-                          </a>
-                        </Typography>
-                      </Tooltip>
-                    </Box>
+                    <Tooltip
+                      title={t('label.prices_fetched_from_interval') || ''}
+                      placement="bottom"
+                    >
+                      <Box display="flex" justifyContent="center" alignItems="center">
+                        {uiStateStore!.timeSincePricesFetchedLabel && (
+                          <>
+                            <Typography variant="body2" className={classes.creditText}>
+                              {t('label.prices_fetched_from')}
+                              <a
+                                className={classes.inlineLink}
+                                href="https://poe.ninja"
+                                onClick={(e) => openLink(e)}
+                              >
+                                https://poe.ninja
+                              </a>
+                              &nbsp;
+                              {uiStateStore!.timeSincePricesFetchedLabel}
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </AccordionSummary>
