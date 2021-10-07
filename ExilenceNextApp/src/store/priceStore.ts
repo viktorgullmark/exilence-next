@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { fromStream } from 'mobx-utils';
+import moment from 'moment';
 import { forkJoin, from, interval, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { IExternalPrice } from '../interfaces/external-price.interface';
@@ -24,18 +25,35 @@ export class PriceStore {
   leaguePriceDetails: LeaguePriceDetails[] = [];
   @observable activePriceSourceUuid: string = '';
   @observable isUpdatingPrices: boolean = false;
-  @observable pollingInterval: number = 60 * 1000 * 20;
+
+  @observable pollingIntervalMinutes: number = 20;
+  @observable checkInterval: number = 60 * 1000 * 1;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
     fromStream(
-      interval(this.pollingInterval).pipe(
+      // check every minute if prices needs updating
+      interval(this.checkInterval).pipe(
         switchMap(() => {
-          if (!this.rootStore.uiStateStore.isSnapshotting) {
-            return of(this.getPricesForLeagues());
-          } else {
-            return of(null);
+          // when polling, only fetch for active league
+          const activePriceLeagueId = this.rootStore.accountStore.getSelectedAccount
+            .activePriceLeague?.id;
+          if (!this.rootStore.uiStateStore.isSnapshotting && activePriceLeagueId) {
+            const leaguePriceDetails = rootStore.priceStore.getLeaguePriceDetails(
+              activePriceLeagueId
+            );
+            const leaguePriceSource = rootStore.priceStore.getLeaguePriceSource(leaguePriceDetails);
+
+            const minutesAgo = moment().utc().subtract(this.pollingIntervalMinutes, 'minutes');
+            const fetchedRecently = moment(leaguePriceSource.pricedFetchedAt)
+              .utc()
+              .isAfter(minutesAgo);
+
+            if (!fetchedRecently) {
+              return of(this.getPricesForLeagues([activePriceLeagueId]));
+            }
           }
+          return of(null);
         })
       )
     );
@@ -151,8 +169,7 @@ export class PriceStore {
   }
 
   @action
-  getPricesForLeagues() {
-    const leagueIds = this.rootStore.leagueStore.priceLeagues.map((l) => l.id);
+  getPricesForLeagues(leagueIds: string[]) {
     this.isUpdatingPrices = true;
     fromStream(
       forkJoin(

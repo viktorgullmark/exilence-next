@@ -342,6 +342,10 @@ export class Account implements IAccount {
   setActiveProfileSuccess() {
     rootStore.notificationStore.createNotification('set_active_profile', 'success');
     rootStore.uiStateStore.setChangingProfile(false);
+
+    if (this.activeProfile) {
+      this.activeProfile.checkPriceStatus();
+    }
   }
 
   @action
