@@ -50,7 +50,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^4.0.3",
     "react-table": "^7.6.0",
-    "react-toastify": "^6.0.9",
+    "react-toastify": "^8.0.3",
     "reactour": "^1.18.3",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",

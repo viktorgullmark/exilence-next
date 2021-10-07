@@ -19,8 +19,13 @@ const primaryLight = '#e91e63';
 const primaryMain = '#a31545';
 const primaryDark = '#720e30';
 
+const infoLight = '#d3d3d3';
+const infoMain = '#c9c9c9';
+const infoDark = '#b5b5b5';
+
 export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
+export const primaryDarkest = '#280310';
 
 export const fontColors = {
   hintDarker: 'rgba(255, 255, 255, 0.2)',
@@ -39,7 +44,7 @@ export const highchartsColors = [
 ];
 
 export const secondary = {
-  light: '#696969',
+  light: '#4e4e4e',
   main: '#1e1e1e',
   dark: '#000',
 };
@@ -93,7 +98,7 @@ export type Rarity = typeof rarityColors;
 export type ItemColor = typeof itemColors;
 export type StatusColor = typeof statusColors;
 
-export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarker} 100%)`;
+export const primaryGradient = `linear-gradient(90deg, ${primaryDark} 0%, ${primaryMain} 35%, ${primaryDarkest} 100%)`;
 
 export default function exilenceTheme() {
   return createTheme({
@@ -161,6 +166,11 @@ export default function exilenceTheme() {
       },
       secondary: secondary,
       background: background,
+      info: {
+        light: infoLight,
+        main: infoMain,
+        dark: infoDark,
+      },
       mode: 'dark',
     },
     typography: {

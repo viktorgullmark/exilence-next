@@ -8,6 +8,7 @@ export class LeaguePriceSource {
   priceSourceUuid: string = '';
 
   prices: IExternalPrice[] = [];
+  pricedFetchedAt?: Date;
 
   constructor(obj?: ILeaguePriceSource) {
     makeObservable(this);
@@ -17,5 +18,6 @@ export class LeaguePriceSource {
   @action
   updatePrices(newPrices: IExternalPrice[]) {
     this.prices = newPrices;
+    this.pricedFetchedAt = new Date();
   }
 }

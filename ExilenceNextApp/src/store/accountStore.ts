@@ -242,7 +242,11 @@ export class AccountStore {
               this.getSelectedAccount.updateLeaguesForProfiles(
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
               );
-              this.rootStore.priceStore.getPricesForLeagues();
+
+              // at initial launch, fetch prices for all leagues
+              this.rootStore.priceStore.getPricesForLeagues(
+                this.rootStore.leagueStore.priceLeagues.map((l) => l.id)
+              );
 
               return forkJoin(
                 of(account.accountLeagues).pipe(

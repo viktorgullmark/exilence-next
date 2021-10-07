@@ -2,7 +2,14 @@ import React from 'react';
 import { VictoryGroup, VictoryArea } from 'victory';
 import { Box } from '@mui/material';
 
-const SparklineChart = ({ data, internalName, color, height, width }: any) => (
+const SparklineChart = ({
+  data,
+  internalName,
+  color,
+  height,
+  width,
+  domainPadding = { x: 0, y: 0 },
+}: any) => (
   <Box width={width} height={height} position="relative">
     <svg style={{ height: 0 }}>
       <defs>
@@ -19,7 +26,7 @@ const SparklineChart = ({ data, internalName, color, height, width }: any) => (
         duration: 2000,
         onLoad: { duration: 1000 },
       }}
-      domainPadding={{ x: 1, y: 1 }}
+      domainPadding={domainPadding}
       padding={{ top: 0, bottom: 0, right: 0, left: 0 }}
       data={data}
       style={{

@@ -13,6 +13,7 @@ import {
   AppBar,
   Badge,
   Box,
+  Button,
   FormControl,
   Grid,
   MenuItem,
@@ -255,24 +256,23 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
-              <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={
-                      !activeProfile ||
-                      !activeProfile.readyToSnapshot ||
-                      !signalrOnline ||
-                      retryAfter > 0
-                    }
-                    onClick={() => handleSnapshot()}
-                    aria-label="snapshot"
-                    className={classes.iconButton}
-                    size="large"
-                  >
-                    <UpdateIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              <Button
+                startIcon={<UpdateIcon />}
+                variant="contained"
+                size="small"
+                color="primary"
+                disabled={
+                  !activeProfile ||
+                  !activeProfile.readyToSnapshot ||
+                  !signalrOnline ||
+                  retryAfter > 0
+                }
+                onClick={() => handleSnapshot()}
+                aria-label="snapshot"
+                className={classes.snapshotBtn}
+              >
+                {t('label.fetch_snapshot_icon_title')}
+              </Button>
               <Tooltip title={t('label.cancel_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton

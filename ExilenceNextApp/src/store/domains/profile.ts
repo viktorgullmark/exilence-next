@@ -323,6 +323,28 @@ export class Profile {
   }
 
   @action
+  checkPriceStatus() {
+    // fetch prices if they are outdated
+    if (this.activePriceLeagueId) {
+      const leaguePriceDetails = rootStore.priceStore.getLeaguePriceDetails(
+        this.activePriceLeagueId
+      );
+      const leaguePriceSource = rootStore.priceStore.getLeaguePriceSource(leaguePriceDetails);
+
+      const twentyMinutesAgo = moment()
+        .utc()
+        .subtract(rootStore.priceStore.pollingIntervalMinutes, 'minutes');
+      const fetchedRecently = moment(leaguePriceSource.pricedFetchedAt)
+        .utc()
+        .isAfter(twentyMinutesAgo);
+
+      if (!fetchedRecently) {
+        rootStore.priceStore.getPricesForLeagues([this.activePriceLeagueId]);
+      }
+    }
+  }
+
+  @action
   updateProfileFail(e: Error) {
     rootStore.notificationStore.createNotification('update_profile', 'error', false, e);
   }
@@ -330,6 +352,7 @@ export class Profile {
   @action
   updateProfileSuccess() {
     rootStore.notificationStore.createNotification('update_profile', 'success');
+    this.checkPriceStatus();
   }
 
   @action snapshot() {

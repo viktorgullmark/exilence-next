@@ -7,14 +7,16 @@ import { resizeHandleContainerHeight, toolbarHeight } from '../header/Header';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    top: toolbarHeight + resizeHandleContainerHeight + theme.spacing(2),
+    top: toolbarHeight + resizeHandleContainerHeight + parseInt(theme.spacing(2)),
     width: 350,
+    right: parseInt(theme.spacing(4)),
   },
   authorized: {
-    top: toolbarHeight + resizeHandleContainerHeight + innerToolbarHeight + theme.spacing(2),
+    top:
+      toolbarHeight + resizeHandleContainerHeight + innerToolbarHeight + parseInt(theme.spacing(2)),
   },
   rightMargin: {
-    right: drawerWidth + theme.spacing(2),
+    right: drawerWidth + parseInt(theme.spacing(4)),
   },
 }));
 
