@@ -25,7 +25,7 @@ const infoDark = '#b5b5b5';
 
 export const primaryLighter = '#ff2e75';
 export const primaryDarker = '#4a091f';
-export const primaryDarkest = '#3e071a';
+export const primaryDarkest = '#280310';
 
 export const fontColors = {
   hintDarker: 'rgba(255, 255, 255, 0.2)',
@@ -44,7 +44,7 @@ export const highchartsColors = [
 ];
 
 export const secondary = {
-  light: '#696969',
+  light: '#4e4e4e',
   main: '#1e1e1e',
   dark: '#000',
 };

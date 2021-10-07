@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     height: innerToolbarHeight,
-    borderLeft: `1px solid ${theme.palette.primary.dark}`,
+    borderLeft: `1px solid ${theme.palette.secondary.light}`,
   },
   spinner: {
     color: theme.palette.primary.contrastText,
