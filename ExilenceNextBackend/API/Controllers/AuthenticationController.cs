@@ -110,6 +110,8 @@ namespace API.Controllers
                 using (var client = _httpClientFactory.CreateClient())
                 {
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+                    client.DefaultRequestHeaders.Add("User-Agent", "exilence-next-api");
+
 
                     var response = await client.GetAsync(uri);
                     var content = await response.Content.ReadAsStringAsync();
