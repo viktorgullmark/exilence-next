@@ -95,7 +95,7 @@ namespace API.Controllers
                     return Ok(content);
                 }
 
-                _logger.LogError($"Something went wrong fetching token from code: {code}", response.ReasonPhrase);
+                _logger.LogError($"Something went wrong fetching token from code: {code}, reason: {response.ReasonPhrase}");
                 return BadRequest(content);
             }
         }
