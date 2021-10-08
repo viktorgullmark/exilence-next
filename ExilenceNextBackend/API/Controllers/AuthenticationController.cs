@@ -132,13 +132,13 @@ namespace API.Controllers
                     }
                     else
                     {
-                        _logger.LogError($"Something went wrong trying to validate account: {accountName} with token: {accessToken}", response.ReasonPhrase);
+                        _logger.LogError($"Something went wrong trying to validate account: {accountName} with token: {accessToken}, reason: {response.ReasonPhrase}");
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}", e.Message);
+                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}, message: {e.Message}", );
                 return false;
             }
 
