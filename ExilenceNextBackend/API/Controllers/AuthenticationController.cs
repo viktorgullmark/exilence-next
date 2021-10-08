@@ -78,6 +78,8 @@ namespace API.Controllers
 
             using (var client = _httpClientFactory.CreateClient())
             {
+                client.DefaultRequestHeaders.Add("User-Agent", "exilence-next-api");
+
                 var data = new FormUrlEncodedContent(new[]
                 {
                 new KeyValuePair<string, string>("client_id", _clientId),
