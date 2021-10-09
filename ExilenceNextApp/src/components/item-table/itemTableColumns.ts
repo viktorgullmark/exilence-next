@@ -51,6 +51,7 @@ const itemTableColumns: Column<object>[] = [
     Header: 'Quantity',
     accessor: 'stackSize',
     align: 'right',
+    sortType: 'basic',
     maxWidth: 80,
   },
   sparkLine({

@@ -11,6 +11,11 @@ const useStyles = makeStyles((theme) => ({
   inputField: {
     fontSize: '0.875rem',
   },
+  grow: {
+    display: 'flex',
+    flex: 1,
+    maxWidth: 350,
+  },
 }));
 
 export default useStyles;

@@ -43,6 +43,7 @@ const itemTableGroupColumns: Column<object>[] = [
     Header: 'Quantity',
     accessor: 'stackSize',
     align: 'right',
+    sortType: 'basic',
   },
   itemValue({
     accessor: 'calculated',

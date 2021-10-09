@@ -151,6 +151,7 @@ export function sparkLine(options: { accessor: string; header: string }): Column
     accessor,
     align: 'right',
     maxWidth: 190,
+    sortType: 'basic',
     minWidth: 190,
     width: 190,
     disableResizing: true,
@@ -175,6 +176,7 @@ export function itemValue(options: {
     Header: header,
     accessor,
     align: 'right',
+    sortType: 'basic',
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       let value = 0;

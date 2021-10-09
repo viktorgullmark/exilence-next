@@ -47,6 +47,7 @@ const itemTableBulkSellColumns: Column<object>[] = [
     Header: 'Quantity',
     accessor: 'stackSize',
     align: 'right',
+    sortType: 'basic',
   },
   sparkLine({
     accessor: 'sparkLine.totalChange',

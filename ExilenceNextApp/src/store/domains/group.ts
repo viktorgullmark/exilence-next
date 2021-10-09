@@ -8,7 +8,9 @@ import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import {
   calculateNetWorth,
+  diffSnapshots,
   filterItems,
+  filterSnapshotItems,
   formatSnapshotsForChart,
   getItemCount,
   getValueForSnapshot,
@@ -140,10 +142,17 @@ export class Group implements IApiGroup {
 
   @computed
   get items() {
-    if (this.latestGroupSnapshots.length === 0) {
+    const diffSelected = rootStore.uiStateStore.itemTableSelection === 'comparison';
+    if (
+      this.latestGroupSnapshots.length === 0 ||
+      (diffSelected && this.latestGroupSnapshots.length < 2)
+    ) {
       return [];
     }
-    return filterItems(this.latestGroupSnapshots);
+    if (diffSelected) {
+      return filterItems(diffSnapshots(this.latestGroupSnapshots[1], this.latestGroupSnapshots[0]));
+    }
+    return filterSnapshotItems(this.latestGroupSnapshots);
   }
 
   @computed

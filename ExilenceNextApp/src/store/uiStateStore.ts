@@ -11,6 +11,7 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ISelectOption } from '../interfaces/select-option.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
+import { ItemTableSelectionType } from '../types/item-table-selection.type';
 import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
@@ -83,6 +84,7 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
+  @persist @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
@@ -158,6 +160,11 @@ export class UiStateStore {
   @action
   setChartTimeSpan(timespan: TimespanType) {
     this.chartTimeSpan = timespan;
+  }
+
+  @action
+  setItemTableSelection(selection: ItemTableSelectionType) {
+    this.itemTableSelection = selection;
   }
 
   @action
