@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 - Added the ability to delete selected snapshots from the history
 - Added a new column `Price history last 7 days` to the item table
 - Added a new column `Cumulative` to the item table
+- Added a new toggle button to the table to select display mode
+    - Option 1 (default): Displays the items from the latest snapshot
+    - Option 2: Displays the change (diff) in items and value between the latest two snapshots
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
 - Added beta labels to new features

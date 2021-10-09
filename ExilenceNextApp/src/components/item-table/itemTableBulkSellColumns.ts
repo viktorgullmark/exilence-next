@@ -5,6 +5,7 @@ import {
   itemIlvlTier,
   itemLinks,
   itemName,
+  itemQuantity,
   itemValue,
   sparkLine,
 } from '../columns/Columns';
@@ -43,11 +44,10 @@ const itemTableBulkSellColumns: Column<object>[] = [
     accessor: 'level',
     align: 'right',
   },
-  {
-    Header: 'Quantity',
+  itemQuantity({
+    header: 'Quantity',
     accessor: 'stackSize',
-    align: 'right',
-  },
+  }),
   sparkLine({
     accessor: 'sparkLine.totalChange',
     header: 'Price last 7 days',

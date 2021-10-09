@@ -22,7 +22,9 @@ import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
+  diffSnapshots,
   filterItems,
+  filterSnapshotItems,
   formatSnapshotsForChart,
   formatStashTabSnapshotsForChart,
   formatValue,
@@ -93,10 +95,19 @@ export class Profile {
 
   @computed
   get items() {
-    if (this.snapshots.length === 0) {
+    const diffSelected = rootStore.uiStateStore.itemTableSelection === 'comparison';
+    if (this.snapshots.length === 0 || (diffSelected && this.snapshots.length < 2)) {
       return [];
     }
-    return filterItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    if (diffSelected) {
+      return filterItems(
+        diffSnapshots(
+          mapSnapshotToApiSnapshot(this.snapshots[1]),
+          mapSnapshotToApiSnapshot(this.snapshots[0])
+        )
+      );
+    }
+    return filterSnapshotItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
   @computed
@@ -704,9 +715,9 @@ export class Profile {
     if (activeAccountLeague) {
       const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabList);
       const callback = () => {
-        // clear items from previous snapshot
-        if (this.snapshots.length > 1) {
-          this.snapshots[0].stashTabSnapshots.forEach((stss) => {
+        // clear items from second to last snapshot
+        if (this.snapshots.length > 2) {
+          this.snapshots[1].stashTabSnapshots.forEach((stss) => {
             stss.pricedItems = [];
           });
         }

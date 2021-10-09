@@ -1,10 +1,22 @@
 import FilterListIcon from '@mui/icons-material/FilterList';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
-import { Box, Button, Grid, Theme, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  Stack,
+  Theme,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { observer } from 'mobx-react-lite';
 import moment from 'moment';
+import CompareIcon from '@mui/icons-material/Compare';
+import UpdateIcon from '@mui/icons-material/Update';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -31,6 +43,7 @@ import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
+import itemTableComparisonColumns from './itemTableComparisonColumns';
 
 export const itemTableFilterSpacing = 2;
 
@@ -57,6 +70,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   warningIcon: {
     color: statusColors.warning,
     marginLeft: theme.spacing(2),
+  },
+  itemTableSelectionGroup: {
+    height: 36,
   },
   bulkSell: {
     display: 'flex',
@@ -113,8 +129,9 @@ const ItemTableContainer = ({
   const getColumns = useMemo(() => {
     if (activeGroup && !bulkSellView) return itemTableGroupColumns;
     if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
+    if (uiStateStore.itemTableSelection === 'comparison') return itemTableComparisonColumns;
     return itemTableColumns;
-  }, [activeGroup]);
+  }, [activeGroup, uiStateStore.itemTableSelection]);
 
   const data = useMemo(() => {
     return getItems;
@@ -230,22 +247,41 @@ const ItemTableContainer = ({
             </Grid>
           ) : (
             <>
-              <Grid item md={6}>
-                <Grid container direction="row" spacing={2} alignItems="center">
-                  <Grid item md={7} id="items-table-input" display="block">
-                    <ItemTableFilter
-                      array={getItems}
-                      handleFilter={handleFilter}
-                      clearFilter={() => handleFilter(undefined, '')}
-                      searchText={searchFilterText}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <ItemTableFilterSubtotal array={getItems} />
-                  </Grid>
-                </Grid>
+              <Grid item md={7}>
+                <Stack spacing={2} display="flex" alignItems="center" direction="row">
+                  <ToggleButtonGroup
+                    className={classes.itemTableSelectionGroup}
+                    value={uiStateStore.itemTableSelection}
+                    exclusive
+                    size="small"
+                    onChange={(_, value) => {
+                      if (value !== null) {
+                        uiStateStore.setItemTableSelection(value);
+                      }
+                    }}
+                    aria-label="text alignment"
+                  >
+                    <ToggleButton value="latest">
+                      <Tooltip title={t('label.icon_latest') || ''} placement="bottom">
+                        <UpdateIcon fontSize="small" />
+                      </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value="comparison">
+                      <Tooltip title={t('label.icon_comparison') || ''} placement="bottom">
+                        <CompareIcon fontSize="small" />
+                      </Tooltip>
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  <ItemTableFilter
+                    array={getItems}
+                    handleFilter={handleFilter}
+                    clearFilter={() => handleFilter(undefined, '')}
+                    searchText={searchFilterText}
+                  />
+                  <ItemTableFilterSubtotal array={getItems} />
+                </Stack>
               </Grid>
-              <Grid item className={classes.actionArea} id="items-table-actions" md={6}>
+              <Grid item className={classes.actionArea} id="items-table-actions" md={5}>
                 <ColumnHidePage
                   instance={instance}
                   onClose={handleClose}
@@ -256,6 +292,7 @@ const ItemTableContainer = ({
                   <Button
                     size="small"
                     className={classes.tableButton}
+                    disabled={uiStateStore.itemTableSelection === 'comparison'}
                     variant="contained"
                     onClick={handleColumnsClick}
                     startIcon={<ViewColumnsIcon />}
@@ -267,6 +304,7 @@ const ItemTableContainer = ({
                   size="small"
                   className={classes.tableButton}
                   variant="contained"
+                  disabled={uiStateStore.itemTableSelection === 'comparison'}
                   onClick={() =>
                     uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
                   }

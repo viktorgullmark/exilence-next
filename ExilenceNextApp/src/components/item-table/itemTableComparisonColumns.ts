@@ -6,12 +6,11 @@ import {
   itemLinks,
   itemName,
   itemQuantity,
-  itemTabs,
   itemValue,
   sparkLine,
 } from '../columns/Columns';
 
-const itemTableColumns: Column<object>[] = [
+const itemTableComparisonColumns: Column<object>[] = [
   itemIcon({
     accessor: 'icon',
     header: 'Icon',
@@ -23,10 +22,6 @@ const itemTableColumns: Column<object>[] = [
   itemIlvlTier({
     accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
     header: 'Ilvl / Tier',
-  }),
-  itemTabs({
-    accessor: 'tab',
-    header: 'Tabs',
   }),
   itemCorrupted({
     accessor: 'corrupted',
@@ -49,8 +44,9 @@ const itemTableColumns: Column<object>[] = [
     maxWidth: 60,
   },
   itemQuantity({
-    header: 'Quantity',
+    header: 'Quantity diff',
     accessor: 'stackSize',
+    diff: true,
   }),
   sparkLine({
     accessor: 'sparkLine.totalChange',
@@ -62,7 +58,8 @@ const itemTableColumns: Column<object>[] = [
   }),
   itemValue({
     accessor: 'total',
-    header: 'Total value (c)',
+    header: 'Total value diff (c)',
+    diff: true,
   }),
   itemValue({
     header: 'Cumulative (c)',
@@ -70,4 +67,4 @@ const itemTableColumns: Column<object>[] = [
   }),
 ];
 
-export default itemTableColumns;
+export default itemTableComparisonColumns;

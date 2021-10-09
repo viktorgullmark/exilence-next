@@ -1,4 +1,4 @@
-export interface IPricedItem {
+export interface IApiPricedItem {
   uuid: string;
   itemId: string;
   name: string;
