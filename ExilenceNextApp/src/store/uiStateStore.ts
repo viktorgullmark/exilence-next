@@ -84,7 +84,7 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
-  @persist @observable itemTableSelection: ItemTableSelectionType = 'latest';
+  @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
@@ -165,6 +165,9 @@ export class UiStateStore {
   @action
   setItemTableSelection(selection: ItemTableSelectionType) {
     this.itemTableSelection = selection;
+    if (selection === 'comparison') {
+      this.setShowItemTableFilter(false);
+    }
   }
 
   @action

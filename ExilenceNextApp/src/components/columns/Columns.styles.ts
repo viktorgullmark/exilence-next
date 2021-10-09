@@ -1,6 +1,10 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-import { currencyChangeColors, primaryLighter } from '../../assets/themes/exilence-theme';
+import {
+  currencyChangeColors,
+  itemColors,
+  primaryLighter,
+} from '../../assets/themes/exilence-theme';
 
 const useStyles = makeStyles((theme) => ({
   iconCellInner: {
@@ -15,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  itemValue: {
+    color: itemColors.chaosOrb,
   },
   iconCell: {
     padding: theme.spacing(0.75),

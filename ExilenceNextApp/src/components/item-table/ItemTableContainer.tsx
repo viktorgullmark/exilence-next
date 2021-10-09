@@ -43,6 +43,7 @@ import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
 import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
+import itemTableComparisonColumns from './itemTableComparisonColumns';
 
 export const itemTableFilterSpacing = 2;
 
@@ -128,8 +129,9 @@ const ItemTableContainer = ({
   const getColumns = useMemo(() => {
     if (activeGroup && !bulkSellView) return itemTableGroupColumns;
     if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
+    if (uiStateStore.itemTableSelection === 'comparison') return itemTableComparisonColumns;
     return itemTableColumns;
-  }, [activeGroup]);
+  }, [activeGroup, uiStateStore.itemTableSelection]);
 
   const data = useMemo(() => {
     return getItems;
@@ -252,7 +254,11 @@ const ItemTableContainer = ({
                     value={uiStateStore.itemTableSelection}
                     exclusive
                     size="small"
-                    onChange={(_, value) => uiStateStore.setItemTableSelection(value)}
+                    onChange={(_, value) => {
+                      if (value !== null) {
+                        uiStateStore.setItemTableSelection(value);
+                      }
+                    }}
                     aria-label="text alignment"
                   >
                     <ToggleButton value="latest">
@@ -286,6 +292,7 @@ const ItemTableContainer = ({
                   <Button
                     size="small"
                     className={classes.tableButton}
+                    disabled={uiStateStore.itemTableSelection === 'comparison'}
                     variant="contained"
                     onClick={handleColumnsClick}
                     startIcon={<ViewColumnsIcon />}
@@ -297,6 +304,7 @@ const ItemTableContainer = ({
                   size="small"
                   className={classes.tableButton}
                   variant="contained"
+                  disabled={uiStateStore.itemTableSelection === 'comparison'}
                   onClick={() =>
                     uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
                   }

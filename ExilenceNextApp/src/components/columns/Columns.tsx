@@ -143,6 +143,27 @@ export function itemTabs(options: { accessor: string; header: string }): Column<
   };
 }
 
+export function itemQuantity(options: {
+  accessor: string;
+  header: string;
+  diff?: boolean;
+}): Column<object> {
+  const { header, accessor, diff } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    sortType: 'basic',
+    maxWidth: 80,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.values[accessor];
+      return <ItemQuantityCell quantity={value} diff={diff} />;
+    },
+  };
+}
+
 export function sparkLine(options: { accessor: string; header: string }): Column<object> {
   const { header, accessor } = options;
 
@@ -169,8 +190,9 @@ export function itemValue(options: {
   editable?: boolean;
   placeholder?: string;
   cumulative?: boolean;
+  diff?: boolean;
 }): Column<object> {
-  const { header, accessor, editable, placeholder, cumulative } = options;
+  const { header, accessor, editable, placeholder, cumulative, diff } = options;
 
   return {
     Header: header,
@@ -197,6 +219,7 @@ export function itemValue(options: {
           editable={editable}
           pricedItem={data.row.original}
           placeholder={placeholder}
+          diff={diff}
         />
       );
     },
@@ -302,6 +325,7 @@ type ItemValueCellProps = {
   editable?: boolean;
   pricedItem: IPricedItem;
   placeholder?: string;
+  diff?: boolean;
 };
 
 const ItemValueCellComponent = ({
@@ -309,13 +333,16 @@ const ItemValueCellComponent = ({
   editable,
   pricedItem,
   placeholder,
+  diff,
 }: ItemValueCellProps) => {
   const { uiStateStore, customPriceStore } = useStores();
 
   const classes = useStyles();
   const { t } = useTranslation();
-  const tryParseNumber = (value: boolean | string | number) => {
-    return typeof value === 'number' ? value.toFixed(2) : value;
+  const tryParseNumber = (value: boolean | string | number, diff?: boolean) => {
+    return typeof value === 'number'
+      ? `${diff && value > 0 ? '+ ' : ''}${value.toFixed(2)}`
+      : value;
   };
 
   const toggleCustomPriceDialog = () => {
@@ -333,12 +360,12 @@ const ItemValueCellComponent = ({
     <>
       {value ? (
         <span
-          className={classes.lastCell}
-          style={{
-            color: itemColors.chaosOrb,
-          }}
+          className={clsx(classes.itemValue, classes.lastCell, classes.currencyChange, {
+            [classes.positiveChange]: diff && value > 0,
+            [classes.negativeChange]: diff && value < 0,
+          })}
         >
-          {value ? tryParseNumber(value) : placeholder}
+          {value ? tryParseNumber(value, diff) : placeholder}
         </span>
       ) : (
         <span className={classes.lastCell}>{placeholder}</span>
@@ -420,6 +447,26 @@ const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
     <Tooltip title={value} placement="bottom">
       <span className={classes.ellipsis}>{value}</span>
     </Tooltip>
+  );
+};
+
+type ItemQuantityCellProps = {
+  quantity: number;
+  diff?: boolean;
+};
+
+const ItemQuantityCell = ({ quantity, diff }: ItemQuantityCellProps) => {
+  const classes = useStyles();
+  return (
+    <span
+      className={clsx(classes.currencyChange, {
+        [classes.positiveChange]: diff && quantity > 0,
+        [classes.negativeChange]: diff && quantity < 0,
+      })}
+    >
+      {diff && quantity > 0 ? '+ ' : ''}
+      {quantity}
+    </span>
   );
 };
 
