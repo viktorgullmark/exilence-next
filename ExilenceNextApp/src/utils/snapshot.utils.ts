@@ -116,13 +116,15 @@ export const formatStashTabSnapshotsForChart = (
 
 export const diffSnapshots = (snapshot1: IApiSnapshot, snapshot2: IApiSnapshot): IPricedItem[] => {
   const difference: IPricedItem[] = [];
-  const itemsInSnapshot1 = snapshot1.stashTabs.flatMap((sts) => sts.pricedItems);
-  const itemsInSnapshot2 = snapshot2.stashTabs.flatMap((sts) => sts.pricedItems);
+  const itemsInSnapshot1 = mergeItemStacks(snapshot1.stashTabs.flatMap((sts) => sts.pricedItems));
+  const itemsInSnapshot2 = mergeItemStacks(snapshot2.stashTabs.flatMap((sts) => sts.pricedItems));
 
   // items that exist in snapshot 2 but not in snapshot 1 & items that exist in both snapshots but should be updated
   const itemsToAdd = itemsInSnapshot2.filter((x) => findItem(itemsInSnapshot1, x) === undefined);
-  const itemsToUpdate = itemsInSnapshot2.filter((x) => findItem(itemsInSnapshot1, x) !== undefined);
-
+  const itemsToUpdate = itemsInSnapshot2.filter((x) => {
+    const foundItem = findItem(itemsInSnapshot1, x);
+    return foundItem !== undefined && x.stackSize !== foundItem.stackSize;
+  });
   itemsToUpdate.concat(itemsToAdd).map((item) => {
     const existingItem = findItem(itemsInSnapshot1, item);
     if (existingItem) {
@@ -140,7 +142,6 @@ export const diffSnapshots = (snapshot1: IApiSnapshot, snapshot2: IApiSnapshot):
 
   // items that exist in snapshot 1 but not in snapshot 2
   const itemsToRemove = itemsInSnapshot1.filter((x) => findItem(itemsInSnapshot2, x) === undefined);
-
   itemsToRemove.map((item) => {
     const existingItem = findItem(itemsInSnapshot2, item);
     const recentItem = Object.assign({}, item);
@@ -156,7 +157,6 @@ export const diffSnapshots = (snapshot1: IApiSnapshot, snapshot2: IApiSnapshot):
       difference.push(recentItem);
     }
   });
-
   return difference;
 };
 
