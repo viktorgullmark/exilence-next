@@ -72,6 +72,7 @@ export class UiStateStore {
   @observable profilesLoaded: boolean = false;
   @observable settingsTabIndex: number = 0;
   @observable announcementDialogOpen: boolean = false;
+  @observable removeSnapshotsDialogOpen: boolean = false;
   @observable filteredStashTabs: IStashTab[] | undefined = undefined;
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
@@ -235,6 +236,11 @@ export class UiStateStore {
   setAnnouncementDialogOpen(open: boolean, announcement?: IApiAnnouncement) {
     this.announcementMessage = announcement;
     this.announcementDialogOpen = open;
+  }
+
+  @action
+  setRemoveSnapshotsDialogOpen(open: boolean) {
+    this.removeSnapshotsDialogOpen = open;
   }
 
   @action

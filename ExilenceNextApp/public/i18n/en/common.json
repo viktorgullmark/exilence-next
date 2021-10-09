@@ -19,7 +19,9 @@
     "save_custom_price": "Save",
     "lets_begin": "Lets begin!",
     "apply_filter": "Apply filter",
-    "currency_switch": "Click to switch currency"
+    "currency_switch": "Click to switch currency",
+    "select_all": "Select all",
+    "remove_snapshots": "Remove snapshots"
   },
   "title": {
     "login": "Login",
@@ -39,6 +41,7 @@
     "announcement_dialog_title": "Announcement",
     "ga_consent_dialog_title": "Terms and conditions",
     "custom_price_dialog_title": "Set custom price",
+    "remove_snapshots_dialog_title": "Select snapshots to remove",
     "net_worth_settings": "General",
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",

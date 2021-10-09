@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing `Blighted`, `Elder` and `Shaper` maps
 - Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
 - Added the ability to cancel an ongoing snapshot
+- Added the ability to delete selected snapshots from the history
 - Added a new column `Price history last 7 days` to the item table
 - Added a new column `Cumulative` to the item table
 - Added display of map tier in the item table

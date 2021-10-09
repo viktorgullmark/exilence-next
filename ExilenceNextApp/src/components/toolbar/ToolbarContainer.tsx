@@ -7,6 +7,7 @@ import { delay, tap } from 'rxjs/operators';
 import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
+import RemoveSnapshotsDialogContainer from '../remove-snapshots-dialog/RemoveSnapshotsDialogContainer';
 import Toolbar from './Toolbar';
 
 const ToolbarContainer = () => {
@@ -33,10 +34,6 @@ const ToolbarContainer = () => {
 
   const handleClose = () => {
     setProfileOpen(false);
-  };
-
-  const handleClearSnapshots = () => {
-    accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
   };
 
   const activeCurrency = () => {
@@ -112,16 +109,7 @@ const ToolbarContainer = () => {
 
   return (
     <>
-      <ConfirmationDialog
-        show={uiStateStore!.confirmClearSnapshotsDialogOpen}
-        onClose={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(false)}
-        onConfirm={handleClearSnapshots}
-        title={t('title.confirm_clear_snapshots')}
-        body={t('body.clear_snapshots')}
-        acceptButtonText={t('action.confirm')}
-        cancelButtonText={t('action.cancel')}
-        loading={uiStateStore!.clearingSnapshots}
-      />
+      <RemoveSnapshotsDialogContainer />
       <ConfirmationDialog
         show={uiStateStore!.confirmRemoveProfileDialogOpen}
         onClose={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(false)}
@@ -162,7 +150,7 @@ const ToolbarContainer = () => {
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
+        handleClearSnapshots={() => uiStateStore!.setRemoveSnapshotsDialogOpen(true)}
         handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
         handleCancelSnapshot={() => uiStateStore!.setCancelSnapshot(true)}
         isSnapshotting={uiStateStore!.isSnapshotting}

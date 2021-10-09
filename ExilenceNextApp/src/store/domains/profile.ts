@@ -745,6 +745,11 @@ export class Profile {
   }
 
   @action
+  removeSnapshots(snapshotIds: string[]) {
+    this.snapshots = this.snapshots.filter((s) => !snapshotIds.find((id) => id === s.uuid));
+  }
+
+  @action
   removeAllSnapshotsSuccess() {
     rootStore.uiStateStore.setConfirmClearSnapshotsDialogOpen(false);
     rootStore.uiStateStore.setClearingSnapshots(false);
