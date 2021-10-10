@@ -54,7 +54,6 @@ const StashTabDropdown = ({
         multiple
         disableCloseOnSelect
         limitTags={2}
-        id="stash"
         options={stashTabs}
         size={size}
         style={{ width: width ? width : 'auto' }}
@@ -86,7 +85,7 @@ const StashTabDropdown = ({
             </Box>
           </li>
         )}
-        getOptionLabel={(option) => `${option.name} (idx: ${option.index})`}
+        getOptionLabel={(option) => `${option.name} (id: ${option.id})`}
         onChange={(e, value) => {
           if (handleChange) {
             handleChange(e);

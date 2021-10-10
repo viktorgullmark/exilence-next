@@ -86,6 +86,8 @@ const BulkSell = () => {
                           >
                             https://poe.ninja
                           </a>
+                          &nbsp;
+                          {uiStateStore!.timeSincePricesFetchedLabel}
                         </Typography>
                       </Tooltip>
                     </Box>
