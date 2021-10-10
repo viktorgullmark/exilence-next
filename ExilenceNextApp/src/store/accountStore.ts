@@ -273,7 +273,7 @@ export class AccountStore {
                       if (league) {
                         runInAction(() => {
                           newProfile.activeStashTabIds = league.stashtabs
-                            .slice(0, 6)
+                            .slice(0, 2)
                             .map((lst) => lst.id);
                         });
                         this.rootStore.uiStateStore.setStatusMessage(
