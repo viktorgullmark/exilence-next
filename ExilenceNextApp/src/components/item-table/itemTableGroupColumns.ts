@@ -5,7 +5,9 @@ import {
   itemIlvlTier,
   itemLinks,
   itemName,
+  itemQuantity,
   itemValue,
+  sparkLine,
 } from '../columns/Columns';
 
 const itemTableGroupColumns: Column<object>[] = [
@@ -33,25 +35,33 @@ const itemTableGroupColumns: Column<object>[] = [
     Header: 'Quality',
     accessor: 'quality',
     align: 'right',
+    maxWidth: 60,
   },
   {
     Header: 'Level',
     accessor: 'level',
     align: 'right',
+    maxWidth: 60,
   },
-  {
-    Header: 'Quantity',
+  itemQuantity({
+    header: 'Quantity',
     accessor: 'stackSize',
-    align: 'right',
-    sortType: 'basic',
-  },
+  }),
+  sparkLine({
+    accessor: 'sparkLine.totalChange',
+    header: 'Price last 7 days',
+  }),
   itemValue({
     accessor: 'calculated',
-    header: 'Price',
+    header: 'Price (c)',
   }),
   itemValue({
     accessor: 'total',
-    header: 'Total value',
+    header: 'Total value (c)',
+  }),
+  itemValue({
+    header: 'Cumulative (c)',
+    cumulative: true,
   }),
 ];
 
