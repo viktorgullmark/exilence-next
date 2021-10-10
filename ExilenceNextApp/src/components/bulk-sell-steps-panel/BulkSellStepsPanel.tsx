@@ -95,7 +95,7 @@ const BulkSellStepsPanel = () => {
         }}
       >
         <Grid container spacing={3}>
-          <Grid item xs={12} direction="column" justifyContent="flex-start">
+          <Grid item xs={12} justifyContent="flex-start">
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 1. Set <b>{t('label.asking_price')}</b>
@@ -112,7 +112,7 @@ const BulkSellStepsPanel = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} direction="column" justifyContent="flex-end">
+          <Grid item xs={12} justifyContent="flex-end">
             <Grid container>
               <Grid item xs={6}>
                 <Button
