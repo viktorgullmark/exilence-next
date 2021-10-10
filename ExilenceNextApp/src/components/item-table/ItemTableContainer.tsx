@@ -145,7 +145,7 @@ const ItemTableContainer = ({
       })
     : useLocalStorage(`tableState:item-table`, {
         pageSize: 25,
-        hiddenColumns: ['level', 'quality'],
+        hiddenColumns: uiStateStore!.bulkSellActivePreset?.hiddenColumns || [],
       });
 
   const [instance] = useState<TableInstance<object>>(
