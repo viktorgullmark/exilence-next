@@ -9,6 +9,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,24 +65,26 @@ const ColumnHidePage = ({
     toggleHideColumn(id, isVisible);
     updateState();
     // todo: this code is fugly and should really be reworked, but hey it works
-    const updatedPresets = itemTableColumnPresets.map((preset) => {
-      if (preset.name === bulkSellActivePreset?.name) {
-        const cols = hideableColumns.map((hc) => {
-          if (hc.id === id) {
-            hc.isVisible = !hc.isVisible;
-          }
-          return hc;
-        });
-        preset.hiddenColumns = cols
-          .filter((hc) => !hc.isVisible)
-          .map((hc) => {
-            return hc.id;
+    runInAction(() => {
+      const updatedPresets = itemTableColumnPresets.map((preset) => {
+        if (preset.name === bulkSellActivePreset?.name) {
+          const cols = hideableColumns.map((hc) => {
+            if (hc.id === id) {
+              hc.isVisible = !hc.isVisible;
+            }
+            return hc;
           });
-        setBulkSellActivePreset(preset);
-      }
-      return preset;
+          preset.hiddenColumns = cols
+            .filter((hc) => !hc.isVisible)
+            .map((hc) => {
+              return hc.id;
+            });
+          setBulkSellActivePreset(preset);
+        }
+        return preset;
+      });
+      setItemtableColumnPresets(updatedPresets);
     });
-    setItemtableColumnPresets(updatedPresets);
   };
 
   const updateState = () => {

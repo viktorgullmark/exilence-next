@@ -282,12 +282,14 @@ const ItemTableContainer = ({
                 </Stack>
               </Grid>
               <Grid item className={classes.actionArea} id="items-table-actions" md={5}>
-                <ColumnHidePage
-                  instance={instance}
-                  onClose={handleClose}
-                  show={columnsOpen}
-                  anchorEl={anchorEl}
-                />
+                {columnsOpen && (
+                  <ColumnHidePage
+                    instance={instance}
+                    onClose={handleClose}
+                    show={columnsOpen}
+                    anchorEl={anchorEl}
+                  />
+                )}
                 {hideableColumns.length > 1 && (
                   <Button
                     size="small"
