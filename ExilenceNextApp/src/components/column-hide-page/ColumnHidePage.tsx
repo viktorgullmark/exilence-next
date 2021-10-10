@@ -41,7 +41,7 @@ const ColumnHidePage = ({
     },
   } = useStores();
   const classes = useStyles();
-  const { allColumns, toggleHideColumn } = instance;
+  const { allColumns, toggleHideColumn, setHiddenColumns } = instance;
 
   const [hideableColumns, setHideableColumns] = useState(
     allColumns.filter((column) => !(column.id === '_selector'))
@@ -90,13 +90,7 @@ const ColumnHidePage = ({
   };
 
   useEffect(() => {
-    hideableColumns.map((col) => {
-      let shouldHide = false;
-      if (bulkSellActivePreset?.hiddenColumns?.includes(col.id)) {
-        shouldHide = true;
-      }
-      toggleHideColumn(col.id, shouldHide);
-    });
+    setHiddenColumns(bulkSellActivePreset?.hiddenColumns);
     updateState();
   }, [bulkSellActivePreset]);
 
