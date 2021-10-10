@@ -61,6 +61,7 @@
     "app_exit_action_settings": "Application on exit action"
   },
   "label": {
+    "items_missing": "No items exist on snapshot",
     "icon_latest": "Only show the latest snapshot",
     "icon_comparison": "Difference for the two latest snapshots",
     "icon_fetched_from": "Icon fetched from pathofexile.com",

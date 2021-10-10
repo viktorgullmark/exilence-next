@@ -715,9 +715,9 @@ export class Profile {
     if (activeAccountLeague) {
       const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabList);
       const callback = () => {
-        // clear items from second to last snapshot
-        if (this.snapshots.length > 2) {
-          this.snapshots[1].stashTabSnapshots.forEach((stss) => {
+        // keep items for only 10 snapshots at all times
+        if (this.snapshots.length > 10) {
+          this.snapshots[10].stashTabSnapshots.forEach((stss) => {
             stss.pricedItems = [];
           });
         }

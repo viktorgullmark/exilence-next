@@ -360,7 +360,7 @@ const ItemValueCellComponent = ({
     <>
       {value ? (
         <span
-          className={clsx(classes.itemValue, classes.lastCell, classes.currencyChange, {
+          className={clsx(classes.itemValue, classes.lastCell, {
             [classes.positiveChange]: diff && value > 0,
             [classes.negativeChange]: diff && value < 0,
           })}
@@ -459,7 +459,7 @@ const ItemQuantityCell = ({ quantity, diff }: ItemQuantityCellProps) => {
   const classes = useStyles();
   return (
     <span
-      className={clsx(classes.currencyChange, {
+      className={clsx({
         [classes.positiveChange]: diff && quantity > 0,
         [classes.negativeChange]: diff && quantity < 0,
       })}
@@ -491,7 +491,7 @@ const SparklineCell = ({ sparkline, id }: SparklineCellProps) => {
             data={data}
           />
           <span
-            className={clsx(classes.ellipsis, classes.currencyChange, {
+            className={clsx(classes.ellipsis, {
               [classes.positiveChange]: sparkline && sparkline.totalChange > 0,
               [classes.negativeChange]: sparkline && sparkline.totalChange < 0,
             })}

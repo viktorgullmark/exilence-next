@@ -43,11 +43,12 @@ const useStyles = makeStyles((theme) => ({
   iconRoot: {
     fontSize: '1.2rem',
   },
-  currencyChange: { fontWeight: 'bold' },
   positiveChange: {
+    fontWeight: 'bold',
     color: currencyChangeColors.positive,
   },
   negativeChange: {
+    fontWeight: 'bold',
     color: currencyChangeColors.negative,
   },
   editIconRoot: {

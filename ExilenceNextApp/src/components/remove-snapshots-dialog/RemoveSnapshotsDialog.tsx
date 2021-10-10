@@ -12,6 +12,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import moment from 'moment';
@@ -20,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { Snapshot } from '../../store/domains/snapshot';
 import { calculateNetWorth, mapSnapshotToApiSnapshot } from '../../utils/snapshot.utils';
 import useStyles from './RemoveSnapshotsDialog.styles';
+import WarningIcon from '@mui/icons-material/Warning';
 
 type RemoveSnapshotsDialogProps = {
   show: boolean;
@@ -68,9 +70,19 @@ const RemoveSnapshotsDialog = ({
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
           {snapshots.map((s) => {
             const labelId = `checkbox-list-label-${s.uuid}`;
-
+            const snapshotItems = s.stashTabSnapshots.flatMap((x) => x.pricedItems);
             return (
-              <ListItem key={s.uuid} disablePadding>
+              <ListItem
+                key={s.uuid}
+                disablePadding
+                secondaryAction={
+                  snapshotItems.length === 0 && (
+                    <Tooltip title={t('label.items_missing') || ''} placement="bottom">
+                      <WarningIcon className={classes.warningIcon} />
+                    </Tooltip>
+                  )
+                }
+              >
                 <ListItemButton role={undefined} onClick={handleToggle(s.uuid)} dense>
                   <ListItemIcon>
                     <Checkbox
