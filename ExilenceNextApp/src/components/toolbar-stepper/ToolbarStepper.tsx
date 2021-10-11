@@ -6,6 +6,7 @@ import { Button, useTheme } from '@mui/material';
 import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
 import { getToolbarSteps } from '../../utils/stepper.utils';
 import StepContent from './StepContent/StepContent';
+import i18next from 'i18next';
 
 type ToolbarStepperProps = {
   isOpen: boolean;
@@ -22,15 +23,20 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   const isOnSupportPanelStep = step === supportPanelStep;
   const style = {
     color: '#000',
-    maxWidth: 401,
-    marginTop: isOnSupportPanelStep ? 10 : 0,
+    maxWidth: 450,
+    marginTop: isOnSupportPanelStep ? 20 : 0,
   };
 
   const steps = stepDescriptors.map((sd) => {
+    const body2 = `stepper:body2.${sd.key}`;
     return {
       selector: sd.selector,
       content: (
-        <StepContent title={t(`stepper:title.${sd.key}`)} body={t(`stepper:body.${sd.key}`)} />
+        <StepContent
+          title={t(`stepper:title.${sd.key}`)}
+          body={t(`stepper:body.${sd.key}`)}
+          body2={i18next.exists(body2) ? t(body2) : undefined}
+        />
       ),
       style: style,
     };

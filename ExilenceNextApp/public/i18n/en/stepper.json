@@ -1,30 +1,34 @@
 {
   "title": {
     "initial_step": "Welcome to Exilence Next!",
-    "net_worth_step": "Net Worth View",
-    "bulk_sell_step": "Bulk Sell View",
-    "settings_step": "Settings View",
+    "net_worth_step": "Net worth View",
+    "bulk_sell_step": "Bulk sell View",
+    "settings_step": "Settings view",
     "profile_step": "Profile section",
     "snapshot_step": "Snapshot section",
     "overlay_step": "Overlay section",
     "group_step": "Group section",
     "notifications_step": "Notification list",
-    "support_panel_step": "Support Panel",
+    "support_panel_step": "Support panel",
     "currency_switch": "Switch currency",
     "reset_income": "Reset income"
   },
   "body": {
     "initial_step": "This tour will guide you through the main functions of the app to get you started quickly.",
-    "net_worth_step": "In this view you can track all your gains and loses now or in the past and how much your (public) stash is worth",
-    "bulk_sell_step": "In this view you can share your stash items via generated image and message to various Discord communities",
-    "settings_step": "In this view you can manage your general, interface, pricing or data reset settings.",
+    "net_worth_step": "In this view you can track all your gains and losses and how much your stash is worth",
+    "bulk_sell_step": "In this view you can share your stash items via a generated image and message to various Discord communities",
+    "settings_step": "In this view you can manage your settings",
     "profile_step": "In this area you can manage your profiles, and create multiple ones for different setups for quick access.",
-    "snapshot_step": "This is where you take snapshots to see your current net worth, you can also enable automatic snapshotting in the settings.",
-    "overlay_step": "Here you can toggle the overlay, for a slim overview while you map!",
+    "snapshot_step": "Here you take snapshots to record your current net worth, and you can also enable automatic snapshotting in the settings.",
+    "overlay_step": "Here you can toggle the net worth overlay, for a slim overview while you map!",
     "group_step": "Here you can group up with your friends to see your combined net worth status.",
     "notifications_step": "Everything that happens in the app will be displayed here.",
-    "support_panel_step": "Here you can see what's new in latest release, report a bug, submit a feature request, re-run this tour or get our discord server invitation.",
+    "support_panel_step": "Here you can see what's new in latest release, report a bug, submit a feature request, re-run this tour or get our Discord server invitation.",
     "currency_switch": "Clicking this button will switch the currency type between chaos and exalts.",
-    "reset_income": "Click here to quickly reset your income if you think its skewed!"
+    "reset_income": "Clicking this button resets your income."
+  },
+  "body2": {
+    "profile_step": "Profiles are the core of the app where you select your stash tabs to track.",
+    "snapshot_step": "A snapshot represents a recording of your current stash tabs (controlled by the profile)."
   }
 }
