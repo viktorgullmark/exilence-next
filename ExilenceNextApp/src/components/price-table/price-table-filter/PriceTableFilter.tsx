@@ -38,6 +38,7 @@ const PriceTableFilter = ({ handleFilter, clearFilter }: TableFilterProps) => {
       <TextField
         margin="dense"
         variant="outlined"
+        size="small"
         onChange={(e) => {
           formik.handleChange(e);
           handleFilter(e);
