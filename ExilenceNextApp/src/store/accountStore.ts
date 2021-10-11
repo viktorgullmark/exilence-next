@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { forkJoin, of, Subject, throwError, timer } from 'rxjs';
@@ -33,6 +33,14 @@ export class AccountStore {
     makeObservable(this);
     electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
       this.handleAuthCallback(code, error);
+    });
+
+    autorun(() => {
+      if (this.getSelectedAccount?.activeLeague) {
+        rootStore.uiStateStore.setSelectedPriceTableLeagueId(
+          this.getSelectedAccount?.activeLeague.id
+        );
+      }
     });
   }
 
@@ -209,12 +217,12 @@ export class AccountStore {
 
           return forkJoin(
             externalService.getLeagues('main', 1, res.realm),
-            externalService.getCharacters(res.realm),
+            externalService.getCharacters(),
             !skipAuth ? this.getSelectedAccount.authorize() : of({})
           ).pipe(
             concatMap((requests) => {
               const leagues: ILeague[] = requests[0].data;
-              const characters: ICharacter[] = requests[1].data;
+              const characters: ICharacter[] = requests[1].data.characters;
               const unsupportedLeagues = ['Path of Exile: Royale'];
 
               if (leagues.length === 0) {
@@ -224,23 +232,21 @@ export class AccountStore {
                 throw new Error('error:no_characters');
               }
 
-              const accountLeagues = leagues.filter((league) =>
-                characters.find((character) =>
-                  character.league.toLowerCase().includes(league.id.toLowerCase())
-                )
-              );
-              const filteredLeagues = accountLeagues.filter(
+              const filteredPriceLeagues = leagues.filter(
                 (league) =>
                   !unsupportedLeagues.includes(league.id) && league.id.indexOf('SSF') === -1
               );
-
               this.rootStore.leagueStore.updateLeagues(getCharacterLeagues(characters));
-              this.rootStore.leagueStore.updatePriceLeagues(filteredLeagues);
+              this.rootStore.leagueStore.updatePriceLeagues(filteredPriceLeagues);
               this.getSelectedAccount.updateAccountLeagues(characters);
               this.getSelectedAccount.updateLeaguesForProfiles(
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
               );
-              this.rootStore.priceStore.getPricesForLeagues();
+
+              // at initial launch, fetch prices for all leagues
+              this.rootStore.priceStore.getPricesForLeagues(
+                this.rootStore.leagueStore.priceLeagues.map((l) => l.id)
+              );
 
               return forkJoin(
                 of(account.accountLeagues).pipe(
@@ -267,7 +273,7 @@ export class AccountStore {
                       if (league) {
                         runInAction(() => {
                           newProfile.activeStashTabIds = league.stashtabs
-                            .slice(0, 6)
+                            .slice(0, 2)
                             .map((lst) => lst.id);
                         });
                         this.rootStore.uiStateStore.setStatusMessage(

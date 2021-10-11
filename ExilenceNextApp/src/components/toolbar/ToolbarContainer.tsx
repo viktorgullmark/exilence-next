@@ -1,11 +1,13 @@
+import { SelectChangeEvent } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import ConfirmationDialog from '../confirmation-dialog/ConfirmationDialog';
+import RemoveSnapshotsDialogContainer from '../remove-snapshots-dialog/RemoveSnapshotsDialogContainer';
 import Toolbar from './Toolbar';
 
 const ToolbarContainer = () => {
@@ -18,6 +20,7 @@ const ToolbarContainer = () => {
     settingStore,
     overlayStore,
     logStore,
+    rateLimitStore,
   } = useStores();
   const { t } = useTranslation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -33,13 +36,9 @@ const ToolbarContainer = () => {
     setProfileOpen(false);
   };
 
-  const handleClearSnapshots = () => {
-    accountStore!.getSelectedAccount.activeProfile!.removeAllSnapshots();
-  };
-
   const activeCurrency = () => {
-    return accountStore!.getSelectedAccount!.activeProfile!
-      ? accountStore!.getSelectedAccount!.activeProfile!.activeCurrency
+    return settingStore?.showPriceInExalt
+      ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
   };
 
@@ -51,7 +50,8 @@ const ToolbarContainer = () => {
         ? signalrStore!.activeGroup.income
         : accountStore!.getSelectedAccount!.activeProfile!.income,
       activeCurrency().short,
-      true
+      true,
+      !priceStore.exaltedPrice
     );
 
     const netWorth = signalrStore!.activeGroup
@@ -60,7 +60,7 @@ const ToolbarContainer = () => {
 
     overlayStore!.createOverlay({
       event: 'netWorth',
-      data: { netWorth: netWorth, income: income },
+      data: { netWorth: netWorth, income: income, short: settingStore.activeCurrency.short },
     });
   };
 
@@ -93,9 +93,7 @@ const ToolbarContainer = () => {
     accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
 
-  const handleProfileChange = (
-    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ) => {
+  const handleProfileChange = (event: SelectChangeEvent<string>) => {
     accountStore!.getSelectedAccount.setActiveProfile(event.target.value as string);
   };
 
@@ -111,16 +109,7 @@ const ToolbarContainer = () => {
 
   return (
     <>
-      <ConfirmationDialog
-        show={uiStateStore!.confirmClearSnapshotsDialogOpen}
-        onClose={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(false)}
-        onConfirm={handleClearSnapshots}
-        title={t('title.confirm_clear_snapshots')}
-        body={t('body.clear_snapshots')}
-        acceptButtonText={t('action.confirm')}
-        cancelButtonText={t('action.cancel')}
-        loading={uiStateStore!.clearingSnapshots}
-      />
+      <RemoveSnapshotsDialogContainer />
       <ConfirmationDialog
         show={uiStateStore!.confirmRemoveProfileDialogOpen}
         onClose={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(false)}
@@ -133,7 +122,8 @@ const ToolbarContainer = () => {
       />
       <Toolbar
         hasPrices={
-          priceStore!.pricesWithCustomValues && priceStore!.pricesWithCustomValues.length > 0
+          priceStore!.activePricesWithCustomValues &&
+          priceStore!.activePricesWithCustomValues.length > 0
         }
         changingProfile={uiStateStore!.changingProfile}
         signalrOnline={signalrStore!.online}
@@ -142,12 +132,16 @@ const ToolbarContainer = () => {
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
+        toggleAutosnapshot={() =>
+          settingStore!.setAutoSnapshotting(!settingStore!.autoSnapshotting)
+        }
         toggleSidenav={() => uiStateStore!.toggleSidenav()}
         toggleGroupOverview={() => uiStateStore!.toggleGroupOverview()}
         handleProfileChange={handleProfileChange}
         handleSnapshot={handleSnapshot}
         isEditing={isEditing}
         statusMessage={uiStateStore!.statusMessage}
+        retryAfter={rateLimitStore.retryAfter}
         profileOpen={profileOpen}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
@@ -156,8 +150,9 @@ const ToolbarContainer = () => {
         unreadNotifications={notificationStore!.unreadNotifications}
         handleNotificationsOpen={handleNotificationsOpen}
         handleAccountMenuOpen={handleAccountMenuOpen}
-        handleClearSnapshots={() => uiStateStore!.setConfirmClearSnapshotsDialogOpen(true)}
+        handleClearSnapshots={() => uiStateStore!.setRemoveSnapshotsDialogOpen(true)}
         handleRemoveProfile={() => uiStateStore!.setConfirmRemoveProfileDialogOpen(true)}
+        handleCancelSnapshot={() => uiStateStore!.setCancelSnapshot(true)}
         isSnapshotting={uiStateStore!.isSnapshotting}
         isInitiating={uiStateStore!.isInitiating || uiStateStore!.isValidating}
         isUpdatingPrices={priceStore!.isUpdatingPrices}

@@ -1,6 +1,10 @@
-import { CssBaseline } from '@material-ui/core';
-import { responsiveFontSizes } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import { CssBaseline } from '@mui/material';
+import {
+  responsiveFontSizes,
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
 import localForage from 'localforage';
 import { configure } from 'mobx';
@@ -29,12 +33,17 @@ import configureAxios from './config/axios';
 import configureI18n from './config/i18n';
 import initSentry from './config/sentry';
 import useStyles from './index.styles';
+import BulkSell from './routes/bulk-sell/BulkSell';
 import Login from './routes/login/Login';
 import NetWorth from './routes/net-worth/NetWorth';
 import Settings from './routes/settings/Settings';
-import BulkSell from './routes/bulk-sell/BulkSell';
 import { electronService } from './services/electron.service';
 import { RootStore } from './store/rootStore';
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 export const appName = 'Exilence Next';
 export let visitor: Visitor | undefined = undefined;
@@ -79,46 +88,48 @@ const App = ({ error }: Props) => {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Suspense fallback={null}>
-        <Router>
-          <div className={classes.app}>
-            <HighchartsTheme />
-            <CssBaseline />
-            <GlobalStyles />
-            <ToastWrapper />
-            <Route path="/login" component={Login} />
-            <HeaderContainer />
-            {error ? (
-              <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
-            ) : (
-              <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
-                <DrawerWrapperContainer>
-                  <ToolbarContainer />
-                  <Route path="/net-worth" component={NetWorth} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/bulk-sell" component={BulkSell} />
-                  <Route
-                    exact
-                    path="/"
-                    render={() =>
-                      rootStore.accountStore.getSelectedAccount.name ? (
-                        <Redirect to="/net-worth" />
-                      ) : (
-                        <Redirect to="/login" />
-                      )
-                    }
-                  />
-                </DrawerWrapperContainer>
-              </Sentry.ErrorBoundary>
-            )}
-            <Notifier />
-            <ReactionContainer />
-            <AnnouncementDialogContainer />
-          </div>
-        </Router>
-      </Suspense>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Suspense fallback={null}>
+          <Router>
+            <div className={classes.app}>
+              <HighchartsTheme />
+              <CssBaseline />
+              <GlobalStyles />
+              <ToastWrapper />
+              <Route path="/login" component={Login} />
+              <HeaderContainer />
+              {error ? (
+                <ErrorBoundaryFallback error={error} componentStack={error.stack ?? null} />
+              ) : (
+                <Sentry.ErrorBoundary fallback={(props) => <ErrorBoundaryFallback {...props} />}>
+                  <DrawerWrapperContainer>
+                    <ToolbarContainer />
+                    <Route path="/net-worth" component={NetWorth} />
+                    <Route path="/settings" component={Settings} />
+                    <Route path="/bulk-sell" component={BulkSell} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        rootStore.accountStore.getSelectedAccount.name ? (
+                          <Redirect to="/net-worth" />
+                        ) : (
+                          <Redirect to="/login" />
+                        )
+                      }
+                    />
+                  </DrawerWrapperContainer>
+                </Sentry.ErrorBoundary>
+              )}
+              <Notifier />
+              <ReactionContainer />
+              <AnnouncementDialogContainer />
+            </div>
+          </Router>
+        </Suspense>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 
@@ -134,9 +145,23 @@ const renderApp = () => {
     hydrate('uiState', rootStore.uiStateStore),
     hydrate('league', rootStore.leagueStore),
     hydrate('setting', rootStore.settingStore),
+    hydrate('rateLimit', rootStore.rateLimitStore),
   ])
     .then(() => {
       rootStore.settingStore.setUiScale(rootStore.settingStore.uiScale);
+      // if last stash tab request is sent less than 5 min ago, put on cooldown
+      const fiveMinutesAgo = moment().utc().subtract(5, 'minutes');
+      if (rootStore.rateLimitStore.lastRequestTimestamp) {
+        const requestRecently = moment(rootStore.rateLimitStore.lastRequestTimestamp)
+          .utc()
+          .isAfter(fiveMinutesAgo);
+        if (requestRecently) {
+          const duration = moment.duration(
+            moment(rootStore.rateLimitStore.lastRequestTimestamp).diff(fiveMinutesAgo)
+          );
+          rootStore.rateLimitStore.setRetryAfter(duration.asSeconds());
+        }
+      }
       visitor = ua(AppConfig.trackingId, rootStore.uiStateStore.userId);
       ReactDOM.render(<App />, document.getElementById('root'));
     })

@@ -1,23 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  FormControl,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  MenuItem,
-  Select,
-} from '@material-ui/core';
+import { FormControl, FormGroup, FormHelperText, FormLabel, MenuItem, Select } from '@mui/material';
 
 import { ISelectOption } from '../../../../interfaces/select-option.interface';
 import useStyles from './SelectSetting.styles';
 
 type SelectSettingProps = {
-  value: number;
+  value: number | string;
   options: ISelectOption[];
-  handleChange: (value: number) => void;
+  handleChange: (value: any) => void;
   translationKey: string;
   requiresSnapshot?: boolean;
+  maxWidth?: number;
+  withNone?: boolean;
 };
 
 const SelectSetting = ({
@@ -26,6 +21,8 @@ const SelectSetting = ({
   handleChange,
   translationKey,
   requiresSnapshot,
+  maxWidth = 150,
+  withNone = true,
 }: SelectSettingProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -41,10 +38,14 @@ const SelectSetting = ({
           value={value}
           onChange={(e) => handleChange(e.target.value as number)}
           displayEmpty
+          style={{ maxWidth }}
+          variant="standard"
         >
-          <MenuItem value={0}>
-            <em>{t('value.none')}</em>
-          </MenuItem>
+          {withNone && (
+            <MenuItem value={0}>
+              <em>{t('value.none')}</em>
+            </MenuItem>
+          )}
           {options.map((option) => {
             return (
               <MenuItem key={option.id} value={option.value}>
@@ -53,7 +54,9 @@ const SelectSetting = ({
             );
           })}
         </Select>
-        <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
+        <FormHelperText className={classes.helperText}>
+          {t(`helper_text.${translationKey}`)}
+        </FormHelperText>
       </FormGroup>
     </FormControl>
   );

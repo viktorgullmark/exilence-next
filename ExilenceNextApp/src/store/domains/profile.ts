@@ -3,29 +3,33 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { combineLatest, forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { IConnectionChartSeries } from '../../interfaces/connection-chart-series.interface';
-import { ICurrency } from '../../interfaces/currency.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { IProfile } from '../../interfaces/profile.interface';
 import { ISnapshot } from '../../interfaces/snapshot.interface';
+import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface';
+import { IStashTab } from '../../interfaces/stash.interface';
 import { pricingService } from '../../services/pricing.service';
 import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
 import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
+  diffSnapshots,
   filterItems,
+  filterSnapshotItems,
   formatSnapshotsForChart,
   formatStashTabSnapshotsForChart,
   formatValue,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';
@@ -41,10 +45,6 @@ export class Profile {
   @persist @observable activeLeagueId: string = '';
   @persist @observable activePriceLeagueId: string = '';
   @persist @observable activeCharacterName: string = '';
-  @persist('object') @observable activeCurrency: ICurrency = {
-    name: 'chaos',
-    short: 'c',
-  };
 
   @persist('list') @observable activeStashTabIds: string[] = [];
 
@@ -75,7 +75,8 @@ export class Profile {
       rootStore.uiStateStore.validated &&
       rootStore.uiStateStore.initiated &&
       !rootStore.uiStateStore.isSnapshotting &&
-      this.hasPricesForActiveLeague
+      this.hasPricesForActiveLeague &&
+      rootStore.rateLimitStore.retryAfter === 0
     );
   }
 
@@ -94,10 +95,19 @@ export class Profile {
 
   @computed
   get items() {
-    if (this.snapshots.length === 0) {
+    const diffSelected = rootStore.uiStateStore.itemTableSelection === 'comparison';
+    if (this.snapshots.length === 0 || (diffSelected && this.snapshots.length < 2)) {
       return [];
     }
-    return filterItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    if (diffSelected) {
+      return filterItems(
+        diffSnapshots(
+          mapSnapshotToApiSnapshot(this.snapshots[1]),
+          mapSnapshotToApiSnapshot(this.snapshots[0])
+        )
+      );
+    }
+    return filterSnapshotItems([mapSnapshotToApiSnapshot(this.snapshots[0])]);
   }
 
   @computed
@@ -105,7 +115,11 @@ export class Profile {
     if (this.snapshots.length === 0) {
       return 0;
     }
-    return calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    let calculatedValue = calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
+    }
+    return calculatedValue;
   }
 
   @computed
@@ -113,13 +127,17 @@ export class Profile {
     if (this.snapshots.length < 2) {
       return 0;
     }
-    const lastSnapshotNetWorth = getValueForSnapshotsTabs([
+    let lastSnapshotNetWorth = getValueForSnapshotsTabs([
       mapSnapshotToApiSnapshot(this.snapshots[0]),
     ]);
-    const previousSnapshotNetWorth = getValueForSnapshotsTabs([
+    let previousSnapshotNetWorth = getValueForSnapshotsTabs([
       mapSnapshotToApiSnapshot(this.snapshots[1]),
     ]);
 
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      lastSnapshotNetWorth = lastSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
+      previousSnapshotNetWorth = previousSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
+    }
     return lastSnapshotNetWorth - previousSnapshotNetWorth;
   }
 
@@ -158,6 +176,23 @@ export class Profile {
     };
 
     return [connectionSeries];
+  }
+
+  @computed
+  get sparklineChartData(): ISparklineDataPoint[] | undefined {
+    const sortedSnapshots = this.snapshots
+      .slice(0, 10)
+      .sort((a, b) => (moment(a.created).isAfter(b.created) ? 1 : -1));
+    const snapshots = [...sortedSnapshots];
+    if (snapshots.length === 0) {
+      return;
+    }
+    return snapshots.map((s, i) => {
+      return {
+        x: i + 1,
+        y: getValueForSnapshot(mapSnapshotToApiSnapshot(s)),
+      } as ISparklineDataPoint;
+    });
   }
 
   @computed
@@ -200,7 +235,7 @@ export class Profile {
     }, Object.create(null));
 
     this.activeStashTabIds.map((id) => {
-      const stashTabName = accountLeague.stashtabs.find((s) => s.id === id)?.n;
+      const stashTabName = accountLeague.stashtabList.find((s) => s.id === id)?.name;
       const serie: IConnectionChartSeries = {
         seriesName: stashTabName ?? '',
         series: formatStashTabSnapshotsForChart(
@@ -234,6 +269,7 @@ export class Profile {
       const incomePerHour =
         (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
       this.income = incomePerHour;
+
       return;
     }
 
@@ -280,7 +316,10 @@ export class Profile {
   updateProfile(profile: IProfile, callback: () => void) {
     visitor!.event('Profile', 'Edit profile').send();
 
-    const apiProfile = mapProfileToApiProfile(new Profile(profile));
+    const apiProfile = mapProfileToApiProfile(
+      new Profile(profile),
+      rootStore.settingStore.activeCurrency
+    );
 
     fromStream(
       rootStore.signalrHub.invokeEvent<IApiProfile>('EditProfile', apiProfile).pipe(
@@ -295,6 +334,28 @@ export class Profile {
   }
 
   @action
+  checkPriceStatus() {
+    // fetch prices if they are outdated
+    if (this.activePriceLeagueId) {
+      const leaguePriceDetails = rootStore.priceStore.getLeaguePriceDetails(
+        this.activePriceLeagueId
+      );
+      const leaguePriceSource = rootStore.priceStore.getLeaguePriceSource(leaguePriceDetails);
+
+      const twentyMinutesAgo = moment()
+        .utc()
+        .subtract(rootStore.priceStore.pollingIntervalMinutes, 'minutes');
+      const fetchedRecently = moment(leaguePriceSource.pricedFetchedAt)
+        .utc()
+        .isAfter(twentyMinutesAgo);
+
+      if (!fetchedRecently) {
+        rootStore.priceStore.getPricesForLeagues([this.activePriceLeagueId]);
+      }
+    }
+  }
+
+  @action
   updateProfileFail(e: Error) {
     rootStore.notificationStore.createNotification('update_profile', 'error', false, e);
   }
@@ -302,6 +363,7 @@ export class Profile {
   @action
   updateProfileSuccess() {
     rootStore.notificationStore.createNotification('update_profile', 'success');
+    this.checkPriceStatus();
   }
 
   @action snapshot() {
@@ -330,16 +392,23 @@ export class Profile {
 
   @action
   updateNetWorthOverlay() {
-    const activeCurrency = rootStore.accountStore.getSelectedAccount!.activeProfile!
-      ? rootStore.accountStore.getSelectedAccount!.activeProfile!.activeCurrency
+    const activeCurrency = rootStore.settingStore.showPriceInExalt
+      ? { name: 'exalted', short: 'ex' }
       : { name: 'chaos', short: 'c' };
 
-    const income = formatValue(
-      rootStore.signalrStore.activeGroup
-        ? rootStore.signalrStore.activeGroup.income
-        : rootStore.accountStore.getSelectedAccount!.activeProfile!.income,
+    let income = rootStore.signalrStore.activeGroup
+      ? rootStore.signalrStore.activeGroup.income
+      : rootStore.accountStore.getSelectedAccount!.activeProfile!.income;
+
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      income = income / rootStore.priceStore.exaltedPrice;
+    }
+
+    const formattedIncome = formatValue(
+      income,
       activeCurrency.short,
-      true
+      true,
+      !rootStore.priceStore.exaltedPrice
     );
 
     rootStore.overlayStore.updateOverlay({
@@ -348,7 +417,8 @@ export class Profile {
         netWorth: rootStore.signalrStore.activeGroup
           ? rootStore.signalrStore.activeGroup.netWorthValue
           : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue,
-        income: income,
+        income: formattedIncome,
+        short: rootStore.settingStore.activeCurrency.short,
       },
     });
   }
@@ -377,14 +447,15 @@ export class Profile {
     rootStore.uiStateStore.setStatusMessage('refreshing_stash_tabs');
 
     fromStream(
-      accountLeague.getStashTabs().pipe(
-        mergeMap(() => of(this.refreshStashTabsSuccess(league.id))),
+      accountLeague.getStashTabs(true).pipe(
+        mergeMap((response) => of(this.refreshStashTabsSuccess(league.id, response))),
+        takeUntil(rootStore.uiStateStore.cancelSnapshot),
         catchError((e: AxiosError) => of(this.refreshStashTabsFail(e, league.id)))
       )
     );
   }
 
-  @action refreshStashTabsSuccess(leagueId: string) {
+  @action refreshStashTabsSuccess(leagueId: string, firstStashTab?: IStashTab) {
     rootStore.notificationStore.createNotification(
       'refreshing_stash_tabs',
       'success',
@@ -392,7 +463,7 @@ export class Profile {
       undefined,
       leagueId
     );
-    this.getItems();
+    this.getItems(firstStashTab);
   }
 
   @action refreshStashTabsFail(e: AxiosError | Error, leagueId: string) {
@@ -406,7 +477,7 @@ export class Profile {
     this.snapshotFail();
   }
 
-  @action getItems() {
+  @action getItems(firstStashTab?: IStashTab) {
     const accountLeague = rootStore.accountStore.getSelectedAccount.accountLeagues.find(
       (al) => al.leagueId === this.activeLeagueId
     );
@@ -417,9 +488,27 @@ export class Profile {
       return this.getItemsFail(new Error('no_matching_league'), this.activeLeagueId);
     }
 
-    const selectedStashTabs = accountLeague.stashtabs.filter(
+    const selectedStashTabs = accountLeague.stashtabList.filter(
       (st) => this.activeStashTabIds.find((ast) => ast === st.id) !== undefined
     );
+
+    if (selectedStashTabs.length === 0) {
+      return this.getItemsFail(
+        new Error('no_stash_tabs_selected_for_profile'),
+        this.activeLeagueId
+      );
+    }
+
+    const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
+    const getMainTabsWithChildren =
+      tabsToFetch.length > 0
+        ? combineLatest(
+            // slice away first because we already fetched it when checking headers
+            tabsToFetch.map((tab: IStashTab) => {
+              return externalService.getStashTabWithChildren(tab, league.id);
+            })
+          )
+        : of([]);
 
     rootStore.uiStateStore.setStatusMessage(
       'fetching_stash_tab',
@@ -427,40 +516,74 @@ export class Profile {
       1,
       selectedStashTabs.length
     );
-
     fromStream(
       forkJoin(
-        externalService.getItemsForTabs(
-          selectedStashTabs,
-          rootStore.accountStore.getSelectedAccount.name!,
-          league.id,
-          rootStore.uiStateStore.selectedPlatform.id
-        ),
+        getMainTabsWithChildren,
         this.activeCharacterName &&
           this.activeCharacterName !== '' &&
           this.activeCharacterName !== 'None'
-          ? externalService.getCharacterItems(
-              rootStore.accountStore.getSelectedAccount.name!,
-              this.activeCharacterName,
-              rootStore.uiStateStore.selectedPlatform.id
-            )
+          ? externalService.getCharacter(this.activeCharacterName)
           : of(null)
       ).pipe(
+        switchMap((response) => {
+          let combinedTabs = response[0];
+          if (firstStashTab) {
+            combinedTabs = combinedTabs.concat([firstStashTab]);
+          }
+          let subTabs = response[0]
+            .filter((sst) => sst.children)
+            .flatMap((sst) => sst.children ?? sst);
+          subTabs =
+            firstStashTab && firstStashTab.children
+              ? subTabs.concat(firstStashTab.children)
+              : subTabs;
+          // if no subtabs exist, simply return the original request
+          if (subTabs.length === 0) {
+            response[0] = combinedTabs;
+            return of(response);
+          }
+          rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
+          const getItemsForSubTabs = combineLatest(
+            subTabs.map((tab) => {
+              return externalService.getStashTabWithChildren(tab, league.id, true);
+            })
+          );
+          return getItemsForSubTabs.pipe(
+            mergeMap((subTabs) => {
+              response[0] = combinedTabs.map((sst) => {
+                if (sst.children) {
+                  const children = subTabs.filter((st) => st.parent === sst.id);
+                  const childItems = children.flatMap((st) => st.items ?? []);
+                  sst.items = (sst.items ?? []).concat(childItems);
+                }
+                return sst;
+              });
+              return of(response);
+            })
+          );
+        }),
         map((result) => {
-          const stashTabsWithItems = result[0];
+          const stashTabsWithItems = result[0].map((tab) => {
+            const stashitems = tab.items;
+            const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
+            return {
+              ...{ stashTabId: tab.id },
+              ...{ pricedItems: items },
+            } as IStashTabSnapshot;
+          });
+
           const characterWithItems = result[1];
           if (characterWithItems?.data) {
-            const characterItems = mapItemsToPricedItems(characterWithItems?.data?.items);
             let includedCharacterItems: IPricedItem[] = [];
             if (this.includeInventory) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId === 'MainInventory')
-              );
+              const inventory = characterWithItems?.data?.character.inventory;
+              const mappedInventory = inventory ? mapItemsToPricedItems(inventory) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedInventory);
             }
             if (this.includeEquipment) {
-              includedCharacterItems = includedCharacterItems.concat(
-                characterItems.filter((ci) => ci.inventoryId !== 'MainInventory')
-              );
+              const equipment = characterWithItems?.data?.character.equipment;
+              const mappedEquipment = equipment ? mapItemsToPricedItems(equipment) : [];
+              includedCharacterItems = includedCharacterItems.concat(mappedEquipment);
             }
             const characterTab: IStashTabSnapshot = {
               stashTabId: 'Character',
@@ -475,6 +598,7 @@ export class Profile {
           });
         }),
         mergeMap((stashTabsWithItems) => of(this.getItemsSuccess(stashTabsWithItems, league.id))),
+        takeUntil(rootStore.uiStateStore.cancelSnapshot),
         catchError((e: AxiosError) => of(this.getItemsFail(e, league.id)))
       )
     );
@@ -589,11 +713,11 @@ export class Profile {
     );
 
     if (activeAccountLeague) {
-      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabs);
+      const apiSnapshot = mapSnapshotToApiSnapshot(snapshotToAdd, activeAccountLeague.stashtabList);
       const callback = () => {
-        // clear items from previous snapshot
-        if (this.snapshots.length > 1) {
-          this.snapshots[0].stashTabSnapshots.forEach((stss) => {
+        // keep items for only 10 snapshots at all times
+        if (this.snapshots.length > 10) {
+          this.snapshots[10].stashTabSnapshots.forEach((stss) => {
             stss.pricedItems = [];
           });
         }
@@ -629,6 +753,11 @@ export class Profile {
         return of(failAction(e));
       })
     );
+  }
+
+  @action
+  removeSnapshots(snapshotIds: string[]) {
+    this.snapshots = this.snapshots.filter((s) => !snapshotIds.find((id) => id === s.uuid));
   }
 
   @action

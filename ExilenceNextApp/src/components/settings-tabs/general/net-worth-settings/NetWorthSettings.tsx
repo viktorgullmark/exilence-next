@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStores } from '../../../..';
@@ -9,6 +9,13 @@ const NetWorthSettings = () => {
   const { settingStore } = useStores();
   return (
     <Grid container spacing={5}>
+      <Grid item>
+        <CheckboxSetting
+          value={settingStore!.showPriceInExalt}
+          handleChange={(value: boolean) => settingStore!.setShowPriceInExalt(value)}
+          translationKey="price_in_exalt"
+        />
+      </Grid>
       <Grid item>
         <CheckboxSetting
           value={settingStore!.lowConfidencePricing}

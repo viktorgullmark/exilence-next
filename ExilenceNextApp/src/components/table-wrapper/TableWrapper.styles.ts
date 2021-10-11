@@ -1,6 +1,11 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Theme } from '@mui/material';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import { primaryLighter } from '../../assets/themes/exilence-theme';
+import { hex2rgba } from '../../utils/misc.utils';
 
-const tableHeadCellBorder = '1px solid rgba(56, 56, 56, 1)';
+const tableHeadCellBorder = '1px solid rgba(56, 56, 56, 0.6)';
+const tableCellBorder = '1px solid rgba(56, 56, 56, 0.2)';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,8 +16,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderSpacing: 0,
     },
     tableHeadRow: {
+      boxShadow: `0 2px 15px 0 ${hex2rgba(primaryLighter, 0.15)}`,
       outline: 0,
-      right: 2,
       verticalAlign: 'middle',
       backgroundColor: theme.palette.background.paper,
       color: theme.palette.text.primary,
@@ -25,7 +30,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tableHeadCell: {
-      padding: '8px 1px 8px 16px',
+      padding: '4px 1px 4px 16px',
       fontSize: '0.75rem',
       textAlign: 'left',
       verticalAlign: 'inherit',
@@ -34,21 +39,33 @@ export const useStyles = makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       borderRight: tableHeadCellBorder,
       borderTop: tableHeadCellBorder,
-      '&:last-child': {
-        borderRight: 'none',
-      },
       '&:first-child': {
-        borderLeft: 'none',
+        borderLeft: tableHeadCellBorder,
       },
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     tableRow: {
       color: 'inherit',
       outline: 0,
       verticalAlign: 'middle',
       '&:hover': {
-        backgroundColor: '#303030',
+        backgroundColor: `rgba(163, 21, 69, 0.16)`,
       },
-      borderBottom: '1px solid rgba(81, 81, 81, 1)',
+      borderBottom: '1px solid rgba(81, 81, 81, 0.6)',
+    },
+    disabledSortBy: {
+      paddingRight: theme.spacing(2),
+    },
+    placeholderRow: {
+      backgroundColor: theme.palette.background.paper,
+      '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
+    noFlex: {
+      flex: 'none !important',
     },
     rowSelected: {
       backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -57,15 +74,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tableCell: {
-      padding: 10,
+      padding: `6px 14px`,
       fontSize: '0.75rem',
       textAlign: 'left',
+      height: 42,
       lineHeight: 1.43,
       verticalAlign: 'inherit',
       color: theme.palette.text.primary,
-      '&:last-child': {
-        borderRight: 'none',
-      },
+      borderRight: tableCellBorder,
+      borderLeft: tableCellBorder,
     },
     tableSortLabel: {
       '& svg': {

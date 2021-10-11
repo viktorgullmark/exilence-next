@@ -7,6 +7,11 @@ const ToolbarStepperContainer = () => {
   const { uiStateStore } = useStores();
   const handleClose = () => {
     uiStateStore!.setToolbarTourOpen(false);
+    if (uiStateStore.shouldShowWhatsNewModal) {
+      setTimeout(() => {
+        uiStateStore.setShowWhatsNewModal(true);
+      }, 1000);
+    }
   };
 
   return <ToolbarStepper isOpen={uiStateStore!.toolbarTourOpen} handleClose={handleClose} />;

@@ -1,6 +1,6 @@
-import { Box, IconButton, TextField } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
+import { Box, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent } from 'react';
@@ -38,6 +38,7 @@ const PriceTableFilter = ({ handleFilter, clearFilter }: TableFilterProps) => {
       <TextField
         margin="dense"
         variant="outlined"
+        size="small"
         onChange={(e) => {
           formik.handleChange(e);
           handleFilter(e);

@@ -1,19 +1,21 @@
-import { Box, IconButton, Tooltip, useTheme } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'react-table';
 import { useStores } from '../..';
-import { itemColors, rarityColors } from '../../assets/themes/exilence-theme';
+import { itemColors, primaryLighter, rarityColors } from '../../assets/themes/exilence-theme';
+import { ISparkLineDetails } from '../../interfaces/external-price.interface';
 import { IPricedItem } from '../../interfaces/priced-item.interface';
 import { ICompactTab } from '../../interfaces/stash.interface';
 import { getRarity, parseTabNames } from '../../utils/item.utils';
-import { getRawPriceFromPricedItem } from '../../utils/price.utils';
+import { formatSparklineChartData, getRawPriceFromPricedItem } from '../../utils/price.utils';
 import { openCustomLink } from '../../utils/window.utils';
+import SparklineChart from '../sparkline-chart/SparklineChart';
 import useStyles from './Columns.styles';
 
 export function itemIcon(options: { accessor: string; header: string }): Column<object> {
@@ -39,10 +41,10 @@ export function itemName(
 
   return {
     Header: header,
+    minWidth: 120,
     accessor,
-    minWidth: 180,
-    // eslint-disable-next-line react/display-name
     ...(!bulkSellView && {
+      // eslint-disable-next-line react/display-name
       Cell: (data: any) => {
         const value = data.row.values[accessor];
         return (
@@ -63,6 +65,7 @@ export function itemLinks(options: { accessor: string; header: string }): Column
   return {
     Header: header,
     accessor,
+    maxWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
@@ -99,10 +102,29 @@ export function itemCorrupted(options: { accessor: string; header: string }): Co
   return {
     Header: header,
     accessor,
+    minWidth: 60,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
       return <ItemCorruptedCell value={value} />;
+    },
+  };
+}
+
+export function itemIlvlTier(options: {
+  accessor: (row: any) => string | number | null | undefined;
+  header: string;
+}): Column<object> {
+  const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    maxWidth: 60,
+    // eslint-disable-next-line react/display-name
+    Cell: (row: any) => {
+      return <span>{row.value}</span>;
     },
   };
 }
@@ -121,27 +143,83 @@ export function itemTabs(options: { accessor: string; header: string }): Column<
   };
 }
 
-export function itemValue(options: {
+export function itemQuantity(options: {
   accessor: string;
   header: string;
-  editable?: boolean;
-  placeholder?: string;
+  diff?: boolean;
 }): Column<object> {
-  const { header, accessor, editable, placeholder } = options;
+  const { header, accessor, diff } = options;
 
   return {
     Header: header,
     accessor,
     align: 'right',
+    sortType: 'basic',
+    maxWidth: 80,
     // eslint-disable-next-line react/display-name
     Cell: (data: any) => {
       const value = data.row.values[accessor];
+      return <ItemQuantityCell quantity={value} diff={diff} />;
+    },
+  };
+}
+
+export function sparkLine(options: { accessor: string; header: string }): Column<object> {
+  const { header, accessor } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    maxWidth: 190,
+    sortType: 'basic',
+    minWidth: 190,
+    width: 190,
+    disableResizing: true,
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      const value = data.row.original['sparkLine'];
+      return <SparklineCell sparkline={value} id={data.row.id} />;
+    },
+  };
+}
+
+export function itemValue(options: {
+  accessor?: string;
+  header: string;
+  editable?: boolean;
+  placeholder?: string;
+  cumulative?: boolean;
+  diff?: boolean;
+}): Column<object> {
+  const { header, accessor, editable, placeholder, cumulative, diff } = options;
+
+  return {
+    Header: header,
+    accessor,
+    align: 'right',
+    sortType: 'basic',
+    // eslint-disable-next-line react/display-name
+    Cell: (data: any) => {
+      let value = 0;
+      if (cumulative) {
+        value = data.row.original.total;
+        for (let i = 0; i < data.sortedRows.length; i++) {
+          if (data.sortedRows[i].id === data.row.id) {
+            break;
+          }
+          value += data.sortedRows[i].original.total;
+        }
+      } else if (accessor) {
+        value = data.row.values[accessor];
+      }
       return (
         <ItemValueCell
           value={value}
           editable={editable}
           pricedItem={data.row.original}
           placeholder={placeholder}
+          diff={diff}
         />
       );
     },
@@ -155,6 +233,7 @@ type ItemIconCellProps = {
 
 const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const theme = useTheme();
   const rarityColor = rarityColors[getRarity(frameType)];
 
@@ -175,8 +254,7 @@ const ItemIconCell = ({ value, frameType }: ItemIconCellProps) => {
       >
         <img
           className={classes.iconImg}
-          alt={value.toString()}
-          title={value.toString()}
+          alt={t('label.icon_fetched_from')}
           src={typeof value === 'string' ? value : ''}
         />
       </Box>
@@ -197,13 +275,16 @@ const ItemNameCell = ({ value, frameType, poeNinjaUrl }: ItemNameCellProps) => {
 
   return (
     <Box display="flex" width={1} alignItems="center" justifyContent="space-between">
-      <span
-        style={{
-          color: rarityColor,
-        }}
-      >
-        {value}
-      </span>
+      <Tooltip title={value || ''} placement="bottom">
+        <span
+          style={{
+            color: rarityColor,
+          }}
+          className={classes.ellipsis}
+        >
+          {value}
+        </span>
+      </Tooltip>
       {poeNinjaUrl && (
         <Tooltip title={t('label.open_on_ninja') || ''} placement="bottom">
           <IconButton
@@ -244,6 +325,7 @@ type ItemValueCellProps = {
   editable?: boolean;
   pricedItem: IPricedItem;
   placeholder?: string;
+  diff?: boolean;
 };
 
 const ItemValueCellComponent = ({
@@ -251,13 +333,16 @@ const ItemValueCellComponent = ({
   editable,
   pricedItem,
   placeholder,
+  diff,
 }: ItemValueCellProps) => {
   const { uiStateStore, customPriceStore } = useStores();
 
   const classes = useStyles();
   const { t } = useTranslation();
-  const tryParseNumber = (value: boolean | string | number) => {
-    return typeof value === 'number' ? value.toFixed(2) : value;
+  const tryParseNumber = (value: boolean | string | number, diff?: boolean) => {
+    return typeof value === 'number'
+      ? `${diff && value > 0 ? '+ ' : ''}${value.toFixed(2)}`
+      : value;
   };
 
   const toggleCustomPriceDialog = () => {
@@ -275,12 +360,12 @@ const ItemValueCellComponent = ({
     <>
       {value ? (
         <span
-          className={classes.lastCell}
-          style={{
-            color: itemColors.chaosOrb,
-          }}
+          className={clsx(classes.itemValue, classes.lastCell, {
+            [classes.positiveChange]: diff && value > 0,
+            [classes.negativeChange]: diff && value < 0,
+          })}
         >
-          {value ? tryParseNumber(value) : placeholder}
+          {value ? tryParseNumber(value, diff) : placeholder}
         </span>
       ) : (
         <span className={classes.lastCell}>{placeholder}</span>
@@ -357,5 +442,64 @@ type ItemTabsCellProps = {
 
 const ItemTabsCell = ({ tabs }: ItemTabsCellProps) => {
   const classes = useStyles();
-  return <span className={classes.tabsCell}>{tabs ? parseTabNames(tabs) : ''}</span>;
+  const value = tabs ? parseTabNames(tabs) : '';
+  return (
+    <Tooltip title={value} placement="bottom">
+      <span className={classes.ellipsis}>{value}</span>
+    </Tooltip>
+  );
+};
+
+type ItemQuantityCellProps = {
+  quantity: number;
+  diff?: boolean;
+};
+
+const ItemQuantityCell = ({ quantity, diff }: ItemQuantityCellProps) => {
+  const classes = useStyles();
+  return (
+    <span
+      className={clsx({
+        [classes.positiveChange]: diff && quantity > 0,
+        [classes.negativeChange]: diff && quantity < 0,
+      })}
+    >
+      {diff && quantity > 0 ? '+ ' : ''}
+      {quantity}
+    </span>
+  );
+};
+
+type SparklineCellProps = {
+  id: string;
+  sparkline?: ISparkLineDetails;
+};
+
+const SparklineCell = ({ sparkline, id }: SparklineCellProps) => {
+  const classes = useStyles();
+  const data = sparkline ? formatSparklineChartData(sparkline.data) : undefined;
+  return (
+    <>
+      {data && (
+        <Box display="flex" width={1} alignItems="center" justifyContent="space-between">
+          <SparklineChart
+            internalName={id}
+            color={primaryLighter}
+            height={25}
+            width={90}
+            domainPadding={{ x: 1, y: 1 }}
+            data={data}
+          />
+          <span
+            className={clsx(classes.ellipsis, {
+              [classes.positiveChange]: sparkline && sparkline.totalChange > 0,
+              [classes.negativeChange]: sparkline && sparkline.totalChange < 0,
+            })}
+          >
+            {sparkline?.totalChange} %
+          </span>
+        </Box>
+      )}
+    </>
+  );
 };

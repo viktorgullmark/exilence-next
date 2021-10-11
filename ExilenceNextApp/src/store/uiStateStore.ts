@@ -1,21 +1,23 @@
 import { AxiosError } from 'axios';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import SUPPORTED_PRESETS from '../components/bulk-sell-column-presets-panel/supportedPresets';
 import { IApiAnnouncement } from '../interfaces/api/api-announcement.interface';
+import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ISelectOption } from '../interfaces/select-option.interface';
-
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
+import { ItemTableSelectionType } from '../types/item-table-selection.type';
 import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
 import { authService } from './../services/auth.service';
 import { Notification } from './domains/notification';
 import { RootStore } from './rootStore';
-import { IBulkSellColumnPreset } from '../interfaces/bulk-sell-column-preset.interface';
 
 export type GroupDialogType = 'create' | 'join' | undefined;
 
@@ -67,10 +69,13 @@ export class UiStateStore {
   @observable joiningGroup: boolean = false;
   @observable creatingGroup: boolean = false;
   @observable leavingGroup: boolean = false;
+  @observable shouldShowWhatsNewModal: boolean = false;
+  @observable showWhatsNewModal: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable settingsTabIndex: number = 0;
   @observable announcementDialogOpen: boolean = false;
+  @observable removeSnapshotsDialogOpen: boolean = false;
   @observable filteredStashTabs: IStashTab[] | undefined = undefined;
   @persist @observable showItemTableFilter: boolean = false;
   @observable changingProfile: boolean = false;
@@ -78,26 +83,43 @@ export class UiStateStore {
   @persist @observable tabChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
+  @observable timeSincePricesFetchedLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
+  @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
   @observable selectedPriceTableLeagueId: string | undefined = undefined;
   @observable announcementMessage: IApiAnnouncement | undefined = undefined;
   @persist('list') @observable platformList: ISelectOption[] = platforms;
+  @persist('list') @observable itemTableColumnPresets: IBulkSellColumnPreset[] = SUPPORTED_PRESETS;
   @persist('object') @observable selectedPlatform: ISelectOption = pc;
   @observable bulkSellView: boolean = false;
-  @persist('object') @observable bulkSellActivePreset:
-    | IBulkSellColumnPreset
-    | undefined = undefined;
+  @persist('object') @observable bulkSellActivePreset: IBulkSellColumnPreset = SUPPORTED_PRESETS[0];
   @persist @observable bulkSellAskingPrice: number = 0;
   @persist @observable bulkSellAskingPricePercentage: number = 100;
   @persist @observable bulkSellGeneratedMessage: string = '';
   @persist @observable bulkSellGeneratingImage: boolean = false;
 
+  @observable cancelSnapshot: Subject<boolean> = new Subject();
+
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @action
+  setCancelSnapshot(cancel: boolean) {
+    this.cancelSnapshot.next(cancel);
+    if (cancel) {
+      this.resetStatusMessage();
+      if (this.rootStore.settingStore.autoSnapshotting) {
+        this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+        this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
+      }
+      this.setIsSnapshotting(false);
+      this.cancelSnapshot.next(!cancel);
+    }
   }
 
   @action
@@ -108,6 +130,11 @@ export class UiStateStore {
   @action.bound
   setSettingsTabIndex(index: number) {
     this.settingsTabIndex = index;
+  }
+
+  @action.bound
+  setItemtableColumnPresets(presets: IBulkSellColumnPreset[]) {
+    this.itemTableColumnPresets = presets;
   }
 
   @action.bound
@@ -139,6 +166,14 @@ export class UiStateStore {
   }
 
   @action
+  setItemTableSelection(selection: ItemTableSelectionType) {
+    this.itemTableSelection = selection;
+    if (selection === 'comparison') {
+      this.setShowItemTableFilter(false);
+    }
+  }
+
+  @action
   setStatusMessage(
     message: string,
     translateParam?: string | number,
@@ -166,6 +201,16 @@ export class UiStateStore {
   }
 
   @action
+  setShowWhatsNewModal(show: boolean) {
+    this.showWhatsNewModal = show;
+  }
+
+  @action
+  setShouldShowWhatsNewModal(show: boolean) {
+    this.shouldShowWhatsNewModal = show;
+  }
+
+  @action
   setTabChartExpanded(expanded: boolean) {
     this.tabChartExpanded = expanded;
   }
@@ -184,6 +229,11 @@ export class UiStateStore {
   @action
   setTimeSinceLastSnapshotLabel(label: string | undefined) {
     this.timeSinceLastSnapshotLabel = label;
+  }
+
+  @action
+  setTimeSincePricesFetchedLabel(label: string | undefined) {
+    this.timeSincePricesFetchedLabel = label;
   }
 
   @action
@@ -208,6 +258,11 @@ export class UiStateStore {
   setAnnouncementDialogOpen(open: boolean, announcement?: IApiAnnouncement) {
     this.announcementMessage = announcement;
     this.announcementDialogOpen = open;
+  }
+
+  @action
+  setRemoveSnapshotsDialogOpen(open: boolean) {
+    this.removeSnapshotsDialogOpen = open;
   }
 
   @action
@@ -399,7 +454,7 @@ export class UiStateStore {
     this.bulkSellView = active;
   }
 
-  @action
+  @action.bound
   setBulkSellActivePreset(preset: IBulkSellColumnPreset) {
     this.bulkSellActivePreset = preset;
   }

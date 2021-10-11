@@ -1,24 +1,26 @@
 {
   "name": "exilence-next-app",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@material-ui/styles": "^4.10.0",
-    "@microsoft/signalr": "^3.1.0",
-    "@microsoft/signalr-protocol-msgpack": "^3.1.0",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@microsoft/signalr": "^5.0.10",
+    "@microsoft/signalr-protocol-msgpack": "^5.0.10",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "*",
+    "@mui/material": "^5.0.2",
+    "@mui/styles": "^5.0.1",
     "@rehooks/component-size": "^1.0.3",
     "@sentry/browser": "^6.2.3",
     "@sentry/electron": "^2.4.0",
     "@sentry/react": "^6.2.3",
+    "@types/react": "^17.0.26",
     "@types/reactour": "^1.13.1",
     "@types/universal-analytics": "^0.4.3",
     "axios": "^0.21.1",
     "axios-observable": "^1.1.2",
     "clsx": "^1.0.4",
-    "electron-context-menu": "^2.5.0",
     "electron-devtools-installer": "^3.1.1",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.3.2",
@@ -46,9 +48,9 @@
     "react-number-format": "^4.3.1",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^4.0.0",
+    "react-scripts": "^4.0.3",
     "react-table": "^7.6.0",
-    "react-toastify": "^6.0.9",
+    "react-toastify": "^8.0.3",
     "reactour": "^1.18.3",
     "rxjs": "^6.5.3",
     "rxjs-ratelimiter": "^1.0.1",
@@ -59,45 +61,34 @@
     "typescript": "^4.0.3",
     "universal-analytics": "^0.4.20",
     "uuid": "^8.3.1",
+    "victory": "^36.0.1",
     "yup": "^0.29.3"
   },
-  "main": "public/electron.js",
-  "homepage": "./",
+  "main": "build/electron/main.js",
+  "homepage": ".",
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder",
-    "build": "npm run react-build && npm run electron-build",
-    "smoke-build-linux": "npm run react-build && electron-builder -l --publish=never",
-    "smoke-build-mac": "npm run react-build && electron-builder -m --publish=never",
-    "smoke-build-win": "npm run react-build && electron-builder -w --publish=never",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "release": "npm run react-build && tsc -p electron && electron-builder",
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
+    "build": "npm run react-build && tsc -p electron && electron-build",
+    "smoke-build-linux": "npm run react-build && tsc -p electron && electron-builder -l --publish=never",
+    "smoke-build-mac": "npm run react-build && tsc -p electron && electron-builder -m --publish=never",
+    "smoke-build-win": "npm run react-build && tsc -p electron && electron-builder -w --publish=never",
     "eslint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "prettier": "prettier \"./**/*.{js,jsx,ts,tsx}\""
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@types/electron-is-dev": "^1.1.1",
     "@types/jest": "26.0.15",
     "@types/node": "14.14.2",
-    "@types/react-dom": "16.9.8",
+    "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-table": "^7.0.24",
     "@types/uuid": "^8.3.0",
@@ -107,8 +98,9 @@
     "chokidar": "^3.5.1",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
-    "electron": "^12.0.7",
-    "electron-builder": "^22.10.5",
+    "electron": "^15.1.0",
+    "electron-builder": "^22.11.7",
+    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.13.0",
@@ -119,6 +111,8 @@
     "wait-on": "^5.3.0"
   },
   "build": {
+    "extends": null,
+    "generateUpdatesFilesForAllChannels": true,
     "productName": "Exilence Next",
     "appId": "com.exilence.exilence-next-app",
     "files": [
@@ -128,11 +122,10 @@
     ],
     "extraFiles": [
       "public/i18n/**/*",
-      "public/overlays/**/*",
-      "public/background-tasks/**/*"
+      "public/overlays/**/*"
     ],
     "directories": {
-      "buildResources": "src/assets/**/*"
+      "buildResources": "src/assets/*"
     },
     "publish": {
       "provider": "github",
@@ -158,5 +151,17 @@
         "exilence"
       ]
     }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

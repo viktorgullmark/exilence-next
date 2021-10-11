@@ -5,7 +5,7 @@ Exilence Next is a desktop application that helps you calculate how valuable you
 
 The app is a successor to our old application named Exilence, previously known as ExileParty.
 
-![Preview image](https://i.imgur.com/RftNTac.png)
+![Preview image](https://i.imgur.com/IfyINev.png)
 
 ## Contents
 
@@ -26,12 +26,12 @@ Download the latest release at https://github.com/viktorgullmark/exilence-next/r
 
 Currently runs with:
 
-- Electron 12.0.2
+- Electron 15.1.0
 - React 17.0.1
 - mobx 6.0.1
 - .NET Core 3.1
-- **node 14.x**
-- **npm 6.x**
+- **node 16.x**
+- **npm 7.x**
 
 ## Contributing with development
 

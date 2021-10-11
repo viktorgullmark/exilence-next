@@ -1,25 +1,37 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
+import { rootStore } from '..';
+import { ICurrency } from '../interfaces/currency.interface';
 
 import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
+export type ReleaseChannel = 'latest' | 'beta';
+export type AppExitTypes = 'minimize-to-tray' | 'exit';
+
 export class SettingStore {
   @persist @observable lowConfidencePricing: boolean = false;
-  @persist @observable autoSnapshotting: boolean = true;
+  @persist @observable autoSnapshotting: boolean = false;
   @persist @observable isHardwareAccelerationEnabled: boolean =
     electronService.localSettings?.isHardwareAccelerationEnabled || true;
+  @persist @observable releaseChannel: ReleaseChannel =
+    electronService.localSettings?.releaseChannel || 'latest';
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
-  @persist @observable autoSnapshotInterval: number = 60 * 2 * 1000; // default to 2 minutes
-  @persist
-  @observable
-  uiScale: number = electronService.webFrame.getZoomFactor() * 100;
+  @persist @observable showPriceInExalt = false;
+  @persist @observable autoSnapshotInterval: number = 60 * 20 * 1000; // default to 20 minutes
+  @persist @observable uiScale: number = electronService.webFrame.getZoomFactor() * 100;
   @persist @observable logPath: string =
     'C:/Program Files (x86)/Grinding Gear Games/Path of Exile/logs/Client.txt';
+  @persist @observable appExitAction: AppExitTypes =
+    electronService.localSettings?.appExitAction || 'minimize-to-tray';
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @computed get activeCurrency(): ICurrency {
+    return this.showPriceInExalt ? { name: 'exalted', short: 'ex' } : { name: 'chaos', short: 'c' };
   }
 
   @action
@@ -35,6 +47,12 @@ export class SettingStore {
   }
 
   @action
+  setShowPriceInExalt(value: boolean) {
+    this.showPriceInExalt = value;
+    rootStore.accountStore.getSelectedAccount?.activeProfile?.updateNetWorthOverlay();
+  }
+
+  @action
   setLowConfidencePricing(value: boolean) {
     this.lowConfidencePricing = value;
   }
@@ -47,6 +65,12 @@ export class SettingStore {
       this.rootStore.accountStore.getSelectedAccount.queueSnapshot();
     }
     this.autoSnapshotting = value;
+  }
+
+  @action
+  setReleaseChannel(value: ReleaseChannel) {
+    this.releaseChannel = value;
+    electronService.ipcRenderer.send('release-channel', value);
   }
 
   @action
@@ -75,5 +99,11 @@ export class SettingStore {
   @action
   setLogPath(path: string) {
     this.logPath = path;
+  }
+
+  @action
+  setAppExitAction(appExitAction: AppExitTypes) {
+    this.appExitAction = appExitAction;
+    electronService.ipcRenderer.send('app-exit-action', appExitAction);
   }
 }

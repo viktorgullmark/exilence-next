@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core';
+import { Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { primaryGradient, statusColors } from '../../assets/themes/exilence-theme';
 import { drawerWidth, innerToolbarHeight } from '../drawer-wrapper/DrawerWrapper';
 import {
@@ -56,34 +57,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButton: {
     padding: theme.spacing(0.5),
   },
+  snapshotBtn: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
   toolbarGrid: {
     maxHeight: innerToolbarHeight,
     minHeight: innerToolbarHeight,
   },
   profileArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   snapshotArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   miscArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   overlayArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   logMonitorArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   groupArea: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
   },
   formControl: {
-    padding: `0 ${theme.spacing(0.5)}px`,
+    padding: `0 ${theme.spacing(0.5)}`,
   },
   divider: {
     height: innerToolbarHeight,
-    borderLeft: `1px solid ${theme.palette.primary.dark}`,
+    borderLeft: `1px solid ${theme.palette.secondary.light}`,
   },
   spinner: {
     color: theme.palette.primary.contrastText,

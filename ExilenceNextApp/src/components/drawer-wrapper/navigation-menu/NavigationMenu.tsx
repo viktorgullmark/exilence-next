@@ -1,3 +1,8 @@
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BurstModeIcon from '@mui/icons-material/BurstMode';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Divider,
   Drawer,
@@ -6,12 +11,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SettingsIcon from '@material-ui/icons/Settings';
-import BurstModeIcon from '@material-ui/icons/BurstMode';
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -49,7 +51,7 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
       transitionDuration={0}
     >
       <div className={clsx(classes.drawerHeader, { [classes.drawerHeaderOpen]: open })}>
-        <IconButton onClick={() => toggleSidenav()}>
+        <IconButton onClick={() => toggleSidenav()} size="large">
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
@@ -58,33 +60,43 @@ const NavigationMenu = ({ open, toggleSidenav, handleRedirect }: NavigationMenuP
         <ListItem
           button
           key="net-worth"
+          data-tour-elem="netWorthView"
           selected={location.pathname === '/net-worth'}
           onClick={() => handleRedirect('/net-worth')}
         >
           <ListItemIcon>
-            <AttachMoneyIcon />
+            <Tooltip title={t('title.net_worth') || ''} placement="right">
+              <AttachMoneyIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.net_worth')} />
         </ListItem>
         <ListItem
           button
           key="bulk-selling"
+          data-tour-elem="bulkSellView"
           selected={location.pathname === '/bulk-sell'}
           onClick={() => handleRedirect('/bulk-sell')}
         >
+          <Typography className={classes.new}>BETA</Typography>
           <ListItemIcon>
-            <BurstModeIcon />
+            <Tooltip title={t('title.bulk_sell') || ''} placement="right">
+              <BurstModeIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.bulk_sell')} />
         </ListItem>
         <ListItem
           button
           key="settings"
+          data-tour-elem="settingsView"
           selected={location.pathname === '/settings'}
           onClick={() => handleRedirect('/settings')}
         >
           <ListItemIcon>
-            <SettingsIcon />
+            <Tooltip title={t('title.settings') || ''} placement="right">
+              <SettingsIcon />
+            </Tooltip>
           </ListItemIcon>
           <ListItemText primary={t('title.settings')} />
         </ListItem>

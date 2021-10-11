@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ReactNode, useEffect } from 'react';
 import { useStores } from '../..';

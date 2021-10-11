@@ -1,19 +1,24 @@
+import FilterListIcon from '@mui/icons-material/FilterList';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ViewColumnsIcon from '@mui/icons-material/ViewColumn';
 import {
   Box,
   Button,
   Grid,
-  IconButton,
-  makeStyles,
+  Stack,
   Theme,
+  ToggleButton,
+  ToggleButtonGroup,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ViewColumnsIcon from '@material-ui/icons/ViewColumn';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { observer } from 'mobx-react-lite';
+import moment from 'moment';
+import CompareIcon from '@mui/icons-material/Compare';
+import UpdateIcon from '@mui/icons-material/Update';
 import { ChangeEvent, default as React, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 import {
   TableInstance,
   useColumnOrder,
@@ -26,18 +31,19 @@ import {
   useTable,
 } from 'react-table';
 import { useStores } from '../..';
-import { primaryLighter, statusColors } from '../../assets/themes/exilence-theme';
+import { statusColors } from '../../assets/themes/exilence-theme';
 import { useLocalStorage } from '../../hooks/use-local-storage';
-import { ColumnHidePage } from '../column-hide-page/ColumnHidePage';
+import { exportData } from '../../utils/export.utils';
+import ColumnHidePage from '../column-hide-page/ColumnHidePage';
 import { defaultColumn } from '../table-wrapper/DefaultColumn';
 import TableWrapper from '../table-wrapper/TableWrapper';
 import ItemTableFilterSubtotal from './item-table-filter-subtotal/ItemTableFilterSubtotal';
 import ItemTableFilter from './item-table-filter/ItemTableFilter';
 import ItemTableMenuContainer from './item-table-menu/ItemTableMenuContainer';
+import itemTableBulkSellColumns from './itemTableBulkSellColumns';
 import itemTableColumns from './itemTableColumns';
 import itemTableGroupColumns from './itemTableGroupColumns';
-import itemTableBulkSellColumns from './itemTableBulkSellColumns';
-import { observer } from 'mobx-react-lite';
+import itemTableComparisonColumns from './itemTableComparisonColumns';
 
 export const itemTableFilterSpacing = 2;
 
@@ -52,8 +58,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignSelf: 'flex-end',
   },
-  inlineIcon: {
-    color: primaryLighter,
+  tableButton: {
+    marginLeft: theme.spacing(1.5),
   },
   warning: {
     color: statusColors.warning,
@@ -64,6 +70,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   warningIcon: {
     color: statusColors.warning,
     marginLeft: theme.spacing(2),
+  },
+  itemTableSelectionGroup: {
+    height: 36,
   },
   bulkSell: {
     display: 'flex',
@@ -84,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   generatedAt: {
     display: 'flex',
     alignItems: 'center',
-    marginLeft: -10,
+    marginLeft: theme.spacing(2),
   },
   askingPriceInput: {
     width: 100,
@@ -104,7 +113,7 @@ const ItemTableContainer = ({
   bulkSellView = false,
   searchFilterText = '',
 }: ItemTableContainerProps) => {
-  const { accountStore, signalrStore, uiStateStore, routeStore } = useStores();
+  const { accountStore, signalrStore, uiStateStore } = useStores();
   const activeProfile = accountStore!.getSelectedAccount.activeProfile;
   const { activeGroup } = signalrStore!;
   const classes = useStyles();
@@ -120,8 +129,9 @@ const ItemTableContainer = ({
   const getColumns = useMemo(() => {
     if (activeGroup && !bulkSellView) return itemTableGroupColumns;
     if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
+    if (uiStateStore.itemTableSelection === 'comparison') return itemTableComparisonColumns;
     return itemTableColumns;
-  }, [activeGroup]);
+  }, [activeGroup, uiStateStore.itemTableSelection]);
 
   const data = useMemo(() => {
     return getItems;
@@ -135,6 +145,7 @@ const ItemTableContainer = ({
       })
     : useLocalStorage(`tableState:item-table`, {
         pageSize: 25,
+        hiddenColumns: uiStateStore!.bulkSellActivePreset?.hiddenColumns || [],
       });
 
   const [instance] = useState<TableInstance<object>>(
@@ -187,10 +198,6 @@ const ItemTableContainer = ({
     );
   };
 
-  const handleItemTableMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    uiStateStore!.setItemTableMenuAnchor(event.currentTarget);
-  };
-
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const hideableColumns = getColumns.filter((column) => !(column.id === '_selector'));
@@ -208,113 +215,122 @@ const ItemTableContainer = ({
     setAnchorEl(null);
   }, []);
 
-  const handleRedirectToCustomPrices = () => {
-    uiStateStore!.setSettingsTabIndex(2);
-    routeStore!.redirect('/settings');
-  };
-
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
-          <Grid item md={uiStateStore!.bulkSellGeneratingImage ? 11 : 5}>
-            <Grid container direction="row" spacing={2} alignItems="center">
-              <Grid item md={7} id="items-table-input">
-                <ItemTableFilter
-                  array={getItems}
-                  handleFilter={handleFilter}
-                  clearFilter={() => handleFilter(undefined, '')}
-                  searchText={searchFilterText}
-                />
-              </Grid>
-              <Grid item>
-                <ItemTableFilterSubtotal array={getItems} />
-              </Grid>
-              {uiStateStore!.bulkSellGeneratingImage && (
-                <>
-                  <Grid item id="items-table-asking-price" className={classes.askingPrice}>
-                    <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
-                    <Button
-                      className={classes.askingPriceGeneratedValue}
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                    >
-                      {uiStateStore!.bulkSellAskingPrice}c (
-                      {uiStateStore!.bulkSellAskingPricePercentage}% of original price)
-                    </Button>
-                  </Grid>
-                  <Grid item id="items-table-generated" className={classes.generatedAt}>
-                    <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
-                    <b>
-                      <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
-                    </b>
-                    &nbsp;
-                    <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
-                    <Typography variant="body2">{t('label.powered_by_poe_ninja')}</Typography>
-                  </Grid>
-                </>
-              )}
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
+          {uiStateStore!.bulkSellGeneratingImage ? (
+            <Grid item md={12} display="flex" flexDirection="row">
+              <>
+                <Grid item id="items-table-asking-price" className={classes.askingPrice}>
+                  <Typography variant="body2">{t('label.asking_price')}</Typography>:&nbsp;
+                  <Button
+                    className={classes.askingPriceGeneratedValue}
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                  >
+                    {uiStateStore!.bulkSellAskingPrice}c (
+                    {uiStateStore!.bulkSellAskingPricePercentage}% of original price)
+                  </Button>
+                </Grid>
+                <Grid item id="items-table-generated" className={classes.generatedAt}>
+                  <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
+                  <b>
+                    <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
+                  </b>
+                  &nbsp;
+                  <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
+                  <Typography variant="body2">{t('label.powered_by_poe_ninja')}</Typography>
+                </Grid>
+              </>
             </Grid>
-          </Grid>
-          <Grid
-            item
-            className={classes.actionArea}
-            id="items-table-actions"
-            md={uiStateStore!.bulkSellGeneratingImage ? 1 : 7}
-          >
-            <ColumnHidePage
-              instance={instance}
-              onClose={handleClose}
-              show={columnsOpen}
-              anchorEl={anchorEl}
-            />
-            {!bulkSellView && (
-              <Box mr={1}>
+          ) : (
+            <>
+              <Grid item md={7}>
+                <Stack spacing={2} display="flex" alignItems="center" direction="row">
+                  <ToggleButtonGroup
+                    className={classes.itemTableSelectionGroup}
+                    value={uiStateStore.itemTableSelection}
+                    exclusive
+                    size="small"
+                    onChange={(_, value) => {
+                      if (value !== null) {
+                        uiStateStore.setItemTableSelection(value);
+                      }
+                    }}
+                    aria-label="text alignment"
+                  >
+                    <ToggleButton value="latest">
+                      <Tooltip title={t('label.icon_latest') || ''} placement="bottom">
+                        <UpdateIcon fontSize="small" />
+                      </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value="comparison">
+                      <Tooltip title={t('label.icon_comparison') || ''} placement="bottom">
+                        <CompareIcon fontSize="small" />
+                      </Tooltip>
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  <ItemTableFilter
+                    array={getItems}
+                    handleFilter={handleFilter}
+                    clearFilter={() => handleFilter(undefined, '')}
+                    searchText={searchFilterText}
+                  />
+                  <ItemTableFilterSubtotal array={getItems} />
+                </Stack>
+              </Grid>
+              <Grid item className={classes.actionArea} id="items-table-actions" md={5}>
+                {columnsOpen && (
+                  <ColumnHidePage
+                    instance={instance}
+                    onClose={handleClose}
+                    show={columnsOpen}
+                    anchorEl={anchorEl}
+                  />
+                )}
+                {hideableColumns.length > 1 && (
+                  <Button
+                    size="small"
+                    className={classes.tableButton}
+                    disabled={uiStateStore.itemTableSelection === 'comparison'}
+                    variant="contained"
+                    onClick={handleColumnsClick}
+                    startIcon={<ViewColumnsIcon />}
+                  >
+                    {t('label.toggle_visible_columns')}
+                  </Button>
+                )}
                 <Button
                   size="small"
+                  className={classes.tableButton}
                   variant="contained"
-                  color="primary"
-                  onClick={handleRedirectToCustomPrices}
+                  disabled={uiStateStore.itemTableSelection === 'comparison'}
+                  onClick={() =>
+                    uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
+                  }
+                  startIcon={<FilterListIcon />}
                 >
-                  {t('label.customize_prices')}
+                  {!uiStateStore!.showItemTableFilter
+                    ? t('label.show_stash_tab_filter')
+                    : t('label.disable_stash_tab_filter')}
                 </Button>
-              </Box>
-            )}
-            {hideableColumns.length > 1 && (
-              <Tooltip title={t('label.toggle_visible_columns') || ''} placement="bottom">
-                <IconButton
-                  size="small"
-                  className={classes.inlineIcon}
-                  onClick={handleColumnsClick}
-                >
-                  <ViewColumnsIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title={t('label.toggle_stash_tab_filter') || ''} placement="bottom">
-              <IconButton
-                size="small"
-                className={classes.inlineIcon}
-                onClick={() =>
-                  uiStateStore!.setShowItemTableFilter(!uiStateStore!.showItemTableFilter)
-                }
-              >
-                <FilterListIcon />
-              </IconButton>
-            </Tooltip>
-            {!bulkSellView && (
-              <Tooltip title={t('label.toggle_export_menu') || ''} placement="bottom">
-                <IconButton
-                  size="small"
-                  className={classes.inlineIcon}
-                  onClick={handleItemTableMenuOpen}
-                >
-                  <GetAppIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-          </Grid>
+                {!bulkSellView && (
+                  <Button
+                    size="small"
+                    className={classes.tableButton}
+                    variant="contained"
+                    disabled={data.length === 0}
+                    onClick={() => exportData(data)}
+                    startIcon={<GetAppIcon />}
+                  >
+                    {t('label.toggle_export_menu')}
+                  </Button>
+                )}
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
       <TableWrapper instance={instance} setInitialState={setInitialState} />

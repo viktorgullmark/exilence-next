@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,11 +52,11 @@ const ProfileDialogContainer = ({
       if (foundLeague && accountLeague) {
         setPriceLeague(getPriceLeagueSelection(isEditing).id);
         setCharacters(accountLeague.characters);
-        setStashTabs(accountLeague.stashtabs);
+        setStashTabs(accountLeague.stashtabList);
 
         if (isEditing) {
           setSelectedStashTabs(
-            accountLeague.stashtabs.filter((s) => profile!.activeStashTabIds.includes(s.id))
+            accountLeague.stashtabList.filter((s) => profile!.activeStashTabIds.includes(s.id))
           );
         }
       }
@@ -87,7 +88,7 @@ const ProfileDialogContainer = ({
     return foundLeague ? foundLeague : priceLeagues[0];
   };
 
-  const handleLeagueChange = (event: ChangeEvent<{ value: unknown }>) => {
+  const handleLeagueChange = (event: SelectChangeEvent<string>) => {
     const id = event.target.value;
     const accountLeague = accountStore!.getSelectedAccount.accountLeagues.find(
       (l) => l.leagueId === id
@@ -95,7 +96,7 @@ const ProfileDialogContainer = ({
     setSelectedStashTabs([]);
 
     if (accountLeague) {
-      setStashTabs(accountLeague.stashtabs);
+      setStashTabs(accountLeague.stashtabList);
       setCharacters(accountLeague.characters);
     } else {
       setStashTabs([]);

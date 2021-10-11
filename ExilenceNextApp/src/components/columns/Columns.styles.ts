@@ -1,6 +1,10 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import { primaryLighter } from '../../assets/themes/exilence-theme';
+import {
+  currencyChangeColors,
+  itemColors,
+  primaryLighter,
+} from '../../assets/themes/exilence-theme';
 
 const useStyles = makeStyles((theme) => ({
   iconCellInner: {
@@ -11,10 +15,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   tableCell: {
-    padding: `${theme.spacing(1.75)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1.75)} ${theme.spacing(2)}`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  itemValue: {
+    color: itemColors.chaosOrb,
   },
   iconCell: {
     padding: theme.spacing(0.75),
@@ -28,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 120,
   },
   unavailable: {
-    color: theme.palette.text.hint,
+    color: theme.palette.text.disabled,
   },
   inlineIcon: {
     color: primaryLighter,
@@ -36,10 +43,18 @@ const useStyles = makeStyles((theme) => ({
   iconRoot: {
     fontSize: '1.2rem',
   },
+  positiveChange: {
+    fontWeight: 'bold',
+    color: currencyChangeColors.positive,
+  },
+  negativeChange: {
+    fontWeight: 'bold',
+    color: currencyChangeColors.negative,
+  },
   editIconRoot: {
     fontSize: '0.75rem',
   },
-  tabsCell: {
+  ellipsis: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

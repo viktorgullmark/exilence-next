@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format';
-import { FormControl, FormGroup, FormHelperText, FormLabel, TextField } from '@material-ui/core';
+import { FormControl, FormGroup, FormHelperText, FormLabel, TextField } from '@mui/material';
 
 import useStyles from './NumberInputSetting.styles';
 
@@ -63,6 +63,7 @@ const NumberInputSetting = ({
           {t(`label.${translationKey}`)} {requiresSnapshot ? '*' : ''}
         </FormLabel>
         <TextField
+          variant="standard"
           className={classes.root}
           id={`${translationKey}-label`}
           value={value}
@@ -77,7 +78,9 @@ const NumberInputSetting = ({
           }}
           disabled={disabled}
         />
-        <FormHelperText>{t(`helper_text.${translationKey}`)}</FormHelperText>
+        <FormHelperText className={classes.helperText}>
+          {t(`helper_text.${translationKey}`)}
+        </FormHelperText>
       </FormGroup>
     </FormControl>
   );

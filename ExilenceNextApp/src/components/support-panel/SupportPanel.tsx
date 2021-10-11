@@ -1,12 +1,12 @@
-import Fade from '@material-ui/core/Fade';
-import Paper from '@material-ui/core/Paper';
-import Popper, { PopperProps } from '@material-ui/core/Popper';
-import Typography from '@material-ui/core/Typography';
-import RedirectIcon from '@material-ui/icons/CallMade';
-import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import HistoryIcon from '@material-ui/icons/History';
-import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import Fade from '@mui/material/Fade';
+import Paper from '@mui/material/Paper';
+import Popper, { PopperProps } from '@mui/material/Popper';
+import Typography from '@mui/material/Typography';
+import RedirectIcon from '@mui/icons-material/CallMade';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import HistoryIcon from '@mui/icons-material/History';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { observer } from 'mobx-react-lite';
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,8 @@ type SupportPanelProps = {
 
 const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPanelProps) => {
   const { uiStateStore } = useStores();
-  const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
+  const { showWhatsNewModal } = uiStateStore;
+
   const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
   };
 
   const handleWhatsNewClick = () => {
-    setIsWhatsNewOpen((isWhatsNewOpen) => !isWhatsNewOpen);
+    uiStateStore.setShowWhatsNewModal(!showWhatsNewModal);
     closeSupportPanel();
   };
 
@@ -118,7 +119,7 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
           </Fade>
         )}
       </Popper>
-      <WhatsNewDialog open={isWhatsNewOpen} onClose={handleWhatsNewClick} />
+      <WhatsNewDialog open={showWhatsNewModal} onClose={handleWhatsNewClick} />
       <CreditsDialog open={isCreditsOpen} onClose={handleCreditsClick} />
     </>
   );

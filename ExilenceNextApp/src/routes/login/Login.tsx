@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { observer } from 'mobx-react-lite';
 
 import { appName, visitor } from '../..';
-import Image from '../../assets/img/2020expansion-bg.jpg';
+import Image from '../../assets/img/scourge-bg.jpg';
 import LoginContentContainer from '../../components/login-content/LoginContentContainer';
 
 const useStyles = makeStyles(() => ({

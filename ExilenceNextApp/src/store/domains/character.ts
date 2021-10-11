@@ -7,15 +7,18 @@ import { IItem } from '../../interfaces/item.interface';
 
 export class Character implements ICharacter {
   @persist uuid: string = uuidv4();
+  @persist id: string = '';
   @persist name: string = '';
-  @persist league: string = '';
-  @persist classId: number = -1;
-  @persist ascendancyClass: number = -1;
   @persist class: string = '';
   @persist level: number = -1;
-
+  @persist experience: number = -1;
+  @persist league?: string;
+  @persist expired?: boolean;
+  @persist current?: boolean;
+  @persist deleted?: boolean;
   @persist('list') @observable inventory: IItem[] = [];
   @persist('list') @observable equipment: IItem[] = [];
+  @persist('list') @observable jewels: IItem[] = [];
 
   constructor(obj?: ICharacter) {
     makeObservable(this);

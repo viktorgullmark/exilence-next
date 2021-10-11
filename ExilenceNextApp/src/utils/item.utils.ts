@@ -45,28 +45,34 @@ export function formatSnapshotsForTable(stashTabSnapshots: IStashTabSnapshot[]) 
 }
 
 export function parseTabNames(tabs: ICompactTab[]) {
-  return tabs.map((t) => t.n).join(', ');
+  return tabs.map((t) => t.name).join(', ');
 }
 
 export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
   return items.map((item: IItem) => {
-    return {
+    const mapTier =
+      item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0;
+    const blighted = item.typeLine.indexOf('Blighted ') > -1;
+    const mappedItem = {
       uuid: uuidv4(),
       itemId: item.id,
-      name: getItemName(item.typeLine, item.name),
+      name:
+        mapTier && item.frameType !== 3
+          ? item.baseType
+          : getItemName(item.name, item.frameType !== 3 ? item.typeLine : undefined),
       typeLine: item.typeLine,
       frameType: item.frameType,
       calculated: 0,
       inventoryId: item.inventoryId,
-      elder: item.elder !== undefined ? item.elder : false,
-      shaper: item.shaper !== undefined ? item.shaper : false,
+      elder: (item.elder !== undefined ? item.elder : false) || isElderMap(item.implicitMods),
+      shaper: (item.shaper !== undefined ? item.shaper : false) || isShaperMap(item.implicitMods),
+      blighted: blighted,
       icon: item.icon,
       ilvl:
         item.typeLine.indexOf(' Seed') > -1 && item.frameType === 5
           ? getSeedTier(item.properties)
           : item.ilvl,
-      tier:
-        item.properties !== null && item.properties !== undefined ? getMapTier(item.properties) : 0,
+      tier: mapTier,
       corrupted: item.corrupted || false,
       links:
         item.sockets !== undefined && item.sockets !== null
@@ -82,19 +88,20 @@ export function mapItemsToPricedItems(items: IItem[], tab?: IStashTab) {
       variant: getItemVariant(
         item.sockets,
         item.explicitMods,
-        getItemName(item.typeLine, item.name)
+        getItemName(item.name, item.typeLine)
       ),
       tab: tab
         ? [
             {
-              n: tab.n,
-              i: tab.i,
+              name: tab.name,
+              index: tab.index,
               id: tab.id,
-              colour: tab.colour,
+              color: tab.metadata.colour,
             } as ICompactTab,
           ]
         : [],
     } as IPricedItem;
+    return mappedItem;
   });
 }
 
@@ -115,6 +122,13 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
 export function isDivinationCard(icon: string) {
   return icon.indexOf('/Divination/') > -1;
 }
+
+export function isSpecialGem(name: string) {
+  const suffix = 'Support';
+  const specialGems = [`Empower ${suffix}`, `Enhance ${suffix}`, `Enlighten ${suffix}`];
+  return specialGems.some((sg) => name.includes(sg));
+}
+
 export function getLinks(array: any[]) {
   const numMapping: any = {};
   let greatestFreq = 0;
@@ -187,12 +201,26 @@ export function getMapTier(properties: IProperty[]) {
   return 0;
 }
 
-export function getItemName(typeline: string, name: string) {
+export function getItemName(name: string, typeline?: string) {
   let itemName = name;
   if (typeline) {
     itemName += ' ' + typeline;
   }
   return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+}
+
+export function isElderMap(implicitMods: string[]): boolean {
+  if (implicitMods) {
+    return implicitMods.some((im) => im.includes('Elder'));
+  }
+  return false;
+}
+
+export function isShaperMap(implicitMods: string[]): boolean {
+  if (implicitMods) {
+    return implicitMods.some((im) => im.includes('Shaper'));
+  }
+  return false;
 }
 
 export function getItemVariant(sockets: ISocket[], explicitMods: string[], name: string): string {

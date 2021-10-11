@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, FormControl, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
 import { useField } from 'formik';
 
 interface Props {

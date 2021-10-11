@@ -1,5 +1,14 @@
 import { Column } from 'react-table';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+import {
+  itemCorrupted,
+  itemIcon,
+  itemIlvlTier,
+  itemLinks,
+  itemName,
+  itemQuantity,
+  itemValue,
+  sparkLine,
+} from '../columns/Columns';
 
 const itemTableBulkSellColumns: Column<object>[] = [
   itemIcon({
@@ -13,11 +22,10 @@ const itemTableBulkSellColumns: Column<object>[] = [
     },
     true
   ),
-  {
-    Header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
-  },
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
+  }),
   itemCorrupted({
     accessor: 'corrupted',
     header: 'Corrupted',
@@ -36,18 +44,21 @@ const itemTableBulkSellColumns: Column<object>[] = [
     accessor: 'level',
     align: 'right',
   },
-  {
-    Header: 'Quantity',
+  itemQuantity({
+    header: 'Quantity',
     accessor: 'stackSize',
-    align: 'right',
-  },
+  }),
+  sparkLine({
+    accessor: 'sparkLine.totalChange',
+    header: 'Price last 7 days',
+  }),
   itemValue({
     accessor: 'calculated',
-    header: 'Price',
+    header: 'Price (c)',
   }),
   itemValue({
     accessor: 'total',
-    header: 'Total value',
+    header: 'Total value (c)',
   }),
 ];
 

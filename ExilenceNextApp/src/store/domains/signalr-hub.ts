@@ -65,7 +65,11 @@ export class SignalrHub {
 
           this.rootStore.signalrStore.setOnline(true);
         })
-        .catch((err: string) => console.log(err))
+        .catch((err: string) => {
+          if (!AppConfig.production) {
+            console.log(err);
+          }
+        })
     );
   }
 

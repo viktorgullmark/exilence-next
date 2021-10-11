@@ -1,14 +1,15 @@
 import React, { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, IconButton, TextField } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
+import { Box, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
 
 import { IPricedItem } from '../../../interfaces/priced-item.interface';
 import useStyles from './ItemTableFilter.styles';
+import clsx from 'clsx';
 
 export type TableFilterProps<T> = {
   array: T[];
@@ -40,7 +41,7 @@ const ItemTableFilter = ({
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} className={classes.grow}>
       <TextField
         margin="dense"
         variant="outlined"
@@ -49,8 +50,9 @@ const ItemTableFilter = ({
           handleFilter(e);
         }}
         name="searchText"
+        size="small"
         placeholder={t('tables:label.search_text')}
-        className={classes.searchField}
+        className={clsx(classes.searchField, classes.grow)}
         value={formik.values.searchText}
         InputProps={{
           classes: {

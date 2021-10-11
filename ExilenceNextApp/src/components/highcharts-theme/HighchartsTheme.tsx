@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import Highcharts from 'highcharts';
 
 import { highchartsColors } from '../../assets/themes/exilence-theme';
@@ -44,7 +44,7 @@ const HighchartsTheme = () => {
     },
     yAxis: {
       gridLineColor: theme.palette.secondary.light,
-      lineColor: theme.palette.text.hint,
+      lineColor: theme.palette.text.disabled,
       minorGridLineColor: theme.palette.secondary.light,
       title: {
         text: '',
@@ -60,7 +60,7 @@ const HighchartsTheme = () => {
     },
     xAxis: {
       gridLineColor: theme.palette.secondary.light,
-      lineColor: theme.palette.text.hint,
+      lineColor: theme.palette.text.disabled,
       minorGridLineColor: theme.palette.secondary.light,
       labels: {
         style: {

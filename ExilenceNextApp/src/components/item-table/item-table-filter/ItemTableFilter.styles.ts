@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   searchField: {
@@ -10,6 +10,11 @@ const useStyles = makeStyles((theme) => ({
   },
   inputField: {
     fontSize: '0.875rem',
+  },
+  grow: {
+    display: 'flex',
+    flex: 1,
+    maxWidth: 350,
   },
 }));
 

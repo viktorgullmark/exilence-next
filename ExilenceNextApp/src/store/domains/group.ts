@@ -1,15 +1,19 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-
+import { rootStore } from '../..';
 import { IApiConnection } from '../../interfaces/api/api-connection.interface';
 import { IApiGroup } from '../../interfaces/api/api-group.interface';
 import { IGroupChartSeries } from '../../interfaces/group-chart-series.interface';
+import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import {
   calculateNetWorth,
+  diffSnapshots,
   filterItems,
+  filterSnapshotItems,
   formatSnapshotsForChart,
   getItemCount,
+  getValueForSnapshot,
   getValueForSnapshotsTabs,
 } from '../../utils/snapshot.utils';
 
@@ -54,6 +58,20 @@ export class Group implements IApiGroup {
   }
 
   @computed
+  get sparklineChartData(): ISparklineDataPoint[] | undefined {
+    const snapshots = [...this.latestGroupSnapshots.slice(0, 10)];
+    if (snapshots.length === 0) {
+      return;
+    }
+    return snapshots.map((s, i) => {
+      return {
+        x: i + 1,
+        y: getValueForSnapshot(s),
+      } as ISparklineDataPoint;
+    });
+  }
+
+  @computed
   get lastSnapshotChange() {
     if (this.groupSnapshots.length < 2) {
       return 0;
@@ -63,12 +81,16 @@ export class Group implements IApiGroup {
       moment(a.created).isBefore(b.created) ? 1 : -1
     )[0];
 
-    const previousNetworth = getValueForSnapshotsTabs(
+    let previousNetworth = getValueForSnapshotsTabs(
       this.latestGroupSnapshotsExceptLast(latestSnapshot.uuid)
     );
 
-    const newNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
+    let newNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
 
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      newNetworth = newNetworth / rootStore.priceStore.exaltedPrice;
+      previousNetworth = previousNetworth / rootStore.priceStore.exaltedPrice;
+    }
     return newNetworth - previousNetworth;
   }
 
@@ -120,10 +142,17 @@ export class Group implements IApiGroup {
 
   @computed
   get items() {
-    if (this.latestGroupSnapshots.length === 0) {
+    const diffSelected = rootStore.uiStateStore.itemTableSelection === 'comparison';
+    if (
+      this.latestGroupSnapshots.length === 0 ||
+      (diffSelected && this.latestGroupSnapshots.length < 2)
+    ) {
       return [];
     }
-    return filterItems(this.latestGroupSnapshots);
+    if (diffSelected) {
+      return filterItems(diffSnapshots(this.latestGroupSnapshots[1], this.latestGroupSnapshots[0]));
+    }
+    return filterSnapshotItems(this.latestGroupSnapshots);
   }
 
   @computed
@@ -131,7 +160,11 @@ export class Group implements IApiGroup {
     if (this.latestGroupSnapshots.length === 0) {
       return 0;
     }
-    return calculateNetWorth(this.latestGroupSnapshots);
+    let calculatedValue = calculateNetWorth(this.latestGroupSnapshots);
+    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+      calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
+    }
+    return calculatedValue;
   }
 
   @computed

@@ -1,5 +1,14 @@
 import { Column } from 'react-table';
-import { itemCorrupted, itemIcon, itemLinks, itemName, itemValue } from '../columns/Columns';
+import {
+  itemCorrupted,
+  itemIcon,
+  itemIlvlTier,
+  itemLinks,
+  itemName,
+  itemQuantity,
+  itemValue,
+  sparkLine,
+} from '../columns/Columns';
 
 const itemTableGroupColumns: Column<object>[] = [
   itemIcon({
@@ -10,11 +19,10 @@ const itemTableGroupColumns: Column<object>[] = [
     accessor: 'name',
     header: 'Name',
   }),
-  {
-    Header: 'Item level',
-    accessor: 'ilvl',
-    align: 'right',
-  },
+  itemIlvlTier({
+    accessor: (row: any) => (row.tier > 0 ? row.tier : row.ilvl),
+    header: 'Ilvl / Tier',
+  }),
   itemCorrupted({
     accessor: 'corrupted',
     header: 'Corrupted',
@@ -27,24 +35,33 @@ const itemTableGroupColumns: Column<object>[] = [
     Header: 'Quality',
     accessor: 'quality',
     align: 'right',
+    maxWidth: 60,
   },
   {
     Header: 'Level',
     accessor: 'level',
     align: 'right',
+    maxWidth: 60,
   },
-  {
-    Header: 'Quantity',
+  itemQuantity({
+    header: 'Quantity',
     accessor: 'stackSize',
-    align: 'right',
-  },
+  }),
+  sparkLine({
+    accessor: 'sparkLine.totalChange',
+    header: 'Price last 7 days',
+  }),
   itemValue({
     accessor: 'calculated',
-    header: 'Price',
+    header: 'Price (c)',
   }),
   itemValue({
     accessor: 'total',
-    header: 'Total value',
+    header: 'Total value (c)',
+  }),
+  itemValue({
+    header: 'Cumulative (c)',
+    cumulative: true,
   }),
 ];
 

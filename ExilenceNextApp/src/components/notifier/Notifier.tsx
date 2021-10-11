@@ -27,7 +27,7 @@ const Notifier = () => {
             description={t(n.description)}
           />
         ),
-        { type: n.type, className: classes[n.type] }
+        { type: n.type, className: classes.default }
       );
       storeDisplayed(n.uuid);
     });

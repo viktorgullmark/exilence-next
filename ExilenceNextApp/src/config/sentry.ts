@@ -6,7 +6,14 @@ function initSentry() {
   if (AppConfig.production) {
     Sentry.init({
       dsn: AppConfig.sentryBrowserDsn,
-      ignoreErrors: [/^net::+.*$/, AppConfig.pathOfExileUrl, 'Network Error', 'NetworkError'],
+      ignoreErrors: [
+        /^net::+.*$/,
+        AppConfig.pathOfExileUrl,
+        'Network Error',
+        'NetworkError',
+        'Request failed',
+        'net::',
+      ],
     });
   }
 }

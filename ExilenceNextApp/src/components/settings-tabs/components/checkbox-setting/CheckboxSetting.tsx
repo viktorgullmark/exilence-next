@@ -8,7 +8,7 @@ import {
   FormHelperText,
   FormLabel,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import useStyles from './CheckboxSetting.styles';
 
@@ -53,7 +53,9 @@ const CheckboxSetting = ({
           }
         />
       </FormGroup>
-      <FormHelperText>{t(`helper_text.${helperTextKey || translationKey}`)}</FormHelperText>
+      <FormHelperText className={classes.helperText}>
+        {t(`helper_text.${helperTextKey || translationKey}`)}
+      </FormHelperText>
     </FormControl>
   );
 };

@@ -1,6 +1,86 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2021-10-11
+#### Added
+- Added support for parsing the Unique stash tab
+- Added support for parsing the Map tab
+- Added a setting for using exalted orbs as main currency
+   - Added quicktoggle button directly on the net worth card
+   - Changed the currency color to a more neutral tone
+- Added support for pricing `Blighted`, `Elder` and `Shaper` maps
+- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
+- Added the ability to cancel an ongoing snapshot
+- Added the ability to delete selected snapshots from the history
+- Added a new column `Price history last 7 days` to the item table
+- Added a new column `Cumulative` to the item table
+- Added a new toggle button to the table to select display mode
+    - Option 1 (default): Displays the items from the latest snapshot
+    - Option 2: Displays the change (diff) in items and value between the latest two snapshots
+- Added display of map tier in the item table
+- Added a sparkline chart to the net worth card
+- Added major display improvements to the item table
+- Added beta labels to new features
+- Added tooltips to menu icons
+- Added placeholder option to character selection dropdown
+- Added option to choose release channels
+   - Allows you to change to the beta channel feed
+- Added option to choose what should happen when closing the app window
+- Added column presets to the item table
+- Added a label for displaying the age of prices fetched from `https://poe.ninja`
+- Added minor display improvements to the toolbar
+- Added minor display improvements to the stash tab list
+- Added an info icon to the snapshotting status message, to explain rate limitations
+#### Fixed
+- Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
+- Fixed an issue where some legacy maps were priced incorrectly
+- Fixed a bug where the app would sometimes get stuck on `Waiting for prices`
+- Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
+- Fixed a bug where the character selection sometimes would not change when league was changed
+- Fixed a bug where the filter input width would change after generating a bulk sell image
+- Fixed a bug where the export button would cause an error if the table was empty
+- Fixed a bug where the app would sometimes turn white when loading
+#### Changed
+- Reworked how maps are priced
+  - Should now accurately price maps with good confidence
+  - Now only prices maps based on the latest generation of maps (e.g Expedition)
+- Reworked how uniques are priced
+  - Should now correctly identify uniques all the time
+- Reworked skill gem pricing
+  - Accurate pricing for empower, enhance, enlighten
+  - Accurate pricing and identification for all gems
+- Changed the underlying data provider
+  - Now uses the new https://api.pathofexile.com instead of `/character-window`
+- Changed which leagues the pricing league dropdown lists
+  - Now lists all leagues that has prices on poe.ninja
+- Reworked how we fetch prices
+  - We now only refresh prices for the leagues you are actively using
+- Changed the warning message for `Waiting for prices` to be more descriptive than previously
+- Changed the behaviour of the custom prices table
+  - Now uses the active pricing league as default
+- Changed the default setting for autosnapshotting to false
+- Changed the minimum auto snapshotting interval to five minutes, up from two
+- Changed background color of the filter total chip
+- Changed the default columns for the item table
+- Changed how we set the rate limitation on requests
+  - Now parses the headers from the response and sets/updates them accordingly
+  - Sets a temporary cooldown for snapshots after you have been rate limited
+- Changed the way the profile modal behaves
+  - Now you should not be able to close it by mistake
+- Changed the way snapshots are stored in order for comparison to work
+  - Now stores items for up to ten snapshots back, up from one
+- Changed the widget placement on the bulk sell page
+- Changed some common translations
+- Now only shows the filter total chip when the filter is active
+#### Removed
+- Removed the helper icon from the pricing league dropdown
+- Removed the close button from the initial quickstart tour
+- Removed the shortcut to custom prices from the item table
+##### Updated
+- Updated Material UI (v4 -> v5) with dependencies
+- Updated Electron (v12 -> v15) with dependencies
+- Updated SignalR (v3 -> v5) with dependencies
+
 ## [0.6.0] - 2021-09-19
 #### Added
 - Added pricing support for item type `Blighted map` (Thanks to AndyHoang)

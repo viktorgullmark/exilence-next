@@ -5,6 +5,7 @@ import { IPoeNinjaCurrencyOverviewLine } from '../interfaces/poe-ninja/poe-ninja
 import { IPoeNinjaItemOverviewLine } from '../interfaces/poe-ninja/poe-ninja-item-overview-line.interface';
 import { IPoeWatchCombinedPriceItemData } from '../interfaces/poe-watch/poe-watch-combined-price-item-data.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { ISparklineDataPoint } from '../interfaces/sparkline-data-point.interface';
 import AppConfig from './../config/app.config';
 import { getNinjaLeagueUrl, getNinjaTypeUrl } from './ninja.utils';
 
@@ -61,7 +62,20 @@ export function getExternalPriceFromNinjaItem(
     count: item.count ?? 0,
     quality: item.gemQuality ?? 0,
     detailsUrl: detailsUrl,
+    sparkLine: item.count > 10 ? item.sparkline : item.lowConfidenceSparkline,
   } as IExternalPrice;
+}
+
+export function formatSparklineChartData(data: number[]): ISparklineDataPoint[] | undefined {
+  if (data.length === 0) {
+    return;
+  }
+  return data.map((val, i) => {
+    return {
+      x: i + 1,
+      y: val,
+    } as ISparklineDataPoint;
+  });
 }
 
 export function getExternalPriceFromNinjaCurrencyItem(
@@ -74,6 +88,7 @@ export function getExternalPriceFromNinjaCurrencyItem(
     league.toLowerCase()
   )}/${getNinjaTypeUrl(type)}/${item.detailsId}`;
   const calculated = item.receive ? item.receive.value : 0;
+  const sparkLine = item.receiveSparkLine ? item.receiveSparkLine : undefined;
 
   return {
     name: item.currencyTypeName,
@@ -82,6 +97,8 @@ export function getExternalPriceFromNinjaCurrencyItem(
     count: item.receive ? item.receive.count : 0,
     frameType: 5,
     detailsUrl: detailsUrl,
+    sparkLine:
+      item.receive && item.receive.count > 10 ? sparkLine : item.lowConfidenceReceiveSparkLine,
   } as IExternalPrice;
 }
 
@@ -169,6 +186,6 @@ export function mapApiPricedItemToPricedItem(item: IPricedItem) {
 }
 
 export function excludeLegacyMaps(prices: IExternalPrice[]) {
-  const legacyMapVariants = ['Pre 2.0', 'Atlas2', 'Atlas2-3.4'];
-  return prices.filter((p) => !p.variant || !legacyMapVariants.includes(p.variant));
+  const acceptedMaps = [', Gen-11', 'expedition'];
+  return prices.filter((p) => p.tier === 0 || !p.variant || acceptedMaps.includes(p.variant));
 }

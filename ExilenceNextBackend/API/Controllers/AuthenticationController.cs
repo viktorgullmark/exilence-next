@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.ApiModels;
+using API.Models;
 using API.Helpers;
 using API.Hubs;
 using API.Interfaces;
@@ -78,6 +78,8 @@ namespace API.Controllers
 
             using (var client = _httpClientFactory.CreateClient())
             {
+                client.DefaultRequestHeaders.Add("User-Agent", "exilence-next");
+
                 var data = new FormUrlEncodedContent(new[]
                 {
                 new KeyValuePair<string, string>("client_id", _clientId),
@@ -93,7 +95,7 @@ namespace API.Controllers
                     return Ok(content);
                 }
 
-                _logger.LogError($"Something went wrong fetching token from code: {code}", response.ReasonPhrase);
+                _logger.LogError($"Something went wrong fetching token from code: {code}, reason: {response.ReasonPhrase}");
                 return BadRequest(content);
             }
         }
@@ -108,6 +110,8 @@ namespace API.Controllers
                 using (var client = _httpClientFactory.CreateClient())
                 {
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+                    client.DefaultRequestHeaders.Add("User-Agent", "exilence-next");
+
 
                     var response = await client.GetAsync(uri);
                     var content = await response.Content.ReadAsStringAsync();
@@ -128,13 +132,13 @@ namespace API.Controllers
                     }
                     else
                     {
-                        _logger.LogError($"Something went wrong trying to validate account: {accountName} with token: {accessToken}", response.ReasonPhrase);
+                        _logger.LogError($"Something went wrong trying to validate account: {accountName} with token: {accessToken}, reason: {response.ReasonPhrase}");
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}", e.Message);
+                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}, message: {e.Message}");
                 return false;
             }
 

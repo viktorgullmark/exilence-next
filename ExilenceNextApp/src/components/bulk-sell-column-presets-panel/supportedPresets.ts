@@ -1,47 +1,47 @@
 const SUPPORTED_PRESETS = [
   {
+    name: 'value.custom',
+    hiddenColumns: ['quality', 'level', 'corrupted', 'Ilvl / Tier'],
+  },
+  {
     name: 'label.breachstones',
-    hiddenColumns: ['corrupted', 'quality'],
+    hiddenColumns: ['corrupted', 'quality', 'Ilvl / Tier'],
   },
   {
     name: 'label.catalysts',
-    hiddenColumns: ['quantity', 'price'],
+    hiddenColumns: ['quantity', 'price', 'Ilvl / Tier'],
   },
   {
     name: 'label.delirium_orbs',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.divination_cards',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.essences',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.fossils',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.incubators',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.prophecies',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.scarabs',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
   {
     name: 'label.sets',
-    hiddenColumns: [],
-  },
-  {
-    name: 'value.none',
-    hiddenColumns: [],
+    hiddenColumns: ['Ilvl / Tier'],
   },
 ];
 

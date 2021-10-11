@@ -1,34 +1,39 @@
+import { Cancel } from '@mui/icons-material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import AddIcon from '@mui/icons-material/Add';
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import GroupIcon from '@mui/icons-material/Group';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
+import UpdateIcon from '@mui/icons-material/Update';
+import WarningIcon from '@mui/icons-material/Warning';
 import {
   AppBar,
   Badge,
   Box,
+  Button,
   FormControl,
   Grid,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Tooltip,
-} from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
-import MuiToolbar from '@material-ui/core/Toolbar';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import AddIcon from '@material-ui/icons/Add';
-import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
-import GroupIcon from '@material-ui/icons/Group';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import UpdateIcon from '@material-ui/icons/Update';
-import WarningIcon from '@material-ui/icons/Warning';
+  Typography,
+} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import MuiToolbar from '@mui/material/Toolbar';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';
 import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
+import CountdownTimer from '../countdown-timer/CountdownTimer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
 import NotificationListContainer from '../notification-list/NotificationListContainer';
 import ProfileDialogContainer from '../profile-dialog/ProfileDialogContainer';
@@ -53,12 +58,14 @@ type ToolbarProps = {
   profilesLoaded: boolean;
   changingProfile: boolean;
   hasPrices?: boolean;
+  retryAfter: number;
   statusMessage?: IStatusMessage;
+  toggleAutosnapshot: () => void;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
-  handleProfileChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
+  handleProfileChange: (event: SelectChangeEvent<string>) => void;
   handleSnapshot: () => void;
   handleOverlay: () => void;
   handleLogMonitor: () => void;
@@ -66,6 +73,7 @@ type ToolbarProps = {
   handleAccountMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleClearSnapshots: () => void;
   handleRemoveProfile: () => void;
+  handleCancelSnapshot: () => void;
 };
 
 const Toolbar = ({
@@ -84,6 +92,7 @@ const Toolbar = ({
   profilesLoaded,
   changingProfile,
   statusMessage,
+  retryAfter,
   toggleGroupOverview,
   handleProfileOpen,
   handleProfileClose,
@@ -94,6 +103,7 @@ const Toolbar = ({
   handleClearSnapshots,
   handleRemoveProfile,
   handleOverlay,
+  handleCancelSnapshot,
 }: ToolbarProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -114,34 +124,72 @@ const Toolbar = ({
       >
         <ToolbarStepperContainer />
         <MuiToolbar className={clsx(classes.toolbar, { [classes.baseMargin]: !sidenavOpened })}>
-          {!signalrOnline && (
-            <WarningIcon
-              titleAccess={t('label.server_offline_title')}
-              className={classes.offlineIcon}
-            />
-          )}
-          {signalrOnline && !hasPrices && (
-            <WarningIcon
-              titleAccess={t('label.no_prices_retrieved')}
-              className={classes.offlineIcon}
-            />
-          )}
-          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) && (
-            <Box ml={1} display="flex" alignItems="center" justifyContent="center">
-              <CircularProgress
-                className={classes.leftSpinner}
-                title={t('label.loading_title')}
-                size={20}
+          {!signalrOnline && retryAfter === 0 && (
+            <>
+              <WarningIcon
+                titleAccess={t('label.server_offline_title')}
+                className={classes.offlineIcon}
               />
+              {!statusMessage && (
+                <Box display="flex" alignItems="center" width={420}>
+                  <Typography variant="caption">{t('label.server_offline_title')}</Typography>
+                </Box>
+              )}
+            </>
+          )}
+          {signalrOnline && !hasPrices && retryAfter === 0 && (
+            <>
+              <WarningIcon
+                titleAccess={t('label.no_prices_retrieved', {
+                  league: activeProfile?.activePriceLeagueId,
+                })}
+                className={classes.offlineIcon}
+              />
+              {!statusMessage && (
+                <Box display="flex" alignItems="center" width={420}>
+                  <Typography variant="caption">{t('label.no_prices_retrieved')}</Typography>
+                </Box>
+              )}
+            </>
+          )}
+          {retryAfter > 0 && (
+            <>
+              <WarningIcon
+                titleAccess={t('label.rate_limit_exceeded')}
+                className={classes.offlineIcon}
+              />
+              <Box display="flex" alignItems="center" width={420}>
+                <Typography variant="caption">
+                  {t('label.rate_limit_exceeded_prefix')}:&nbsp;
+                </Typography>
+                <CountdownTimer comparison={retryAfter} />
+              </Box>
+            </>
+          )}
+          {(isInitiating || changingProfile || isUpdatingPrices || isSnapshotting) &&
+            retryAfter === 0 && (
+              <Box ml={1} display="flex" alignItems="center" justifyContent="center">
+                <CircularProgress
+                  className={classes.leftSpinner}
+                  title={t('label.loading_title')}
+                  size={20}
+                />
+              </Box>
+            )}
+          {retryAfter === 0 && (
+            <Box ml={2} display="flex" whiteSpace="nowrap">
+              {statusMessage && <StatusMessageContainer />}
+              {!statusMessage && isUpdatingPrices && (
+                <StatusMessageContainer overrideMessage={fetchingPricesMsg} />
+              )}
             </Box>
           )}
-          <Box ml={2} display="flex" whiteSpace="nowrap">
-            {statusMessage && <StatusMessageContainer />}
-            {!statusMessage && isUpdatingPrices && (
-              <StatusMessageContainer overrideMessage={fetchingPricesMsg} />
-            )}
-          </Box>
-          <Grid container alignItems="center" justify="flex-end" className={classes.toolbarGrid}>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="flex-end"
+            className={classes.toolbarGrid}
+          >
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
               <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
                 <span>
@@ -156,6 +204,7 @@ const Toolbar = ({
                     aria-label="edit"
                     className={classes.iconButton}
                     onClick={() => handleProfileOpen(true)}
+                    size="large"
                   >
                     <SettingsIcon fontSize="small" />
                   </IconButton>
@@ -174,6 +223,7 @@ const Toolbar = ({
                     name: 'profile',
                     id: 'profile-dd',
                   }}
+                  variant="standard"
                 >
                   {profiles.map((profile: Profile) => {
                     return (
@@ -192,6 +242,7 @@ const Toolbar = ({
                     onClick={() => handleProfileOpen()}
                     aria-label="create"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <AddIcon fontSize="small" />
                   </IconButton>
@@ -210,6 +261,7 @@ const Toolbar = ({
                     onClick={() => handleRemoveProfile()}
                     aria-label="remove profile"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
@@ -218,15 +270,33 @@ const Toolbar = ({
             </Grid>
             <Grid item className={classes.divider} />
             <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
-              <Tooltip title={t('label.fetch_snapshot_icon_title') || ''} placement="bottom">
+              <Button
+                startIcon={<UpdateIcon />}
+                variant="contained"
+                size="small"
+                color="primary"
+                disabled={
+                  !activeProfile ||
+                  !activeProfile.readyToSnapshot ||
+                  !signalrOnline ||
+                  retryAfter > 0
+                }
+                onClick={() => handleSnapshot()}
+                aria-label="snapshot"
+                className={classes.snapshotBtn}
+              >
+                {t('label.fetch_snapshot_icon_title')}
+              </Button>
+              <Tooltip title={t('label.cancel_snapshot_icon_title') || ''} placement="bottom">
                 <span>
                   <IconButton
-                    disabled={!activeProfile || !activeProfile.readyToSnapshot || !signalrOnline}
-                    onClick={() => handleSnapshot()}
-                    aria-label="snapshot"
+                    disabled={!isSnapshotting}
+                    onClick={() => handleCancelSnapshot()}
+                    aria-label="cancelSnapshot"
                     className={classes.iconButton}
+                    size="large"
                   >
-                    <UpdateIcon fontSize="small" />
+                    <Cancel fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -242,6 +312,7 @@ const Toolbar = ({
                     onClick={() => handleClearSnapshots()}
                     aria-label="clear snapshots"
                     className={classes.iconButton}
+                    size="large"
                   >
                     <DeleteSweepIcon fontSize="small" />
                   </IconButton>
@@ -257,6 +328,7 @@ const Toolbar = ({
                     aria-label="overlay"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <AddToPhotosIcon fontSize="small" />
                   </IconButton>
@@ -273,6 +345,7 @@ const Toolbar = ({
                     aria-label="group"
                     aria-haspopup="true"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <GroupIcon fontSize="small" />
                   </IconButton>
@@ -289,6 +362,7 @@ const Toolbar = ({
                     aria-label="show new notifications"
                     color="inherit"
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <Badge
                       max={9}
@@ -310,6 +384,7 @@ const Toolbar = ({
                     aria-haspopup="true"
                     disabled={isSnapshotting || isInitiating}
                     className={clsx(classes.iconButton)}
+                    size="large"
                   >
                     <AccountCircle fontSize="small" />
                   </IconButton>

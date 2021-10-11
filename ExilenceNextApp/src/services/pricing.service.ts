@@ -1,5 +1,6 @@
 import { IExternalPrice } from '../interfaces/external-price.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
+import { isSpecialGem } from '../utils/item.utils';
 import { mapPriceToItem } from '../utils/price.utils';
 
 export const pricingService = {
@@ -27,9 +28,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       case 1: // magic
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
-          price = prices.find(
-            (p) => (p.name === item.name || item.name.indexOf(p.name) > -1) && p.tier === item.tier
-          );
+          price = prices.find((p) => p.name === item.name && p.tier === item.tier);
         } else {
           // other (e.g fragments, scrabs)
           price = prices.find((p) => p.name === item.name);
@@ -39,7 +38,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         // unique
         const itemPrices = prices.filter(
           (p) =>
-            item.name.startsWith(p.name) &&
+            p.name === item.name &&
             ((item.links < 5 && p.links !== undefined && p.links < 5) || p.links === item.links) &&
             p.frameType === 3 &&
             (p.variant === item.variant ||
@@ -62,9 +61,11 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
         price = prices.find(
           (p) =>
             p.name === item.name &&
-            p.level === item.level &&
             p.corrupted === item.corrupted &&
-            p.quality === item.quality
+            (item.quality < 20 || p.quality === item.quality) &&
+            ((isSpecialGem(item.name) && p.level === item.level) ||
+              item.level < 20 ||
+              p.level === item.level)
         );
         break;
       case 5: // currency, including seeds
@@ -107,6 +108,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     ...item,
     ...modifiedPrice,
     corrupted: item.corrupted,
+    icon: item.icon,
   };
   return data;
 }

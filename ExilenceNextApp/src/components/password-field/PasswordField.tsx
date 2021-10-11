@@ -1,9 +1,7 @@
+import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
+import { useField } from 'formik';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@material-ui/core';
-import { useField } from 'formik';
-
-import useLabelWidth from '../../hooks/use-label-width';
 import VisibilityIcon from '../visibility-icon/VisibilityIcon';
 import useStyles from './PasswordField.styles';
 
@@ -32,11 +30,12 @@ const PasswordField = ({
   const classes = useStyles();
   const [field, meta] = useField(name);
   const [visible, setVisible] = useState(false);
-  const { labelWidth, ref } = useLabelWidth(0);
 
   const handleMouseDownIcon = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
   };
+
+  const inputLabel = `${label} ${!required && `(${t('label.optional').toLowerCase()})`}`;
 
   return (
     <FormControl
@@ -49,16 +48,14 @@ const PasswordField = ({
       }}
       fullWidth
     >
-      <InputLabel ref={ref} htmlFor={name}>
-        {label} {!required && `(${t('label.optional').toLowerCase()})`}
-      </InputLabel>
+      <InputLabel htmlFor={name}>{inputLabel}</InputLabel>
       <OutlinedInput
         id={name}
+        label={inputLabel}
         type={visible ? 'text' : 'password'}
         autoFocus={autoFocus}
         placeholder={placeholder}
         required={required}
-        labelWidth={labelWidth}
         endAdornment={
           <VisibilityIcon
             position="end"
