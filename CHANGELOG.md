@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2021-10-11
+#### Changed
+- Changed the way requests are handled internally
+
 ## [1.0.0] - 2021-10-11
 #### Added
 - Added support for parsing the Unique stash tab
