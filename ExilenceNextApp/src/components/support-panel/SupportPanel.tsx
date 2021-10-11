@@ -23,7 +23,8 @@ type SupportPanelProps = {
 
 const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPanelProps) => {
   const { uiStateStore } = useStores();
-  const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
+  const { showWhatsNewModal } = uiStateStore;
+
   const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
   };
 
   const handleWhatsNewClick = () => {
-    setIsWhatsNewOpen((isWhatsNewOpen) => !isWhatsNewOpen);
+    uiStateStore.setShowWhatsNewModal(!showWhatsNewModal);
     closeSupportPanel();
   };
 
@@ -118,7 +119,7 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
           </Fade>
         )}
       </Popper>
-      <WhatsNewDialog open={isWhatsNewOpen} onClose={handleWhatsNewClick} />
+      <WhatsNewDialog open={showWhatsNewModal} onClose={handleWhatsNewClick} />
       <CreditsDialog open={isCreditsOpen} onClose={handleCreditsClick} />
     </>
   );

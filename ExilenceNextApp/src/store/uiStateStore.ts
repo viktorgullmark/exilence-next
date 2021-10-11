@@ -69,6 +69,8 @@ export class UiStateStore {
   @observable joiningGroup: boolean = false;
   @observable creatingGroup: boolean = false;
   @observable leavingGroup: boolean = false;
+  @observable shouldShowWhatsNewModal: boolean = false;
+  @observable showWhatsNewModal: boolean = false;
   @observable clearingSnapshots: boolean = false;
   @observable profilesLoaded: boolean = false;
   @observable settingsTabIndex: number = 0;
@@ -196,6 +198,16 @@ export class UiStateStore {
   @action
   setNetWorthChartExpanded(expanded: boolean) {
     this.netWorthChartExpanded = expanded;
+  }
+
+  @action
+  setShowWhatsNewModal(show: boolean) {
+    this.showWhatsNewModal = show;
+  }
+
+  @action
+  setShouldShowWhatsNewModal(show: boolean) {
+    this.shouldShowWhatsNewModal = show;
   }
 
   @action

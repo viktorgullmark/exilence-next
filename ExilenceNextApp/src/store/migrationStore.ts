@@ -6,6 +6,7 @@ import { catchError, concatMap, switchMap } from 'rxjs/operators';
 
 import { RootStore } from './rootStore';
 import { fromStream } from 'mobx-utils';
+import { rootStore } from '..';
 
 export class MigrationStore {
   @observable @persist current: number = 2;
@@ -72,6 +73,7 @@ export class MigrationStore {
             case 2:
               // from version 2
               observable = this.clearStorage();
+              rootStore.uiStateStore.setShouldShowWhatsNewModal(true);
               break;
             default:
               break;
