@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
     - Option 2: Displays the change (diff) in items and value between the latest two snapshots
 - Added display of map tier in the item table
 - Added a sparkline chart to the net worth card
+- Added major display improvements to the item table
 - Added beta labels to new features
 - Added tooltips to menu icons
 - Added placeholder option to character selection dropdown
@@ -27,7 +28,6 @@ All notable changes to this project will be documented in this file.
 - Added option to choose what should happen when closing the app window
 - Added column presets to the item table
 - Added a label for displaying the age of prices fetched from `https://poe.ninja`
-- Added minor display improvements to the item table
 - Added minor display improvements to the toolbar
 - Added minor display improvements to the stash tab list
 - Added an info icon to the snapshotting status message, to explain rate limitations
