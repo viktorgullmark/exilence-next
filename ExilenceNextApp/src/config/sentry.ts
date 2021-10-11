@@ -12,6 +12,7 @@ function initSentry() {
         'Network Error',
         'NetworkError',
         'Request failed',
+        'net::',
       ],
     });
   }
