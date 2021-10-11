@@ -125,18 +125,32 @@ const Toolbar = ({
         <ToolbarStepperContainer />
         <MuiToolbar className={clsx(classes.toolbar, { [classes.baseMargin]: !sidenavOpened })}>
           {!signalrOnline && retryAfter === 0 && (
-            <WarningIcon
-              titleAccess={t('label.server_offline_title')}
-              className={classes.offlineIcon}
-            />
+            <>
+              <WarningIcon
+                titleAccess={t('label.server_offline_title')}
+                className={classes.offlineIcon}
+              />
+              {!statusMessage && (
+                <Box display="flex" alignItems="center" width={420}>
+                  <Typography variant="caption">{t('label.server_offline_title')}</Typography>
+                </Box>
+              )}
+            </>
           )}
           {signalrOnline && !hasPrices && retryAfter === 0 && (
-            <WarningIcon
-              titleAccess={t('label.no_prices_retrieved', {
-                league: activeProfile?.activePriceLeagueId,
-              })}
-              className={classes.offlineIcon}
-            />
+            <>
+              <WarningIcon
+                titleAccess={t('label.no_prices_retrieved', {
+                  league: activeProfile?.activePriceLeagueId,
+                })}
+                className={classes.offlineIcon}
+              />
+              {!statusMessage && (
+                <Box display="flex" alignItems="center" width={420}>
+                  <Typography variant="caption">{t('label.no_prices_retrieved')}</Typography>
+                </Box>
+              )}
+            </>
           )}
           {retryAfter > 0 && (
             <>
