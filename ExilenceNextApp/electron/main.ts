@@ -70,6 +70,7 @@ function createWindow() {
     minHeight: browserWindowsConfig[MAIN_BROWSER_WINDOW].height,
     webPreferences: { webSecurity: false, nodeIntegration: true, contextIsolation: false },
     frame: false,
+    show: false,
   });
 
   manage(browserWindows[MAIN_BROWSER_WINDOW]);
@@ -186,6 +187,12 @@ function createWindow() {
       ),
       forceHardReset: true,
       hardResetMethod: 'exit',
+    });
+  }
+
+  if (browserWindows[MAIN_BROWSER_WINDOW] instanceof BrowserWindow) {
+    browserWindows[MAIN_BROWSER_WINDOW].once('ready-to-show', () => {
+      browserWindows[MAIN_BROWSER_WINDOW].show();
     });
   }
 }

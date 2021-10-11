@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the character selection sometimes would not change when league was changed
 - Fixed a bug where the filter input width would change after generating a bulk sell image
 - Fixed a bug where the export button would cause an error if the table was empty
+- Fixed a bug where the app would sometimes turn white when loading
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence
