@@ -61,10 +61,6 @@ const itemTableComparisonColumns: Column<object>[] = [
     header: 'Total value diff (c)',
     diff: true,
   }),
-  itemValue({
-    header: 'Cumulative (c)',
-    cumulative: true,
-  }),
 ];
 
 export default itemTableComparisonColumns;

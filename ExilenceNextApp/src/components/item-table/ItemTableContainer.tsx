@@ -321,6 +321,7 @@ const ItemTableContainer = ({
                     size="small"
                     className={classes.tableButton}
                     variant="contained"
+                    disabled={data.length === 0}
                     onClick={() => exportData(data)}
                     startIcon={<GetAppIcon />}
                   >

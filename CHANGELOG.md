@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Added minor display improvements to the item table
 - Added minor display improvements to the toolbar
 - Added minor display improvements to the stash tab list
+- Added an info icon to the snapshotting status message, to explain rate limitations
 #### Fixed
 - Fixed a bug where the icon for some items would sometimes be wrong compared to how it looks in your stash
 - Fixed an issue where some legacy maps were priced incorrectly
@@ -37,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the `Waiting for prices` warning would appear when filtering in the custom prices table
 - Fixed a bug where the character selection sometimes would not change when league was changed
 - Fixed a bug where the filter input width would change after generating a bulk sell image
+- Fixed a bug where the export button would cause an error if the table was empty
 #### Changed
 - Reworked how maps are priced
   - Should now accurately price maps with good confidence

@@ -13,6 +13,7 @@ const ToastWrapper = () => {
 
   return (
     <ToastContainer
+      theme="dark"
       className={clsx(classes.root, {
         [classes.authorized]: location.pathname !== '/login',
         [classes.rightMargin]: uiStateStore!.groupOverviewOpen,

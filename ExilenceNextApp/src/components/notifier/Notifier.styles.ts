@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   default: {
     background: theme.palette.background.default,
+    color: theme.palette.primary.contrastText,
   },
 }));
 

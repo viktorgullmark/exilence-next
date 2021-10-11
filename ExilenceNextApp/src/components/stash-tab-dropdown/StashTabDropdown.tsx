@@ -115,7 +115,7 @@ const StashTabDropdown = ({
         )}
         PopperComponent={CustomPopper}
       />
-      {displayCountWarning && selectedStashTabs.length >= 10 && (
+      {displayCountWarning && selectedStashTabs.length >= 5 && (
         <Box mt={1}>
           <Alert severity="warning">{t('common:label.stash_tab_count_warning')}</Alert>
         </Box>

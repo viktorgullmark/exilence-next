@@ -78,7 +78,7 @@ namespace API.Controllers
 
             using (var client = _httpClientFactory.CreateClient())
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "exilence-next-api");
+                client.DefaultRequestHeaders.Add("User-Agent", "exilence-next");
 
                 var data = new FormUrlEncodedContent(new[]
                 {
@@ -110,7 +110,7 @@ namespace API.Controllers
                 using (var client = _httpClientFactory.CreateClient())
                 {
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-                    client.DefaultRequestHeaders.Add("User-Agent", "exilence-next-api");
+                    client.DefaultRequestHeaders.Add("User-Agent", "exilence-next");
 
 
                     var response = await client.GetAsync(uri);
@@ -138,7 +138,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}, message: {e.Message}", );
+                _logger.LogError($"Exception when trying to validate account: {accountName} with token: {accessToken}, message: {e.Message}");
                 return false;
             }
 
