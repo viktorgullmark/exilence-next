@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { asyncScheduler } from 'rxjs';
+import { asyncScheduler, queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
 
@@ -35,7 +35,7 @@ export class RateLimitStore {
   @observable rateLimiter2 = rateLimit(
     this.rateLimiter2limits.requests,
     this.rateLimiter2limits.interval,
-    asyncScheduler
+    queueScheduler
   );
 
   constructor(private rootStore: RootStore) {
@@ -49,7 +49,7 @@ export class RateLimitStore {
 
   @action
   setRateLimiter2(limit: IRateLimitBoundaries) {
-    this.rateLimiter2 = rateLimit(limit.requests, limit.interval, asyncScheduler);
+    this.rateLimiter2 = rateLimit(limit.requests, limit.interval, queueScheduler);
   }
 
   @action
