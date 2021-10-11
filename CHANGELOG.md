@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - NOT RELEASED
+## [1.0.0] - 2021-10-11
 #### Added
 - Added support for parsing the Unique stash tab
 - Added support for parsing the Map tab
