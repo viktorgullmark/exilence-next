@@ -536,7 +536,6 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
-          debugger;
           let combinedTabs = response[0];
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);
@@ -560,7 +559,6 @@ export class Profile {
             concatMap((tab: IStashTab) =>
               externalService.getStashTabWithChildren(tab, league.id, true)
             ),
-            delay(5500),
             toArray()
           );
           return getItemsForSubTabsSource.pipe(
@@ -578,7 +576,6 @@ export class Profile {
           );
         }),
         map((result) => {
-          debugger;
           const stashTabsWithItems = result[0].map((tab) => {
             const stashitems = tab.items;
             const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];
