@@ -63,7 +63,8 @@ export class AccountLeague {
             rootStore.rateLimitStore.rateLimiter1,
             rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) =>
-              externalService.getStashTabWithChildren(tab, this.leagueId, false, true)
+              // temp disabled parsing of headers; use the ones we manually set
+              externalService.getStashTabWithChildren(tab, this.leagueId, false)
             )
           );
           return source;
