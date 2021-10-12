@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2021-10-12
+## [1.0.2-beta] - 2021-10-12
 #### Changed
 - Changed the way our rate limiters behave
 
