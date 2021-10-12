@@ -3,8 +3,8 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { combineLatest, forkJoin, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { forkJoin, from, of } from 'rxjs';
+import { catchError, concatMap, delay, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -502,11 +502,12 @@ export class Profile {
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? combineLatest(
-            // slice away first because we already fetched it when checking headers
-            tabsToFetch.map((tab: IStashTab) => {
-              return externalService.getStashTabWithChildren(tab, league.id);
-            })
+        ? forkJoin(
+            from(tabsToFetch).pipe(
+              rootStore.rateLimitStore.rateLimiter1,
+              rootStore.rateLimitStore.rateLimiter2,
+              concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id))
+            )
           )
         : of([]);
 
@@ -543,12 +544,17 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabs = combineLatest(
-            subTabs.map((tab) => {
-              return externalService.getStashTabWithChildren(tab, league.id, true);
-            })
+          const getItemsForSubTabsSource = forkJoin(
+            from(subTabs).pipe(
+              rootStore.rateLimitStore.rateLimiter1,
+              rootStore.rateLimitStore.rateLimiter2,
+              concatMap((tab: IStashTab) =>
+                externalService.getStashTabWithChildren(tab, league.id, true)
+              ),
+              delay(5500)
+            )
           );
-          return getItemsForSubTabs.pipe(
+          return getItemsForSubTabsSource.pipe(
             mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
                 if (sst.children) {
