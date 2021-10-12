@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { forkJoin, from, of } from 'rxjs';
+import { defer, forkJoin, from, of } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -512,7 +512,7 @@ export class Profile {
 
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? from(tabsToFetch).pipe(
+        ? defer(() => from(tabsToFetch)).pipe(
             rootStore.rateLimitStore.rateLimiter1,
             rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id)),
@@ -553,7 +553,7 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabsSource = from(subTabs).pipe(
+          const getItemsForSubTabsSource = defer(() => from(subTabs)).pipe(
             rootStore.rateLimitStore.rateLimiter1,
             rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) =>

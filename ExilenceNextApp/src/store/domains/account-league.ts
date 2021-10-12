@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { from, of } from 'rxjs';
+import { defer, from, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
@@ -59,7 +59,7 @@ export class AccountLeague {
         );
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
-          const source = from([selectedStashTabs[0]]).pipe(
+          const source = defer(() => from([selectedStashTabs[0]])).pipe(
             rootStore.rateLimitStore.rateLimiter1,
             rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) =>
