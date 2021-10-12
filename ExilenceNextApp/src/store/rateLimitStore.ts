@@ -16,7 +16,7 @@ const rateLimiter1Defaults: IRateLimitBoundaries = {
 
 const rateLimiter2Defaults: IRateLimitBoundaries = {
   requests: 26,
-  interval: 303 * 1000,
+  interval: 310 * 1000,
 };
 
 export class RateLimitStore {
@@ -80,7 +80,7 @@ export class RateLimitStore {
       const _outer = headers.split(',').pop()?.split(':');
       if (_outer && _outer.length > 0) {
         const _requests = +_outer[0] - 4;
-        const _interval = (+_outer[1] + 3) * 1000;
+        const _interval = (+_outer[1] + 10) * 1000;
         if (
           _requests !== this.rateLimiter2limits.requests ||
           _interval !== this.rateLimiter2limits.interval
