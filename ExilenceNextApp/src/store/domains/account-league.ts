@@ -59,13 +59,13 @@ export class AccountLeague {
         );
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
-          const source = defer(() => from([selectedStashTabs[0]])).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
-            concatMap((tab: IStashTab) =>
-              externalService.getStashTabWithChildren(tab, this.leagueId, false, true)
-            )
-          );
+          const source = externalService
+            .getStashTabWithChildren(selectedStashTabs[0], this.leagueId, false, true)
+            .pipe(
+              rootStore.rateLimitStore.rateLimiter1,
+              rootStore.rateLimitStore.rateLimiter2,
+              concatMap((tab: IStashTab) => of(tab))
+            );
           return source;
         }
         return of(undefined);

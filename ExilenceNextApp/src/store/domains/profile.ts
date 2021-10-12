@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { defer, forkJoin, from, of } from 'rxjs';
+import { combineLatest, defer, forkJoin, from, of } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -512,11 +512,11 @@ export class Profile {
 
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? defer(() => from(tabsToFetch)).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
-            concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id)),
-            toArray()
+        ? combineLatest(
+            // slice away first because we already fetched it when checking headers
+            tabsToFetch.map((tab: IStashTab) => {
+              return externalService.getStashTabWithChildren(tab, league.id);
+            })
           )
         : of([]);
 
@@ -536,6 +536,7 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
+          debugger;
           let combinedTabs = response[0];
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);
@@ -553,15 +554,12 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabsSource = defer(() => from(subTabs)).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
-            concatMap((tab: IStashTab) =>
-              externalService.getStashTabWithChildren(tab, league.id, true)
-            ),
-            toArray()
+          const getItemsForSubTabs = combineLatest(
+            subTabs.map((tab) => {
+              return externalService.getStashTabWithChildren(tab, league.id, true);
+            })
           );
-          return getItemsForSubTabsSource.pipe(
+          return getItemsForSubTabs.pipe(
             mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
                 if (sst.children) {

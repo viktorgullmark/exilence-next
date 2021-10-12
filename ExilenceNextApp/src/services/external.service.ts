@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { Observable } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import moment from 'moment';
+import { defer, Observable, of } from 'rxjs';
+import { concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -38,7 +39,7 @@ function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
 
 /* #region pathofexile.com */
 function getStashTab(league: string, id: string): Observable<AxiosResponse<IStashTabResponse>> {
-  return axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`);
+  return defer(() => axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`));
 }
 
 function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
@@ -53,8 +54,10 @@ function getStashTabWithChildren(
 ) {
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
+    console.log(`req ${prefix}${tab.id} ${+new Date()}`, moment().format('LTS'));
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
       map((stashTab: AxiosResponse<IStashTabResponse>) => {
+        console.log(`res ${prefix}${tab.id} ${+new Date()}`, moment().format('LTS'));
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
@@ -66,12 +69,16 @@ function getStashTabWithChildren(
         }
         rootStore.rateLimitStore.setLastRequestTimestamp(new Date());
         return stashTab.data.stash;
-      }),
-      delay(125)
+      })
     );
   };
 
-  const source = makeRequest(stashTab);
+  const source = of(stashTab).pipe(
+    rootStore.rateLimitStore.rateLimiter1,
+    rootStore.rateLimitStore.rateLimiter2,
+    concatMap((tab: IStashTab) => makeRequest(tab))
+  );
+
   return source;
 }
 
