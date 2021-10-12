@@ -3,17 +3,8 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
-import { combineLatest, defer, forkJoin, from, of } from 'rxjs';
-import {
-  catchError,
-  concatMap,
-  delay,
-  map,
-  mergeMap,
-  switchMap,
-  takeUntil,
-  toArray,
-} from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -43,7 +34,7 @@ import {
   mapSnapshotToApiSnapshot,
 } from '../../utils/snapshot.utils';
 import { rootStore, visitor } from './../../index';
-import { externalService } from './../../services/external.service';
+import { externalService, throttledGetTab } from './../../services/external.service';
 import { Snapshot } from './snapshot';
 import { StashTabSnapshot } from './stashtab-snapshot';
 
@@ -510,15 +501,13 @@ export class Profile {
 
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
 
-    const getMainTabsWithChildren =
-      tabsToFetch.length > 0
-        ? combineLatest(
-            // slice away first because we already fetched it when checking headers
-            tabsToFetch.map((tab: IStashTab) => {
-              return externalService.getStashTabWithChildren(tab, league.id);
-            })
-          )
-        : of([]);
+    const mainTabBottleneck = rootStore.rateLimitStore.getBottleneck;
+    console.log('bottleneck used for main tabs:', mainTabBottleneck);
+    const throttledMainTabs = tabsToFetch.map((tab) => {
+      return throttledGetTab(tab, league.id, mainTabBottleneck);
+    });
+
+    const getMainTabsWithChildren = tabsToFetch.length > 0 ? forkJoin(throttledMainTabs) : of([]);
 
     rootStore.uiStateStore.setStatusMessage(
       'fetching_stash_tab',
@@ -536,7 +525,6 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
-          debugger;
           let combinedTabs = response[0];
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);
@@ -554,12 +542,13 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabs = combineLatest(
-            subTabs.map((tab) => {
-              return externalService.getStashTabWithChildren(tab, league.id, true);
-            })
-          );
-          return getItemsForSubTabs.pipe(
+          const subTabBottleneck = rootStore.rateLimitStore.getBottleneck;
+          console.log('bottleneck used for sub tabs:', subTabBottleneck);
+          const throttledSubTabs = subTabs.map((tab) => {
+            return throttledGetTab(tab, league.id, subTabBottleneck, true);
+          });
+
+          return forkJoin(throttledSubTabs).pipe(
             mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
                 if (sst.children) {

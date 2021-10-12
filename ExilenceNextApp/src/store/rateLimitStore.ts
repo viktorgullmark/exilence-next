@@ -1,50 +1,44 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import Bottleneck from 'bottleneck';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
 
-interface IRateLimitBoundaries {
-  requests: number;
-  interval: number;
-}
-
-const rateLimiter1Defaults: IRateLimitBoundaries = {
-  requests: 14,
-  interval: 11 * 1000,
+const options1 = {
+  reservoir: 29,
+  reservoirRefreshAmount: 29,
+  reservoirRefreshInterval: 310 * 1000,
+  maxConcurrent: 1,
+  minTime: 500,
 };
 
-const rateLimiter2Defaults: IRateLimitBoundaries = {
-  requests: 29,
-  interval: 301 * 1000,
+const options2 = {
+  reservoir: 13,
+  reservoirRefreshAmount: 13,
+  reservoirRefreshInterval: 12 * 1000,
+  maxConcurrent: 1,
+  minTime: 500,
 };
 
 export class RateLimitStore {
-  @observable rateLimiter1limits = rateLimiter1Defaults;
-  @observable rateLimiter2limits = rateLimiter2Defaults;
+  @observable bottleneck?: Bottleneck;
   @observable shouldUpdateLimits = false;
   @observable retryAfter = 0;
   @persist('object') @observable lastRequestTimestamp?: Date;
-  @observable rateLimiter1 = rateLimit(
-    this.rateLimiter1limits.requests,
-    this.rateLimiter1limits.interval
-  );
-  @observable rateLimiter2 = rateLimit(
-    this.rateLimiter2limits.requests,
-    this.rateLimiter2limits.interval
-  );
 
-  constructor(private rootStore: RootStore) {
+  constructor(private _: RootStore) {
     makeObservable(this);
   }
 
-  @action
-  setRateLimiter1(limit: IRateLimitBoundaries) {
-    this.rateLimiter1 = rateLimit(limit.requests, limit.interval);
-  }
-
-  @action
-  setRateLimiter2(limit: IRateLimitBoundaries) {
-    this.rateLimiter2 = rateLimit(limit.requests, limit.interval);
+  @computed
+  get getBottleneck() {
+    if (this.bottleneck) {
+      return this.bottleneck;
+    }
+    const outer = new Bottleneck(options1);
+    const inner = new Bottleneck(options2);
+    this.bottleneck = outer.chain(inner);
+    console.log('creating bottleneck!', this.bottleneck);
+    return this.bottleneck;
   }
 
   @action
@@ -64,13 +58,10 @@ export class RateLimitStore {
       if (_inner && _inner.length > 0) {
         const _requests = +_inner[0] - 1;
         const _interval = (+_inner[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter1limits.requests ||
-          _interval !== this.rateLimiter1limits.interval
-        ) {
+        if (_requests !== options2.reservoir || _interval !== options2.reservoirRefreshInterval) {
           runInAction(() => {
             this.shouldUpdateLimits = true;
-            this.rateLimiter1limits = { requests: _requests, interval: _interval };
+            // todo: update options
           });
         }
       }
@@ -78,13 +69,10 @@ export class RateLimitStore {
       if (_outer && _outer.length > 0) {
         const _requests = +_outer[0] - 1;
         const _interval = (+_outer[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter2limits.requests ||
-          _interval !== this.rateLimiter2limits.interval
-        ) {
+        if (_requests !== options2.reservoir || _interval !== options2.reservoirRefreshInterval) {
           runInAction(() => {
             this.shouldUpdateLimits = true;
-            this.rateLimiter2limits = { requests: _requests, interval: _interval };
+            // todo: update options
           });
         }
       }
@@ -93,8 +81,7 @@ export class RateLimitStore {
 
   @action
   updateLimits() {
-    this.setRateLimiter1(this.rateLimiter1limits);
-    this.setRateLimiter2(this.rateLimiter2limits);
+    // todo: update limits
     runInAction(() => {
       this.shouldUpdateLimits = false;
     });

@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
+import Bottleneck from 'bottleneck';
 import moment from 'moment';
 import { defer, Observable, of } from 'rxjs';
 import { concatMap, delay, map } from 'rxjs/operators';
@@ -39,7 +40,7 @@ function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
 
 /* #region pathofexile.com */
 function getStashTab(league: string, id: string): Observable<AxiosResponse<IStashTabResponse>> {
-  return defer(() => axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`));
+  return axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`);
 }
 
 function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
@@ -73,14 +74,21 @@ function getStashTabWithChildren(
     );
   };
 
-  const source = of(stashTab).pipe(
-    rootStore.rateLimitStore.rateLimiter1,
-    rootStore.rateLimitStore.rateLimiter2,
-    concatMap((tab: IStashTab) => makeRequest(tab))
-  );
+  const source = makeRequest(stashTab);
 
   return source;
 }
+
+export const throttledGetTab = (
+  tab: IStashTab,
+  league: string,
+  bottleneck: Bottleneck,
+  children?: boolean,
+  parseHeaders?: boolean
+) =>
+  bottleneck.schedule(() => {
+    return getStashTabWithChildren(tab, league, children, parseHeaders).toPromise();
+  });
 
 function getLeagues(
   type: string = 'main',

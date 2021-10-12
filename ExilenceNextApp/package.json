@@ -20,6 +20,7 @@
     "@types/universal-analytics": "^0.4.3",
     "axios": "^0.21.1",
     "axios-observable": "^1.1.2",
+    "bottleneck": "^2.19.5",
     "clsx": "^1.0.4",
     "electron-devtools-installer": "^3.1.1",
     "electron-is-dev": "^1.1.0",

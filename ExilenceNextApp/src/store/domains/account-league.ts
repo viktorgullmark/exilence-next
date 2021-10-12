@@ -6,7 +6,7 @@ import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
-import { externalService } from '../../services/external.service';
+import { externalService, throttledGetTab } from '../../services/external.service';
 import { Character } from './character';
 
 export class AccountLeague {
@@ -59,14 +59,12 @@ export class AccountLeague {
         );
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
-          const source = externalService
-            .getStashTabWithChildren(selectedStashTabs[0], this.leagueId, false, true)
-            .pipe(
-              rootStore.rateLimitStore.rateLimiter1,
-              rootStore.rateLimitStore.rateLimiter2,
-              concatMap((tab: IStashTab) => of(tab))
-            );
-          return source;
+          const firstTabBottleneck = rootStore.rateLimitStore.getBottleneck;
+          console.log('bottleneck used for first tab:', firstTabBottleneck);
+          const throttledTab = from(
+            throttledGetTab(selectedStashTabs[0], this.leagueId, firstTabBottleneck, false, true)
+          );
+          return throttledTab;
         }
         return of(undefined);
       }),
