@@ -4,7 +4,16 @@ import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import moment from 'moment';
 import { forkJoin, from, of } from 'rxjs';
-import { catchError, concatMap, delay, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  delay,
+  map,
+  mergeMap,
+  switchMap,
+  takeUntil,
+  toArray,
+} from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { IApiProfile } from '../../interfaces/api/api-profile.interface';
 import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
@@ -500,14 +509,14 @@ export class Profile {
     }
 
     const tabsToFetch = firstStashTab ? selectedStashTabs.slice(1) : selectedStashTabs;
+
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? forkJoin(
-            from(tabsToFetch).pipe(
-              rootStore.rateLimitStore.rateLimiter1,
-              rootStore.rateLimitStore.rateLimiter2,
-              concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id))
-            )
+        ? from(tabsToFetch).pipe(
+            rootStore.rateLimitStore.rateLimiter1,
+            rootStore.rateLimitStore.rateLimiter2,
+            concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id)),
+            toArray()
           )
         : of([]);
 
@@ -527,6 +536,7 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
+          debugger;
           let combinedTabs = response[0];
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);
@@ -544,15 +554,14 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabsSource = forkJoin(
-            from(subTabs).pipe(
-              rootStore.rateLimitStore.rateLimiter1,
-              rootStore.rateLimitStore.rateLimiter2,
-              concatMap((tab: IStashTab) =>
-                externalService.getStashTabWithChildren(tab, league.id, true)
-              ),
-              delay(5500)
-            )
+          const getItemsForSubTabsSource = from(subTabs).pipe(
+            rootStore.rateLimitStore.rateLimiter1,
+            rootStore.rateLimitStore.rateLimiter2,
+            concatMap((tab: IStashTab) =>
+              externalService.getStashTabWithChildren(tab, league.id, true)
+            ),
+            delay(5500),
+            toArray()
           );
           return getItemsForSubTabsSource.pipe(
             mergeMap((subTabs) => {
@@ -569,6 +578,7 @@ export class Profile {
           );
         }),
         map((result) => {
+          debugger;
           const stashTabsWithItems = result[0].map((tab) => {
             const stashitems = tab.items;
             const items = stashitems ? mapItemsToPricedItems(stashitems, tab) : [];

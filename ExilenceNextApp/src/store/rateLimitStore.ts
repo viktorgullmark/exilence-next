@@ -3,13 +3,14 @@ import { persist } from 'mobx-persist';
 import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
+
 interface IRateLimitBoundaries {
   requests: number;
   interval: number;
 }
 
 const rateLimiter1Defaults: IRateLimitBoundaries = {
-  requests: 14,
+  requests: 13,
   interval: 13 * 1000,
 };
 
@@ -64,7 +65,7 @@ export class RateLimitStore {
     if (headers) {
       const _inner = headers.split(',').shift()?.split(':');
       if (_inner && _inner.length > 0) {
-        const _requests = +_inner[0] - 1;
+        const _requests = +_inner[0] - 2;
         const _interval = (+_inner[1] + 3) * 1000;
         if (
           _requests !== this.rateLimiter1limits.requests ||
