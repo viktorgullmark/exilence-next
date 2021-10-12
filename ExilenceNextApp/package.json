@@ -1,6 +1,6 @@
 {
   "name": "exilence-next-app",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",

@@ -1,8 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
@@ -59,12 +59,14 @@ export class AccountLeague {
         );
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
-          return externalService.getStashTabWithChildren(
-            selectedStashTabs[0],
-            this.leagueId,
-            false,
-            true
+          const source = from([selectedStashTabs[0]]).pipe(
+            rootStore.rateLimitStore.rateLimiter1,
+            rootStore.rateLimitStore.rateLimiter2,
+            concatMap((tab: IStashTab) =>
+              externalService.getStashTabWithChildren(tab, this.leagueId, false, true)
+            )
           );
+          return source;
         }
         return of(undefined);
       }),

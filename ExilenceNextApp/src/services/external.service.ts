@@ -1,8 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { Observable, of } from 'rxjs';
-import RateLimiter from 'rxjs-ratelimiter';
-import { concatMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -12,7 +11,6 @@ import { IStash, IStashTab, IStashTabResponse } from '../interfaces/stash.interf
 import AppConfig from './../config/app.config';
 
 const apiUrl = AppConfig.pathOfExileApiUrl;
-const globalLimiter = new RateLimiter(1, 250);
 
 export const externalService = {
   getLatestRelease,
@@ -40,11 +38,11 @@ function loginWithOAuth(code: string): Observable<AxiosResponse<any>> {
 
 /* #region pathofexile.com */
 function getStashTab(league: string, id: string): Observable<AxiosResponse<IStashTabResponse>> {
-  return globalLimiter.limit(axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`));
+  return axios.get<IStashTabResponse>(`${apiUrl}/stash/${league}/${id}`);
 }
 
 function getStashTabs(league: string): Observable<AxiosResponse<IStash>> {
-  return globalLimiter.limit(axios.get<IStash>(`${apiUrl}/stash/${league}`));
+  return axios.get<IStash>(`${apiUrl}/stash/${league}`);
 }
 
 function getStashTabWithChildren(
@@ -56,7 +54,7 @@ function getStashTabWithChildren(
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
-      concatMap((stashTab: AxiosResponse<IStashTabResponse>) => {
+      map((stashTab: AxiosResponse<IStashTabResponse>) => {
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
@@ -67,17 +65,13 @@ function getStashTabWithChildren(
           }
         }
         rootStore.rateLimitStore.setLastRequestTimestamp(new Date());
-        return of(stashTab.data.stash);
-      })
+        return stashTab.data.stash;
+      }),
+      delay(100)
     );
   };
 
-  const source = of(stashTab).pipe(
-    rootStore.rateLimitStore.rateLimiter1,
-    rootStore.rateLimitStore.rateLimiter2,
-    concatMap((tab: IStashTab) => makeRequest(tab))
-  );
-
+  const source = makeRequest(stashTab);
   return source;
 }
 
@@ -87,22 +81,20 @@ function getLeagues(
   realm: string = 'pc'
 ): Observable<AxiosResponse<ILeague[]>> {
   const parameters = `?type=${type}&compact=${compact}${getRealmParam(realm)}`;
-  return globalLimiter.limit(
-    axios.get<ILeague[]>(apiUrl + '/leagues' + parameters, { headers: null })
-  );
+  return axios.get<ILeague[]>(apiUrl + '/leagues' + parameters, { headers: null });
 }
 
 function getCharacters(): Observable<AxiosResponse<ICharacterListResponse>> {
-  return globalLimiter.limit(axios.get<ICharacterListResponse>(`${apiUrl}/character`));
+  return axios.get<ICharacterListResponse>(`${apiUrl}/character`);
 }
 
 function getCharacter(character: string): Observable<AxiosResponse<ICharacterResponse>> {
-  return globalLimiter.limit(axios.get<ICharacterResponse>(`${apiUrl}/character/${character}`));
+  return axios.get<ICharacterResponse>(`${apiUrl}/character/${character}`);
 }
 
 function getProfile(realm: string = 'pc'): Observable<AxiosResponse<IPoeProfile>> {
   const parameters = `?realm=${realm}`;
-  return globalLimiter.limit(axios.get<IPoeProfile>(apiUrl + '/profile' + parameters));
+  return axios.get<IPoeProfile>(apiUrl + '/profile' + parameters);
 }
 
 function getRealmParam(realm?: string) {

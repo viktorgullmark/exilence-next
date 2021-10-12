@@ -1,24 +1,21 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
-import { asyncScheduler } from 'rxjs';
+import { queueScheduler } from 'rxjs';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
-
 interface IRateLimitBoundaries {
   requests: number;
   interval: number;
 }
 
-// todo: parse remaining time on current limit
-
 const rateLimiter1Defaults: IRateLimitBoundaries = {
-  requests: 12,
-  interval: 12 * 1000,
+  requests: 14,
+  interval: 13 * 1000,
 };
 
 const rateLimiter2Defaults: IRateLimitBoundaries = {
-  requests: 27,
-  interval: 302 * 1000,
+  requests: 29,
+  interval: 303 * 1000,
 };
 
 export class RateLimitStore {
@@ -30,12 +27,12 @@ export class RateLimitStore {
   @observable rateLimiter1 = rateLimit(
     this.rateLimiter1limits.requests,
     this.rateLimiter1limits.interval,
-    asyncScheduler
+    queueScheduler
   );
   @observable rateLimiter2 = rateLimit(
     this.rateLimiter2limits.requests,
     this.rateLimiter2limits.interval,
-    asyncScheduler
+    queueScheduler
   );
 
   constructor(private rootStore: RootStore) {
@@ -44,12 +41,12 @@ export class RateLimitStore {
 
   @action
   setRateLimiter1(limit: IRateLimitBoundaries) {
-    this.rateLimiter1 = rateLimit(limit.requests, limit.interval, asyncScheduler);
+    this.rateLimiter1 = rateLimit(limit.requests, limit.interval, queueScheduler);
   }
 
   @action
   setRateLimiter2(limit: IRateLimitBoundaries) {
-    this.rateLimiter2 = rateLimit(limit.requests, limit.interval, asyncScheduler);
+    this.rateLimiter2 = rateLimit(limit.requests, limit.interval, queueScheduler);
   }
 
   @action
@@ -67,8 +64,8 @@ export class RateLimitStore {
     if (headers) {
       const _inner = headers.split(',').shift()?.split(':');
       if (_inner && _inner.length > 0) {
-        const _requests = +_inner[0] - 3;
-        const _interval = (+_inner[1] + 2) * 1000;
+        const _requests = +_inner[0] - 1;
+        const _interval = (+_inner[1] + 3) * 1000;
         if (
           _requests !== this.rateLimiter1limits.requests ||
           _interval !== this.rateLimiter1limits.interval
@@ -81,8 +78,8 @@ export class RateLimitStore {
       }
       const _outer = headers.split(',').pop()?.split(':');
       if (_outer && _outer.length > 0) {
-        const _requests = +_outer[0] - 3;
-        const _interval = (+_outer[1] + 2) * 1000;
+        const _requests = +_outer[0] - 1;
+        const _interval = (+_outer[1] + 3) * 1000;
         if (
           _requests !== this.rateLimiter2limits.requests ||
           _interval !== this.rateLimiter2limits.interval

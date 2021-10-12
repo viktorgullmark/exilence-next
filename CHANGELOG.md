@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2021-10-12
+#### Changed
+- Optimized the way our rate limiters behave
+
 ## [1.0.3] - 2021-10-12
 #### Changed
 - Added more strict rate limits while we continue investigation
