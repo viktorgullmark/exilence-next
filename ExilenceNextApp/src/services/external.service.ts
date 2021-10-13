@@ -74,11 +74,10 @@ function getStashTabWithChildren(
     );
   };
 
-  const outer = rootStore.rateLimitStore.getOuter;
-  const inner = rootStore.rateLimitStore.getInner;
-
   const source = makeRequest(stashTab).pipe(
     concatMap((req) => {
+      const outer = rootStore.rateLimitStore.getOuter;
+      const inner = rootStore.rateLimitStore.getInner;
       return from(outer.removeTokens(1)).pipe(
         concatMap(() => {
           console.log(
