@@ -1,4 +1,5 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { RateLimiter } from 'limiter';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
@@ -19,6 +20,9 @@ const rateLimiter2Defaults: IRateLimitBoundaries = {
 };
 
 export class RateLimitStore {
+  @observable outer?: RateLimiter;
+  @observable inner?: RateLimiter;
+
   @observable rateLimiter1limits = rateLimiter1Defaults;
   @observable rateLimiter2limits = rateLimiter2Defaults;
   @observable shouldUpdateLimits = false;
@@ -35,6 +39,30 @@ export class RateLimitStore {
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
+  }
+
+  @computed
+  get getOuter() {
+    if (this.outer) {
+      return this.outer;
+    }
+    this.outer = new RateLimiter({
+      tokensPerInterval: 29,
+      interval: 300000,
+    });
+    return this.outer;
+  }
+
+  @computed
+  get getInner() {
+    if (this.inner) {
+      return this.inner;
+    }
+    this.inner = new RateLimiter({
+      tokensPerInterval: 14,
+      interval: 10000,
+    });
+    return this.inner;
   }
 
   @action

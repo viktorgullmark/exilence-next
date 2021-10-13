@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import { Observable } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -71,7 +71,20 @@ function getStashTabWithChildren(
     );
   };
 
-  const source = makeRequest(stashTab);
+  const source = makeRequest(stashTab).pipe(
+    concatMap((req) => {
+      return from(rootStore.rateLimitStore.getOuter.removeTokens(1)).pipe(
+        concatMap(() => {
+          return from(rootStore.rateLimitStore.getInner.removeTokens(1)).pipe(
+            concatMap(() => {
+              return of(req);
+            })
+          );
+        })
+      );
+    })
+  );
+
   return source;
 }
 

@@ -60,8 +60,6 @@ export class AccountLeague {
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
           const source = from([selectedStashTabs[0]]).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) =>
               externalService.getStashTabWithChildren(tab, this.leagueId, false, true)
             )

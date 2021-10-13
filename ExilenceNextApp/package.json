@@ -33,6 +33,7 @@
     "html-to-image": "^1.6.2",
     "i18next": "^19.8.2",
     "i18next-xhr-backend": "^3.2.0",
+    "limiter": "^2.1.0",
     "localforage": "^1.7.3",
     "mobx": "^6.0.1",
     "mobx-logger": "^0.7.1",
