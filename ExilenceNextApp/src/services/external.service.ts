@@ -74,23 +74,23 @@ function getStashTabWithChildren(
     );
   };
 
-  const source = makeRequest(stashTab).pipe(
-    concatMap((req) => {
-      const outer = rootStore.rateLimitStore.getOuter;
-      const inner = rootStore.rateLimitStore.getInner;
+  const outer = rootStore.rateLimitStore.getOuter;
+  const inner = rootStore.rateLimitStore.getInner;
+  const source = from(inner.removeTokens(1)).pipe(
+    concatMap(() => {
+      console.log(
+        `removed token from inner ${moment().format('LTS')}, count:`,
+        inner.tokensThisInterval
+      );
       return from(outer.removeTokens(1)).pipe(
         concatMap(() => {
           console.log(
             `removed token from outer ${moment().format('LTS')}, count:`,
             outer.tokensThisInterval
           );
-          return from(inner.removeTokens(1)).pipe(
-            concatMap(() => {
-              console.log(
-                `removed token from inner ${moment().format('LTS')}, count:`,
-                inner.tokensThisInterval
-              );
-              return of(req);
+          return makeRequest(stashTab).pipe(
+            concatMap((tabResponse) => {
+              return of(tabResponse);
             })
           );
         })
