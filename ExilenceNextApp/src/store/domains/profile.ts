@@ -537,6 +537,7 @@ export class Profile {
           : of(null)
       ).pipe(
         switchMap((response) => {
+          // todo: fix items not being listed for more than first tab
           let combinedTabs = response[0];
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);

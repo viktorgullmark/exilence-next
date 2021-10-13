@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import moment from 'moment';
 import { from, Observable, of } from 'rxjs';
+import RateLimiter from 'limiter';
 import { concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
@@ -52,6 +53,8 @@ function getStashTabWithChildren(
   children?: boolean,
   parseHeaders?: boolean
 ) {
+  let innerLimiter;
+  let outerLimiter;
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
     console.log(`req ${moment().format('LTS')}`);
@@ -62,10 +65,14 @@ function getStashTabWithChildren(
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
         if (parseHeaders) {
-          rootStore.rateLimitStore.parseRateLimitHeaders(stashTab.headers['x-rate-limit-account']);
-          if (rootStore.rateLimitStore.shouldUpdateLimits) {
-            rootStore.rateLimitStore.updateLimits();
-          }
+          const tokensConsumed = rootStore.rateLimitStore.getTokensConsumedInState(
+            stashTab.headers['x-rate-limit-account-state']
+          );
+          innerLimiter = rootStore.rateLimitStore.createInner(tokensConsumed.innerTokens);
+          outerLimiter = rootStore.rateLimitStore.createOuter(tokensConsumed.outerTokens);
+        } else {
+          innerLimiter = rootStore.rateLimitStore.inner;
+          outerLimiter = rootStore.rateLimitStore.outer;
         }
         rootStore.rateLimitStore.setLastRequestTimestamp(new Date());
         return stashTab.data.stash;
@@ -74,22 +81,20 @@ function getStashTabWithChildren(
     );
   };
 
-  const outer = rootStore.rateLimitStore.getOuter;
-  const inner = rootStore.rateLimitStore.getInner;
-  const source = from(inner.removeTokens(1)).pipe(
-    concatMap(() => {
+  const source = makeRequest(stashTab).pipe(
+    concatMap((tabResponse) => {
       console.log(
         `removed token from inner ${moment().format('LTS')}, count:`,
-        inner.tokensThisInterval
+        innerLimiter.tokensThisInterval
       );
-      return from(outer.removeTokens(1)).pipe(
+      return from(outerLimiter.removeTokens(1)).pipe(
         concatMap(() => {
           console.log(
             `removed token from outer ${moment().format('LTS')}, count:`,
-            outer.tokensThisInterval
+            outerLimiter.tokensThisInterval
           );
-          return makeRequest(stashTab).pipe(
-            concatMap((tabResponse) => {
+          return from(innerLimiter.removeTokens(1)).pipe(
+            concatMap(() => {
               return of(tabResponse);
             })
           );

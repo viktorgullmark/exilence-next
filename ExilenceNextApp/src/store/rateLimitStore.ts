@@ -41,30 +41,22 @@ export class RateLimitStore {
     makeObservable(this);
   }
 
-  @computed
-  get getOuter() {
-    if (this.outer) {
-      return this.outer;
-    }
-    this.outer = new RateLimiter({
-      tokensPerInterval: 29,
-      interval: 312000,
-    });
-    console.log("creating outer")
-    return this.outer;
-  }
-
-  @computed
-  get getInner() {
-    if (this.inner) {
-      return this.inner;
-    }
+  @action createInner(tokensConsumed: number = 0) {
+    console.log('creating inner with tokens', 14 - tokensConsumed);
     this.inner = new RateLimiter({
-      tokensPerInterval: 14,
+      tokensPerInterval: 14 - tokensConsumed,
       interval: 12000,
     });
-    console.log("creating inner")
     return this.inner;
+  }
+
+  @action createOuter(tokensConsumed: number = 0) {
+    console.log('creating outer with tokens', 29 - tokensConsumed);
+    this.outer = new RateLimiter({
+      tokensPerInterval: 29 - tokensConsumed,
+      interval: 312000,
+    });
+    return this.outer;
   }
 
   @action
@@ -88,37 +80,20 @@ export class RateLimitStore {
   }
 
   @action
-  parseRateLimitHeaders(headers: string) {
+  getTokensConsumedInState(headers: string) {
+    let innerTokens = 0;
+    let outerTokens = 0;
     if (headers) {
       const _inner = headers.split(',').shift()?.split(':');
       if (_inner && _inner.length > 0) {
-        const _requests = +_inner[0] - 1;
-        const _interval = (+_inner[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter1limits.requests ||
-          _interval !== this.rateLimiter1limits.interval
-        ) {
-          runInAction(() => {
-            this.shouldUpdateLimits = true;
-            this.rateLimiter1limits = { requests: _requests, interval: _interval };
-          });
-        }
+        innerTokens = +_inner[0];
       }
       const _outer = headers.split(',').pop()?.split(':');
       if (_outer && _outer.length > 0) {
-        const _requests = +_outer[0] - 1;
-        const _interval = (+_outer[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter2limits.requests ||
-          _interval !== this.rateLimiter2limits.interval
-        ) {
-          runInAction(() => {
-            this.shouldUpdateLimits = true;
-            this.rateLimiter2limits = { requests: _requests, interval: _interval };
-          });
-        }
+        outerTokens = +_outer[0];
       }
     }
+    return { innerTokens, outerTokens };
   }
 
   @action
