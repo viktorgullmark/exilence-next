@@ -511,9 +511,13 @@ export class Profile {
 
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
-        ? from(tabsToFetch).pipe(
-            concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id)),
-            toArray()
+        ? forkJoin(
+            from(tabsToFetch).pipe(
+              concatMap((tab: IStashTab) =>
+                externalService.getStashTabWithChildren(tab, league.id)
+              ),
+              toArray()
+            )
           )
         : of([]);
 
@@ -550,17 +554,19 @@ export class Profile {
             return of(response);
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
-          const getItemsForSubTabsSource = from(subTabs).pipe(
-            concatMap((tab: IStashTab) =>
-              externalService.getStashTabWithChildren(tab, league.id, true)
-            ),
-            toArray()
+          const getItemsForSubTabsSource = forkJoin(
+            from(subTabs).pipe(
+              concatMap((tab: IStashTab) =>
+                externalService.getStashTabWithChildren(tab, league.id, true)
+              ),
+              toArray()
+            )
           );
           return getItemsForSubTabsSource.pipe(
             mergeMap((subTabs) => {
               response[0] = combinedTabs.map((sst) => {
                 if (sst.children) {
-                  const children = subTabs.filter((st) => st.parent === sst.id);
+                  const children = subTabs[0].filter((st) => st.parent === sst.id);
                   const childItems = children.flatMap((st) => st.items ?? []);
                   sst.items = (sst.items ?? []).concat(childItems);
                 }
