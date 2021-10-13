@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
+import moment from 'moment';
 import { from, Observable, of } from 'rxjs';
 import { concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
@@ -53,8 +54,10 @@ function getStashTabWithChildren(
 ) {
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
+    console.log(`req ${moment().format('LTS')}`);
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
       map((stashTab: AxiosResponse<IStashTabResponse>) => {
+        console.log(`res ${moment().format('LTS')}`);
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
@@ -71,12 +74,23 @@ function getStashTabWithChildren(
     );
   };
 
+  const outer = rootStore.rateLimitStore.getOuter;
+  const inner = rootStore.rateLimitStore.getInner;
+
   const source = makeRequest(stashTab).pipe(
     concatMap((req) => {
-      return from(rootStore.rateLimitStore.getOuter.removeTokens(1)).pipe(
+      return from(outer.removeTokens(1)).pipe(
         concatMap(() => {
-          return from(rootStore.rateLimitStore.getInner.removeTokens(1)).pipe(
+          console.log(
+            `removed token from outer ${moment().format('LTS')}, count:`,
+            outer.tokensThisInterval
+          );
+          return from(inner.removeTokens(1)).pipe(
             concatMap(() => {
+              console.log(
+                `removed token from inner ${moment().format('LTS')}, count:`,
+                inner.tokensThisInterval
+              );
               return of(req);
             })
           );

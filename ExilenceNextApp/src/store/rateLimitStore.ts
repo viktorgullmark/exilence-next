@@ -48,8 +48,9 @@ export class RateLimitStore {
     }
     this.outer = new RateLimiter({
       tokensPerInterval: 29,
-      interval: 300000,
+      interval: 302000,
     });
+    console.log("creating outer")
     return this.outer;
   }
 
@@ -60,8 +61,9 @@ export class RateLimitStore {
     }
     this.inner = new RateLimiter({
       tokensPerInterval: 14,
-      interval: 10000,
+      interval: 12000,
     });
+    console.log("creating inner")
     return this.inner;
   }
 
