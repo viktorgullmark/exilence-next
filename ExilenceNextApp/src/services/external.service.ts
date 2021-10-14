@@ -67,7 +67,6 @@ function getStashTabWithChildren(
         const state = rootStore.rateLimitStore.getStateFromHeaders(
           stashTab.headers['x-rate-limit-account-state']
         );
-        console.log(`response state ${stashTab.headers['x-rate-limit-account-state']}`);
         if (shouldInstantiate) {
           innerLimiter = rootStore.rateLimitStore.createInner(
             state.inner.tokens,
@@ -111,7 +110,6 @@ function getStashTabWithChildren(
                   outerLimiter.tokenBucket.tokensPerInterval &&
                 outerLimiter.tokenBucket.tokensPerInterval !== response.limits.outer.tokens
               ) {
-                console.log(`custom interval finished for outer ${moment().format('LTS')}`);
                 rootStore.rateLimitStore.createOuter(
                   0,
                   response.limits.outer.tokens,
@@ -128,7 +126,6 @@ function getStashTabWithChildren(
                   innerLimiter.tokenBucket.tokensPerInterval &&
                 innerLimiter.tokenBucket.tokensPerInterval !== response.limits.inner.tokens
               ) {
-                console.log(`custom interval finished for inner ${moment().format('LTS')}`);
                 rootStore.rateLimitStore.createInner(
                   0,
                   response.limits.inner.tokens,

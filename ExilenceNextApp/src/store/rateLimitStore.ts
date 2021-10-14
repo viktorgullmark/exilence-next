@@ -28,30 +28,18 @@ export class RateLimitStore {
   }
 
   @action createInner(tokensConsumed: number = 0, requests: number, interval: number) {
-    console.log(
-      `creating inner limiter ${moment().format('LTS')}, settings:`,
-      requests - tokensConsumed,
-      interval
-    );
     this.inner = new RateLimiter({
       tokensPerInterval: requests - tokensConsumed,
       interval: interval,
     });
-    console.log(`token bucket:`, this.inner.tokenBucket);
     return this.inner;
   }
 
   @action createOuter(tokensConsumed: number = 0, requests: number, interval: number) {
-    console.log(
-      `creating outer limiter ${moment().format('LTS')}, settings:`,
-      requests - tokensConsumed,
-      interval
-    );
     this.outer = new RateLimiter({
       tokensPerInterval: requests - tokensConsumed,
       interval: interval,
     });
-    console.log(`token bucket:`, this.outer.tokenBucket);
     return this.outer;
   }
 
