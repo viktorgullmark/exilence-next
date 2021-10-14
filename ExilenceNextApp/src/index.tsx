@@ -155,8 +155,8 @@ const renderApp = () => {
         const limits = rootStore.rateLimitStore.lastRateLimitBoundaries;
         const state = rootStore.rateLimitStore.lastRateLimitState;
         if (limits && state) {
-          const innerTokensLeft = limits?.inner.tokens - state?.inner.tokens < 2;
-          const outerTokensLeft = limits?.outer.tokens - state?.outer.tokens < 2;
+          const innerTokensLeft = limits?.inner.tokens - state?.inner.tokens < 3;
+          const outerTokensLeft = limits?.outer.tokens - state?.outer.tokens < 3;
 
           const requestRecently = moment(rootStore.rateLimitStore.lastRequestTimestamp)
             .utc()

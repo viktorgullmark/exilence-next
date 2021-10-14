@@ -56,23 +56,19 @@ function getStashTabWithChildren(
   let outerLimiter;
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
-    //console.log(`req ${moment().format('LTS')}`);
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
       map((stashTab: AxiosResponse<IStashTabResponse>) => {
-        //console.log(`res ${moment().format('LTS')}`);
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
         const limits = rootStore.rateLimitStore.getLimitsFromHeaders(
           stashTab.headers['x-rate-limit-account']
         );
-        const state = rootStore.rateLimitStore.getLimitsFromHeaders(
+        const state = rootStore.rateLimitStore.getStateFromHeaders(
           stashTab.headers['x-rate-limit-account-state']
         );
         console.log(`response state ${stashTab.headers['x-rate-limit-account-state']}`);
         if (shouldInstantiate) {
-          console.log('limits parsed', limits);
-          console.log('state parsed', state);
           innerLimiter = rootStore.rateLimitStore.createInner(
             state.inner.tokens,
             limits.inner.tokens,
@@ -106,16 +102,8 @@ function getStashTabWithChildren(
 
   const source = from(outerLimiter.removeTokens(1)).pipe(
     concatMap(() => {
-      // console.log(
-      //   `removed token from outer ${moment().format('LTS')}, count:`,
-      //   outerLimiter.tokensThisInterval
-      // );
       return from(innerLimiter.removeTokens(1)).pipe(
         concatMap(() => {
-          // console.log(
-          //   `removed token from inner ${moment().format('LTS')}, count:`,
-          //   innerLimiter.tokensThisInterval
-          // );
           return makeRequest(stashTab).pipe(
             concatMap((response) => {
               if (
