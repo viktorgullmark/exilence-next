@@ -1,72 +1,58 @@
 import { RateLimiter } from 'limiter';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { rateLimit } from '../utils/rxjs.utils';
+import moment from 'moment';
 import { RootStore } from './rootStore';
 
-interface IRateLimitBoundaries {
-  requests: number;
-  interval: number;
+interface IRateLimitStateGroup {
+  inner: IRateLimitState;
+  outer: IRateLimitState;
 }
 
-const rateLimiter1Defaults: IRateLimitBoundaries = {
-  requests: 14,
-  interval: 11 * 1000,
-};
-
-const rateLimiter2Defaults: IRateLimitBoundaries = {
-  requests: 29,
-  interval: 301 * 1000,
-};
+interface IRateLimitState {
+  tokens: number;
+  interval: number;
+}
 
 export class RateLimitStore {
   @observable outer?: RateLimiter;
   @observable inner?: RateLimiter;
 
-  @observable rateLimiter1limits = rateLimiter1Defaults;
-  @observable rateLimiter2limits = rateLimiter2Defaults;
-  @observable shouldUpdateLimits = false;
   @observable retryAfter = 0;
   @persist('object') @observable lastRequestTimestamp?: Date;
-  @observable rateLimiter1 = rateLimit(
-    this.rateLimiter1limits.requests,
-    this.rateLimiter1limits.interval
-  );
-  @observable rateLimiter2 = rateLimit(
-    this.rateLimiter2limits.requests,
-    this.rateLimiter2limits.interval
-  );
+  @persist('object') @observable lastRateLimitState?: IRateLimitStateGroup;
+  @persist('object') @observable lastRateLimitBoundaries?: IRateLimitStateGroup;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
-  @action createInner(tokensConsumed: number = 0) {
-    console.log('creating inner with tokens', 14 - tokensConsumed);
+  @action createInner(tokensConsumed: number = 0, requests: number, interval: number) {
+    console.log(
+      `creating inner limiter ${moment().format('LTS')}, settings:`,
+      requests - tokensConsumed,
+      interval
+    );
     this.inner = new RateLimiter({
-      tokensPerInterval: 14 - tokensConsumed,
-      interval: 12000,
+      tokensPerInterval: requests - tokensConsumed,
+      interval: interval,
     });
+    console.log(`token bucket:`, this.inner.tokenBucket);
     return this.inner;
   }
 
-  @action createOuter(tokensConsumed: number = 0) {
-    console.log('creating outer with tokens', 29 - tokensConsumed);
+  @action createOuter(tokensConsumed: number = 0, requests: number, interval: number) {
+    console.log(
+      `creating outer limiter ${moment().format('LTS')}, settings:`,
+      requests - tokensConsumed,
+      interval
+    );
     this.outer = new RateLimiter({
-      tokensPerInterval: 29 - tokensConsumed,
-      interval: 312000,
+      tokensPerInterval: requests - tokensConsumed,
+      interval: interval,
     });
+    console.log(`token bucket:`, this.outer.tokenBucket);
     return this.outer;
-  }
-
-  @action
-  setRateLimiter1(limit: IRateLimitBoundaries) {
-    this.rateLimiter1 = rateLimit(limit.requests, limit.interval);
-  }
-
-  @action
-  setRateLimiter2(limit: IRateLimitBoundaries) {
-    this.rateLimiter2 = rateLimit(limit.requests, limit.interval);
   }
 
   @action
@@ -80,28 +66,36 @@ export class RateLimitStore {
   }
 
   @action
-  getTokensConsumedInState(headers: string) {
-    let innerTokens = 0;
-    let outerTokens = 0;
-    if (headers) {
-      const _inner = headers.split(',').shift()?.split(':');
-      if (_inner && _inner.length > 0) {
-        innerTokens = +_inner[0];
-      }
-      const _outer = headers.split(',').pop()?.split(':');
-      if (_outer && _outer.length > 0) {
-        outerTokens = +_outer[0];
-      }
-    }
-    return { innerTokens, outerTokens };
+  setLastRateLimitState(state: IRateLimitStateGroup) {
+    this.lastRateLimitState = state;
   }
 
   @action
-  updateLimits() {
-    this.setRateLimiter1(this.rateLimiter1limits);
-    this.setRateLimiter2(this.rateLimiter2limits);
-    runInAction(() => {
-      this.shouldUpdateLimits = false;
-    });
+  setLastRateLimitBoundaries(state: IRateLimitStateGroup) {
+    this.lastRateLimitBoundaries = state;
+  }
+
+  @action
+  getLimitsFromHeaders(headers: string) {
+    const inner = { tokens: 0, interval: 0 };
+    const outer = { tokens: 0, interval: 0 };
+    if (headers) {
+      const _inner = headers.split(',').shift()?.split(':');
+      if (_inner && _inner.length > 0) {
+        const tokens = +_inner[0] - 3;
+        inner.tokens = tokens < 0 ? 0 : tokens;
+        inner.interval = (+_inner[1] + 2) * 1000;
+      }
+      const _outer = headers.split(',').pop()?.split(':');
+      if (_outer && _outer.length > 0) {
+        const tokens = +_outer[0] - 2;
+        outer.tokens = tokens < 0 ? 0 : tokens;
+        outer.interval = (+_outer[1] + 12) * 1000;
+      }
+    }
+    return {
+      inner,
+      outer,
+    };
   }
 }

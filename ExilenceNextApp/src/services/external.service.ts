@@ -2,7 +2,6 @@ import { AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import moment from 'moment';
 import { from, Observable, of } from 'rxjs';
-import RateLimiter from 'limiter';
 import { concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
@@ -51,51 +50,104 @@ function getStashTabWithChildren(
   stashTab: IStashTab,
   league: string,
   children?: boolean,
-  parseHeaders?: boolean
+  shouldInstantiate?: boolean
 ) {
   let innerLimiter;
   let outerLimiter;
   const makeRequest = (tab: IStashTab) => {
     const prefix = tab.parent && children ? `${tab.parent}/` : '';
-    console.log(`req ${moment().format('LTS')}`);
+    //console.log(`req ${moment().format('LTS')}`);
     return getStashTab(league, `${prefix}${tab.id}`).pipe(
       map((stashTab: AxiosResponse<IStashTabResponse>) => {
-        console.log(`res ${moment().format('LTS')}`);
+        //console.log(`res ${moment().format('LTS')}`);
         if (!children) {
           rootStore.uiStateStore.incrementStatusMessageCount();
         }
-        if (parseHeaders) {
-          const tokensConsumed = rootStore.rateLimitStore.getTokensConsumedInState(
-            stashTab.headers['x-rate-limit-account-state']
+        const limits = rootStore.rateLimitStore.getLimitsFromHeaders(
+          stashTab.headers['x-rate-limit-account']
+        );
+        const state = rootStore.rateLimitStore.getLimitsFromHeaders(
+          stashTab.headers['x-rate-limit-account-state']
+        );
+        console.log(`response state ${stashTab.headers['x-rate-limit-account-state']}`);
+        if (shouldInstantiate) {
+          console.log('limits parsed', limits);
+          console.log('state parsed', state);
+          innerLimiter = rootStore.rateLimitStore.createInner(
+            state.inner.tokens,
+            limits.inner.tokens,
+            limits.inner.interval
           );
-          innerLimiter = rootStore.rateLimitStore.createInner(tokensConsumed.innerTokens);
-          outerLimiter = rootStore.rateLimitStore.createOuter(tokensConsumed.outerTokens);
-        } else {
-          innerLimiter = rootStore.rateLimitStore.inner;
-          outerLimiter = rootStore.rateLimitStore.outer;
+          outerLimiter = rootStore.rateLimitStore.createOuter(
+            state.outer.tokens,
+            limits.outer.tokens,
+            limits.outer.interval
+          );
         }
         rootStore.rateLimitStore.setLastRequestTimestamp(new Date());
-        return stashTab.data.stash;
+        rootStore.rateLimitStore.setLastRateLimitState(state);
+        rootStore.rateLimitStore.setLastRateLimitBoundaries(limits);
+        return { stash: stashTab.data.stash, limits, state };
       }),
       delay(125)
     );
   };
 
-  const source = makeRequest(stashTab).pipe(
-    concatMap((tabResponse) => {
-      console.log(
-        `removed token from inner ${moment().format('LTS')}, count:`,
-        innerLimiter.tokensThisInterval
-      );
-      return from(outerLimiter.removeTokens(1)).pipe(
+  if (shouldInstantiate) {
+    return makeRequest(stashTab).pipe(
+      concatMap((resp) => {
+        return of(resp.stash);
+      })
+    );
+  } else {
+    innerLimiter = rootStore.rateLimitStore.inner;
+    outerLimiter = rootStore.rateLimitStore.outer;
+  }
+
+  const source = from(outerLimiter.removeTokens(1)).pipe(
+    concatMap(() => {
+      // console.log(
+      //   `removed token from outer ${moment().format('LTS')}, count:`,
+      //   outerLimiter.tokensThisInterval
+      // );
+      return from(innerLimiter.removeTokens(1)).pipe(
         concatMap(() => {
-          console.log(
-            `removed token from outer ${moment().format('LTS')}, count:`,
-            outerLimiter.tokensThisInterval
-          );
-          return from(innerLimiter.removeTokens(1)).pipe(
-            concatMap(() => {
-              return of(tabResponse);
+          // console.log(
+          //   `removed token from inner ${moment().format('LTS')}, count:`,
+          //   innerLimiter.tokensThisInterval
+          // );
+          return makeRequest(stashTab).pipe(
+            concatMap((response) => {
+              if (
+                outerLimiter.tokensThisInterval - 1 ===
+                  outerLimiter.tokenBucket.tokensPerInterval &&
+                outerLimiter.tokenBucket.tokensPerInterval !== response.limits.outer.tokens
+              ) {
+                console.log(`custom interval finished for outer ${moment().format('LTS')}`);
+                rootStore.rateLimitStore.createOuter(
+                  0,
+                  response.limits.outer.tokens,
+                  response.limits.outer.interval
+                );
+                rootStore.rateLimitStore.createInner(
+                  0,
+                  response.limits.inner.tokens,
+                  response.limits.inner.interval
+                );
+              }
+              if (
+                innerLimiter.tokensThisInterval - 1 ===
+                  innerLimiter.tokenBucket.tokensPerInterval &&
+                innerLimiter.tokenBucket.tokensPerInterval !== response.limits.inner.tokens
+              ) {
+                console.log(`custom interval finished for inner ${moment().format('LTS')}`);
+                rootStore.rateLimitStore.createInner(
+                  0,
+                  response.limits.inner.tokens,
+                  response.limits.inner.interval
+                );
+              }
+              return of(response.stash);
             })
           );
         })

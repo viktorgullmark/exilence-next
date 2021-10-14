@@ -147,7 +147,7 @@ const Toolbar = ({
               />
               {!statusMessage && (
                 <Box display="flex" alignItems="center" width={420}>
-                  <Typography variant="caption">{t('label.no_prices_retrieved')}</Typography>
+                  <Typography variant="caption">{t('label.no_prices')}</Typography>
                 </Box>
               )}
             </>
