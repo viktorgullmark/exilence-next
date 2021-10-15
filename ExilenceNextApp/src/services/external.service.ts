@@ -139,7 +139,6 @@ function getStashTabWithChildren(
     }),
     catchError((e: Error | AxiosError) => {
       if (e.message.indexOf('token') > -1) {
-        debugger;
         Sentry.captureException(e);
       }
       return throwError(e);
