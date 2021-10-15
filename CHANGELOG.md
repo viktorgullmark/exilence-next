@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
   - Gems with certain levels were incorrectly identified
 - Fixed a bug where the wrong text would be displayed when no prices exist
 #### Changed
-- Further ptimized the way our rate limiters behave
+- Further optimized the way our rate limiters behave
   - Now dynamically parses the headers of requests, to allow for changes from GGG
   - Stores the current request state and persists it between restarts
   - This should result in minimal, if any status code 429 errors
