@@ -23,15 +23,16 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       detailsUrl: undefined,
     };
   } else {
+    let matchedPrices;
     switch (item.frameType) {
       case 0: // normal
       case 1: // magic
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
-          price = prices.find((p) => p.name === item.name && p.tier === item.tier);
+          matchedPrices = prices.filter((p) => p.name === item.name && p.tier === item.tier);
         } else {
           // other (e.g fragments, scrabs)
-          price = prices.find((p) => p.name === item.name);
+          matchedPrices = prices.filter((p) => p.name === item.name);
         }
         break;
       case 3: {
@@ -47,18 +48,19 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
               p.variant === null)
         );
 
-        const qualityPrice = itemPrices.find((ip) => !ip.quality || ip.quality === item.quality);
+        const qualityPrices = itemPrices.filter((ip) => !ip.quality || ip.quality === item.quality);
 
-        if (qualityPrice) {
-          price = qualityPrice;
+        if (qualityPrices.length === 1) {
+          price = qualityPrices[0];
         } else {
-          price = itemPrices.find((ip) => ip.quality === 0);
+          matchedPrices = itemPrices.filter((ip) => ip.quality === 0);
         }
 
         break;
       }
-      case 4: // gem
-        price = prices.find(
+      case 4: {
+        // gem
+        matchedPrices = prices.filter(
           (p) =>
             p.name === item.name &&
             p.corrupted === item.corrupted &&
@@ -69,30 +71,48 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
               p.level === item.level)
         );
         break;
+      }
       case 5: // currency, including seeds
         if (item.name.indexOf(' Seed') > -1) {
           if (item.ilvl > 0 && item.ilvl < 76) {
-            price = prices.find((p) => p.name === item.name && p.ilvl && p.ilvl > 0 && p.ilvl < 76);
+            matchedPrices = prices.filter(
+              (p) => p.name === item.name && p.ilvl && p.ilvl > 0 && p.ilvl < 76
+            );
           } else {
-            price = prices.find(
+            matchedPrices = prices.filter(
               (p) => p.name === item.name && p.ilvl && (p.ilvl === 76 || p.ilvl > 76)
             );
           }
         } else {
-          price = prices.find((p) => p.name === item.name);
+          matchedPrices = prices.filter((p) => p.name === item.name);
         }
         break;
-      case 6: // divination card
-        price = prices.find((p) => p.name === item.name && p.icon.indexOf('Inventory') > -1);
+      case 6: {
+        // divination card
+        matchedPrices = prices.filter(
+          (p) => p.name === item.name && p.icon.indexOf('Inventory') > -1
+        );
         break;
-      case 8: // prophecy
-        price = prices.find((p) => p.name === item.name && p.icon.indexOf('Prophecy') > -1);
+      }
+      case 8: {
+        // prophecy
+        matchedPrices = prices.filter(
+          (p) => p.name === item.name && p.icon.indexOf('Prophecy') > -1
+        );
         break;
-      case 9: // relic
-        price = prices.find((p) => p.name === item.name);
+      }
+      case 9: {
+        // relic
+        matchedPrices = prices.filter((p) => p.name === item.name);
         break;
-      default:
-        price = prices.find((p) => p.name === item.name);
+      }
+      default: {
+        matchedPrices = prices.filter((p) => p.name === item.name);
+      }
+    }
+    // only assign price if we find one item in the price list
+    if (matchedPrices && matchedPrices.length === 1) {
+      price = matchedPrices[0];
     }
   }
 
