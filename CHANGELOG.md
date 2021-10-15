@@ -2,7 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.1.0] - 2021-10-15
+#### Added
+- Added an improved pricing engine
+  - We now only display items we are confident are the right ones, to avoid inaccuracy
 #### Fixed
+- Fixed a bug where some gems would be listed with the wrong price
+  - Gems with certain qualities were incorrectly identified
+  - Gems with certain levels were incorrectly identified
 - Fixed a bug where the wrong text would be displayed when no prices exist
 #### Changed
 - Further ptimized the way our rate limiters behave
