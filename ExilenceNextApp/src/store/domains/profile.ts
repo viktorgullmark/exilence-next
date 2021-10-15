@@ -7,7 +7,6 @@ import { forkJoin, from, of } from 'rxjs';
 import {
   catchError,
   concatMap,
-  delay,
   map,
   mergeMap,
   switchMap,
@@ -513,8 +512,6 @@ export class Profile {
     const getMainTabsWithChildren =
       tabsToFetch.length > 0
         ? from(tabsToFetch).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) => externalService.getStashTabWithChildren(tab, league.id)),
             toArray()
           )
@@ -540,7 +537,7 @@ export class Profile {
           if (firstStashTab) {
             combinedTabs = combinedTabs.concat([firstStashTab]);
           }
-          let subTabs = response[0]
+          let subTabs: IStashTab[] = response[0]
             .filter((sst) => sst.children)
             .flatMap((sst) => sst.children ?? sst);
           subTabs =
@@ -554,8 +551,6 @@ export class Profile {
           }
           rootStore.uiStateStore.setStatusMessage('fetching_subtabs');
           const getItemsForSubTabsSource = from(subTabs).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
             concatMap((tab: IStashTab) =>
               externalService.getStashTabWithChildren(tab, league.id, true)
             ),

@@ -67,6 +67,7 @@
     "icon_fetched_from": "Icon fetched from pathofexile.com",
     "no_rows_found": "No items found",
     "snapshotting_info_icon": "Exilence next is only allowed to do 30 requests per 5 minutes, which is why you might see this message for a prolonged time",
+    "no_prices": "No prices retrieved",
     "no_prices_retrieved": "No prices fetched for `{{league}}`, you can change pricing league in your profile",
     "customize_prices": "Customize prices",
     "set_custom_price": "Set custom price",

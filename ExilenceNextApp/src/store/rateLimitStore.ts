@@ -1,50 +1,45 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { RateLimiter } from 'limiter';
+import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { rateLimit } from '../utils/rxjs.utils';
 import { RootStore } from './rootStore';
 
-interface IRateLimitBoundaries {
-  requests: number;
+interface IRateLimitStateGroup {
+  inner: IRateLimitState;
+  outer: IRateLimitState;
+}
+
+interface IRateLimitState {
+  tokens: number;
   interval: number;
 }
 
-const rateLimiter1Defaults: IRateLimitBoundaries = {
-  requests: 14,
-  interval: 11 * 1000,
-};
-
-const rateLimiter2Defaults: IRateLimitBoundaries = {
-  requests: 29,
-  interval: 301 * 1000,
-};
-
 export class RateLimitStore {
-  @observable rateLimiter1limits = rateLimiter1Defaults;
-  @observable rateLimiter2limits = rateLimiter2Defaults;
-  @observable shouldUpdateLimits = false;
+  @observable outer?: RateLimiter;
+  @observable inner?: RateLimiter;
+
   @observable retryAfter = 0;
   @persist('object') @observable lastRequestTimestamp?: Date;
-  @observable rateLimiter1 = rateLimit(
-    this.rateLimiter1limits.requests,
-    this.rateLimiter1limits.interval
-  );
-  @observable rateLimiter2 = rateLimit(
-    this.rateLimiter2limits.requests,
-    this.rateLimiter2limits.interval
-  );
+  @persist('object') @observable lastRateLimitState?: IRateLimitStateGroup;
+  @persist('object') @observable lastRateLimitBoundaries?: IRateLimitStateGroup;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
-  @action
-  setRateLimiter1(limit: IRateLimitBoundaries) {
-    this.rateLimiter1 = rateLimit(limit.requests, limit.interval);
+  @action createInner(tokensConsumed: number = 0, requests: number, interval: number) {
+    this.inner = new RateLimiter({
+      tokensPerInterval: requests - tokensConsumed,
+      interval: interval,
+    });
+    return this.inner;
   }
 
-  @action
-  setRateLimiter2(limit: IRateLimitBoundaries) {
-    this.rateLimiter2 = rateLimit(limit.requests, limit.interval);
+  @action createOuter(tokensConsumed: number = 0, requests: number, interval: number) {
+    this.outer = new RateLimiter({
+      tokensPerInterval: requests - tokensConsumed,
+      interval: interval,
+    });
+    return this.outer;
   }
 
   @action
@@ -58,45 +53,60 @@ export class RateLimitStore {
   }
 
   @action
-  parseRateLimitHeaders(headers: string) {
-    if (headers) {
-      const _inner = headers.split(',').shift()?.split(':');
-      if (_inner && _inner.length > 0) {
-        const _requests = +_inner[0] - 1;
-        const _interval = (+_inner[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter1limits.requests ||
-          _interval !== this.rateLimiter1limits.interval
-        ) {
-          runInAction(() => {
-            this.shouldUpdateLimits = true;
-            this.rateLimiter1limits = { requests: _requests, interval: _interval };
-          });
-        }
-      }
-      const _outer = headers.split(',').pop()?.split(':');
-      if (_outer && _outer.length > 0) {
-        const _requests = +_outer[0] - 1;
-        const _interval = (+_outer[1] + 1) * 1000;
-        if (
-          _requests !== this.rateLimiter2limits.requests ||
-          _interval !== this.rateLimiter2limits.interval
-        ) {
-          runInAction(() => {
-            this.shouldUpdateLimits = true;
-            this.rateLimiter2limits = { requests: _requests, interval: _interval };
-          });
-        }
-      }
-    }
+  setLastRateLimitState(state: IRateLimitStateGroup) {
+    this.lastRateLimitState = state;
   }
 
   @action
-  updateLimits() {
-    this.setRateLimiter1(this.rateLimiter1limits);
-    this.setRateLimiter2(this.rateLimiter2limits);
-    runInAction(() => {
-      this.shouldUpdateLimits = false;
-    });
+  setLastRateLimitBoundaries(state: IRateLimitStateGroup) {
+    this.lastRateLimitBoundaries = state;
+  }
+
+  @action
+  getLimitsFromHeaders(headers: string) {
+    const inner = { tokens: 0, interval: 0 };
+    const outer = { tokens: 0, interval: 0 };
+    if (headers) {
+      const _inner = headers.split(',').shift()?.split(':');
+      if (_inner && _inner.length > 0) {
+        const tokens = +_inner[0] - 3;
+        inner.tokens = tokens < 0 ? 0 : tokens;
+        inner.interval = (+_inner[1] + 2) * 1000;
+      }
+      const _outer = headers.split(',').pop()?.split(':');
+      if (_outer && _outer.length > 0) {
+        const tokens = +_outer[0] - 2;
+        outer.tokens = tokens < 0 ? 0 : tokens;
+        outer.interval = (+_outer[1] + 12) * 1000;
+      }
+    }
+    return {
+      inner,
+      outer,
+    };
+  }
+
+  @action
+  getStateFromHeaders(headers: string) {
+    const inner = { tokens: 0, interval: 0 };
+    const outer = { tokens: 0, interval: 0 };
+    if (headers) {
+      const _inner = headers.split(',').shift()?.split(':');
+      if (_inner && _inner.length > 0) {
+        const tokens = +_inner[0];
+        inner.tokens = tokens < 0 ? 0 : tokens;
+        inner.interval = (+_inner[1] + 2) * 1000;
+      }
+      const _outer = headers.split(',').pop()?.split(':');
+      if (_outer && _outer.length > 0) {
+        const tokens = +_outer[0];
+        outer.tokens = tokens < 0 ? 0 : tokens;
+        outer.interval = (+_outer[1] + 12) * 1000;
+      }
+    }
+    return {
+      inner,
+      outer,
+    };
   }
 }

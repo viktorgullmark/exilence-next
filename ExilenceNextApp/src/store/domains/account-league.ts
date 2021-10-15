@@ -1,8 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
+import moment from 'moment';
 import { from, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, delay, map, switchMap } from 'rxjs/operators';
 import { rootStore } from '../..';
 import { ICharacter } from '../../interfaces/character.interface';
 import { IStash, IStashTab } from '../../interfaces/stash.interface';
@@ -59,9 +60,26 @@ export class AccountLeague {
         );
         // fetch first and set headers
         if (selectedStashTabs.length > 0 && checkHeaders) {
+          const limits = rootStore.rateLimitStore.lastRateLimitBoundaries;
+          const state = rootStore.rateLimitStore.lastRateLimitState;
+          let delayTime: number = 0;
+          if (limits && state) {
+            const fiveMinutesAgo = moment().utc().subtract(5, 'minutes');
+            const requestRecently = moment(rootStore.rateLimitStore.lastRequestTimestamp)
+              .utc()
+              .isAfter(fiveMinutesAgo);
+            const innerTokensLeft = limits?.inner.tokens - state?.inner.tokens < 3;
+            const outerTokensLeft = limits?.outer.tokens - state?.outer.tokens < 3;
+            const shouldDelay = requestRecently && (innerTokensLeft || outerTokensLeft);
+            const duration = moment.duration(
+              moment(rootStore.rateLimitStore.lastRequestTimestamp).diff(fiveMinutesAgo)
+            );
+            if (shouldDelay) {
+              delayTime = duration.asMilliseconds();
+            }
+          }
           const source = from([selectedStashTabs[0]]).pipe(
-            rootStore.rateLimitStore.rateLimiter1,
-            rootStore.rateLimitStore.rateLimiter2,
+            delay(delayTime),
             concatMap((tab: IStashTab) =>
               externalService.getStashTabWithChildren(tab, this.leagueId, false, true)
             )

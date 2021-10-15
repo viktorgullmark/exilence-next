@@ -16,14 +16,14 @@ import { useStores } from '../../../..';
 import { restart } from '../../../../utils/window.utils';
 
 const ResetIndexedDbSettings = () => {
-  const { signalrStore, migrationStore } = useStores();
+  const { signalrStore, migrationStore, uiStateStore } = useStores();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const { t } = useTranslation();
 
   const handleDataResetConfirmation = async () => {
     setIsClearing(true);
-
+    uiStateStore.setCancelSnapshot(true);
     migrationStore!.clearStorage().subscribe(() => {
       signalrStore!.signOut();
       setIsClearing(false);
