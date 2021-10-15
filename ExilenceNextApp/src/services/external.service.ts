@@ -1,8 +1,8 @@
-import { AxiosResponse } from 'axios';
+import * as Sentry from '@sentry/browser';
+import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios-observable';
-import moment from 'moment';
-import { from, Observable, of } from 'rxjs';
-import { concatMap, delay, map } from 'rxjs/operators';
+import { from, Observable, of, throwError } from 'rxjs';
+import { catchError, concatMap, delay, map } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -10,7 +10,6 @@ import { ILeague } from '../interfaces/league.interface';
 import { IPoeProfile } from '../interfaces/poe-profile.interface';
 import { IStash, IStashTab, IStashTabResponse } from '../interfaces/stash.interface';
 import AppConfig from './../config/app.config';
-
 const apiUrl = AppConfig.pathOfExileApiUrl;
 
 export const externalService = {
@@ -137,6 +136,13 @@ function getStashTabWithChildren(
           );
         })
       );
+    }),
+    catchError((e: Error | AxiosError) => {
+      if (e.message.indexOf('token') > -1) {
+        debugger;
+        Sentry.captureException(e);
+      }
+      return throwError(e);
     })
   );
 

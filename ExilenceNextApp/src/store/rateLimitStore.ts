@@ -1,7 +1,6 @@
 import { RateLimiter } from 'limiter';
 import { action, makeObservable, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import moment from 'moment';
 import { RootStore } from './rootStore';
 
 interface IRateLimitStateGroup {

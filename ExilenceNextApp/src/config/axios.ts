@@ -1,6 +1,6 @@
+import * as Sentry from '@sentry/browser';
 import { AxiosError } from 'axios';
 import Axios from 'axios-observable';
-
 import { rootStore } from '..';
 
 function configureAxios() {
@@ -32,6 +32,7 @@ function configureAxios() {
         if (retryAfter) {
           rootStore.rateLimitStore.setRetryAfter(+retryAfter);
         }
+        Sentry.captureException(error);
       }
       return Promise.reject(error);
     }
