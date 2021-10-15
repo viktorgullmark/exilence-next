@@ -62,9 +62,10 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
           (p) =>
             p.name === item.name &&
             p.corrupted === item.corrupted &&
-            (item.quality < 20 || p.quality === item.quality) &&
+            ((item.quality < 20 && typeof p.quality === 'number' && p.quality < 20) ||
+              p.quality === item.quality) &&
             ((isSpecialGem(item.name) && p.level === item.level) ||
-              item.level < 20 ||
+              (item.level < 20 && p.level && p.level < 20) ||
               p.level === item.level)
         );
         break;
