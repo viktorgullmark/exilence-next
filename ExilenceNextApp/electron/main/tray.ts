@@ -2,8 +2,10 @@ import { app, Tray, Menu, shell, BrowserWindow } from 'electron';
 import { checkForUpdates } from './autoUpdater';
 import { destroyNetWorthOverlay } from './overlays/NetWorth/netWorthOverlay';
 import * as path from 'path';
+import { SYSTEMS } from '../enums';
 
 const trayIconPath = path.join(__dirname, `../../icon512x512.png`);
+const trayIconMacPath = path.join(__dirname, `../../tray_mac.png`);
 import checkForMissingWindow from './utils';
 
 type CreateTrayProps = {
@@ -16,7 +18,10 @@ let tray: Tray | null;
 
 const createTray = ({ mainWindow, updateAvailable, isQuittingCallback }: CreateTrayProps) => {
   checkForMissingWindow({ category: 'tray', mainWindow });
-  tray = new Tray(trayIconPath);
+  if(process.platform === SYSTEMS.MACOS) 
+    tray = new Tray(trayIconMacPath);
+  else
+    tray = new Tray(trayIconPath);
 
   const contextMenu = Menu.buildFromTemplate([
     {
