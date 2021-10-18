@@ -31,7 +31,15 @@ import { SYSTEMS } from './enums';
 
 if (!isDev) {
   sentry.init({
-    dsn: 'https://123362e387b749feaf8f98a2cce30fdf@sentry.io/1852797',
+    dsn: 'https://cefd9ca960954f39870e162aa8936535@o222604.ingest.sentry.io/6011593',
+    ignoreErrors: [
+      'Request failed',
+      'net::',
+      'https://www.pathofexile.com',
+      'https://api.pathofexile.com',
+      'https://poe.ninja',
+      'https://github.com',
+    ],
   });
 }
 

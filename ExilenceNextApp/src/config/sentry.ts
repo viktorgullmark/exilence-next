@@ -7,12 +7,12 @@ function initSentry() {
     Sentry.init({
       dsn: AppConfig.sentryBrowserDsn,
       ignoreErrors: [
-        /^net::+.*$/,
-        AppConfig.pathOfExileUrl,
-        'Network Error',
-        'NetworkError',
         'Request failed',
         'net::',
+        AppConfig.pathOfExileUrl,
+        AppConfig.pathOfExileApiUrl,
+        AppConfig.poeNinjaBaseUrl,
+        AppConfig.githubBaseUrl,
       ],
     });
   }
