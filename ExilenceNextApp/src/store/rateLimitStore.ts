@@ -27,16 +27,18 @@ export class RateLimitStore {
   }
 
   @action createInner(tokensConsumed: number = 0, requests: number, interval: number) {
+    const tokensToUse = requests - tokensConsumed;
     this.inner = new RateLimiter({
-      tokensPerInterval: requests - tokensConsumed,
+      tokensPerInterval: tokensToUse < 1 ? 1 : tokensToUse,
       interval: interval,
     });
     return this.inner;
   }
 
   @action createOuter(tokensConsumed: number = 0, requests: number, interval: number) {
+    const tokensToUse = requests - tokensConsumed;
     this.outer = new RateLimiter({
-      tokensPerInterval: requests - tokensConsumed,
+      tokensPerInterval: tokensToUse < 1 ? 1 : tokensToUse,
       interval: interval,
     });
     return this.outer;
