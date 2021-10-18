@@ -1,11 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.1.1] - NOT RELEASED
+## [1.1.1] - 2021-10-18
 #### Fixed
 - Fixed a bug where the income would always show the chaos value, even when exalted was the chosen currency
+- Fixed a bug where multiple snapshot intervals sometimes would run in parallel after reconnecting
 - Fixed a rare bug that sometimes caused snapshots to fail
 - Fixed a bug where the tray icon used on MacOS was too large (thanks to chrisbigart)
+- Fixed a minor bug related to our rate limiters
 #### Updated
 - Updated Sentry (logging) to the latest version, with a new improved configuration
 
