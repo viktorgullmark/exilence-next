@@ -47,6 +47,7 @@ export class SignalrHub {
         .start()
         .then(() => {
           this.connection!.onreconnected(() => {
+            this.rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
             this.rootStore.notificationStore.createNotification('reconnected', 'success');
             this.rootStore.signalrStore.setOnline(true);
             this.rootStore.accountStore.initSession(true);
