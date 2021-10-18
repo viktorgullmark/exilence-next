@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the income would always show the chaos value, even when exalted was the chosen currency
 - Fixed a rare bug that sometimes caused snapshots to fail
 - Fixed a bug where the tray icon used on MacOS was too large (thanks to chrisbigart)
+#### Updated
+- Updated Sentry (logging) to the latest version, with a new improved configuration
 
 ## [1.1.0] - 2021-10-15
 #### Added
