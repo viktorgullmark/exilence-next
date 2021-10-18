@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.1] - NOT RELEASED
 #### Fixed
+- Fixed a bug where the income would always show the chaos value, even when exalted was the chosen currency
 - Fixed a rare bug that sometimes caused snapshots to fail
 - Fixed a bug where the tray icon used on MacOS was too large (thanks to chrisbigart)
 

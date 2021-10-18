@@ -274,8 +274,11 @@ export class Profile {
     if (snapshots.length > 1) {
       const lastSnapshot = mapSnapshotToApiSnapshot(snapshots[0]);
       const firstSnapshot = mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1]);
-      const incomePerHour =
+      let incomePerHour =
         (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
+      if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+        incomePerHour = incomePerHour / rootStore.priceStore.exaltedPrice;
+      }
       this.income = incomePerHour;
 
       return;
