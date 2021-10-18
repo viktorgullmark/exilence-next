@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file.
    - Added quicktoggle button directly on the net worth card
    - Changed the currency color to a more neutral tone
 - Added support for pricing `Blighted`, `Elder` and `Shaper` maps
-- Added support for pricing `Awakened`, `Anomalous` and `Divergent` gems
+- Added support for pricing `Awakened`, `Anomalous`, `Divergent` and `Phantasmal` gems
 - Added the ability to cancel an ongoing snapshot
 - Added the ability to delete selected snapshots from the history
 - Added a new column `Price history last 7 days` to the item table
