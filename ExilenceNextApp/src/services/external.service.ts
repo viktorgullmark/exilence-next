@@ -114,6 +114,11 @@ function getStashTabWithChildren(
                   response.limits.outer.tokens,
                   response.limits.outer.interval
                 );
+                rootStore.rateLimitStore.createInner(
+                  0,
+                  response.limits.inner.tokens,
+                  response.limits.inner.interval
+                );
               }
               if (
                 innerLimiter.tokensThisInterval - 1 ===
