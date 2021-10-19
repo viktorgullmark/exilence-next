@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - NOT RELEASED
+#### Added
+- Added better listing/grouping of maps in the item table
+  - Now correctly lists all maps as `normal` rarity
+  - Now merges same type of maps together correctly, so they are listed as one item stack
+#### Fixed
+- Fixed a bug where you would sometimes get `Error 429` when snapshotting
+
 ## [1.1.1] - 2021-10-18
 #### Fixed
 - Fixed a bug where the income would always show the chaos value, even when exalted was the chosen currency
