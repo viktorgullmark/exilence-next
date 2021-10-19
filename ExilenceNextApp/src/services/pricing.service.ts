@@ -29,6 +29,8 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
       case 1: // magic
       case 2: // rare
         if (item.name.indexOf(' Map') > -1) {
+          item.frameType = 0;
+          item.corrupted = false;
           matchedPrices = prices.filter((p) => p.name === item.name && p.tier === item.tier);
         } else {
           // other (e.g fragments, scrabs)
@@ -130,6 +132,7 @@ function priceItem(item: IPricedItem, prices: IExternalPrice[]) {
     ...modifiedPrice,
     corrupted: item.corrupted,
     icon: item.icon,
+    frameType: item.frameType,
   };
   return data;
 }

@@ -109,11 +109,13 @@ export function findItem<T extends IPricedItem>(array: T[], itemToFind: T) {
   return array.find(
     (x) =>
       x.name === itemToFind.name &&
-      x.quality === itemToFind.quality &&
+      (x.typeLine.indexOf(' Map') > -1 || x.quality === itemToFind.quality) &&
       x.links === itemToFind.links &&
       x.level === itemToFind.level &&
       x.corrupted === itemToFind.corrupted &&
-      (x.typeLine.indexOf(' Seed') === -1 || x.ilvl === itemToFind.ilvl) &&
+      (x.typeLine.indexOf(' Seed') === -1 ||
+        x.typeLine.indexOf(' Map') > -1 ||
+        x.ilvl === itemToFind.ilvl) &&
       // ignore frameType for all maps except unique ones
       (x.frameType === itemToFind.frameType || (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
   );
