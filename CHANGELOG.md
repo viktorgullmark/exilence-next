@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2021-10-20
+#### Fixed
+- Hotfix for recent logging changes not working as they should
+
 ## [1.1.2] - 2021-10-20
 #### Added
 - Added better listing/grouping of maps in the item table
