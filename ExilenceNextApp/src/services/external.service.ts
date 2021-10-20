@@ -98,20 +98,9 @@ function getStashTabWithChildren(
     outerLimiter = rootStore.rateLimitStore.outer;
   }
 
-  const delayToUse = 5000;
-  const prevLimits = rootStore.rateLimitStore.lastRateLimitBoundaries;
-  const prevState = rootStore.rateLimitStore.lastRateLimitState;
-
-  // if we have few tokens (requests) left for inner interval, stall the next request
-  const delayTime =
-    prevLimits && prevState && prevLimits.inner.tokens < prevState.inner.tokens ? delayToUse : 0;
-
-  if (delayTime > 0) console.log('will stall with ms:', delayTime);
-
   const source = from(
     Promise.all([outerLimiter.removeTokens(1), innerLimiter.removeTokens(1)])
   ).pipe(
-    delay(delayTime),
     mergeMap(() => {
       return makeRequest(stashTab).pipe(
         mergeMap((response) => {
@@ -135,7 +124,23 @@ function getStashTabWithChildren(
               response.limits.inner.interval
             );
           }
-          return of(response.stash);
+
+          const delayToUse = 5000;
+
+          // if we have few tokens (requests) left for inner interval, stall the next request
+          const delayTime =
+            response.limits &&
+            response.state &&
+            response.limits.inner.tokens < response.state.inner.tokens
+              ? delayToUse
+              : 0;
+
+          if (delayTime > 0) {
+            console.log('limit', response.limits?.inner.tokens);
+            console.log('state', response.state?.inner.tokens);
+            console.log('will stall with ms:', delayTime);
+          }
+          return of(response.stash).pipe(delay(delayTime));
         })
       );
     }),
