@@ -131,7 +131,7 @@ function getStashTabWithChildren(
           const delayTime =
             response.limits &&
             response.state &&
-            response.limits.inner.tokens < response.state.inner.tokens
+            response.limits.inner.tokens + 3 === response.state.inner.tokens
               ? delayToUse
               : 0;
 
