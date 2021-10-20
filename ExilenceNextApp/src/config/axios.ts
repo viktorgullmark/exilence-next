@@ -34,7 +34,8 @@ function configureAxios() {
         }
         if (error.response?.headers['x-rate-limit-policy'] === 'stash-request-limit') {
           const state = error.response?.headers['x-rate-limit-account-state'];
-          Sentry.captureException(`Stash request limit reached, state: ${state}`);
+          const customError = new Error(`Stash request limit reached, state: ${state}`);
+          Sentry.captureException(customError);
         }
       }
       return Promise.reject(error);
