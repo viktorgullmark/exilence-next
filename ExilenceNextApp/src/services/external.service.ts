@@ -104,7 +104,7 @@ function getStashTabWithChildren(
 
   // if we have few tokens (requests) left for inner interval, stall the next request
   const delayTime =
-    prevLimits && prevState && prevLimits.inner.tokens === prevState.inner.tokens ? delayToUse : 0;
+    prevLimits && prevState && prevLimits.inner.tokens < prevState.inner.tokens ? delayToUse : 0;
 
   if (delayTime > 0) console.log('will stall with ms:', delayTime);
 
