@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/browser';
 import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios-observable';
 import { from, Observable, of, throwError } from 'rxjs';
-import { catchError, concatMap, delay, map } from 'rxjs/operators';
+import { catchError, concatMap, delay, map, mergeMap } from 'rxjs/operators';
 import { rootStore } from '..';
 import { ICharacterListResponse, ICharacterResponse } from '../interfaces/character.interface';
 import { IGithubRelease } from '../interfaces/github/github-release.interface';
@@ -98,42 +98,44 @@ function getStashTabWithChildren(
     outerLimiter = rootStore.rateLimitStore.outer;
   }
 
-  const source = from(outerLimiter.removeTokens(1)).pipe(
-    concatMap(() => {
-      return from(innerLimiter.removeTokens(1)).pipe(
-        concatMap(() => {
-          return makeRequest(stashTab).pipe(
-            concatMap((response) => {
-              if (
-                outerLimiter.tokensThisInterval - 1 ===
-                  outerLimiter.tokenBucket.tokensPerInterval &&
-                outerLimiter.tokenBucket.tokensPerInterval !== response.limits.outer.tokens
-              ) {
-                rootStore.rateLimitStore.createOuter(
-                  0,
-                  response.limits.outer.tokens,
-                  response.limits.outer.interval
-                );
-                rootStore.rateLimitStore.createInner(
-                  0,
-                  response.limits.inner.tokens,
-                  response.limits.inner.interval
-                );
-              }
-              if (
-                innerLimiter.tokensThisInterval - 1 ===
-                  innerLimiter.tokenBucket.tokensPerInterval &&
-                innerLimiter.tokenBucket.tokensPerInterval !== response.limits.inner.tokens
-              ) {
-                rootStore.rateLimitStore.createInner(
-                  0,
-                  response.limits.inner.tokens,
-                  response.limits.inner.interval
-                );
-              }
-              return of(response.stash);
-            })
-          );
+  const delayToUse = 5000;
+  const prevLimits = rootStore.rateLimitStore.lastRateLimitBoundaries;
+  const prevState = rootStore.rateLimitStore.lastRateLimitState;
+
+  // if we have few tokens (requests) left for inner interval, stall the next request
+  const delayTime =
+    prevLimits && prevState && prevLimits.inner.tokens === prevState.inner.tokens ? delayToUse : 0;
+
+  if (delayTime > 0) console.log('will stall with ms:', delayTime);
+
+  const source = from(
+    Promise.all([outerLimiter.removeTokens(1), innerLimiter.removeTokens(1)])
+  ).pipe(
+    delay(delayTime),
+    mergeMap(() => {
+      return makeRequest(stashTab).pipe(
+        mergeMap((response) => {
+          if (
+            outerLimiter.tokensThisInterval - 1 === outerLimiter.tokenBucket.tokensPerInterval &&
+            outerLimiter.tokenBucket.tokensPerInterval !== response.limits.outer.tokens
+          ) {
+            rootStore.rateLimitStore.createOuter(
+              0,
+              response.limits.outer.tokens,
+              response.limits.outer.interval
+            );
+          }
+          if (
+            innerLimiter.tokensThisInterval - 1 === innerLimiter.tokenBucket.tokensPerInterval &&
+            innerLimiter.tokenBucket.tokensPerInterval !== response.limits.inner.tokens
+          ) {
+            rootStore.rateLimitStore.createInner(
+              0,
+              response.limits.inner.tokens,
+              response.limits.inner.interval
+            );
+          }
+          return of(response.stash);
         })
       );
     }),
