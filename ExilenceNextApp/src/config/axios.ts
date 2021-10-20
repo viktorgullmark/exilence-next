@@ -33,7 +33,8 @@ function configureAxios() {
           rootStore.rateLimitStore.setRetryAfter(+retryAfter);
         }
         if (error.response?.headers['x-rate-limit-policy'] === 'stash-request-limit') {
-          Sentry.captureException('Stash request limit reached');
+          const state = error.response?.headers['x-rate-limit-account-state'];
+          Sentry.captureException(`Stash request limit reached, state: ${state}`);
         }
       }
       return Promise.reject(error);
