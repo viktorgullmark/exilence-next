@@ -153,6 +153,13 @@ const NetWorth = () => {
               icon={<TrendingUpIcon fontSize="medium" />}
               currencyShort={settingStore.activeCurrency.short}
               currency
+              secondaryValue={`${t('label.income_based_on')}`}
+              secondaryValueStyles={{
+                color: theme.palette.text.primary,
+                fontSize: '0.8rem',
+                fontWeight: 'normal',
+              }}
+              tooltip={t('label.income_based_on_tooltip')}
               clearFn={activeGroup ? undefined : () => activeProfile?.clearIncome()}
             />
           </Widget>
