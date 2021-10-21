@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - NOT RELEASED
+#### Added
+- Added more accurate rate limiting, to further avoid `Error 429`
+
 ## [1.1.3] - 2021-10-20
 #### Fixed
 - Hotfix for recent logging changes not working as they should
