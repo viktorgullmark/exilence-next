@@ -131,15 +131,10 @@ function getStashTabWithChildren(
           const delayTime =
             response.limits &&
             response.state &&
-            response.limits.inner.tokens + 3 === response.state.inner.tokens
+            response.limits.inner.tokens + 3 <= response.state.inner.tokens
               ? delayToUse
               : 0;
 
-          if (delayTime > 0) {
-            console.log('limit', response.limits?.inner.tokens);
-            console.log('state', response.state?.inner.tokens);
-            console.log('will stall with ms:', delayTime);
-          }
           return of(response.stash).pipe(delay(delayTime));
         })
       );
