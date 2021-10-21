@@ -83,15 +83,16 @@ export const formatValue = (
   if (!value || typeof value === 'string') {
     return !displayZero ? '' : `0 ${suffix}`;
   }
-  let valueString = value > 0 && change ? '+ ' : '';
-  valueString += value.toLocaleString(undefined, {
+  const roundedValue = Math.round(value * 100) / 100;
+  let valueString = roundedValue > 0 && change ? '+ ' : '';
+  valueString += roundedValue.toLocaleString(undefined, {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
 
   valueString = valueString.replace('-', '- ').replace('−', '− ');
 
-  if (value === 0 || unavailable) {
+  if (roundedValue === 0 || unavailable) {
     valueString = '0';
   }
 
