@@ -3,7 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.4] - NOT RELEASED
 #### Added
+- Added a small info text to the income card to explain how we calculate it
 - Added more accurate rate limiting, to further avoid `Error 429`
+#### Fixed
+- Fixed a bug where net worth values close to zero would be displayed incorrectly
 
 ## [1.1.3] - 2021-10-20
 #### Fixed
