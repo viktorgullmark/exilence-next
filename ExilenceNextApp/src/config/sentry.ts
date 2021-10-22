@@ -9,6 +9,8 @@ function initSentry() {
       ignoreErrors: [
         'Request failed',
         'net::',
+        'Network Error',
+        'HttpError',
         AppConfig.pathOfExileUrl,
         AppConfig.pathOfExileApiUrl,
         AppConfig.poeNinjaBaseUrl,

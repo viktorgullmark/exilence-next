@@ -35,6 +35,8 @@ if (!isDev) {
     ignoreErrors: [
       'Request failed',
       'net::',
+      'Network Error',
+      'HttpError',
       'https://www.pathofexile.com',
       'https://api.pathofexile.com',
       'https://poe.ninja',
