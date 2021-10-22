@@ -1,10 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.1.4] - NOT RELEASED
+## [1.1.4] - 2021-10-22
 #### Added
 - Added a small info text to the income card to explain how we calculate it
 - Added more accurate rate limiting, to further avoid `Error 429`
+- Added improved error logging
 #### Fixed
 - Fixed a bug where net worth values close to zero would be displayed incorrectly
 
