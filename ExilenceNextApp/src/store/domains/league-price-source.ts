@@ -1,4 +1,4 @@
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { IExternalPrice } from '../../interfaces/external-price.interface';
@@ -8,7 +8,7 @@ export class LeaguePriceSource {
   uuid: string = uuidv4();
   priceSourceUuid: string = '';
 
-  prices: IExternalPrice[] = [];
+  @observable prices: IExternalPrice[] = [];
   pricedFetchedAt?: Date;
 
   @computed
