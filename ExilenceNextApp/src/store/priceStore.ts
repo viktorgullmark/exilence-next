@@ -123,7 +123,7 @@ export class PriceStore {
       return;
     }
     const prices = leaguePriceSources[0]?.prices;
-    if (!prices) {
+    if (!prices || !leaguePriceSources[0]?.pricedFetchedAt) {
       return;
     }
     return prices.filter((p) => {

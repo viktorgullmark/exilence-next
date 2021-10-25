@@ -8,8 +8,8 @@ export class LeaguePriceSource {
   uuid: string = uuidv4();
   priceSourceUuid: string = '';
 
-  @observable prices: IExternalPrice[] = [];
-  pricedFetchedAt?: Date;
+  prices: IExternalPrice[] = [];
+  @observable pricedFetchedAt?: Date;
 
   @computed
   get timeSincePricesFetched() {
