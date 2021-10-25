@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - NOT RELEASED
+#### Fixed
+- Fixed a bug where prices would sometimes not be fetched properly
+
 ## [1.1.4] - 2021-10-22
 #### Added
 - Added a small info text to the income card to explain how we calculate it
