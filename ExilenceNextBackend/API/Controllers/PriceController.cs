@@ -1,15 +1,12 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.Models.Ninja;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -21,12 +18,32 @@ namespace API.Controllers
         private readonly ILogger<PriceController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ICacheService _cacheService;
+        private readonly INinjaService _ninjaService;
 
-        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService)
+        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService, INinjaService ninjaService)
         {
             _httpClientFactory = httpClientFactory;
             _cacheService = cacheService;
+            _ninjaService = ninjaService;
             _logger = logger;
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetPrice(string id)
+        {
+            var result = await _ninjaService.GetPrice(id);
+            return Ok(result);
+        }
+
+
+        [Route("")]
+        [HttpPost]
+        public async Task<IActionResult> AddPrices([FromBody] List<NinjaCurrencyLineModel> list)
+        {
+
+
+            return Ok();
         }
 
         [Route("{overviewType}/{league}/{type}/{language}")]

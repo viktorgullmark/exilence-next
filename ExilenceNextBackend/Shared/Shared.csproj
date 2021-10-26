@@ -12,6 +12,12 @@
     <Compile Remove="Migrations\20200309205017_SnapshotsToMongoDB.Designer.cs" />
     <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.cs" />
     <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.Designer.cs" />
+    <Compile Remove="Migrations\20211026193701_RemovedCharacsdfsdf.cs" />
+    <Compile Remove="Migrations\20211026193701_RemovedCharacsdfsdf.Designer.cs" />
+    <Compile Remove="Migrations\20211026193728_RemovedCharacsdfsdf.cs" />
+    <Compile Remove="Migrations\20211026193728_RemovedCharacsdfsdf.Designer.cs" />
+    <Compile Remove="Migrations\20211026193854_RemovedCharacters.cs" />
+    <Compile Remove="Migrations\20211026193854_RemovedCharacters.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +29,10 @@
     <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
     <PackageReference Include="MongoDBMigrations" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MigrationScripts\" />
   </ItemGroup>
 
 </Project>

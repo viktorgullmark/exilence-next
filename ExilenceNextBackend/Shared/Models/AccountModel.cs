@@ -23,8 +23,6 @@ namespace Shared.Models
         public bool Verified { get; set; }
         [Key("role")]
         public Role Role { get; set; }
-        [Key("characters")]
-        public List<CharacterModel> Characters { get; set; }
         [Key("profiles")]
         public List<SnapshotProfileModel> Profiles { get; set; }
         [IgnoreMember]

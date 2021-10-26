@@ -13,7 +13,6 @@ namespace Shared
         }
 
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Character> Characters { get; set; }
         public DbSet<Connection> Connections { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<League> Leagues { get; set; }
@@ -34,8 +33,6 @@ namespace Shared
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             modelBuilder.Entity<Account>()
-                .HasIndex(x => x.ClientId);
-            modelBuilder.Entity<Character>()
                 .HasIndex(x => x.ClientId);
             modelBuilder.Entity<Connection>()
                 .HasIndex(x => x.ConnectionId);

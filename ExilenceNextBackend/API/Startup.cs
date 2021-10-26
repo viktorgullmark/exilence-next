@@ -47,12 +47,14 @@ namespace API
             services.AddScoped<ISnapshotService, SnapshotService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<INinjaService, NinjaService>();
 
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
+            services.AddScoped<IExternalPriceRepository, ExternalPriceRepository>();
 
             services.AddSignalR(o =>
             {
