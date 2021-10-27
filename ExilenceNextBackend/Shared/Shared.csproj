@@ -6,15 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200123184057_test.cs" />
-    <Compile Remove="Migrations\20200123184057_test.Designer.cs" />
-    <Compile Remove="Migrations\20200309205017_SnapshotsToMongoDB.cs" />
-    <Compile Remove="Migrations\20200309205017_SnapshotsToMongoDB.Designer.cs" />
-    <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.cs" />
-    <Compile Remove="Migrations\20200309220553_SnapshotsToMongoDB.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EFCore.BulkExtensions" Version="3.1.0" />
     <PackageReference Include="MessagePack" Version="1.8.80" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.1" />
