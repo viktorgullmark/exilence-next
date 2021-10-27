@@ -1,8 +1,10 @@
 ﻿using API.Interfaces;
 using API.Models;
 using API.Models.Ninja;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,30 +20,46 @@ namespace API.Controllers
         private readonly ILogger<PriceController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ICacheService _cacheService;
-        private readonly INinjaService _ninjaService;
+        private readonly IPriceService _priceService;
+        readonly IMapper _mapper;
 
-        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService, INinjaService ninjaService)
+        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService, IPriceService priceService, IMapper mapper)
         {
             _httpClientFactory = httpClientFactory;
             _cacheService = cacheService;
-            _ninjaService = ninjaService;
+            _priceService = priceService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<IActionResult> GetPrice(string id)
         {
-            var result = await _ninjaService.GetPrice(id);
-            return Ok(result);
+            return Ok();
         }
 
 
-        [Route("")]
+        [Route("currency")]
         [HttpPost]
-        public async Task<IActionResult> AddPrices([FromBody] List<NinjaCurrencyLineModel> list)
+        public async Task<IActionResult> AddCurrencyPrices([FromBody] List<NinjaCurrencyLineModel> list)
         {
+            return Ok();
+        }
 
+        [Route("item")]
+        [HttpPost]
+        public async Task<IActionResult> AddItemPrices([FromBody] List<NinjaItemLineModel> list)
+        {
+            try
+            {
+                List<ExternalPriceModel> externalPriceModels = _mapper.Map<List<ExternalPriceModel>>(list);
+                await _priceService.AddPrices(externalPriceModels);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }

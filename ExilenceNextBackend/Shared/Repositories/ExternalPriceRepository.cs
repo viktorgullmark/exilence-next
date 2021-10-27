@@ -4,6 +4,7 @@ using MongoDB.Driver.Linq;
 using Shared.Entities.Prices;
 using Shared.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -27,6 +28,11 @@ namespace Shared.Repositories
         public IQueryable<ExternalPrice> Queryable(Expression<Func<ExternalPrice, bool>> predicate)
         {
             return _externalPrices.AsQueryable().Where(predicate);
+        }
+
+        public async Task AddPrices(IEnumerable<ExternalPrice> externalPrices)
+        {
+            await _externalPrices.InsertManyAsync(externalPrices);
         }
 
         public async Task<ExternalPrice> GetPrice(string key)

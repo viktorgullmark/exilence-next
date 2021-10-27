@@ -6,6 +6,46 @@ using System.Text;
 
 namespace API.Models.Ninja
 {
+
+    public class NinjaItemLineModel
+    {
+        //public int Id { get; set; }
+        public string Name { get; set; }
+        //public string Icon { get; set; }
+        public int? MapTier { get; set; }
+        //public int? StackSize { get; set; }
+        public int? LevelRequired { get; set; }
+        //public string BaseType { get; set; }
+        public string Variant { get; set; }
+        public int? Links { get; set; }
+        public int? ItemClass { get; set; }
+        //public NinjaSparkLineModel Sparkline { get; set; }
+        //public NinjaSparkLineModel LowConfidenceSparkline { get; set; }
+        //public List<NinjaModifier> ImplicitModifiers { get; set; }
+        //public List<NinjaModifier> ExplicitModifiers { get; set; }
+        //public string FlavourText { get; set; }
+        //public string ItemType { get; set; }
+        public bool? Corrupted { get; set; }
+        public int? GemLevel { get; set; }
+        public int? GemQuality { get; set; }
+        public double? ChaosValue { get; set; }
+        //public double? ExaltedValue { get; set; }
+        //public int Count { get; set; }
+        //public string DetailsId { get; set; }
+        //public int? ListingCount { get; set; }
+        //public string MapRegion { get; set; }
+
+        //public List<TradeInfo> TradeInfo { get; set; }
+    }
+
+    public class TradeInfo
+    {
+        public string Mod { get; set; }
+        public int? Min { get; set; }
+        public int? Max { get; set; }
+        public string Option { get; set; }
+    }
+
     public class NinjaCurrencyLineModel
     {
         public string CurrencyTypeName { get; set; }
@@ -17,6 +57,12 @@ namespace API.Models.Ninja
         public NinjaSparkLineModel ReceiveSparkLine { get; set; }
         public NinjaSparkLineModel LowConfidencePaySparkLine { get; set; }
         public NinjaSparkLineModel LowConfidenceReceiveSparkLine { get; set; }
+    }
+
+    public class NinjaModifier
+    {
+        public string Text { get; set; }
+        public bool Optional { get; set; }
     }
 
     public class NinjaPayReceiveModel
@@ -36,6 +82,6 @@ namespace API.Models.Ninja
     public class NinjaSparkLineModel
     {
         public List<double?> Data { get; set; }
-        public int TotalChange { get; set; }
+        public double TotalChange { get; set; }
     }
 }

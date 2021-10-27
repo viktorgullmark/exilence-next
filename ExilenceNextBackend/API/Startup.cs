@@ -48,6 +48,7 @@ namespace API
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<INinjaService, NinjaService>();
+            services.AddScoped<IPriceService, PriceService>();
 
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();

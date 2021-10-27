@@ -46,8 +46,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Profiles\Prices\" />
-  </ItemGroup>
-
 </Project>
