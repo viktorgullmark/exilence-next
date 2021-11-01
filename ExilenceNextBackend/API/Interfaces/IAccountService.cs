@@ -23,5 +23,6 @@ namespace API.Interfaces
         Task<SnapshotProfileModel> RemoveProfile(string accountName, string profileId);
         Task RemoveAllProfiles(string accountId);
         Task<SnapshotProfileModel> ChangeProfile(string accountName, string profileId);
+        Task<PatreonAccountModel> AddPatreonAccount(string accountName, PatreonAccountModel patreonAccountModel);
     }
 }

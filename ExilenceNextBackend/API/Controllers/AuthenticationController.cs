@@ -5,10 +5,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using API.Models;
 using API.Helpers;
-using API.Hubs;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
@@ -185,15 +183,31 @@ namespace API.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    //TODO fix this conversion (becomes null) and save on backend
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var model = JsonSerializer.Deserialize<PatreonOauthResponse>(content, options);
-                    return Ok(content);
+                    PatreonOauthResponse responseModel = JsonSerializer.Deserialize<PatreonOauthResponse>(content, options);
+                    await SavePatreonAccount(responseModel);
+                    return Ok(responseModel);
                 }
 
                 _logger.LogError($"Something went wrong fetching token from code: {code}, reason: {response.ReasonPhrase}");
                 return BadRequest(content);
             }
+        }
+
+        private async Task SavePatreonAccount(PatreonOauthResponse patreonOauthResponse)
+        {
+
+            string accountName = User.Identity.Name;
+
+            var patreonAccount = new PatreonAccountModel()
+            {
+                AccessToken = patreonOauthResponse.AccessToken,
+                RefreshToken = patreonOauthResponse.RefreshToken,
+                TokenType = patreonOauthResponse.TokenType,
+                ExpiresIn = patreonOauthResponse.ExpiresIn
+            };
+
+            await _accountService.AddPatreonAccount(accountName, patreonAccount);
         }
     }
 }
