@@ -151,7 +151,7 @@ const NetWorth = () => {
               title="label.total_income"
               valueColor={rarityColors.currency}
               icon={<TrendingUpIcon fontSize="medium" />}
-              currencyShort={'c'}
+              currencyShort={settingStore.activeCurrency.short}
               currency
               secondaryValue={`${t('label.income_based_on')}`}
               secondaryValueStyles={{
