@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2021-11-04
+#### Fixed
+- Fixed a bug where maps in Scourge leagues werent priced
+
 ## [1.1.5] - 2021-10-25
 #### Fixed
 - Fixed a bug where prices would sometimes not be fetched properly
