@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [1.1.6] - 2021-11-04
 #### Fixed
 - Fixed a bug where maps in Scourge leagues werent priced
+- Fixed a bug where the income would be incorrectly calculated
+  - Also now displays income in chaos only, until we rework how income is handled
 
 ## [1.1.5] - 2021-10-25
 #### Fixed

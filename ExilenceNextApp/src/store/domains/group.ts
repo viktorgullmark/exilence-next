@@ -117,11 +117,8 @@ export class Group implements IApiGroup {
       if (snapshots && snapshots.length > 1) {
         const lastSnapshot = snapshots[0];
         const firstSnapshot = snapshots[snapshots.length - 1];
-        let incomePerHour =
+        const incomePerHour =
           (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hours;
-        if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
-          incomePerHour = incomePerHour / rootStore.priceStore.exaltedPrice;
-        }
         incomeForGroup += incomePerHour;
       }
     });
