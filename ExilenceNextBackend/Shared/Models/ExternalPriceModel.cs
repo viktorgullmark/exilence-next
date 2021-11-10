@@ -22,7 +22,7 @@ namespace Shared.Models
         //public string Icon { get; set; }
         public int? Tier { get; set; }
         public int Count { get; set; }
-        //public string DetailsUrl { get; set; }
-        //public ExternalPriceSparkLineModel SparkLine { get; set; }
+        public string DetailsUrl { get; set; }
+        public ExternalPriceSparkLineModel SparkLine { get; set; }
     }
 }

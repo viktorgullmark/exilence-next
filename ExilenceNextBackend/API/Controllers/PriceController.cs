@@ -42,18 +42,27 @@ namespace API.Controllers
 
         [Route("currency")]
         [HttpPost]
-        public async Task<IActionResult> AddCurrencyPrices([FromBody] List<NinjaCurrencyLineModel> list)
+        public async Task<IActionResult> AddCurrencyPrices([FromBody] NinjaResponseModel ninjaResponseModel)
         {
             return Ok();
         }
 
         [Route("item")]
         [HttpPost]
-        public async Task<IActionResult> AddItemPrices([FromBody] List<NinjaItemLineModel> list)
+        public async Task<IActionResult> AddItemPrices([FromBody] NinjaResponseModel ninjaResponseModel)
         {
             try
             {
-                List<ExternalPriceModel> externalPriceModels = _mapper.Map<List<ExternalPriceModel>>(list);
+                List<ExternalPriceModel> externalPriceModels = _mapper.Map<List<ExternalPriceModel>>(ninjaResponseModel.Lines);
+
+                if (ninjaResponseModel.CurrencyDetails != null)
+                {
+                    foreach (NinjaCombinedLineModel line in ninjaResponseModel.Lines)
+                    {
+                        line.Details = ninjaResponseModel.CurrencyDetails.FirstOrDefault(c => c.Name == line.Name);
+                    }
+                }
+
                 await _priceService.AddPrices(externalPriceModels);
             }
             catch (Exception e)

@@ -8,9 +8,9 @@ using System.Text;
 
 namespace API.Profiles
 {
-    public class ItemLineModelExternalPriceMapper : Profile
+    public class NinjaItemLineModelExternalPriceModelMapper : Profile
     {
-        public ItemLineModelExternalPriceMapper()
+        public NinjaItemLineModelExternalPriceModelMapper()
         {
             CreateMap<NinjaItemLineModel, ExternalPriceModel>()
                 //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null))

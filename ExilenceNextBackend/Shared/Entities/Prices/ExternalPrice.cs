@@ -21,8 +21,8 @@ namespace Shared.Entities.Prices
         //public int? TotalStackSize { get; set; }
         //public string Icon { get; set; }
         public int? Tier { get; set; }
-        //public int Count { get; set; }
-        //public string DetailsUrl { get; set; }
-        //public ExternalPriceSparkLine SparkLine { get; set; }
+        public int Count { get; set; }
+        public string DetailsUrl { get; set; }
+        public ExternalPriceSparkLine SparkLine { get; set; }
     }
 }

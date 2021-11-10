@@ -14,6 +14,8 @@ namespace API.Profiles
         {
             CreateMap<ExternalPriceModel, ExternalPrice>();
             CreateMap<ExternalPrice, ExternalPriceModel>();
+            CreateMap<ExternalPriceSparkLine, ExternalPriceSparkLineModel>();
+            CreateMap<ExternalPriceSparkLineModel, ExternalPriceSparkLine>();
         }
     }
 }

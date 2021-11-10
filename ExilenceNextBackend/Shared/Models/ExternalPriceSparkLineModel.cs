@@ -6,7 +6,7 @@ namespace Shared.Models
 {
     public class ExternalPriceSparkLineModel
     {
-        public IEnumerable<double?> Data { get; set; }
-        public int? TotalChange { get; set; }
+        public List<double?> Data { get; set; }
+        public double? TotalChange { get; set; }
     }
 }
