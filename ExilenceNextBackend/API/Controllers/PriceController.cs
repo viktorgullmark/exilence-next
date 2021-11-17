@@ -32,20 +32,6 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [Route("{id}")]
-        [HttpGet]
-        public async Task<IActionResult> GetPrice(string id)
-        {
-            return Ok();
-        }
-
-
-        [Route("currency")]
-        [HttpPost]
-        public async Task<IActionResult> AddCurrencyPrices([FromBody] NinjaResponseModel ninjaResponseModel)
-        {
-            return Ok();
-        }
 
         [Route("item")]
         [HttpPost]
