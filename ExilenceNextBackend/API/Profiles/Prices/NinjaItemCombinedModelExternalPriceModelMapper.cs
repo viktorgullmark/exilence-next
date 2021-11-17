@@ -14,9 +14,7 @@ namespace API.Profiles
         public NinjaCombinedLineModelExternalPriceModelMapper()
         {
             CreateMap<NinjaCombinedLineModel, ExternalPriceModel>()
-                //.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null))
                 .ForMember(dest => dest.Name, opt => { opt.MapFrom(src => src.Name); opt.NullSubstitute(null); })
-                //.ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.Calculated, opt => opt.MapFrom(src => src.ChaosValue ?? src.Receive.Value))
                 .ForMember(dest => dest.Links, opt => { opt.MapFrom(src => src.Links); opt.NullSubstitute(0); })
                 .ForMember(dest => dest.Variant, opt => { opt.MapFrom(src => src.Variant); opt.NullSubstitute(null); })
@@ -24,19 +22,15 @@ namespace API.Profiles
                 .ForMember(dest => dest.Shaper, opt => { opt.MapFrom(src => src.Variant == "Shaper"); opt.NullSubstitute(false); })
                 .ForMember(dest => dest.Level, opt => { opt.MapFrom(src => src.GemLevel); opt.NullSubstitute(0); })
                 .ForMember(dest => dest.FrameType, opt => { opt.MapFrom(src => src.ItemClass); opt.NullSubstitute(5); })
-                //.ForMember(dest => dest.BaseType, opt => { opt.MapFrom(src => src.BaseType); opt.NullSubstitute(null); })
                 .ForMember(dest => dest.Ilvl, opt => { opt.MapFrom(src => src.LevelRequired); opt.NullSubstitute(0); })
                 .ForMember(dest => dest.Corrupted, opt => { opt.MapFrom(src => src.Corrupted); opt.NullSubstitute(false); })
-                //.ForMember(dest => dest.TotalStackSize, opt => { opt.MapFrom(src => src.StackSize); opt.NullSubstitute(0); })
+                .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon))
                 .ForMember(dest => dest.Tier, opt => { opt.MapFrom(src => src.MapTier); opt.NullSubstitute(0); })
                 .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count ?? src.Receive.Count))
                 .ForMember(dest => dest.Quality, opt => { opt.MapFrom(src => src.GemQuality); opt.NullSubstitute(0); })
                 .ForMember(dest => dest.SparkLine, opt => { opt.MapFrom(src => src.Count > 10 ? src.Sparkline : src.LowConfidenceSparkline); opt.NullSubstitute(null); })
                 .ForAllOtherMembers(dest => dest.Ignore());
                 
-                //.ForMember(dest => dest.DetailsUrl, opt => opt.MapFrom(src => src))
-                //.ForMember(dest => dest.SparkLine, opt => opt.MapFrom(src => src));
-                ;
             CreateMap<NinjaSparkLineModel, ExternalPriceSparkLineModel>()
                 .ForMember(dest => dest.Data, opt => { opt.MapFrom(src => src.Data); })
                 .ForMember(dest => dest.TotalChange, opt => { opt.MapFrom(src => src.TotalChange); opt.NullSubstitute(0); });
