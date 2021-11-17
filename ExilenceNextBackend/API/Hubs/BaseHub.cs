@@ -21,6 +21,7 @@ namespace API.Hubs
         readonly ISnapshotService _snapshotService;
         readonly IAccountService _accountService;
         readonly IGroupService _groupService;
+        readonly IPriceService _priceService;
 
         private readonly ILogger<BaseHub> _logger;
 

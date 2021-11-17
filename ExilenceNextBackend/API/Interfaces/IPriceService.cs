@@ -9,5 +9,6 @@ namespace API.Interfaces
     public interface IPriceService
     {
         Task AddPrices(IEnumerable<ExternalPriceModel> externalPriceModels);
+        Task<ExternalPriceModel> PriceItem(PricedItemModel item);
     }
 }
