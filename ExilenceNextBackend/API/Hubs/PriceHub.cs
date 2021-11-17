@@ -23,5 +23,16 @@ namespace API.Hubs
             ExternalPriceModel priceModel = await _priceService.PriceItem(item);
             return priceModel;
         }
+        public async Task<List<ExternalPriceModel>> PriceItems(IEnumerable<PricedItemModel> itemModels)
+        {
+            List<ExternalPriceModel> priceModels = new List<ExternalPriceModel>();
+            foreach (PricedItemModel item in itemModels)
+            {
+                ExternalPriceModel price = await _priceService.PriceItem(item);
+                priceModels.Add(price);
+            }
+            return priceModels;
+        }
+
     }
 }
