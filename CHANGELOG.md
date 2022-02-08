@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.7] - 2022-02-08
+#### Changed
+- Changed polling interval to reduce load towards poe.ninja
+
 ## [1.1.6] - 2021-11-04
 #### Fixed
 - Fixed a bug where maps in Scourge leagues werent priced

@@ -144,7 +144,7 @@
     "here": "here",
     "to_update_now": "to update now!",
     "prices_fetched_from": "Prices fetched from ",
-    "prices_fetched_from_interval": "Updated every 20 minutes",
+    "prices_fetched_from_interval": "Updated hourly",
     "not_available": "N/A",
     "hour_suffix": "/ h",
     "low_confidence_pricing": "Activate low confidence pricing",

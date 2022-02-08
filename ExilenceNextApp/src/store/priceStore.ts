@@ -26,7 +26,7 @@ export class PriceStore {
   @observable activePriceSourceUuid: string = '';
   @observable isUpdatingPrices: boolean = false;
 
-  @observable pollingIntervalMinutes: number = 20;
+  @observable pollingIntervalMinutes: number = 60;
   @observable checkInterval: number = 60 * 1000 * 1;
 
   constructor(private rootStore: RootStore) {
