@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.1.8] - NOT RELEASED
+## [1.1.8] - 2022-02-20
 #### Fixed
 - Fixed a bug where users could not snapshot when their profile included items of type `Charged Compass`
 #### Added
