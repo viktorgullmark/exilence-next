@@ -2,10 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.1.8] - 2022-02-20
-#### Fixed
-- Fixed a bug where users could not snapshot when their profile included items of type `Charged Compass`
 #### Added
 - Added support for choosing installation path when installing the application
+#### Fixed
+- Fixed a bug where users could not snapshot when their profile included items of type `Charged Compass`
+#### Changed
+- Minor label tweaks
 
 ## [1.1.7] - 2022-02-08
 #### Changed
