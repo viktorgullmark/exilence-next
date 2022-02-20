@@ -136,6 +136,11 @@
     "win": {
       "icon": "build/icon.ico"
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
+    },
     "mac": {
       "icon": "build/icon512x512.png",
       "category": "public.app-category.utilities"
