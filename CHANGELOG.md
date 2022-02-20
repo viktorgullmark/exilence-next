@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added support for choosing installation path when installing the application
 - Added support for pricing maps in Archnemesis league
 #### Fixed
+- Fixed a bug where uninstalling the app didn't properly clear old user data
 - Fixed a bug where users could not snapshot when their profile included items of type `Charged Compass`
 #### Changed
 - Minor label tweaks
