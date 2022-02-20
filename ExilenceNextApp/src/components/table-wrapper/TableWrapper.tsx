@@ -40,7 +40,7 @@ const TableWrapper = ({
   instance,
   onClick,
   setInitialState,
-  noRowsMessage = 'label.no_rows_found',
+  noRowsMessage = 'label.item_table_placeholder',
 }: TableWrapperProps) => {
   const classes = useStyles();
 
