@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.8] - NOT RELEASED
+#### Added
+- Added support for choosing installation path when installing the application
+
 ## [1.1.7] - 2022-02-08
 #### Changed
 - Changed polling interval to reduce load towards poe.ninja
