@@ -26,7 +26,7 @@ import { IStashTabSnapshot } from '../../interfaces/stash-tab-snapshot.interface
 import { IStashTab } from '../../interfaces/stash.interface';
 import { pricingService } from '../../services/pricing.service';
 import { mapItemsToPricedItems, mergeItemStacks } from '../../utils/item.utils';
-import { excludeLegacyMaps, findPrice } from '../../utils/price.utils';
+import { excludeInvalidItems, excludeLegacyMaps, findPrice } from '../../utils/price.utils';
 import { mapProfileToApiProfile } from '../../utils/profile.utils';
 import {
   calculateNetWorth,
@@ -660,6 +660,7 @@ export class Profile {
     }
 
     prices = excludeLegacyMaps(prices);
+    prices = excludeInvalidItems(prices);
 
     const customPrices = rootStore.customPriceStore.customLeaguePrices.find(
       (cpl) => cpl.leagueId === activePriceLeague?.id
