@@ -23,3 +23,4 @@ jobs:
         host: 142.132.227.44
         username: root
         password: ${{ secrets.SECRET }}
+        tryKeyboard: true
