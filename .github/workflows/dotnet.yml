@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ dev ]
 
+defaults:
+  run:
+    working-directory: ExilenceNextBackend
+
 jobs:
   build:
 
