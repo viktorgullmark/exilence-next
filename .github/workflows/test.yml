@@ -1,0 +1,25 @@
+name: command test 
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+defaults:
+  run:
+    working-directory: ExilenceNextBackend
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run SSH command
+      uses: garygrossgarten/github-action-ssh@v0.3.0
+      with:
+        command: sudo systemctl restart exilence.service
+        host: 142.132.227.44
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SECRET }}
