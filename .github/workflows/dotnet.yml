@@ -12,9 +12,7 @@ defaults:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -22,7 +20,7 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Dotnet Publish
-      run: dotnet publish -c Release -o deploy
+      run: dotnet publish -c release -r ubuntu.18.04-x64 -o deploy
     - name: Copy via ssh
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
