@@ -28,14 +28,14 @@ jobs:
       with:
         local:  /home/runner/work/exilence-next/exilence-next/ExilenceNextBackend/deploy
         remote: ${{ secrets.TARGET }}
-        host: ${{ secrets.HOST }}
+        host: 142.132.227.44
         username: ${{ secrets.USER }}
         password: ${{ secrets.SECRET }}
     - name: Run SSH command
       uses: garygrossgarten/github-action-ssh@v0.3.0
       with:
         command: sudo systemctl restart exilence.service
-        host: ${{ secrets.HOST }}
+        host: 142.132.227.44
         username: ${{ secrets.USER }}
         password: ${{ secrets.SECRET }}
     
