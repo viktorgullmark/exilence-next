@@ -21,6 +21,7 @@ jobs:
       with:
         command: sudo systemctl restart exilence.service
         host: 142.132.227.44
-        username: root
+        username: ${{ secrets.USER }}
         password: ${{ secrets.SECRET }}
         tryKeyboard: true
+        port: 22
