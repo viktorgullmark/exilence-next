@@ -14,3 +14,4 @@ jobs:
         host: ${{ secrets.HOST }}
         username: root
         password: ${{ secrets.SECRET}}
+        tryKeyboard: true
