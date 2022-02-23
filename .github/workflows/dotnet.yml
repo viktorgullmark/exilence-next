@@ -22,11 +22,11 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Dotnet Publish
-      run: dotnet publish src -c Release -o deploy
+      run: dotnet publish -c Release -o deploy
     - name: Copy via ssh
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
-        local:  /home/runner/work/exilence-next/exilence-next/ExilenceNextBackend/
+        local:  /home/runner/work/exilence-next/exilence-next/ExilenceNextBackend/deploy
         remote: ${{ secrets.TARGET }}
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
