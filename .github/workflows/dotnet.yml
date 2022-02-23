@@ -19,9 +19,16 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    - name: Dotnet Publish
+    - name: Publish
       run: dotnet publish -c release -r ubuntu.18.04-x64 -o deploy
-    - name: Copy via ssh
+    - name: Stop service
+      uses: garygrossgarten/github-action-ssh@v0.3.0
+      with:
+        command: sudo systemctl stop exilence-next.service
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SECRET }}
+    - name: Copy files
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
         local:  /home/runner/work/exilence-next/exilence-next/ExilenceNextBackend/deploy
@@ -29,10 +36,10 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         password: ${{ secrets.SECRET }}
-    - name: Run SSH command
+    - name: Start service
       uses: garygrossgarten/github-action-ssh@v0.3.0
       with:
-        command: sudo systemctl restart exilence-next.service
+        command: sudo systemctl start exilence-next.service
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         password: ${{ secrets.SECRET }}
