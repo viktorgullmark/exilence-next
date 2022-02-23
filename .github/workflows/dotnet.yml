@@ -25,5 +25,13 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Dotnet Publish
+      run: dotnet publish src -c Release -o deploy
+    - name: Copy via ssh
+      uses: garygrossgarten/github-action-scp@v0.5.3
+      with:
+        local: /home/runner/work/deferat/deferat/src/deploy/
+        remote: ${{ secrets.TARGET }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SECRET }}
