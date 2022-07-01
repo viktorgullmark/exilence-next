@@ -47,7 +47,7 @@ You will need to manually set protocol handling. Follow steps below:
 ```bash
 [Desktop Entry]
 Name=Exilence Next
-Exec=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/dist/appimage %u
+Exec=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/dist/<Exilence-Next-X.Y.Z.AppImage> %u
 Icon=<ABSOLUTE PATH TO ExilenceNext>/ExilenceNextApp/public/icon.ico
 Terminal=false
 Type=Application
@@ -57,22 +57,26 @@ MimeType=x-scheme-handler/exilence;
 2. Run:
 - `update-mime-database ~/.local/share/mime`
 - `update-desktop-database ~/.local/share/applications`
-
 ---
 
 Run the following to get started with the client:
 ```
 npm install
-npm start (to serve the project)
-npm run build (optional, to build the installer for production) 
----
-npm run release (optional, to build the installer for production and release)
----
 npm run smoke-build-linux (build for linux)
 npm run smoke-build-mac (build for macOS)
 npm run smoke-build-win (build for windows)
 ```
+These create the AppImage the .desktop file points to.
+
 NOTE: Running a build using node versions newer than v14 seem to fail on MacOS and Linux. For development on these platforms, it's recommended to use v14.16.1 (Latest LTS).
+
+Other build options:
+```
+npm start (to serve the project)
+npm run build (optional, to build the installer for production) 
+---
+npm run release (optional, to build the installer for production and release)
+```
 
 ## Contact us
 
