@@ -79,8 +79,11 @@ const NetWorth = () => {
   };
 
   const getExaltedValue = (value: number) => {
-    if (settingStore.showPriceInExalt && priceStore.exaltedPrice) {
+    if (settingStore.currency === 'exalt' && priceStore.exaltedPrice) {
       value = value / priceStore.exaltedPrice;
+    }
+    if (settingStore.currency === 'divine' && priceStore.divinePrice) {
+      value = value / priceStore.divinePrice;
     }
     return value;
   };

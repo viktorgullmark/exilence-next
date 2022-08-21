@@ -37,9 +37,7 @@ const ToolbarContainer = () => {
   };
 
   const activeCurrency = () => {
-    return settingStore?.showPriceInExalt
-      ? { name: 'exalted', short: 'ex' }
-      : { name: 'chaos', short: 'c' };
+    return settingStore?.activeCurrency;
   };
 
   const handleOverlay = () => {

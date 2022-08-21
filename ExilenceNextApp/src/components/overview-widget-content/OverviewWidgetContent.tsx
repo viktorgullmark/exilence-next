@@ -46,6 +46,21 @@ const OverviewWidgetContent = ({
   const classes = useStyles();
   const { t } = useTranslation();
   const { settingStore, priceStore } = useStores();
+
+  const toggleCurrency = () => {
+    // cycle over current setting and choose next
+    const chooseCurrency = () => {
+      switch (settingStore.currency) {
+        case 'exalt':
+          return 'divine';
+        case 'divine':
+          return 'chaos';
+        case 'chaos':
+          return 'exalt';
+      }
+    };
+    settingStore.setCurrencyDisplay(chooseCurrency());
+  };
   return (
     <>
       <Grid container className={classes.topContent}>
@@ -78,7 +93,8 @@ const OverviewWidgetContent = ({
                   title={
                     <>
                       <Typography variant="subtitle1" color="inherit" gutterBottom>
-                        1 ex = {priceStore.exaltedPrice?.toFixed(1)} chaos
+                        1 ex = {priceStore.exaltedPrice?.toFixed(1)} c
+                        <br />1 divine = {priceStore.divinePrice?.toFixed(1)} c
                       </Typography>
                       <em>{t('action.currency_switch')}</em>
                     </>
@@ -90,7 +106,7 @@ const OverviewWidgetContent = ({
                     data-tour-elem="currencySwitch"
                     size="small"
                     className={classes.adornmentIcon}
-                    onClick={() => settingStore.setShowPriceInExalt(!settingStore.showPriceInExalt)}
+                    onClick={() => toggleCurrency()}
                   >
                     <ChangeCircleIcon />
                   </IconButton>

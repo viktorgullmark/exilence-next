@@ -87,9 +87,13 @@ export class Group implements IApiGroup {
 
     let newNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
 
-    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+    if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       newNetworth = newNetworth / rootStore.priceStore.exaltedPrice;
       previousNetworth = previousNetworth / rootStore.priceStore.exaltedPrice;
+    }
+    if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
+      newNetworth = newNetworth / rootStore.priceStore.divinePrice;
+      previousNetworth = previousNetworth / rootStore.priceStore.divinePrice;
     }
     return newNetworth - previousNetworth;
   }
@@ -161,8 +165,11 @@ export class Group implements IApiGroup {
       return 0;
     }
     let calculatedValue = calculateNetWorth(this.latestGroupSnapshots);
-    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+    if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
+    }
+    if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
+      calculatedValue = calculatedValue / rootStore.priceStore.divinePrice;
     }
     return calculatedValue;
   }

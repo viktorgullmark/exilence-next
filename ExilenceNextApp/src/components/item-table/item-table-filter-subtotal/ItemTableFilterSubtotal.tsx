@@ -19,9 +19,17 @@ const ItemTableFilterSubtotal = ({ array }: ItemTableFilterSubtotalProps) => {
 
   let value = array.map((i) => i.total).reduce((a, b) => a + b, 0);
 
-  if (settingStore.showPriceInExalt) {
+  if (settingStore.currency === 'exalt') {
     if (priceStore.exaltedPrice) {
       value = value / priceStore.exaltedPrice;
+    } else {
+      value = 0;
+    }
+  }
+
+  if (settingStore.currency === 'divine') {
+    if (priceStore.divinePrice) {
+      value = value / priceStore.divinePrice;
     } else {
       value = 0;
     }
