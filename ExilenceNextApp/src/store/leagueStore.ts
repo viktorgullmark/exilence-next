@@ -15,14 +15,9 @@ export class LeagueStore {
 
   @action
   updateLeagues(leagues: ILeague[]) {
-    const newLeagues = leagues.filter(
-      (l) => this.leagues.find((el) => el.id === l.id) === undefined
-    );
-    this.leagues = this.leagues.concat(
-      newLeagues.map((league) => {
-        return new League(league);
-      })
-    );
+    this.leagues = leagues.map((l) => {
+      return new League(l);
+    });
   }
 
   @action

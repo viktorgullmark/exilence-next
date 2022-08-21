@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - NOT RELEASED
+#### Fixed
+- Fixed a bug where rate limits could sometimes occur from fetching obsolete leagues
+
 ## [1.1.8] - 2022-02-20
 #### Added
 - Added support for choosing installation path when installing the application

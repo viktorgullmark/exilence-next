@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
 import { persist } from 'mobx-persist';
 import { fromStream } from 'mobx-utils';
 import { of, Subject, throwError, timer } from 'rxjs';
@@ -269,19 +269,16 @@ export class Account implements IAccount {
 
   @action
   updateAccountLeagues(characters: ICharacter[]) {
+    this.accountLeagues = [];
     rootStore.leagueStore.leagues.forEach((l) => {
       let accLeague = this.accountLeagues.find((al) => al.leagueId === l.id);
       const leagueCharacters = characters.filter((c) => c.league === l.id);
 
-      if (accLeague) {
+      accLeague = new AccountLeague(l.id);
+      if (leagueCharacters) {
         accLeague.updateCharacters(leagueCharacters);
       }
-
-      if (!accLeague && leagueCharacters) {
-        accLeague = new AccountLeague(l.id);
-        accLeague.updateCharacters(leagueCharacters);
-        this.accountLeagues.push(accLeague);
-      }
+      this.accountLeagues.push(accLeague);
     });
   }
 
