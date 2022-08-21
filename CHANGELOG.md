@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.2.0] - NOT RELEASED
+## [1.2.0] - 2020-08-21
 #### Added
 - Added support for converting currency to divine orbs in net worth display
 #### Fixed
