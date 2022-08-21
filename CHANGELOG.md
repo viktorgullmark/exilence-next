@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.2.0] - NOT RELEASED
+#### Added
+- Added support for converting currency to divine orbs in net worth display
 #### Fixed
 - Fixed a bug where rate limits could sometimes occur from fetching obsolete leagues
 #### Changed
