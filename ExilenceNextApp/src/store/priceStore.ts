@@ -81,6 +81,13 @@ export class PriceStore {
       : exaltedOrbPrice?.calculated;
   }
 
+  @computed get divinePrice() {
+    const divineOrbPrice = this.activePricesWithCustomValues?.find((p) => p.name === 'Divine Orb');
+    return divineOrbPrice?.customPrice && divineOrbPrice.customPrice > 0
+      ? divineOrbPrice?.customPrice
+      : divineOrbPrice?.calculated;
+  }
+
   @computed get customPricesTableData() {
     const selectedLeagueId = this.rootStore.uiStateStore.selectedPriceTableLeagueId;
     const activeLeagueId = this.rootStore.accountStore.getSelectedAccount.activePriceLeague?.id;

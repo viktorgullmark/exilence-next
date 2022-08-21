@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     color: currencyChangeColors.negative,
   },
   tooltip: {
-    maxWidth: 170,
+    maxWidth: 220,
   },
   clearBtn: {
     color: theme.palette.text.secondary,
