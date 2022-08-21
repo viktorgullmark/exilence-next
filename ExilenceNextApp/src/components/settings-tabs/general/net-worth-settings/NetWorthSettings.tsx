@@ -11,13 +11,6 @@ const NetWorthSettings = () => {
     <Grid container spacing={5}>
       <Grid item>
         <CheckboxSetting
-          value={settingStore!.showPriceInExalt}
-          handleChange={(value: boolean) => settingStore!.setShowPriceInExalt(value)}
-          translationKey="price_in_exalt"
-        />
-      </Grid>
-      <Grid item>
-        <CheckboxSetting
           value={settingStore!.lowConfidencePricing}
           handleChange={(value: boolean) => settingStore!.setLowConfidencePricing(value)}
           translationKey="low_confidence_pricing"

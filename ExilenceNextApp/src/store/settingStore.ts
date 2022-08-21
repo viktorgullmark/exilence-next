@@ -7,6 +7,7 @@ import { electronService } from '../services/electron.service';
 import { RootStore } from './rootStore';
 
 export type ReleaseChannel = 'latest' | 'beta';
+export type Currency = 'chaos' | 'exalt' | 'divine';
 export type AppExitTypes = 'minimize-to-tray' | 'exit';
 
 export class SettingStore {
@@ -18,7 +19,7 @@ export class SettingStore {
     electronService.localSettings?.releaseChannel || 'latest';
   @persist @observable priceThreshold: number = 0;
   @persist @observable totalPriceThreshold: number = 0;
-  @persist @observable showPriceInExalt = false;
+  @persist @observable currency: Currency = 'chaos';
   @persist @observable autoSnapshotInterval: number = 60 * 20 * 1000; // default to 20 minutes
   @persist @observable uiScale: number = electronService.webFrame.getZoomFactor() * 100;
   @persist @observable logPath: string =
@@ -31,7 +32,14 @@ export class SettingStore {
   }
 
   @computed get activeCurrency(): ICurrency {
-    return this.showPriceInExalt ? { name: 'exalted', short: 'ex' } : { name: 'chaos', short: 'c' };
+    switch (this.currency) {
+      case 'exalt':
+        return { name: 'exalted', short: 'ex' };
+      case 'chaos':
+        return { name: 'chaos', short: 'c' };
+      case 'divine':
+        return { name: 'divine', short: 'div' };
+    }
   }
 
   @action
@@ -47,8 +55,8 @@ export class SettingStore {
   }
 
   @action
-  setShowPriceInExalt(value: boolean) {
-    this.showPriceInExalt = value;
+  setCurrencyDisplay(value: Currency) {
+    this.currency = value;
     rootStore.accountStore.getSelectedAccount?.activeProfile?.updateNetWorthOverlay();
   }
 

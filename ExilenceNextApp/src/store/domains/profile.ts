@@ -124,8 +124,11 @@ export class Profile {
       return 0;
     }
     let calculatedValue = calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
-    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+    if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
+    }
+    if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
+      calculatedValue = calculatedValue / rootStore.priceStore.divinePrice;
     }
     return calculatedValue;
   }
@@ -142,9 +145,13 @@ export class Profile {
       mapSnapshotToApiSnapshot(this.snapshots[1]),
     ]);
 
-    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+    if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       lastSnapshotNetWorth = lastSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
       previousSnapshotNetWorth = previousSnapshotNetWorth / rootStore.priceStore.exaltedPrice;
+    }
+    if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
+      lastSnapshotNetWorth = lastSnapshotNetWorth / rootStore.priceStore.divinePrice;
+      previousSnapshotNetWorth = previousSnapshotNetWorth / rootStore.priceStore.divinePrice;
     }
     return lastSnapshotNetWorth - previousSnapshotNetWorth;
   }
@@ -400,16 +407,18 @@ export class Profile {
 
   @action
   updateNetWorthOverlay() {
-    const activeCurrency = rootStore.settingStore.showPriceInExalt
-      ? { name: 'exalted', short: 'ex' }
-      : { name: 'chaos', short: 'c' };
+    const activeCurrency = rootStore.settingStore.activeCurrency;
 
     let income = rootStore.signalrStore.activeGroup
       ? rootStore.signalrStore.activeGroup.income
       : rootStore.accountStore.getSelectedAccount!.activeProfile!.income;
 
-    if (rootStore.settingStore.showPriceInExalt && rootStore.priceStore.exaltedPrice) {
+    if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       income = income / rootStore.priceStore.exaltedPrice;
+    }
+
+    if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
+      income = income / rootStore.priceStore.divinePrice;
     }
 
     const formattedIncome = formatValue(
