@@ -375,6 +375,47 @@ namespace Shared.Migrations
                     b.ToTable("SnapshotProfiles");
                 });
 
+            modelBuilder.Entity("Shared.Entities.Stashtab", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SnapshotId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StashTabId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(13,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("SnapshotId");
+
+                    b.ToTable("StashTabs");
+                });
+
             modelBuilder.Entity("Shared.Entities.Character", b =>
                 {
                     b.HasOne("Shared.Entities.Account", "Account")
@@ -399,11 +440,38 @@ namespace Shared.Migrations
                         .HasForeignKey("GroupId");
                 });
 
+            modelBuilder.Entity("Shared.Entities.PricedItem", b =>
+                {
+                    b.HasOne("Shared.Entities.Stashtab", "Stashtab")
+                        .WithMany("PricedItems")
+                        .HasForeignKey("StashtabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Entities.Snapshot", b =>
+                {
+                    b.HasOne("Shared.Entities.SnapshotProfile", "Profile")
+                        .WithMany("Snapshots")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Shared.Entities.SnapshotProfile", b =>
                 {
                     b.HasOne("Shared.Entities.Account", "Account")
                         .WithMany("Profiles")
                         .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Entities.Stashtab", b =>
+                {
+                    b.HasOne("Shared.Entities.Snapshot", "Snapshot")
+                        .WithMany("StashTabs")
+                        .HasForeignKey("SnapshotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

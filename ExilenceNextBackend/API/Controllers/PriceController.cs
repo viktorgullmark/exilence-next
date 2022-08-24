@@ -1,15 +1,14 @@
 ﻿using API.Interfaces;
 using API.Models;
+using API.Models.Ninja;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Shared.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -21,12 +20,43 @@ namespace API.Controllers
         private readonly ILogger<PriceController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ICacheService _cacheService;
+        private readonly IPriceService _priceService;
+        readonly IMapper _mapper;
 
-        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService)
+        public PriceController(IHttpClientFactory httpClientFactory, ILogger<PriceController> logger, ICacheService cacheService, IPriceService priceService, IMapper mapper)
         {
             _httpClientFactory = httpClientFactory;
             _cacheService = cacheService;
+            _priceService = priceService;
             _logger = logger;
+            _mapper = mapper;
+        }
+
+
+        [Route("item")]
+        [HttpPost]
+        public async Task<IActionResult> AddItemPrices([FromBody] NinjaResponseModel ninjaResponseModel)
+        {
+            try
+            {
+                List<ExternalPriceModel> externalPriceModels = _mapper.Map<List<ExternalPriceModel>>(ninjaResponseModel.Lines);
+
+                if (ninjaResponseModel.CurrencyDetails != null)
+                {
+                    foreach (NinjaCombinedLineModel line in ninjaResponseModel.Lines)
+                    {
+                        line.Details = ninjaResponseModel.CurrencyDetails.FirstOrDefault(c => c.Name == line.Name);
+                    }
+                }
+
+                await _priceService.AddPrices(externalPriceModels);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return Ok();
         }
 
         [Route("{overviewType}/{league}/{type}/{language}")]
