@@ -17,6 +17,7 @@ namespace Shared.Entities
         public string Name { get; set; }
         public bool Verified { get; set; }
         public Role Role { get; set; }
+        public virtual PatreonAccount PatreonAccount { get; set; }
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<SnapshotProfile> Profiles { get; set; }
         public string Version { get; set; }

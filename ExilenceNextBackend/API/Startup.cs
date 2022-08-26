@@ -48,6 +48,8 @@ namespace API
             services.AddScoped<ISnapshotService, SnapshotService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IPatreonService, PatreonService>();
+
 
             // Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();

@@ -12,7 +12,8 @@ namespace API.Profiles
         public AccountProfileMapper()
         {
             CreateMap<AccountModel, Account>()
-                .ForMember(o => o.Id, opt => opt.Ignore());
+                .ForMember(o => o.Id, opt => opt.Ignore())
+                .ForMember(o => o.PatreonAccount, opt => opt.Ignore());
             CreateMap<Account, AccountModel>();
         }
     }

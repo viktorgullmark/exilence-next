@@ -186,6 +186,20 @@ namespace API.Services
             return _mapper.Map<SnapshotProfileModel>(profile);
         }
 
+        public async Task<PatreonAccountModel> AddPatreonAccount(string accountName, PatreonAccountModel patreonAccountModel)
+        {
+            var account = await _accountRepository.GetAccounts(account => account.Name == accountName).Include(account => account.Profiles).FirstOrDefaultAsync();
+
+            if (account == null)
+                throw new Exception("Can't find account");
+
+            var patreonAccount = _mapper.Map<PatreonAccount>(patreonAccountModel);
+
+            account.PatreonAccount = patreonAccount;
+            await _accountRepository.SaveChangesAsync();
+            return _mapper.Map<PatreonAccountModel>(patreonAccount);
+        }
+
     }
 
 }

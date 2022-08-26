@@ -5,10 +5,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using API.Models;
 using API.Helpers;
-using API.Hubs;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared.Models;
@@ -22,23 +20,31 @@ namespace API.Controllers
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAccountService _accountService;
-        private readonly string _secret;
-        private readonly string _clientId;
-        private readonly string _clientSecret;
+        private readonly string _exilenceSecret;
+        private readonly string _pathOfExileClientId;
+        private readonly string _pathOfExileClientSecret;
+
+        private readonly string _patreonClientId;
+        private readonly string _patreonClientSecret;
+        private readonly string _patreonRedirectUrl;
 
         public AuthenticationController(IAccountService accountRepository, IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<AuthenticationController> logger)
         {
-            _accountService = accountRepository;
-            _secret = configuration.GetSection("Settings")["Secret"];
-            _httpClientFactory = httpClientFactory;
-            _clientId = configuration.GetSection("OAuth2")["ClientId"];
-            _clientSecret = configuration.GetSection("OAuth2")["ClientSecret"];
             _logger = logger;
+            _accountService = accountRepository;
+            _httpClientFactory = httpClientFactory;
+            _exilenceSecret = configuration.GetSection("Settings")["Secret"];
+            _pathOfExileClientId = configuration.GetSection("PathOfExile")["ClientId"];
+            _pathOfExileClientSecret = configuration.GetSection("PathOfExile")["ClientSecret"];
+
+            _patreonClientId = configuration.GetSection("Patreon")["ClientId"];
+            _patreonClientSecret = configuration.GetSection("Patreon")["ClientSecret"];
+            _patreonRedirectUrl = configuration.GetSection("Patreon")["RedirectUrl"];
         }
 
         [HttpPost]
         [Route("token")]
-        public async Task<IActionResult> Token([FromBody]AccountModel accountModel)
+        public async Task<IActionResult> Token([FromBody] AccountModel accountModel)
         {
             var accountValid = await ValidateAccount(accountModel.Name, accountModel.AccessToken);
             if (!accountValid)
@@ -63,7 +69,7 @@ namespace API.Controllers
 
             }
 
-            var token = AuthHelper.GenerateToken(_secret, account);
+            var token = AuthHelper.GenerateToken(_exilenceSecret, account);
 
             account.AccessToken = token;
 
@@ -82,8 +88,8 @@ namespace API.Controllers
 
                 var data = new FormUrlEncodedContent(new[]
                 {
-                new KeyValuePair<string, string>("client_id", _clientId),
-                new KeyValuePair<string, string>("client_secret", _clientSecret),
+                new KeyValuePair<string, string>("client_id", _pathOfExileClientId),
+                new KeyValuePair<string, string>("client_secret", _pathOfExileClientSecret),
                 new KeyValuePair<string, string>("code", code),
                 new KeyValuePair<string, string>("grant_type", "authorization_code")
                 });
@@ -151,6 +157,57 @@ namespace API.Controllers
         public IActionResult Redirect(string code, string state)
         {
             return Redirect($"exilence://?code={code}&state={state}");
+        }
+
+
+        [HttpGet]
+        [Route("patreon")]
+        public async Task<IActionResult> PatreonOauth2(string code, string state)
+        {
+            string uri = "https://www.patreon.com/api/oauth2/token";
+
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "exilence-next");
+
+                var data = new FormUrlEncodedContent(new[]
+                {
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("redirect_uri", _patreonRedirectUrl),
+                new KeyValuePair<string, string>("client_id", _patreonClientId),
+                new KeyValuePair<string, string>("client_secret", _patreonClientSecret),
+                new KeyValuePair<string, string>("grant_type", "authorization_code")
+                });
+                var response = await client.PostAsync(uri, data);
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    PatreonOauthResponse responseModel = JsonSerializer.Deserialize<PatreonOauthResponse>(content, options);
+                    await SavePatreonAccount(responseModel);
+                    return Ok(responseModel);
+                }
+
+                _logger.LogError($"Something went wrong fetching token from code: {code}, reason: {response.ReasonPhrase}");
+                return BadRequest(content);
+            }
+        }
+
+        private async Task SavePatreonAccount(PatreonOauthResponse patreonOauthResponse)
+        {
+
+            string accountName = User.Identity.Name;
+
+            var patreonAccount = new PatreonAccountModel()
+            {
+                AccessToken = patreonOauthResponse.AccessToken,
+                RefreshToken = patreonOauthResponse.RefreshToken,
+                TokenType = patreonOauthResponse.TokenType,
+                ExpiresIn = patreonOauthResponse.ExpiresIn
+            };
+
+            await _accountService.AddPatreonAccount(accountName, patreonAccount);
         }
     }
 }
