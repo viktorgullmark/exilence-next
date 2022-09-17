@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.2.0] - 2020-08-21
+## [1.2.1] - 2022-09-17
+#### Fixed
+- Removed `Prophecy` and `Watchstone` categories
+
+## [1.2.0] - 2022-08-21
 #### Added
 - Added support for converting currency to divine orbs in net worth display
 #### Fixed
