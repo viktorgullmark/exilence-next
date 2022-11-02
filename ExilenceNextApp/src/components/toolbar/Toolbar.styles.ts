@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: innerToolbarHeight,
     minHeight: innerToolbarHeight,
   },
+  sessionArea: {
+    padding: `0 ${theme.spacing(1)}`,
+  },
   profileArea: {
     padding: `0 ${theme.spacing(1)}`,
   },

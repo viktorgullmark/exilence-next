@@ -34,6 +34,14 @@ export class AccountStore {
     electronService.ipcRenderer.on('auth-callback', (_event, { code, error }) => {
       this.handleAuthCallback(code, error);
     });
+    electronService.ipcRenderer.on('pause-networth-session', () => {
+      if (this.accounts.length !== 0) {
+        this.getSelectedAccount.activeProfile?.session.offlineSession();
+      }
+      setTimeout(() => {
+        electronService.ipcRenderer.send('closed');
+      }, 100);
+    });
 
     autorun(() => {
       if (this.getSelectedAccount?.activeLeague) {
@@ -78,6 +86,20 @@ export class AccountStore {
 
   @action
   setActiveAccount(uuid: string) {
+    let foundAccount: Account | undefined;
+    if (this.activeAccount !== uuid) {
+      foundAccount = this.accounts.find((a) => a.uuid === this.activeAccount);
+      if (foundAccount) {
+        foundAccount.activeProfile?.session.disableSession();
+      }
+    }
+    // Player is online again
+    foundAccount = this.accounts.find((a) => a.uuid === uuid);
+    if (foundAccount) {
+      foundAccount.activeProfile?.session.resolveTimeAndContinueWith('pause');
+      foundAccount.activeProfile?.updateNetWorthOverlay();
+    }
+
     this.activeAccount = uuid;
   }
 

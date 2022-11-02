@@ -153,10 +153,19 @@ export class Group implements IApiGroup {
     ) {
       return [];
     }
+    // Group items are not visible in bulkview
+    const filterText = rootStore.uiStateStore.itemTableFilterText.toLowerCase();
     if (diffSelected) {
-      return filterItems(diffSnapshots(this.latestGroupSnapshots[1], this.latestGroupSnapshots[0]));
+      return filterItems(
+        diffSnapshots(this.latestGroupSnapshots[1], this.latestGroupSnapshots[0]),
+        filterText
+      );
     }
-    return filterSnapshotItems(this.latestGroupSnapshots);
+    return filterSnapshotItems(
+      this.latestGroupSnapshots,
+      filterText,
+      rootStore.uiStateStore.filteredStashTabs
+    );
   }
 
   @computed

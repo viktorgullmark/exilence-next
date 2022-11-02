@@ -8,6 +8,14 @@ const useStyles = makeStyles((theme) => ({
   warningIcon: {
     color: statusColors.warning,
   },
+  // TODO: Any better solution?
+  listItem: {
+    maxWidth: '30rem',
+    minWidth: '30rem',
+  },
+  emptyItem: {
+    minWidth: '30rem',
+  },
 }));
 
 export default useStyles;

@@ -87,6 +87,19 @@ const ToolbarContainer = () => {
     accountStore!.getSelectedAccount.removeActiveProfile();
   };
 
+  const handleStartSession = () => {
+    accountStore!.getSelectedAccount.activeProfile?.session.startSession();
+  };
+
+  const handlePauseSession = () => {
+    accountStore!.getSelectedAccount.activeProfile?.session.pauseSession();
+  };
+
+  const handleStopSession = () => {
+    accountStore!.getSelectedAccount.activeProfile?.session.stopSession();
+    uiStateStore!.setConfirmStopSessionDialogOpen(false);
+  };
+
   const handleSnapshot = () => {
     accountStore!.getSelectedAccount.activeProfile!.snapshot();
   };
@@ -118,6 +131,15 @@ const ToolbarContainer = () => {
         cancelButtonText={t('action.cancel')}
         loading={uiStateStore!.removingProfile}
       />
+      <ConfirmationDialog
+        show={uiStateStore!.confirmStopSessionDialogOpen}
+        onClose={() => uiStateStore!.setConfirmStopSessionDialogOpen(false)}
+        onConfirm={handleStopSession}
+        title={t('title.confirm_stop_net_worth_session')}
+        body={t('body.stop_net_worth_session')}
+        acceptButtonText={t('action.confirm')}
+        cancelButtonText={t('action.cancel')}
+      />
       <Toolbar
         hasPrices={
           priceStore!.activePricesWithCustomValues &&
@@ -128,6 +150,13 @@ const ToolbarContainer = () => {
         sidenavOpened={uiStateStore!.sidenavOpen}
         autoSnapshotting={settingStore!.autoSnapshotting}
         groupOverviewOpened={uiStateStore!.groupOverviewOpen}
+        sessionStarted={Boolean(
+          accountStore!.getSelectedAccount.activeProfile?.session.sessionStarted
+        )}
+        sessionPaused={Boolean(
+          accountStore!.getSelectedAccount.activeProfile?.session.sessionPaused
+        )}
+        sessionNetWorthOpened={uiStateStore.netWorthSessionOpen}
         profiles={accountStore!.getSelectedAccount.profiles}
         activeProfile={accountStore!.getSelectedAccount.activeProfile}
         toggleAutosnapshot={() =>
@@ -141,6 +170,10 @@ const ToolbarContainer = () => {
         statusMessage={uiStateStore!.statusMessage}
         retryAfter={rateLimitStore.retryAfter}
         profileOpen={profileOpen}
+        toggleSessionNetWorth={() => uiStateStore!.toggleNetWorthSession()}
+        handleSessionStart={handleStartSession}
+        handleSessionPause={handlePauseSession}
+        handleSessionStop={() => uiStateStore!.setConfirmStopSessionDialogOpen(true)}
         handleProfileOpen={handleOpen}
         handleProfileClose={handleClose}
         handleOverlay={handleOverlay}

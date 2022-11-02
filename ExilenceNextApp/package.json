@@ -11,6 +11,7 @@
     "@mui/lab": "*",
     "@mui/material": "^5.0.2",
     "@mui/styles": "^5.0.1",
+    "@mui/x-date-pickers": "^5.0.6",
     "@rehooks/component-size": "^1.0.3",
     "@sentry/browser": "^6.13.3",
     "@sentry/electron": "^2.5.4",
@@ -70,7 +71,7 @@
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
-    "react-test": "react-scripts test --env=jsdom",
+    "react-test": "react-scripts test --env=node",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "release": "npm run react-build && tsc -p electron && electron-builder",
@@ -88,6 +89,7 @@
   "devDependencies": {
     "@types/electron-is-dev": "^1.1.1",
     "@types/jest": "26.0.15",
+    "@types/lodash": "^4.14.187",
     "@types/node": "14.14.2",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.6",

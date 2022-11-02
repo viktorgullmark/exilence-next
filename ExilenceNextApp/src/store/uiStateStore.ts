@@ -63,6 +63,7 @@ export class UiStateStore {
   @observable groupError: AxiosError | Error | undefined = undefined;
   @observable confirmClearSnapshotsDialogOpen: boolean = false;
   @observable confirmRemoveProfileDialogOpen: boolean = false;
+  @observable confirmStopSessionDialogOpen: boolean = false;
   @observable isSnapshotting: boolean = false;
   @observable savingProfile: boolean = false;
   @observable removingProfile: boolean = false;
@@ -82,11 +83,15 @@ export class UiStateStore {
   @persist @observable netWorthChartExpanded: boolean = false;
   @persist @observable tabChartExpanded: boolean = false;
   @persist @observable netWorthItemsExpanded: boolean = true;
+  @persist @observable sessionTimeChartExpanded: boolean = true;
+  @persist @observable sessionTimePieChartExpanded: boolean = true;
   @observable timeSinceLastSnapshotLabel: string | undefined = undefined;
   @observable timeSincePricesFetchedLabel: string | undefined = undefined;
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
+  @persist @observable networthSessionSnapshotChartTimeSpan: TimespanType = 'All time';
+  @persist @observable networthSessionChartTimeSpan: TimespanType = 'All time';
   @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
@@ -101,6 +106,9 @@ export class UiStateStore {
   @persist @observable bulkSellAskingPricePercentage: number = 100;
   @persist @observable bulkSellGeneratedMessage: string = '';
   @persist @observable bulkSellGeneratingImage: boolean = false;
+
+  @persist @observable netWorthSessionOpen: boolean = false;
+  @observable manualAdjustmentsOpen: boolean = false;
 
   @observable cancelSnapshot: Subject<boolean> = new Subject();
 
@@ -166,6 +174,16 @@ export class UiStateStore {
   }
 
   @action
+  setNetworthSessionSnapshotChartTimeSpan(timespan: TimespanType) {
+    this.networthSessionSnapshotChartTimeSpan = timespan;
+  }
+
+  @action
+  setNetworthSessionChartTimeSpan(timespan: TimespanType) {
+    this.networthSessionChartTimeSpan = timespan;
+  }
+
+  @action
   setItemTableSelection(selection: ItemTableSelectionType) {
     this.itemTableSelection = selection;
     if (selection === 'comparison') {
@@ -213,6 +231,16 @@ export class UiStateStore {
   @action
   setTabChartExpanded(expanded: boolean) {
     this.tabChartExpanded = expanded;
+  }
+
+  @action
+  setSessionTimeChartExpanded(expanded: boolean) {
+    this.sessionTimeChartExpanded = expanded;
+  }
+
+  @action
+  setSessionTimePieChartExpanded(expanded: boolean) {
+    this.sessionTimePieChartExpanded = expanded;
   }
 
   @action
@@ -316,6 +344,11 @@ export class UiStateStore {
   }
 
   @action
+  setConfirmStopSessionDialogOpen(open: boolean) {
+    this.confirmStopSessionDialogOpen = open;
+  }
+
+  @action
   setGroupExists(exists: boolean) {
     this.groupExists = exists;
   }
@@ -407,6 +440,20 @@ export class UiStateStore {
   toggleGroupOverview(open?: boolean) {
     this.sidenavOpen = false;
     this.groupOverviewOpen = open !== undefined ? open : !this.groupOverviewOpen;
+  }
+
+  @action
+  toggleNetWorthSession(open?: boolean) {
+    const updateNetWorth = open !== this.netWorthSessionOpen || open === undefined;
+    this.netWorthSessionOpen = open !== undefined ? open : !this.netWorthSessionOpen;
+    if (updateNetWorth) {
+      this.rootStore.accountStore.getSelectedAccount.activeProfile?.updateNetWorthOverlay();
+    }
+  }
+
+  @action
+  toggleManualAdjustment(open?: boolean) {
+    this.manualAdjustmentsOpen = open !== undefined ? open : !this.manualAdjustmentsOpen;
   }
 
   @action

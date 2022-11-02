@@ -6,13 +6,16 @@ import useStyles from './ChartToolbox.styles';
 
 type ChartToolboxProps = {
   selectedChartTimeSpan: TimespanType;
+  options: TimespanType[];
   handleChangeTimeSpan: (value: TimespanType) => void;
 };
 
-const ChartToolbox = ({ selectedChartTimeSpan, handleChangeTimeSpan }: ChartToolboxProps) => {
+const ChartToolbox = ({
+  selectedChartTimeSpan,
+  options,
+  handleChangeTimeSpan,
+}: ChartToolboxProps) => {
   const classes = useStyles();
-
-  const options: TimespanType[] = ['1 day', '1 week', '1 month', 'All time'];
 
   return (
     <Box className={classes.root} display="flex" justifyContent="flex-end" alignItems="flex-end">

@@ -1,4 +1,5 @@
 import { Cancel } from '@mui/icons-material';
+import { Calculate } from '@mui/icons-material';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material';
 import clsx from 'clsx';
@@ -9,13 +10,14 @@ import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
 import useStyles from './OverviewWidgetContent.styles';
 type OverviewWidgetContentProps = {
-  value: number | string;
+  value: number | string | React.ReactNode;
   valueIsDiff?: boolean;
   valueSuffix?: string;
   secondaryValue?: number | string;
   secondaryValueIsDiff?: boolean;
   secondaryValueStyles?: React.CSSProperties;
   clearFn?: () => void;
+  manualAdjustmentFn?: () => void;
   title: string;
   icon: JSX.Element;
   sparklineChart?: JSX.Element;
@@ -36,6 +38,7 @@ const OverviewWidgetContent = ({
   secondaryValueIsDiff,
   secondaryValueStyles,
   clearFn,
+  manualAdjustmentFn,
   valueColor,
   currency,
   currencyShort,
@@ -64,22 +67,24 @@ const OverviewWidgetContent = ({
   return (
     <>
       <Grid container className={classes.topContent}>
-        <Grid item xs={5}>
+        <Grid item xs={sparklineChart ? 5 : 3}>
           <Grid container spacing={2}>
             <Grid item sm={3}>
               {icon}
             </Grid>
-            <Grid item sm={9}>
-              <Box height={1} display="flex" alignItems="center">
-                {sparklineChart}
-              </Box>
-            </Grid>
+            {sparklineChart && (
+              <Grid item sm={9}>
+                <Box height={1} display="flex" alignItems="center">
+                  {sparklineChart}
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={sparklineChart ? 7 : 9}>
           <div className={classes.ellipsis}>
             <Typography variant="h6" align="right" style={{ color: valueColor }}>
-              {currency
+              {(typeof value === 'string' || typeof value === 'number') && currency
                 ? `${formatValue(
                     value,
                     currencyShort,
@@ -126,6 +131,21 @@ const OverviewWidgetContent = ({
                     onClick={clearFn}
                   >
                     <Cancel />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {manualAdjustmentFn && (
+                <Tooltip
+                  title={`${t('label.manual_adjustment')}`}
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end"
+                >
+                  <IconButton
+                    size="small"
+                    className={classes.adornmentIcon}
+                    onClick={manualAdjustmentFn}
+                  >
+                    <Calculate />
                   </IconButton>
                 </Tooltip>
               )}

@@ -20,8 +20,11 @@
     "lets_begin": "Lets begin!",
     "apply_filter": "Apply filter",
     "currency_switch": "Click to switch currency",
-    "select_all": "Select all",
-    "remove_snapshots": "Remove snapshots"
+    "select_all_snapshots": "Select all snapshots",
+    "select_all_session_snapshots": "Select all session snapshots",
+    "remove_snapshots": "Remove snapshots",
+    "subtract": "Subtract",
+    "add": "Add"
   },
   "title": {
     "login": "Login",
@@ -37,11 +40,13 @@
     "select_characters": "Select your characters",
     "confirm_clear_snapshots": "Clear snapshots for profile",
     "confirm_remove_profile": "Remove profile",
+    "confirm_stop_net_worth_session": "Stop net worth session",
     "confirm_leave_group": "Leave group",
     "announcement_dialog_title": "Announcement",
     "ga_consent_dialog_title": "Terms and conditions",
     "custom_price_dialog_title": "Set custom price",
     "remove_snapshots_dialog_title": "Select snapshots to remove",
+    "manual_adjustment_dialog_title": "Adjust net worth session duration",
     "net_worth_settings": "General",
     "misc_settings": "Misc",
     "pricing_settings": "Pricing settings",
@@ -66,9 +71,16 @@
     "icon_comparison": "Difference for the two latest snapshots",
     "icon_fetched_from": "Icon fetched from pathofexile.com",
     "income_based_on": "Based on last hour",
+    "net_worth_session_income_based_on": "Based on session duration",
     "income_based_on_tooltip": "Income is calculated based on snapshot values over the last hour",
+    "time_since_last_snapshot_tooltip": "Time since last snapshot",
+    "net_worth_session_income_based_on_tooltip": "Income is calculated based on snapshot values for the session duration",
+    "net_worth_session_started_at_tooltip": "Net worth session is started at",
+    "critial_stashtyp_unique_tooltip": "Attention, a separate request is made for each item in the unique stashtab. This can significantly increase snapshot duration.",
+    "critial_stashtyp_map_tooltip": "Attention, spearate requests are made for all tiles in the map stash tab. This can significantly increase snapshot duration.",
     "no_rows_found": "No items found",
     "item_table_placeholder": "No items found for the selected profile, take a snapshot to begin (top right)",
+    "item_table_placeholder_net_worth_session_preview": "You are in the snapshot preview, but the items are no longer saved. Only the first 10 snapshot items are saved.",
     "snapshotting_info_icon": "Exilence next is only allowed to do 30 requests per 5 minutes, which is why you might see this message for a prolonged time",
     "no_prices": "No prices retrieved",
     "no_prices_retrieved": "No prices fetched for `{{league}}`, you can change pricing league in your profile",
@@ -87,6 +99,7 @@
     "toggle_export_menu": "Export data",
     "stash_tabs": "Stash tabs",
     "reset": "Reset",
+    "manual_adjustment": "Manual adjustment",
     "add_stash_tabs": "Add/remove tabs",
     "required": "Required",
     "optional": "Optional",
@@ -123,6 +136,11 @@
     "create_group": "Create group",
     "loading_title": "Loading",
     "toggle_menu_title": "Toggle menu",
+    "start_net_worth_session_icon_title": "Start net worth session",
+    "continue_net_worth_session_icon_title": "Continue net worth session",
+    "pause_net_worth_session_icon_title": "Pause net worth session",
+    "stop_net_worth_session_icon_title": "Stop net worth session",
+    "toggle_net_worth_session_icon_title": "Toggle net worth session",
     "edit_profile_icon_title": "Edit profile",
     "create_profile_icon_title": "Create profile",
     "fetch_snapshot_icon_title": "Take snapshot",
@@ -139,6 +157,8 @@
     "net_worth_export": "Export data",
     "net_worth_chart": "Net worth history chart",
     "tab_chart": "Tab breakdown history chart",
+    "sessiontime_chart": "session duration history chart",
+    "sessiontime_pie_chart": "session duration breakdown history chart",
     "these_terms_inline": "these terms",
     "update_available": "Update available, ",
     "click": "click",
@@ -172,6 +192,7 @@
     "discord": "Discord Server",
     "retake_tour": "Re-take Tour",
     "whats_new": "What's new",
+
     "credits": "Credits",
     "faq": "FAQ",
     "bug_report": "Bug Report",
@@ -214,7 +235,10 @@
     "prophecies": "Prophecies",
     "scarabs": "Scarabs",
     "sets": "Sets",
-    "note_discord": "Note for pasting into Discord"
+    "note_discord": "Note for pasting into Discord",
+    "net_worth_session_started_at": "Session start",
+    "total_manual_offset": "Total offset",
+    "adjust_manual_offset": "Offset"
   },
   "value": {
     "none": "None",
@@ -238,7 +262,8 @@
     "hardware_acceleration": "Restart Exilence for Hardware Acceleration to take effect",
     "reset_indexeddb": "This option will reset your account, league and local settings",
     "release_channel": "Note: this setting is for this computer only. You may need to restart Exilence Next to receive app updates.",
-    "app_exit_actions": ""
+    "app_exit_actions": "",
+    "total_manual_offset": "Note: This offset manipulates the session duration and is saved for new snapshots. The income is based on the session duration."
   },
   "link": {
     "restart_now": "Restart now"
@@ -246,6 +271,7 @@
   "body": {
     "clear_snapshots": "Are you sure you want to clear all snapshots for the current profile?",
     "remove_profile": "Are you sure you want to remove your profile?",
+    "stop_net_worth_session": "Are you sure you want to stop your net worth session?",
     "leave_group": "Are you sure you want to leave your current group?",
     "reset_indexeddb": "Are you sure you want to reset your data?",
     "reset_indexeddb_notice": "Your league data, account data and local settings will be cleared.",

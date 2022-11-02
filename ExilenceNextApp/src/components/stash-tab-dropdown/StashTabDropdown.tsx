@@ -1,7 +1,8 @@
-import { Alert, Box, Chip, Popper, PopperProps, TextField } from '@mui/material';
+import { Alert, Box, Chip, Popper, PopperProps, TextField, Tooltip } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { ChangeEvent, useEffect, useMemo } from 'react';
+import WarningIcon from '@mui/icons-material/Warning';
 import { useTranslation } from 'react-i18next';
 import { IStashTab } from '../../interfaces/stash.interface';
 import useStyles from './StashTabDropdown.styles';
@@ -48,6 +49,17 @@ const StashTabDropdown = ({
     defaultValue = [...selectedStashTabs];
   }, []);
 
+  const criticalStashTabs = useMemo(
+    () => [
+      {
+        type: 'MapStash',
+        message: t('common:label.critial_stashtyp_map_tooltip'),
+      },
+      { type: 'UniqueStash', message: t('common:label.critial_stashtyp_unique_tooltip') },
+    ],
+    [t]
+  );
+
   return (
     <Box mt={marginTop ? marginTop : 1} mb={marginBottom ? marginBottom : 2}>
       <Autocomplete
@@ -80,7 +92,16 @@ const StashTabDropdown = ({
             >
               {option.name}
             </Box>
-            <Box component="span" sx={{ opacity: 0.6 }}>
+            {criticalStashTabs
+              .filter((stash) => stash.type === option.type)
+              .map((stash, index) => (
+                <Box key={index} sx={{ marginRight: 2 }}>
+                  <Tooltip title={stash.message || ''} placement="bottom">
+                    <WarningIcon className={classes.warningIcon} />
+                  </Tooltip>
+                </Box>
+              ))}
+            <Box component="span" sx={{ opacity: 0.6, width: 25 }}>
               {option.index}
             </Box>
           </li>

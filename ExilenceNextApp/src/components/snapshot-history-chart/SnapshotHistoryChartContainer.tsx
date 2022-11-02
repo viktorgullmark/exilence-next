@@ -14,7 +14,7 @@ const SnapshotHistoryChartContainer = ({
   showIndividualTabs,
   chartHeight,
 }: SnapshotHistoryChartContainerProps) => {
-  const { accountStore, signalrStore } = useStores();
+  const { accountStore, signalrStore, uiStateStore } = useStores();
   const ref = useRef(null);
   const size = useComponentSize(ref);
 
@@ -27,8 +27,20 @@ const SnapshotHistoryChartContainer = ({
       <SnapshotHistoryChart
         width={size.width}
         height={size.height}
-        groupData={showIndividualTabs ? undefined : activeGroup?.chartData}
-        playerData={showIndividualTabs ? activeProfile?.tabChartData : activeProfile?.chartData}
+        groupData={
+          showIndividualTabs && !uiStateStore!.netWorthSessionOpen
+            ? undefined
+            : activeGroup?.chartData
+        }
+        playerData={
+          showIndividualTabs
+            ? uiStateStore!.netWorthSessionOpen
+              ? activeProfile?.session.tabChartData
+              : activeProfile?.tabChartData
+            : uiStateStore!.netWorthSessionOpen
+            ? activeProfile?.session.chartData
+            : activeProfile?.chartData
+        }
         showIndividualTabs={showIndividualTabs}
       />
     </div>

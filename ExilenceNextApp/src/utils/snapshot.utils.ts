@@ -1,13 +1,15 @@
 import moment from 'moment';
-import { rootStore } from '..';
 import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
+import { IDataChartSeries } from '../interfaces/connection-chart-series.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStashTab } from '../interfaces/stash.interface';
+import { Session } from '../store/domains/session';
 import { Snapshot } from '../store/domains/snapshot';
 import { findItem, getRarityIdentifier, mergeItemStacks } from './item.utils';
+// Do not import rootstore or the tests doesn´t work anymore
 
 export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashTab[]) => {
   const filteredLeagueTabs = stashTabs?.filter((st) =>
@@ -16,6 +18,7 @@ export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashT
   return {
     uuid: snapshot.uuid,
     created: snapshot.created,
+    networthSessionOffsets: { ...snapshot.networthSessionOffsets },
     stashTabs: stashTabs
       ? snapshot.stashTabSnapshots.map((st) => {
           const foundTab = filteredLeagueTabs?.find((lt) => lt.id === st.stashTabId);
@@ -29,7 +32,7 @@ export const mapSnapshotToApiSnapshot = (snapshot: Snapshot, stashTabs?: IStashT
             name: foundTab?.name,
           } as IApiStashTabSnapshot;
         })
-      : snapshot.stashTabSnapshots,
+      : [...snapshot.stashTabSnapshots], // Clone stashtabs to prevent conflicts with domain
   } as IApiSnapshot;
 };
 
@@ -71,7 +74,31 @@ export const getValueForSnapshotsTabsItems = (snapshots: IApiSnapshot[]) => {
     .reduce((a, b) => a + b, 0);
 };
 
+export const getValueForSnapshotsItems = (items: IPricedItem[]) => {
+  return items.flatMap((item) => item.total).reduce((a, b) => a + b, 0);
+};
+
 export const calculateNetWorth = (snapshots: IApiSnapshot[]) => getValueForSnapshotsTabs(snapshots);
+
+export const calculateNetWorthItems = (items: IPricedItem[]) => getValueForSnapshotsItems(items);
+
+export const calculateSessionIncome = (
+  lastSnapshot: IApiSnapshot,
+  firstSnapshot: IApiSnapshot | undefined
+) => {
+  let incomePerHour = 0;
+  if (lastSnapshot.networthSessionOffsets !== undefined && firstSnapshot) {
+    const sessionDuration = lastSnapshot.networthSessionOffsets.sessionDuration;
+    let hoursToCalcOver = sessionDuration / 1000 / 60 / 60;
+    hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
+
+    incomePerHour =
+      (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
+  } else {
+    return 0;
+  }
+  return incomePerHour;
+};
 
 export const formatValue = (
   value: number | string | undefined,
@@ -115,23 +142,212 @@ export const formatStashTabSnapshotsForChart = (
     .sort((n1, n2) => n1[0] - n2[0]);
 };
 
-export const diffSnapshots = (snapshot1: IApiSnapshot, snapshot2: IApiSnapshot): IPricedItem[] => {
+export const formatSessionTimesNetWorthForChart = (
+  snapshots: IApiSnapshot[],
+  session: Session
+): IDataChartSeries[] => {
+  // Why this format: moment(new Date(s.created).getTime()).valueOf() ? Why not moment(s.created).valueOf()
+  return snapshots
+    .map((s) => ({
+      x: moment(new Date(s.created).getTime()).valueOf(),
+      y: +getValueForSnapshot(s).toFixed(2),
+      id: s.uuid,
+      events: {
+        click: (e) => {
+          if (session.chartPreviewSnapshotId !== e.point.id) {
+            session.setSnapshotPreview(e.point.id);
+          } else {
+            session.setSnapshotPreview(undefined);
+          }
+        },
+      },
+      marker: {
+        symbol: 'circle',
+        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 3,
+      },
+      selected: session.chartPreviewSnapshotId === s.uuid,
+    }))
+    .sort((n1, n2) => n1.x - n2.x);
+};
+
+export const formatSessionTimesIncomeForChart = (
+  snapshots: IApiSnapshot[],
+  firstSnapshot: IApiSnapshot | undefined,
+  session: Session
+): IDataChartSeries[] => {
+  // Why this format: moment(new Date(s.created).getTime()).valueOf() ? Why not moment(s.created).valueOf()
+  return snapshots
+    .map((s) => ({
+      x: moment(new Date(s.created).getTime()).valueOf(),
+      y: +calculateSessionIncome(s, firstSnapshot).toFixed(2),
+      id: s.uuid,
+      events: {
+        click: (e) => {
+          if (session.chartPreviewSnapshotId !== e.point.id) {
+            session.setSnapshotPreview(e.point.id);
+          } else {
+            session.setSnapshotPreview(undefined);
+          }
+        },
+      },
+      marker: {
+        symbol: 'circle',
+        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 3,
+      },
+      selected: session.chartPreviewSnapshotId === s.uuid,
+    }))
+    .sort((n1, n2) => n1.x - n2.x);
+};
+
+export const mergeFromDiffSnapshotStashTabs = (
+  snapshot1: IApiSnapshot,
+  snapshot2: IApiSnapshot,
+  updatePrices = true,
+  priceResolver?: (items: IPricedItem[]) => void,
+  addRemovedItems = false
+): IApiSnapshot => {
+  const itemToRemove = (itemsToRemove: IPricedItem[]) => {
+    const difference: IPricedItem[] = [];
+    const removedItems: IPricedItem[] = [];
+    itemsToRemove.map((item) => {
+      const recentItem = { ...item };
+      if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
+        if (!addRemovedItems) {
+          recentItem.total = -recentItem.total;
+          recentItem.stackSize = -recentItem.stackSize;
+        }
+
+        if (updatePrices) {
+          removedItems.push(recentItem);
+        }
+        difference.push(recentItem);
+      }
+    });
+    if (priceResolver && removedItems.length > 0) priceResolver(removedItems);
+    return difference;
+  };
+
+  const getDiffStashTabSnapshots = (
+    stashTabs1: IApiStashTabSnapshot[],
+    stashTabs2: IApiStashTabSnapshot[]
+  ) => {
+    return stashTabs2.map((stashTab2) => {
+      const difference: IPricedItem[] = [];
+      const itemsToUpdate: IPricedItem[] = [];
+
+      const itemInSnapshotTab2 = mergeItemStacks(stashTab2.pricedItems);
+      const stashTab1 = stashTabs1.find(
+        (stashTab1) => stashTab1.stashTabId === stashTab2.stashTabId
+      );
+      let itemInSnapshotTab1: IPricedItem[] = [];
+      if (stashTab1) {
+        itemInSnapshotTab1 = mergeItemStacks(stashTab1.pricedItems);
+      }
+
+      // items that exist in snapshot 2 but not in snapshot 1 & items that exist in both snapshots but should be updated
+      const itemsToAddOrUpdate = itemInSnapshotTab2.filter((x) => {
+        const foundItem = findItem(itemInSnapshotTab1, x);
+        if (foundItem === undefined) return true;
+        if (x.stackSize !== foundItem.stackSize) return true;
+        return false;
+      });
+
+      itemsToAddOrUpdate.map((item) => {
+        const recentItem = { ...item };
+        const foundItem = findItem(itemInSnapshotTab1, recentItem);
+        if (foundItem) {
+          const existingItem = { ...foundItem };
+          if (addRemovedItems) {
+            recentItem.stackSize = recentItem.stackSize + existingItem.stackSize;
+          } else {
+            recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
+          }
+          if (updatePrices) {
+            recentItem.total = existingItem.calculated * recentItem.stackSize;
+          }
+          recentItem.total = recentItem.total - existingItem.total;
+          if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
+            difference.push(recentItem);
+          }
+        } else if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
+          difference.push(recentItem);
+        }
+      });
+
+      // Update by reference
+      if (priceResolver && itemsToUpdate.length > 0) priceResolver(itemsToUpdate);
+
+      // items that exist in snapshot 1 but not in snapshot 2
+      const itemsToRemove = itemInSnapshotTab1.filter(
+        (x) => findItem(itemInSnapshotTab2, x) === undefined
+      );
+      const newDifference = difference.concat(itemToRemove(itemsToRemove));
+
+      return {
+        ...stashTab2,
+        pricedItems: newDifference,
+        value: getValueForSnapshotsItems(newDifference),
+      } as IApiStashTabSnapshot;
+    });
+  };
+
+  const getRemovedItemsFromStashTabs = (stashTabs: IApiStashTabSnapshot[]) => {
+    return stashTabs.map((stashTab) => {
+      const difference: IPricedItem[] = [];
+
+      const itemsToRemove = mergeItemStacks(stashTab.pricedItems);
+      const newDifference = difference.concat(itemToRemove(itemsToRemove));
+
+      return {
+        ...stashTab,
+        pricedItems: newDifference,
+        value: getValueForSnapshotsItems(newDifference),
+      } as IApiStashTabSnapshot;
+    });
+  };
+
+  // Snapshot2 stashtabs:
+  const clonedDiffStashTabs2 = getDiffStashTabSnapshots(snapshot1.stashTabs, snapshot2.stashTabs);
+  // Calculate stashtabs only in snapshot1 -> All items removed - Update them if needed
+  const diffStashTabs1 = snapshot1.stashTabs.filter(
+    (s1) => !snapshot2.stashTabs.some((s2) => s2.stashTabId === s1.stashTabId)
+  );
+  const clonedDiffStashTabs1 = getRemovedItemsFromStashTabs(diffStashTabs1);
+  // Now combine the stashtabs into one snapshot
+  return {
+    ...snapshot2,
+    stashTabs: clonedDiffStashTabs2.concat(clonedDiffStashTabs1),
+  };
+};
+
+export const diffSnapshots = (
+  snapshot1: IApiSnapshot,
+  snapshot2: IApiSnapshot,
+  updatePrices = true,
+  priceResolver?: (items: IPricedItem[]) => void
+) => {
   const difference: IPricedItem[] = [];
+  const removedItems: IPricedItem[] = [];
   const itemsInSnapshot1 = mergeItemStacks(snapshot1.stashTabs.flatMap((sts) => sts.pricedItems));
   const itemsInSnapshot2 = mergeItemStacks(snapshot2.stashTabs.flatMap((sts) => sts.pricedItems));
 
   // items that exist in snapshot 2 but not in snapshot 1 & items that exist in both snapshots but should be updated
-  const itemsToAdd = itemsInSnapshot2.filter((x) => findItem(itemsInSnapshot1, x) === undefined);
-  const itemsToUpdate = itemsInSnapshot2.filter((x) => {
+  const itemsToAddOrUpdate = itemsInSnapshot2.filter((x) => {
     const foundItem = findItem(itemsInSnapshot1, x);
-    return foundItem !== undefined && x.stackSize !== foundItem.stackSize;
+    if (foundItem === undefined) return true;
+    if (x.stackSize !== foundItem.stackSize) return true;
+    return false;
   });
-  itemsToUpdate.concat(itemsToAdd).map((item) => {
-    const existingItem = findItem(itemsInSnapshot1, item);
-    if (existingItem) {
-      const recentItem = Object.assign({}, item);
+
+  itemsToAddOrUpdate.map((item) => {
+    const recentItem = { ...item };
+    const foundItem = findItem(itemsInSnapshot1, recentItem);
+    if (foundItem) {
+      const existingItem = { ...foundItem };
       recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
-      existingItem.total = recentItem.calculated * existingItem.stackSize;
+      if (updatePrices) {
+        existingItem.total = recentItem.calculated * existingItem.stackSize;
+      }
       recentItem.total = recentItem.total - existingItem.total;
       if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
         difference.push(recentItem);
@@ -144,28 +360,21 @@ export const diffSnapshots = (snapshot1: IApiSnapshot, snapshot2: IApiSnapshot):
   // items that exist in snapshot 1 but not in snapshot 2
   const itemsToRemove = itemsInSnapshot1.filter((x) => findItem(itemsInSnapshot2, x) === undefined);
   itemsToRemove.map((item) => {
-    const existingItem = findItem(itemsInSnapshot2, item);
-    const recentItem = Object.assign({}, item);
+    const recentItem = { ...item };
     if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
-      if (existingItem !== undefined) {
-        recentItem.stackSize = existingItem.stackSize - recentItem.stackSize;
-        existingItem.total = recentItem.calculated * existingItem.stackSize;
-        recentItem.total = existingItem.total - recentItem.total;
-      } else {
-        recentItem.total = -Math.abs(recentItem.total);
-        recentItem.stackSize = -Math.abs(recentItem.stackSize);
-      }
+      recentItem.total = -Math.abs(recentItem.total);
+      recentItem.stackSize = -Math.abs(recentItem.stackSize);
+      if (updatePrices) removedItems.push(recentItem);
       difference.push(recentItem);
     }
   });
+
+  if (priceResolver && removedItems.length > 0) priceResolver(removedItems);
+
   return difference;
 };
 
-export const filterItems = (items: IPricedItem[]) => {
-  const filterText = rootStore.uiStateStore.bulkSellView
-    ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
-    : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
-
+export const filterItems = (items: IPricedItem[], filterText: string) => {
   const rarity = getRarityIdentifier(filterText);
 
   let itemNameRegex = new RegExp('', 'i');
@@ -192,14 +401,14 @@ export const filterItems = (items: IPricedItem[]) => {
   );
 };
 
-export const filterSnapshotItems = (snapshots: IApiSnapshot[]) => {
+export const filterSnapshotItems = (
+  snapshots: IApiSnapshot[],
+  filterText: string,
+  filteredStashTabs: IStashTab[] | undefined
+) => {
   if (snapshots.length === 0) {
     return [];
   }
-  const filterText = rootStore.uiStateStore.bulkSellView
-    ? rootStore.uiStateStore.bulkSellItemTableFilterText.toLowerCase()
-    : rootStore.uiStateStore.itemTableFilterText.toLowerCase();
-
   const rarity = getRarityIdentifier(filterText);
 
   let itemNameRegex = new RegExp('', 'i');
@@ -215,8 +424,7 @@ export const filterSnapshotItems = (snapshots: IApiSnapshot[]) => {
       .flatMap((sts) =>
         sts.stashTabs.filter(
           (st) =>
-            !rootStore.uiStateStore.filteredStashTabs ||
-            rootStore.uiStateStore.filteredStashTabs.map((fst) => fst.id).includes(st.stashTabId)
+            !filteredStashTabs || filteredStashTabs.map((fst) => fst.id).includes(st.stashTabId)
         )
       )
       .flatMap((sts) =>

@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Snapshot } from '../../store/domains/snapshot';
 import { calculateNetWorth, mapSnapshotToApiSnapshot } from '../../utils/snapshot.utils';
@@ -27,15 +27,20 @@ type RemoveSnapshotsDialogProps = {
   show: boolean;
   loading: boolean;
   snapshots: Snapshot[];
+  sessionSnapshots: Snapshot[];
   handleSubmit: (snapshotIds: string[]) => void;
   onClose: () => void;
 };
+
+type CombinedSnapshots = [Snapshot, Snapshot | undefined];
+type ComboCombinedSnapshots = [Snapshot | undefined, Snapshot | undefined];
 
 const RemoveSnapshotsDialog = ({
   show,
   onClose,
   loading,
   snapshots,
+  sessionSnapshots,
   handleSubmit,
 }: RemoveSnapshotsDialogProps) => {
   const [checked, setChecked] = useState<string[]>([]);
@@ -63,51 +68,147 @@ const RemoveSnapshotsDialog = ({
     setChecked(newChecked);
   };
 
+  const combinedSnapshotsSorted = useMemo(() => {
+    const combinedSnapshots = snapshots.map((snapshot) => [
+      snapshot,
+      sessionSnapshots.find((ss) => ss.uuid === snapshot.uuid),
+    ]) as CombinedSnapshots[];
+
+    let diffSessionSnapshots = sessionSnapshots.filter(
+      (sessionSnapshot) => !snapshots.some((s) => s.uuid === sessionSnapshot.uuid)
+    );
+
+    const combinedSnapshotsSorted: ComboCombinedSnapshots[] = [];
+    combinedSnapshots.forEach((s) => {
+      diffSessionSnapshots = diffSessionSnapshots.filter((ss) => {
+        const isBefore = moment(ss.created).isAfter(moment(s[0].created));
+        if (isBefore) {
+          combinedSnapshotsSorted.push([undefined, ss]);
+        }
+        return !isBefore;
+      });
+      combinedSnapshotsSorted.push(s);
+    });
+
+    diffSessionSnapshots.forEach((ss) => {
+      combinedSnapshotsSorted.push([undefined, ss]);
+    });
+
+    return combinedSnapshotsSorted;
+  }, [snapshots, sessionSnapshots]);
+
   return (
-    <Dialog open={show} onClose={onClose} maxWidth={'sm'} fullWidth>
+    <Dialog open={show} onClose={onClose} maxWidth={'md'} fullWidth>
       <DialogTitle>{t('title.remove_snapshots_dialog_title')}</DialogTitle>
       <DialogContent>
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-          {snapshots.map((s) => {
-            const labelId = `checkbox-list-label-${s.uuid}`;
-            const snapshotItems = s.stashTabSnapshots.flatMap((x) => x.pricedItems);
+          {combinedSnapshotsSorted.map((comboSnapshot) => {
+            // Its kind of zipmap
+            const snapshot = comboSnapshot[0];
+            const sessionSnapshot = comboSnapshot[1];
+
+            const primarySnapshot = snapshot;
+            const secondarySnapshot = sessionSnapshot;
+
+            const primaryLabelId = primarySnapshot
+              ? `checkbox-list-label-${primarySnapshot.uuid}`
+              : '';
+            const secondaryLabelId = secondarySnapshot
+              ? `checkbox-list-label-${secondarySnapshot.uuid}`
+              : '';
+
+            const primarySnapshotItems =
+              primarySnapshot?.stashTabSnapshots.flatMap((x) => x.pricedItems) || [];
+            const secondarySnapshotItems =
+              secondarySnapshot?.stashTabSnapshots.flatMap((x) => x.pricedItems) || [];
+
             return (
-              <ListItem
-                key={s.uuid}
-                disablePadding
-                secondaryAction={
-                  snapshotItems.length === 0 && (
-                    <Tooltip title={t('label.items_missing') || ''} placement="bottom">
-                      <WarningIcon className={classes.warningIcon} />
-                    </Tooltip>
-                  )
-                }
-              >
-                <ListItemButton role={undefined} onClick={handleToggle(s.uuid)} dense>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(s.uuid) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': labelId }}
+              <ListItem key={primarySnapshot?.uuid || secondarySnapshot?.uuid} disablePadding>
+                {primarySnapshot ? (
+                  <ListItemButton
+                    className={classes.listItem}
+                    role={undefined}
+                    onClick={handleToggle(primarySnapshot.uuid)}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(primarySnapshot.uuid) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': primaryLabelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      id={primaryLabelId}
+                      primary={`Snapshot ${moment(primarySnapshot.created).format(
+                        'YYYY-MM-DD HH:mm'
+                      )}, value: ${calculateNetWorth([
+                        mapSnapshotToApiSnapshot(primarySnapshot),
+                      ]).toFixed(2)}c`}
                     />
-                  </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={`Snapshot ${moment(s.created).format(
-                      'YYYY-MM-DD HH:MM'
-                    )}, value: ${calculateNetWorth([mapSnapshotToApiSnapshot(s)]).toFixed(2)}c`}
-                  />
-                </ListItemButton>
+                    {primarySnapshotItems.length === 0 && (
+                      <ListItemIcon>
+                        <Tooltip title={t('label.items_missing') || ''} placement="bottom">
+                          <WarningIcon className={classes.warningIcon} />
+                        </Tooltip>
+                      </ListItemIcon>
+                    )}
+                  </ListItemButton>
+                ) : (
+                  <div className={classes.emptyItem} />
+                )}
+                {secondarySnapshot && (
+                  <ListItemButton
+                    key={`_ss_${secondarySnapshot.uuid}`}
+                    role={undefined}
+                    onClick={handleToggle(`_ss_${secondarySnapshot.uuid}`)}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(`_ss_${secondarySnapshot.uuid}`) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': secondaryLabelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      id={secondaryLabelId}
+                      primary={`Session value: ${calculateNetWorth([
+                        mapSnapshotToApiSnapshot(secondarySnapshot),
+                      ]).toFixed(2)}c`}
+                    />
+                    {secondarySnapshotItems.length === 0 && (
+                      <ListItemIcon>
+                        <Tooltip title={t('label.items_missing') || ''} placement="bottom">
+                          <WarningIcon className={classes.warningIcon} />
+                        </Tooltip>
+                      </ListItemIcon>
+                    )}
+                  </ListItemButton>
+                )}
               </ListItem>
             );
           })}
         </List>
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
-        <Button onClick={() => setChecked(snapshots.map((s) => s.uuid))}>
-          {t('action.select_all')}
+        <Button
+          onClick={() => {
+            setChecked((checked) => checked.concat(snapshots.map((s) => s.uuid)));
+          }}
+        >
+          {t('action.select_all_snapshots')}
+        </Button>
+        <Button
+          onClick={() => {
+            setChecked((checked) => checked.concat(sessionSnapshots.map((ss) => `_ss_${ss.uuid}`)));
+          }}
+        >
+          {t('action.select_all_session_snapshots')}
         </Button>
         <Button onClick={handleClose}>{t('action.cancel')}</Button>
         <LoadingButton

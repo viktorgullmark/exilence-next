@@ -8,11 +8,17 @@ const RemoveSnapshotsDialogContainer = () => {
 
   const profile = accountStore.getSelectedAccount.activeProfile;
   const snapshots = profile?.snapshots ?? [];
+  const sessionSnapshots = profile?.session.snapshots ?? [];
 
   const handleSubmit = (snapshotIds: string[]) => {
     if (profile?.snapshots) {
-      profile.removeSnapshots(snapshotIds);
+      profile.removeSnapshots(snapshotIds.filter((s) => !s.startsWith('_ss_')));
       uiStateStore!.setRemoveSnapshotsDialogOpen(false);
+    }
+    if (profile?.session.snapshots) {
+      profile.session.removeSnapshots(
+        snapshotIds.filter((s) => s.startsWith('_ss_')).map((s) => s.substring(4))
+      );
     }
   };
 
@@ -22,6 +28,7 @@ const RemoveSnapshotsDialogContainer = () => {
         <RemoveSnapshotsDialog
           loading={false}
           snapshots={snapshots}
+          sessionSnapshots={sessionSnapshots}
           handleSubmit={handleSubmit}
           show={uiStateStore!.removeSnapshotsDialogOpen}
           onClose={() => uiStateStore!.setRemoveSnapshotsDialogOpen(false)}

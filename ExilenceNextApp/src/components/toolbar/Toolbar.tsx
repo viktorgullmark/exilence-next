@@ -6,6 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import GroupIcon from '@mui/icons-material/Group';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import PlayIcon from '@mui/icons-material/PlayCircleFilled';
+import PauseIcon from '@mui/icons-material/PauseCircleFilled';
+import StopIcon from '@mui/icons-material/StopCircle';
+import CachedIcon from '@mui/icons-material/Cached';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UpdateIcon from '@mui/icons-material/Update';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -47,6 +51,9 @@ type ToolbarProps = {
   sidenavOpened: boolean;
   autoSnapshotting: boolean;
   groupOverviewOpened: boolean;
+  sessionStarted: boolean;
+  sessionPaused: boolean;
+  sessionNetWorthOpened: boolean;
   activeProfile?: Profile;
   profiles: Profile[];
   profileOpen: boolean;
@@ -63,6 +70,10 @@ type ToolbarProps = {
   toggleAutosnapshot: () => void;
   toggleSidenav: () => void;
   toggleGroupOverview: () => void;
+  toggleSessionNetWorth: () => void;
+  handleSessionStart: () => void;
+  handleSessionPause: () => void;
+  handleSessionStop: () => void;
   handleProfileOpen: (edit?: boolean) => void;
   handleProfileClose: () => void;
   handleProfileChange: (event: SelectChangeEvent<string>) => void;
@@ -80,6 +91,8 @@ const Toolbar = ({
   signalrOnline,
   sidenavOpened,
   groupOverviewOpened,
+  sessionStarted,
+  sessionPaused,
   activeProfile,
   hasPrices,
   profiles,
@@ -94,6 +107,10 @@ const Toolbar = ({
   statusMessage,
   retryAfter,
   toggleGroupOverview,
+  toggleSessionNetWorth,
+  handleSessionStart,
+  handleSessionPause,
+  handleSessionStop,
   handleProfileOpen,
   handleProfileClose,
   handleProfileChange,
@@ -190,6 +207,101 @@ const Toolbar = ({
             justifyContent="flex-end"
             className={classes.toolbarGrid}
           >
+            <Grid item className={classes.sessionArea} data-tour-elem="sessionArea">
+              {(!sessionStarted || (sessionStarted && sessionPaused)) && (
+                <Tooltip
+                  title={
+                    (!sessionStarted
+                      ? t('label.start_net_worth_session_icon_title')
+                      : t('label.continue_net_worth_session_icon_title')) || ''
+                  }
+                  placement="bottom"
+                >
+                  <span>
+                    <IconButton
+                      disabled={
+                        (sessionStarted && !sessionPaused) || // Enable for start and continue
+                        (!sessionStarted && isSnapshotting) || // Enable for continue and started
+                        !activeProfile ||
+                        isInitiating ||
+                        !profilesLoaded
+                      }
+                      aria-label="start"
+                      className={classes.iconButton}
+                      onClick={() => handleSessionStart()}
+                      size="large"
+                    >
+                      <PlayIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
+              {sessionStarted && !sessionPaused && (
+                <Tooltip
+                  title={t('label.pause_net_worth_session_icon_title') || ''}
+                  placement="bottom"
+                >
+                  <span>
+                    <IconButton
+                      disabled={
+                        !sessionStarted ||
+                        (sessionStarted && sessionPaused) || // Diabled if - started and paused
+                        (!sessionStarted && isSnapshotting) ||
+                        !activeProfile ||
+                        isInitiating ||
+                        !profilesLoaded
+                      }
+                      aria-label="pause"
+                      className={classes.iconButton}
+                      onClick={() => handleSessionPause()}
+                      size="large"
+                    >
+                      <PauseIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
+              <Tooltip
+                title={t('label.stop_net_worth_session_icon_title') || ''}
+                placement="bottom"
+              >
+                <span>
+                  <IconButton
+                    disabled={
+                      !sessionStarted ||
+                      isSnapshotting ||
+                      !activeProfile ||
+                      isInitiating ||
+                      !profilesLoaded ||
+                      !signalrOnline
+                    }
+                    aria-label="stop"
+                    className={classes.iconButton}
+                    onClick={() => handleSessionStop()}
+                    size="large"
+                  >
+                    <StopIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip
+                title={t('label.toggle_net_worth_session_icon_title') || ''}
+                placement="bottom"
+              >
+                <span>
+                  <IconButton
+                    disabled={!sessionStarted}
+                    aria-label="toggle session networth"
+                    className={classes.iconButton}
+                    onClick={() => toggleSessionNetWorth()}
+                    size="large"
+                  >
+                    <CachedIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid item className={classes.divider} />
             <Grid item className={classes.profileArea} data-tour-elem="profileArea">
               <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
                 <span>
@@ -307,7 +419,8 @@ const Toolbar = ({
                       !activeProfile ||
                       isSnapshotting ||
                       !signalrOnline ||
-                      activeProfile.snapshots.length === 0
+                      (activeProfile.snapshots.length === 0 &&
+                        activeProfile.session.snapshots.length === 0)
                     }
                     onClick={() => handleClearSnapshots()}
                     aria-label="clear snapshots"

@@ -120,19 +120,34 @@ const ItemTableContainer = ({
   const { t } = useTranslation();
   const getItems = useMemo(() => {
     if (activeProfile) {
-      return activeGroup && !bulkSellView ? activeGroup.items : activeProfile.items;
+      return activeGroup && !bulkSellView && !uiStateStore.netWorthSessionOpen
+        ? activeGroup.items
+        : uiStateStore.netWorthSessionOpen && !bulkSellView
+        ? activeProfile.session.items
+        : activeProfile.items;
     } else {
       return [];
     }
-  }, [activeProfile, activeProfile?.items, activeGroup?.items, activeGroup]);
+  }, [
+    activeProfile,
+    activeProfile?.items,
+    activeProfile?.session.items,
+    activeGroup?.items,
+    activeGroup,
+    uiStateStore.netWorthSessionOpen,
+    // FIXME: builSellView was not in dependency array
+    // bulkSellView,
+  ]);
 
   const getColumns = useMemo(() => {
-    if (activeGroup && !bulkSellView) return itemTableGroupColumns;
+    if (activeGroup && !bulkSellView && !uiStateStore.netWorthSessionOpen)
+      return itemTableGroupColumns;
     if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
     if (uiStateStore.itemTableSelection === 'comparison') return itemTableComparisonColumns;
     return itemTableColumns;
   }, [activeGroup, uiStateStore.itemTableSelection]);
 
+  // FIXME: This makes no sense, add this to getItemsMemo
   const data = useMemo(() => {
     return getItems;
   }, [getItems, bulkSellView]);
@@ -237,7 +252,7 @@ const ItemTableContainer = ({
                 <Grid item id="items-table-generated" className={classes.generatedAt}>
                   <Typography variant="body2">{t('label.generated_at')}</Typography>&nbsp;
                   <b>
-                    <u>{moment().utc().format('YYYY-MM-DD HH:MM')}</u>
+                    <u>{moment().utc().format('YYYY-MM-DD HH:mm')}</u>
                   </b>
                   &nbsp;
                   <Typography variant="body2">{t('label.generated_by')}.</Typography>&nbsp;
@@ -333,7 +348,18 @@ const ItemTableContainer = ({
           )}
         </Grid>
       </Box>
-      <TableWrapper instance={instance} setInitialState={setInitialState} />
+      <TableWrapper
+        instance={instance}
+        setInitialState={setInitialState}
+        noRowsMessage={
+          uiStateStore.netWorthSessionOpen &&
+          activeProfile?.session.snapshotPreviewIndex &&
+          activeProfile?.session.snapshotPreviewIndex >= 10
+            ? 'label.item_table_placeholder_net_worth_session_preview'
+            : undefined
+        }
+      />
+
       <ItemTableMenuContainer />
     </>
   );
