@@ -183,6 +183,7 @@ const NetWorth = () => {
                 )
               }
               currencySwitch
+              tourTopElement="networth"
             />
           </Widget>
         </Grid>
@@ -218,6 +219,7 @@ const NetWorth = () => {
               clearFn={
                 activeGroup || sessionNetWorthOpen ? undefined : () => activeProfile?.clearIncome()
               }
+              tourTopElement="income"
             />
           </Widget>
         </Grid>
@@ -254,6 +256,8 @@ const NetWorth = () => {
                       ? undefined
                       : () => uiStateStore.toggleManualAdjustment()
                   }
+                  tourTopElement="sessionDuration"
+                  tourButtomElement="sessionStartedAt"
                 />
               </Widget>
             </Grid>
@@ -286,7 +290,7 @@ const NetWorth = () => {
         {sessionNetWorthOpen && (
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={7}>
+              <Grid item xs={7} data-tour-elem="sessionDurationHistoryChart">
                 {loading() ? (
                   <Skeleton variant="rectangular" height={40} />
                 ) : (
@@ -327,7 +331,7 @@ const NetWorth = () => {
                   </Accordion>
                 )}
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={5} data-tour-elem="sessionDurationHistoryPieChart">
                 {loading() ? (
                   <Skeleton variant="rectangular" height={40} />
                 ) : (

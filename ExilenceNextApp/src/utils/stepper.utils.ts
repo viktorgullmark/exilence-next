@@ -18,6 +18,10 @@ export function getToolbarSteps(): IStepDescriptor[] {
       selector: '[data-tour-elem="settingsView"]',
     },
     {
+      key: 'networth_session_step',
+      selector: '[data-tour-elem="networthSessionArea"]',
+    },
+    {
       key: 'profile_step',
       selector: '[data-tour-elem="profileArea"]',
     },
@@ -48,6 +52,64 @@ export function getToolbarSteps(): IStepDescriptor[] {
     {
       key: 'support_panel_step',
       selector: '[data-tour-elem="supportPanel"]',
+    },
+  ];
+}
+
+export function getNetworthSessionToolbarSteps(): IStepDescriptor[] {
+  return [
+    {
+      key: 'motivation',
+    },
+    {
+      key: 'initial_step',
+    },
+    {
+      key: 'networth_step',
+      selector: '[data-tour-elem="networth"]',
+    },
+    {
+      key: 'income_step',
+      selector: '[data-tour-elem="income"]',
+    },
+    {
+      key: 'session_duration_step',
+      selector: '[data-tour-elem="sessionDuration"]',
+    },
+    {
+      key: 'session_started_at_step',
+      selector: '[data-tour-elem="sessionStartedAt"]',
+    },
+    {
+      key: 'session_duration_history_chart_step',
+      selector: '[data-tour-elem="sessionDurationHistoryChart"]',
+    },
+    {
+      key: 'session_duration_history_pie_chart_step',
+      selector: '[data-tour-elem="sessionDurationHistoryPieChart"]',
+    },
+    {
+      key: 'manual_adjustment_step',
+      selector: '[data-tour-elem="manualAdjustment"]',
+    },
+    {
+      key: 'profile_step',
+      selector: '[data-tour-elem="profileArea"]',
+    },
+    {
+      key: 'snapshot_step',
+      selector: '[data-tour-elem="snapshotArea"]',
+    },
+    {
+      key: 'overlay_step',
+      selector: '[data-tour-elem="overlayArea"]',
+    },
+    {
+      key: 'group_step',
+      selector: '[data-tour-elem="groupArea"]',
+    },
+    {
+      key: 'ending',
     },
   ];
 }

@@ -4,20 +4,25 @@ import Tour from 'reactour';
 import { Button, useTheme } from '@mui/material';
 
 import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
-import { getToolbarSteps } from '../../utils/stepper.utils';
 import StepContent from './StepContent/StepContent';
 import i18next from 'i18next';
 
 type ToolbarStepperProps = {
   isOpen: boolean;
+  stepDescriptors: IStepDescriptor[];
+  namespace: 'stepper' | 'net_worth_stepper';
   handleClose: () => void;
 };
 
-const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
+const ToolbarStepper = ({
+  isOpen,
+  stepDescriptors,
+  namespace,
+  handleClose,
+}: ToolbarStepperProps) => {
   const [step, setStep] = useState(0);
   const { t } = useTranslation();
   const theme = useTheme();
-  const stepDescriptors: IStepDescriptor[] = getToolbarSteps();
   const supportPanelStep = stepDescriptors.length - 1; // Support Panel should be always last
   const viewStep = [1, 2, 3].includes(step); // 1 - net worth, 2 - bulk sell, 3 - settings
   const isOnSupportPanelStep = step === supportPanelStep;
@@ -28,13 +33,13 @@ const ToolbarStepper = ({ isOpen, handleClose }: ToolbarStepperProps) => {
   };
 
   const steps = stepDescriptors.map((sd) => {
-    const body2 = `stepper:body2.${sd.key}`;
+    const body2 = `${namespace}:body2.${sd.key}`;
     return {
       selector: sd.selector,
       content: (
         <StepContent
-          title={t(`stepper:title.${sd.key}`)}
-          body={t(`stepper:body.${sd.key}`)}
+          title={t(`${namespace}:title.${sd.key}`)}
+          body={t(`${namespace}:body.${sd.key}`)}
           body2={i18next.exists(body2) ? t(body2) : undefined}
         />
       ),

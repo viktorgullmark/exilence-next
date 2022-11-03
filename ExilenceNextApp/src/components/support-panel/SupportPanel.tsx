@@ -42,6 +42,11 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
     closeSupportPanel();
   };
 
+  const handleNetWorthSessionRetakeTourClick = () => {
+    uiStateStore!.setToolbarNetWorthSessionTourOpen(true);
+    closeSupportPanel();
+  };
+
   const handleWhatsNewClick = () => {
     uiStateStore.setShowWhatsNewModal(!showWhatsNewModal);
     closeSupportPanel();
@@ -83,6 +88,14 @@ const SupportPanel = ({ isOpen = false, setIsOpen, anchorEl = null }: SupportPan
                 {!isLoginRoute && (
                   <li className={classes.option} onClick={handleRetakeTourClick}>
                     <Typography variant="body2">{t('label.retake_tour')}</Typography>
+                    <HistoryIcon className={classes.icon} />
+                  </li>
+                )}
+                {!isLoginRoute && (
+                  <li className={classes.option} onClick={handleNetWorthSessionRetakeTourClick}>
+                    <Typography variant="body2">
+                      {t('label.retake_net_worth_session_tour')}
+                    </Typography>
                     <HistoryIcon className={classes.icon} />
                   </li>
                 )}

@@ -233,7 +233,7 @@ export const mergeFromDiffSnapshotStashTabs = (
   ) => {
     return stashTabs2.map((stashTab2) => {
       const difference: IPricedItem[] = [];
-      const itemsToUpdate: IPricedItem[] = [];
+      // const itemsToUpdate: IPricedItem[] = [];
 
       const itemInSnapshotTab2 = mergeItemStacks(stashTab2.pricedItems);
       const stashTab1 = stashTabs1.find(
@@ -254,16 +254,15 @@ export const mergeFromDiffSnapshotStashTabs = (
 
       itemsToAddOrUpdate.map((item) => {
         const recentItem = { ...item };
-        const foundItem = findItem(itemInSnapshotTab1, recentItem);
-        if (foundItem) {
-          const existingItem = { ...foundItem };
+        const existingItem = findItem(itemInSnapshotTab1, recentItem);
+        if (existingItem) {
           if (addRemovedItems) {
             recentItem.stackSize = recentItem.stackSize + existingItem.stackSize;
           } else {
             recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
           }
           if (updatePrices) {
-            recentItem.total = existingItem.calculated * recentItem.stackSize;
+            existingItem.total = recentItem.calculated * existingItem.stackSize;
           }
           recentItem.total = recentItem.total - existingItem.total;
           if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
@@ -275,7 +274,7 @@ export const mergeFromDiffSnapshotStashTabs = (
       });
 
       // Update by reference
-      if (priceResolver && itemsToUpdate.length > 0) priceResolver(itemsToUpdate);
+      // if (priceResolver && itemsToUpdate.length > 0) priceResolver(itemsToUpdate);
 
       // items that exist in snapshot 1 but not in snapshot 2
       const itemsToRemove = itemInSnapshotTab1.filter(
@@ -341,9 +340,8 @@ export const diffSnapshots = (
 
   itemsToAddOrUpdate.map((item) => {
     const recentItem = { ...item };
-    const foundItem = findItem(itemsInSnapshot1, recentItem);
-    if (foundItem) {
-      const existingItem = { ...foundItem };
+    const existingItem = findItem(itemsInSnapshot1, recentItem);
+    if (existingItem) {
       recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
       if (updatePrices) {
         existingItem.total = recentItem.calculated * existingItem.stackSize;
@@ -352,8 +350,8 @@ export const diffSnapshots = (
       if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
         difference.push(recentItem);
       }
-    } else if (item.total !== 0 && item.stackSize !== 0) {
-      difference.push(item);
+    } else if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
+      difference.push(recentItem);
     }
   });
 

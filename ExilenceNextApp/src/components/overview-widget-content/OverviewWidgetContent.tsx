@@ -26,6 +26,8 @@ type OverviewWidgetContentProps = {
   currencyShort?: string;
   tooltip?: string;
   currencySwitch?: boolean;
+  tourTopElement?: string;
+  tourButtomElement?: string;
 };
 
 const OverviewWidgetContent = ({
@@ -45,6 +47,8 @@ const OverviewWidgetContent = ({
   tooltip = '',
   currencySwitch,
   sparklineChart,
+  tourTopElement,
+  tourButtomElement,
 }: OverviewWidgetContentProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -66,7 +70,7 @@ const OverviewWidgetContent = ({
   };
   return (
     <>
-      <Grid container className={classes.topContent}>
+      <Grid data-tour-elem={tourTopElement} container className={classes.topContent}>
         <Grid item xs={sparklineChart ? 5 : 3}>
           <Grid container spacing={2}>
             <Grid item sm={3}>
@@ -142,6 +146,7 @@ const OverviewWidgetContent = ({
                 >
                   <IconButton
                     size="small"
+                    data-tour-elem="manualAdjustment"
                     className={classes.adornmentIcon}
                     onClick={manualAdjustmentFn}
                   >
@@ -153,7 +158,7 @@ const OverviewWidgetContent = ({
           </div>
         </Grid>
       </Grid>
-      <Box mt={1}>
+      <Box data-tour-elem={tourButtomElement} mt={1}>
         <Grid container spacing={1}>
           <Grid item sm={6}>
             <Typography component="span" style={{}} className={classes.title}>

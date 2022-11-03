@@ -207,7 +207,7 @@ const Toolbar = ({
             justifyContent="flex-end"
             className={classes.toolbarGrid}
           >
-            <Grid item className={classes.sessionArea} data-tour-elem="sessionArea">
+            <Grid item className={classes.sessionArea} data-tour-elem="networthSessionArea">
               {(!sessionStarted || (sessionStarted && sessionPaused)) && (
                 <Tooltip
                   title={

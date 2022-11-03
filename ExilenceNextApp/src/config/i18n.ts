@@ -30,7 +30,7 @@ function configureI18n() {
       },
       fallbackLng: 'en',
       debug: false,
-      ns: ['common', 'notification', 'error', 'tables', 'stepper', 'status'],
+      ns: ['common', 'notification', 'error', 'tables', 'stepper', 'net_worth_stepper', 'status'],
       defaultNS: 'common',
       interpolation: {
         escapeValue: false,

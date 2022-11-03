@@ -43,6 +43,7 @@ export class UiStateStore {
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = false;
   @persist @observable toolbarTourOpen: boolean = true;
+  @persist @observable toolbarNetWorthSessionTourOpen: boolean = true;
   @observable validated: boolean = false;
   @observable isValidating: boolean = false;
   @observable isSubmitting: boolean = false;
@@ -280,6 +281,11 @@ export class UiStateStore {
   @action
   setToolbarTourOpen(open: boolean) {
     this.toolbarTourOpen = open;
+  }
+
+  @action
+  setToolbarNetWorthSessionTourOpen(open: boolean) {
+    this.toolbarNetWorthSessionTourOpen = open;
   }
 
   @action

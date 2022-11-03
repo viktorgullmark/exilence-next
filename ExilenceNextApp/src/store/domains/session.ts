@@ -66,7 +66,11 @@ interface ITimeStamps {
 // REJECTED: Snapshot löschbar auf click
 // TODO: Add Pause and Continue button to networth overlay
 // TODO: Scope in timespan on click / Not possible?
+
 // TODO: Add settings for sessions?
+// TODO: Income based on end of last inactivity / last offline
+// TODO: Option to not show items negativly, who are removed from your current wealth while the session started
+
 // TODO: Session Duration History Snapshot - Smooth the lines, the start end end for the snapshots should be the same lines as net worth history
 // DONE: Isolate session from other sessions while the session is inactive -> Diffitems will removed
 // DONE: Session duration breakdown history chart dynamically recalculated
@@ -954,9 +958,6 @@ export class Session {
       data: [
         {
           name: 'Online',
-          // y:
-          //   sessionDuration + (offsetManualAdjustment < 0 ? offsetManualAdjustment : 0) ||
-          //   0,
           y: sessionDuration + offsetManualAdjustment || 0,
           color: HC.color(colors[0]).setOpacity(0.5).brighten(0.2).get(),
           dataLabels: {
@@ -991,14 +992,11 @@ export class Session {
 
   @computed
   get sessionTimeChartData() {
+    console.log('Recalculated');
     // FIXME: Cann't remove proxy from timeStamps via spread or assign ?
     let timestamps = _.cloneDeep(this.timeStamps) as ITimeStamps[];
 
     let snapshots = [...this.snapshots];
-
-    if (snapshots.length === 0) {
-      return undefined;
-    }
 
     let timeStamp: moment.Moment | undefined;
     if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {

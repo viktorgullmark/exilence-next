@@ -1,0 +1,43 @@
+{
+  "title": {
+    "motivation": "Welche to net worth sessions!",
+    "initial_step": "What are net worth session",
+    "networth_step": "Net worth section",
+    "income_step": "Income section",
+    "session_duration_step": "Session duration section",
+    "session_started_at_step": "Session start section",
+    "session_duration_history_chart_step": "Session duration history chart",
+    "session_duration_history_pie_chart_step": "Session duration breakdown history chart",
+    "manual_adjustment_step": "Manual adjustment",
+    "profile_step": "Profile section",
+    "snapshot_step": "Snapshot section",
+    "overlay_step": "Overlay section",
+    "group_step": "Group section",
+    "ending": "Thank you for your attention"
+  },
+  "body": {
+    "motivation": "Welcome to net worth sessions. The net worth sessions view is designed to help you analyze your earnings during your gaming session without the influence of your current net worth and its price fluctuations. Net worth sessions are completely isolated from the outside. Even sessions between each other with the same stashtabs are isolated.",
+    "initial_step": "A net worth session is similar to a normal view. However, you always start from scratch. Any items you add or remove to an active session are displayed. Items that you remove during an active session without having added them are displayed negatively. There are four different states for this. Online, paused, offline and inactive. The time is counted individually for each state. If you are online, the online time is also counted up. The other states pause them. You are offline when Exilence Next is closed and the session is active. The session becomes inactive as soon as you change the profile. Any items added or removed from the Stashtabs during this time will not be added or removed!",
+    "networth_step": "Here you can see your net worth for the current session.",
+    "income_step": "Here you can see your income. Calculated for the current session duration, i.e. the online time.",
+    "session_duration_step": "Here you can see your current session duration.",
+    "session_started_at_step": "All time calculation is based on this session start.",
+    "session_duration_history_chart_step": "Here you can see your net worth and income for the respective status. So online, paused, offline and inactive.",
+    "session_duration_history_pie_chart_step": "Here you can see a summary of your times by states.",
+    "manual_adjustment_step": "Here you can manually adjust your session duration so that the income is not calculated incorrectly if you forgot to switch to pause.",
+    "profile_step": "Each session is assigned a profile. If you switch profiles, the current session will be set to inactive. If the new profile has a session, it will be paused and any items you added or removed during inactivity will be deducted. By the way, profiles are a great way to divide the earned currency in a group.",
+    "snapshot_step": "Snapshots are saved in parallel for both the current session and the normal view. If you delete a snapshot for the session, the charts will be recalculated!",
+    "overlay_step": "The overlay always shows the income for the current view in Exilence Next.",
+    "group_step": "Unfortunately, groups are not supported at the moment. This view only shows information about your session.",
+    "ending": "I hope this feature is helpful. Some features are still planned. Suggestions for improvement are welcome. Thanks"
+  },
+  "body2": {
+    "motivation": "Net Worth Sessions help to promote group play as it is possible to create session profiles for group play and thus fairly share the earnings generated in a play session.",
+    "income_step": "The session duration can be actively paused or adjusted afterwards.",
+    "session_duration_history_chart_step": "Note: You can click snapshots (circles) for time travel views. All views are then recalculated and show the state when the snapshot was taken. If you click the snapshot again or if it is no longer visible in the timeline, all views are reset to the current state.",
+    "session_duration_history_pie_chart_step": "This and the other chart are updated every 10 seconds.",
+    "profile_step": "Warning: If you want to switch profiles and have added items, wait a little and take a snapshot or the items will apply to the session in the other profile!",
+    "overlay_step": "For info, when changing the view to the normal view, the session continues in the background!",
+    "ending": "Best regards C3ntraX"
+  }
+}
