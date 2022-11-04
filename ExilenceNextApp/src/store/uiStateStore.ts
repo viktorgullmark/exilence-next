@@ -43,7 +43,8 @@ export class UiStateStore {
   @observable sessIdCookie: ICookie | undefined = undefined;
   @persist @observable sidenavOpen: boolean = false;
   @persist @observable toolbarTourOpen: boolean = true;
-  @persist @observable toolbarNetWorthSessionTourOpen: boolean = true;
+  @persist @observable toolbarNetWorthSessionTourOpen: boolean = false;
+  @persist @observable firstNetWorthSessionTour: boolean = true;
   @observable validated: boolean = false;
   @observable isValidating: boolean = false;
   @observable isSubmitting: boolean = false;
@@ -286,6 +287,11 @@ export class UiStateStore {
   @action
   setToolbarNetWorthSessionTourOpen(open: boolean) {
     this.toolbarNetWorthSessionTourOpen = open;
+  }
+
+  @action
+  setFirstNetWorthSessionTour(open: boolean) {
+    this.firstNetWorthSessionTour = open;
   }
 
   @action

@@ -285,6 +285,12 @@ export class Session {
   startSession() {
     // Set start; If already started - continue from pause mode
     if (!this.sessionStarted) {
+      if (rootStore.uiStateStore.firstNetWorthSessionTour) {
+        // Start net worth session tour after the start button is clicked the first time
+        rootStore.uiStateStore.setFirstNetWorthSessionTour(false);
+        rootStore.uiStateStore.setToolbarNetWorthSessionTourOpen(true);
+      }
+
       this.sessionStartedAt = moment.utc().valueOf();
       // Show session net worth by default on start
       rootStore.uiStateStore.toggleNetWorthSession(true);
