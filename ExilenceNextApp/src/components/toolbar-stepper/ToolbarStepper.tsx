@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import Tour from 'reactour';
 import { Button, useTheme } from '@mui/material';
-
 import { IStepDescriptor } from '../../interfaces/step-descriptor.interface';
 import StepContent from './StepContent/StepContent';
 import i18next from 'i18next';
@@ -39,7 +38,7 @@ const ToolbarStepper = ({
       content: (
         <StepContent
           title={t(`${namespace}:title.${sd.key}`)}
-          body={t(`${namespace}:body.${sd.key}`)}
+          body={<Trans t={t} i18nKey={`${namespace}:body.${sd.key}`} />}
           body2={i18next.exists(body2) ? t(body2) : undefined}
         />
       ),

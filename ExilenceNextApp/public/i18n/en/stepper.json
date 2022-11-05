@@ -19,7 +19,7 @@
     "net_worth_step": "In this view you can track all your gains and losses and how much your stash is worth",
     "bulk_sell_step": "In this view you can share your stash items via a generated image and message to various Discord communities",
     "settings_step": "In this view you can manage your settings",
-    "networth_session_step": "In this area you can start, pause and stop net worth sessions. Here you can switch the view, if an session is started.",
+    "networth_session_step": "In this area you can start and stop net worth sessions. If a session is started you can continue and pause the session. Here you can switch the view, if a session is started.",
     "profile_step": "In this area you can manage your profiles, and create multiple ones for different setups for quick access.",
     "snapshot_step": "Here you take snapshots to record your current net worth, and you can also enable automatic snapshotting in the settings.",
     "overlay_step": "Here you can toggle the net worth overlay, for a slim overview while you map!",

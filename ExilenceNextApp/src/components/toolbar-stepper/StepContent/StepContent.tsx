@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 type StepContentProps = {
   title: string;
-  body: string;
+  body: string | React.ReactElement;
   body2?: string;
 };
 
@@ -13,7 +13,7 @@ const StepContent = ({ title, body, body2 }: StepContentProps) => {
       <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
-      <Typography variant="body2" gutterBottom>
+      <Typography style={{ whiteSpace: 'pre-line' }} variant="body2" gutterBottom>
         {body}
       </Typography>
       {body2 && (
