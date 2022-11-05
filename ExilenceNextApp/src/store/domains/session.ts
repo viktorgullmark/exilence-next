@@ -68,7 +68,7 @@ import { assert } from 'console';
 // TODO: Income based on end of last inactivity / last offline
 // TODO: Option to not show items negativly, who are removed from your current wealth while the session started
 
-// TODO: Session Duration History Snapshot - Smooth the lines, the start end end for the snapshots should be the same lines as net worth history
+// DONE: Session Duration History Snapshot - Straight lines between snapshots in the duration history chart
 // DONE: Isolate session from other sessions while the session is inactive -> Diffitems will removed
 // DONE: Session duration breakdown history chart dynamically recalculated
 
@@ -1156,7 +1156,7 @@ export class Session {
 
     const seriesCount = mode === 'both' ? 2 : 1;
 
-    if (series.length >= 2 && this.snapshots.length > snapshots.length) {
+    if (series.length >= seriesCount && this.snapshots.length > snapshots.length) {
       // TODO: Verfiy straight lines
       // Calculate the first entry in the series for net worth and income
       // Use the latest snapshot before the first snapshot in the timespan
