@@ -6,6 +6,7 @@ import { Snapshot } from './snapshot';
 import { rootStore } from './../../index';
 import {
   calculateNetWorth,
+  calculateRelativTimeStampValue,
   calculateSessionIncome,
   diffSnapshots,
   filterItems,
@@ -22,6 +23,7 @@ import {
 import { StashTabSnapshot } from './stashtab-snapshot';
 import {
   IConnectionChartSeries,
+  IDataChartSeries,
   ISessionTimeChartSeries,
   ISessionTimePieChartSeries,
 } from '../../interfaces/connection-chart-series.interface';
@@ -31,18 +33,13 @@ import HC from 'highcharts';
 import { primaryDarker } from '../../assets/themes/exilence-theme';
 import _ from 'lodash';
 import { INetworthSessionOffsets } from '../../interfaces/snapshot-networth-session.interface';
-
-type TimestapTypes = 'start' | 'pause' | 'offline' | 'notActive';
-type TimestapTypesExtended = TimestapTypes | 'keeplast';
-
-interface ITimeStamps {
-  uuid: string;
-  type: TimestapTypes;
-  start: number;
-  end: number;
-  duration: number;
-  sessionDuration: number;
-}
+import {
+  ITimeStamp,
+  TimestapTypes,
+  TimestapTypesExtended,
+} from '../../interfaces/net-worth_session_timespan.interface';
+import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
+import { assert } from 'console';
 
 // TODO: Add to roundtour on new account + 1 Sessions als beta markieren
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
@@ -85,6 +82,8 @@ interface ITimeStamps {
 // Other:
 // DONE: Add critical stash tabs with tooltip info
 
+type historyChartSeriesMode = 'netWorth' | 'income' | 'both';
+
 export class Session {
   @persist uuid: string = uuidv4();
   @persist @observable profileId: string | undefined = undefined;
@@ -97,7 +96,7 @@ export class Session {
   @persist @observable sessionPaused: boolean = false;
   @persist @observable sessionStartedAt: number | undefined = undefined;
 
-  @persist('list') @observable timeStamps: ITimeStamps[] = [];
+  @persist('list') @observable timeStamps: ITimeStamp[] = [];
   @persist @observable lastStartAt: number | undefined = undefined;
   @persist @observable lastPauseAt: number | undefined = undefined;
   @persist @observable lastOfflineAt: number | undefined = undefined;
@@ -114,6 +113,7 @@ export class Session {
   @persist @observable addNextSnapshotDiffToBase: boolean = false;
 
   @observable chartPreviewSnapshotId: string | undefined = undefined;
+  @observable historyChartMode: historyChartSeriesMode = 'netWorth';
 
   constructor(profileId: string) {
     makeObservable(this);
@@ -336,7 +336,7 @@ export class Session {
   //#endregion
 
   //#region Time manipulation
-  createTimestamp(time: number, type: TimestapTypes): ITimeStamps {
+  createTimestamp(time: number, type: TimestapTypes): ITimeStamp {
     const lastTime = moment.utc(time);
     const now = moment.utc();
     const diff = now.diff(lastTime);
@@ -1000,9 +1000,13 @@ export class Session {
   get sessionTimeChartData() {
     console.log('Recalculated');
     // FIXME: Cann't remove proxy from timeStamps via spread or assign ?
-    let timestamps = _.cloneDeep(this.timeStamps) as ITimeStamps[];
+    let timestamps = _.cloneDeep(this.timeStamps) as ITimeStamp[];
 
     let snapshots = [...this.snapshots];
+
+    const mode = this.historyChartMode;
+
+    // mode = 'netWorth';
 
     let timeStamp: moment.Moment | undefined;
     if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
@@ -1053,7 +1057,7 @@ export class Session {
         seriesName = 'Offline';
         colorIndex = 2;
       } else {
-        seriesName = 'Inaktiv';
+        seriesName = 'Inactiv';
         colorIndex = 3;
       }
 
@@ -1079,98 +1083,155 @@ export class Session {
           ],
         },
       };
-      series.push({
-        ...staticFields,
-        name: `${seriesName} - Net worth`,
-        data: [
-          {
-            x: ts.start,
-            y: 0, // Default, will recalculated later
-            marker: {
-              radius: 1,
-              symbol: 'square',
+      if (mode === 'netWorth' || mode === 'both') {
+        series.push({
+          ...staticFields,
+          name: `${seriesName} - Net worth`,
+          data: [
+            {
+              x: ts.start,
+              y: 0, // Default, will recalculated later
+              marker: {
+                radius: 1,
+                symbol: 'square',
+              },
             },
-          },
-          // Fill Snapshots - NetWorth
-          ...formatSessionTimesNetWorthForChart(
-            snapshotsBetween.map((s) => mapSnapshotToApiSnapshot(s)),
-            this // Set eventhandler for click which sets the preview of the snapshot
-          ),
-          {
-            x: ts.end,
-            y: snapshotsBetween[0]
-              ? +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotsBetween[0])).toFixed(2)
-              : 0,
-            marker: {
-              radius: 1,
-              symbol: 'square',
-            },
-          },
-        ],
-      });
-      series.push({
-        ...staticFields,
-        name: `${seriesName} - Income`,
-        data: [
-          {
-            x: ts.start,
-            y: 0, // Default, will recalculated later
-            marker: {
-              radius: 1,
-              symbol: 'square',
-            },
-          },
-          // Fill Snapshots - Income
-          ...formatSessionTimesIncomeForChart(
-            snapshotsBetween.map((s) => mapSnapshotToApiSnapshot(s)),
-            this.snapshots.length > 0
-              ? mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-              : undefined,
-            this // Set eventhandler for click which sets the preview of the snapshot
-          ),
-          {
-            x: ts.end,
-            y:
-              this.snapshots.length > 0 && snapshotsBetween[0]
-                ? +calculateSessionIncome(
-                    mapSnapshotToApiSnapshot(snapshotsBetween[0]),
-                    mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-                  ).toFixed(2)
+            // Fill Snapshots - NetWorth; Sorted -> snapshotsBetween first index is the last index
+            ...formatSessionTimesNetWorthForChart(
+              snapshotsBetween.map((s) => mapSnapshotToApiSnapshot(s)),
+              this // Set eventhandler for click which sets the preview of the snapshot
+            ),
+            {
+              x: ts.end,
+              y: snapshotsBetween[0]
+                ? +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotsBetween[0])).toFixed(2)
                 : 0,
-            marker: {
-              radius: 1,
-              symbol: 'square',
+              marker: {
+                radius: 1,
+                symbol: 'square',
+              },
             },
-          },
-        ],
-      });
+          ],
+        });
+      }
+      if (mode === 'income' || mode === 'both') {
+        series.push({
+          ...staticFields,
+          name: `${seriesName} - Income`,
+          data: [
+            {
+              x: ts.start,
+              y: 0, // Default, will recalculated later
+              marker: {
+                radius: 1,
+                symbol: 'square',
+              },
+            },
+            // Fill Snapshots - Income; Sorted -> snapshotsBetween first index is the last index
+            ...formatSessionTimesIncomeForChart(
+              snapshotsBetween.map((s) => mapSnapshotToApiSnapshot(s)),
+              this.snapshots.length > 0
+                ? mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+                : undefined,
+              this // Set eventhandler for click which sets the preview of the snapshot
+            ),
+            {
+              x: ts.end,
+              y:
+                this.snapshots.length > 0 && snapshotsBetween[0]
+                  ? +calculateSessionIncome(
+                      mapSnapshotToApiSnapshot(snapshotsBetween[0]),
+                      mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+                    ).toFixed(2)
+                  : 0,
+              marker: {
+                radius: 1,
+                symbol: 'square',
+              },
+            },
+          ],
+        });
+      }
     });
 
-    for (let i = series.length - 3; i >= 0; i--) {
-      // Set the net worth and income for the beginning of a series to the end of the previous series
-      const prevSeries = series[i + 2];
-      series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
-      if (series[i].data.length === 2) {
-        // The end values could not be calculated, because there are no snapshots between - set the start
-        // TODO: Recalc income for current sessiontime
-        series[i].data[1].y = prevSeries.data[prevSeries.data.length - 1].y;
-      }
-    }
+    const seriesCount = mode === 'both' ? 2 : 1;
 
     if (series.length >= 2 && this.snapshots.length > snapshots.length) {
+      // TODO: Verfiy straight lines
       // Calculate the first entry in the series for net worth and income
       // Use the latest snapshot before the first snapshot in the timespan
       const fallbackSnapshot = this.snapshots[snapshots.length];
       // Net worth
-      series[series.length - 2].data[0].y = +getValueForSnapshot(
-        mapSnapshotToApiSnapshot(fallbackSnapshot)
-      ).toFixed(2);
+      if (mode === 'netWorth' || mode === 'both') {
+        const firstNetWorthSeries = series[series.length - seriesCount];
+        firstNetWorthSeries.data[0].y = +getValueForSnapshot(
+          mapSnapshotToApiSnapshot(fallbackSnapshot)
+        ).toFixed(2);
+        if (firstNetWorthSeries.data.length === 2) {
+          // The end values could not be calculated, because there are no snapshots between - set the start
+          firstNetWorthSeries.data[1].y = firstNetWorthSeries.data[0].y;
+        }
+      }
+
       // Income
-      // TODO: Recalc income for current sessiontime
-      series[series.length - 1].data[0].y = +calculateSessionIncome(
-        mapSnapshotToApiSnapshot(fallbackSnapshot),
-        mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-      ).toFixed(2);
+      if (mode === 'income' || mode === 'both') {
+        const firstIncomeSeries = series[series.length - 1];
+        firstIncomeSeries.data[0].y = +calculateSessionIncome(
+          mapSnapshotToApiSnapshot(fallbackSnapshot),
+          mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+        ).toFixed(2);
+        if (firstIncomeSeries.data.length === 2) {
+          // The end values could not be calculated, because there are no snapshots between - set the start
+          firstIncomeSeries.data[1].y = firstIncomeSeries.data[0].y;
+        }
+      }
+    }
+
+    // For reference series last index => Position left in chart; Index 0 => Positon right in chart;
+    for (let i = series.length - (1 + seriesCount); i >= 0; i--) {
+      // Set the net worth and income for the beginning of a series to the end of the previous series
+      const prevSeries = series[i + seriesCount];
+
+      // Get the prev snapshot value
+      let prevSnapshotDatapoint: IDataChartSeries | undefined;
+      for (let j = i; j < series.length - seriesCount; j += seriesCount) {
+        // Search in the series to the left (Before) for the last snapshot in the series
+        if (series[j + seriesCount].data.length > 2) {
+          const lastSnapshotIndexInSeries = series[j + seriesCount].data.length - 2;
+          // Net worth and income
+          prevSnapshotDatapoint = series[j + seriesCount].data[lastSnapshotIndexInSeries];
+          break;
+        }
+      }
+      // Get the next snapshot value for within the timestamp and after
+      let nextSnapshotDatapoint: IDataChartSeries | undefined;
+      for (let j = i - seriesCount; j >= -seriesCount; j -= seriesCount) {
+        if (series[j + seriesCount].data.length > 2) {
+          // Net worth and income
+          nextSnapshotDatapoint = series[j + seriesCount].data[1];
+          break;
+        }
+      }
+
+      if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
+        // Snapshot datapoint before and within the current series found -> Calc relative value
+        series[i].data[0].y = +calculateRelativTimeStampValue(
+          { created: prevSnapshotDatapoint.x, value: prevSnapshotDatapoint.y },
+          series[i].data[0].x,
+          { created: nextSnapshotDatapoint.x, value: nextSnapshotDatapoint.y }
+        ).toFixed(2);
+        // Sync the datapoints - End from prev with start from current
+        const lastDataIndex = prevSeries.data.length - 1;
+        prevSeries.data[lastDataIndex].y = series[i].data[0].y;
+      } else {
+        series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
+      }
+
+      // TODO: Verfiy straight lines
+      if (series[i].data.length === 2) {
+        // The end values could not be calculated, because there are no snapshots between - set to the start
+        series[i].data[1].y = series[i].data[0].y;
+      }
     }
 
     return series;

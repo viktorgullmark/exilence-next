@@ -100,6 +100,25 @@ export const calculateSessionIncome = (
   return incomePerHour;
 };
 
+export const calculateRelativTimeStampValue = (
+  prevSnapshot: { value: number; created: number },
+  time: number,
+  afterSnapshot: { value: number; created: number }
+) => {
+  // 10 = 15 - 5
+  const cleanedSnapshotTime = afterSnapshot.created - prevSnapshot.created;
+  // 2 = 7 - 5
+  const cleanedTimeStampTime = time - prevSnapshot.created;
+  // 0.2 = 2 / 10
+  const percentageTime = cleanedTimeStampTime / cleanedSnapshotTime;
+  // 100 = 150 - 50
+  const cleanedSnapshotNetWorth = afterSnapshot.value - prevSnapshot.value;
+  // 20 = 100 * 0.2
+  const relativNetworth = cleanedSnapshotNetWorth * percentageTime;
+  // 70 = 50 + 20
+  return prevSnapshot.value + relativNetworth;
+};
+
 export const formatValue = (
   value: number | string | undefined,
   suffix: string | undefined,
