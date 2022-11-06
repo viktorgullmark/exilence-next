@@ -32,6 +32,11 @@ import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
 import SessionTimeHistoryPieChartContainer from '../../components/session-time-history-pie-chart/SessionTimeHistoryPieChartContainer';
 
+import NetWorthChartAccordion from '../../components/chart-accordions/NetWorthChartAccordion';
+import NetWorthTabChartAccordion from '../../components/chart-accordions/NetWorthTabChartAccordion';
+import SessionTimeChartAccordion from '../../components/chart-accordions/SessionTimeChartAccordion';
+import SessionTimePieChartAccordion from '../../components/chart-accordions/SessionTimePieChartAccordion';
+
 export const netWorthGridSpacing = 2;
 export const cardHeight = 100;
 export const chartHeight = 180;
@@ -137,9 +142,6 @@ const NetWorth = () => {
       : sessionNetWorthOpen
       ? activeProfile?.session.sparklineChartData
       : activeProfile?.sparklineChartData;
-
-  const tabChartHeight = chartHeight + 42;
-  const sessionDurationPieChartHeight = chartHeight + 42;
 
   const displayedValue =
     activeGroup && !sessionNetWorthOpen ? activeGroup.netWorthValue : netWorthValue();
@@ -287,178 +289,34 @@ const NetWorth = () => {
             />
           </Widget>
         </Grid>
-        {sessionNetWorthOpen && (
+        {sessionNetWorthOpen ? (
+          <>
+            <Grid item xs={12} data-tour-elem="sessionDurationHistoryChart">
+              <SessionTimeChartAccordion />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={7}>
+                  <NetWorthTabChartAccordion />
+                </Grid>
+                <Grid item xs={5} data-tour-elem="sessionDurationHistoryPieChart">
+                  <SessionTimePieChartAccordion />
+                </Grid>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={7} data-tour-elem="sessionDurationHistoryChart">
-                {loading() ? (
-                  <Skeleton variant="rectangular" height={40} />
-                ) : (
-                  <Accordion
-                    expanded={uiStateStore!.sessionTimeChartExpanded}
-                    onChange={() =>
-                      uiStateStore!.setSessionTimeChartExpanded(
-                        !uiStateStore!.sessionTimeChartExpanded
-                      )
-                    }
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <Box display="flex" justifyContent="center" alignItems="center">
-                        <StackedLineChartIcon fontSize="small" />
-                        <Box ml={1}>
-                          <Typography variant="overline">{t('label.sessiontime_chart')}</Typography>
-                        </Box>
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails
-                      style={{
-                        background: theme.palette.background.default,
-                      }}
-                    >
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <SessionTimeHistoryChartContainer />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <ChartToolboxContainer isNetworthSessionTimespanChart={true} />
-                        </Grid>
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                )}
+              <Grid item xs={7}>
+                <NetWorthChartAccordion />
               </Grid>
-              <Grid item xs={5} data-tour-elem="sessionDurationHistoryPieChart">
-                {loading() ? (
-                  <Skeleton variant="rectangular" height={40} />
-                ) : (
-                  <Accordion
-                    expanded={uiStateStore!.sessionTimePieChartExpanded}
-                    onChange={() =>
-                      uiStateStore!.setSessionTimePieChartExpanded(
-                        !uiStateStore!.sessionTimePieChartExpanded
-                      )
-                    }
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <Box display="flex" justifyContent="center" alignItems="center">
-                        <StackedLineChartIcon fontSize="small" />
-                        <Box ml={1}>
-                          <Typography variant="overline">
-                            {t('label.sessiontime_pie_chart')}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails
-                      style={{
-                        background: theme.palette.background.default,
-                      }}
-                    >
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <SessionTimeHistoryPieChartContainer
-                            chartHeight={sessionDurationPieChartHeight}
-                          />
-                        </Grid>
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                )}
+              <Grid item xs={5}>
+                <NetWorthTabChartAccordion />
               </Grid>
             </Grid>
           </Grid>
         )}
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={7}>
-              {/* todo: this block should be refactored to its own component */}
-              {loading() ? (
-                <Skeleton variant="rectangular" height={40} />
-              ) : (
-                <Accordion
-                  expanded={uiStateStore!.netWorthChartExpanded}
-                  onChange={() =>
-                    uiStateStore!.setNetWorthChartExpanded(!uiStateStore!.netWorthChartExpanded)
-                  }
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Box display="flex" justifyContent="center" alignItems="center">
-                      <ShowChartIcon fontSize="small" />
-                      <Box ml={1}>
-                        <Typography variant="overline">{t('label.net_worth_chart')}</Typography>
-                      </Box>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    style={{
-                      background: theme.palette.background.default,
-                    }}
-                  >
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <SnapshotHistoryChartContainer />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <ChartToolboxContainer />
-                      </Grid>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-            </Grid>
-            <Grid item xs={5}>
-              {loading() ? (
-                <Skeleton variant="rectangular" height={40} />
-              ) : (
-                <Accordion
-                  expanded={uiStateStore!.tabChartExpanded}
-                  onChange={() =>
-                    uiStateStore!.setTabChartExpanded(!uiStateStore!.tabChartExpanded)
-                  }
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Box display="flex" justifyContent="center" alignItems="center">
-                      <StackedLineChartIcon fontSize="small" />
-                      <Box ml={1}>
-                        <Typography variant="overline">{t('label.tab_chart')}</Typography>
-                      </Box>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    style={{
-                      background: theme.palette.background.default,
-                    }}
-                  >
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <SnapshotHistoryChartContainer
-                          chartHeight={tabChartHeight}
-                          showIndividualTabs
-                        />
-                      </Grid>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
           {/* todo: this block should be refactored to its own component */}
           {loading() ? (
