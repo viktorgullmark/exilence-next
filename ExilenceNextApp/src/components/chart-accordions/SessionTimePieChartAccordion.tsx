@@ -6,9 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useStores } from '../..';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
-import SnapshotHistoryChartContainer from '../snapshot-history-chart/SnapshotHistoryChartContainer';
-import SessionTimeHistoryChartContainer from '../session-time-history-chart/SessionTimeHistoryChartContainer';
-import ChartToolboxContainer from '../chart-toolbox/ChartToolboxContainer';
 import SessionTimeHistoryPieChartContainer from '../session-time-history-pie-chart/SessionTimeHistoryPieChartContainer';
 import { chartHeight } from '../../routes/net-worth/NetWorth';
 
