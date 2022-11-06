@@ -38,8 +38,6 @@ import {
   TimestapTypes,
   TimestapTypesExtended,
 } from '../../interfaces/net-worth_session_timespan.interface';
-import { IApiSnapshot } from '../../interfaces/api/api-snapshot.interface';
-import { assert } from 'console';
 
 // TODO: Add to roundtour on new account + 1 Sessions als beta markieren
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
@@ -82,7 +80,7 @@ import { assert } from 'console';
 // Other:
 // DONE: Add critical stash tabs with tooltip info
 
-type historyChartSeriesMode = 'netWorth' | 'income' | 'both';
+type HistoryChartSeriesMode = 'netWorth' | 'income' | 'both';
 
 export class Session {
   @persist uuid: string = uuidv4();
@@ -113,7 +111,9 @@ export class Session {
   @persist @observable addNextSnapshotDiffToBase: boolean = false;
 
   @observable chartPreviewSnapshotId: string | undefined = undefined;
-  @observable historyChartMode: historyChartSeriesMode = 'netWorth';
+
+  // TODO: Add switch next to timespan choice
+  @observable historyChartMode: HistoryChartSeriesMode = 'netWorth';
 
   constructor(profileId: string) {
     makeObservable(this);
@@ -224,7 +224,7 @@ export class Session {
       const diffSnapshotWhileInactiv = mergeFromDiffSnapshotStashTabs(
         mapSnapshotToApiSnapshot(this.snapshots[0]), // Snapshot before inactiv
         diffSnapshot, // Snapshot after inactiv
-        true,
+        false, // Do not manipulate existing snapshot
         this.profile?.diffSnapshotPriceResolver
       );
 
@@ -643,7 +643,7 @@ export class Session {
             diffSnapshots(
               mapSnapshotToApiSnapshot(this.snapshots[index + 1]),
               mapSnapshotToApiSnapshot(this.snapshots[index]),
-              true
+              false
               // Priceresolver does not work here, because of historical prices
             ),
             filterText
@@ -657,7 +657,7 @@ export class Session {
         diffSnapshots(
           mapSnapshotToApiSnapshot(this.snapshots[1]),
           mapSnapshotToApiSnapshot(this.snapshots[0]),
-          true,
+          false,
           this.profile?.diffSnapshotPriceResolver
         ),
         filterText
@@ -1006,8 +1006,6 @@ export class Session {
 
     const mode = this.historyChartMode;
 
-    // mode = 'netWorth';
-
     let timeStamp: moment.Moment | undefined;
     if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
       timeStamp = moment().subtract(1, 'h');
@@ -1084,6 +1082,7 @@ export class Session {
         },
       };
       if (mode === 'netWorth' || mode === 'both') {
+        // TODO: On Click - select previous - only if in current timespan
         series.push({
           ...staticFields,
           name: `${seriesName} - Net worth`,
@@ -1227,7 +1226,8 @@ export class Session {
         series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
       }
 
-      // TODO: Verfiy straight lines
+      // TODO: Smooth lines between the timespans
+      // TODO: Verfiy straight lines -
       if (series[i].data.length === 2) {
         // The end values could not be calculated, because there are no snapshots between - set to the start
         series[i].data[1].y = series[i].data[0].y;

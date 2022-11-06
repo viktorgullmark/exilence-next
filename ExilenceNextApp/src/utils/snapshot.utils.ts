@@ -221,8 +221,8 @@ export const formatSessionTimesIncomeForChart = (
 export const mergeFromDiffSnapshotStashTabs = (
   snapshot1: IApiSnapshot,
   snapshot2: IApiSnapshot,
-  updatePrices = true,
-  priceResolver?: (items: IPricedItem[]) => void,
+  updateSnapshot1Prices = true,
+  removedItemsPriceResolver?: (items: IPricedItem[]) => void,
   addRemovedItems = false
 ): IApiSnapshot => {
   const itemToRemove = (itemsToRemove: IPricedItem[]) => {
@@ -236,13 +236,12 @@ export const mergeFromDiffSnapshotStashTabs = (
           recentItem.stackSize = -recentItem.stackSize;
         }
 
-        if (updatePrices) {
-          removedItems.push(recentItem);
-        }
+        if (removedItemsPriceResolver) removedItems.push(recentItem);
         difference.push(recentItem);
       }
     });
-    if (priceResolver && removedItems.length > 0) priceResolver(removedItems);
+    if (removedItemsPriceResolver && removedItems.length > 0)
+      removedItemsPriceResolver(removedItems);
     return difference;
   };
 
@@ -280,10 +279,13 @@ export const mergeFromDiffSnapshotStashTabs = (
           } else {
             recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
           }
-          if (updatePrices) {
+          if (updateSnapshot1Prices) {
             existingItem.total = recentItem.calculated * existingItem.stackSize;
+            recentItem.total = recentItem.total - existingItem.total;
+          } else {
+            const existingItemTotal = recentItem.calculated * existingItem.stackSize;
+            recentItem.total = recentItem.total - existingItemTotal;
           }
-          recentItem.total = recentItem.total - existingItem.total;
           if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
             difference.push(recentItem);
           }
@@ -341,8 +343,8 @@ export const mergeFromDiffSnapshotStashTabs = (
 export const diffSnapshots = (
   snapshot1: IApiSnapshot,
   snapshot2: IApiSnapshot,
-  updatePrices = true,
-  priceResolver?: (items: IPricedItem[]) => void
+  updateSnapshot1Prices = true,
+  removedItemsPriceResolver?: (items: IPricedItem[]) => void
 ) => {
   const difference: IPricedItem[] = [];
   const removedItems: IPricedItem[] = [];
@@ -362,10 +364,13 @@ export const diffSnapshots = (
     const existingItem = findItem(itemsInSnapshot1, recentItem);
     if (existingItem) {
       recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
-      if (updatePrices) {
+      if (updateSnapshot1Prices) {
         existingItem.total = recentItem.calculated * existingItem.stackSize;
+        recentItem.total = recentItem.total - existingItem.total;
+      } else {
+        const existingItemTotal = recentItem.calculated * existingItem.stackSize;
+        recentItem.total = recentItem.total - existingItemTotal;
       }
-      recentItem.total = recentItem.total - existingItem.total;
       if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
         difference.push(recentItem);
       }
@@ -381,12 +386,12 @@ export const diffSnapshots = (
     if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
       recentItem.total = -Math.abs(recentItem.total);
       recentItem.stackSize = -Math.abs(recentItem.stackSize);
-      if (updatePrices) removedItems.push(recentItem);
+      if (removedItemsPriceResolver) removedItems.push(recentItem);
       difference.push(recentItem);
     }
   });
 
-  if (priceResolver && removedItems.length > 0) priceResolver(removedItems);
+  if (removedItemsPriceResolver && removedItems.length > 0) removedItemsPriceResolver(removedItems);
 
   return difference;
 };

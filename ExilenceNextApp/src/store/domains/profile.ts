@@ -144,7 +144,7 @@ export class Profile {
         diffSnapshots(
           mapSnapshotToApiSnapshot(this.snapshots[1]),
           mapSnapshotToApiSnapshot(this.snapshots[0]),
-          true,
+          false,
           this.diffSnapshotPriceResolver
         ),
         filterText
