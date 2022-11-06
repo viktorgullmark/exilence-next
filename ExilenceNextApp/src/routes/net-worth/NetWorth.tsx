@@ -1,7 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import UpdateIcon from '@mui/icons-material/Update';
 import { Box, Grid, Skeleton, Tooltip, Typography, useTheme } from '@mui/material';
@@ -11,7 +9,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { appName, useStores, visitor } from '../..';
 import { primaryLighter, rarityColors } from '../../assets/themes/exilence-theme';
-import ChartToolboxContainer from '../../components/chart-toolbox/ChartToolboxContainer';
 import {
   Accordion,
   AccordionDetails,
@@ -22,16 +19,12 @@ import ItemTableFilterSection from '../../components/item-table/item-table-filte
 import ItemTableContainer from '../../components/item-table/ItemTableContainer';
 import OverviewWidgetContent from '../../components/overview-widget-content/OverviewWidgetContent';
 import SessionStopwatch from '../../components/session-stopwatch/SessionStopwatch';
-import SessionTimeHistoryChartContainer from '../../components/session-time-history-chart/SessionTimeHistoryChartContainer';
-import SnapshotHistoryChartContainer from '../../components/snapshot-history-chart/SnapshotHistoryChartContainer';
 import SparklineChart from '../../components/sparkline-chart/SparklineChart';
 import Widget from '../../components/widget/Widget';
 import ManualAdjustmentDialogContainer from '../../components/manual-adjustment-dialog/ManualAdjustmentDialogContainer';
 import { getSnapshotCardValue } from '../../utils/snapshot.utils';
 import { openLink } from '../../utils/window.utils';
 import { useStyles } from './NetWorth.styles';
-import SessionTimeHistoryPieChartContainer from '../../components/session-time-history-pie-chart/SessionTimeHistoryPieChartContainer';
-
 import NetWorthChartAccordion from '../../components/chart-accordions/NetWorthChartAccordion';
 import NetWorthTabChartAccordion from '../../components/chart-accordions/NetWorthTabChartAccordion';
 import SessionTimeChartAccordion from '../../components/chart-accordions/SessionTimeChartAccordion';
