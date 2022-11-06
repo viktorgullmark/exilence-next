@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Grid, Skeleton, Typography, useTheme } from '@mui/material';
 import { Accordion, AccordionDetails, AccordionSummary } from '../expansion-panel/ExpansionPanel';
 import { observer } from 'mobx-react-lite';
@@ -7,7 +7,7 @@ import { useStores } from '../..';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import SessionTimeHistoryChartContainer from '../session-time-history-chart/SessionTimeHistoryChartContainer';
-import ChartToolboxContainer from '../chart-toolbox/ChartToolboxContainer';
+import ChartToolboxContainer from '../session-chart-toolbox/NetWorthSessionChartToolboxContainer';
 
 const SessionTimeChartAccordion = () => {
   const { uiStateStore } = useStores();
@@ -50,7 +50,7 @@ const SessionTimeChartAccordion = () => {
             <SessionTimeHistoryChartContainer />
           </Grid>
           <Grid item xs={12}>
-            <ChartToolboxContainer isNetworthSessionTimespanChart={true} />
+            <ChartToolboxContainer />
           </Grid>
         </Grid>
       </AccordionDetails>

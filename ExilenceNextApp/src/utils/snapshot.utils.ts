@@ -182,7 +182,7 @@ export const formatSessionTimesNetWorthForChart = (
       },
       marker: {
         symbol: 'circle',
-        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 3,
+        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 1,
       },
       selected: session.chartPreviewSnapshotId === s.uuid,
     }))
@@ -211,7 +211,7 @@ export const formatSessionTimesIncomeForChart = (
       },
       marker: {
         symbol: 'circle',
-        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 3,
+        radius: session.chartPreviewSnapshotId === s.uuid ? 5 : 1,
       },
       selected: session.chartPreviewSnapshotId === s.uuid,
     }))

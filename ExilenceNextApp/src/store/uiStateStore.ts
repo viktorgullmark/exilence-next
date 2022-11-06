@@ -11,6 +11,7 @@ import { IPricedItem } from '../interfaces/priced-item.interface';
 import { ISelectOption } from '../interfaces/select-option.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
+import { HistoryChartSeriesMode } from '../types/history-chart-series-mode.type';
 import { ItemTableSelectionType } from '../types/item-table-selection.type';
 import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
@@ -92,7 +93,6 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
-  @persist @observable networthSessionSnapshotChartTimeSpan: TimespanType = 'All time';
   @persist @observable networthSessionChartTimeSpan: TimespanType = 'All time';
   @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
@@ -111,6 +111,7 @@ export class UiStateStore {
 
   @persist @observable netWorthSessionOpen: boolean = false;
   @observable manualAdjustmentsOpen: boolean = false;
+  @observable netWorthSessionHistoryChartMode: HistoryChartSeriesMode = 'netWorth';
 
   @observable cancelSnapshot: Subject<boolean> = new Subject();
 
@@ -176,13 +177,13 @@ export class UiStateStore {
   }
 
   @action
-  setNetworthSessionSnapshotChartTimeSpan(timespan: TimespanType) {
-    this.networthSessionSnapshotChartTimeSpan = timespan;
+  setNetworthSessionChartTimeSpan(timespan: TimespanType) {
+    this.networthSessionChartTimeSpan = timespan;
   }
 
   @action
-  setNetworthSessionChartTimeSpan(timespan: TimespanType) {
-    this.networthSessionChartTimeSpan = timespan;
+  setNetWorthSessionHistoryChartMode(mode: HistoryChartSeriesMode) {
+    this.netWorthSessionHistoryChartMode = mode;
   }
 
   @action

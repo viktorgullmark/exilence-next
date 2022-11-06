@@ -24,7 +24,10 @@
     "select_all_session_snapshots": "Select all session snapshots",
     "remove_snapshots": "Remove snapshots",
     "subtract": "Subtract",
-    "add": "Add"
+    "add": "Add",
+    "history-chart-net-worth-mode": "NET WORTH",
+    "history-chart-income-mode": "INCOME",
+    "history-chart-both-mode": "BOTH"
   },
   "title": {
     "login": "Login",

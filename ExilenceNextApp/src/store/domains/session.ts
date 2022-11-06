@@ -37,7 +37,7 @@ import {
   ITimeStamp,
   TimestapTypes,
   TimestapTypesExtended,
-} from '../../interfaces/net-worth_session_timespan.interface';
+} from '../../interfaces/net-worth-session-timespan.interface';
 
 // TODO: Add to roundtour on new account + 1 Sessions als beta markieren
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
@@ -80,8 +80,6 @@ import {
 // Other:
 // DONE: Add critical stash tabs with tooltip info
 
-type HistoryChartSeriesMode = 'netWorth' | 'income' | 'both';
-
 export class Session {
   @persist uuid: string = uuidv4();
   @persist @observable profileId: string | undefined = undefined;
@@ -111,9 +109,6 @@ export class Session {
   @persist @observable addNextSnapshotDiffToBase: boolean = false;
 
   @observable chartPreviewSnapshotId: string | undefined = undefined;
-
-  // TODO: Add switch next to timespan choice
-  @observable historyChartMode: HistoryChartSeriesMode = 'netWorth';
 
   constructor(profileId: string) {
     makeObservable(this);
@@ -702,13 +697,13 @@ export class Session {
     // Used in autorun
     try {
       let timeStamp: moment.Moment | undefined;
-      if (rootStore.uiStateStore.chartTimeSpan === '1 hour') {
+      if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
         timeStamp = moment().subtract(1, 'h');
-      } else if (rootStore.uiStateStore.chartTimeSpan === '1 day') {
+      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
         timeStamp = moment().subtract(1, 'd');
-      } else if (rootStore.uiStateStore.chartTimeSpan === '1 week') {
+      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
         timeStamp = moment().subtract(7, 'd');
-      } else if (rootStore.uiStateStore.chartTimeSpan === '1 month') {
+      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
         timeStamp = moment().subtract(30, 'd');
       } else {
         return true;
@@ -726,49 +721,6 @@ export class Session {
   //#endregion Snapshot preview
 
   //#region Chart calculation
-
-  @computed
-  get chartData() {
-    let snapshots = [...this.snapshots];
-
-    if (snapshots.length === 0) {
-      return undefined;
-    }
-
-    switch (rootStore.uiStateStore.networthSessionSnapshotChartTimeSpan) {
-      case '1 hour': {
-        snapshots = snapshots.filter((s) => {
-          return moment().subtract(1, 'h').isBefore(moment(s.created));
-        });
-        break;
-      }
-      case '1 day': {
-        snapshots = snapshots.filter((s) => {
-          return moment().subtract(24, 'h').isBefore(moment(s.created));
-        });
-        break;
-      }
-      case '1 week': {
-        snapshots = snapshots.filter((s) => moment().subtract(7, 'd').isBefore(moment(s.created)));
-        break;
-      }
-      case '1 month': {
-        snapshots = snapshots.filter((s) => moment().subtract(30, 'd').isBefore(moment(s.created)));
-        break;
-      }
-      default: {
-        // all time
-        break;
-      }
-    }
-
-    const connectionSeries: IConnectionChartSeries = {
-      seriesName: this.profile?.name || '',
-      series: formatSnapshotsForChart(snapshots.map((s) => mapSnapshotToApiSnapshot(s))),
-    };
-
-    return [connectionSeries];
-  }
 
   @computed
   get sparklineChartData(): ISparklineDataPoint[] | undefined {
@@ -1004,7 +956,7 @@ export class Session {
 
     let snapshots = [...this.snapshots];
 
-    const mode = this.historyChartMode;
+    const mode = rootStore.uiStateStore.netWorthSessionHistoryChartMode;
 
     let timeStamp: moment.Moment | undefined;
     if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
@@ -1091,7 +1043,7 @@ export class Session {
               x: ts.start,
               y: 0, // Default, will recalculated later
               marker: {
-                radius: 1,
+                radius: 0,
                 symbol: 'square',
               },
             },
@@ -1106,7 +1058,7 @@ export class Session {
                 ? +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotsBetween[0])).toFixed(2)
                 : 0,
               marker: {
-                radius: 1,
+                radius: 0,
                 symbol: 'square',
               },
             },
@@ -1122,7 +1074,7 @@ export class Session {
               x: ts.start,
               y: 0, // Default, will recalculated later
               marker: {
-                radius: 1,
+                radius: 0,
                 symbol: 'square',
               },
             },
@@ -1144,7 +1096,7 @@ export class Session {
                     ).toFixed(2)
                   : 0,
               marker: {
-                radius: 1,
+                radius: 0,
                 symbol: 'square',
               },
             },
