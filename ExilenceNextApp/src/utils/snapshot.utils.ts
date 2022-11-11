@@ -3,7 +3,10 @@ import { IApiSnapshot } from '../interfaces/api/api-snapshot.interface';
 import { IApiStashTabSnapshot } from '../interfaces/api/api-stash-tab-snapshot.interface';
 import { IApiStashTabPricedItem } from '../interfaces/api/api-stashtab-priceditem.interface';
 import { IChartStashTabSnapshot } from '../interfaces/chart-stash-tab-snapshot.interface';
-import { IDataChartSeries } from '../interfaces/connection-chart-series.interface';
+import {
+  IDataChartSeries,
+  ISnapshotDataPoint,
+} from '../interfaces/connection-chart-series.interface';
 import { IPricedItem } from '../interfaces/priced-item.interface';
 import { IStashTab } from '../interfaces/stash.interface';
 import { Session } from '../store/domains/session';
@@ -101,9 +104,9 @@ export const calculateSessionIncome = (
 };
 
 export const calculateRelativTimeStampValue = (
-  prevSnapshot: { value: number; created: number },
+  prevSnapshot: ISnapshotDataPoint,
   time: number,
-  afterSnapshot: { value: number; created: number }
+  afterSnapshot: ISnapshotDataPoint
 ) => {
   // 10 = 15 - 5
   const cleanedSnapshotTime = afterSnapshot.created - prevSnapshot.created;

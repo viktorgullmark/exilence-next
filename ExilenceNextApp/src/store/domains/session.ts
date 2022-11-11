@@ -26,6 +26,7 @@ import {
   IDataChartSeries,
   ISessionTimeChartSeries,
   ISessionTimePieChartSeries,
+  ISnapshotDataPoint,
 } from '../../interfaces/connection-chart-series.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
@@ -1054,9 +1055,7 @@ export class Session {
             ),
             {
               x: ts.end,
-              y: snapshotsBetween[0]
-                ? +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotsBetween[0])).toFixed(2)
-                : 0,
+              y: 0, // Default, will recalculated later
               marker: {
                 radius: 0,
                 symbol: 'square',
@@ -1088,13 +1087,7 @@ export class Session {
             ),
             {
               x: ts.end,
-              y:
-                this.snapshots.length > 0 && snapshotsBetween[0]
-                  ? +calculateSessionIncome(
-                      mapSnapshotToApiSnapshot(snapshotsBetween[0]),
-                      mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-                    ).toFixed(2)
-                  : 0,
+              y: 0, // Default, will recalculated later
               marker: {
                 radius: 0,
                 symbol: 'square',
@@ -1107,83 +1100,122 @@ export class Session {
 
     const seriesCount = mode === 'both' ? 2 : 1;
 
-    if (series.length >= seriesCount && this.snapshots.length > snapshots.length) {
-      // TODO: Verfiy straight lines
-      // Calculate the first entry in the series for net worth and income
-      // Use the latest snapshot before the first snapshot in the timespan
-      const fallbackSnapshot = this.snapshots[snapshots.length];
-      // Net worth
-      if (mode === 'netWorth' || mode === 'both') {
-        const firstNetWorthSeries = series[series.length - seriesCount];
-        firstNetWorthSeries.data[0].y = +getValueForSnapshot(
-          mapSnapshotToApiSnapshot(fallbackSnapshot)
-        ).toFixed(2);
-        if (firstNetWorthSeries.data.length === 2) {
-          // The end values could not be calculated, because there are no snapshots between - set the start
-          firstNetWorthSeries.data[1].y = firstNetWorthSeries.data[0].y;
-        }
-      }
-
-      // Income
-      if (mode === 'income' || mode === 'both') {
-        const firstIncomeSeries = series[series.length - 1];
-        firstIncomeSeries.data[0].y = +calculateSessionIncome(
-          mapSnapshotToApiSnapshot(fallbackSnapshot),
-          mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-        ).toFixed(2);
-        if (firstIncomeSeries.data.length === 2) {
-          // The end values could not be calculated, because there are no snapshots between - set the start
-          firstIncomeSeries.data[1].y = firstIncomeSeries.data[0].y;
-        }
+    // Get the latest snapshot in the timeseries before
+    let snapshotDPBeforeTimespan: ISnapshotDataPoint[] = [];
+    if (snapshots.length < this.snapshots.length) {
+      const snapshotBeforeTimespan = { ...this.snapshots[snapshots.length] };
+      if (mode === 'both') {
+        snapshotDPBeforeTimespan = [
+          {
+            created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
+            value: +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)).toFixed(
+              2
+            ),
+          },
+          {
+            created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
+            value: +calculateSessionIncome(
+              mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
+              mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+            ).toFixed(2),
+          },
+        ];
+      } else if (mode === 'netWorth') {
+        snapshotDPBeforeTimespan = [
+          {
+            created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
+            value: +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)).toFixed(
+              2
+            ),
+          },
+        ];
+      } else {
+        snapshotDPBeforeTimespan = [
+          {
+            created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
+            value: +calculateSessionIncome(
+              mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
+              mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+            ).toFixed(2),
+          },
+        ];
       }
     }
 
     // For reference series last index => Position left in chart; Index 0 => Positon right in chart;
-    for (let i = series.length - (1 + seriesCount); i >= 0; i--) {
-      // Set the net worth and income for the beginning of a series to the end of the previous series
-      const prevSeries = series[i + seriesCount];
-
+    for (let i = series.length - 1; i >= 0; i--) {
       // Get the prev snapshot value
-      let prevSnapshotDatapoint: IDataChartSeries | undefined;
+      let prevSnapshotDatapoint: ISnapshotDataPoint | undefined;
       for (let j = i; j < series.length - seriesCount; j += seriesCount) {
-        // Search in the series to the left (Before) for the last snapshot in the series
+        // Search in the series to the left (Before) for the prev snapshot in the series
         if (series[j + seriesCount].data.length > 2) {
           const lastSnapshotIndexInSeries = series[j + seriesCount].data.length - 2;
           // Net worth and income
-          prevSnapshotDatapoint = series[j + seriesCount].data[lastSnapshotIndexInSeries];
+          const seriesDataPoint = series[j + seriesCount].data[lastSnapshotIndexInSeries];
+          prevSnapshotDatapoint = { created: seriesDataPoint.x, value: seriesDataPoint.y };
           break;
         }
       }
+      if (!prevSnapshotDatapoint && snapshotDPBeforeTimespan.length > 0) {
+        if (mode !== 'both') {
+          prevSnapshotDatapoint = snapshotDPBeforeTimespan[0];
+        } else if (i % 2 === 0) {
+          // Net worth
+          prevSnapshotDatapoint = snapshotDPBeforeTimespan[0];
+        } else if (i % 2 === 1) {
+          // Income
+          prevSnapshotDatapoint = snapshotDPBeforeTimespan[1];
+        }
+      }
+
       // Get the next snapshot value for within the timestamp and after
-      let nextSnapshotDatapoint: IDataChartSeries | undefined;
+      let nextSnapshotDatapoint: ISnapshotDataPoint | undefined;
       for (let j = i - seriesCount; j >= -seriesCount; j -= seriesCount) {
+        // Search in the series to the right (After) for the latest snapshot in the series
         if (series[j + seriesCount].data.length > 2) {
           // Net worth and income
-          nextSnapshotDatapoint = series[j + seriesCount].data[1];
+          const seriesDataPoint = series[j + seriesCount].data[1];
+          nextSnapshotDatapoint = { created: seriesDataPoint.x, value: seriesDataPoint.y };
           break;
         }
       }
 
-      if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
-        // Snapshot datapoint before and within the current series found -> Calc relative value
-        series[i].data[0].y = +calculateRelativTimeStampValue(
-          { created: prevSnapshotDatapoint.x, value: prevSnapshotDatapoint.y },
-          series[i].data[0].x,
-          { created: nextSnapshotDatapoint.x, value: nextSnapshotDatapoint.y }
-        ).toFixed(2);
-        // Sync the datapoints - End from prev with start from current
-        const lastDataIndex = prevSeries.data.length - 1;
-        prevSeries.data[lastDataIndex].y = series[i].data[0].y;
+      if (i + seriesCount < series.length) {
+        // Set the net worth and income for the beginning of a series to the end of the previous series
+        const prevSeries = series[i + seriesCount];
+        if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
+          // Snapshot datapoint before and within the current series found -> Calc relative value
+          series[i].data[0].y = +calculateRelativTimeStampValue(
+            prevSnapshotDatapoint,
+            series[i].data[0].x,
+            nextSnapshotDatapoint
+          ).toFixed(2);
+          // Sync the datapoints - End from prev with start from current
+          const lastDataIndex = prevSeries.data.length - 1;
+          prevSeries.data[lastDataIndex].y = series[i].data[0].y;
+        } else {
+          series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
+        }
       } else {
-        series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
+        // Set startpoint of last index in the timespan (on the left)
+        if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
+          // Snapshot datapoint before and within the current series found -> Calc relative value
+          series[i].data[0].y = +calculateRelativTimeStampValue(
+            prevSnapshotDatapoint, // snapshotDPBeforeTimespan
+            series[i].data[0].x,
+            nextSnapshotDatapoint
+          ).toFixed(2);
+        } else {
+          // No snapshot before but after = 0; Snapshot before but not after (Only timespan view) = current value
+          if (prevSnapshotDatapoint) {
+            series[i].data[0].y = prevSnapshotDatapoint.value;
+          }
+        }
       }
 
-      // TODO: Smooth lines between the timespans
-      // TODO: Verfiy straight lines -
-      if (series[i].data.length === 2) {
-        // The end values could not be calculated, because there are no snapshots between - set to the start
-        series[i].data[1].y = series[i].data[0].y;
-      }
+      // Set the end of the datapoint in advance. The values may get recalculated
+      const lastIndex = series[i].data.length - 1;
+      series[i].data[lastIndex].y = series[i].data[lastIndex - 1].y;
     }
 
     return series;

@@ -41,6 +41,11 @@ export interface ISessionTimeChartSeries {
   };
 }
 
+export interface ISnapshotDataPoint {
+  value: number;
+  created: number;
+}
+
 export interface IDataPieChartSeries {
   name: string;
   y: number;
