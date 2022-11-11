@@ -83,6 +83,14 @@ export const statusColors = {
   error: red[900],
 };
 
+export const netWorthSessionColors = [
+  '#3ed914', // 'start'
+  '#e8952e', // 'pause'
+  '#eb2f26', // 'offline'
+  '#de23de', // 'inactive'
+  '#3119cf', // 'adjustments'
+];
+
 export const currencyChangeColors = {
   positive: green[600],
   negative: red[700],

@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { ISessionTimeChartSeries } from '../../interfaces/connection-chart-series.interface';
 import Highcharts from './../highcharts-base/HighchartsBase';
 import useStyles from './SessionTimeHistoryChart.styles';
+import { netWorthSessionColors } from '../../assets/themes/exilence-theme';
 
 type SessionTimeHistoryChartProps = {
   width: number;
@@ -40,12 +41,7 @@ const SessionTimeHistoryChart = ({ seriesData }: SessionTimeHistoryChartProps) =
     legend: {
       enabled: false,
     },
-    colors: [
-      '#3ed914', // 'start'
-      '#e8952e', // 'pause'
-      '#eb2f26', // 'offline'
-      '#de23de', // 'notActive'
-    ],
+    colors: netWorthSessionColors,
     plotOptions: {
       area: {
         marker: {

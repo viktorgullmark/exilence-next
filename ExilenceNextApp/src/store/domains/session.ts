@@ -31,7 +31,7 @@ import {
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
 import HC from 'highcharts';
-import { primaryDarker } from '../../assets/themes/exilence-theme';
+import { netWorthSessionColors, primaryDarker } from '../../assets/themes/exilence-theme';
 import _ from 'lodash';
 import { INetworthSessionOffsets } from '../../interfaces/snapshot-networth-session.interface';
 import {
@@ -813,14 +813,6 @@ export class Session {
 
     const getFormattedDuration = this.getFormattedDuration;
 
-    const colors = [
-      '#3ed914', // 'start'
-      '#e8952e', // 'pause'
-      '#eb2f26', // 'offline'
-      '#de23de', // 'notActive'
-      '#3119cf', // 'adjustments'
-    ];
-
     let offsetPause = this.offsetPause;
     let offsetOffline = this.offsetOffline;
     let offsetNotActive = this.offsetNotActive;
@@ -866,7 +858,7 @@ export class Session {
           {
             name: 'Online',
             y: sessionDuration || 0,
-            color: colors[0],
+            color: netWorthSessionColors[0],
             dataLabels: {
               distance: -30,
               enabled: true,
@@ -875,7 +867,7 @@ export class Session {
           {
             name: 'Adjustment',
             y: offsetManualAdjustment || 0,
-            color: colors[4],
+            color: netWorthSessionColors[4],
             dataLabels: {
               distance: 30,
               enabled: offsetManualAdjustment !== 0,
@@ -884,17 +876,17 @@ export class Session {
           {
             name: 'Pause',
             y: offsetPause || 0,
-            color: colors[1],
+            color: netWorthSessionColors[1],
           },
           {
             name: 'Offline',
             y: offsetOffline || 0,
-            color: colors[2],
+            color: netWorthSessionColors[2],
           },
           {
             name: 'Inactiv',
             y: offsetNotActive || 0,
-            color: colors[3],
+            color: netWorthSessionColors[3],
           },
         ],
       },
@@ -918,7 +910,7 @@ export class Session {
         {
           name: 'Online',
           y: sessionDuration + offsetManualAdjustment || 0,
-          color: HC.color(colors[0]).setOpacity(0.5).brighten(0.2).get(),
+          color: HC.color(netWorthSessionColors[0]).setOpacity(0.5).brighten(0.2).get(),
           dataLabels: {
             enabled: false,
           },
@@ -926,22 +918,22 @@ export class Session {
         {
           name: 'Adjustment',
           y: -(offsetManualAdjustment || 0),
-          color: HC.color(colors[4]).setOpacity(0.5).brighten(0.2).get(),
+          color: HC.color(netWorthSessionColors[4]).setOpacity(0.5).brighten(0.2).get(),
         },
         {
           name: 'Pause',
           y: offsetPause || 0,
-          color: HC.color(colors[1]).setOpacity(0.5).brighten(0.2).get(),
+          color: HC.color(netWorthSessionColors[1]).setOpacity(0.5).brighten(0.2).get(),
         },
         {
           name: 'Offline',
           y: offsetOffline || 0,
-          color: HC.color(colors[2]).setOpacity(0.5).brighten(0.2).get(),
+          color: HC.color(netWorthSessionColors[2]).setOpacity(0.5).brighten(0.2).get(),
         },
         {
           name: 'Inactiv',
           y: offsetNotActive || 0,
-          color: HC.color(colors[3]).setOpacity(0.5).brighten(0.2).get(),
+          color: HC.color(netWorthSessionColors[3]).setOpacity(0.5).brighten(0.2).get(),
         },
       ],
     });
@@ -989,10 +981,10 @@ export class Session {
     const series: ISessionTimeChartSeries[] = [];
 
     const fillColorStops = [
-      HC.color('#3ed914').setOpacity(0.25).get('rgba'),
-      HC.color('#e8952e').setOpacity(0.25).get('rgba'),
-      HC.color('#eb2f26').setOpacity(0.25).get('rgba'),
-      HC.color('#de23de').setOpacity(0.25).get('rgba'),
+      HC.color(netWorthSessionColors[0]).setOpacity(0.25).get('rgba'),
+      HC.color(netWorthSessionColors[1]).setOpacity(0.25).get('rgba'),
+      HC.color(netWorthSessionColors[2]).setOpacity(0.25).get('rgba'),
+      HC.color(netWorthSessionColors[3]).setOpacity(0.25).get('rgba'),
     ];
 
     timestamps.map((ts) => {
