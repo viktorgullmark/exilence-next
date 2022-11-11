@@ -23,10 +23,10 @@ import {
 import { StashTabSnapshot } from './stashtab-snapshot';
 import {
   IConnectionChartSeries,
-  IDataChartSeries,
   ISessionTimeChartSeries,
   ISessionTimePieChartSeries,
   ISnapshotDataPoint,
+  PointClickEventObjectExtended,
 } from '../../interfaces/connection-chart-series.interface';
 import { IChartStashTabSnapshot } from '../../interfaces/chart-stash-tab-snapshot.interface';
 import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.interface';
@@ -40,7 +40,7 @@ import {
   TimestapTypesExtended,
 } from '../../interfaces/net-worth-session-timespan.interface';
 
-// TODO: Add to roundtour on new account + 1 Sessions als beta markieren
+// DONE: Add to roundtour on new account + 1 Sessions als beta markieren
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
 // DONE: 4 Stop Button -> Warning with current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // TODO: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
@@ -987,6 +987,18 @@ export class Session {
       HC.color(netWorthSessionColors[3]).setOpacity(0.25).get('rgba'),
     ];
 
+    const pointClickHandler = (e: PointClickEventObjectExtended) => {
+      if (!e.point.id || e.point.id.startsWith('highcharts'))
+        return this.setSnapshotPreview(undefined);
+      const splitIndex = e.point.id.indexOf('_');
+      const snapshotId = e.point.id.substring(splitIndex + 1);
+      if (this.chartPreviewSnapshotId !== snapshotId) {
+        this.setSnapshotPreview(snapshotId);
+      } else {
+        this.setSnapshotPreview(undefined);
+      }
+    };
+
     timestamps.map((ts) => {
       let seriesName: string;
       let colorIndex: number;
@@ -1027,7 +1039,6 @@ export class Session {
         },
       };
       if (mode === 'netWorth' || mode === 'both') {
-        // TODO: On Click - select previous - only if in current timespan
         series.push({
           ...staticFields,
           name: `${seriesName} - Net worth`,
@@ -1038,6 +1049,9 @@ export class Session {
               marker: {
                 radius: 0,
                 symbol: 'square',
+              },
+              events: {
+                click: pointClickHandler,
               },
             },
             // Fill Snapshots - NetWorth; Sorted -> snapshotsBetween first index is the last index
@@ -1051,6 +1065,9 @@ export class Session {
               marker: {
                 radius: 0,
                 symbol: 'square',
+              },
+              events: {
+                click: pointClickHandler,
               },
             },
           ],
@@ -1068,6 +1085,9 @@ export class Session {
                 radius: 0,
                 symbol: 'square',
               },
+              events: {
+                click: pointClickHandler,
+              },
             },
             // Fill Snapshots - Income; Sorted -> snapshotsBetween first index is the last index
             ...formatSessionTimesIncomeForChart(
@@ -1083,6 +1103,9 @@ export class Session {
               marker: {
                 radius: 0,
                 symbol: 'square',
+              },
+              events: {
+                click: pointClickHandler,
               },
             },
           ],
@@ -1144,7 +1167,11 @@ export class Session {
           const lastSnapshotIndexInSeries = series[j + seriesCount].data.length - 2;
           // Net worth and income
           const seriesDataPoint = series[j + seriesCount].data[lastSnapshotIndexInSeries];
-          prevSnapshotDatapoint = { created: seriesDataPoint.x, value: seriesDataPoint.y };
+          prevSnapshotDatapoint = {
+            uuid: seriesDataPoint.id,
+            created: seriesDataPoint.x,
+            value: seriesDataPoint.y,
+          };
           break;
         }
       }
@@ -1203,6 +1230,10 @@ export class Session {
             series[i].data[0].y = prevSnapshotDatapoint.value;
           }
         }
+      }
+
+      if (prevSnapshotDatapoint?.uuid) {
+        series[i].data[0].id = series[i].data[0].x + '_' + prevSnapshotDatapoint.uuid;
       }
 
       // Set the end of the datapoint in advance. The values may get recalculated

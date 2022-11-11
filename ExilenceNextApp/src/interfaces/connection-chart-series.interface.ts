@@ -5,7 +5,7 @@ export interface IConnectionChartSeries {
   series: number[][];
 }
 
-type PointClickEventObjectExtended = HC.PointClickEventObject & {
+export type PointClickEventObjectExtended = HC.PointClickEventObject & {
   // Defined in api but missing in type?
   point: { id: string };
 };
@@ -42,6 +42,7 @@ export interface ISessionTimeChartSeries {
 }
 
 export interface ISnapshotDataPoint {
+  uuid?: string;
   value: number;
   created: number;
 }

@@ -34,7 +34,7 @@
   "body2": {
     "motivation": "Net Worth Sessions help to promote group play as it is possible to create session profiles for group play and thus fairly share the earnings generated in a play session. Also, you no longer need a dump stash tabs anymore. Sessions are basically dump stash tabs!",
     "income_step": "The session duration can be actively paused or adjusted afterwards.",
-    "session_duration_history_chart_step": "Note: You can click snapshots (circles) for time travel views. All views are then recalculated and show the state when the snapshot was taken. If you click the snapshot again or if the snapshot is no longer visible in the timeline, all views are reset to the current state (the latest snapshot). You can zoom the x-Axis for the selection.",
+    "session_duration_history_chart_step": "Note: You can click snapshots (circles) for time travel views. All views are then recalculated and show the state when the snapshot was taken. If you click the snapshot again or if the snapshot is no longer visible in the timeline, all views are reset to the current state (the latest snapshot). You can zoom the x-Axis for the selection or click a marker that selects the snapshot it's based on.",
     "session_duration_history_pie_chart_step": "This and the other chart are updated every 10 seconds.",
     "profile_step": "Warning: If you want to switch profiles and have added items, wait a little and take a snapshot or the added items will removed after you are active again!",
     "overlay_step": "Note: When changing the view to the normal view, the session continues with the current state 'Online' or 'Paused' in the background!",
