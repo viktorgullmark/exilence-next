@@ -89,18 +89,16 @@ export const calculateSessionIncome = (
   lastSnapshot: IApiSnapshot,
   firstSnapshot: IApiSnapshot | undefined
 ) => {
-  let incomePerHour = 0;
-  if (lastSnapshot.networthSessionOffsets !== undefined && firstSnapshot) {
-    const sessionDuration = lastSnapshot.networthSessionOffsets.sessionDuration;
-    let hoursToCalcOver = sessionDuration / 1000 / 60 / 60;
+  const elapsedTime = lastSnapshot.networthSessionOffsets?.sessionDuration;
+  if (elapsedTime && firstSnapshot) {
+    let hoursToCalcOver = elapsedTime / 1000 / 60 / 60;
     hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
 
-    incomePerHour =
-      (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
-  } else {
-    return 0;
+    return (
+      (getValueForSnapshot(lastSnapshot) - getValueForSnapshot(firstSnapshot)) / hoursToCalcOver
+    );
   }
-  return incomePerHour;
+  return 0;
 };
 
 export const calculateRelativTimeStampValue = (

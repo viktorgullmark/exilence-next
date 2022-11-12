@@ -531,11 +531,11 @@ export class Session {
       },
       timestamp,
       {
-        created: moment(new Date(snapshots[0].created).getTime()).valueOf(),
-        value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshots[0])),
+        created: moment(new Date(snapshots[snapshots.length - 1].created).getTime()).valueOf(),
+        value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshots[snapshots.length - 1])),
       }
     );
-    const elapsedTime = moment.utc().diff(moment.utc(timestamp));
+    const elapsedTime = moment(snapshots[0].created).diff(moment.utc(timestamp));
     let hoursToCalcOver = elapsedTime / 1000 / 60 / 60;
     hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
     const lastSnapshotValue = getValueForSnapshot(mapSnapshotToApiSnapshot(snapshots[0]));
@@ -543,8 +543,8 @@ export class Session {
   }
 
   get incomeSessionDuration() {
-    if (this.snapshots.length < 2) return 0;
-    const elapsedTime = moment.utc().diff(this.sessionTimestamp);
+    if (this.snapshots.length < 2 || !this.snapshots[0].networthSessionOffsets) return 0;
+    const elapsedTime = this.snapshots[0].networthSessionOffsets.sessionDuration;
     let hoursToCalcOver = elapsedTime / 1000 / 60 / 60;
     hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
     const firstSnapshotValue = getValueForSnapshot(
@@ -1169,17 +1169,17 @@ export class Session {
     // Get the latest snapshot in the timeseries before
     let snapshotDPBeforeTimespan: ISnapshotDataPoint[] = [];
     if (snapshots.length < this.snapshots.length) {
-      const snapshotBeforeTimespan = { ...this.snapshots[snapshots.length] };
+      const snapshotBeforeTimespan = mapSnapshotToApiSnapshot(this.snapshots[snapshots.length]);
       if (mode === 'both') {
         snapshotDPBeforeTimespan = [
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)),
+            value: getValueForSnapshot(snapshotBeforeTimespan),
           },
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
             value: calculateSessionIncome(
-              mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
+              snapshotBeforeTimespan,
               mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
             ),
           },
@@ -1188,7 +1188,7 @@ export class Session {
         snapshotDPBeforeTimespan = [
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)),
+            value: getValueForSnapshot(snapshotBeforeTimespan),
           },
         ];
       } else {
@@ -1196,7 +1196,7 @@ export class Session {
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
             value: calculateSessionIncome(
-              mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
+              snapshotBeforeTimespan,
               mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
             ),
           },
@@ -1206,6 +1206,7 @@ export class Session {
 
     // For reference series last index => Position left in chart; Index 0 => Positon right in chart;
     for (let i = series.length - 1; i >= 0; i--) {
+      // const isIncomeSeries = (mode === 'both' && i % 2 === 1) || mode === 'income';
       // Get the prev snapshot value
       let prevSnapshotDatapoint: ISnapshotDataPoint | undefined;
       for (let j = i; j < series.length - seriesCount; j += seriesCount) {
@@ -1272,7 +1273,7 @@ export class Session {
             nextSnapshotDatapoint
           ).toFixed(2);
         } else {
-          // No snapshot before but after = 0; Snapshot before but not after (Only timespan view) = current value
+          // Sync the datapoints - No snapshot before but after = 0; Snapshot before but not after (Only timespan view) = current value
           if (prevSnapshotDatapoint) {
             series[i].data[0].y = +prevSnapshotDatapoint.value.toFixed(2);
           }
