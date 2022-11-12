@@ -97,8 +97,6 @@ export class Session {
   @persist @observable lastNotActiveAt: number | undefined = undefined;
   @persist @observable stoppedAt: number | undefined = undefined;
 
-  // Triggers recalculation of timestamp
-  @observable pseudoOffsetForStart: number = 0;
   @persist @observable offsetPause: number = 0;
   @persist @observable offsetOffline: number = 0;
   @persist @observable offsetNotActive: number = 0;
@@ -366,9 +364,6 @@ export class Session {
     let lastType: TimestapTypes = 'pause';
     if (this.lastStartAt) {
       this.resolveLast(this.lastStartAt, 'start');
-      // Trigger computed function "get sessionTimestamp" to force recompute all functions that rely on the sessionTimestamp
-      // Especially because the moment.utc().diff(sessionTimestamp) relies on this
-      this.pseudoOffsetForStart += 1;
       this.lastStartAt = undefined;
       lastType = 'start';
     } else if (this.lastPauseAt) {
@@ -433,9 +428,6 @@ export class Session {
 
   @computed
   get sessionTimestamp() {
-    // This function triggers all calculations that rely on the offsets
-    // Fix to moment diff timestamps, force recompution
-    this.pseudoOffsetForStart;
     const sessionTime = moment
       .utc(this.sessionStartedAt)
       .add(
@@ -483,7 +475,6 @@ export class Session {
       return this.getFormattedDuration(moment.utc().diff(this.sessionTimestamp));
     }
 
-    this.pseudoOffsetForStart;
     const sessionTime = moment
       .utc(this.sessionStartedAt)
       .add(
@@ -492,15 +483,6 @@ export class Session {
       );
     // Do not calc diff, because cached values will cause invalid sessiontime
     return this.getFormattedDuration(moment.utc().diff(sessionTime));
-  }
-
-  get timecalculation() {
-    return {
-      offsetPause: this.offsetPause,
-      offsetOffline: this.offsetOffline,
-      offsetNotActive: this.offsetNotActive,
-      offsetManualAdjustment: this.offsetManualAdjustment,
-    };
   }
 
   @computed
