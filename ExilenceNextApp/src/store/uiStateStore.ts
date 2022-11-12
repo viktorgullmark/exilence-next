@@ -191,6 +191,7 @@ export class UiStateStore {
   @action
   setNetWorthSessionIncomeMode(mode: NetWorthSessionIncomeMode) {
     this.netWorthSessionIncomeMode = mode;
+    this.rootStore.accountStore.getSelectedAccount.activeProfile?.updateNetWorthOverlay();
   }
 
   @action

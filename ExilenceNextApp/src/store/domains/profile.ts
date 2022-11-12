@@ -448,12 +448,17 @@ export class Profile {
     const activeCurrency = rootStore.settingStore.activeCurrency;
 
     let income: number;
+    let netWorth: number;
     if (sessionmode) {
       income = rootStore.accountStore.getSelectedAccount!.activeProfile!.session.income;
+      netWorth = rootStore.accountStore.getSelectedAccount.activeProfile!.session.netWorthValue;
     } else {
       income = rootStore.signalrStore.activeGroup
         ? rootStore.signalrStore.activeGroup.income
         : rootStore.accountStore.getSelectedAccount!.activeProfile!.income;
+      netWorth = rootStore.signalrStore.activeGroup
+        ? rootStore.signalrStore.activeGroup.netWorthValue
+        : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue;
     }
 
     if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
@@ -474,11 +479,7 @@ export class Profile {
     rootStore.overlayStore.updateOverlay({
       event: 'netWorth',
       data: {
-        netWorth: sessionmode
-          ? rootStore.accountStore.getSelectedAccount.activeProfile!.session.netWorthValue
-          : rootStore.signalrStore.activeGroup
-          ? rootStore.signalrStore.activeGroup.netWorthValue
-          : rootStore.accountStore.getSelectedAccount.activeProfile!.netWorthValue,
+        netWorth: netWorth,
         income: formattedIncome,
         short: rootStore.settingStore.activeCurrency.short,
       },

@@ -36,29 +36,44 @@ const ToolbarContainer = () => {
     setProfileOpen(false);
   };
 
-  const activeCurrency = () => {
-    return settingStore?.activeCurrency;
-  };
-
   const handleOverlay = () => {
     //todo: rework to toggle modal instead, with buttons for each overlay
-
-    const income = formatValue(
-      signalrStore!.activeGroup
+    let income: number;
+    let netWorth: number;
+    if (uiStateStore.netWorthSessionOpen) {
+      income = accountStore.getSelectedAccount!.activeProfile!.session.income;
+      netWorth = netWorth = accountStore.getSelectedAccount.activeProfile!.session.netWorthValue;
+    } else {
+      income = signalrStore!.activeGroup
         ? signalrStore!.activeGroup.income
-        : accountStore!.getSelectedAccount!.activeProfile!.income,
-      activeCurrency().short,
+        : accountStore!.getSelectedAccount!.activeProfile!.income;
+      netWorth = signalrStore!.activeGroup
+        ? signalrStore!.activeGroup.netWorthValue
+        : accountStore!.getSelectedAccount!.activeProfile!.netWorthValue;
+    }
+
+    if (settingStore.currency === 'exalt' && priceStore.exaltedPrice) {
+      income = income / priceStore.exaltedPrice;
+    }
+
+    if (settingStore.currency === 'divine' && priceStore.divinePrice) {
+      income = income / priceStore.divinePrice;
+    }
+
+    const formattedIncome = formatValue(
+      income,
+      settingStore.activeCurrency.short,
       true,
       !priceStore.exaltedPrice
     );
 
-    const netWorth = signalrStore!.activeGroup
-      ? signalrStore!.activeGroup.netWorthValue
-      : accountStore!.getSelectedAccount!.activeProfile!.netWorthValue;
-
     overlayStore!.createOverlay({
       event: 'netWorth',
-      data: { netWorth: netWorth, income: income, short: settingStore.activeCurrency.short },
+      data: {
+        netWorth: netWorth,
+        income: formattedIncome,
+        short: settingStore.activeCurrency.short,
+      },
     });
   };
 
