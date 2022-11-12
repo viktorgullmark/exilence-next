@@ -42,6 +42,8 @@ import {
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
 // DONE: 4 Stop Button -> Warning with current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // DONE: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
+// TODO: Change income in chart accodinaly
+// TODO: Change inactive to offline -> offline to inactive -> Better income calculation
 
 // DONE: 5 Neues Diagramm mit -> Current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // DONE: Add Timestamp Charts

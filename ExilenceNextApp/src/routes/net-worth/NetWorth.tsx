@@ -230,7 +230,7 @@ const NetWorth = () => {
               clearFn={
                 activeGroup || sessionNetWorthOpen ? undefined : () => activeProfile?.clearIncome()
               }
-              incomeSwitch={sessionNetWorthOpen}
+              incomeSwitch={sessionNetWorthOpen && !activeProfile?.session.chartPreviewSnapshotId}
               tourTopElement="income"
             />
           </Widget>
@@ -241,8 +241,8 @@ const NetWorth = () => {
               <Widget loading={loading()} backgroundColor={theme.palette.secondary.main}>
                 <OverviewWidgetContent
                   value={
-                    activeProfile?.session.previewSessionDuration ? (
-                      <span>{activeProfile.session.previewSessionDuration}</span>
+                    activeProfile?.session.chartPreviewSnapshotId ? (
+                      <span>{activeProfile.session.previewSessionDuration || '00:00:00'}</span>
                     ) : (
                       <SessionStopwatch />
                     )
@@ -264,7 +264,7 @@ const NetWorth = () => {
                   icon={<UpdateIcon fontSize="medium" />}
                   tooltip={t('label.net_worth_session_started_at_tooltip')}
                   manualAdjustmentFn={
-                    activeProfile?.session.previewSessionDuration
+                    activeProfile?.session.chartPreviewSnapshotId
                       ? undefined
                       : () => uiStateStore.toggleManualAdjustment()
                   }
