@@ -8,6 +8,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../..';
 import { formatValue } from '../../utils/snapshot.utils';
+import IncomeSwitch from './incomeSwitch/IncomeSwitch';
 import useStyles from './OverviewWidgetContent.styles';
 type OverviewWidgetContentProps = {
   value: number | string | React.ReactNode;
@@ -26,6 +27,7 @@ type OverviewWidgetContentProps = {
   currencyShort?: string;
   tooltip?: string;
   currencySwitch?: boolean;
+  incomeSwitch?: boolean;
   tourTopElement?: string;
   tourButtomElement?: string;
 };
@@ -47,6 +49,7 @@ const OverviewWidgetContent = ({
   tooltip = '',
   currencySwitch,
   sparklineChart,
+  incomeSwitch,
   tourTopElement,
   tourButtomElement,
 }: OverviewWidgetContentProps) => {
@@ -137,6 +140,13 @@ const OverviewWidgetContent = ({
                     <Cancel />
                   </IconButton>
                 </Tooltip>
+              )}
+              {incomeSwitch && (
+                <IncomeSwitch
+                  currencyShort={currencyShort}
+                  valueIsDiff={valueIsDiff}
+                  valueSuffix={valueSuffix}
+                />
               )}
               {manualAdjustmentFn && (
                 <Tooltip

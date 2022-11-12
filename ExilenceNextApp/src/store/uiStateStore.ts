@@ -13,6 +13,7 @@ import { IStashTab } from '../interfaces/stash.interface';
 import { IStatusMessage } from '../interfaces/status-message.interface';
 import { HistoryChartSeriesMode } from '../types/history-chart-series-mode.type';
 import { ItemTableSelectionType } from '../types/item-table-selection.type';
+import { NetWorthSessionIncomeMode } from '../types/net-worth-session-income-mode.type';
 import { TimespanType } from '../types/timespan.type';
 import { constructCookie } from '../utils/cookie.utils';
 import { ICookie } from './../interfaces/cookie.interface';
@@ -112,6 +113,7 @@ export class UiStateStore {
   @persist @observable netWorthSessionOpen: boolean = false;
   @observable manualAdjustmentsOpen: boolean = false;
   @observable netWorthSessionHistoryChartMode: HistoryChartSeriesMode = 'netWorth';
+  @observable netWorthSessionIncomeMode: NetWorthSessionIncomeMode = 'sessionDuration';
 
   @observable cancelSnapshot: Subject<boolean> = new Subject();
 
@@ -184,6 +186,11 @@ export class UiStateStore {
   @action
   setNetWorthSessionHistoryChartMode(mode: HistoryChartSeriesMode) {
     this.netWorthSessionHistoryChartMode = mode;
+  }
+
+  @action
+  setNetWorthSessionIncomeMode(mode: NetWorthSessionIncomeMode) {
+    this.netWorthSessionIncomeMode = mode;
   }
 
   @action

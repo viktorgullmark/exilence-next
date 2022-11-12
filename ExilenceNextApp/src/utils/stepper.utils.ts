@@ -73,6 +73,10 @@ export function getNetworthSessionToolbarSteps(): IStepDescriptor[] {
       selector: '[data-tour-elem="income"]',
     },
     {
+      key: 'income_switch',
+      selector: '[data-tour-elem="incomeSwitch"]',
+    },
+    {
       key: 'session_duration_step',
       selector: '[data-tour-elem="sessionDuration"]',
     },

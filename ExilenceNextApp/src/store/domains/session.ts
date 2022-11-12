@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Snapshot } from './snapshot';
 import { rootStore } from './../../index';
 import {
-  calculateNetWorth,
   calculateRelativTimeStampValue,
   calculateSessionIncome,
   diffSnapshots,
@@ -13,7 +12,6 @@ import {
   filterSnapshotItems,
   formatSessionTimesIncomeForChart,
   formatSessionTimesNetWorthForChart,
-  formatSnapshotsForChart,
   formatStashTabSnapshotsForChart,
   getValueForSnapshot,
   getValueForSnapshotsTabs,
@@ -43,7 +41,7 @@ import {
 // DONE: Add to roundtour on new account + 1 Sessions als beta markieren
 // DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
 // DONE: 4 Stop Button -> Warning with current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
-// TODO: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
+// DONE: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
 
 // DONE: 5 Neues Diagramm mit -> Current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // DONE: Add Timestamp Charts
@@ -64,7 +62,6 @@ import {
 // TODO: Scope in timespan on click / Not possible?
 
 // TODO: Add settings for sessions?
-// TODO: Income based on end of last inactivity / last offline
 // TODO: Option to not show items negativly, who are removed from your current wealth while the session started
 
 // DONE: Session Duration History Snapshot - Straight lines between snapshots in the duration history chart
@@ -521,39 +518,93 @@ export class Session {
   //#endregion
 
   //#region Widget calculation
+  calculateIncome(timestamp: number) {
+    if (this.snapshots.length < 2) return 0;
+    const timestampToUse = moment.utc(timestamp);
+    const snapshots = this.snapshots.filter((s) => moment(s.created).utc().isAfter(timestampToUse));
+    if (snapshots.length === this.snapshots.length || snapshots.length === 0) return 0;
+    const prevSnapshot = this.snapshots[snapshots.length];
+    const firstSnapshotValue = calculateRelativTimeStampValue(
+      {
+        created: moment(new Date(prevSnapshot.created).getTime()).valueOf(),
+        value: getValueForSnapshot(mapSnapshotToApiSnapshot(prevSnapshot)),
+      },
+      timestamp,
+      {
+        created: moment(new Date(snapshots[0].created).getTime()).valueOf(),
+        value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshots[0])),
+      }
+    );
+    const elapsedTime = moment.utc().diff(moment.utc(timestamp));
+    let hoursToCalcOver = elapsedTime / 1000 / 60 / 60;
+    hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
+    const lastSnapshotValue = getValueForSnapshot(mapSnapshotToApiSnapshot(snapshots[0]));
+    return (lastSnapshotValue - firstSnapshotValue) / hoursToCalcOver;
+  }
+
+  get incomeSessionDuration() {
+    if (this.snapshots.length < 2) return 0;
+    const elapsedTime = moment.utc().diff(this.sessionTimestamp);
+    let hoursToCalcOver = elapsedTime / 1000 / 60 / 60;
+    hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
+    const firstSnapshotValue = getValueForSnapshot(
+      mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+    );
+    const lastSnapshotValue = getValueForSnapshot(mapSnapshotToApiSnapshot(this.snapshots[0]));
+    return (lastSnapshotValue - firstSnapshotValue) / hoursToCalcOver;
+  }
+  get incomeSinceLastPause() {
+    const timestamp = this.timeStamps.find((ts) => ts.type === 'pause')?.end;
+    if (!timestamp) return undefined;
+    return this.calculateIncome(timestamp);
+  }
+  get incomeSinceLastOffline() {
+    const timestamp = this.timeStamps.find((ts) => ts.type === 'offline')?.end;
+    if (!timestamp) return undefined;
+    return this.calculateIncome(timestamp);
+  }
+  get incomeSinceLastInactive() {
+    const timestamp = this.timeStamps.find((ts) => ts.type === 'notActive')?.end;
+    if (!timestamp) return undefined;
+    return this.calculateIncome(timestamp);
+  }
+  get incomeSinceLastHour() {
+    const timestamp = moment.utc().subtract(1, 'hours').valueOf();
+    return this.calculateIncome(timestamp);
+  }
 
   @computed
   get income() {
-    let incomePerHour = 0;
-
     if (this.chartPreviewSnapshotId) {
       const index = this.snapshots.findIndex((s) => s.uuid === this.chartPreviewSnapshotId);
       if (index !== -1 && this.snapshots[index].networthSessionOffsets) {
         const sessionDuration = this.snapshots[index].networthSessionOffsets!.sessionDuration;
-        let hoursToCalcOver = sessionDuration! / 1000 / 60 / 60;
+        let hoursToCalcOver = sessionDuration / 1000 / 60 / 60;
         hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
 
-        const lastSnapshot = mapSnapshotToApiSnapshot(this.snapshots[index]);
-        const firstSnapshot = mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1]);
-
-        incomePerHour =
-          (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) /
-          hoursToCalcOver;
+        const lastSnapshotValue = getValueForSnapshot(
+          mapSnapshotToApiSnapshot(this.snapshots[index])
+        );
+        const firstSnapshotValue = getValueForSnapshot(
+          mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
+        );
+        return (lastSnapshotValue - firstSnapshotValue) / hoursToCalcOver;
       } else {
         return 0;
       }
-    } else if (this.snapshots.length > 1) {
-      const sessionDuration = moment.utc().diff(this.sessionTimestamp);
-      let hoursToCalcOver = sessionDuration / 1000 / 60 / 60;
-      hoursToCalcOver = hoursToCalcOver >= 1 ? hoursToCalcOver : 1;
-
-      const lastSnapshot = mapSnapshotToApiSnapshot(this.snapshots[0]);
-      const firstSnapshot = mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1]);
-
-      incomePerHour =
-        (calculateNetWorth([lastSnapshot]) - calculateNetWorth([firstSnapshot])) / hoursToCalcOver;
     }
-    return incomePerHour;
+    if (this.snapshots.length < 2) return 0;
+    if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastPause') {
+      return this.incomeSinceLastPause || 0;
+    } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastOffline') {
+      return this.incomeSinceLastOffline || 0;
+    } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastInactiv') {
+      return this.incomeSinceLastInactive || 0;
+    } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastHour') {
+      return this.incomeSinceLastHour || 0;
+    }
+    // Default and fallback
+    return this.incomeSessionDuration || 0;
   }
 
   @computed
@@ -568,9 +619,9 @@ export class Session {
       if (!snapshot) {
         return 0;
       }
-      calculatedValue = calculateNetWorth([mapSnapshotToApiSnapshot(snapshot)]);
+      calculatedValue = getValueForSnapshot(mapSnapshotToApiSnapshot(snapshot));
     } else {
-      calculatedValue = calculateNetWorth([mapSnapshotToApiSnapshot(this.snapshots[0])]);
+      calculatedValue = getValueForSnapshot(mapSnapshotToApiSnapshot(this.snapshots[0]));
     }
     if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
       calculatedValue = calculatedValue / rootStore.priceStore.exaltedPrice;
@@ -697,21 +748,21 @@ export class Session {
   get isSnapshotPreviewVisible() {
     // Used in autorun
     try {
-      let timeStamp: moment.Moment | undefined;
+      let timestamp: moment.Moment | undefined;
       if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
-        timeStamp = moment().subtract(1, 'h');
+        timestamp = moment().subtract(1, 'h');
       } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
-        timeStamp = moment().subtract(1, 'd');
+        timestamp = moment().subtract(1, 'd');
       } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
-        timeStamp = moment().subtract(7, 'd');
+        timestamp = moment().subtract(7, 'd');
       } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
-        timeStamp = moment().subtract(30, 'd');
+        timestamp = moment().subtract(30, 'd');
       } else {
         return true;
       }
       const snapshots = [...this.snapshots];
       return snapshots
-        .filter((s) => timeStamp?.isBefore(moment(s.created)))
+        .filter((s) => timestamp?.isBefore(moment(s.created)))
         .some((s) => s.uuid === this.chartPreviewSnapshotId);
     } catch (error) {
       // Rootstore not init on appstart - preview is not persists - so default is false
@@ -951,28 +1002,28 @@ export class Session {
 
     const mode = rootStore.uiStateStore.netWorthSessionHistoryChartMode;
 
-    let timeStamp: moment.Moment | undefined;
+    let timestamp: moment.Moment | undefined;
     if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
-      timeStamp = moment().subtract(1, 'h');
+      timestamp = moment().subtract(1, 'h');
     } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
-      timeStamp = moment().subtract(24, 'h');
+      timestamp = moment().subtract(24, 'h');
     } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
-      timeStamp = moment().subtract(7, 'd');
+      timestamp = moment().subtract(7, 'd');
     } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
-      timeStamp = moment().subtract(30, 'd');
+      timestamp = moment().subtract(30, 'd');
     }
     // Cut start timestamp
-    if (timeStamp) {
-      timestamps = timestamps.filter((s) => timeStamp?.isBefore(moment.utc(s.end)));
-      snapshots = snapshots.filter((s) => timeStamp?.isBefore(moment(s.created)));
+    if (timestamp) {
+      timestamps = timestamps.filter((s) => timestamp?.isBefore(moment.utc(s.end)));
+      snapshots = snapshots.filter((s) => timestamp?.isBefore(moment(s.created)));
       if (timestamps.length > 0) {
-        const isStartBefore = timeStamp.isBefore(
+        const isStartBefore = timestamp.isBefore(
           moment.utc(timestamps[timestamps.length - 1].start)
         );
         if (!isStartBefore) {
           timestamps[timestamps.length - 1] = {
             ...timestamps[timestamps.length - 1],
-            start: timeStamp.valueOf(),
+            start: timestamp.valueOf(),
           };
         }
       }
@@ -1123,35 +1174,31 @@ export class Session {
         snapshotDPBeforeTimespan = [
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)).toFixed(
-              2
-            ),
+            value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)),
           },
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: +calculateSessionIncome(
+            value: calculateSessionIncome(
               mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
               mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-            ).toFixed(2),
+            ),
           },
         ];
       } else if (mode === 'netWorth') {
         snapshotDPBeforeTimespan = [
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: +getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)).toFixed(
-              2
-            ),
+            value: getValueForSnapshot(mapSnapshotToApiSnapshot(snapshotBeforeTimespan)),
           },
         ];
       } else {
         snapshotDPBeforeTimespan = [
           {
             created: moment(new Date(snapshotBeforeTimespan.created).getTime()).valueOf(),
-            value: +calculateSessionIncome(
+            value: calculateSessionIncome(
               mapSnapshotToApiSnapshot(snapshotBeforeTimespan),
               mapSnapshotToApiSnapshot(this.snapshots[this.snapshots.length - 1])
-            ).toFixed(2),
+            ),
           },
         ];
       }
@@ -1227,7 +1274,7 @@ export class Session {
         } else {
           // No snapshot before but after = 0; Snapshot before but not after (Only timespan view) = current value
           if (prevSnapshotDatapoint) {
-            series[i].data[0].y = prevSnapshotDatapoint.value;
+            series[i].data[0].y = +prevSnapshotDatapoint.value.toFixed(2);
           }
         }
       }

@@ -197,9 +197,17 @@ const NetWorth = () => {
               currencyShort={settingStore.activeCurrency.short}
               currency
               secondaryValue={
-                sessionNetWorthOpen
-                  ? `${t('label.net_worth_session_income_based_on')}`
-                  : `${t('label.income_based_on')}`
+                !sessionNetWorthOpen
+                  ? `${t('label.income_based_on_last_hour')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'sessionDuration'
+                  ? `${t('label.income_based_on_session_duration')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastPause'
+                  ? `${t('label.income_based_on_last_pause')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastOffline'
+                  ? `${t('label.income_based_on_last_offline')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactiv'
+                  ? `${t('label.income_based_on_last_inactive')}`
+                  : `${t('label.income_based_on_last_hour')}`
               }
               secondaryValueStyles={{
                 color: theme.palette.text.primary,
@@ -207,13 +215,22 @@ const NetWorth = () => {
                 fontWeight: 'normal',
               }}
               tooltip={
-                sessionNetWorthOpen
-                  ? t('label.net_worth_session_income_based_on_tooltip')
-                  : t('label.income_based_on_tooltip')
+                !sessionNetWorthOpen
+                  ? `${t('label.income_based_on_last_hour_tooltip')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'sessionDuration'
+                  ? `${t('label.income_based_on_session_duration_tooltip')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastPause'
+                  ? `${t('label.income_based_on_last_pause_tooltip')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastOffline'
+                  ? `${t('label.income_based_on_last_offline_tooltip')}`
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactiv'
+                  ? `${t('label.income_based_on_last_inactive_tooltip')}`
+                  : `${t('label.income_based_on_last_hour_tooltip')}`
               }
               clearFn={
                 activeGroup || sessionNetWorthOpen ? undefined : () => activeProfile?.clearIncome()
               }
+              incomeSwitch={sessionNetWorthOpen}
               tourTopElement="income"
             />
           </Widget>
