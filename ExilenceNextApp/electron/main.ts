@@ -67,7 +67,6 @@ function createWindow() {
 
   const { x, y, width, height, manage } = windowStateKeeper({
     defaultWidth,
-
     defaultHeight,
     file: MAIN_BROWSER_WINDOW,
   });

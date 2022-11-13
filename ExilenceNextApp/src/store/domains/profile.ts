@@ -80,13 +80,19 @@ export class Profile {
       this.snapshots = currentProfile.snapshots;
       if (currentProfile.session) {
         this.session = currentProfile.session;
-        // Trigger all computed updates
         this.session.setProfileId(this.uuid);
       }
     } else {
       // Fallback for older profiles
       if (this.session.profileId !== this.uuid) {
-        console.warn('Profile session undefined - setting value', this.uuid);
+        console.warn(
+          'Profile session is not in sync with profile - setting value; ProfileId: ',
+          this.uuid,
+          'SessionProfileId: ',
+          this.session.profileId,
+          ' SessionId: ',
+          this.session.uuid
+        );
         this.session.setProfileId(this.uuid);
       }
     }

@@ -120,14 +120,16 @@ export class Session {
           this.setSnapshotPreview(undefined);
         }
       } catch (error) {
-        return;
+        return; // Rootstore not init yet
       }
     });
 
+    // Automatically sets the correct state (from inactiv|offline => pause; from offline|online|pause => inactiv)
     autorun(() => {
       try {
         if (!rootStore) return;
         if (!this.profile) return;
+        if (!this.sessionStarted) return;
         if (
           !this.profile.active ||
           rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
@@ -138,7 +140,36 @@ export class Session {
           this.profile.updateNetWorthOverlay();
         }
       } catch (error) {
-        return;
+        return; // Rootstore not init yet
+      }
+    });
+
+    // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
+    autorun(() => {
+      try {
+        if (!rootStore) return;
+        if (!this.profile) return;
+        if (!this.sessionStarted || !this.sessionStartSnapshot) return;
+        if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
+          return;
+
+        // Remove removed stashTabs which were active
+        this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
+          (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
+        );
+        // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
+        const addedStashTabs = this.profile.activeStashTabIds.filter(
+          (stId) =>
+            !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
+        );
+        if (addedStashTabs.length > 0) {
+          // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
+          // Any item added after this snapshot will be added to the session
+          rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+          rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+        }
+      } catch (error) {
+        return; // Rootstore not init yet
       }
     });
   }
@@ -311,6 +342,7 @@ export class Session {
       // Show session net worth by default on start
       rootStore.uiStateStore.toggleNetWorthSession(true);
       // Make snapshot and refresh data
+      rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
       rootStore.accountStore.getSelectedAccount.queueSnapshot(1);
     }
     this.resolveTimeAndContinueWith('start');
@@ -336,7 +368,6 @@ export class Session {
     // If the profile gets disabled
     if (this.sessionStarted) {
       this.resolveTimeAndContinueWith('notActive');
-      this.addNextSnapshotDiffToBase = true;
     }
   }
 
@@ -345,8 +376,9 @@ export class Session {
     this.resolveTimeAndContinueWith('pause');
     this.stoppedAt = this.lastPauseAt; // Special behaviour
     this.lastPauseAt = undefined;
-    this.profile?.newSession();
+    this.sessionStarted = false;
     rootStore.uiStateStore.toggleNetWorthSession(false);
+    this.profile?.newSession();
   }
 
   //#endregion
@@ -407,7 +439,6 @@ export class Session {
       this.lastNotActiveAt = undefined;
       lastType = 'notActive';
     }
-    console.log('From: ', lastType, ' To: ', continueWith, ' Profile: ', this.profile?.name);
     if (continueWith === 'start' || (continueWith === 'keeplast' && lastType === 'start')) {
       this.lastStartAt = moment.utc().valueOf();
       this.sessionStarted = true;
@@ -434,11 +465,13 @@ export class Session {
       return rootStore.uiStateStore.toggleNetWorthSession(false);
     }
 
-    if (lastType === 'notActive' && continueWith !== 'notActive') {
+    if (lastType === 'notActive' && (continueWith === 'start' || continueWith === 'pause')) {
       // Make snapshot to remove the diff items
       // This must be directly after being activ again,
       // Because all items within the timespan from being active and the first snapshot after being active will be removed
-      rootStore.accountStore.getSelectedAccount.queueSnapshot(1);
+      this.addNextSnapshotDiffToBase = true;
+      rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+      rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
     }
   }
 
@@ -997,7 +1030,6 @@ export class Session {
 
   @computed
   get sessionTimeChartData() {
-    console.log('Recalculated');
     // FIXME: Cann't remove proxy from timeStamps via spread or assign ?
     let timestamps = _.cloneDeep(this.timeStamps) as ITimeStamp[];
 
