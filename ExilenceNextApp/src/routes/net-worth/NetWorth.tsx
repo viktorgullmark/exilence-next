@@ -252,6 +252,7 @@ const NetWorth = () => {
                     activeProfile?.session.sessionStarted
                       ? moment
                           .utc(activeProfile?.session.sessionStartedAt)
+                          .local()
                           .format('YYYY-MM-DD HH:mm:ss')
                       : '00:00:00'
                   }
