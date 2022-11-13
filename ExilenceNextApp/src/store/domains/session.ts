@@ -1,4 +1,4 @@
-import { action, autorun, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, autorun, reaction, computed, makeObservable, observable, runInAction } from 'mobx';
 import { persist } from 'mobx-persist';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
@@ -145,33 +145,36 @@ export class Session {
     });
 
     // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
-    autorun(() => {
-      try {
-        if (!rootStore) return;
-        if (!this.profile) return;
-        if (!this.sessionStarted || !this.sessionStartSnapshot) return;
-        if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
-          return;
+    reaction(
+      () => this.profile?.activeStashTabIds,
+      () => {
+        try {
+          if (!rootStore) return;
+          if (!this.profile) return;
+          if (!this.sessionStarted || !this.sessionStartSnapshot) return;
+          if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
+            return;
 
-        // Remove removed stashTabs which were active
-        this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
-          (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
-        );
-        // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
-        const addedStashTabs = this.profile.activeStashTabIds.filter(
-          (stId) =>
-            !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
-        );
-        if (addedStashTabs.length > 0) {
-          // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
-          // Any item added after this snapshot will be added to the session
-          rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
-          rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+          // Remove removed stashTabs which were active
+          this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
+            (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
+          );
+          // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
+          const addedStashTabs = this.profile.activeStashTabIds.filter(
+            (stId) =>
+              !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
+          );
+          if (addedStashTabs.length > 0) {
+            // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
+            // Any item added after this snapshot will be added to the session
+            rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+            rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+          }
+        } catch (error) {
+          return; // Rootstore not init yet
         }
-      } catch (error) {
-        return; // Rootstore not init yet
       }
-    });
+    );
   }
 
   @computed
