@@ -109,6 +109,7 @@ const ProfileDialogContainer = ({
     const profile: IProfile = {
       uuid: isEditing ? activeProfile!.uuid : uuidv4(),
       name: values.profileName,
+      session: activeProfile?.session,
       activeLeagueId: values.league,
       activePriceLeagueId: values.priceLeague,
       activeStashTabIds: selectedStashTabs.map((s) => s.id),
