@@ -171,11 +171,11 @@ export const formatSessionTimesNetWorthForChart = (
     .map((s) => ({
       x: moment(new Date(s.created).getTime()).valueOf(),
       y: +getValueForSnapshot(s).toFixed(2),
-      id: s.uuid,
+      custom: s.uuid,
       events: {
         click: (e) => {
-          if (session.chartPreviewSnapshotId !== e.point.id) {
-            session.setSnapshotPreview(e.point.id);
+          if (session.chartPreviewSnapshotId !== e.point.custom) {
+            session.setSnapshotPreview(e.point.custom);
           } else {
             session.setSnapshotPreview(undefined);
           }
@@ -200,11 +200,11 @@ export const formatSessionTimesIncomeForChart = (
     .map((s) => ({
       x: moment(new Date(s.created).getTime()).valueOf(),
       y: +calculateSessionIncome(s, firstSnapshot).toFixed(2),
-      id: s.uuid,
+      custom: s.uuid,
       events: {
         click: (e) => {
-          if (session.chartPreviewSnapshotId !== e.point.id) {
-            session.setSnapshotPreview(e.point.id);
+          if (session.chartPreviewSnapshotId !== e.point.custom) {
+            session.setSnapshotPreview(e.point.custom);
           } else {
             session.setSnapshotPreview(undefined);
           }

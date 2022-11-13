@@ -146,7 +146,13 @@ export class Session {
 
     // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
     reaction(
-      () => this.profile?.activeStashTabIds,
+      () => {
+        try {
+          this.profile?.activeStashTabIds;
+        } catch (error) {
+          return; // Rootstore not init yet
+        }
+      },
       () => {
         try {
           if (!rootStore) return;
@@ -461,11 +467,6 @@ export class Session {
     ) {
       this.lastNotActiveAt = moment.utc().valueOf();
       this.sessionPaused = true;
-    }
-
-    // Ensure session is valid
-    if (!this.sessionStarted) {
-      return rootStore.uiStateStore.toggleNetWorthSession(false);
     }
 
     if (lastType === 'notActive' && (continueWith === 'start' || continueWith === 'pause')) {
@@ -1067,10 +1068,8 @@ export class Session {
     ];
 
     const pointClickHandler = (e: PointClickEventObjectExtended) => {
-      if (!e.point.id || e.point.id.startsWith('highcharts'))
-        return this.setSnapshotPreview(undefined);
-      const splitIndex = e.point.id.indexOf('_');
-      const snapshotId = e.point.id.substring(splitIndex + 1);
+      if (!e.point.custom) return this.setSnapshotPreview(undefined);
+      const snapshotId = e.point.custom;
       if (this.chartPreviewSnapshotId !== snapshotId) {
         this.setSnapshotPreview(snapshotId);
       } else {
@@ -1244,7 +1243,7 @@ export class Session {
           // Net worth and income
           const seriesDataPoint = series[j + seriesCount].data[lastSnapshotIndexInSeries];
           prevSnapshotDatapoint = {
-            uuid: seriesDataPoint.id,
+            uuid: seriesDataPoint.custom,
             created: seriesDataPoint.x,
             value: seriesDataPoint.y,
           };
@@ -1291,6 +1290,11 @@ export class Session {
         } else {
           series[i].data[0].y = prevSeries.data[prevSeries.data.length - 1].y;
         }
+        if (prevSnapshotDatapoint?.uuid) {
+          series[i].data[0].custom = prevSnapshotDatapoint.uuid;
+          const lastDataIndex = prevSeries.data.length - 1;
+          prevSeries.data[lastDataIndex].custom = prevSnapshotDatapoint.uuid;
+        }
       } else {
         // Set startpoint of last index in the timespan (on the left)
         if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
@@ -1306,10 +1310,9 @@ export class Session {
             series[i].data[0].y = +prevSnapshotDatapoint.value.toFixed(2);
           }
         }
-      }
-
-      if (prevSnapshotDatapoint?.uuid) {
-        series[i].data[0].id = series[i].data[0].x + '_' + prevSnapshotDatapoint.uuid;
+        if (prevSnapshotDatapoint?.uuid) {
+          series[i].data[0].custom = prevSnapshotDatapoint.uuid;
+        }
       }
 
       // Set the end of the datapoint in advance. The values may get recalculated

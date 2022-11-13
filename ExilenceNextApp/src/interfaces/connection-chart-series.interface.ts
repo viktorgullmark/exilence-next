@@ -7,14 +7,17 @@ export interface IConnectionChartSeries {
 
 export type PointClickEventObjectExtended = HC.PointClickEventObject & {
   // Defined in api but missing in type?
-  point: { id: string };
+  point: {
+    // id: string;
+    custom: string;
+  };
 };
 
 export interface IDataChartSeries {
   x: number;
   y: number;
-  id?: string;
-  // custom?: any;
+  // id?: string;
+  custom?: string;
   events?: {
     click: (e: PointClickEventObjectExtended) => void;
   };

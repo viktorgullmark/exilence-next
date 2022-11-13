@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Box, Grid, Skeleton, Typography, useTheme } from '@mui/material';
 import { Accordion, AccordionDetails, AccordionSummary } from '../expansion-panel/ExpansionPanel';
 import { observer } from 'mobx-react-lite';
