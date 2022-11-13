@@ -67,6 +67,7 @@ function createWindow() {
 
   const { x, y, width, height, manage } = windowStateKeeper({
     defaultWidth,
+
     defaultHeight,
     file: MAIN_BROWSER_WINDOW,
   });
@@ -99,7 +100,7 @@ function createWindow() {
       if (browserWindows[MAIN_BROWSER_WINDOW]) {
         e.preventDefault();
         // Signal the session to switch to offline. After this, the session will emit the "closed" event to ipcMain
-        browserWindows[MAIN_BROWSER_WINDOW].webContents.send('pause-networth-session');
+        browserWindows[MAIN_BROWSER_WINDOW].webContents.send('offline-net-worth-session');
       }
 
       return;

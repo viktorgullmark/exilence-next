@@ -136,8 +136,6 @@ export class Account implements IAccount {
     const activeProfile = mappedProfiles.find((p) => p.active);
     if (!activeProfile && mappedProfiles.length > 0) {
       mappedProfiles[0].active = true;
-      mappedProfiles[0].session.resolveTimeAndContinueWith('pause');
-      mappedProfiles[0].updateNetWorthOverlay();
     }
     this.profiles = mappedProfiles;
   }
@@ -237,7 +235,6 @@ export class Account implements IAccount {
       map((uuid: string) => {
         runInAction(() => {
           this.profiles = this.profiles.map((p) => {
-            if (p.active) p.session.disableSession();
             p.active = false;
             return p;
           });
@@ -248,8 +245,6 @@ export class Account implements IAccount {
         }
         runInAction(() => {
           foundProfile.active = true;
-          foundProfile.session.resolveTimeAndContinueWith('pause');
-          foundProfile.updateNetWorthOverlay();
         });
         if (rootStore.signalrStore.activeGroup) {
           rootStore.signalrStore.changeProfileForConnection(

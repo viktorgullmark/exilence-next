@@ -114,8 +114,31 @@ export class Session {
 
     // Automatically reset snapshot preview, if not visible anymore
     autorun(() => {
-      if (!this.isSnapshotPreviewVisible) {
-        this.setSnapshotPreview(undefined);
+      try {
+        if (!rootStore) return;
+        if (!this.isSnapshotPreviewVisible) {
+          this.setSnapshotPreview(undefined);
+        }
+      } catch (error) {
+        return;
+      }
+    });
+
+    autorun(() => {
+      try {
+        if (!rootStore) return;
+        if (!this.profile) return;
+        if (
+          !this.profile.active ||
+          rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
+        ) {
+          this.disableSession();
+        } else {
+          this.pauseSession();
+          this.profile.updateNetWorthOverlay();
+        }
+      } catch (error) {
+        return;
       }
     });
   }
@@ -384,6 +407,7 @@ export class Session {
       this.lastNotActiveAt = undefined;
       lastType = 'notActive';
     }
+    console.log('From: ', lastType, ' To: ', continueWith, ' Profile: ', this.profile?.name);
     if (continueWith === 'start' || (continueWith === 'keeplast' && lastType === 'start')) {
       this.lastStartAt = moment.utc().valueOf();
       this.sessionStarted = true;
@@ -731,27 +755,22 @@ export class Session {
   @computed
   get isSnapshotPreviewVisible() {
     // Used in autorun
-    try {
-      let timestamp: moment.Moment | undefined;
-      if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
-        timestamp = moment().subtract(1, 'h');
-      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
-        timestamp = moment().subtract(1, 'd');
-      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
-        timestamp = moment().subtract(7, 'd');
-      } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
-        timestamp = moment().subtract(30, 'd');
-      } else {
-        return true;
-      }
-      const snapshots = [...this.snapshots];
-      return snapshots
-        .filter((s) => timestamp?.isBefore(moment(s.created)))
-        .some((s) => s.uuid === this.chartPreviewSnapshotId);
-    } catch (error) {
-      // Rootstore not init on appstart - preview is not persists - so default is false
-      false;
+    let timestamp: moment.Moment | undefined;
+    if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
+      timestamp = moment().subtract(1, 'h');
+    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
+      timestamp = moment().subtract(1, 'd');
+    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
+      timestamp = moment().subtract(7, 'd');
+    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
+      timestamp = moment().subtract(30, 'd');
+    } else {
+      return true;
     }
+    const snapshots = [...this.snapshots];
+    return snapshots
+      .filter((s) => timestamp?.isBefore(moment(s.created)))
+      .some((s) => s.uuid === this.chartPreviewSnapshotId);
   }
 
   //#endregion Snapshot preview

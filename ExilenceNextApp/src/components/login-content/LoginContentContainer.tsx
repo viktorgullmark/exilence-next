@@ -9,8 +9,8 @@ const LoginContentContainer = () => {
 
   useEffect(() => {
     // Set all active sessions offline on sign out
-    accountStore!.accounts.forEach((acc) => {
-      acc.activeProfile?.session.offlineSession();
+    accountStore!.accounts.forEach((account) => {
+      account.profiles.forEach((profile) => profile.session.offlineSession());
     });
   }, []);
 
