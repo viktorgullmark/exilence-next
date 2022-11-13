@@ -24,15 +24,17 @@ type ManualAdjustmentDialogProps = {
   manualAdjustment: moment.Duration | null;
   isAdjustmentNegativ: boolean;
   handleSubmit: (offsetTime: number) => void;
-  onClose: () => void;
+  handleReset: () => void;
+  handleClose: () => void;
 };
 
 const ManualAdjustmentDialog = ({
   show,
   manualAdjustment,
   isAdjustmentNegativ,
-  onClose: handleClose,
+  handleClose,
   handleSubmit,
+  handleReset,
 }: ManualAdjustmentDialogProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -113,6 +115,14 @@ const ManualAdjustmentDialog = ({
       </DialogContent>
       <DialogActions className={classes.dialogActions}>
         <Button onClick={handleClose}>{t('action.cancel')}</Button>
+        <Button
+          onClick={() => {
+            handleClose();
+            handleReset();
+          }}
+        >
+          {t('action.reset')}
+        </Button>
         <Button
           variant="contained"
           color="primary"

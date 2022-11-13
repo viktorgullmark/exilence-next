@@ -502,20 +502,10 @@ export class Session {
 
   getFormattedDuration(diff: number | undefined) {
     if (!diff) return '00:00:00';
-    // Show more than 24h
-    const duration = moment.duration(diff);
-
-    const hours = Math.floor(duration.asHours());
-    const mins = Math.floor(duration.asMinutes()) - hours * 60;
-    const sec = Math.floor(duration.asSeconds()) - hours * 60 * 60 - mins * 60;
-
-    const hoursPadded =
-      hours > 99 ? hours.toString().padStart(3, '0') : hours.toString().padStart(2, '0');
-    const minsPadded = mins.toString().padStart(2, '0');
-    const secPadded = sec.toString().padStart(2, '0');
-
-    // Currently, this cann´t handle negativ values: If negativ the times stats at: 1:59:59
-    return `${hoursPadded}:${minsPadded}:${secPadded}`;
+    // This plugin shows more than 24h
+    return moment.duration(diff).format('HH:mm:ss', {
+      trim: false,
+    });
   }
 
   get formattedSessionDuration() {

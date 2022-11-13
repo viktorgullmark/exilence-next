@@ -14,6 +14,11 @@ const ManualAdjustmentDialogContainer = () => {
     session.addManualAdjustment(offsetTime);
   };
 
+  const handleReset = () => {
+    if (!session) return;
+    session.addManualAdjustment(-session.offsetManualAdjustment);
+  };
+
   const manualAdjustment = session?.offsetManualAdjustment
     ? moment.duration(Math.abs(session.offsetManualAdjustment))
     : null;
@@ -31,7 +36,8 @@ const ManualAdjustmentDialogContainer = () => {
           manualAdjustment={manualAdjustment}
           isAdjustmentNegativ={isAdjustmentNegativ}
           handleSubmit={handleSubmit}
-          onClose={() => uiStateStore!.toggleManualAdjustment(false)}
+          handleReset={handleReset}
+          handleClose={() => uiStateStore!.toggleManualAdjustment(false)}
         />
       )}
     </>

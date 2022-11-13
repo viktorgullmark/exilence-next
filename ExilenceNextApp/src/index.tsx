@@ -11,6 +11,7 @@ import { configure } from 'mobx';
 import { enableLogging } from 'mobx-logger';
 import { create } from 'mobx-persist';
 import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 import React, { Suspense, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
@@ -59,6 +60,7 @@ enableLogging({
 
 configure({ enforceActions: 'observed' });
 
+momentDurationFormatSetup(moment);
 moment.locale(electronService.appLocale);
 
 const theme = responsiveFontSizes(exilenceTheme());
