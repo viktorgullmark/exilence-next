@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material';
+import { IconButton, Tooltip, Typography } from '@mui/material';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { useTranslation } from 'react-i18next';
 import useStyles from './IncomeSwitch.styles';
@@ -133,7 +133,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
         <em>{t('action.income_switch')}</em>
       </>
     );
-  }, [open, uiStateStore.netWorthSessionIncomeMode]);
+  }, [open, uiStateStore.netWorthSessionIncomeMode, session?.snapshots]);
 
   return (
     <Tooltip

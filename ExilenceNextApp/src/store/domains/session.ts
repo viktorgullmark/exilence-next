@@ -1,4 +1,13 @@
-import { action, autorun, reaction, computed, makeObservable, observable, runInAction } from 'mobx';
+import {
+  action,
+  autorun,
+  reaction,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  IReactionDisposer,
+} from 'mobx';
 import { persist } from 'mobx-persist';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
@@ -43,7 +52,7 @@ import {
 // DONE: 4 Stop Button -> Warning with current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // DONE: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
 // TODO: Change income in chart accodinaly
-// TODO: Change inactive to offline -> offline to inactive -> Better income calculation
+// DONE: Change inactive to offline -> offline to inactive -> Better income calculation
 
 // DONE: 5 Neues Diagramm mit -> Current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
 // DONE: Add Timestamp Charts
@@ -108,78 +117,86 @@ export class Session {
 
   @observable chartPreviewSnapshotId: string | undefined = undefined;
 
+  reactionHandler: IReactionDisposer[] = [];
+
   constructor(profileId: string) {
     makeObservable(this);
     this.profileId = profileId;
 
     // Automatically reset snapshot preview, if not visible anymore
-    autorun(() => {
-      try {
-        if (!rootStore) return;
-        if (!this.isSnapshotPreviewVisible) {
-          this.setSnapshotPreview(undefined);
-        }
-      } catch (error) {
-        return; // Rootstore not init yet
-      }
-    });
-
-    // Automatically sets the correct state (from inactiv|offline => pause; from offline|online|pause => inactiv)
-    autorun(() => {
-      try {
-        if (!rootStore) return;
-        if (!this.profile) return;
-        if (!this.sessionStarted) return;
-        if (
-          !this.profile.active ||
-          rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
-        ) {
-          this.disableSession();
-        } else {
-          this.pauseSession();
-          this.profile.updateNetWorthOverlay();
-        }
-      } catch (error) {
-        return; // Rootstore not init yet
-      }
-    });
-
-    // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
-    reaction(
-      () => {
-        try {
-          this.profile?.activeStashTabIds;
-        } catch (error) {
-          return; // Rootstore not init yet
-        }
-      },
-      () => {
+    this.reactionHandler.push(
+      autorun(() => {
         try {
           if (!rootStore) return;
-          if (!this.profile) return;
-          if (!this.sessionStarted || !this.sessionStartSnapshot) return;
-          if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
-            return;
-
-          // Remove removed stashTabs which were active
-          this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
-            (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
-          );
-          // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
-          const addedStashTabs = this.profile.activeStashTabIds.filter(
-            (stId) =>
-              !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
-          );
-          if (addedStashTabs.length > 0) {
-            // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
-            // Any item added after this snapshot will be added to the session
-            rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
-            rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+          if (!this.isSnapshotPreviewVisible) {
+            this.setSnapshotPreview(undefined);
           }
         } catch (error) {
           return; // Rootstore not init yet
         }
-      }
+      })
+    );
+
+    // Automatically sets the correct state (from inactiv|offline => pause; from offline|online|pause => inactiv)
+    this.reactionHandler.push(
+      autorun(() => {
+        try {
+          if (!rootStore) return;
+          if (!this.profile) return;
+          if (!this.sessionStarted) return;
+          if (
+            !this.profile.active ||
+            rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
+          ) {
+            this.disableSession();
+          } else {
+            this.pauseSession();
+            this.profile.updateNetWorthOverlay();
+          }
+        } catch (error) {
+          return; // Rootstore not init yet
+        }
+      })
+    );
+
+    // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
+    this.reactionHandler.push(
+      reaction(
+        () => {
+          try {
+            this.profile?.activeStashTabIds;
+          } catch (error) {
+            return; // Rootstore not init yet
+          }
+        },
+        () => {
+          try {
+            if (!rootStore) return;
+            if (!this.profile) return;
+            if (!this.sessionStarted || !this.sessionStartSnapshot) return;
+            if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
+              return;
+
+            // Remove removed stashTabs which were active
+            this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
+              (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
+            );
+            // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
+            const addedStashTabs = this.profile.activeStashTabIds.filter(
+              (stId) =>
+                !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
+            );
+            if (addedStashTabs.length > 0) {
+              // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
+              // Any item added after this snapshot will be added to the session
+              rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+              rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+            }
+          } catch (error) {
+            return; // Rootstore not init yet
+          }
+        }
+      )
     );
   }
 
@@ -369,6 +386,7 @@ export class Session {
     // If the app gets closed
     if (this.sessionStarted) {
       this.resolveTimeAndContinueWith('offline');
+      return true;
     }
   }
 
@@ -387,6 +405,8 @@ export class Session {
     this.lastPauseAt = undefined;
     this.sessionStarted = false;
     rootStore.uiStateStore.toggleNetWorthSession(false);
+    this.reactionHandler[1](); // Stop changing states
+    this.reactionHandler[2](); // Stop tracking activeStashTabIds
     this.profile?.newSession();
   }
 
@@ -515,13 +535,13 @@ export class Session {
     let offsetOffline = this.offsetOffline;
     let offsetNotActive = this.offsetNotActive;
     if (this.lastPauseAt) {
-      const timestamp = this.resolveLast(this.lastPauseAt, 'pause');
+      const timestamp = this.createTimestamp(this.lastPauseAt, 'pause');
       offsetPause += timestamp.duration;
     } else if (this.lastOfflineAt) {
-      const timestamp = this.resolveLast(this.lastOfflineAt, 'offline');
+      const timestamp = this.createTimestamp(this.lastOfflineAt, 'offline');
       offsetOffline += timestamp.duration;
     } else if (this.lastNotActiveAt) {
-      const timestamp = this.resolveLast(this.lastNotActiveAt, 'notActive');
+      const timestamp = this.createTimestamp(this.lastNotActiveAt, 'notActive');
       offsetNotActive += timestamp.duration;
     } else {
       // Nothing changed -> Online
