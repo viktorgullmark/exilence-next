@@ -33,8 +33,8 @@ const SessionTimeHistoryPieChart = ({ seriesData }: SessionTimeHistoryPieChartPr
     },
     plotOptions: {
       pie: {
-        allowPointSelect: true,
-        cursor: 'pointer',
+        // allowPointSelect: true,
+        // cursor: 'pointer',
         dataLabels: {
           enabled: true,
           format: '<b>{point.name}</b>: {point.percentage:.1f} %',

@@ -100,7 +100,6 @@ export class Profile {
 
   @action
   newSession() {
-    // TODO: Add this session to archive for later views or analysis
     this.session = new Session(this.uuid);
   }
 

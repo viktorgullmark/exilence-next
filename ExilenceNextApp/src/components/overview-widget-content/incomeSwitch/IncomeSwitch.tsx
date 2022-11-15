@@ -133,7 +133,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
         <em>{t('action.income_switch')}</em>
       </>
     );
-  }, [open, uiStateStore.netWorthSessionIncomeMode, session?.snapshots]);
+  }, [open, uiStateStore.netWorthSessionIncomeMode, session?.snapshots, t]);
 
   return (
     <Tooltip

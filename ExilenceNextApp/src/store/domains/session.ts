@@ -47,47 +47,39 @@ import {
   TimestapTypesExtended,
 } from '../../interfaces/net-worth-session-timespan.interface';
 
-// DONE: Add to roundtour on new account + 1 Sessions als beta markieren
-// DONE: 2 Snapshotberechnung & Networth berechnen -> Differenzberechnung die alten Mengen + Preise abziehen und Differenz mit neuen Preise verrechnen
-// DONE: 4 Stop Button -> Warning with current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
-// DONE: Anbieten, wie das income berechnet werden soll. Basierend auf X Stunden oder nicht sondern auf Session Zeit
-// TODO: Change income in chart accodinaly
-// DONE: Change inactive to offline -> offline to inactive -> Better income calculation
+// Next steps:
+// TODO: Save session in backend
+// TODO: Add groups gameplay somehow ;
+// Problems: Who could change the states, how to keep in sync?
+// Make sessions joinable? For example: The session owner starts a session. You could join the session with your current profile.
+// -> The session owner controles the states; Income and networth is summed up
+// -> Your current session for the profile is set to inactive while you joined the group owners session.
+// The group session needs to be isolated from the current session; That you could continue without influence after the group session
 
-// DONE: 5 Neues Diagramm mit -> Current stats - Starttime, PauseDuration, OfflineDuration, ManualAdjustmanDuration
-// DONE: Add Timestamp Charts
-// DONE: 6 ManualAdjustmanDuration mit "SettingsIcon" -> Dialog mit Current time + Formular with Formatted Input: HH:mm:ss + Add and Substract Button
-// DONE: Set session offline in main fpr event ""
-// DONE: Based on last hour => Abändern
-// DONE: Add note to remove snapshots -> With value and remove snapshots for session as well
-// REJECTED: Calculate income for each second because the session timer is dynamic
-// DONE: Modify Profile stash tabs causes added or removed stashtabs added to sessionStartSnapshot
-// DONE: Sign out => Session offline
-// TODO: Add Text Area for custom notes
-// DONE: Make snapshots clickable
-// TODO: Improve moment use UTC and format to local time because moment() could created in different timezones
-
-// DONE: Show snapshot on click in chart, when snapshot clicked in chart
-// REJECTED: Snapshot löschbar auf click
-// TODO: Add Pause and Continue button to networth overlay
-// TODO: Scope in timespan on click / Not possible?
-
-// TODO: Add settings for sessions?
+// Features:
+// TODO: Add settings for session:
 // TODO: Option to not show items negativly, who are removed from your current wealth while the session started
 
-// DONE: Session Duration History Snapshot - Straight lines between snapshots in the duration history chart
-// DONE: Isolate session from other sessions while the session is inactive -> Diffitems will removed
-// DONE: Session duration breakdown history chart dynamically recalculated
+// Big feature:
+// TODO: Add this session to archive for later views or analysis
 
-// Client.txt:
-// TODO: Start and stop session if poe charakter is logged in and stop if loggt out -> with settings checkbox
+// Optional featues:
+// TODO: Add Text Area for custom notes
+// TODO: Add custom name for the session (on start) - show the name somewhere
+// TODO: Change income in chart to the current income type
+// TODO: Client.txt: Continue session if poe character is signed in and offline if signed out -> with settings checkbox
+// TODO: Add not priced items from snapshots in a separate table below. Allow to set the prices manually
+// Allow to modify the items prices for earlier snapshots via the historical view (click on a snapshot). This would affect all snapshot prices after the modified snapshot
 
-// Groups:
-// Track Strash from group different - Each member with separate netWorth and income as line
+// To be refactored - Can I do? This need to be tested very well:
+// TODO: Improve moments to use UTC (moment.utc()) and format to local time (moment.utc().local().format("HH:mm:ss")) because moment() could created in different timezones and could lead to wrong times.
 
-// FIXED: Wrong Time format: HH:MM => HH:mm
-// Other:
-// DONE: Add critical stash tabs with tooltip info
+// Noticable fixes:
+// FIXED: Networth overlay does not shows the currency in divine/ex when opened
+// FIXED: Networth overlay does sometimes not update the states/is not in sync with the app
+// FIXED: Wrong Time format for minutes(currently as month formated after hour): HH:MM => HH:mm
+// Other
+// Added: Add critical stash tabs with tooltip info
 
 export class Session {
   @persist uuid: string = uuidv4();
@@ -108,6 +100,7 @@ export class Session {
   @persist @observable lastNotActiveAt: number | undefined = undefined;
   @persist @observable stoppedAt: number | undefined = undefined;
 
+  // Note for backend persistence: This values can be restored from timeStamps[x].duration
   @persist @observable offsetPause: number = 0;
   @persist @observable offsetOffline: number = 0;
   @persist @observable offsetNotActive: number = 0;
@@ -656,10 +649,10 @@ export class Session {
     } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastInactiv') {
       return this.incomeSinceLastInactive || 0;
     } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastHour') {
-      return this.incomeSinceLastHour || 0;
+      return this.incomeSinceLastHour;
     }
     // Default and fallback
-    return this.incomeSessionDuration || 0;
+    return this.incomeSessionDuration;
   }
 
   @computed
