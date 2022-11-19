@@ -136,15 +136,19 @@ export class Session {
         try {
           if (!rootStore) return;
           if (!this.profile) return;
-          if (!this.sessionStarted) return;
           if (
             !this.profile.active ||
             rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
           ) {
             this.disableSession();
           } else {
-            this.pauseSession();
-            this.profile.updateNetWorthOverlay();
+            if (!this.sessionStarted) {
+              // Profile active but session not started; Ensure after switching the profile, that the session view is not open
+              rootStore.uiStateStore.toggleNetWorthSession(false);
+            } else {
+              this.pauseSession();
+              this.profile.updateNetWorthOverlay();
+            }
           }
         } catch (error) {
           return; // Rootstore not init yet

@@ -23,7 +23,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
 
   const toggleIncome = () => {
     // cycle over current setting and choose next valid mode
-    const chooseCurrency = (mode?: NetWorthSessionIncomeMode): NetWorthSessionIncomeMode => {
+    const chooseIncome = (mode?: NetWorthSessionIncomeMode): NetWorthSessionIncomeMode => {
       switch (mode || uiStateStore.netWorthSessionIncomeMode) {
         case 'sessionDuration':
           return 'lastPause';
@@ -51,9 +51,9 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
           return session?.incomeSinceLastHour !== undefined;
       }
     };
-    let nextMode = chooseCurrency();
+    let nextMode = chooseIncome();
     while (!isValid(nextMode)) {
-      nextMode = chooseCurrency(nextMode);
+      nextMode = chooseIncome(nextMode);
     }
     uiStateStore.setNetWorthSessionIncomeMode(nextMode);
   };
