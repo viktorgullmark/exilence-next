@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react-lite';
-import moment from 'moment';
 import React from 'react';
 import { useStores } from '../..';
 import ManualAdjustmentDialog from './ManualAdjustmentDialogDialog';
@@ -19,22 +18,13 @@ const ManualAdjustmentDialogContainer = () => {
     session.addManualAdjustment(-session.offsetManualAdjustment);
   };
 
-  const manualAdjustment = session?.offsetManualAdjustment
-    ? moment.duration(Math.abs(session.offsetManualAdjustment))
-    : null;
-
-  const isAdjustmentNegativ = session?.offsetManualAdjustment
-    ? session.offsetManualAdjustment > 0
-    : false;
-
   return (
     <>
       {uiStateStore!.manualAdjustmentsOpen && (
         <ManualAdjustmentDialog
           show={uiStateStore!.manualAdjustmentsOpen}
           loading={false}
-          manualAdjustment={manualAdjustment}
-          isAdjustmentNegativ={isAdjustmentNegativ}
+          offsetManualAdjustment={session?.offsetManualAdjustment}
           handleSubmit={handleSubmit}
           handleReset={handleReset}
           handleClose={() => uiStateStore!.toggleManualAdjustment(false)}

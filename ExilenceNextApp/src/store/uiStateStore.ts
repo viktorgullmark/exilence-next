@@ -465,9 +465,9 @@ export class UiStateStore {
 
   @action
   toggleNetWorthSession(open?: boolean) {
-    const updateNetWorth = open !== this.netWorthSessionOpen || open === undefined;
+    const updateNetWorth = this.netWorthSessionOpen;
     this.netWorthSessionOpen = open !== undefined ? open : !this.netWorthSessionOpen;
-    if (updateNetWorth) {
+    if (updateNetWorth !== this.netWorthSessionOpen) {
       this.rootStore.accountStore.getSelectedAccount.activeProfile?.updateNetWorthOverlay();
     }
   }

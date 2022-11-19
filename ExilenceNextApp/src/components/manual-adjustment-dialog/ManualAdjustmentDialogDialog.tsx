@@ -17,12 +17,12 @@ import { observer } from 'mobx-react-lite';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './ManualAdjustmentDialogDialog.styles';
+import moment from 'moment';
 
 type ManualAdjustmentDialogProps = {
   show: boolean;
   loading: boolean;
-  manualAdjustment: moment.Duration | null;
-  isAdjustmentNegativ: boolean;
+  offsetManualAdjustment?: number;
   handleSubmit: (offsetTime: number) => void;
   handleReset: () => void;
   handleClose: () => void;
@@ -30,8 +30,7 @@ type ManualAdjustmentDialogProps = {
 
 const ManualAdjustmentDialog = ({
   show,
-  manualAdjustment,
-  isAdjustmentNegativ,
+  offsetManualAdjustment,
   handleClose,
   handleSubmit,
   handleReset,
@@ -66,22 +65,12 @@ const ManualAdjustmentDialog = ({
   };
 
   const formattedOffset = useMemo(() => {
-    if (!manualAdjustment) return '00:00:00';
-    const hours = Math.floor(manualAdjustment.asHours());
-    const mins = Math.floor(manualAdjustment.asMinutes()) - hours * 60;
-    const sec = Math.floor(manualAdjustment.asSeconds()) - hours * 60 * 60 - mins * 60;
-
-    const hoursPadded =
-      hours > 99 ? hours.toString().padStart(3, '0') : hours.toString().padStart(2, '0');
-    const minsPadded = mins.toString().padStart(2, '0');
-    const secPadded = sec.toString().padStart(2, '0');
-
-    if (isAdjustmentNegativ) {
-      return `-${hours}:${minsPadded}:${secPadded}`;
-    }
-
-    return `${hoursPadded}:${minsPadded}:${secPadded}`;
-  }, [manualAdjustment, isAdjustmentNegativ]);
+    if (!offsetManualAdjustment) return '00:00:00';
+    // This plugin shows more than 24h
+    return moment.duration(-offsetManualAdjustment).format('HH:mm:ss', {
+      trim: false,
+    });
+  }, [offsetManualAdjustment]);
 
   return (
     <Dialog open={show} onClose={handleClose} maxWidth={'xs'} fullWidth>
