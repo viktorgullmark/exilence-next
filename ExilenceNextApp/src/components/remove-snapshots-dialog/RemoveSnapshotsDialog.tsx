@@ -96,7 +96,7 @@ const RemoveSnapshotsDialog = ({
                   <ListItemText
                     id={labelId}
                     primary={`Snapshot ${moment(s.created).format(
-                      'YYYY-MM-DD HH:MM'
+                      'YYYY-MM-DD HH:mm'
                     )}, value: ${calculateNetWorth([mapSnapshotToApiSnapshot(s)]).toFixed(2)}c`}
                   />
                 </ListItemButton>
