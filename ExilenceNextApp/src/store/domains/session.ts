@@ -85,6 +85,8 @@ export class Session {
     this.initReactionHandler();
   }
 
+  //#region MobX reaction handler
+
   initReactionHandler() {
     if (this.reactionHandler.length !== 0) return;
     // Automatically reset snapshot preview, if not visible anymore
@@ -143,6 +145,22 @@ export class Session {
     this.reactionHandler.forEach((disposer) => disposer());
   }
 
+  //#endregion
+
+  @computed
+  get profile() {
+    let foundProfile: Profile | undefined;
+    rootStore.accountStore.accounts.forEach((account) => {
+      foundProfile = account.profiles.find((p) => p.uuid === this.profileId);
+    });
+    return foundProfile;
+  }
+
+  @action
+  setProfileId(id: string) {
+    this.profileId = id;
+  }
+
   @action
   updateSession() {
     if (!this.profile) return;
@@ -157,20 +175,6 @@ export class Session {
         rootStore.uiStateStore.toggleNetWorthSession(true);
       }
     }
-  }
-
-  @computed
-  get profile() {
-    let foundProfile: Profile | undefined;
-    rootStore.accountStore.accounts.forEach((account) => {
-      foundProfile = account.profiles.find((p) => p.uuid === this.profileId);
-    });
-    return foundProfile;
-  }
-
-  @action
-  setProfileId(id: string) {
-    this.profileId = id;
   }
 
   @action
