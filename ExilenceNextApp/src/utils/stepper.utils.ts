@@ -65,14 +65,6 @@ export function getNetworthSessionToolbarSteps(): IStepDescriptor[] {
       key: 'initial_step',
     },
     {
-      key: 'networth_step',
-      selector: '[data-tour-elem="networth"]',
-    },
-    {
-      key: 'income_step',
-      selector: '[data-tour-elem="income"]',
-    },
-    {
       key: 'income_switch',
       selector: '[data-tour-elem="incomeSwitch"]',
     },
@@ -111,9 +103,6 @@ export function getNetworthSessionToolbarSteps(): IStepDescriptor[] {
     {
       key: 'group_step',
       selector: '[data-tour-elem="groupArea"]',
-    },
-    {
-      key: 'ending',
     },
   ];
 }

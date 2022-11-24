@@ -222,7 +222,6 @@ export const formatSessionTimesIncomeForChart = (
 export const mergeFromDiffSnapshotStashTabs = (
   snapshot1: IApiSnapshot,
   snapshot2: IApiSnapshot,
-  updateSnapshot1Prices = true,
   removedItemsPriceResolver?: (items: IPricedItem[]) => void,
   addRemovedItems = false
 ): IApiSnapshot => {
@@ -280,13 +279,8 @@ export const mergeFromDiffSnapshotStashTabs = (
           } else {
             recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
           }
-          if (updateSnapshot1Prices) {
-            existingItem.total = recentItem.calculated * existingItem.stackSize;
-            recentItem.total = recentItem.total - existingItem.total;
-          } else {
-            const existingItemTotal = recentItem.calculated * existingItem.stackSize;
-            recentItem.total = recentItem.total - existingItemTotal;
-          }
+          const existingItemTotal = recentItem.calculated * existingItem.stackSize;
+          recentItem.total = recentItem.total - existingItemTotal;
           if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
             difference.push(recentItem);
           }
@@ -344,7 +338,6 @@ export const mergeFromDiffSnapshotStashTabs = (
 export const diffSnapshots = (
   snapshot1: IApiSnapshot,
   snapshot2: IApiSnapshot,
-  updateSnapshot1Prices = true,
   removedItemsPriceResolver?: (items: IPricedItem[]) => void
 ) => {
   const difference: IPricedItem[] = [];
@@ -365,13 +358,8 @@ export const diffSnapshots = (
     const existingItem = findItem(itemsInSnapshot1, recentItem);
     if (existingItem) {
       recentItem.stackSize = recentItem.stackSize - existingItem.stackSize;
-      if (updateSnapshot1Prices) {
-        existingItem.total = recentItem.calculated * existingItem.stackSize;
-        recentItem.total = recentItem.total - existingItem.total;
-      } else {
-        const existingItemTotal = recentItem.calculated * existingItem.stackSize;
-        recentItem.total = recentItem.total - existingItemTotal;
-      }
+      const existingItemTotal = recentItem.calculated * existingItem.stackSize;
+      recentItem.total = recentItem.total - existingItemTotal;
       if (recentItem.total !== 0 && recentItem.stackSize !== 0) {
         difference.push(recentItem);
       }

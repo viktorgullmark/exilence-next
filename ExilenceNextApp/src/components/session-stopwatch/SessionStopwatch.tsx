@@ -57,7 +57,7 @@ const SessionStopwatch = () => {
     activeProfile?.session.sessionPaused,
     activeProfile?.session.offsetPause,
     activeProfile?.session.offsetOffline,
-    activeProfile?.session.offsetNotActive,
+    activeProfile?.session.offsetInactive,
     activeProfile?.session.offsetManualAdjustment,
   ]);
 

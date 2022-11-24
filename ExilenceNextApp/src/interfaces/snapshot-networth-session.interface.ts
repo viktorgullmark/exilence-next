@@ -2,6 +2,6 @@ export interface INetworthSessionOffsets {
   sessionDuration: number;
   offsetPause: number;
   offsetOffline: number;
-  offsetNotActive: number;
+  offsetInactive: number;
   offsetManualAdjustment: number;
 }

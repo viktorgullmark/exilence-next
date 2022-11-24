@@ -46,40 +46,7 @@ import {
   TimestapTypes,
   TimestapTypesExtended,
 } from '../../interfaces/net-worth-session-timespan.interface';
-
-// Next steps:
-// TODO: Save session in backend
-// TODO: Add groups gameplay somehow ;
-// Problems: Who could change the states, how to keep in sync?
-// Make sessions joinable? For example: The session owner starts a session. You could join the session with your current profile.
-// -> The session owner controles the states; Income and networth is summed up
-// -> Your current session for the profile is set to inactive while you joined the group owners session.
-// The group session needs to be isolated from the current session; That you could continue without influence after the group session
-
-// Features:
-// TODO: Add settings for session:
-// TODO: Option to not show items negativly, who are removed from your current wealth while the session started
-
-// Big feature:
-// TODO: Add this session to archive for later views or analysis
-
-// Optional featues:
-// TODO: Add Text Area for custom notes
-// TODO: Add custom name for the session (on start) - show the name somewhere
-// TODO: Change income in chart to the current income type
-// TODO: Client.txt: Continue session if poe character is signed in and offline if signed out -> with settings checkbox
-// TODO: Add not priced items from snapshots in a separate table below. Allow to set the prices manually
-// Allow to modify the items prices for earlier snapshots via the historical view (click on a snapshot). This would affect all snapshot prices after the modified snapshot
-
-// To be refactored - Can I do? This need to be tested very well:
-// TODO: Improve moments to use UTC (moment.utc()) and format to local time (moment.utc().local().format("HH:mm:ss")) because moment() could created in different timezones and could lead to wrong times.
-
-// Noticable fixes:
-// FIXED: Networth overlay does not shows the currency in divine/ex when opened
-// FIXED: Networth overlay does sometimes not update the states/is not in sync with the app
-// FIXED: Wrong Time format for minutes(currently as month formated after hour): HH:MM => HH:mm
-// Other
-// Added: Add critical stash tabs with tooltip info
+import { Profile } from './profile';
 
 export class Session {
   @persist uuid: string = uuidv4();
@@ -97,13 +64,13 @@ export class Session {
   @persist @observable lastStartAt: number | undefined = undefined;
   @persist @observable lastPauseAt: number | undefined = undefined;
   @persist @observable lastOfflineAt: number | undefined = undefined;
-  @persist @observable lastNotActiveAt: number | undefined = undefined;
+  @persist @observable lastInactiveAt: number | undefined = undefined;
   @persist @observable stoppedAt: number | undefined = undefined;
 
   // Note for backend persistence: This values can be restored from timeStamps[x].duration
   @persist @observable offsetPause: number = 0;
   @persist @observable offsetOffline: number = 0;
-  @persist @observable offsetNotActive: number = 0;
+  @persist @observable offsetInactive: number = 0;
   @persist @observable offsetManualAdjustment: number = 0;
 
   @persist @observable addNextSnapshotDiffToBase: boolean = false;
@@ -115,93 +82,90 @@ export class Session {
   constructor(profileId: string) {
     makeObservable(this);
     this.profileId = profileId;
+    this.initReactionHandler();
+  }
 
+  initReactionHandler() {
+    if (this.reactionHandler.length !== 0) return;
     // Automatically reset snapshot preview, if not visible anymore
     this.reactionHandler.push(
       autorun(() => {
         try {
-          if (!rootStore) return;
           if (!this.isSnapshotPreviewVisible) {
             this.setSnapshotPreview(undefined);
           }
         } catch (error) {
-          return; // Rootstore not init yet
+          // Rootstore not init
         }
       })
     );
-
-    // Automatically sets the correct state (from inactiv|offline => pause; from offline|online|pause => inactiv)
-    this.reactionHandler.push(
-      autorun(() => {
-        try {
-          if (!rootStore) return;
-          if (!this.profile) return;
-          if (
-            !this.profile.active ||
-            rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid
-          ) {
-            this.disableSession();
-          } else {
-            if (!this.sessionStarted) {
-              // Profile active but session not started; Ensure after switching the profile, that the session view is not open
-              rootStore.uiStateStore.toggleNetWorthSession(false);
-            } else {
-              this.pauseSession();
-              this.profile.updateNetWorthOverlay();
-            }
-          }
-        } catch (error) {
-          return; // Rootstore not init yet
-        }
-      })
-    );
-
     // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
     this.reactionHandler.push(
       reaction(
         () => {
           try {
-            this.profile?.activeStashTabIds;
+            if (this.profile) {
+              return this.profile.activeStashTabIds;
+            } else {
+              // Allow remove empty sessions created when the app starts
+              this.dispose();
+            }
           } catch (error) {
-            return; // Rootstore not init yet
+            // Rootstore not init
           }
         },
         () => {
-          try {
-            if (!rootStore) return;
-            if (!this.profile) return;
-            if (!this.sessionStarted || !this.sessionStartSnapshot) return;
-            if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
-              return;
-
-            // Remove removed stashTabs which were active
-            this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
-              (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
-            );
-            // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
-            const addedStashTabs = this.profile.activeStashTabIds.filter(
-              (stId) =>
-                !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
-            );
-            if (addedStashTabs.length > 0) {
-              // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
-              // Any item added after this snapshot will be added to the session
-              rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
-              rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
-            }
-          } catch (error) {
-            return; // Rootstore not init yet
+          if (!this.profile) return;
+          if (!this.sessionStarted || !this.sessionStartSnapshot) return;
+          if (rootStore.accountStore.getSelectedAccount.activeProfile?.uuid !== this.profile.uuid)
+            return;
+          // Remove removed stashTabs which were active
+          this.sessionStartSnapshot.stashTabSnapshots = this.sessionStartSnapshot.stashTabSnapshots.filter(
+            (sts) => this.profile?.activeStashTabIds.some((stId) => stId === sts.stashTabId)
+          );
+          // Add added stashTabs which are now active - keep them in newSnapshotToAdd to calc value = 0
+          const addedStashTabs = this.profile.activeStashTabIds.filter(
+            (stId) =>
+              !this.sessionStartSnapshot?.stashTabSnapshots.some((sts) => stId === sts.stashTabId)
+          );
+          if (addedStashTabs.length > 0) {
+            // Make snapshot for the new stashtabs to save the current items as baseitems -> value 0;
+            // Any item added after this snapshot will be added to the session
+            rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
+            rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
           }
         }
       )
     );
   }
 
+  dispose() {
+    this.reactionHandler.forEach((disposer) => disposer());
+  }
+
+  @action
+  updateSession() {
+    if (!this.profile) return;
+    if (!this.profile.active) {
+      this.disableSession();
+    } else {
+      if (!this.sessionStarted) {
+        // Profile active but session not started; Ensure after switching the profile, that the session view is not open
+        rootStore.uiStateStore.toggleNetWorthSession(false);
+      } else {
+        this.pauseSession();
+        rootStore.uiStateStore.toggleNetWorthSession(true);
+      }
+    }
+  }
+
   @computed
   get profile() {
-    return rootStore.accountStore.getSelectedAccount.profiles.find(
-      (p) => p.uuid === this.profileId
-    );
+    let foundProfile: Profile | undefined;
+    rootStore.accountStore.accounts.forEach((account) => {
+      foundProfile = account.profiles.find((p) => p.uuid === this.profileId);
+    });
+    return foundProfile;
   }
 
   @action
@@ -212,11 +176,11 @@ export class Session {
   @action
   saveSnapshot(newSnapshotToAdd: Snapshot) {
     // Update the offsets to recalculate the correct sessionTimestamp and networthSessionDuration
-
     if (!this.profile) {
       console.error('Profile is not set to session:', this.uuid);
       return;
     }
+
     if (!this.sessionStarted) return;
 
     // Update offsets and save them in snapshot for historical views
@@ -225,7 +189,7 @@ export class Session {
       sessionDuration: moment.utc().diff(this.sessionTimestamp),
       offsetPause: this.offsetPause,
       offsetOffline: this.offsetOffline,
-      offsetNotActive: this.offsetNotActive,
+      offsetInactive: this.offsetInactive,
       offsetManualAdjustment: this.offsetManualAdjustment,
     };
 
@@ -285,7 +249,6 @@ export class Session {
     let diffSnapshot = mergeFromDiffSnapshotStashTabs(
       mapSnapshotToApiSnapshot(this.sessionStartSnapshot),
       newApiSnapshotToAdd,
-      true,
       this.profile?.diffSnapshotPriceResolver
     );
 
@@ -294,7 +257,6 @@ export class Session {
       const diffSnapshotWhileInactiv = mergeFromDiffSnapshotStashTabs(
         mapSnapshotToApiSnapshot(this.snapshots[0]), // Snapshot before inactiv
         diffSnapshot, // Snapshot after inactiv
-        false, // Do not manipulate existing snapshot
         this.profile?.diffSnapshotPriceResolver
       );
 
@@ -302,7 +264,6 @@ export class Session {
       const newSessionStartSnapshot = mergeFromDiffSnapshotStashTabs(
         mapSnapshotToApiSnapshot(this.sessionStartSnapshot),
         diffSnapshotWhileInactiv,
-        true,
         this.profile?.diffSnapshotPriceResolver,
         true // Add removed items from sessionStartSnapshot
       );
@@ -320,7 +281,6 @@ export class Session {
       diffSnapshot = mergeFromDiffSnapshotStashTabs(
         mapSnapshotToApiSnapshot(this.sessionStartSnapshot),
         newApiSnapshotToAdd,
-        true,
         this.profile?.diffSnapshotPriceResolver
       );
 
@@ -336,9 +296,9 @@ export class Session {
       (stss) => new StashTabSnapshot(stss)
     );
 
-    // keep items for only 10 snapshots at all times
-    if (this.snapshots.length > 10) {
-      this.snapshots[10].stashTabSnapshots.forEach((stss) => {
+    // keep items for only 100 ~ 8.5h for autosnapshot 5min snapshots at all time
+    if (this.snapshots.length > 100) {
+      this.snapshots[100].stashTabSnapshots.forEach((stss) => {
         stss.pricedItems = [];
       });
     }
@@ -391,7 +351,7 @@ export class Session {
   disableSession() {
     // If the profile gets disabled
     if (this.sessionStarted) {
-      this.resolveTimeAndContinueWith('notActive');
+      this.resolveTimeAndContinueWith('inactive');
     }
   }
 
@@ -402,8 +362,7 @@ export class Session {
     this.lastPauseAt = undefined;
     this.sessionStarted = false;
     rootStore.uiStateStore.toggleNetWorthSession(false);
-    this.reactionHandler[1](); // Stop changing states
-    this.reactionHandler[2](); // Stop tracking activeStashTabIds
+    this.dispose();
     this.profile?.newSession();
   }
 
@@ -459,11 +418,11 @@ export class Session {
       this.offsetOffline += timestamp.duration;
       this.lastOfflineAt = undefined;
       lastType = 'offline';
-    } else if (this.lastNotActiveAt) {
-      const timestamp = this.resolveLast(this.lastNotActiveAt, 'notActive');
-      this.offsetNotActive += timestamp.duration;
-      this.lastNotActiveAt = undefined;
-      lastType = 'notActive';
+    } else if (this.lastInactiveAt) {
+      const timestamp = this.resolveLast(this.lastInactiveAt, 'inactive');
+      this.offsetInactive += timestamp.duration;
+      this.lastInactiveAt = undefined;
+      lastType = 'inactive';
     }
     if (continueWith === 'start' || (continueWith === 'keeplast' && lastType === 'start')) {
       this.lastStartAt = moment.utc().valueOf();
@@ -479,20 +438,23 @@ export class Session {
       this.lastOfflineAt = moment.utc().valueOf();
       this.sessionPaused = true;
     } else if (
-      continueWith === 'notActive' ||
-      (continueWith === 'keeplast' && lastType === 'notActive')
+      continueWith === 'inactive' ||
+      (continueWith === 'keeplast' && lastType === 'inactive')
     ) {
-      this.lastNotActiveAt = moment.utc().valueOf();
+      this.lastInactiveAt = moment.utc().valueOf();
       this.sessionPaused = true;
     }
 
-    if (lastType === 'notActive' && (continueWith === 'start' || continueWith === 'pause')) {
+    if (lastType === 'inactive' && (continueWith === 'start' || continueWith === 'pause')) {
       // Make snapshot to remove the diff items
       // This must be directly after being activ again,
       // Because all items within the timespan from being active and the first snapshot after being active will be removed
       this.addNextSnapshotDiffToBase = true;
       rootStore.accountStore.getSelectedAccount.dequeueSnapshot();
-      rootStore.accountStore.getSelectedAccount.queueSnapshot(100);
+      // 30 sec delay to wait for the server after an item was added from any other profile for the same stash tabs
+      // TODO: This delay should be reevaluated to match the actual server delay
+      // This also prevents heavy load to the ratelimiter if profiles are switch frequently
+      rootStore.accountStore.getSelectedAccount.queueSnapshot(1000 * 30);
     }
   }
 
@@ -511,7 +473,7 @@ export class Session {
     const sessionTime = moment
       .utc(this.sessionStartedAt)
       .add(
-        this.offsetPause + this.offsetOffline + this.offsetNotActive + this.offsetManualAdjustment,
+        this.offsetPause + this.offsetOffline + this.offsetInactive + this.offsetManualAdjustment,
         'millisecond'
       );
     // Do not calc diff, because cached values will cause invalid sessiontime
@@ -530,16 +492,16 @@ export class Session {
     // This calculates the correct timestamp used for clocks - do not annotate this with @computed!
     let offsetPause = this.offsetPause;
     let offsetOffline = this.offsetOffline;
-    let offsetNotActive = this.offsetNotActive;
+    let offsetInactive = this.offsetInactive;
     if (this.lastPauseAt) {
       const timestamp = this.createTimestamp(this.lastPauseAt, 'pause');
       offsetPause += timestamp.duration;
     } else if (this.lastOfflineAt) {
       const timestamp = this.createTimestamp(this.lastOfflineAt, 'offline');
       offsetOffline += timestamp.duration;
-    } else if (this.lastNotActiveAt) {
-      const timestamp = this.createTimestamp(this.lastNotActiveAt, 'notActive');
-      offsetNotActive += timestamp.duration;
+    } else if (this.lastInactiveAt) {
+      const timestamp = this.createTimestamp(this.lastInactiveAt, 'inactive');
+      offsetInactive += timestamp.duration;
     } else {
       // Nothing changed -> Online
       return this.getFormattedDuration(moment.utc().diff(this.sessionTimestamp));
@@ -548,7 +510,7 @@ export class Session {
     const sessionTime = moment
       .utc(this.sessionStartedAt)
       .add(
-        offsetPause + offsetOffline + offsetNotActive + this.offsetManualAdjustment,
+        offsetPause + offsetOffline + offsetInactive + this.offsetManualAdjustment,
         'millisecond'
       );
     // Do not calc diff, because cached values will cause invalid sessiontime
@@ -616,7 +578,7 @@ export class Session {
     return this.calculateIncome(timestamp);
   }
   get incomeSinceLastInactive() {
-    const timestamp = this.timeStamps.find((ts) => ts.type === 'notActive')?.end;
+    const timestamp = this.timeStamps.find((ts) => ts.type === 'inactive')?.end;
     if (!timestamp) return undefined;
     return this.calculateIncome(timestamp);
   }
@@ -741,8 +703,7 @@ export class Session {
           return filterItems(
             diffSnapshots(
               mapSnapshotToApiSnapshot(this.snapshots[index + 1]),
-              mapSnapshotToApiSnapshot(this.snapshots[index]),
-              false
+              mapSnapshotToApiSnapshot(this.snapshots[index])
               // Priceresolver does not work here, because of historical prices
             ),
             filterText
@@ -756,7 +717,6 @@ export class Session {
         diffSnapshots(
           mapSnapshotToApiSnapshot(this.snapshots[1]),
           mapSnapshotToApiSnapshot(this.snapshots[0]),
-          false,
           this.profile?.diffSnapshotPriceResolver
         ),
         filterText
@@ -913,7 +873,7 @@ export class Session {
 
     let offsetPause = this.offsetPause;
     let offsetOffline = this.offsetOffline;
-    let offsetNotActive = this.offsetNotActive;
+    let Inactive = this.offsetInactive;
     let offsetManualAdjustment = this.offsetManualAdjustment;
 
     if (this.chartPreviewSnapshotId) {
@@ -922,14 +882,14 @@ export class Session {
         sessionDuration = this.snapshots[index].networthSessionOffsets!.sessionDuration;
         offsetPause = this.snapshots[index].networthSessionOffsets!.offsetPause;
         offsetOffline = this.snapshots[index].networthSessionOffsets!.offsetOffline;
-        offsetNotActive = this.snapshots[index].networthSessionOffsets!.offsetNotActive;
+        Inactive = this.snapshots[index].networthSessionOffsets!.offsetInactive;
         offsetManualAdjustment = this.snapshots[index].networthSessionOffsets!
           .offsetManualAdjustment;
       } else {
         sessionDuration = 0;
         offsetPause = 0;
         offsetOffline = 0;
-        offsetNotActive = 0;
+        Inactive = 0;
         offsetManualAdjustment = 0;
       }
     }
@@ -983,7 +943,7 @@ export class Session {
           },
           {
             name: 'Inactiv',
-            y: offsetNotActive || 0,
+            y: Inactive || 0,
             color: netWorthSessionColors[3],
           },
         ],
@@ -1030,7 +990,7 @@ export class Session {
         },
         {
           name: 'Inactiv',
-          y: offsetNotActive || 0,
+          y: Inactive || 0,
           color: HC.color(netWorthSessionColors[3]).setOpacity(0.5).brighten(0.2).get(),
         },
       ],

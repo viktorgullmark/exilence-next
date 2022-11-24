@@ -73,28 +73,18 @@ export class Profile {
   @persist @observable includeInventory: boolean = false;
   @persist @observable incomeResetAt: number = moment().utc().valueOf();
 
-  constructor(obj?: IProfile, currentProfile?: Profile) {
+  constructor(obj?: IProfile, disposeSession = false, currentProfile?: Profile) {
     makeObservable(this);
     Object.assign(this, obj);
+    // Fallback for older profiles - needed if hydrated? See line 69
+    if (!this.session) this.newSession();
+    else this.session.setProfileId(this.uuid);
+    // Prevent memory leaks for temp profils or sessions
+    if (disposeSession) this.session.dispose();
     if (currentProfile) {
       this.snapshots = currentProfile.snapshots;
-      if (currentProfile.session) {
-        this.session = currentProfile.session;
-        this.session.setProfileId(this.uuid);
-      }
-    } else {
-      // Fallback for older profiles
-      if (this.session.profileId !== this.uuid) {
-        console.warn(
-          'Profile session is not in sync with profile - setting value; ProfileId: ',
-          this.uuid,
-          'SessionProfileId: ',
-          this.session.profileId,
-          ' SessionId: ',
-          this.session.uuid
-        );
-        this.session.setProfileId(this.uuid);
-      }
+      this.session = currentProfile.session;
+      this.session.setProfileId(this.uuid);
     }
   }
 
@@ -149,7 +139,6 @@ export class Profile {
         diffSnapshots(
           mapSnapshotToApiSnapshot(this.snapshots[1]),
           mapSnapshotToApiSnapshot(this.snapshots[0]),
-          false,
           this.diffSnapshotPriceResolver
         ),
         filterText
@@ -373,7 +362,7 @@ export class Profile {
     visitor!.event('Profile', 'Edit profile').send();
 
     const apiProfile = mapProfileToApiProfile(
-      new Profile(profile),
+      new Profile(profile, true),
       rootStore.settingStore.activeCurrency
     );
 

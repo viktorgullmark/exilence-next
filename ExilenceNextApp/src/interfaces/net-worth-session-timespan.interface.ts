@@ -1,4 +1,4 @@
-export type TimestapTypes = 'start' | 'pause' | 'offline' | 'notActive';
+export type TimestapTypes = 'start' | 'pause' | 'offline' | 'inactive';
 export type TimestapTypesExtended = TimestapTypes | 'keeplast';
 
 export interface ITimeStamp {

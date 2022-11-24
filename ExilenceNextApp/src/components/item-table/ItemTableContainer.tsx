@@ -354,7 +354,7 @@ const ItemTableContainer = ({
         noRowsMessage={
           uiStateStore.netWorthSessionOpen &&
           activeProfile?.session.snapshotPreviewIndex &&
-          activeProfile?.session.snapshotPreviewIndex >= 10
+          activeProfile?.session.snapshotPreviewIndex >= 100
             ? 'label.item_table_placeholder_net_worth_session_preview'
             : undefined
         }

@@ -129,13 +129,15 @@ export class Account implements IAccount {
   updateProfiles(profiles: IApiProfile[]) {
     const mappedProfiles = profiles.map((p) => {
       const currentProfile = this.profiles.find((cp) => cp.uuid === p.uuid);
-      const newProfile = new Profile(p, currentProfile);
+      const newProfile = new Profile(p, true, currentProfile);
+      newProfile.session.updateSession();
       return newProfile;
     });
     // if no active profile, set first profile in array to active
     const activeProfile = mappedProfiles.find((p) => p.active);
     if (!activeProfile && mappedProfiles.length > 0) {
       mappedProfiles[0].active = true;
+      mappedProfiles[0].session.updateSession();
     }
     this.profiles = mappedProfiles;
   }
@@ -233,19 +235,22 @@ export class Account implements IAccount {
   setActiveProfileObservable(uuid: string) {
     return rootStore.signalrHub.invokeEvent<string>('ChangeProfile', uuid).pipe(
       map((uuid: string) => {
+        let foundProfile: Profile | undefined = undefined;
         runInAction(() => {
           this.profiles = this.profiles.map((p) => {
-            p.active = false;
+            if (p.uuid === uuid) {
+              p.active = true;
+              foundProfile = p;
+            } else {
+              p.active = false;
+            }
+            p.session.updateSession();
             return p;
           });
         });
-        const foundProfile = this.profiles.find((p) => p.uuid === uuid);
         if (!foundProfile) {
           return throwError('error:no_profile_found');
         }
-        runInAction(() => {
-          foundProfile.active = true;
-        });
         if (rootStore.signalrStore.activeGroup) {
           rootStore.signalrStore.changeProfileForConnection(
             rootStore.signalrStore.ownConnection.connectionId,
