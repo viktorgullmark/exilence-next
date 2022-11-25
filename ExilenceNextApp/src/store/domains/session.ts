@@ -77,7 +77,7 @@ export class Session {
 
   @observable chartPreviewSnapshotId: string | undefined = undefined;
 
-  reactionHandler: IReactionDisposer[] = [];
+  reactionDisposer: IReactionDisposer[] = [];
 
   constructor(profileId: string) {
     makeObservable(this);
@@ -88,9 +88,9 @@ export class Session {
   //#region MobX reaction handler
 
   initReactionHandler() {
-    if (this.reactionHandler.length !== 0) return;
+    if (this.reactionDisposer.length !== 0) return;
     // Automatically reset snapshot preview, if not visible anymore
-    this.reactionHandler.push(
+    this.reactionDisposer.push(
       autorun(() => {
         try {
           if (!this.isSnapshotPreviewVisible) {
@@ -102,7 +102,7 @@ export class Session {
       })
     );
     // Automatically ensure the isolated stash tabs if they changed; If necessary make a snapshot to set the baseline
-    this.reactionHandler.push(
+    this.reactionDisposer.push(
       reaction(
         () => {
           try {
@@ -142,11 +142,12 @@ export class Session {
   }
 
   dispose() {
-    this.reactionHandler.forEach((disposer) => disposer());
+    this.reactionDisposer.forEach((disposer) => disposer());
   }
 
   //#endregion
 
+  //#region Profile handling
   @computed
   get profile() {
     let foundProfile: Profile | undefined;
@@ -160,23 +161,9 @@ export class Session {
   setProfileId(id: string) {
     this.profileId = id;
   }
+  //#endregion
 
-  @action
-  updateSession() {
-    if (!this.profile) return;
-    if (!this.profile.active) {
-      this.disableSession();
-    } else {
-      if (!this.sessionStarted) {
-        // Profile active but session not started; Ensure after switching the profile, that the session view is not open
-        rootStore.uiStateStore.toggleNetWorthSession(false);
-      } else {
-        this.pauseSession();
-        rootStore.uiStateStore.toggleNetWorthSession(true);
-      }
-    }
-  }
-
+  //#region Snapshot handling
   @action
   saveSnapshot(newSnapshotToAdd: Snapshot) {
     // Update the offsets to recalculate the correct sessionTimestamp and networthSessionDuration
@@ -313,8 +300,13 @@ export class Session {
     });
   }
 
-  //#region Session handling
+  @action
+  removeSnapshots(snapshotIds: string[]) {
+    this.snapshots = this.snapshots.filter((s) => !snapshotIds.find((id) => id === s.uuid));
+  }
+  //#endregion
 
+  //#region Session handling
   @action
   startSession() {
     // Set start; If already started - continue from pause mode
@@ -370,6 +362,21 @@ export class Session {
     this.profile?.newSession();
   }
 
+  @action
+  updateSession() {
+    if (!this.profile) return;
+    if (!this.profile.active) {
+      this.disableSession();
+    } else {
+      if (!this.sessionStarted) {
+        // Profile active but session not started; Ensure after switching the profile, that the session view is not open
+        rootStore.uiStateStore.toggleNetWorthSession(false);
+      } else {
+        this.pauseSession();
+        rootStore.uiStateStore.toggleNetWorthSession(true);
+      }
+    }
+  }
   //#endregion
 
   //#region Time manipulation
@@ -467,11 +474,9 @@ export class Session {
     this.resolveTimeAndContinueWith('keeplast');
     this.offsetManualAdjustment += adjustment;
   }
-
   //#endregion
 
   //#region Time calculation and formatting
-
   @computed
   get sessionTimestamp() {
     const sessionTime = moment
@@ -532,7 +537,6 @@ export class Session {
       }
     }
   }
-
   //#endregion
 
   //#region Widget calculation
@@ -688,7 +692,6 @@ export class Session {
     }
     return lastSnapshotNetWorth - previousSnapshotNetWorth;
   }
-
   //#endregion Widget calculation
 
   //#region Table calculation
@@ -749,7 +752,6 @@ export class Session {
   //#endregion Table calculation
 
   //#region Snapshot preview
-
   @action
   setSnapshotPreview(id: string | undefined) {
     this.chartPreviewSnapshotId = id;
@@ -780,11 +782,9 @@ export class Session {
       .filter((s) => timestamp?.isBefore(moment(s.created)))
       .some((s) => s.uuid === this.chartPreviewSnapshotId);
   }
-
   //#endregion Snapshot preview
 
   //#region Chart calculation
-
   @computed
   get sparklineChartData(): ISparklineDataPoint[] | undefined {
     let snapshots: Snapshot[] = [];
@@ -1303,11 +1303,5 @@ export class Session {
 
     return series;
   }
-
   //#endregion Chart calculation
-
-  @action
-  removeSnapshots(snapshotIds: string[]) {
-    this.snapshots = this.snapshots.filter((s) => !snapshotIds.find((id) => id === s.uuid));
-  }
 }
