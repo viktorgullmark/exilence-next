@@ -178,7 +178,6 @@ const NetWorth = () => {
                 )
               }
               currencySwitch
-              tourTopElement="networth"
             />
           </Widget>
         </Grid>
@@ -231,7 +230,6 @@ const NetWorth = () => {
                 activeGroup || sessionNetWorthOpen ? undefined : () => activeProfile?.clearIncome()
               }
               incomeSwitch={sessionNetWorthOpen && !activeProfile?.session.chartPreviewSnapshotId}
-              tourTopElement="income"
             />
           </Widget>
         </Grid>
