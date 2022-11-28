@@ -144,7 +144,7 @@ test('Save new snapshot after being active again', () => {
     ],
   };
 
-  let diffSnapshot = mergeFromDiffSnapshotStashTabs(sessionStartSnapshot, newSnapshotToAdd, true);
+  let diffSnapshot = mergeFromDiffSnapshotStashTabs(sessionStartSnapshot, newSnapshotToAdd);
 
   diffSnapshot.stashTabs.forEach((s) => {
     expect(s.pricedItems).toContainObject({ name: 'Orb of Scouring', stackSize: -5 });
@@ -157,8 +157,7 @@ test('Save new snapshot after being active again', () => {
   // First snapshot after the profile is activ again - remove the diffitems while inactiv
   const diffSnapshotWhileInactiv = mergeFromDiffSnapshotStashTabs(
     diffSnapshotBeforeInactiv, // Snapshot before inactiv
-    diffSnapshot, // Snapshot after inactiv
-    true
+    diffSnapshot // Snapshot after inactiv
   );
 
   diffSnapshotWhileInactiv.stashTabs.forEach((s) => {
@@ -175,7 +174,6 @@ test('Save new snapshot after being active again', () => {
   const newSessionStartSnapshot = mergeFromDiffSnapshotStashTabs(
     sessionStartSnapshot,
     diffSnapshotWhileInactiv,
-    true,
     undefined,
     true
   );
@@ -202,7 +200,7 @@ test('Save new snapshot after being active again', () => {
   });
 
   // The sessionStartSnapshot is updated, now recalculate the diffSnapshot
-  diffSnapshot = mergeFromDiffSnapshotStashTabs(newSessionStartSnapshot, newSnapshotToAdd, true);
+  diffSnapshot = mergeFromDiffSnapshotStashTabs(newSessionStartSnapshot, newSnapshotToAdd);
 
   // Remove influence completly
   diffSnapshot.stashTabs.forEach((s) => {
