@@ -24,7 +24,7 @@
     "group_step": "Here you can group up with your friends to see your combined net worth status.",
     "notifications_step": "Everything that happens in the app will be displayed here.",
     "support_panel_step": "Here you can see what's new in the latest release, report a bug, submit a feature request, re-run this tour or get our Discord server invitation.",
-    "currency_switch": "Clicking this button will switch the currency type between chaos and exalts.",
+    "currency_switch": "Clicking this button will switch the currency type between chaos, exalts, and divines.",
     "reset_income": "Clicking this button resets your income."
   },
   "body2": {
