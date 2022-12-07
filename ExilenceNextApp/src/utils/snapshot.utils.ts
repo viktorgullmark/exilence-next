@@ -101,7 +101,7 @@ export const calculateSessionIncome = (
   return 0;
 };
 
-export const calculateRelativTimeStampValue = (
+export const calculateRelativeTimeStampValue = (
   prevSnapshot: ISnapshotDataPoint,
   time: number,
   afterSnapshot: ISnapshotDataPoint
@@ -115,9 +115,9 @@ export const calculateRelativTimeStampValue = (
   // 100 = 150 - 50
   const cleanedSnapshotNetWorth = afterSnapshot.value - prevSnapshot.value;
   // 20 = 100 * 0.2
-  const relativNetworth = cleanedSnapshotNetWorth * percentageTime;
+  const relativeNetWorth = cleanedSnapshotNetWorth * percentageTime;
   // 70 = 50 + 20
-  return prevSnapshot.value + relativNetworth;
+  return prevSnapshot.value + relativeNetWorth;
 };
 
 export const formatValue = (

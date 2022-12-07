@@ -94,7 +94,7 @@ export class UiStateStore {
   @observable statusMessage: IStatusMessage | undefined = undefined;
   @observable loginError: string | undefined = undefined;
   @persist @observable chartTimeSpan: TimespanType = 'All time';
-  @persist @observable networthSessionChartTimeSpan: TimespanType = 'All time';
+  @persist @observable netWorthSessionChartTimeSpan: TimespanType = 'All time';
   @observable itemTableSelection: ItemTableSelectionType = 'latest';
   @observable customPriceDialogOpen: boolean = false;
   @observable selectedPricedItem: IPricedItem | undefined = undefined;
@@ -179,8 +179,8 @@ export class UiStateStore {
   }
 
   @action
-  setNetworthSessionChartTimeSpan(timespan: TimespanType) {
-    this.networthSessionChartTimeSpan = timespan;
+  setNetWorthSessionChartTimeSpan(timespan: TimespanType) {
+    this.netWorthSessionChartTimeSpan = timespan;
   }
 
   @action

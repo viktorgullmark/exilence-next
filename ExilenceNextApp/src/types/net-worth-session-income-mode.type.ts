@@ -1,6 +1,6 @@
 export type NetWorthSessionIncomeMode =
   | 'sessionDuration'
   | 'lastPause'
-  | 'lastInactiv'
+  | 'lastInactive'
   | 'lastOffline'
   | 'lastHour';

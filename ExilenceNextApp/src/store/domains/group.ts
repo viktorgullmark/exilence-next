@@ -81,21 +81,21 @@ export class Group implements IApiGroup {
       moment(a.created).isBefore(b.created) ? 1 : -1
     )[0];
 
-    let previousNetworth = getValueForSnapshotsTabs(
+    let previousNetWorth = getValueForSnapshotsTabs(
       this.latestGroupSnapshotsExceptLast(latestSnapshot.uuid)
     );
 
-    let newNetworth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
+    let newNetWorth = getValueForSnapshotsTabs(this.latestGroupSnapshots);
 
     if (rootStore.settingStore.currency === 'exalt' && rootStore.priceStore.exaltedPrice) {
-      newNetworth = newNetworth / rootStore.priceStore.exaltedPrice;
-      previousNetworth = previousNetworth / rootStore.priceStore.exaltedPrice;
+      newNetWorth = newNetWorth / rootStore.priceStore.exaltedPrice;
+      previousNetWorth = previousNetWorth / rootStore.priceStore.exaltedPrice;
     }
     if (rootStore.settingStore.currency === 'divine' && rootStore.priceStore.divinePrice) {
-      newNetworth = newNetworth / rootStore.priceStore.divinePrice;
-      previousNetworth = previousNetworth / rootStore.priceStore.divinePrice;
+      newNetWorth = newNetWorth / rootStore.priceStore.divinePrice;
+      previousNetWorth = previousNetWorth / rootStore.priceStore.divinePrice;
     }
-    return newNetworth - previousNetworth;
+    return newNetWorth - previousNetWorth;
   }
 
   @computed

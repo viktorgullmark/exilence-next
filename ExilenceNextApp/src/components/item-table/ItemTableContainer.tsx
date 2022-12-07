@@ -120,11 +120,10 @@ const ItemTableContainer = ({
   const { t } = useTranslation();
   const getItems = useMemo(() => {
     if (activeProfile) {
-      return activeGroup && !bulkSellView && !uiStateStore.netWorthSessionOpen
-        ? activeGroup.items
-        : uiStateStore.netWorthSessionOpen && !bulkSellView
-        ? activeProfile.session.items
-        : activeProfile.items;
+      if (bulkSellView) return activeProfile.items;
+      if (uiStateStore.netWorthSessionOpen) return activeProfile.session.items;
+      if (activeGroup) return activeGroup.items;
+      return activeProfile.items;
     } else {
       return [];
     }
@@ -140,8 +139,9 @@ const ItemTableContainer = ({
   ]);
 
   const getColumns = useMemo(() => {
-    if (activeGroup && !bulkSellView && !uiStateStore.netWorthSessionOpen)
+    if (activeGroup && !bulkSellView && !uiStateStore.netWorthSessionOpen) {
       return itemTableGroupColumns;
+    }
     if (!activeGroup && bulkSellView) return itemTableBulkSellColumns;
     if (uiStateStore.itemTableSelection === 'comparison') return itemTableComparisonColumns;
     return itemTableColumns;

@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Snapshot } from './snapshot';
 import { rootStore } from './../../index';
 import {
-  calculateRelativTimeStampValue,
+  calculateRelativeTimeStampValue,
   calculateSessionIncome,
   diffSnapshots,
   filterItems,
@@ -40,7 +40,7 @@ import { ISparklineDataPoint } from '../../interfaces/sparkline-data-point.inter
 import HC from 'highcharts';
 import { netWorthSessionColors, primaryDarker } from '../../assets/themes/exilence-theme';
 import _ from 'lodash';
-import { INetworthSessionOffsets } from '../../interfaces/snapshot-networth-session.interface';
+import { INetWorthSessionOffsets } from '../../interfaces/snapshot-networth-session.interface';
 import {
   ITimeStamp,
   TimestapTypes,
@@ -176,7 +176,7 @@ export class Session {
 
     // Update offsets and save them in snapshot for historical views
     this.resolveTimeAndContinueWith('keeplast');
-    const networthSessionOffsets: INetworthSessionOffsets = {
+    const networthSessionOffsets: INetWorthSessionOffsets = {
       sessionDuration: moment.utc().diff(this.sessionTimestamp),
       offsetPause: this.offsetPause,
       offsetOffline: this.offsetOffline,
@@ -546,7 +546,7 @@ export class Session {
     const snapshots = this.snapshots.filter((s) => moment(s.created).utc().isAfter(timestampToUse));
     if (snapshots.length === this.snapshots.length || snapshots.length === 0) return 0;
     const prevSnapshot = this.snapshots[snapshots.length];
-    const firstSnapshotValue = calculateRelativTimeStampValue(
+    const firstSnapshotValue = calculateRelativeTimeStampValue(
       {
         created: moment(new Date(prevSnapshot.created).getTime()).valueOf(),
         value: getValueForSnapshot(mapSnapshotToApiSnapshot(prevSnapshot)),
@@ -620,7 +620,7 @@ export class Session {
       return this.incomeSinceLastPause || 0;
     } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastOffline') {
       return this.incomeSinceLastOffline || 0;
-    } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastInactiv') {
+    } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastInactive') {
       return this.incomeSinceLastInactive || 0;
     } else if (rootStore.uiStateStore!.netWorthSessionIncomeMode === 'lastHour') {
       return this.incomeSinceLastHour;
@@ -766,13 +766,13 @@ export class Session {
   get isSnapshotPreviewVisible() {
     // Used in autorun
     let timestamp: moment.Moment | undefined;
-    if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
+    if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 hour') {
       timestamp = moment().subtract(1, 'h');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 day') {
       timestamp = moment().subtract(1, 'd');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 week') {
       timestamp = moment().subtract(7, 'd');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 month') {
       timestamp = moment().subtract(30, 'd');
     } else {
       return true;
@@ -1013,13 +1013,13 @@ export class Session {
     const mode = rootStore.uiStateStore.netWorthSessionHistoryChartMode;
 
     let timestamp: moment.Moment | undefined;
-    if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 hour') {
+    if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 hour') {
       timestamp = moment().subtract(1, 'h');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 day') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 day') {
       timestamp = moment().subtract(24, 'h');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 week') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 week') {
       timestamp = moment().subtract(7, 'd');
-    } else if (rootStore.uiStateStore.networthSessionChartTimeSpan === '1 month') {
+    } else if (rootStore.uiStateStore.netWorthSessionChartTimeSpan === '1 month') {
       timestamp = moment().subtract(30, 'd');
     }
     // Cut start timestamp
@@ -1260,7 +1260,7 @@ export class Session {
         const prevSeries = series[i + seriesCount];
         if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
           // Snapshot datapoint before and within the current series found -> Calc relative value
-          series[i].data[0].y = +calculateRelativTimeStampValue(
+          series[i].data[0].y = +calculateRelativeTimeStampValue(
             prevSnapshotDatapoint,
             series[i].data[0].x,
             nextSnapshotDatapoint
@@ -1280,7 +1280,7 @@ export class Session {
         // Set startpoint of last index in the timespan (on the left)
         if (prevSnapshotDatapoint && nextSnapshotDatapoint) {
           // Snapshot datapoint before and within the current series found -> Calc relative value
-          series[i].data[0].y = +calculateRelativTimeStampValue(
+          series[i].data[0].y = +calculateRelativeTimeStampValue(
             prevSnapshotDatapoint, // snapshotDPBeforeTimespan
             series[i].data[0].x,
             nextSnapshotDatapoint

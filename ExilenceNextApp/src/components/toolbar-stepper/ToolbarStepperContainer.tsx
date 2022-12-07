@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useStores } from '../..';
-import { getNetworthSessionToolbarSteps, getToolbarSteps } from '../../utils/stepper.utils';
+import { getNetWorthSessionToolbarSteps, getToolbarSteps } from '../../utils/stepper.utils';
 import ToolbarStepper from './ToolbarStepper';
 
 const ToolbarStepperContainer = () => {
@@ -35,7 +35,7 @@ const ToolbarStepperContainer = () => {
   return uiStateStore.netWorthSessionOpen ? (
     <ToolbarStepper
       isOpen={uiStateStore!.toolbarNetWorthSessionTourOpen}
-      stepDescriptors={getNetworthSessionToolbarSteps()}
+      stepDescriptors={getNetWorthSessionToolbarSteps()}
       namespace={'net_worth_stepper'}
       handleClose={handleNetWorthSessionClose}
     />

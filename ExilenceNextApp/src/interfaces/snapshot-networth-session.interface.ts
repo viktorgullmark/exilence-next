@@ -1,4 +1,4 @@
-export interface INetworthSessionOffsets {
+export interface INetWorthSessionOffsets {
   sessionDuration: number;
   offsetPause: number;
   offsetOffline: number;

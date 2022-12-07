@@ -32,8 +32,8 @@ const NetWorthSessionChartToolboxContainer = () => {
       <Grid item xs={7}>
         <ChartToolbox
           options={timespanOptions}
-          handleChangeTimeSpan={(val) => uiStateStore.setNetworthSessionChartTimeSpan(val)}
-          selectedChartTimeSpan={uiStateStore.networthSessionChartTimeSpan}
+          handleChangeTimeSpan={(val) => uiStateStore.setNetWorthSessionChartTimeSpan(val)}
+          selectedChartTimeSpan={uiStateStore.netWorthSessionChartTimeSpan}
         />
       </Grid>
       <Grid item xs={5}>

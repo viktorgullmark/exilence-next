@@ -56,7 +56,7 @@ export function getToolbarSteps(): IStepDescriptor[] {
   ];
 }
 
-export function getNetworthSessionToolbarSteps(): IStepDescriptor[] {
+export function getNetWorthSessionToolbarSteps(): IStepDescriptor[] {
   return [
     {
       key: 'motivation',

@@ -16,7 +16,7 @@ type IncomeSwitchProps = {
 
 const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchProps) => {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const classes = useStyles();
   const { uiStateStore, accountStore, settingStore, priceStore } = useStores();
   const session = accountStore.getSelectedAccount.activeProfile?.session;
@@ -30,8 +30,8 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
         case 'lastPause':
           return 'lastOffline';
         case 'lastOffline':
-          return 'lastInactiv';
-        case 'lastInactiv':
+          return 'lastInactive';
+        case 'lastInactive':
           return 'lastHour';
         case 'lastHour':
           return 'sessionDuration';
@@ -45,7 +45,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
           return session?.incomeSinceLastPause !== undefined;
         case 'lastOffline':
           return session?.incomeSinceLastOffline !== undefined;
-        case 'lastInactiv':
+        case 'lastInactive':
           return session?.incomeSinceLastInactive !== undefined;
         case 'lastHour':
           return session?.incomeSinceLastHour !== undefined;
@@ -79,7 +79,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
   };
 
   const toottipTitle = useMemo(() => {
-    if (!open) return;
+    if (!isOpen) return;
 
     const sessionDuration = (
       <>
@@ -127,18 +127,18 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
           {mode === 'sessionDuration' ? <strong>{sessionDuration}</strong> : sessionDuration}
           {mode === 'lastPause' ? <strong>{pause}</strong> : pause}
           {mode === 'lastOffline' ? <strong>{offline}</strong> : offline}
-          {mode === 'lastInactiv' ? <strong>{inactive}</strong> : inactive}
+          {mode === 'lastInactive' ? <strong>{inactive}</strong> : inactive}
           {mode === 'lastHour' ? <strong>{hour}</strong> : hour}
         </Typography>
         <em>{t('action.income_switch')}</em>
       </>
     );
-  }, [open, uiStateStore.netWorthSessionIncomeMode, session?.snapshots, t]);
+  }, [isOpen, uiStateStore.netWorthSessionIncomeMode, session?.snapshots, t]);
 
   return (
     <Tooltip
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
       title={toottipTitle}
       placement="bottom-end"
     >

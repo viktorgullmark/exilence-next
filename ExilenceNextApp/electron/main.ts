@@ -127,7 +127,7 @@ function createWindow() {
   });
 
   /**
-   * Networth session handlers
+   * NetWorth session handlers
    */
   ipcMain.on('closed', () => {
     browserWindows[MAIN_BROWSER_WINDOW] = null;

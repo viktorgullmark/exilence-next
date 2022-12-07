@@ -38,6 +38,29 @@ const NetWorthSessionGridItem = ({
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const isStartDisabled =
+    (sessionStarted && !sessionPaused) || // Enable for start and continue
+    (!sessionStarted && isSnapshotting) || // Enable for continue and started
+    !activeProfile ||
+    isInitiating ||
+    !profilesLoaded;
+
+  const isPauseDisabled =
+    !sessionStarted ||
+    (sessionStarted && sessionPaused) || // Diabled if - started and paused
+    (!sessionStarted && isSnapshotting) ||
+    !activeProfile ||
+    isInitiating ||
+    !profilesLoaded;
+
+  const isStopDisabled =
+    !sessionStarted ||
+    isSnapshotting ||
+    !activeProfile ||
+    isInitiating ||
+    !profilesLoaded ||
+    !signalrOnline;
+
   return (
     <>
       <Grid item className={classes.sessionArea} data-tour-elem="networthSessionArea">
@@ -52,13 +75,7 @@ const NetWorthSessionGridItem = ({
           >
             <span>
               <IconButton
-                disabled={
-                  (sessionStarted && !sessionPaused) || // Enable for start and continue
-                  (!sessionStarted && isSnapshotting) || // Enable for continue and started
-                  !activeProfile ||
-                  isInitiating ||
-                  !profilesLoaded
-                }
+                disabled={isStartDisabled}
                 aria-label="start"
                 className={classes.iconButton}
                 onClick={() => handleSessionStart()}
@@ -73,14 +90,7 @@ const NetWorthSessionGridItem = ({
           <Tooltip title={t('label.pause_net_worth_session_icon_title') || ''} placement="bottom">
             <span>
               <IconButton
-                disabled={
-                  !sessionStarted ||
-                  (sessionStarted && sessionPaused) || // Diabled if - started and paused
-                  (!sessionStarted && isSnapshotting) ||
-                  !activeProfile ||
-                  isInitiating ||
-                  !profilesLoaded
-                }
+                disabled={isPauseDisabled}
                 aria-label="pause"
                 className={classes.iconButton}
                 onClick={() => handleSessionPause()}
@@ -94,14 +104,7 @@ const NetWorthSessionGridItem = ({
         <Tooltip title={t('label.stop_net_worth_session_icon_title') || ''} placement="bottom">
           <span>
             <IconButton
-              disabled={
-                !sessionStarted ||
-                isSnapshotting ||
-                !activeProfile ||
-                isInitiating ||
-                !profilesLoaded ||
-                !signalrOnline
-              }
+              disabled={isStopDisabled}
               aria-label="stop"
               className={classes.iconButton}
               onClick={() => handleSessionStop()}

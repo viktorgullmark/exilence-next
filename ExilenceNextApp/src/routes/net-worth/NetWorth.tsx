@@ -204,7 +204,7 @@ const NetWorth = () => {
                   ? `${t('label.income_based_on_last_pause')}`
                   : uiStateStore.netWorthSessionIncomeMode === 'lastOffline'
                   ? `${t('label.income_based_on_last_offline')}`
-                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactiv'
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactive'
                   ? `${t('label.income_based_on_last_inactive')}`
                   : `${t('label.income_based_on_last_hour')}`
               }
@@ -222,7 +222,7 @@ const NetWorth = () => {
                   ? `${t('label.income_based_on_last_pause_tooltip')}`
                   : uiStateStore.netWorthSessionIncomeMode === 'lastOffline'
                   ? `${t('label.income_based_on_last_offline_tooltip')}`
-                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactiv'
+                  : uiStateStore.netWorthSessionIncomeMode === 'lastInactive'
                   ? `${t('label.income_based_on_last_inactive_tooltip')}`
                   : `${t('label.income_based_on_last_hour_tooltip')}`
               }
