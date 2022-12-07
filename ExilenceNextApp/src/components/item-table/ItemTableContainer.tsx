@@ -230,6 +230,11 @@ const ItemTableContainer = ({
     setAnchorEl(null);
   }, []);
 
+  const noRowsMessage =
+    uiStateStore.netWorthSessionOpen && (activeProfile?.session?.snapshotPreviewIndex || 0) >= 100
+      ? 'label.item_table_placeholder_net_worth_session_preview'
+      : undefined;
+
   return (
     <>
       <Box mb={itemTableFilterSpacing} className={classes.itemTableFilter}>
@@ -351,13 +356,7 @@ const ItemTableContainer = ({
       <TableWrapper
         instance={instance}
         setInitialState={setInitialState}
-        noRowsMessage={
-          uiStateStore.netWorthSessionOpen &&
-          activeProfile?.session.snapshotPreviewIndex &&
-          activeProfile?.session.snapshotPreviewIndex >= 100
-            ? 'label.item_table_placeholder_net_worth_session_preview'
-            : undefined
-        }
+        noRowsMessage={noRowsMessage}
       />
 
       <ItemTableMenuContainer />

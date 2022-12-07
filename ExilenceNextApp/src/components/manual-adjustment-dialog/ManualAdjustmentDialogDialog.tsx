@@ -18,6 +18,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useStyles from './ManualAdjustmentDialogDialog.styles';
 import moment from 'moment';
+import { getMillisecondsFromMoment } from '../../utils/misc.utils';
 
 type ManualAdjustmentDialogProps = {
   show: boolean;
@@ -40,25 +41,14 @@ const ManualAdjustmentDialog = ({
   const [timeValue, setTimeValue] = useState<moment.Moment | null>(null);
 
   const handleAdd = () => {
-    if (!timeValue || !timeValue.isValid()) return 0;
-    const hourSeconds = timeValue.hours() * 60 * 60;
-    const minuteSeconds = timeValue.minutes() * 60;
-    const seconds = timeValue.seconds();
-
-    const timeToAdd = -((hourSeconds + minuteSeconds + seconds) * 1000);
+    const timeToAdd = -getMillisecondsFromMoment(timeValue);
     handleSubmit(timeToAdd);
 
     handleClose();
   };
 
   const handleSubtract = () => {
-    if (!timeValue || !timeValue.isValid()) return 0;
-    timeValue.subtract;
-    const hourSeconds = timeValue.hours() * 60 * 60;
-    const minuteSeconds = timeValue.minutes() * 60;
-    const seconds = timeValue.seconds();
-
-    const timeToSubtract = (hourSeconds + minuteSeconds + seconds) * 1000;
+    const timeToSubtract = -getMillisecondsFromMoment(timeValue);
     handleSubmit(timeToSubtract);
 
     handleClose();

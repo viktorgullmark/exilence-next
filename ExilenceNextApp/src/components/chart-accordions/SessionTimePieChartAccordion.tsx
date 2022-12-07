@@ -15,9 +15,9 @@ const SessionTimePieChartAccordion = () => {
 
   const theme = useTheme();
 
-  const loading = !uiStateStore.profilesLoaded || uiStateStore.isValidating;
+  const isLoading = !uiStateStore.profilesLoaded || uiStateStore.isValidating;
 
-  if (loading) {
+  if (isLoading) {
     return <Skeleton variant="rectangular" height={40} />;
   }
 

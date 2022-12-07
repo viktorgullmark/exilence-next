@@ -51,43 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1),
     cursor: 'pointer',
   },
-  selectMenu: {
-    fontSize: '0.9rem',
-  },
   iconButton: {
     padding: theme.spacing(0.5),
-  },
-  snapshotBtn: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
   },
   toolbarGrid: {
     maxHeight: innerToolbarHeight,
     minHeight: innerToolbarHeight,
   },
-  sessionArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
-  profileArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
-  snapshotArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
-  miscArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
-  overlayArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
   logMonitorArea: {
     padding: `0 ${theme.spacing(1)}`,
-  },
-  groupArea: {
-    padding: `0 ${theme.spacing(1)}`,
-  },
-  formControl: {
-    padding: `0 ${theme.spacing(0.5)}`,
   },
   divider: {
     height: innerToolbarHeight,
@@ -98,9 +70,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   leftSpinner: {
     color: theme.palette.primary.contrastText,
-  },
-  badge: {
-    backgroundColor: theme.palette.secondary.dark,
   },
   offlineIcon: {
     marginRight: theme.spacing(1),

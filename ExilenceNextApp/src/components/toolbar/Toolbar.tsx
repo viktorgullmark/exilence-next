@@ -1,33 +1,6 @@
-import { Cancel } from '@mui/icons-material';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import AddIcon from '@mui/icons-material/Add';
-import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import GroupIcon from '@mui/icons-material/Group';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import PlayIcon from '@mui/icons-material/PlayCircleFilled';
-import PauseIcon from '@mui/icons-material/PauseCircleFilled';
-import StopIcon from '@mui/icons-material/StopCircle';
-import CachedIcon from '@mui/icons-material/Cached';
-import SettingsIcon from '@mui/icons-material/Settings';
-import UpdateIcon from '@mui/icons-material/Update';
 import WarningIcon from '@mui/icons-material/Warning';
-import {
-  AppBar,
-  Badge,
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { AppBar, Box, Grid, SelectChangeEvent, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import IconButton from '@mui/material/IconButton';
 import MuiToolbar from '@mui/material/Toolbar';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
@@ -35,7 +8,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IStatusMessage } from '../../interfaces/status-message.interface';
 import { Notification } from '../../store/domains/notification';
-import { getDropdownSelection, mapDomainToDropdown } from '../../utils/dropdown.utils';
 import AccountMenuContainer from '../account-menu/AccountMenuContainer';
 import CountdownTimer from '../countdown-timer/CountdownTimer';
 import CreateGroupDialogContainer from '../group-dialog/GroupDialogContainer';
@@ -45,6 +17,12 @@ import StatusMessageContainer from '../status-message/StatusMessageContainer';
 import ToolbarStepperContainer from '../toolbar-stepper/ToolbarStepperContainer';
 import { Profile } from './../../store/domains/profile';
 import useStyles from './Toolbar.styles';
+import NetWorthSessionGridItem from './toolbarGridItems/netWorthSessionGridItem/NetWorthSessionGridItem';
+import ProfileGridItem from './toolbarGridItems/profileGridItem/ProfileGridItem';
+import SnapshotAreaGridItem from './toolbarGridItems/snapshotAreaGridItem/SnapshotAreaGridItem';
+import OverlayAreaGridItem from './toolbarGridItems/overlayAreaGridItem/OverlayAreaGridItem';
+import GroupAreaGridItem from './toolbarGridItems/groupAreaGridItem/GroupAreaGridItem';
+import MiscAreaGridItem from './toolbarGridItems/miscAreaGridItem/MiscAreaGridItem';
 
 type ToolbarProps = {
   signalrOnline: boolean;
@@ -207,303 +185,57 @@ const Toolbar = ({
             justifyContent="flex-end"
             className={classes.toolbarGrid}
           >
-            <Grid item className={classes.sessionArea} data-tour-elem="networthSessionArea">
-              {(!sessionStarted || (sessionStarted && sessionPaused)) && (
-                <Tooltip
-                  title={
-                    (!sessionStarted
-                      ? t('label.start_net_worth_session_icon_title')
-                      : t('label.continue_net_worth_session_icon_title')) || ''
-                  }
-                  placement="bottom"
-                >
-                  <span>
-                    <IconButton
-                      disabled={
-                        (sessionStarted && !sessionPaused) || // Enable for start and continue
-                        (!sessionStarted && isSnapshotting) || // Enable for continue and started
-                        !activeProfile ||
-                        isInitiating ||
-                        !profilesLoaded
-                      }
-                      aria-label="start"
-                      className={classes.iconButton}
-                      onClick={() => handleSessionStart()}
-                      size="large"
-                    >
-                      <PlayIcon fontSize="small" />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              )}
-              {sessionStarted && !sessionPaused && (
-                <Tooltip
-                  title={t('label.pause_net_worth_session_icon_title') || ''}
-                  placement="bottom"
-                >
-                  <span>
-                    <IconButton
-                      disabled={
-                        !sessionStarted ||
-                        (sessionStarted && sessionPaused) || // Diabled if - started and paused
-                        (!sessionStarted && isSnapshotting) ||
-                        !activeProfile ||
-                        isInitiating ||
-                        !profilesLoaded
-                      }
-                      aria-label="pause"
-                      className={classes.iconButton}
-                      onClick={() => handleSessionPause()}
-                      size="large"
-                    >
-                      <PauseIcon fontSize="small" />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              )}
-              <Tooltip
-                title={t('label.stop_net_worth_session_icon_title') || ''}
-                placement="bottom"
-              >
-                <span>
-                  <IconButton
-                    disabled={
-                      !sessionStarted ||
-                      isSnapshotting ||
-                      !activeProfile ||
-                      isInitiating ||
-                      !profilesLoaded ||
-                      !signalrOnline
-                    }
-                    aria-label="stop"
-                    className={classes.iconButton}
-                    onClick={() => handleSessionStop()}
-                    size="large"
-                  >
-                    <StopIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip
-                title={t('label.toggle_net_worth_session_icon_title') || ''}
-                placement="bottom"
-              >
-                <span>
-                  <IconButton
-                    disabled={!sessionStarted}
-                    aria-label="toggle session networth"
-                    className={classes.iconButton}
-                    onClick={() => toggleSessionNetWorth()}
-                    size="large"
-                  >
-                    <CachedIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <NetWorthSessionGridItem
+              sessionStarted={sessionStarted}
+              sessionPaused={sessionPaused}
+              signalrOnline={signalrOnline}
+              isSnapshotting={isSnapshotting}
+              activeProfile={activeProfile}
+              isInitiating={isInitiating}
+              profilesLoaded={profilesLoaded}
+              toggleSessionNetWorth={toggleSessionNetWorth}
+              handleSessionStart={handleSessionStart}
+              handleSessionPause={handleSessionPause}
+              handleSessionStop={handleSessionStop}
+            />
             <Grid item className={classes.divider} />
-            <Grid item className={classes.profileArea} data-tour-elem="profileArea">
-              <Tooltip title={t('label.edit_profile_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={
-                      isSnapshotting ||
-                      !activeProfile ||
-                      isInitiating ||
-                      !profilesLoaded ||
-                      !signalrOnline
-                    }
-                    aria-label="edit"
-                    className={classes.iconButton}
-                    onClick={() => handleProfileOpen(true)}
-                    size="large"
-                  >
-                    <SettingsIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <FormControl className={classes.formControl}>
-                <Select
-                  disabled={isSnapshotting || isInitiating || !profilesLoaded || !signalrOnline}
-                  className={classes.selectMenu}
-                  value={getDropdownSelection(
-                    mapDomainToDropdown(profiles),
-                    activeProfile ? activeProfile.uuid : ''
-                  )}
-                  onChange={(e) => handleProfileChange(e)}
-                  inputProps={{
-                    name: 'profile',
-                    id: 'profile-dd',
-                  }}
-                  variant="standard"
-                >
-                  {profiles.map((profile: Profile) => {
-                    return (
-                      <MenuItem key={profile.uuid} value={profile.uuid}>
-                        {profile.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-
-              <Tooltip title={t('label.create_profile_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={isSnapshotting || !profilesLoaded || isInitiating || !signalrOnline}
-                    onClick={() => handleProfileOpen()}
-                    aria-label="create"
-                    className={classes.iconButton}
-                    size="large"
-                  >
-                    <AddIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t('label.remove_profile_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={
-                      isSnapshotting ||
-                      profiles.length < 2 ||
-                      isInitiating ||
-                      !profilesLoaded ||
-                      !signalrOnline
-                    }
-                    onClick={() => handleRemoveProfile()}
-                    aria-label="remove profile"
-                    className={classes.iconButton}
-                    size="large"
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <ProfileGridItem
+              profiles={profiles}
+              signalrOnline={signalrOnline}
+              isSnapshotting={isSnapshotting}
+              activeProfile={activeProfile}
+              isInitiating={isInitiating}
+              profilesLoaded={profilesLoaded}
+              handleRemoveProfile={handleRemoveProfile}
+              handleProfileOpen={handleProfileOpen}
+              handleProfileChange={handleProfileChange}
+            />
             <Grid item className={classes.divider} />
-            <Grid item className={classes.snapshotArea} data-tour-elem="snapshotArea">
-              <Button
-                startIcon={<UpdateIcon />}
-                variant="contained"
-                size="small"
-                color="primary"
-                disabled={
-                  !activeProfile ||
-                  !activeProfile.readyToSnapshot ||
-                  !signalrOnline ||
-                  retryAfter > 0
-                }
-                onClick={() => handleSnapshot()}
-                aria-label="snapshot"
-                className={classes.snapshotBtn}
-              >
-                {t('label.fetch_snapshot_icon_title')}
-              </Button>
-              <Tooltip title={t('label.cancel_snapshot_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={!isSnapshotting}
-                    onClick={() => handleCancelSnapshot()}
-                    aria-label="cancelSnapshot"
-                    className={classes.iconButton}
-                    size="large"
-                  >
-                    <Cancel fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t('label.remove_snapshot_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={
-                      !activeProfile ||
-                      isSnapshotting ||
-                      !signalrOnline ||
-                      (activeProfile.snapshots.length === 0 &&
-                        activeProfile.session.snapshots.length === 0)
-                    }
-                    onClick={() => handleClearSnapshots()}
-                    aria-label="clear snapshots"
-                    className={classes.iconButton}
-                    size="large"
-                  >
-                    <DeleteSweepIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <SnapshotAreaGridItem
+              signalrOnline={signalrOnline}
+              isSnapshotting={isSnapshotting}
+              activeProfile={activeProfile}
+              retryAfter={retryAfter}
+              handleSnapshot={handleSnapshot}
+              handleClearSnapshots={handleClearSnapshots}
+              handleCancelSnapshot={handleCancelSnapshot}
+            />
             <Grid item className={classes.divider} />
-            <Grid item className={classes.overlayArea} data-tour-elem="overlayArea">
-              <Tooltip title={t('label.overlay_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    onClick={() => handleOverlay()}
-                    aria-label="overlay"
-                    aria-haspopup="true"
-                    className={clsx(classes.iconButton)}
-                    size="large"
-                  >
-                    <AddToPhotosIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <OverlayAreaGridItem handleOverlay={handleOverlay} />
             <Grid item className={classes.divider} />
-            <Grid item className={classes.groupArea} data-tour-elem="groupArea">
-              <Tooltip title={t('label.group_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    disabled={isSnapshotting || !signalrOnline}
-                    onClick={() => toggleGroupOverview()}
-                    aria-label="group"
-                    aria-haspopup="true"
-                    className={clsx(classes.iconButton)}
-                    size="large"
-                  >
-                    <GroupIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <GroupAreaGridItem
+              signalrOnline={signalrOnline}
+              isSnapshotting={isSnapshotting}
+              toggleGroupOverview={toggleGroupOverview}
+            />
             <Grid item className={classes.divider} />
-            <Grid item className={classes.miscArea}>
-              <Tooltip title={t('label.notification_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    data-tour-elem="notificationList"
-                    onClick={(e) => handleNotificationsOpen(e)}
-                    aria-label="show new notifications"
-                    color="inherit"
-                    className={clsx(classes.iconButton)}
-                    size="large"
-                  >
-                    <Badge
-                      max={9}
-                      badgeContent={
-                        unreadNotifications.length > 0 ? unreadNotifications.length : undefined
-                      }
-                      classes={{ badge: classes.badge }}
-                    >
-                      <NotificationsIcon fontSize="small" />
-                    </Badge>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t('label.account_icon_title') || ''} placement="bottom">
-                <span>
-                  <IconButton
-                    onClick={(e) => handleAccountMenuOpen(e)}
-                    aria-label="account"
-                    aria-haspopup="true"
-                    disabled={isSnapshotting || isInitiating}
-                    className={clsx(classes.iconButton)}
-                    size="large"
-                  >
-                    <AccountCircle fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+            <MiscAreaGridItem
+              isInitiating={isInitiating}
+              isSnapshotting={isSnapshotting}
+              unreadNotifications={unreadNotifications}
+              handleNotificationsOpen={handleNotificationsOpen}
+              handleAccountMenuOpen={handleAccountMenuOpen}
+            />
           </Grid>
         </MuiToolbar>
       </AppBar>
