@@ -55,7 +55,7 @@ const StashTabDropdown = ({
         type: 'MapStash',
         message: t('common:label.critial_stashtyp_map_tooltip'),
       },
-      { type: 'UniqueStash', message: t('common:label.critial_stashtyp_unique_tooltip') },
+      { type: 'UniqueStash', message: t('common:label.critical_stashtype_unique_tooltip') },
     ],
     [t]
   );

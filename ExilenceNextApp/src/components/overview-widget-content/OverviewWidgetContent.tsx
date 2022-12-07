@@ -11,7 +11,7 @@ import { formatValue } from '../../utils/snapshot.utils';
 import IncomeSwitch from './incomeSwitch/IncomeSwitch';
 import useStyles from './OverviewWidgetContent.styles';
 type OverviewWidgetContentProps = {
-  value: number | string | React.ReactNode;
+  value: React.ReactNode;
   valueIsDiff?: boolean;
   valueSuffix?: string;
   secondaryValue?: number | string;
