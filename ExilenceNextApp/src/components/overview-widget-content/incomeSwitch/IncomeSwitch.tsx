@@ -22,40 +22,20 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
   const session = accountStore.getSelectedAccount.activeProfile?.session;
 
   const toggleIncome = () => {
-    // cycle over current setting and choose next valid mode
-    const chooseIncome = (mode?: NetWorthSessionIncomeMode): NetWorthSessionIncomeMode => {
-      switch (mode || uiStateStore.netWorthSessionIncomeMode) {
-        case 'sessionDuration':
-          return 'lastPause';
-        case 'lastPause':
-          return 'lastOffline';
-        case 'lastOffline':
-          return 'lastInactive';
-        case 'lastInactive':
-          return 'lastHour';
-        case 'lastHour':
-          return 'sessionDuration';
-      }
-    };
-    const isValid = (mode: NetWorthSessionIncomeMode) => {
-      switch (mode) {
-        case 'sessionDuration':
-          return true;
-        case 'lastPause':
-          return session?.incomeSinceLastPause !== undefined;
-        case 'lastOffline':
-          return session?.incomeSinceLastOffline !== undefined;
-        case 'lastInactive':
-          return session?.incomeSinceLastInactive !== undefined;
-        case 'lastHour':
-          return session?.incomeSinceLastHour !== undefined;
-      }
-    };
-    let nextMode = chooseIncome();
-    while (!isValid(nextMode)) {
-      nextMode = chooseIncome(nextMode);
+    let mode = uiStateStore.netWorthSessionIncomeMode;
+    if (mode === 'sessionDuration' && session?.incomeSinceLastPause !== undefined) {
+      mode = 'lastPause';
+    } else if (mode === 'lastPause' && session?.incomeSinceLastOffline !== undefined) {
+      mode = 'lastOffline';
+    } else if (mode === 'lastOffline' && session?.incomeSinceLastInactive !== undefined) {
+      mode = 'lastInactive';
+    } else if (mode === 'lastInactive' && session?.incomeSinceLastHour !== undefined) {
+      mode = 'lastHour';
+    } else {
+      mode = 'sessionDuration';
     }
-    uiStateStore.setNetWorthSessionIncomeMode(nextMode);
+
+    uiStateStore.setNetWorthSessionIncomeMode(mode);
   };
 
   const getExaltedValue = (value: number) => {
@@ -78,7 +58,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
     );
   };
 
-  const toottipTitle = useMemo(() => {
+  const tooltipTitle = useMemo(() => {
     if (!isOpen) return;
 
     const sessionDuration = (
@@ -139,7 +119,7 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
     <Tooltip
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
-      title={toottipTitle}
+      title={tooltipTitle}
       placement="bottom-end"
     >
       <IconButton
