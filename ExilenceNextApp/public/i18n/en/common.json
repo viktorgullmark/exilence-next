@@ -26,6 +26,11 @@
     "remove_snapshots": "Remove snapshots",
     "subtract": "Subtract",
     "add": "Add",
+    "timespan-one-hour-type": "1 hour",
+    "timespan-one-day-type": "1 day",
+    "timespan-one-week-type": "1 week",
+    "timespan-one-month-type": "1 month",
+    "timespan-all-time-type": "All time",
     "history-chart-net-worth-mode": "NET WORTH",
     "history-chart-income-mode": "INCOME",
     "history-chart-both-mode": "BOTH"

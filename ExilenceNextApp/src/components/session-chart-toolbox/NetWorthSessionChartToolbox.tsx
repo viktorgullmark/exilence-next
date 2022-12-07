@@ -3,12 +3,16 @@ import { Box, Grid, ListItem, ListItemText } from '@mui/material';
 
 import useStyles from './NetWorthSessionChartToolbox.styles';
 import { HistoryChartSeriesMode } from '../../types/history-chart-series-mode.type';
-import { HistoryChartSeriesModeWordings } from './NetWorthSessionChartToolboxContainer';
 import { useTranslation } from 'react-i18next';
+
+export interface HistoryChartSeriesModeWording {
+  mode: HistoryChartSeriesMode;
+  wording: string;
+}
 
 type NetWorthSessionChartToolboxProps = {
   selectedChartMode: HistoryChartSeriesMode;
-  options: HistoryChartSeriesModeWordings[];
+  options: HistoryChartSeriesModeWording[];
   handleChangeMode: (value: HistoryChartSeriesMode) => void;
 };
 
