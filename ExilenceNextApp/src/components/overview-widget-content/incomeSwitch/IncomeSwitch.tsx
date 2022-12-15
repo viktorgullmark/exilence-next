@@ -23,13 +23,13 @@ const IncomeSwitch = ({ currencyShort, valueIsDiff, valueSuffix }: IncomeSwitchP
 
   const toggleIncome = () => {
     let mode = uiStateStore.netWorthSessionIncomeMode;
-    if (mode === 'sessionDuration' && session?.incomeSinceLastPause !== undefined) {
+    if (mode === 'sessionDuration') {
       mode = 'lastPause';
-    } else if (mode === 'lastPause' && session?.incomeSinceLastOffline !== undefined) {
+    } else if (mode === 'lastPause') {
       mode = 'lastOffline';
-    } else if (mode === 'lastOffline' && session?.incomeSinceLastInactive !== undefined) {
+    } else if (mode === 'lastOffline') {
       mode = 'lastInactive';
-    } else if (mode === 'lastInactive' && session?.incomeSinceLastHour !== undefined) {
+    } else if (mode === 'lastInactive') {
       mode = 'lastHour';
     } else {
       mode = 'sessionDuration';
