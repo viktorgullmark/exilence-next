@@ -48,7 +48,7 @@ const ManualAdjustmentDialog = ({
   };
 
   const handleSubtract = () => {
-    const timeToSubtract = -getMillisecondsFromMoment(timeValue);
+    const timeToSubtract = getMillisecondsFromMoment(timeValue);
     handleSubmit(timeToSubtract);
 
     handleClose();
